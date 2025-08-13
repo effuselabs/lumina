@@ -5,7 +5,7 @@ import Google from 'next-auth/providers/google';
 import { compare } from 'bcryptjs';
 import { z } from 'zod';
 import { prisma } from './prisma';
-import type { UserRole, BusinessRole } from '@prisma/client';
+import type { UserRole } from '@prisma/client';
 
 // Validation schemas
 const loginSchema = z.object({
@@ -79,7 +79,6 @@ export const authConfig: NextAuthConfig = {
 
   pages: {
     signIn: '/auth/signin',
-    signUp: '/auth/signup',
     error: '/auth/error',
     verifyRequest: '/auth/verify-request',
     newUser: '/auth/welcome',

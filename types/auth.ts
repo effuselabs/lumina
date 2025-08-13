@@ -1,5 +1,5 @@
-import type { DefaultSession, DefaultUser } from 'next-auth';
-import type { JWT, DefaultJWT } from 'next-auth/jwt';
+import type { DefaultSession } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
 import type { UserRole, BusinessRole } from '@prisma/client';
 
 // Extend the built-in session types
@@ -138,7 +138,7 @@ export type PermissionAction =
 
 // Auth context types for client components
 export interface AuthContextType {
-  user: Session['user'] | null;
+  user: DefaultSession['user'] | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   hasRole: (roles: UserRole[]) => boolean;
