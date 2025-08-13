@@ -1,0 +1,459 @@
+// Lumina Database Schema
+// Comprehensive schema for salon/barbershop management platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// AUTHENTICATION & USER MANAGEMENT
+// ============================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  password      String?   // For email/password auth
+  role          UserRole  @default(STAFF)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  businesses    BusinessUser[]
+  staffProfile  Staff?
+  appointments  Appointment[] @relation("AppointmentClient")
+  transactions  Transaction[]
+  
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================================================
+// BUSINESS MANAGEMENT
+// ============================================================================
+
+model Business {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String?
+  
+  // Contact Information
+  email       String?
+  phone       String?
+  website     String?
+  
+  // Address
+  address     String?
+  city        String?
+  state       String?
+  zipCode     String?
+  country     String     @default("US")
+  timezone    String     @default("America/New_York")
+  
+  // Business Settings
+  financialModel FinancialModel @default(COMMISSION)
+  currency       String         @default("USD")
+  
+  // Booking Settings
+  bookingEnabled     Boolean @default(true)
+  onlineBooking      Boolean @default(true)
+  requireDeposit     Boolean @default(false)
+  depositAmount      Decimal? @db.Decimal(10, 2)
+  cancellationPolicy String?
+  
+  // Operating Hours (JSON stored as string)
+  operatingHours Json?
+  
+  // Branding
+  logo        String?
+  primaryColor String? @default("#FFD25A")
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  users        BusinessUser[]
+  staff        Staff[]
+  services     Service[]
+  clients      Client[]
+  appointments Appointment[]
+  transactions Transaction[]
+  
+  @@map("businesses")
+}
+
+model BusinessUser {
+  id         String       @id @default(cuid())
+  businessId String
+  userId     String
+  role       BusinessRole @default(STAFF)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([businessId, userId])
+  @@map("business_users")
+}
+
+// ============================================================================
+// STAFF MANAGEMENT
+// ============================================================================
+
+model Staff {
+  id         String @id @default(cuid())
+  businessId String
+  userId     String @unique
+  
+  // Staff Information
+  displayName String
+  title       String?
+  bio         String?
+  avatar      String?
+  
+  // Financial Configuration
+  commissionRate Decimal? @db.Decimal(5, 2) // Percentage (e.g., 50.00 for 50%)
+  chairRental    Decimal? @db.Decimal(10, 2) // Fixed amount
+  hourlyRate     Decimal? @db.Decimal(10, 2) // For hourly staff
+  
+  // Availability Settings
+  isActive           Boolean @default(true)
+  acceptsOnlineBookings Boolean @default(true)
+  
+  // Working Hours (JSON stored as string)
+  workingHours Json?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services     StaffService[]
+  appointments Appointment[]
+  transactions Transaction[]
+  
+  @@map("staff")
+}
+
+// ============================================================================
+// SERVICE MANAGEMENT
+// ============================================================================
+
+model Service {
+  id          String @id @default(cuid())
+  businessId  String
+  
+  // Service Information
+  name        String
+  description String?
+  category    String?
+  
+  // Pricing
+  price       Decimal @db.Decimal(10, 2)
+  duration    Int     // Duration in minutes
+  
+  // Settings
+  isActive    Boolean @default(true)
+  isOnline    Boolean @default(true) // Available for online booking
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  business     Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  staff        StaffService[]
+  appointments AppointmentService[]
+  
+  @@map("services")
+}
+
+model StaffService {
+  id        String @id @default(cuid())
+  staffId   String
+  serviceId String
+  
+  // Custom pricing for this staff member (optional)
+  customPrice    Decimal? @db.Decimal(10, 2)
+  customDuration Int?     // Custom duration in minutes
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  staff   Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  
+  @@unique([staffId, serviceId])
+  @@map("staff_services")
+}
+
+// ============================================================================
+// CLIENT MANAGEMENT
+// ============================================================================
+
+model Client {
+  id         String @id @default(cuid())
+  businessId String
+  
+  // Personal Information
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  
+  // Address (optional)
+  address String?
+  city    String?
+  state   String?
+  zipCode String?
+  
+  // Client Preferences
+  preferredStaff String? // Staff ID
+  notes          String?
+  
+  // Marketing Preferences
+  emailMarketing Boolean @default(true)
+  smsMarketing   Boolean @default(true)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+  
+  @@unique([businessId, email])
+  @@unique([businessId, phone])
+  @@map("clients")
+}
+
+// ============================================================================
+// APPOINTMENT & BOOKING SYSTEM
+// ============================================================================
+
+model Appointment {
+  id         String @id @default(cuid())
+  businessId String
+  clientId   String?
+  staffId    String
+  userId     String? // For walk-in appointments created by staff
+  
+  // Appointment Details
+  startTime DateTime
+  endTime   DateTime
+  status    AppointmentStatus @default(SCHEDULED)
+  
+  // Client Information (for walk-ins without client record)
+  clientName  String?
+  clientEmail String?
+  clientPhone String?
+  
+  // Booking Information
+  notes          String?
+  internalNotes  String? // Staff-only notes
+  depositAmount  Decimal? @db.Decimal(10, 2)
+  depositPaid    Boolean  @default(false)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  business Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  client   Client?              @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  staff    Staff                @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  user     User?                @relation("AppointmentClient", fields: [userId], references: [id], onDelete: SetNull)
+  services AppointmentService[]
+  transactions Transaction[]
+  
+  @@index([businessId, startTime])
+  @@index([staffId, startTime])
+  @@map("appointments")
+}
+
+model AppointmentService {
+  id            String @id @default(cuid())
+  appointmentId String
+  serviceId     String
+  
+  // Service details at time of booking (for historical accuracy)
+  serviceName String
+  price       Decimal @db.Decimal(10, 2)
+  duration    Int     // Duration in minutes
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  service     Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  
+  @@unique([appointmentId, serviceId])
+  @@map("appointment_services")
+}
+
+// ============================================================================
+// FINANCIAL & TRANSACTION SYSTEM
+// ============================================================================
+
+model Transaction {
+  id            String @id @default(cuid())
+  businessId    String
+  appointmentId String?
+  staffId       String?
+  userId        String?
+  
+  // Transaction Details
+  type          TransactionType
+  status        TransactionStatus @default(PENDING)
+  amount        Decimal           @db.Decimal(10, 2)
+  currency      String            @default("USD")
+  
+  // Payment Information
+  paymentMethod PaymentMethod?
+  paymentId     String?       // External payment ID (Stripe, etc.)
+  
+  // Commission Calculation
+  commissionRate   Decimal? @db.Decimal(5, 2)
+  commissionAmount Decimal? @db.Decimal(10, 2)
+  
+  // Metadata
+  description String?
+  metadata    Json?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  business    Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  staff       Staff?       @relation(fields: [staffId], references: [id], onDelete: SetNull)
+  user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([businessId, createdAt])
+  @@index([staffId, createdAt])
+  @@map("transactions")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  OWNER
+  STAFF
+  CLIENT
+}
+
+enum BusinessRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+enum FinancialModel {
+  COMMISSION
+  CHAIR_RENTAL
+  HOURLY
+  HYBRID
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum TransactionType {
+  PAYMENT
+  REFUND
+  COMMISSION
+  CHAIR_RENTAL
+  TIP
+  DEPOSIT
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  DIGITAL_WALLET
+  BANK_TRANSFER
+  OTHER
+}

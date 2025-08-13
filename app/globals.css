@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Lumina Brand Colors as CSS Custom Properties */
+:root {
+  /* Lumina Primary Colors */
+  --lumina-gold: #ffd25a;
+  --lumina-coral: #ff7a5a;
+  --effuse-teal: #22c5c3;
+  --slate-grey: #2e3440;
+  --deep-teal: #0b2b33;
+  
+  /* Neutral Palette */
+  --off-black: #1d1d21;
+  --medium-grey: #808285;
+  --light-grey: #f1f3f5;
+  --white: #ffffff;
+  
+  /* Semantic Colors */
+  --background: var(--white);
+  --foreground: var(--off-black);
+  --muted: var(--light-grey);
+  --muted-foreground: var(--medium-grey);
+  --border: var(--light-grey);
+  --input: var(--white);
+  --primary: var(--lumina-gold);
+  --primary-foreground: var(--off-black);
+  --secondary: var(--deep-teal);
+  --secondary-foreground: var(--white);
+  --accent: var(--effuse-teal);
+  --accent-foreground: var(--off-black);
+  --destructive: #ef4444;
+  --destructive-foreground: var(--white);
+  --ring: var(--lumina-gold);
+}
+
+/* Dark mode support (future) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--off-black);
+    --foreground: var(--white);
+    --muted: var(--slate-grey);
+    --muted-foreground: var(--medium-grey);
+  }
+}
+
+/* Base styles */
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Lumina Radiant Gradient Utility */
+.lumina-gradient {
+  background: linear-gradient(135deg, var(--lumina-gold) 0%, var(--lumina-coral) 100%);
+}
+
+.lumina-gradient-text {
+  background: linear-gradient(135deg, var(--lumina-gold) 0%, var(--lumina-coral) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-grey);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--medium-grey);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--slate-grey);
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Animation utilities */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
