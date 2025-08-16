@@ -1,25 +1,115 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
+  const startTime = Date.now();
+
   try {
-    // Basic health check - can be extended to check database connectivity
-    const healthCheck = {
+    // Basic health check response
+    const health = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      version: process.env.npm_package_version || '0.1.0',
       uptime: process.uptime(),
-      environment: process.env.NODE_ENV,
-      version: process.env.npm_package_version || '1.0.0',
+      checks: {
+        database: 'unknown',
+        memory: 'unknown',
+      },
     };
 
-    return NextResponse.json(healthCheck, { status: 200 });
+    // Database connectivity check
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      health.checks.database = 'healthy';
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Database health check failed:', error);
+      health.checks.database = 'unhealthy';
+      health.status = 'degraded';
+    }
+
+    // Memory usage check
+    try {
+      const memoryUsage = process.memoryUsage();
+      const memoryUsageMB = {
+        rss: Math.round(memoryUsage.rss / 1024 / 1024),
+        heapTotal: Math.round(memoryUsage.heapTotal / 1024 / 1024),
+        heapUsed: Math.round(memoryUsage.heapUsed / 1024 / 1024),
+        external: Math.round(memoryUsage.external / 1024 / 1024),
+      };
+
+      health.checks.memory = 'healthy';
+
+      // Add memory info in development
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (health as any).memory = memoryUsageMB;
+      }
+
+      // Check if memory usage is too high (over 512MB heap)
+      if (memoryUsageMB.heapUsed > 512) {
+        health.checks.memory = 'warning';
+        health.status = 'degraded';
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Memory health check failed:', error);
+      health.checks.memory = 'unhealthy';
+      health.status = 'degraded';
+    }
+
+    // Response time
+    const responseTime = Date.now() - startTime;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (health as any).responseTime = `${responseTime}ms`;
+
+    // Determine HTTP status code
+    const statusCode =
+      health.status === 'healthy'
+        ? 200
+        : health.status === 'degraded'
+          ? 200
+          : 503;
+
+    return NextResponse.json(health, {
+      status: statusCode,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
+      },
+    });
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Health check failed:', error);
+
     return NextResponse.json(
       {
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
         error: 'Health check failed',
+        responseTime: `${Date.now() - startTime}ms`,
       },
-      { status: 503 }
+      {
+        status: 503,
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      }
     );
+  }
+}
+
+// Support HEAD requests for simple health checks
+export async function HEAD() {
+  try {
+    // Quick database check
+    await prisma.$queryRaw`SELECT 1`;
+    return new NextResponse(null, { status: 200 });
+  } catch {
+    return new NextResponse(null, { status: 503 });
   }
 }

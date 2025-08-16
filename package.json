@@ -29,7 +29,14 @@
     "docker:dev": "docker-compose up --build",
     "docker:dev:detached": "docker-compose up --build -d",
     "docker:down": "docker-compose down",
-    "docker:clean": "docker-compose down -v --remove-orphans"
+    "docker:clean": "docker-compose down -v --remove-orphans",
+    "ci:install": "npm ci",
+    "ci:build": "npm run build",
+    "ci:test": "npm run test:coverage && npm run test:e2e",
+    "ci:lint": "npm run lint && npm run format:check && npm run type-check",
+    "deploy:staging": "railway up --service lumina-staging",
+    "deploy:production": "railway up --service lumina-prod",
+    "health:check": "curl -f http://localhost:3000/api/health || exit 1"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
@@ -41,6 +48,9 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@sentry/nextjs": "^10.5.0",
+    "@sentry/node": "^10.5.0",
+    "@sentry/react": "^10.5.0",
     "@stripe/stripe-js": "^2.4.0",
     "@tanstack/react-query": "^5.17.0",
     "bcryptjs": "^3.0.2",

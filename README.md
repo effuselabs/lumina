@@ -2,8 +2,10 @@
 
 > **Intelligent Software for Small Business Growth**
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/jshields-ca/lumina/ci.yml?branch=main&style=flat-square&logo=github)](https://github.com/jshields-ca/lumina/actions)
-[![Deployment](https://img.shields.io/badge/deployment-railway-blueviolet?style=flat-square&logo=railway)](https://lumina-staging.up.railway.app)
+[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/jshields-ca/lumina/ci.yml?branch=main&style=flat-square&logo=github&label=CI)](https://github.com/jshields-ca/lumina/actions/workflows/ci.yml)
+[![Deployment](https://img.shields.io/github/actions/workflow/status/jshields-ca/lumina/deploy.yml?branch=main&style=flat-square&logo=railway&label=Deploy)](https://github.com/jshields-ca/lumina/actions/workflows/deploy.yml)
+[![Production](https://img.shields.io/badge/production-railway-success?style=flat-square&logo=railway)](https://uselumina.app)
+[![Staging](https://img.shields.io/badge/staging-railway-blueviolet?style=flat-square&logo=railway)](https://lumina-staging.railway.app)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14+-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
@@ -25,6 +27,7 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 **Foundation Phase Complete** - Core infrastructure and authentication system implemented.
 
 ### ✅ Implemented Features
+
 - **Project Foundation** - Next.js 14, TypeScript, Docker containerization
 - **Database Architecture** - PostgreSQL with comprehensive Prisma schema
 - **Authentication System** - NextAuth.js v5 with multi-tenant support
@@ -33,6 +36,7 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 - **Development Environment** - Docker Compose with PostgreSQL, Redis, Prisma Studio
 
 ### 🚧 In Development
+
 - **UI Design System** - Tailwind CSS component library with Lumina branding
 - **CI/CD Pipeline** - GitHub Actions with Railway deployment
 - **Testing Framework** - Jest, React Testing Library, Playwright setup
@@ -40,6 +44,7 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 ### 📋 Planned Features
 
 #### 🎯 Core MVP Features
+
 - **Smart Booking System** - Public booking interface with real-time availability
 - **Client Management** - Comprehensive CRM with appointment history and preferences
 - **Staff Management** - Commission tracking and performance insights
@@ -48,6 +53,7 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 - **Business Dashboard** - Real-time insights and performance metrics
 
 #### 🚀 Post-MVP Features
+
 - **AI-Powered Insights** - Predictive analytics and revenue optimization suggestions
 - **QuickBooks Integration** - Seamless accounting software synchronization
 - **Square POS Integration** - External POS system data synchronization
@@ -104,17 +110,20 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 ### Quick Start with Docker (Recommended)
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/jshields-ca/lumina.git
    cd lumina
    ```
 
 2. **Start the development environment**
+
    ```bash
    npm run docker:dev
    ```
 
 3. **Initialize the database**
+
    ```bash
    npx prisma migrate dev --name init
    npx prisma db seed
@@ -136,7 +145,7 @@ Email: owner@lumina-demo.com
 Password: demo123
 
 Senior Hair Stylist:
-Email: mike@lumina-demo.com  
+Email: mike@lumina-demo.com
 Password: demo123
 
 Nail Technician & Colorist:
@@ -149,29 +158,34 @@ Password: demo123
 ### Local Development (without Docker)
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/jshields-ca/lumina.git
    cd lumina
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
    ```
 
 4. **Set up the database**
+
    ```bash
    npx prisma migrate dev --name init
    npx prisma db seed
    ```
 
 5. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -185,6 +199,7 @@ Password: demo123
 📖 **For detailed setup instructions, see [Development Setup Guide](docs/DEVELOPMENT_SETUP.md)**
 
 📚 **Additional Documentation:**
+
 - [Development Setup](docs/DEVELOPMENT_SETUP.md) - Complete setup instructions
 - [Git Workflow](docs/GIT_WORKFLOW.md) - Branching strategy and development process
 - [Authentication System](docs/AUTHENTICATION.md) - Multi-tenant auth and permissions
@@ -341,6 +356,7 @@ This project is proprietary software. All rights reserved.
 ## 🙋‍♂️ Support
 
 For questions or support, please contact:
+
 - **Email**: [Your Email]
 - **Linear**: [Project Link]
 - **GitHub Issues**: For bug reports and feature requests
@@ -349,4 +365,4 @@ For questions or support, please contact:
 
 **Built with ❤️ by Effuse Labs**
 
-*Democratizing the power of technology for small businesses*
+_Democratizing the power of technology for small businesses_
