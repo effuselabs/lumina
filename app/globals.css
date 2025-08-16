@@ -2,6 +2,148 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Lumina Design System CSS Custom Properties */
+@layer base {
+  :root {
+    /* Lumina Brand Colors */
+    --lumina-gold: #ffd25a;
+    --lumina-coral: #ff7a5a;
+    --deep-teal: #0b2b33;
+
+    /* Lumina UI Colors */
+    --text-primary: #1d2d35;
+    --text-secondary: #808285;
+    --background-primary: #ffffff;
+    --background-secondary: #f1f3f5;
+    --border-primary: #e4e6e7;
+
+    /* Lumina Functional Colors */
+    --success: #22c58b;
+    --warning: #ffb800;
+    --error: #e5484d;
+
+    /* Semantic Color Mapping for shadcn/ui compatibility */
+    --background: 0 0% 100%;
+    --foreground: 210 40% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 15%;
+    --primary: 45 100% 66%;
+    --primary-foreground: 210 40% 15%;
+    --secondary: 195 100% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 210 40% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 45 100% 66%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark mode support for future implementation */
+    --background: 210 40% 15%;
+    --foreground: 0 0% 95%;
+    --card: 210 40% 15%;
+    --card-foreground: 0 0% 95%;
+    --popover: 210 40% 15%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 45 100% 66%;
+    --primary-foreground: 210 40% 15%;
+    --secondary: 195 100% 20%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 210 40% 20%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 210 40% 20%;
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 210 40% 20%;
+    --input: 210 40% 20%;
+    --ring: 45 100% 66%;
+  }
+}
+
+/* Lumina Typography System */
+@layer base {
+  /* Import Inter font */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+  }
+
+  /* Lumina Typography Scale */
+  .text-display-2xl {
+    @apply text-6xl font-bold tracking-tight;
+  }
+
+  .text-display-xl {
+    @apply text-5xl font-bold tracking-tight;
+  }
+
+  .text-display-lg {
+    @apply text-4xl font-bold tracking-tight;
+  }
+
+  .text-display-md {
+    @apply text-3xl font-bold tracking-tight;
+  }
+
+  .text-display-sm {
+    @apply text-2xl font-bold tracking-tight;
+  }
+
+  .text-display-xs {
+    @apply text-xl font-bold tracking-tight;
+  }
+}
+
+/* Lumina Component Utilities */
+@layer utilities {
+  /* Lumina Gradient Utilities */
+  .bg-lumina-radiant {
+    background: linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%);
+  }
+
+  .bg-lumina-radiant-hover {
+    background: linear-gradient(135deg, #ffe066 0%, #ff8666 100%);
+  }
+
+  .text-lumina-radiant {
+    background: linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Lumina Shadow System */
+  .shadow-lumina {
+    box-shadow: 0 4px 14px 0 rgba(255, 210, 90, 0.15);
+  }
+
+  .shadow-lumina-lg {
+    box-shadow: 0 10px 25px 0 rgba(255, 210, 90, 0.2);
+  }
+
+  .shadow-lumina-xl {
+    box-shadow: 0 20px 40px 0 rgba(255, 210, 90, 0.25);
+  }
+}
+
 /* Lumina Brand Colors as CSS Custom Properties */
 :root {
   /* Lumina Primary Colors */
@@ -10,13 +152,13 @@
   --effuse-teal: #22c5c3;
   --slate-grey: #2e3440;
   --deep-teal: #0b2b33;
-  
+
   /* Neutral Palette */
   --off-black: #1d1d21;
   --medium-grey: #808285;
   --light-grey: #f1f3f5;
   --white: #ffffff;
-  
+
   /* Semantic Colors */
   --background: var(--white);
   --foreground: var(--off-black);
@@ -53,16 +195,26 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-feature-settings: "rlig" 1, "calt" 1;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
 }
 
 /* Lumina Radiant Gradient Utility */
 .lumina-gradient {
-  background: linear-gradient(135deg, var(--lumina-gold) 0%, var(--lumina-coral) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--lumina-gold) 0%,
+    var(--lumina-coral) 100%
+  );
 }
 
 .lumina-gradient-text {
-  background: linear-gradient(135deg, var(--lumina-gold) 0%, var(--lumina-coral) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--lumina-gold) 0%,
+    var(--lumina-coral) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
