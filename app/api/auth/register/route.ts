@@ -1,21 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { hash } from 'bcryptjs';
-import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import type { UserRole } from '@prisma/client';
+import { hash } from 'bcryptjs';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  businessName: z.string().min(2, 'Business name must be at least 2 characters').optional(),
+  businessName: z
+    .string()
+    .min(2, 'Business name must be at least 2 characters')
+    .optional(),
   role: z.enum(['OWNER', 'STAFF', 'CLIENT']).default('OWNER'),
 });
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password, businessName, role } = registerSchema.parse(body);
+    const { name, email, password, role } = registerSchema.parse(body);
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -42,52 +45,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // If registering as owner and business name provided, create business
-    if (role === 'OWNER' && businessName) {
-      const businessSlug = businessName
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
-
-      // Ensure unique slug
-      let uniqueSlug = businessSlug;
-      let counter = 1;
-      while (await prisma.business.findUnique({ where: { slug: uniqueSlug } })) {
-        uniqueSlug = `${businessSlug}-${counter}`;
-        counter++;
-      }
-
-      const business = await prisma.business.create({
-        data: {
-          name: businessName,
-          slug: uniqueSlug,
-          users: {
-            create: {
-              userId: user.id,
-              role: 'OWNER',
-            },
-          },
-        },
-      });
-
-      return NextResponse.json({
-        success: true,
-        message: 'Account and business created successfully',
-        data: {
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-          },
-          business: {
-            id: business.id,
-            name: business.name,
-            slug: business.slug,
-          },
-        },
-      });
-    }
+    // Note: Business creation is handled during the onboarding process
+    // Users will be redirected to onboarding after successful registration
 
     return NextResponse.json({
       success: true,
