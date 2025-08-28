@@ -179,7 +179,8 @@ Pre-commit hooks are automatically set up with Husky to:
 After setting up the development environment:
 
 1. Review the [Git Workflow Guide](./GIT_WORKFLOW.md) for branching strategy
-2. Read the [Contributing Guide](../CONTRIBUTING.md) for development standards
-3. Check the [Authentication Documentation](./AUTHENTICATION.md) for auth system details
-4. Explore the [Brand Guidelines](./BRAND_STYLEGUIDE.md) for design system
-5. Review the [Changelog](../CHANGELOG.md) for recent updates
+2. Check the [Authentication Documentation](./AUTHENTICATION.md) for auth system details
+3. Read the [Testing Guide](./TESTING.md) for testing framework usage
+4. Explore the [Brand Guidelines](./LUMINA_PRODUCT_STYLEGUIDE.md) for design system
+5. Review the [Development Plan](./DEVELOPMENT_PLAN.md) for project roadmap
+6. Check the [Changelog](../CHANGELOG.md) for recent updates

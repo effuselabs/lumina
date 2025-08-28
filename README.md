@@ -31,15 +31,17 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 - **Project Foundation** - Next.js 14, TypeScript, Docker containerization
 - **Database Architecture** - PostgreSQL with comprehensive Prisma schema
 - **Authentication System** - NextAuth.js v5 with multi-tenant support
-- **User Management** - Role-based access control (Owner, Manager, Staff)
-- **Multi-Tenancy** - Business-scoped data access and permissions
-- **Development Environment** - Docker Compose with PostgreSQL, Redis, Prisma Studio
-
-### 🚧 In Development
-
 - **UI Design System** - Tailwind CSS component library with Lumina branding
 - **CI/CD Pipeline** - GitHub Actions with Railway deployment
 - **Testing Framework** - Jest, React Testing Library, Playwright setup
+- **User Management** - Role-based access control (Owner, Manager, Staff)
+- **Multi-Tenancy** - Business-scoped data access and permissions
+
+### 🚧 In Development
+
+- **Business Onboarding** - Multi-step business registration and setup wizard
+- **Service Management** - CRUD operations for salon services and pricing
+- **Client Data Import** - CSV import system for existing client databases
 
 ### 📋 Planned Features
 
@@ -198,14 +200,17 @@ Password: demo123
 
 📖 **For detailed setup instructions, see [Development Setup Guide](docs/DEVELOPMENT_SETUP.md)**
 
-📚 **Additional Documentation:**
+## 📚 Documentation
 
-- [Development Setup](docs/DEVELOPMENT_SETUP.md) - Complete setup instructions
-- [Git Workflow](docs/GIT_WORKFLOW.md) - Branching strategy and development process
-- [Authentication System](docs/AUTHENTICATION.md) - Multi-tenant auth and permissions
-- [Brand Guidelines](docs/BRAND_STYLEGUIDE.md) - Design system and branding
-- [Development Plan](docs/DEVELOPMENT_PLAN.md) - Technical architecture and roadmap
-- [Changelog](CHANGELOG.md) - Version history and release notes
+**[📋 Complete Documentation Hub](docs/README.md)** - Navigate all project documentation
+
+### Quick Links
+- **[Development Setup](docs/DEVELOPMENT_SETUP.md)** - Get started with local development
+- **[Git Workflow](docs/GIT_WORKFLOW.md)** - Branching and development process
+- **[Testing Guide](docs/TESTING.md)** - Testing framework and best practices
+- **[Authentication System](docs/AUTHENTICATION.md)** - Multi-tenant auth system
+- **[Brand Guidelines](docs/LUMINA_PRODUCT_STYLEGUIDE.md)** - Design system and UI
+- **[Changelog](CHANGELOG.md)** - Version history and release notes
 
 ## 🏃‍♂️ Development
 

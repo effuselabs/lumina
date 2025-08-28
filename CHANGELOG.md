@@ -8,12 +8,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- UI Design System and Component Library (in progress)
-- CI/CD Pipeline with GitHub Actions (planned)
-- Testing Framework with Jest and Playwright (planned)
+- Business onboarding system (in development)
+- Service management CRUD operations (planned)
+- Client data import system (planned)
 
 ### Changed
-- Transitioned to feature branch workflow for development
+- Updated documentation structure and cross-references
+- Improved README with current project status
+
+## [0.2.0] - 2025-01-27
+
+### Added
+- **UI Design System and Component Library**
+  - Tailwind CSS configured with Lumina brand colors and typography
+  - Base component library (buttons, forms, modals, navigation)
+  - Responsive layout system with mobile-first approach
+  - Lucide React icon system for consistent iconography
+  - Design tokens and component variants
+
+- **CI/CD Pipeline and Deployment Configuration**
+  - GitHub Actions workflows for automated testing and deployment
+  - Railway deployment with environment-specific configurations
+  - Preview deployments for pull requests
+  - Sentry integration for error tracking and monitoring
+
+- **Testing Framework Setup**
+  - Jest and React Testing Library for unit and integration tests
+  - Playwright for end-to-end testing with cross-browser support
+  - Testing utilities and mock data factories
+  - Code coverage reporting with quality gates
+  - Comprehensive testing documentation
+
+### Technical Details
+
+#### UI Design System
+- **Brand Colors**: Lumina Radiant Gradient (#FFD25A to #FF7A5A), Deep Teal (#0B2B33)
+- **Typography**: Inter font with defined weight hierarchy
+- **Components**: Reusable UI components with accessibility compliance
+- **Responsive Design**: Mobile-first approach with Tailwind breakpoints
+
+#### CI/CD Pipeline
+- **Environments**: Development, Staging, Production, Preview
+- **Automation**: Automated testing, building, and deployment
+- **Monitoring**: Health checks, error tracking, performance monitoring
+- **Security**: Environment variable management, secure deployments
+
+#### Testing Framework
+- **Unit Testing**: Jest with React Testing Library
+- **E2E Testing**: Playwright with cross-browser support
+- **Coverage**: 80%+ code coverage target with quality gates
+- **Utilities**: Custom testing helpers and mock data factories
 
 ## [0.1.0] - 2025-01-12
 
