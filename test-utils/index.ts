@@ -19,8 +19,8 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   queryClient?: QueryClient;
 }
 
-function AllTheProviders({ 
-  children, 
+function AllTheProviders({
+  children,
   session = null,
   queryClient = new QueryClient({
     defaultOptions: {
@@ -35,8 +35,8 @@ function AllTheProviders({
   queryClient?: QueryClient;
 }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
+    <QueryClientProvider client= { queryClient } >
+    { children }
     </QueryClientProvider>
   );
 }
@@ -46,11 +46,11 @@ const customRender = (
   options: CustomRenderOptions = {}
 ) => {
   const { session, queryClient, ...renderOptions } = options;
-  
+
   return render(ui, {
     wrapper: ({ children }: { children: ReactNode }) => (
-      <AllTheProviders session={session} queryClient={queryClient}>
-        {children}
+      <AllTheProviders session= { session } queryClient={ queryClient } >
+      { children }
       </AllTheProviders>
     ),
     ...renderOptions,
@@ -124,7 +124,7 @@ export const createMockPrismaClient = () => ({
 // Form testing helpers
 export const fillForm = async (form: HTMLFormElement, data: Record<string, string>) => {
   const { fireEvent } = await import('@testing-library/react');
-  
+
   Object.entries(data).forEach(([name, value]) => {
     const input = form.querySelector(`[name="${name}"]`) as HTMLInputElement;
     if (input) {
@@ -144,7 +144,7 @@ export const getAllByTestId = (container: HTMLElement, testId: string) =>
 export const waitForElement = async (selector: string, timeout = 5000) => {
   return new Promise((resolve, reject) => {
     const startTime = Date.now();
-    
+
     const checkElement = () => {
       const element = document.querySelector(selector);
       if (element) {
@@ -155,7 +155,7 @@ export const waitForElement = async (selector: string, timeout = 5000) => {
         setTimeout(checkElement, 100);
       }
     };
-    
+
     checkElement();
   });
 };
@@ -184,7 +184,7 @@ export const mockRouter = {
 // Local storage testing helpers
 export const mockLocalStorage = () => {
   const store: Record<string, string> = {};
-  
+
   return {
     getItem: jest.fn((key: string) => store[key] || null),
     setItem: jest.fn((key: string, value: string) => {
