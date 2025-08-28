@@ -2,15 +2,10 @@
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { ClientSelect } from '@/components/ui/client-select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { SelectItem } from '@/components/ui/select';
 import { CheckCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -175,19 +170,15 @@ export function SignUpForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="role">Account Type</Label>
-          <Select
+          <ClientSelect
             value={formData.role}
             onValueChange={handleRoleChange}
             disabled={isLoading}
+            placeholder="Select account type"
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select account type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="OWNER">Business Owner</SelectItem>
-              <SelectItem value="STAFF">Staff Member</SelectItem>
-            </SelectContent>
-          </Select>
+            <SelectItem value="OWNER">Business Owner</SelectItem>
+            <SelectItem value="STAFF">Staff Member</SelectItem>
+          </ClientSelect>
         </div>
 
         <div className="space-y-2">
