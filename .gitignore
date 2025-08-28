@@ -20,8 +20,10 @@
 
 # Next.js
 /.next/
+.next/
 /out/
 /.swc/
+next-env.d.ts
 
 # Production builds
 /build
@@ -155,3 +157,52 @@ docker-compose*.yml
 # Local development
 .local
 .cache/
+
+# IDE and Editor files
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Runtime and temporary files
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Package manager lock files (keep only one)
+# Uncomment the one you're NOT using:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Environment and secrets
+.env*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+/prisma/dev.db*
+
+# Testing and coverage
+/coverage/
+/.nyc_output/
+/test-results/
+/playwright-report/
+/e2e-results/
+
+# Build artifacts
+/build/
+/dist/
+*.tsbuildinfo
