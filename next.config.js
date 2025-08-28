@@ -3,11 +3,19 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable App Router (default in Next.js 13+)
+  // Experimental features
   experimental: {
     // Enable server actions for form handling
     serverActions: true,
+    // Optimize package imports
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    // External packages for server components
+    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
   },
+
+  // Performance optimizations
+  swcMinify: true,
+  compress: true,
 
   // Enable standalone output for Docker
   output: 'standalone',
@@ -15,6 +23,8 @@ const nextConfig = {
   // Image optimization configuration
   images: {
     domains: ['localhost', 'lumina-staging.up.railway.app', 'uselumina.app'],
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
   },
 
   // Environment variables that should be available on the client
@@ -42,6 +52,14 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
           },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
         ],
       },
     ];
@@ -56,6 +74,20 @@ const nextConfig = {
         permanent: false,
       },
     ];
+  },
+
+  // Webpack configuration
+  webpack: (config, { isServer }) => {
+    // Optimize bundle size
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
   },
 };
 

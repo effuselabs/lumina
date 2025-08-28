@@ -1,0 +1,19 @@
+# Lumina - Salon Management Platform
+# https://uselumina.app
+
+User-agent: *
+Disallow: /api/
+Disallow: /auth/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /dashboard/
+
+# Allow public pages
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /pricing
+Allow: /features
+
+# Sitemap
+Sitemap: https://uselumina.app/sitemap.xml
