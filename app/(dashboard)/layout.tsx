@@ -1,5 +1,4 @@
-import { authConfig } from '@/lib/auth-config';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -10,7 +9,7 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session) {
     redirect('/auth/signin');

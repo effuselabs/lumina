@@ -1,6 +1,5 @@
-import { authConfig } from '@/lib/auth-config';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
 interface DashboardPageProps {
@@ -10,7 +9,7 @@ interface DashboardPageProps {
 }
 
 export default async function DashboardPage({ params }: DashboardPageProps) {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   if (!session) {
     redirect('/auth/signin');

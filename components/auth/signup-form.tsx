@@ -1,21 +1,30 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { z } from 'zod';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { CheckCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { z } from 'zod';
 
 const signUpSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  businessName: z.string().min(2, 'Business name must be at least 2 characters').optional(),
+  businessName: z
+    .string()
+    .min(2, 'Business name must be at least 2 characters')
+    .optional(),
   role: z.enum(['OWNER', 'STAFF']).default('OWNER'),
 });
 
@@ -80,13 +89,15 @@ export function SignUpForm() {
           router.push('/dashboard');
           router.refresh();
         } else {
-          router.push('/auth/signin?message=Registration successful, please sign in');
+          router.push(
+            '/auth/signin?message=Registration successful, please sign in'
+          );
         }
       }, 2000);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors: Record<string, string> = {};
-        error.errors.forEach((err) => {
+        error.errors.forEach(err => {
           if (err.path[0]) {
             fieldErrors[err.path[0] as string] = err.message;
           }
@@ -104,7 +115,7 @@ export function SignUpForm() {
     setIsLoading(true);
     try {
       await signIn('google', { callbackUrl: '/dashboard' });
-    } catch (error) {
+    } catch {
       setGeneralError('Failed to sign in with Google');
       setIsLoading(false);
     }
@@ -130,8 +141,10 @@ export function SignUpForm() {
           <CheckCircle className="h-16 w-16 text-green-500" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-neutral-off-black">Account Created!</h1>
-          <p className="text-neutral-medium-grey mt-2">
+          <h1 className="text-2xl font-bold text-neutral-off-black">
+            Account Created!
+          </h1>
+          <p className="mt-2 text-neutral-medium-grey">
             Welcome to Lumina! Signing you in...
           </p>
         </div>
@@ -145,8 +158,10 @@ export function SignUpForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-neutral-off-black">Create your account</h1>
-        <p className="text-neutral-medium-grey mt-2">
+        <h1 className="text-2xl font-bold text-neutral-off-black">
+          Create your account
+        </h1>
+        <p className="mt-2 text-neutral-medium-grey">
           Get started with Lumina today
         </p>
       </div>
@@ -160,7 +175,11 @@ export function SignUpForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="role">Account Type</Label>
-          <Select value={formData.role} onValueChange={handleRoleChange} disabled={isLoading}>
+          <Select
+            value={formData.role}
+            onValueChange={handleRoleChange}
+            disabled={isLoading}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select account type" />
             </SelectTrigger>
@@ -183,9 +202,7 @@ export function SignUpForm() {
             disabled={isLoading}
             className={errors.name ? 'border-red-500' : ''}
           />
-          {errors.name && (
-            <p className="text-sm text-red-500">{errors.name}</p>
-          )}
+          {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
         </div>
 
         <div className="space-y-2">
@@ -275,7 +292,9 @@ export function SignUpForm() {
           <span className="w-full border-t border-neutral-light-grey" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-neutral-medium-grey">Or continue with</span>
+          <span className="bg-white px-2 text-neutral-medium-grey">
+            Or continue with
+          </span>
         </div>
       </div>
 
@@ -312,10 +331,12 @@ export function SignUpForm() {
       </Button>
 
       <div className="text-center text-sm">
-        <span className="text-neutral-medium-grey">Already have an account? </span>
+        <span className="text-neutral-medium-grey">
+          Already have an account?{' '}
+        </span>
         <a
           href="/auth/signin"
-          className="text-lumina-coral hover:text-lumina-gold font-medium"
+          className="font-medium text-lumina-coral hover:text-lumina-gold"
         >
           Sign in
         </a>

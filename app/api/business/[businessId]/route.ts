@@ -1,7 +1,6 @@
-import { authConfig } from '@/lib/auth-config';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { businessProfileSchema } from '@/lib/validations/business';
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface RouteParams {
@@ -10,9 +9,9 @@ interface RouteParams {
   };
 }
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(_: NextRequest, { params }: RouteParams) {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -67,7 +66,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -91,14 +90,16 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const body = await request.json();
     const validatedData = businessProfileSchema.partial().parse(body);
 
+    // Filter out undefined values to avoid Prisma type issues
+    const updateData = Object.fromEntries(
+      Object.entries(validatedData).filter(([, value]) => value !== undefined)
+    );
+
     const business = await prisma.business.update({
       where: {
         id: params.businessId,
       },
-      data: {
-        ...validatedData,
-        operatingHours: validatedData.operatingHours || undefined,
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ business });
@@ -120,9 +121,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(_: NextRequest, { params }: RouteParams) {
   try {
-    const session = await getServerSession(authConfig);
+    const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

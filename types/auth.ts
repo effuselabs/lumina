@@ -1,6 +1,5 @@
+import type { BusinessRole, UserRole } from '@prisma/client';
 import type { DefaultSession } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
-import type { UserRole, BusinessRole } from '@prisma/client';
 
 // Extend the built-in session types
 declare module 'next-auth' {
@@ -8,7 +7,7 @@ declare module 'next-auth' {
     user: {
       id: string;
       role: UserRole;
-      businesses: Array<{
+      businesses?: Array<{
         id: string;
         businessId: string;
         role: BusinessRole;
@@ -34,9 +33,9 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
   }
 
-  interface User extends DefaultUser {
+  interface User {
     role: UserRole;
-    businesses: Array<{
+    businesses?: Array<{
       id: string;
       businessId: string;
       role: BusinessRole;
@@ -63,9 +62,9 @@ declare module 'next-auth' {
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT extends DefaultJWT {
+  interface JWT {
     role: UserRole;
-    businesses: Array<{
+    businesses?: Array<{
       id: string;
       businessId: string;
       role: BusinessRole;
@@ -123,7 +122,7 @@ export interface BusinessInviteData {
 }
 
 // Permission types
-export type PermissionAction = 
+export type PermissionAction =
   | 'canManageBusiness'
   | 'canManageStaff'
   | 'canManageServices'
@@ -172,7 +171,8 @@ export const signUpSchema = {
   name: 'string().min(2, "Name must be at least 2 characters")',
   email: 'string().email("Invalid email address")',
   password: 'string().min(8, "Password must be at least 8 characters")',
-  businessName: 'string().min(2, "Business name must be at least 2 characters").optional()',
+  businessName:
+    'string().min(2, "Business name must be at least 2 characters").optional()',
 };
 
 export const signInSchema = {

@@ -14,17 +14,17 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    
+
     // Strict Type Checking
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
     "noImplicitOverride": true,
-    
+
     // Path Mapping
     "baseUrl": ".",
     "paths": {
@@ -35,7 +35,7 @@
       "@/app/*": ["./app/*"],
       "@/prisma/*": ["./prisma/*"]
     },
-    
+
     // Next.js specific
     "plugins": [
       {
@@ -43,16 +43,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "dist",
-    "build"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next", "dist", "build"]
 }

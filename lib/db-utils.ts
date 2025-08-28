@@ -1,18 +1,20 @@
 import { prisma } from './prisma';
-import type { 
-  BusinessWithRelations, 
-  StaffWithRelations, 
+import type {
   AppointmentWithRelations,
+  BusinessAnalytics,
+  BusinessWithRelations,
   FinancialSummary,
   StaffPerformance,
-  BusinessAnalytics 
+  StaffWithRelations,
 } from '@/types/database';
 
 // ============================================================================
 // BUSINESS UTILITIES
 // ============================================================================
 
-export async function getBusinessWithRelations(businessId: string): Promise<BusinessWithRelations | null> {
+export async function getBusinessWithRelations(
+  businessId: string
+): Promise<BusinessWithRelations | null> {
   return prisma.business.findUnique({
     where: { id: businessId },
     include: {
@@ -37,7 +39,9 @@ export async function getBusinessWithRelations(businessId: string): Promise<Busi
   });
 }
 
-export async function getBusinessBySlug(slug: string): Promise<BusinessWithRelations | null> {
+export async function getBusinessBySlug(
+  slug: string
+): Promise<BusinessWithRelations | null> {
   return prisma.business.findUnique({
     where: { slug },
     include: {
@@ -66,7 +70,9 @@ export async function getBusinessBySlug(slug: string): Promise<BusinessWithRelat
 // STAFF UTILITIES
 // ============================================================================
 
-export async function getStaffWithRelations(staffId: string): Promise<StaffWithRelations | null> {
+export async function getStaffWithRelations(
+  staffId: string
+): Promise<StaffWithRelations | null> {
   return prisma.staff.findUnique({
     where: { id: staffId },
     include: {
@@ -91,7 +97,9 @@ export async function getStaffWithRelations(staffId: string): Promise<StaffWithR
   });
 }
 
-export async function getStaffByUserId(userId: string): Promise<StaffWithRelations | null> {
+export async function getStaffByUserId(
+  userId: string
+): Promise<StaffWithRelations | null> {
   return prisma.staff.findUnique({
     where: { userId },
     include: {
@@ -120,7 +128,9 @@ export async function getStaffByUserId(userId: string): Promise<StaffWithRelatio
 // APPOINTMENT UTILITIES
 // ============================================================================
 
-export async function getAppointmentWithRelations(appointmentId: string): Promise<AppointmentWithRelations | null> {
+export async function getAppointmentWithRelations(
+  appointmentId: string
+): Promise<AppointmentWithRelations | null> {
   return prisma.appointment.findUnique({
     where: { id: appointmentId },
     include: {
@@ -146,7 +156,7 @@ export async function getBusinessAppointments(
   endDate?: Date
 ): Promise<AppointmentWithRelations[]> {
   const where: any = { businessId };
-  
+
   if (startDate || endDate) {
     where.startTime = {};
     if (startDate) where.startTime.gte = startDate;
@@ -204,7 +214,8 @@ export async function getFinancialSummary(
     .reduce((sum, t) => sum + Number(t.amount), 0);
 
   const totalTransactions = transactions.length;
-  const averageTicket = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+  const averageTicket =
+    totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
 
   return {
     totalRevenue,
@@ -257,22 +268,28 @@ export async function getStaffPerformance(
     .reduce((sum, t) => sum + Number(t.amount), 0);
 
   const totalAppointments = appointments.length;
-  const averageTicket = totalAppointments > 0 ? totalRevenue / totalAppointments : 0;
+  const averageTicket =
+    totalAppointments > 0 ? totalRevenue / totalAppointments : 0;
 
   // Calculate client retention rate (simplified)
-  const uniqueClients = new Set(appointments.map(a => a.clientId).filter(Boolean));
+  const uniqueClients = new Set(
+    appointments.map(a => a.clientId).filter(Boolean)
+  );
   const returningClients = new Set();
-  
+
   for (const clientId of uniqueClients) {
-    const clientAppointments = appointments.filter(a => a.clientId === clientId);
+    const clientAppointments = appointments.filter(
+      a => a.clientId === clientId
+    );
     if (clientAppointments.length > 1) {
       returningClients.add(clientId);
     }
   }
 
-  const clientRetentionRate = uniqueClients.size > 0 
-    ? (returningClients.size / uniqueClients.size) * 100 
-    : 0;
+  const clientRetentionRate =
+    uniqueClients.size > 0
+      ? (returningClients.size / uniqueClients.size) * 100
+      : 0;
 
   return {
     staffId,
@@ -356,14 +373,17 @@ export async function getBusinessAnalytics(
   );
 
   // Get top services
-  const serviceStats = new Map<string, { name: string; bookings: number; revenue: number }>();
-  
+  const serviceStats = new Map<
+    string,
+    { name: string; bookings: number; revenue: number }
+  >();
+
   appointments.forEach(appointment => {
     appointment.services.forEach(appointmentService => {
       const serviceId = appointmentService.serviceId;
       const serviceName = appointmentService.serviceName;
       const revenue = Number(appointmentService.price);
-      
+
       if (serviceStats.has(serviceId)) {
         const stats = serviceStats.get(serviceId)!;
         stats.bookings += 1;
@@ -420,10 +440,7 @@ export async function checkStaffAvailability(
           ],
         },
         {
-          AND: [
-            { startTime: { lt: endTime } },
-            { endTime: { gte: endTime } },
-          ],
+          AND: [{ startTime: { lt: endTime } }, { endTime: { gte: endTime } }],
         },
         {
           AND: [

@@ -1,104 +1,81 @@
-import { withAuth } from 'next-auth/middleware';
+import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
-export default withAuth(
-  function middleware(req: NextRequest) {
-    const token = req.nextauth.token;
-    const { pathname } = req.nextUrl;
+export default auth(req => {
+  const { pathname } = req.nextUrl;
+  const session = req.auth;
 
-    // Public routes that don't require authentication
-    const publicRoutes = [
-      '/',
-      '/auth/signin',
-      '/auth/signup',
-      '/auth/error',
-      '/auth/verify-request',
-      '/api/auth',
-      '/api/health',
-    ];
+  // Public routes that don't require authentication
+  const publicRoutes = [
+    '/',
+    '/auth/signin',
+    '/auth/signup',
+    '/auth/error',
+    '/auth/verify-request',
+    '/api/auth',
+    '/api/health',
+  ];
 
-    // Check if the route is public
-    const isPublicRoute = publicRoutes.some(route => 
-      pathname.startsWith(route) || pathname === route
-    );
+  // Check if the route is public
+  const isPublicRoute = publicRoutes.some(
+    route => pathname.startsWith(route) || pathname === route
+  );
 
-    // Allow public routes
-    if (isPublicRoute) {
-      return NextResponse.next();
-    }
+  // Allow public routes
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
 
-    // Redirect to signin if not authenticated
-    if (!token) {
-      const signInUrl = new URL('/auth/signin', req.url);
-      signInUrl.searchParams.set('callbackUrl', pathname);
-      return NextResponse.redirect(signInUrl);
-    }
+  // Redirect to signin if not authenticated
+  if (!session?.user) {
+    const signInUrl = new URL('/auth/signin', req.url);
+    signInUrl.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(signInUrl);
+  }
 
-    // Business-specific route protection
-    if (pathname.startsWith('/dashboard/')) {
-      const pathSegments = pathname.split('/');
-      const businessSlug = pathSegments[2];
+  // Business-specific route protection
+  if (pathname.startsWith('/dashboard/')) {
+    const pathSegments = pathname.split('/');
+    const businessSlug = pathSegments[2];
 
-      if (businessSlug && token.businesses) {
-        // Check if user has access to this business
-        const hasBusinessAccess = token.businesses.some(
-          (business: any) => business.business.slug === businessSlug
-        );
+    if (businessSlug && (session.user as any).businesses) {
+      // Check if user has access to this business
+      const hasBusinessAccess = (session.user as any).businesses.some(
+        (business: any) => business.business.slug === businessSlug
+      );
 
-        if (!hasBusinessAccess) {
-          return NextResponse.redirect(new URL('/unauthorized', req.url));
-        }
-      }
-    }
-
-    // Admin routes protection
-    if (pathname.startsWith('/admin')) {
-      const allowedRoles = ['SUPER_ADMIN', 'ADMIN'];
-      if (!allowedRoles.includes(token.role as string)) {
+      if (!hasBusinessAccess) {
         return NextResponse.redirect(new URL('/unauthorized', req.url));
       }
     }
+  }
 
-    // Owner-only routes protection
-    if (pathname.includes('/settings') || pathname.includes('/manage')) {
-      const pathSegments = pathname.split('/');
-      const businessSlug = pathSegments[2];
+  // Admin routes protection
+  if (pathname.startsWith('/admin')) {
+    const allowedRoles = ['SUPER_ADMIN', 'ADMIN'];
+    if (!allowedRoles.includes(session.user.role)) {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
+    }
+  }
 
-      if (businessSlug && token.businesses) {
-        const businessUser = token.businesses.find(
-          (business: any) => business.business.slug === businessSlug
-        );
+  // Owner-only routes protection
+  if (pathname.includes('/settings') || pathname.includes('/manage')) {
+    const pathSegments = pathname.split('/');
+    const businessSlug = pathSegments[2];
 
-        if (!businessUser || !['OWNER', 'MANAGER'].includes(businessUser.role)) {
-          return NextResponse.redirect(new URL('/unauthorized', req.url));
-        }
+    if (businessSlug && (session.user as any).businesses) {
+      const businessUser = (session.user as any).businesses.find(
+        (business: any) => business.business.slug === businessSlug
+      );
+
+      if (!businessUser || !['OWNER', 'MANAGER'].includes(businessUser.role)) {
+        return NextResponse.redirect(new URL('/unauthorized', req.url));
       }
     }
-
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        const { pathname } = req.nextUrl;
-
-        // Always allow access to auth pages and API routes
-        if (
-          pathname.startsWith('/auth/') ||
-          pathname.startsWith('/api/auth/') ||
-          pathname.startsWith('/api/health') ||
-          pathname === '/'
-        ) {
-          return true;
-        }
-
-        // Require token for all other routes
-        return !!token;
-      },
-    },
   }
-);
+
+  return NextResponse.next();
+});
 
 export const config = {
   matcher: [

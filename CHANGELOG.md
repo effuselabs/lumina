@@ -8,17 +8,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Business onboarding system (in development)
+
 - Service management CRUD operations (planned)
 - Client data import system (planned)
 
 ### Changed
+
 - Updated documentation structure and cross-references
 - Improved README with current project status
+
+## [0.3.0] - 2025-08-28
+
+### Added
+
+- **Complete Business Onboarding System**
+  - 5-step onboarding wizard with progress tracking
+  - Business profile creation and management
+  - Financial model configuration (commission, chair rental, hourly, hybrid)
+  - Operating hours configuration with default schedules
+  - Business settings management with booking preferences
+  - Comprehensive form validation with Zod schemas
+
+### Fixed
+
+- **Development Environment Configuration**
+  - Resolved TypeScript configuration issues with strict mode
+  - Fixed NextAuth.js v5 type conflicts and adapter issues
+  - Corrected VS Code extension configuration and formatter setup
+  - Fixed Radix UI Select component rendering issues
+  - Resolved middleware authentication type conflicts
+  - Updated Prisma client type handling for optional properties
+
+### Changed
+
+- **Development Workflow Optimization**
+  - Established CLI-first approach for linting, formatting, and testing
+  - Configured essential VS Code extensions for productivity
+  - Updated TypeScript configuration for better development experience
+  - Improved error handling and type safety across authentication system
+
+### Technical Details
+
+#### Business Onboarding System
+
+- **Multi-step Wizard**: 5 comprehensive steps with validation
+- **Progress Tracking**: Visual progress indicators and step completion
+- **Form Validation**: Zod schemas with real-time error feedback
+- **Data Persistence**: Secure business profile creation with user association
+- **Financial Models**: Support for all salon business models
+
+#### Development Environment
+
+- **TypeScript**: Optimized configuration for development speed
+- **VS Code**: Essential extensions configured (Tailwind, Prisma, Auto Rename Tag, Path IntelliSense)
+- **CLI Tools**: Reliable formatting, linting, and testing via npm scripts
+- **Error Resolution**: Fixed 42+ TypeScript compilation errors
 
 ## [0.2.0] - 2025-01-27
 
 ### Added
+
 - **UI Design System and Component Library**
   - Tailwind CSS configured with Lumina brand colors and typography
   - Base component library (buttons, forms, modals, navigation)
@@ -42,18 +91,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical Details
 
 #### UI Design System
+
 - **Brand Colors**: Lumina Radiant Gradient (#FFD25A to #FF7A5A), Deep Teal (#0B2B33)
 - **Typography**: Inter font with defined weight hierarchy
 - **Components**: Reusable UI components with accessibility compliance
 - **Responsive Design**: Mobile-first approach with Tailwind breakpoints
 
 #### CI/CD Pipeline
+
 - **Environments**: Development, Staging, Production, Preview
 - **Automation**: Automated testing, building, and deployment
 - **Monitoring**: Health checks, error tracking, performance monitoring
 - **Security**: Environment variable management, secure deployments
 
 #### Testing Framework
+
 - **Unit Testing**: Jest with React Testing Library
 - **E2E Testing**: Playwright with cross-browser support
 - **Coverage**: 80%+ code coverage target with quality gates
@@ -62,6 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-01-12
 
 ### Added
+
 - **Project Foundation**
   - Next.js 14 with App Router and TypeScript
   - Docker containerization with multi-stage builds
@@ -110,6 +163,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical Details
 
 #### Database Schema
+
 - **Users & Authentication**: User, Account, Session, VerificationToken
 - **Business Management**: Business, BusinessUser with multi-tenancy
 - **Staff Management**: Staff with commission/rental configurations
@@ -119,6 +173,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Financial System**: Transaction with commission tracking
 
 #### Security Features
+
 - bcrypt password hashing (12 rounds)
 - JWT tokens with secure configuration
 - CSRF protection built-in
@@ -127,6 +182,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Secure HTTP-only cookies
 
 #### Development Infrastructure
+
 - Multi-stage Docker builds for optimization
 - PostgreSQL and Redis containers
 - Prisma Studio for database management
@@ -134,6 +190,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-commit hooks for code quality
 
 ### Demo Data
+
 - **Lumina Demo Salon** business with realistic configuration
 - **3 Demo Users**: Business owner, hair stylist, nail technician
 - **7 Services**: Hair cuts, color, nails, beauty services
@@ -141,6 +198,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Sample Appointments** for testing booking flows
 
 ### Development Standards
+
 - TypeScript strict mode enabled
 - ESLint with React and TypeScript rules
 - Prettier code formatting
@@ -151,6 +209,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.1] - 2025-01-10
 
 ### Added
+
 - Initial project setup
 - Repository structure
 - Basic Next.js configuration
@@ -165,6 +224,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This release establishes the complete foundation for the Lumina platform. The authentication system, database architecture, and development environment are production-ready and provide a solid base for feature development.
 
 **Key Achievements:**
+
 - ✅ Multi-tenant authentication system
 - ✅ Comprehensive database schema
 - ✅ Docker development environment
@@ -172,23 +232,28 @@ This release establishes the complete foundation for the Lumina platform. The au
 - ✅ Demo data and documentation
 
 **Next Steps:**
+
 - UI Design System implementation
 - CI/CD pipeline setup
 - Testing framework configuration
 - Core business features development
 
 ### Breaking Changes
+
 - None (initial release)
 
 ### Migration Guide
+
 - None (initial release)
 
 ### Known Issues
+
 - Google OAuth requires environment configuration
 - Email functionality requires SMTP setup
 - Production deployment requires environment-specific configuration
 
 ### Contributors
+
 - Jeremy Shields (@jshields-ca) - Lead Developer
 - Effuse Labs - Project Sponsor
 
@@ -203,11 +268,14 @@ We use [Semantic Versioning](https://semver.org/) with the following approach:
 - **PATCH** version for backwards-compatible bug fixes
 
 ### Pre-1.0 Development
+
 During pre-1.0 development (current phase):
+
 - **0.x.0** for significant feature milestones
 - **0.x.y** for bug fixes and minor improvements
 
 ### Release Schedule
+
 - **Foundation Phase**: 0.1.x - Core infrastructure
 - **MVP Phase**: 0.2.x to 0.9.x - Core business features
 - **Production Release**: 1.0.0 - Full MVP with production deployment

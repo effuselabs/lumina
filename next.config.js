@@ -5,8 +5,6 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const nextConfig = {
   // Experimental features
   experimental: {
-    // Enable server actions for form handling
-    serverActions: true,
     // Optimize package imports
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
     // External packages for server components

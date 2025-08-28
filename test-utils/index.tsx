@@ -1,6 +1,6 @@
-import { render, RenderOptions } from '@testing-library/react';
-import { ReactElement, ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RenderOptions, render } from '@testing-library/react';
+import { ReactElement, ReactNode } from 'react';
 
 // Mock session data
 export const mockSession = {
@@ -21,7 +21,6 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 
 function AllTheProviders({
   children,
-  session = null,
   queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -31,26 +30,20 @@ function AllTheProviders({
   }),
 }: {
   children: ReactNode;
-  session?: typeof mockSession | null;
   queryClient?: QueryClient;
 }) {
   return (
-    <QueryClientProvider client= { queryClient } >
-    { children }
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
 
-const customRender = (
-  ui: ReactElement,
-  options: CustomRenderOptions = {}
-) => {
+const customRender = (ui: ReactElement, options: CustomRenderOptions = {}) => {
   const { session, queryClient, ...renderOptions } = options;
 
   return render(ui, {
     wrapper: ({ children }: { children: ReactNode }) => (
-      <AllTheProviders session= { session } queryClient={ queryClient } >
-      { children }
+      <AllTheProviders session={session} queryClient={queryClient}>
+        {children}
       </AllTheProviders>
     ),
     ...renderOptions,
@@ -63,7 +56,7 @@ export { customRender as render };
 
 // Custom matchers and utilities
 export const waitForLoadingToFinish = () =>
-  new Promise((resolve) => setTimeout(resolve, 0));
+  new Promise(resolve => setTimeout(resolve, 0));
 
 // Mock API response helper
 export const mockApiResponse = (data: any, status = 200) => ({
@@ -122,7 +115,10 @@ export const createMockPrismaClient = () => ({
 });
 
 // Form testing helpers
-export const fillForm = async (form: HTMLFormElement, data: Record<string, string>) => {
+export const fillForm = async (
+  form: HTMLFormElement,
+  data: Record<string, string>
+) => {
   const { fireEvent } = await import('@testing-library/react');
 
   Object.entries(data).forEach(([name, value]) => {

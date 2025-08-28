@@ -1,11 +1,10 @@
-import { authConfig } from '@/lib/auth-config';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function HomePage() {
-  const session = await getServerSession(authConfig);
+  const session = await auth();
 
   // If user is authenticated, check if they have a business
   if (session?.user?.id) {

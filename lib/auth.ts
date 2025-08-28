@@ -1,19 +1,18 @@
-import { getServerSession } from 'next-auth/next';
-import { redirect } from 'next/navigation';
-import { authConfig } from './auth-config';
-import { prisma } from './prisma';
-import type { UserRole, BusinessRole } from '@prisma/client';
+import { auth } from '@/auth';
 import type { UserWithRelations } from '@/types/database';
+import type { BusinessRole, UserRole } from '@prisma/client';
+import { redirect } from 'next/navigation';
+import { prisma } from './prisma';
 
 // Get the current session
 export async function getSession() {
-  return await getServerSession(authConfig);
+  return await auth();
 }
 
 // Get the current user with full relations
 export async function getCurrentUser(): Promise<UserWithRelations | null> {
   const session = await getSession();
-  
+
   if (!session?.user?.id) {
     return null;
   }
@@ -45,35 +44,38 @@ export async function getCurrentUser(): Promise<UserWithRelations | null> {
 // Require authentication - redirect to login if not authenticated
 export async function requireAuth() {
   const session = await getSession();
-  
+
   if (!session?.user) {
     redirect('/auth/signin');
   }
-  
+
   return session;
 }
 
 // Require specific role
 export async function requireRole(allowedRoles: UserRole[]) {
   const session = await requireAuth();
-  
-  if (!allowedRoles.includes(session.user.role)) {
+
+  if (!allowedRoles.includes(session.user.role as UserRole)) {
     redirect('/unauthorized');
   }
-  
+
   return session;
 }
 
 // Check if user has access to a business
-export async function requireBusinessAccess(businessId: string, allowedRoles?: BusinessRole[]) {
+export async function requireBusinessAccess(
+  businessId: string,
+  allowedRoles?: BusinessRole[]
+) {
   const user = await getCurrentUser();
-  
+
   if (!user) {
     redirect('/auth/signin');
   }
 
   const businessUser = user.businesses.find(bu => bu.businessId === businessId);
-  
+
   if (!businessUser) {
     redirect('/unauthorized');
   }
@@ -98,7 +100,7 @@ export async function requireBusinessManager(businessId: string) {
 // Get user's businesses
 export async function getUserBusinesses() {
   const user = await getCurrentUser();
-  
+
   if (!user) {
     return [];
   }
@@ -119,22 +121,31 @@ export async function getPrimaryBusiness() {
 export const permissions = {
   // Business management
   canManageBusiness: (userRole: BusinessRole) => ['OWNER'].includes(userRole),
-  canManageStaff: (userRole: BusinessRole) => ['OWNER', 'MANAGER'].includes(userRole),
-  canManageServices: (userRole: BusinessRole) => ['OWNER', 'MANAGER'].includes(userRole),
-  canManageClients: (userRole: BusinessRole) => ['OWNER', 'MANAGER', 'STAFF'].includes(userRole),
-  
+  canManageStaff: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER'].includes(userRole),
+  canManageServices: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER'].includes(userRole),
+  canManageClients: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER', 'STAFF'].includes(userRole),
+
   // Appointment management
-  canCreateAppointments: (userRole: BusinessRole) => ['OWNER', 'MANAGER', 'STAFF'].includes(userRole),
-  canModifyAppointments: (userRole: BusinessRole) => ['OWNER', 'MANAGER'].includes(userRole),
-  canViewAllAppointments: (userRole: BusinessRole) => ['OWNER', 'MANAGER'].includes(userRole),
-  
+  canCreateAppointments: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER', 'STAFF'].includes(userRole),
+  canModifyAppointments: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER'].includes(userRole),
+  canViewAllAppointments: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER'].includes(userRole),
+
   // Financial access
-  canViewFinancials: (userRole: BusinessRole) => ['OWNER', 'MANAGER'].includes(userRole),
-  canProcessPayments: (userRole: BusinessRole) => ['OWNER', 'MANAGER', 'STAFF'].includes(userRole),
-  
+  canViewFinancials: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER'].includes(userRole),
+  canProcessPayments: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER', 'STAFF'].includes(userRole),
+
   // Settings and configuration
   canManageSettings: (userRole: BusinessRole) => ['OWNER'].includes(userRole),
-  canManageIntegrations: (userRole: BusinessRole) => ['OWNER', 'MANAGER'].includes(userRole),
+  canManageIntegrations: (userRole: BusinessRole) =>
+    ['OWNER', 'MANAGER'].includes(userRole),
 };
 
 // Utility function to check if user can perform an action
@@ -172,9 +183,15 @@ export function hasRole(session: any, roles: UserRole[]): boolean {
   return session?.user?.role && roles.includes(session.user.role);
 }
 
-export function hasBusinessRole(session: any, businessId: string, roles: BusinessRole[]): boolean {
+export function hasBusinessRole(
+  session: any,
+  businessId: string,
+  roles: BusinessRole[]
+): boolean {
   if (!session?.user?.businesses) return false;
-  
-  const businessUser = session.user.businesses.find((bu: any) => bu.businessId === businessId);
+
+  const businessUser = session.user.businesses.find(
+    (bu: any) => bu.businessId === businessId
+  );
   return businessUser && roles.includes(businessUser.role);
 }

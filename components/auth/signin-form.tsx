@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn, getSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { z } from 'zod';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { getSession, signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { z } from 'zod';
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -57,7 +57,7 @@ export function SignInForm() {
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors: Record<string, string> = {};
-        error.errors.forEach((err) => {
+        error.errors.forEach(err => {
           if (err.path[0]) {
             fieldErrors[err.path[0] as string] = err.message;
           }
@@ -75,7 +75,7 @@ export function SignInForm() {
     setIsLoading(true);
     try {
       await signIn('google', { callbackUrl });
-    } catch (error) {
+    } catch {
       setGeneralError('Failed to sign in with Google');
       setIsLoading(false);
     }
@@ -93,8 +93,10 @@ export function SignInForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-neutral-off-black">Welcome back</h1>
-        <p className="text-neutral-medium-grey mt-2">
+        <h1 className="text-2xl font-bold text-neutral-off-black">
+          Welcome back
+        </h1>
+        <p className="mt-2 text-neutral-medium-grey">
           Sign in to your Lumina account
         </p>
       </div>
@@ -171,7 +173,9 @@ export function SignInForm() {
           <span className="w-full border-t border-neutral-light-grey" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-neutral-medium-grey">Or continue with</span>
+          <span className="bg-white px-2 text-neutral-medium-grey">
+            Or continue with
+          </span>
         </div>
       </div>
 
@@ -208,10 +212,12 @@ export function SignInForm() {
       </Button>
 
       <div className="text-center text-sm">
-        <span className="text-neutral-medium-grey">Don't have an account? </span>
+        <span className="text-neutral-medium-grey">
+          Don&apos;t have an account?{' '}
+        </span>
         <a
           href="/auth/signup"
-          className="text-lumina-coral hover:text-lumina-gold font-medium"
+          className="font-medium text-lumina-coral hover:text-lumina-gold"
         >
           Sign up
         </a>
