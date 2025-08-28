@@ -1,6 +1,35 @@
+import { authConfig } from '@/lib/auth-config';
+import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await getServerSession(authConfig);
+
+  // If user is authenticated, check if they have a business
+  if (session?.user?.id) {
+    const userBusiness = await prisma.businessUser.findFirst({
+      where: {
+        userId: session.user.id,
+      },
+      include: {
+        business: {
+          select: {
+            slug: true,
+          },
+        },
+      },
+    });
+
+    if (userBusiness) {
+      // User has a business, redirect to dashboard
+      redirect(`/dashboard/${userBusiness.business.slug}`);
+    } else {
+      // User doesn't have a business, redirect to onboarding
+      redirect('/onboarding');
+    }
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-16">
@@ -23,8 +52,8 @@ export default function HomePage() {
           {/* CTA Buttons */}
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link
-              href="/auth/register"
-              className="lumina-gradient inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium text-white shadow-lg transition-all hover:shadow-xl hover:scale-105"
+              href="/auth/signup"
+              className="lumina-gradient inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
               Get Started Free
             </Link>
