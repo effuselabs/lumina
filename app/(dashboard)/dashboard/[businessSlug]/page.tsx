@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
