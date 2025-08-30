@@ -199,8 +199,8 @@ export class HybridModelPerformanceMonitor {
      */
     private checkPerformanceThresholds(
         executionTime: number,
-        success: boolean,
-        validationResult: boolean
+        _success: boolean,
+        _validationResult: boolean
     ): void {
         // Check execution time threshold
         if (executionTime > this.performanceThresholds.maxCalculationTime) {

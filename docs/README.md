@@ -13,6 +13,12 @@ Welcome to the Lumina documentation hub. This directory contains comprehensive d
 - **[Testing Guide](TESTING.md)** - Testing framework, best practices, and usage
 - **[Deployment Guide](DEPLOYMENT.md)** - CI/CD pipeline and deployment processes
 
+### Workflow Automation
+- **[Agent Hook Workflows](AGENT_HOOK_WORKFLOWS.md)** - Complete documentation sync and compliance automation
+- **[Hybrid Business Model Guide](HYBRID_BUSINESS_MODEL_GUIDE.md)** - Implementation guide for commission, chair rental, and hybrid employment models
+- **[Linear Integration Training](LINEAR_INTEGRATION_TRAINING.md)** - Training materials for enhanced Linear project management
+- **[Workflow Troubleshooting Guide](WORKFLOW_TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting for workflow automation
+
 ### Project Management
 - **[Development Plan](DEVELOPMENT_PLAN.md)** - Technical architecture and development roadmap
 - **[Brand Guidelines](LUMINA_PRODUCT_STYLEGUIDE.md)** - Design system and UI guidelines
@@ -39,6 +45,10 @@ Lumina is built as a modern, scalable SaaS platform with the following key compo
 - UI design system with Lumina branding
 - CI/CD pipeline with automated deployment
 - Testing framework with comprehensive coverage
+- **Workflow integration system** with Agent Hooks for documentation sync and steering compliance
+- **Documentation audit** with comprehensive steering system integration
+- **Hybrid employment model** database architecture and financial calculation engine
+- **Production deployment infrastructure** with zero-downtime migration support
 
 ### 🚧 In Development
 - Business onboarding and profile management

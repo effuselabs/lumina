@@ -94,9 +94,9 @@ async function executeDocumentationAuditHook(context: AgentHookContext): Promise
 }
 
 // Mock documentation audit function
-async function performDocumentationAudit(workspaceRoot: string): Promise<DocumentationAuditResult> {
+async function performDocumentationAudit(): Promise<DocumentationAuditResult> {
     // Mock file discovery
-    const allFiles = mockGlob.mockResolvedValue([
+    mockGlob.mockResolvedValue([
         'components/ui/button.tsx',
         'components/ui/input.tsx',
         'components/forms/contact-form.tsx',

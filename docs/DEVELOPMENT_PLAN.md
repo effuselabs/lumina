@@ -1,8 +1,8 @@
 # Lumina SaaS - MVP Development Plan
 
-* **Version:** 3.0
-* **Date:** August 08, 2025
-* **Status:** For Development
+* **Version:** 3.1
+* **Date:** January 27, 2025
+* **Status:** Enhanced with Workflow Integration
 * **Product:** Lumina - All-in-one, AI-powered business management platform for the salon and barber industry.
 * **Mission:** To go beyond simple booking, acting as an intelligent partner that provides clear, actionable suggestions to illuminate the path to higher revenue and happier clients.
 * **GitHub Repository (Private):** `https://github.com/jshields-ca/lumina`

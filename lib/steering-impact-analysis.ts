@@ -58,7 +58,7 @@ interface ComplianceCheck {
 }
 
 // Schema for parsing steering file frontmatter
-const SteeringFrontmatterSchema = z.object({
+const _SteeringFrontmatterSchema = z.object({
     inclusion: z.enum(['always', 'fileMatch', 'manual']).default('always'),
     fileMatchPattern: z.array(z.string()).optional()
 });

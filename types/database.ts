@@ -193,7 +193,9 @@ export interface WorkingHours {
 }
 
 // Operating hours structure for business
-export interface OperatingHours extends WorkingHours { }
+export interface OperatingHours extends WorkingHours {
+  // Inherits all fields from WorkingHours
+}
 
 // Appointment booking data
 export interface AppointmentBookingData {
