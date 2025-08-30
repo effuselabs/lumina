@@ -11,7 +11,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { BusinessBasicInfo, businessBasicInfoSchema } from '@/lib/validations/business';
+import {
+  BusinessBasicInfo,
+  businessBasicInfoSchema,
+} from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -125,8 +128,20 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
                 <FormControl>
                   <Input
                     type="url"
-                    placeholder="https://www.yourbusiness.com"
+                    placeholder="www.yourbusiness.com"
                     {...field}
+                    onChange={e => {
+                      let value = e.target.value;
+                      // Auto-add https:// if user enters domain without protocol
+                      if (
+                        value &&
+                        !value.startsWith('http://') &&
+                        !value.startsWith('https://')
+                      ) {
+                        value = `https://${value}`;
+                      }
+                      field.onChange(value);
+                    }}
                     className="focus:ring-2 focus:ring-orange-500"
                   />
                 </FormControl>

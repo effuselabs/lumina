@@ -10,9 +10,46 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { BusinessAddress, businessAddressSchema } from '@/lib/validations/business';
+import {
+  BusinessAddress,
+  businessAddressSchema,
+} from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@radix-ui/react-select';
 import { useForm } from 'react-hook-form';
+
+const countries = [
+  {
+    code: 'US',
+    name: 'United States',
+    stateLabel: 'State',
+    postalLabel: 'ZIP Code',
+  },
+  {
+    code: 'CA',
+    name: 'Canada',
+    stateLabel: 'Province',
+    postalLabel: 'Postal Code',
+  },
+  {
+    code: 'GB',
+    name: 'United Kingdom',
+    stateLabel: 'County',
+    postalLabel: 'Postal Code',
+  },
+  {
+    code: 'AU',
+    name: 'Australia',
+    stateLabel: 'State',
+    postalLabel: 'Postal Code',
+  },
+];
 
 interface AddressStepProps {
   data: Partial<BusinessAddress>;
@@ -33,6 +70,10 @@ export function AddressStep({ data, onNext, onPrevious }: AddressStepProps) {
     },
   });
 
+  const selectedCountry = form.watch('country');
+  const countryInfo =
+    countries.find(c => c.code === selectedCountry) || countries[0];
+
   const handleSubmit = (formData: BusinessAddress) => {
     onNext(formData);
   };
@@ -41,6 +82,34 @@ export function AddressStep({ data, onNext, onPrevious }: AddressStepProps) {
     <div className="mx-auto max-w-2xl">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Country *</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="focus:ring-2 focus:ring-orange-500">
+                      <SelectValue placeholder="Select a country" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {countries.map(country => (
+                      <SelectItem key={country.code} value={country.code}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="address"
@@ -68,7 +137,9 @@ export function AddressStep({ data, onNext, onPrevious }: AddressStepProps) {
                   <FormLabel>City *</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="New York"
+                      placeholder={
+                        selectedCountry === 'CA' ? 'Toronto' : 'New York'
+                      }
                       {...field}
                       className="focus:ring-2 focus:ring-orange-500"
                     />
@@ -83,10 +154,16 @@ export function AddressStep({ data, onNext, onPrevious }: AddressStepProps) {
               name="state"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>State *</FormLabel>
+                  <FormLabel>{countryInfo.stateLabel} *</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="NY"
+                      placeholder={
+                        selectedCountry === 'CA'
+                          ? 'ON'
+                          : selectedCountry === 'GB'
+                            ? 'London'
+                            : 'NY'
+                      }
                       {...field}
                       className="focus:ring-2 focus:ring-orange-500"
                     />
@@ -102,10 +179,16 @@ export function AddressStep({ data, onNext, onPrevious }: AddressStepProps) {
             name="zipCode"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ZIP Code *</FormLabel>
+                <FormLabel>{countryInfo.postalLabel} *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="10001"
+                    placeholder={
+                      selectedCountry === 'CA'
+                        ? 'K1A 0A6'
+                        : selectedCountry === 'GB'
+                          ? 'SW1A 1AA'
+                          : '10001'
+                    }
                     {...field}
                     className="focus:ring-2 focus:ring-orange-500"
                   />
@@ -116,11 +199,7 @@ export function AddressStep({ data, onNext, onPrevious }: AddressStepProps) {
           />
 
           <div className="flex justify-between">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onPrevious}
-            >
+            <Button type="button" variant="outline" onClick={onPrevious}>
               Previous
             </Button>
 

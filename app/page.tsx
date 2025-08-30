@@ -1,35 +1,37 @@
-import { auth } from '@/auth';
-import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 export default async function HomePage() {
-  const session = await auth();
-
+  // TEMPORARILY DISABLED FOR TESTING
   // If user is authenticated, check if they have a business
-  if (session?.user?.id) {
-    const userBusiness = await prisma.businessUser.findFirst({
-      where: {
-        userId: session.user.id,
-      },
-      include: {
-        business: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+  // if (session?.user?.id) {
+  //   console.log('Root page - checking businesses for user:', session.user.id); // Debug log
 
-    if (userBusiness) {
-      // User has a business, redirect to dashboard
-      redirect('/dashboard');
-    } else {
-      // User doesn't have a business, redirect to onboarding
-      redirect('/onboarding');
-    }
-  }
+  //   const userBusinesses = await prisma.businessUser.findMany({
+  //     where: {
+  //       userId: session.user.id,
+  //     },
+  //     include: {
+  //       business: {
+  //         select: {
+  //           id: true,
+  //           name: true,
+  //         },
+  //       },
+  //     },
+  //   });
+
+  //   console.log('Root page - found businesses:', userBusinesses.length); // Debug log
+
+  //   if (userBusinesses.length > 0) {
+  //     // User has a business, redirect to dashboard
+  //     console.log('Root page - redirecting to dashboard'); // Debug log
+  //     redirect('/dashboard');
+  //   } else {
+  //     // User doesn't have a business, redirect to onboarding
+  //     console.log('Root page - redirecting to onboarding'); // Debug log
+  //     redirect('/onboarding');
+  //   }
+  // }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-16">

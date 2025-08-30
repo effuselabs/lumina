@@ -23,7 +23,9 @@ export default auth(req => {
 
   // Allow public routes
   if (isPublicRoute) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set('x-pathname', pathname);
+    return response;
   }
 
   // Redirect to signin if not authenticated
@@ -34,15 +36,25 @@ export default auth(req => {
   }
 
   // Protected dashboard routes - user must have at least one business
-  const protectedRoutes = ['/dashboard', '/services', '/clients', '/staff', '/appointments', '/payments', '/settings'];
-  const isProtectedRoute = protectedRoutes.some(route =>
-    pathname === route || pathname.startsWith(route + '/')
+  const protectedRoutes = [
+    '/dashboard',
+    '/services',
+    '/clients',
+    '/staff',
+    '/appointments',
+    '/payments',
+    '/settings',
+  ];
+  const isProtectedRoute = protectedRoutes.some(
+    route => pathname === route || pathname.startsWith(route + '/')
   );
 
   if (isProtectedRoute) {
     // For now, we just ensure the user is authenticated
     // Business access will be checked at the API level
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set('x-pathname', pathname);
+    return response;
   }
 
   // Admin routes protection
@@ -53,10 +65,10 @@ export default auth(req => {
     }
   }
 
-  // Owner-only routes protection will be handled at the API level
-  // since we need to check business context from the database
-
-  return NextResponse.next();
+  // For all other authenticated routes (including onboarding)
+  const response = NextResponse.next();
+  response.headers.set('x-pathname', pathname);
+  return response;
 });
 
 export const config = {

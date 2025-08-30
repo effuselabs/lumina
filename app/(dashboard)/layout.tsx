@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { DashboardNav } from '@/components/dashboard/dashboard-nav';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -17,6 +18,14 @@ export default async function DashboardLayout({
     redirect('/auth/signin');
   }
 
+  // Get the current pathname to determine if we're on onboarding
+  const headersList = headers();
+  const pathname = headersList.get('x-pathname') || '';
+  // For onboarding page, render without dashboard navigation and skip business check
+  if (pathname === '/onboarding') {
+    return <div className="min-h-screen bg-gray-50">{children}</div>;
+  }
+
   // Check if user has completed onboarding (has at least one business)
   const userBusinesses = await prisma.businessUser.findMany({
     where: {
@@ -31,7 +40,6 @@ export default async function DashboardLayout({
   if (userBusinesses.length === 0) {
     redirect('/onboarding');
   }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardNav />
@@ -39,9 +47,7 @@ export default async function DashboardLayout({
       {/* Main content */}
       <div className="lg:pl-72">
         <main className="py-10">
-          <div className="px-4 sm:px-6 lg:px-8">
-            {children}
-          </div>
+          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
     </div>

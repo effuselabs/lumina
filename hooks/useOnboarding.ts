@@ -1,7 +1,6 @@
 'use client';
 
 import type { BusinessProfile } from '@/lib/validations/business';
-import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -32,7 +31,6 @@ const initialState: OnboardingState = {
 
 export function useOnboarding(): UseOnboardingReturn {
   const [state, setState] = useState<OnboardingState>(initialState);
-  const router = useRouter();
 
   const nextStep = useCallback(() => {
     setState(prev => ({
@@ -75,12 +73,12 @@ export function useOnboarding(): UseOnboardingReturn {
         throw new Error(errorData.error || 'Failed to create business');
       }
 
-      const { business } = await response.json();
+      await response.json();
 
       toast.success('Business profile created successfully!');
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Force a hard redirect to ensure the dashboard layout re-evaluates
+      window.location.href = '/dashboard';
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Onboarding error:', error);
@@ -99,7 +97,7 @@ export function useOnboarding(): UseOnboardingReturn {
     } finally {
       setState(prev => ({ ...prev, isLoading: false }));
     }
-  }, [state.data, router]);
+  }, [state.data]);
 
   const resetOnboarding = useCallback(() => {
     setState(initialState);

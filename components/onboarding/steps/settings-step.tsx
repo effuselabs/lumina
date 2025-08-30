@@ -12,7 +12,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { BusinessSettings, businessSettingsSchema } from '@/lib/validations/business';
+import {
+  BusinessSettings,
+  businessSettingsSchema,
+} from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -50,17 +53,22 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
               control={form.control}
               name="bookingEnabled"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Enable Booking System</FormLabel>
-                    <FormDescription>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-white p-4">
+                  <div className="flex-1 space-y-0.5">
+                    <FormLabel className="cursor-pointer text-base font-medium">
+                      Enable Booking System
+                    </FormLabel>
+                    <FormDescription className="text-sm text-gray-600">
                       Allow clients to book appointments through your system
                     </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onCheckedChange={checked => {
+                        field.onChange(checked);
+                      }}
+                      className="data-[state=checked]:bg-orange-500"
                     />
                   </FormControl>
                 </FormItem>
@@ -71,17 +79,22 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
               control={form.control}
               name="onlineBooking"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Online Booking</FormLabel>
-                    <FormDescription>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-white p-4">
+                  <div className="flex-1 space-y-0.5">
+                    <FormLabel className="cursor-pointer text-base font-medium">
+                      Online Booking
+                    </FormLabel>
+                    <FormDescription className="text-sm text-gray-600">
                       Allow clients to book appointments online 24/7
                     </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onCheckedChange={checked => {
+                        field.onChange(checked);
+                      }}
+                      className="data-[state=checked]:bg-orange-500"
                     />
                   </FormControl>
                 </FormItem>
@@ -92,17 +105,22 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
               control={form.control}
               name="requireDeposit"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Require Deposit</FormLabel>
-                    <FormDescription>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-white p-4">
+                  <div className="flex-1 space-y-0.5">
+                    <FormLabel className="cursor-pointer text-base font-medium">
+                      Require Deposit
+                    </FormLabel>
+                    <FormDescription className="text-sm text-gray-600">
                       Require clients to pay a deposit when booking
                     </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onCheckedChange={checked => {
+                        field.onChange(checked);
+                      }}
+                      className="data-[state=checked]:bg-orange-500"
                     />
                   </FormControl>
                 </FormItem>
@@ -123,7 +141,9 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
                         min="0"
                         placeholder="25.00"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={e =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                         className="focus:ring-2 focus:ring-orange-500"
                       />
                     </FormControl>
@@ -154,11 +174,7 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
           />
 
           <div className="flex justify-between">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onPrevious}
-            >
+            <Button type="button" variant="outline" onClick={onPrevious}>
               Previous
             </Button>
 

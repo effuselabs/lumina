@@ -20,8 +20,8 @@ export const businessBasicInfoSchema = z.object({
 export const businessAddressSchema = z.object({
   address: z.string().min(5, 'Please enter a complete address'),
   city: z.string().min(2, 'City is required'),
-  state: z.string().min(2, 'State is required'),
-  zipCode: z.string().min(5, 'Please enter a valid ZIP code'),
+  state: z.string().min(1, 'State/Province is required'),
+  zipCode: z.string().min(3, 'Please enter a valid postal code'),
   country: z.string().default('US'),
   timezone: z.string().default('America/New_York'),
 });
