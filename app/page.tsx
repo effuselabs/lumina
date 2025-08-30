@@ -15,7 +15,8 @@ export default async function HomePage() {
       include: {
         business: {
           select: {
-            slug: true,
+            id: true,
+            name: true,
           },
         },
       },
@@ -23,7 +24,7 @@ export default async function HomePage() {
 
     if (userBusiness) {
       // User has a business, redirect to dashboard
-      redirect(`/dashboard/${userBusiness.business.slug}`);
+      redirect('/dashboard');
     } else {
       // User doesn't have a business, redirect to onboarding
       redirect('/onboarding');

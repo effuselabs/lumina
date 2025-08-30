@@ -80,7 +80,7 @@ export function useOnboarding(): UseOnboardingReturn {
       toast.success('Business profile created successfully!');
 
       // Redirect to dashboard
-      router.push(`/dashboard/${business.slug}`);
+      router.push('/dashboard');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Onboarding error:', error);

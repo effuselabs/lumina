@@ -1,25 +1,24 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import {
-  type BusinessFinancialModel,
-  businessFinancialModelSchema,
-  financialModelDescriptions,
-} from '@/lib/validations/business';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { BusinessFinancialModel, businessFinancialModelSchema, financialModelDescriptions } from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, DollarSign } from 'lucide-react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { StepContainer } from '../step-container';
 
 interface FinancialModelStepProps {
   data: Partial<BusinessFinancialModel>;
@@ -27,151 +26,97 @@ interface FinancialModelStepProps {
   onPrevious: () => void;
 }
 
-type FinancialModelType = keyof typeof financialModelDescriptions;
-
-export function FinancialModelStep({
-  data,
-  onNext,
-  onPrevious,
-}: FinancialModelStepProps) {
-  const [selectedModel, setSelectedModel] = useState<FinancialModelType | null>(
-    (data.financialModel as FinancialModelType) || null
-  );
-
-  const {
-    handleSubmit,
-    setValue,
-    formState: { isValid },
-  } = useForm<BusinessFinancialModel>({
+export function FinancialModelStep({ data, onNext, onPrevious }: FinancialModelStepProps) {
+  const form = useForm<BusinessFinancialModel>({
     resolver: zodResolver(businessFinancialModelSchema),
-    defaultValues: data,
-    mode: 'onChange',
+    defaultValues: {
+      financialModel: data.financialModel || 'COMMISSION',
+      currency: data.currency || 'USD',
+    },
   });
 
-  const handleModelSelect = (model: FinancialModelType) => {
-    setSelectedModel(model);
-    setValue('financialModel', model, { shouldValidate: true });
-  };
-
-  const onSubmit = (formData: BusinessFinancialModel) => {
+  const handleSubmit = (formData: BusinessFinancialModel) => {
     onNext(formData);
   };
 
+  const selectedModel = form.watch('financialModel');
+  const modelInfo = selectedModel ? financialModelDescriptions[selectedModel] : null;
+
   return (
-    <StepContainer
-      title="How do you pay your staff?"
-      description="Choose the financial model that works best for your business. You can change this later."
-      icon={<DollarSign className="h-8 w-8 text-orange-500" />}
-    >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {Object.entries(financialModelDescriptions).map(([key, model]) => {
-            const modelKey = key as FinancialModelType;
-            const isSelected = selectedModel === modelKey;
+    <div className="mx-auto max-w-2xl">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="financialModel"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>How do you pay your staff? *</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="focus:ring-2 focus:ring-orange-500">
+                      <SelectValue placeholder="Select a financial model" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Object.entries(financialModelDescriptions).map(([key, model]) => (
+                      <SelectItem key={key} value={key}>
+                        {model.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            return (
-              <Card
-                key={modelKey}
-                className={cn(
-                  'cursor-pointer transition-all duration-200 hover:shadow-md',
-                  isSelected
-                    ? 'border-orange-500 bg-orange-50 ring-2 ring-orange-500'
-                    : 'border-gray-200 hover:border-gray-300'
-                )}
-                onClick={() => handleModelSelect(modelKey)}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg font-semibold">
-                      {model.title}
-                    </CardTitle>
-                    {isSelected && (
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500">
-                        <Check className="h-4 w-4 text-white" />
-                      </div>
-                    )}
-                  </div>
-                  <CardDescription className="text-sm text-gray-600">
-                    {model.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="rounded-lg bg-gray-50 p-3">
-                    <p className="mb-1 text-sm font-medium text-gray-700">
-                      Example:
-                    </p>
-                    <p className="text-sm text-gray-600">{model.example}</p>
-                  </div>
+          {modelInfo && (
+            <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
+              <h3 className="font-semibold text-orange-900 mb-2">{modelInfo.title}</h3>
+              <p className="text-orange-800 mb-3">{modelInfo.description}</p>
+              <p className="text-sm text-orange-700 mb-3 italic">{modelInfo.example}</p>
 
-                  <div className="space-y-2">
-                    <div>
-                      <p className="mb-1 text-sm font-medium text-green-700">
-                        Pros:
-                      </p>
-                      <ul className="space-y-1 text-xs text-green-600">
-                        {model.pros.map((pro, index) => (
-                          <li key={index} className="flex items-start gap-1">
-                            <span className="mt-0.5 text-green-500">•</span>
-                            {pro}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-medium text-orange-900 mb-1">Pros:</h4>
+                  <ul className="text-sm text-orange-700 space-y-1">
+                    {modelInfo.pros.map((pro, index) => (
+                      <li key={index}>• {pro}</li>
+                    ))}
+                  </ul>
+                </div>
 
-                    <div>
-                      <p className="mb-1 text-sm font-medium text-amber-700">
-                        Considerations:
-                      </p>
-                      <ul className="space-y-1 text-xs text-amber-600">
-                        {model.cons.map((con, index) => (
-                          <li key={index} className="flex items-start gap-1">
-                            <span className="mt-0.5 text-amber-500">•</span>
-                            {con}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                <div>
+                  <h4 className="font-medium text-orange-900 mb-1">Cons:</h4>
+                  <ul className="text-sm text-orange-700 space-y-1">
+                    {modelInfo.cons.map((con, index) => (
+                      <li key={index}>• {con}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
 
-                  {/* Popular badge for commission model */}
-                  {modelKey === 'COMMISSION' && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-orange-100 text-orange-800"
-                    >
-                      Most Popular
-                    </Badge>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+          <div className="flex justify-between">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onPrevious}
+            >
+              Previous
+            </Button>
 
-        {selectedModel && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <p className="text-sm text-blue-800">
-              <strong>Good choice!</strong> You&apos;ve selected the{' '}
-              {financialModelDescriptions[selectedModel].title} model. You can
-              configure specific rates and details after completing the setup.
-            </p>
+            <Button
+              type="submit"
+              className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
+            >
+              Continue
+            </Button>
           </div>
-        )}
-
-        {/* Navigation */}
-        <div className="flex justify-between pt-4">
-          <Button type="button" variant="outline" onClick={onPrevious}>
-            Previous
-          </Button>
-          <Button
-            type="submit"
-            disabled={!isValid || !selectedModel}
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
-          >
-            Continue
-          </Button>
-        </div>
-      </form>
-    </StepContainer>
+        </form>
+      </Form>
+    </div>
   );
 }

@@ -1,4 +1,6 @@
 import { auth } from '@/auth';
+import { DashboardNav } from '@/components/dashboard/dashboard-nav';
+import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -30,5 +32,18 @@ export default async function DashboardLayout({
     redirect('/onboarding');
   }
 
-  return <div className="min-h-screen bg-gray-50">{children}</div>;
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <DashboardNav />
+
+      {/* Main content */}
+      <div className="lg:pl-72">
+        <main className="py-10">
+          <div className="px-4 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
 }
