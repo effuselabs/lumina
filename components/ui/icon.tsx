@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { type VariantProps, cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { type VariantProps, cva } from 'class-variance-authority';
+import type { LucideIcon } from 'lucide-react';
 import {
   // Common icons for Lumina (alphabetically sorted)
   AlertCircle,
@@ -42,7 +42,7 @@ import {
   X,
   XCircle,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import * as React from 'react';
 
 const iconVariants = cva('', {
   variants: {
@@ -71,7 +71,7 @@ const iconVariants = cva('', {
 });
 
 export interface IconProps
-  extends React.HTMLAttributes<SVGElement>,
+  extends Omit<React.HTMLAttributes<SVGElement>, 'color'>,
     VariantProps<typeof iconVariants> {
   icon: LucideIcon;
 }

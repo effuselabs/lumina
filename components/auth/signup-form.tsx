@@ -126,8 +126,10 @@ export function SignUpForm() {
     }
   };
 
-  const handleRoleChange = (value: 'OWNER' | 'STAFF') => {
-    setFormData(prev => ({ ...prev, role: value }));
+  const handleRoleChange = (value: string) => {
+    if (value === 'OWNER' || value === 'STAFF') {
+      setFormData(prev => ({ ...prev, role: value }));
+    }
   };
 
   if (success) {

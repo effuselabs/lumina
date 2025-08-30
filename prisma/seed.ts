@@ -52,7 +52,8 @@ async function main() {
     create: {
       name: 'Lumina Demo Salon',
       slug: 'lumina-demo-salon',
-      description: 'A modern full-service salon offering cutting-edge hair, nail, and beauty services.',
+      description:
+        'A modern full-service salon offering cutting-edge hair, nail, and beauty services.',
       email: 'hello@lumina-demo.com',
       phone: '(555) 123-4567',
       website: 'https://lumina-demo.com',
@@ -140,7 +141,7 @@ async function main() {
       displayName: 'Mike Rodriguez',
       title: 'Senior Hair Stylist',
       bio: 'Specializing in modern cuts and color with 8+ years of experience.',
-      commissionRate: 60.00,
+      commissionRate: 60.0,
       isActive: true,
       acceptsOnlineBookings: true,
       workingHours: {
@@ -164,7 +165,7 @@ async function main() {
       displayName: 'Emma Chen',
       title: 'Nail Technician & Colorist',
       bio: 'Expert in nail art and advanced color techniques.',
-      commissionRate: 55.00,
+      commissionRate: 55.0,
       isActive: true,
       acceptsOnlineBookings: true,
       workingHours: {
@@ -187,70 +188,74 @@ async function main() {
       name: 'Haircut & Style',
       description: 'Professional haircut with wash and style',
       category: 'Hair',
-      price: 65.00,
+      price: 65.0,
       duration: 60,
     },
     {
       name: 'Hair Color',
       description: 'Full hair coloring service',
       category: 'Hair',
-      price: 120.00,
+      price: 120.0,
       duration: 120,
     },
     {
       name: 'Highlights',
       description: 'Partial or full highlights',
       category: 'Hair',
-      price: 95.00,
+      price: 95.0,
       duration: 90,
     },
     {
       name: 'Manicure',
       description: 'Classic manicure with polish',
       category: 'Nails',
-      price: 35.00,
+      price: 35.0,
       duration: 45,
     },
     {
       name: 'Pedicure',
       description: 'Relaxing pedicure with polish',
       category: 'Nails',
-      price: 45.00,
+      price: 45.0,
       duration: 60,
     },
     {
       name: 'Gel Manicure',
       description: 'Long-lasting gel manicure',
       category: 'Nails',
-      price: 50.00,
+      price: 50.0,
       duration: 60,
     },
     {
       name: 'Eyebrow Shaping',
       description: 'Professional eyebrow shaping and trimming',
       category: 'Beauty',
-      price: 25.00,
+      price: 25.0,
       duration: 30,
     },
   ];
 
   const createdServices = [];
   for (const serviceData of services) {
-    const service = await prisma.service.upsert({
+    // Check if service already exists
+    let service = await prisma.service.findFirst({
       where: {
-        businessId_name: {
-          businessId: demoBusiness.id,
-          name: serviceData.name,
-        },
-      },
-      update: {},
-      create: {
-        ...serviceData,
         businessId: demoBusiness.id,
-        isActive: true,
-        isOnline: true,
+        name: serviceData.name,
       },
     });
+
+    if (!service) {
+      service = await prisma.service.create({
+        data: {
+          ...serviceData,
+          businessId: demoBusiness.id,
+          isActive: true,
+          isOnline: true,
+        },
+      });
+    }
+
     createdServices.push(service);
   }
 
@@ -281,8 +286,12 @@ async function main() {
   // Emma does nails and color services
   const colorService = createdServices.find(s => s.name === 'Hair Color');
   const highlightsService = createdServices.find(s => s.name === 'Highlights');
-  
-  for (const service of [...nailServices, colorService, highlightsService].filter(Boolean)) {
+
+  for (const service of [
+    ...nailServices,
+    colorService,
+    highlightsService,
+  ].filter(Boolean)) {
     await prisma.staffService.upsert({
       where: {
         staffId_serviceId: {
@@ -354,7 +363,7 @@ async function main() {
   const now = new Date();
   const tomorrow = new Date(now);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  
+
   const nextWeek = new Date(now);
   nextWeek.setDate(nextWeek.getDate() + 7);
 
@@ -379,7 +388,7 @@ async function main() {
 
   for (const appointmentData of appointments) {
     const { serviceIds, ...appointmentInfo } = appointmentData;
-    
+
     const appointment = await prisma.appointment.create({
       data: {
         ...appointmentInfo,
@@ -415,7 +424,7 @@ main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error('❌ Seed failed:', e);
     await prisma.$disconnect();
     process.exit(1);

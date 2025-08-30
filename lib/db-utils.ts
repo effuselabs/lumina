@@ -1,4 +1,3 @@
-import { prisma } from './prisma';
 import type {
   AppointmentWithRelations,
   BusinessAnalytics,
@@ -7,6 +6,7 @@ import type {
   StaffPerformance,
   StaffWithRelations,
 } from '@/types/database';
+import { prisma } from './prisma';
 
 // ============================================================================
 // BUSINESS UTILITIES
@@ -31,6 +31,7 @@ export async function getBusinessWithRelations(
               service: true,
             },
           },
+          paymentCalculations: true,
         },
       },
       services: true,
@@ -58,6 +59,7 @@ export async function getBusinessBySlug(
               service: true,
             },
           },
+          paymentCalculations: true,
         },
       },
       services: true,
@@ -93,6 +95,7 @@ export async function getStaffWithRelations(
           },
         },
       },
+      paymentCalculations: true,
     },
   });
 }
@@ -120,6 +123,7 @@ export async function getStaffByUserId(
           },
         },
       },
+      paymentCalculations: true,
     },
   });
 }
@@ -366,6 +370,10 @@ export async function getBusinessAnalytics(
   // Get staff performance
   const staff = await prisma.staff.findMany({
     where: { businessId },
+    select: {
+      id: true,
+      employmentType: true,
+    },
   });
 
   const staffPerformance = await Promise.all(
@@ -408,12 +416,20 @@ export async function getBusinessAnalytics(
     .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 10);
 
+  // Get employment type statistics
+  const employmentTypes = {
+    commission: staff.filter(s => s.employmentType === 'COMMISSION').length,
+    chairRental: staff.filter(s => s.employmentType === 'CHAIR_RENTAL').length,
+    hybrid: staff.filter(s => s.employmentType === 'HYBRID').length,
+  };
+
   return {
     revenue,
     appointments: appointmentStats,
     clients: clientStats,
     staff: staffPerformance,
     topServices,
+    employmentTypes,
   };
 }
 

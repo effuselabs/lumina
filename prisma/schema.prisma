@@ -177,8 +177,8 @@ model Staff {
   hourlyRate        Decimal?       @db.Decimal(10, 2) // For hourly staff (legacy)
 
   // Employment Period
-  startDate Date  @default(now())
-  endDate   Date? // For terminated staff
+  startDate DateTime  @default(now())
+  endDate   DateTime? // For terminated staff
 
   // Availability Settings
   isActive              Boolean @default(true)
@@ -422,8 +422,8 @@ model PaymentCalculation {
   staffId    String
 
   // Calculation Period
-  calculationPeriodStart Date
-  calculationPeriodEnd   Date
+  calculationPeriodStart DateTime
+  calculationPeriodEnd   DateTime
 
   // Employment Details
   employmentType EmploymentType

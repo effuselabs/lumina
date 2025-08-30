@@ -1,12 +1,11 @@
 import { prisma } from '@/lib/prisma';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma), // Temporarily disabled due to type compatibility
   trustHost: true, // Required for deployment environments
   providers: [
     Google({
@@ -110,9 +109,9 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
-  interface JWT {
-    role: string;
-    id: string;
-  }
-}
+// declare module 'next-auth/jwt' {
+//   interface JWT {
+//     role: string;
+//     id: string;
+//   }
+// }

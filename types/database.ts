@@ -41,6 +41,7 @@ export type BusinessWithRelations = Prisma.BusinessGetPayload<{
             service: true;
           };
         };
+        paymentCalculations: true;
       };
     };
     services: true;
@@ -140,40 +141,89 @@ export type TransactionWithRelations = Prisma.TransactionGetPayload<{
 }>;
 
 // Payment calculation with relations
-export type PaymentCalculationWithRelations = Prisma.PaymentCalculationGetPayload<{
-  include: {
-    staff: {
-      include: {
-        user: true;
+export type PaymentCalculationWithRelations =
+  Prisma.PaymentCalculationGetPayload<{
+    include: {
+      staff: {
+        include: {
+          user: true;
+        };
       };
+      business: true;
     };
-    business: true;
-  };
-}>;
+  }>;
 
 // ============================================================================
 // UTILITY TYPES
 // ============================================================================
 
 // Create types (without id, createdAt, updatedAt)
-export type CreateUser = Omit<Prisma.UserCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type CreateBusiness = Omit<Prisma.BusinessCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type CreateStaff = Omit<Prisma.StaffCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type CreateService = Omit<Prisma.ServiceCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type CreateClient = Omit<Prisma.ClientCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type CreateAppointment = Omit<Prisma.AppointmentCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type CreateTransaction = Omit<Prisma.TransactionCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type CreatePaymentCalculation = Omit<Prisma.PaymentCalculationCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateUser = Omit<
+  Prisma.UserCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type CreateBusiness = Omit<
+  Prisma.BusinessCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type CreateStaff = Omit<
+  Prisma.StaffCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type CreateService = Omit<
+  Prisma.ServiceCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type CreateClient = Omit<
+  Prisma.ClientCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type CreateAppointment = Omit<
+  Prisma.AppointmentCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type CreateTransaction = Omit<
+  Prisma.TransactionCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type CreatePaymentCalculation = Omit<
+  Prisma.PaymentCalculationCreateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
 
 // Update types (without id, createdAt, updatedAt)
-export type UpdateUser = Omit<Prisma.UserUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateBusiness = Omit<Prisma.BusinessUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateStaff = Omit<Prisma.StaffUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateService = Omit<Prisma.ServiceUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateClient = Omit<Prisma.ClientUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateAppointment = Omit<Prisma.AppointmentUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateTransaction = Omit<Prisma.TransactionUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdatePaymentCalculation = Omit<Prisma.PaymentCalculationUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateUser = Omit<
+  Prisma.UserUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type UpdateBusiness = Omit<
+  Prisma.BusinessUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type UpdateStaff = Omit<
+  Prisma.StaffUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type UpdateService = Omit<
+  Prisma.ServiceUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type UpdateClient = Omit<
+  Prisma.ClientUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type UpdateAppointment = Omit<
+  Prisma.AppointmentUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type UpdateTransaction = Omit<
+  Prisma.TransactionUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type UpdatePaymentCalculation = Omit<
+  Prisma.PaymentCalculationUpdateInput,
+  'id' | 'createdAt' | 'updatedAt'
+>;
 
 // ============================================================================
 // BUSINESS LOGIC TYPES

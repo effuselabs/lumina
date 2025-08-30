@@ -10,7 +10,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { BusinessOperatingHours, businessOperatingHoursSchema, defaultOperatingHours } from '@/lib/validations/business';
+import {
+  BusinessOperatingHours,
+  businessOperatingHoursSchema,
+  defaultOperatingHours,
+} from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -30,7 +34,11 @@ const daysOfWeek = [
   { key: 'sunday', label: 'Sunday' },
 ];
 
-export function OperatingHoursStep({ data, onNext, onPrevious }: OperatingHoursStepProps) {
+export function OperatingHoursStep({
+  data,
+  onNext,
+  onPrevious,
+}: OperatingHoursStepProps) {
   const form = useForm<BusinessOperatingHours>({
     resolver: zodResolver(businessOperatingHoursSchema),
     defaultValues: {
@@ -49,16 +57,20 @@ export function OperatingHoursStep({ data, onNext, onPrevious }: OperatingHoursS
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">Set Your Operating Hours</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Set Your Operating Hours
+            </h3>
             <p className="text-gray-600">
-              Configure when your business is open for appointments. You can always change these later.
+              Configure when your business is open for appointments. You can
+              always change these later.
             </p>
 
-            {daysOfWeek.map((day) => {
-              const dayHours = operatingHours[day.key];
+            {daysOfWeek.map(day => {
+              const dayHours =
+                operatingHours[day.key as keyof typeof operatingHours];
               return (
                 <div key={day.key} className="rounded-lg border p-4">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="mb-3 flex items-center justify-between">
                     <FormLabel className="text-base font-medium">
                       {day.label}
                     </FormLabel>
@@ -102,7 +114,9 @@ export function OperatingHoursStep({ data, onNext, onPrevious }: OperatingHoursS
                         name={`operatingHours.${day.key}.closeTime` as any}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm">Close Time</FormLabel>
+                            <FormLabel className="text-sm">
+                              Close Time
+                            </FormLabel>
                             <FormControl>
                               <Input
                                 type="time"
@@ -125,11 +139,7 @@ export function OperatingHoursStep({ data, onNext, onPrevious }: OperatingHoursS
           </div>
 
           <div className="flex justify-between">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onPrevious}
-            >
+            <Button type="button" variant="outline" onClick={onPrevious}>
               Previous
             </Button>
 
