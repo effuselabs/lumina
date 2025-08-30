@@ -54,25 +54,12 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">
-                {business.name}
-              </h1>
-              <span className="ml-3 rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-800">
-                {userRole}
-              </span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                Welcome back, {session.user.name}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <DashboardHeader
+        businessName={business.name}
+        userRole={userRole}
+        userName={session.user.name || 'User'}
+        businessSlug={params.businessSlug}
+      />
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

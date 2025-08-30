@@ -39,15 +39,15 @@ export interface DocumentationComplianceReport {
 
 // Validation schemas
 // Validation schema for workflow metrics (currently unused but available for future validation)
-const WorkflowMetricsSchema = z.object({
-    agentHookExecutions: z.number().min(0),
-    successfulExecutions: z.number().min(0),
-    failedExecutions: z.number().min(0),
-    documentationSyncEvents: z.number().min(0),
-    steeringComplianceChecks: z.number().min(0),
-    linearSyncEvents: z.number().min(0),
-    averageExecutionTime: z.number().min(0),
-    lastExecutionTime: z.date(),
+// const WorkflowMetricsSchema = z.object({
+//     agentHookExecutions: z.number().min(0),
+//     successfulExecutions: z.number().min(0),
+//     failedExecutions: z.number().min(0),
+//     documentationSyncEvents: z.number().min(0),
+//     steeringComplianceChecks: z.number().min(0),
+//     linearSyncEvents: z.number().min(0),
+//     averageExecutionTime: z.number().min(0),
+//     lastExecutionTime: z.date(),
 });
 
 const WorkflowAlertSchema = z.object({

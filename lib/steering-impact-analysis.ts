@@ -10,7 +10,6 @@
 
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { z } from 'zod';
 
 // Types for steering file analysis
 interface SteeringFile {
@@ -59,10 +58,10 @@ interface ComplianceCheck {
 
 // Schema for parsing steering file frontmatter
 // Validation schema for steering frontmatter (currently unused but available for future validation)
-const SteeringFrontmatterSchema = z.object({
-    inclusion: z.enum(['always', 'fileMatch', 'manual']).default('always'),
-    fileMatchPattern: z.array(z.string()).optional()
-});
+// const SteeringFrontmatterSchema = z.object({
+//     inclusion: z.enum(['always', 'fileMatch', 'manual']).default('always'),
+//     fileMatchPattern: z.array(z.string()).optional()
+// });
 
 export class SteeringImpactAnalyzer {
     private steeringFiles: SteeringFile[] = [];

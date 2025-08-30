@@ -77,6 +77,10 @@ const config: Config = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
         // Lumina Functional UI Colors (per style guide)
         success: {
           DEFAULT: '#22C58B', // Success Green per Lumina brand
