@@ -81,7 +81,8 @@ export function SignUpForm() {
         });
 
         if (signInResult?.ok) {
-          router.push('/dashboard');
+          // Redirect to onboarding for new users
+          router.push('/onboarding');
           router.refresh();
         } else {
           router.push(
@@ -109,7 +110,7 @@ export function SignUpForm() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      await signIn('google', { callbackUrl: '/dashboard' });
+      await signIn('google', { callbackUrl: '/onboarding' });
     } catch {
       setGeneralError('Failed to sign in with Google');
       setIsLoading(false);
