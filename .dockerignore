@@ -97,8 +97,13 @@ tsconfig.json
 # Sentry
 .sentryclirc
 
-# Kiro IDE
+# Kiro IDE - exclude all Kiro files from Docker builds
 .kiro/
+
+# Generated reports
+steering-impact-report.md
+*-impact-report.md
+*-analysis-report.md
 
 # Cache directories
 .cache/
@@ -113,5 +118,8 @@ temp/
 # Husky
 .husky/
 
-# Railway
-railway.json
+# Railway - keep railway.json for deployment config
+# railway.json
+
+# Scripts directory - exclude development scripts
+scripts/

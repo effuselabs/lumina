@@ -110,7 +110,7 @@ export class HybridModelPerformanceMonitor {
             this.recordCalculationMetrics(calculationType, success, executionTime);
 
             // Check performance thresholds
-            this.checkPerformanceThresholds(executionTime, success, validationResult);
+            this.checkPerformanceThresholds(executionTime);
         }
     }
 
@@ -198,9 +198,7 @@ export class HybridModelPerformanceMonitor {
      * Check performance thresholds and create alerts
      */
     private checkPerformanceThresholds(
-        executionTime: number,
-        _success: boolean,
-        _validationResult: boolean
+        executionTime: number
     ): void {
         // Check execution time threshold
         if (executionTime > this.performanceThresholds.maxCalculationTime) {

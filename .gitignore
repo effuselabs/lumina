@@ -145,14 +145,16 @@ next-env.d.ts
 # Prisma
 /prisma/migrations/migration_lock.toml
 
-# Docker
-.dockerignore
-Dockerfile*
-docker-compose*.yml
+# Docker - remove these lines as we want to track Docker files
 
-# Kiro IDE
+# Kiro IDE - only ignore cache and temp, keep specs/steering/hooks
 .kiro/cache/
 .kiro/temp/
+
+# Generated reports and analysis files
+steering-impact-report.md
+*-impact-report.md
+*-analysis-report.md
 
 # Local development
 .local
@@ -176,11 +178,9 @@ docker-compose*.yml
 .DS_Store
 Thumbs.db
 
-# Package manager lock files (keep only one)
-# Uncomment the one you're NOT using:
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
+# Package manager lock files - keep package-lock.json, ignore others
+yarn.lock
+pnpm-lock.yaml
 
 # Environment and secrets
 .env*
