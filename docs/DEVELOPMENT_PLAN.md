@@ -115,7 +115,7 @@ The typography system is designed for clarity and a clean, modern feel.
 * **Task 4:** Set up automated email confirmations for new bookings.
 
 ### Sprint 3: Staff & Client Management (CRM)
-* **Task 1:** Build the "Staff" page with an email invitation system.
+* **Task 1:** Build the "Staff" page with an email invitation system and hybrid employment model configuration (commission, chair rental, hybrid arrangements).
 * **Task 2:** Create the "Clients" page with a searchable list of all clients.
 * **Task 3:** Develop the "Client Detail" view showing contact info and appointment history.
 
@@ -124,7 +124,7 @@ The typography system is designed for clarity and a clean, modern feel.
 * **Task 2:** Integrate with Stripe API for payment processing.
 * **Task 3:** Implement logic to record Lumina-native transactions.
 * **Task 4:** Design data models to accommodate external POS transaction data.
-* **Task 5:** Develop the backend logic to calculate staff commission.
+* **Task 5:** Develop the backend logic to calculate staff earnings for all employment models (commission, chair rental, hybrid arrangements).
 
 ### Sprint 5: Dashboard & MVP Polish
 * **Task 1:** Build the UI for the main Lumina Dashboard page, using the Lumina Radiant Gradient for primary actions.

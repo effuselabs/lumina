@@ -40,6 +40,7 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 ### ✅ Recently Completed
 
 - **Business Onboarding System** - Complete 5-step wizard with financial model configuration
+- **Hybrid Employment Model** - Database architecture and financial calculation engine for commission, chair rental, and hybrid staff arrangements
 - **Development Environment** - Optimized TypeScript config and VS Code setup
 - **Authentication Flow** - Full signup → onboarding → dashboard workflow
 
@@ -47,6 +48,7 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 - **Service Management** - CRUD operations for salon services and pricing
 - **Client Data Import** - CSV import system for existing client databases
+- **Hybrid Employment UI** - User interface components for managing mixed employment types
 
 ### 📋 Planned Features
 
@@ -54,9 +56,9 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 - **Smart Booking System** - Public booking interface with real-time availability
 - **Client Management** - Comprehensive CRM with appointment history and preferences
-- **Staff Management** - Commission tracking and performance insights
+- **Staff Management** - Hybrid employment model support with commission, chair rental, and mixed arrangements
 - **Point of Sale** - Integrated POS with payment processing and receipt generation
-- **Financial Reporting** - Revenue analytics, commission calculations, and tax reporting
+- **Financial Reporting** - Revenue analytics with employment type breakdowns, commission calculations, and tax reporting
 - **Business Dashboard** - Real-time insights and performance metrics
 
 #### 🚀 Post-MVP Features
@@ -83,28 +85,38 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 ## 🏗 Architecture
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Public Web    │    │   Dashboard     │    │   Admin Panel   │
-│   (Booking)     │    │   (Business)    │    │   (Management)  │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │
-         ┌─────────────────────────────────────────────────────┐
-         │                 Next.js API                         │
-         │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐   │
-         │  │    Auth     │ │   Booking   │ │  Payments   │   │
-         │  │   Service   │ │   Engine    │ │   (Stripe)  │   │
-         │  └─────────────┘ └─────────────┘ └─────────────┘   │
-         └─────────────────────────────────────────────────────┘
-                                 │
-         ┌─────────────────────────────────────────────────────┐
-         │              PostgreSQL Database                    │
-         │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-         │  │  Users  │ │ Clients │ │  Staff  │ │Bookings │   │
-         │  └─────────┘ └─────────┘ └─────────┘ └─────────┘   │
-         └─────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph "Frontend Applications"
+        PW[Public Web<br/>Booking]
+        DB[Dashboard<br/>Business]
+        AP[Admin Panel<br/>Management]
+    end
+    
+    subgraph "Next.js API Layer"
+        AS[Auth Service]
+        BE[Booking Engine]
+        PS[Payments<br/>Stripe]
+    end
+    
+    subgraph "PostgreSQL Database"
+        U[Users]
+        C[Clients]
+        S[Staff]
+        B[Bookings]
+    end
+    
+    PW --> AS
+    DB --> AS
+    AP --> AS
+    
+    AS --> U
+    BE --> B
+    BE --> S
+    PS --> B
+    
+    B --> C
+    B --> S
 ```
 
 ## 🚀 Getting Started
@@ -146,18 +158,18 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 After seeding the database, you can use these demo accounts:
 
-```
+```yaml
 Business Owner:
-Email: owner@lumina-demo.com
-Password: demo123
+  Email: owner@lumina-demo.com
+  Password: demo123
 
 Senior Hair Stylist:
-Email: mike@lumina-demo.com
-Password: demo123
+  Email: mike@lumina-demo.com
+  Password: demo123
 
 Nail Technician & Colorist:
-Email: emma@lumina-demo.com
-Password: demo123
+  Email: emma@lumina-demo.com
+  Password: demo123
 ```
 
 **Demo Business**: Lumina Demo Salon with pre-configured services, clients, and appointments.
@@ -217,6 +229,17 @@ Password: demo123
 - **[Authentication System](docs/AUTHENTICATION.md)** - Multi-tenant auth system
 - **[Brand Guidelines](docs/LUMINA_PRODUCT_STYLEGUIDE.md)** - Design system and UI
 - **[Changelog](CHANGELOG.md)** - Version history and release notes
+
+### 🎯 AI-Powered Development Guidance
+
+Lumina includes a comprehensive **Steering System** that provides context-aware development guidance:
+
+- **Automatic Application**: Coding standards and security guidelines are automatically applied based on file types
+- **Specialized Guidance**: API, database, UI, and security standards are applied to relevant files
+- **Consistent Patterns**: Ensures all developers follow the same multi-tenant SaaS best practices
+- **Security First**: Built-in security guidelines for authentication, data protection, and PCI compliance
+
+**[📖 Steering System Overview](.kiro/steering/README.md)** - Learn how automated guidance works
 
 ## 🏃‍♂️ Development
 
@@ -359,6 +382,11 @@ We use a **Feature Branch Workflow** for all development. Please follow our [Git
 - **Reviews**: All changes require code review before merging
 
 📖 **See [Git Workflow Guide](docs/GIT_WORKFLOW.md) for complete development process**
+
+### See Also
+- **[Steering System](/.kiro/steering/README.md)** - Automated development guidance
+- **[Security Guidelines](/.kiro/steering/security.md)** - Multi-tenant security standards
+- **[API Standards](/.kiro/steering/api-standards.md)** - RESTful API design patterns
 
 ## 📝 License
 

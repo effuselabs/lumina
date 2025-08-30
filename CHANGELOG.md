@@ -9,13 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Hybrid Employment Model Database Architecture**
+  - Enhanced staff table with employment type enumeration (commission, chair rental, hybrid)
+  - Payment calculations table for tracking different employment arrangements
+  - Comprehensive financial calculation engine supporting all employment models
+  - Employment type validation and transition workflows
+  - Business retention calculations for mixed employment types
+
 - Service management CRUD operations (planned)
 - Client data import system (planned)
+- Hybrid employment UI components (planned)
 
 ### Changed
 
 - Updated documentation structure and cross-references
-- Improved README with current project status
+- Improved README with current project status and hybrid business model support
+- Enhanced Linear project issues to reflect hybrid employment model capabilities
 
 ## [0.3.0] - 2025-08-28
 

@@ -122,6 +122,7 @@ After seeding the database, you can use these demo accounts to explore the appli
 - Sample clients with contact information
 - Upcoming appointments for testing
 - Staff schedules and availability patterns
+- Hybrid employment model examples (commission, chair rental, hybrid arrangements)
 
 ## Environment Variables
 
@@ -174,13 +175,25 @@ Pre-commit hooks are automatically set up with Husky to:
 - Perform TypeScript type checking
 - Ensure code quality before commits
 
+## 🎯 AI-Powered Development Guidance
+
+Lumina includes an intelligent **Steering System** that automatically provides context-aware development guidance:
+
+- **Automatic Application**: Coding standards are applied based on the files you're working on
+- **Security Guidelines**: API routes and auth files get security-focused guidance
+- **Multi-Tenant Patterns**: Database files get multi-tenant architecture guidance
+- **UI Standards**: React components get design system and accessibility guidance
+
+**No setup required** - the steering system works automatically when you start coding!
+
 ## Next Steps
 
 After setting up the development environment:
 
-1. Review the [Git Workflow Guide](./GIT_WORKFLOW.md) for branching strategy
-2. Check the [Authentication Documentation](./AUTHENTICATION.md) for auth system details
-3. Read the [Testing Guide](./TESTING.md) for testing framework usage
-4. Explore the [Brand Guidelines](./LUMINA_PRODUCT_STYLEGUIDE.md) for design system
-5. Review the [Development Plan](./DEVELOPMENT_PLAN.md) for project roadmap
-6. Check the [Changelog](../CHANGELOG.md) for recent updates
+1. **[📖 Steering System Overview](../.kiro/steering/README.md)** - Learn about automated development guidance
+2. Review the [Git Workflow Guide](./GIT_WORKFLOW.md) for branching strategy
+3. Check the [Authentication Documentation](./AUTHENTICATION.md) for auth system details
+4. Read the [Testing Guide](./TESTING.md) for testing framework usage
+5. Explore the [Brand Guidelines](./LUMINA_PRODUCT_STYLEGUIDE.md) for design system
+6. Review the [Development Plan](./DEVELOPMENT_PLAN.md) for project roadmap
+7. Check the [Changelog](../CHANGELOG.md) for recent updates

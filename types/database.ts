@@ -68,6 +68,20 @@ export type StaffWithRelations = Prisma.StaffGetPayload<{
         };
       };
     };
+    paymentCalculations: true;
+  };
+}>;
+
+// Staff with payment calculations
+export type StaffWithPaymentCalculations = Prisma.StaffGetPayload<{
+  include: {
+    user: true;
+    business: true;
+    paymentCalculations: {
+      orderBy: {
+        calculationPeriodStart: 'desc';
+      };
+    };
   };
 }>;
 
@@ -125,6 +139,18 @@ export type TransactionWithRelations = Prisma.TransactionGetPayload<{
   };
 }>;
 
+// Payment calculation with relations
+export type PaymentCalculationWithRelations = Prisma.PaymentCalculationGetPayload<{
+  include: {
+    staff: {
+      include: {
+        user: true;
+      };
+    };
+    business: true;
+  };
+}>;
+
 // ============================================================================
 // UTILITY TYPES
 // ============================================================================
@@ -137,6 +163,7 @@ export type CreateService = Omit<Prisma.ServiceCreateInput, 'id' | 'createdAt' |
 export type CreateClient = Omit<Prisma.ClientCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
 export type CreateAppointment = Omit<Prisma.AppointmentCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
 export type CreateTransaction = Omit<Prisma.TransactionCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreatePaymentCalculation = Omit<Prisma.PaymentCalculationCreateInput, 'id' | 'createdAt' | 'updatedAt'>;
 
 // Update types (without id, createdAt, updatedAt)
 export type UpdateUser = Omit<Prisma.UserUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
@@ -146,6 +173,7 @@ export type UpdateService = Omit<Prisma.ServiceUpdateInput, 'id' | 'createdAt' |
 export type UpdateClient = Omit<Prisma.ClientUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateAppointment = Omit<Prisma.AppointmentUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateTransaction = Omit<Prisma.TransactionUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdatePaymentCalculation = Omit<Prisma.PaymentCalculationUpdateInput, 'id' | 'createdAt' | 'updatedAt'>;
 
 // ============================================================================
 // BUSINESS LOGIC TYPES
@@ -165,7 +193,7 @@ export interface WorkingHours {
 }
 
 // Operating hours structure for business
-export interface OperatingHours extends WorkingHours {}
+export interface OperatingHours extends WorkingHours { }
 
 // Appointment booking data
 export interface AppointmentBookingData {
@@ -236,4 +264,28 @@ export interface BusinessAnalytics {
     bookings: number;
     revenue: number;
   }>;
+  employmentTypes: {
+    commission: number;
+    chairRental: number;
+    hybrid: number;
+  };
+}
+
+// Enhanced staff performance with employment type
+export interface EnhancedStaffPerformance extends StaffPerformance {
+  employmentType: EmploymentType;
+  commissionRate?: number;
+  chairRentalAmount?: number;
+  chairRentalPeriod?: ChairRentalPeriod;
+  businessRetention: number;
+}
+
+// Employment type summary
+export interface EmploymentTypeSummary {
+  employmentType: EmploymentType;
+  staffCount: number;
+  totalRevenue: number;
+  totalStaffEarnings: number;
+  businessRetention: number;
+  averageEarningsPerStaff: number;
 }

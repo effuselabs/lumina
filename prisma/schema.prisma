@@ -124,12 +124,13 @@ model Business {
   updatedAt DateTime @updatedAt
 
   // Relations
-  users        BusinessUser[]
-  staff        Staff[]
-  services     Service[]
-  clients      Client[]
-  appointments Appointment[]
-  transactions Transaction[]
+  users               BusinessUser[]
+  staff               Staff[]
+  services            Service[]
+  clients             Client[]
+  appointments        Appointment[]
+  transactions        Transaction[]
+  paymentCalculations PaymentCalculation[]
 
   @@map("businesses")
 }
@@ -167,10 +168,17 @@ model Staff {
   bio         String?
   avatar      String?
 
-  // Financial Configuration
-  commissionRate Decimal? @db.Decimal(5, 2) // Percentage (e.g., 50.00 for 50%)
-  chairRental    Decimal? @db.Decimal(10, 2) // Fixed amount
-  hourlyRate     Decimal? @db.Decimal(10, 2) // For hourly staff
+  // Enhanced Employment Configuration
+  employmentType    EmploymentType @default(COMMISSION)
+  commissionRate    Decimal?       @db.Decimal(5, 2) // Percentage (e.g., 50.00 for 50%)
+  chairRentalAmount Decimal?       @db.Decimal(10, 2) // Fixed rental amount
+  chairRentalPeriod RentalPeriod?
+  baseSalary        Decimal?       @db.Decimal(10, 2) // Optional base salary for commission employees
+  hourlyRate        Decimal?       @db.Decimal(10, 2) // For hourly staff (legacy)
+
+  // Employment Period
+  startDate Date  @default(now())
+  endDate   Date? // For terminated staff
 
   // Availability Settings
   isActive              Boolean @default(true)
@@ -184,12 +192,15 @@ model Staff {
   updatedAt DateTime @updatedAt
 
   // Relations
-  business     Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  services     StaffService[]
-  appointments Appointment[]
-  transactions Transaction[]
+  business            Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services            StaffService[]
+  appointments        Appointment[]
+  transactions        Transaction[]
+  paymentCalculations PaymentCalculation[]
 
+  @@index([businessId, employmentType])
+  @@index([businessId, isActive])
   @@map("staff")
 }
 
@@ -375,9 +386,11 @@ model Transaction {
   paymentMethod PaymentMethod?
   paymentId     String? // External payment ID (Stripe, etc.)
 
-  // Commission Calculation
-  commissionRate   Decimal? @db.Decimal(5, 2)
-  commissionAmount Decimal? @db.Decimal(10, 2)
+  // Enhanced Employment Type Support
+  staffEmploymentType   EmploymentType?
+  commissionRate        Decimal?        @db.Decimal(5, 2)
+  commissionAmount      Decimal?        @db.Decimal(10, 2)
+  chairRentalApplicable Boolean         @default(false)
 
   // Metadata
   description String?
@@ -395,7 +408,51 @@ model Transaction {
 
   @@index([businessId, createdAt])
   @@index([staffId, createdAt])
+  @@index([businessId, staffEmploymentType])
   @@map("transactions")
+}
+
+// ============================================================================
+// PAYMENT CALCULATIONS FOR HYBRID MODELS
+// ============================================================================
+
+model PaymentCalculation {
+  id         String @id @default(cuid())
+  businessId String
+  staffId    String
+
+  // Calculation Period
+  calculationPeriodStart Date
+  calculationPeriodEnd   Date
+
+  // Employment Details
+  employmentType EmploymentType
+
+  // Financial Data
+  grossRevenue       Decimal  @default(0) @db.Decimal(10, 2)
+  commissionEarnings Decimal? @db.Decimal(10, 2) // For commission employees
+  chairRentalDue     Decimal? @db.Decimal(10, 2) // For chair rental contractors
+  baseSalaryAmount   Decimal? @db.Decimal(10, 2) // If applicable
+  netEarnings        Decimal  @db.Decimal(10, 2)
+  businessRetention  Decimal  @db.Decimal(10, 2)
+
+  // Processing Status
+  calculationDate DateTime @default(now())
+  processed       Boolean  @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@unique([staffId, calculationPeriodStart, calculationPeriodEnd])
+  @@index([businessId, calculationPeriodStart])
+  @@index([staffId, calculationPeriodStart])
+  @@index([businessId, employmentType])
+  @@map("payment_calculations")
 }
 
 // ============================================================================
@@ -421,6 +478,18 @@ enum FinancialModel {
   CHAIR_RENTAL
   HOURLY
   HYBRID
+}
+
+enum EmploymentType {
+  COMMISSION
+  CHAIR_RENTAL
+  HYBRID
+}
+
+enum RentalPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
 }
 
 enum AppointmentStatus {

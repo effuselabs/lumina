@@ -52,6 +52,25 @@ Lumina is built as a modern, scalable SaaS platform with the following key compo
 - Financial reporting and analytics
 - Staff management and permissions
 
+## 🎯 AI-Powered Development Guidance
+
+Lumina includes a comprehensive **Steering System** that provides automatic, context-aware development guidance:
+
+### How It Works
+- **File Pattern Matching**: Different rules apply automatically based on what you're working on
+- **Security Standards**: Auto-applied to API routes, auth files, and middleware
+- **API Standards**: Auto-applied to all API route files for consistent RESTful design
+- **Database Standards**: Auto-applied to Prisma files for multi-tenant data patterns
+- **UI Standards**: Auto-applied to React components for design system compliance
+
+### Key Benefits
+- **Consistent Code Quality**: All developers follow the same patterns automatically
+- **Security First**: Built-in security guidelines prevent common vulnerabilities
+- **Multi-Tenant Architecture**: Enforces business-scoped data access patterns
+- **Best Practices**: Incorporates industry standards for SaaS development
+
+**[📖 Complete Steering System Guide](../.kiro/steering/README.md)** - Learn how to leverage automated guidance
+
 ## 📚 Documentation Standards
 
 All documentation follows these standards:
@@ -61,15 +80,29 @@ All documentation follows these standards:
 - **Code Examples**: Include practical, working code examples
 - **Up-to-Date**: Documentation is updated with each feature release
 - **Accessibility**: Clear headings and structure for screen readers
+- **Steering Integration**: Technical docs reference appropriate steering files
 
 ## 🔄 Keeping Documentation Current
 
 Documentation is maintained as part of the development process:
 
+### Development Integration
 1. **Feature Development**: Update relevant docs when implementing features
 2. **Code Reviews**: Include documentation updates in pull requests
 3. **Release Process**: Update changelog and version documentation
-4. **Regular Audits**: Quarterly review for accuracy and completeness
+4. **Steering Updates**: Update steering files when patterns change
+
+### Quality Assurance
+- **Link Validation**: Check internal links during PR reviews
+- **Content Accuracy**: Verify technical instructions work as documented
+- **Steering Integration**: Ensure new technical docs reference appropriate steering files
+- **Regular Audits**: Quarterly comprehensive documentation review
+
+### Maintenance Schedule
+- **Weekly**: Review and merge documentation PRs
+- **Monthly**: Check for broken links and outdated content
+- **Quarterly**: Full documentation audit using [audit checklist](../.kiro/specs/documentation-audit-plan/audit-checklist.md)
+- **Release**: Update all version-specific information
 
 ## 🤝 Contributing to Documentation
 
