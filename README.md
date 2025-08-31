@@ -39,6 +39,10 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 ### ✅ Recently Completed
 
+- **Complete Booking Engine Epic (LUM-42)** - Full booking system with public interface, staff availability management, and email notifications
+- **Public Booking Interface (LUM-49)** - Multi-step booking wizard with service selection, date/time picker, and customer forms
+- **Booking Confirmation System (LUM-50)** - Email notifications with React Email templates and booking management interface
+- **Staff Availability Management** - Intelligent time slot calculation with conflict detection and recurring patterns
 - **Complete Business Management Epic (LUM-41)** - All core business management features implemented and operational
 - **Business Onboarding System (LUM-47)** - Complete 5-step wizard with financial model configuration, website URL validation, and country-specific address forms
 - **Service Management CRUD System (LUM-48)** - Full service creation, editing, listing with search/filter capabilities and business scoping
@@ -54,16 +58,16 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 ### 🚧 Next Up
 
-- **Booking Engine Core Functionality** - Staff availability management and time slot calculation engine
-- **Service Management** - CRUD operations for salon services and pricing (foundation complete)
-- **Client Data Import** - CSV import system for existing client databases (foundation complete)
-- **Hybrid Employment UI** - User interface components for managing mixed employment types
+- **Client Relationship Management (CRM) System** - Client profiles, search, filtering, and appointment history
+- **Staff Management and Invitation System** - Staff onboarding, role management, and hybrid employment UI
+- **Payment Processing and Financial System** - Stripe integration, POS interface, and financial reporting
+- **Dashboard and Analytics Foundation** - Revenue visualization, appointment calendar, and performance metrics
 
 ### 📋 Planned Features
 
 #### 🎯 Core MVP Features
 
-- **Smart Booking System** - Public booking interface with real-time availability
+- **✅ Smart Booking System** - Public booking interface with real-time availability, email confirmations, and booking management
 - **Client Management** - Comprehensive CRM with appointment history and preferences
 - **Staff Management** - Hybrid employment model support with commission, chair rental, and mixed arrangements
 - **Point of Sale** - Integrated POS with payment processing and receipt generation
@@ -249,6 +253,20 @@ Lumina includes a comprehensive **Steering System** that provides context-aware 
 - **Security First**: Built-in security guidelines for authentication, data protection, and PCI compliance
 
 **[📖 Steering System Overview](.kiro/steering/README.md)** - Learn how automated guidance works
+
+### 🔧 Project Management & Specifications
+
+- **[📋 Feature Specifications](.kiro/specs/)** - Detailed requirements, designs, and task lists
+- **[🎯 Linear Best Practices](.kiro/steering/linear-best-practices.md)** - Issue management and labeling guidelines
+- **[🤖 Agent Hooks](.kiro/hooks/)** - Automated documentation sync and compliance checking
+
+### 📖 Development Guidelines
+
+- **[💻 Coding Standards](.kiro/steering/coding-approach-and-standards.md)** - TypeScript, React, and architecture patterns
+- **[🔌 API Standards](.kiro/steering/api-standards.md)** - RESTful API design and implementation
+- **[🗄️ Database Standards](.kiro/steering/database-standards.md)** - Multi-tenant data patterns and Prisma conventions
+- **[🎨 UI Standards](.kiro/steering/ui-standards.md)** - Component design and accessibility guidelines
+- **[🔒 Security Standards](.kiro/steering/security.md)** - Authentication, authorization, and data protection
 
 ## 🏃‍♂️ Development
 
