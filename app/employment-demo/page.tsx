@@ -2,12 +2,12 @@
 
 import {
     EmploymentCalculationPreview,
+    type EmploymentConfiguration,
     EmploymentConfigurationForm,
     EmploymentManagement,
     EmploymentTransitionDialog,
-    EmploymentTypeSelector,
-    type EmploymentConfiguration,
     type EmploymentType,
+    EmploymentTypeSelector,
 } from '@/components/staff';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

@@ -154,7 +154,7 @@ export function calculateEmploymentEarnings(input: CalculationInput): Calculatio
         periodsWorked = 1,
     } = input;
 
-    let result: CalculationResult = {
+    const result: CalculationResult = {
         grossRevenue,
         commissionEarnings: 0,
         chairRentalDue: 0,
