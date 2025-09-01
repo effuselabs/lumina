@@ -1,377 +1,203 @@
-import type {
-  ChairRentalPeriod,
-  EmploymentConfiguration,
-  EmploymentTransition,
-  EmploymentTransitionValidation,
-  EmploymentType,
-  EmploymentValidationResult,
-  EmploymentValidationRules,
-} from '@/types/employment';
 import { z } from 'zod';
 
-// ============================================================================
-// ZOD VALIDATION SCHEMAS
-// ============================================================================
+// Employment type enums
+export const employmentTypeSchema = z.enum(['COMMISSION', 'CHAIR_RENTAL', 'HYBRID'], {
+  required_error: 'Please select an employment type',
+});
 
-// Employment type schema
-export const employmentTypeSchema = z.enum([
-  'commission',
-  'chair_rental',
-  'hybrid',
-]);
-
-// Chair rental period schema
-export const chairRentalPeriodSchema = z.enum(['daily', 'weekly', 'monthly']);
+export const rentalPeriodSchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY'], {
+  required_error: 'Please select a rental period',
+});
 
 // Base employment configuration schema
 export const employmentConfigurationSchema = z.object({
   employmentType: employmentTypeSchema,
-  commissionRate: z.number().min(0).max(100).optional(),
-  chairRentalAmount: z.number().min(0).optional(),
-  chairRentalPeriod: chairRentalPeriodSchema.optional(),
-  baseSalary: z.number().min(0).optional(),
+  commissionRate: z
+    .number()
+    .min(0, 'Commission rate must be at least 0%')
+    .max(100, 'Commission rate cannot exceed 100%')
+    .optional(),
+  chairRentalAmount: z
+    .number()
+    .min(0, 'Rental amount must be positive')
+    .optional(),
+  chairRentalPeriod: rentalPeriodSchema.optional(),
+  baseSalary: z
+    .number()
+    .min(0, 'Base salary must be positive')
+    .optional(),
 });
 
-// Commission employee schema
-export const commissionEmployeeSchema = z.object({
-  employmentType: z.literal('commission'),
-  commissionRate: z.number().min(1).max(100),
-  baseSalary: z.number().min(0).optional(),
-  chairRentalAmount: z.undefined(),
-  chairRentalPeriod: z.undefined(),
+// Commission-specific validation
+export const commissionEmploymentSchema = employmentConfigurationSchema.extend({
+  employmentType: z.literal('COMMISSION'),
+  commissionRate: z
+    .number()
+    .min(10, 'Commission rate must be at least 10%')
+    .max(90, 'Commission rate cannot exceed 90%'),
+  baseSalary: z
+    .number()
+    .min(0, 'Base salary must be positive')
+    .optional(),
 });
 
-// Chair rental contractor schema
-export const chairRentalContractorSchema = z.object({
-  employmentType: z.literal('chair_rental'),
-  chairRentalAmount: z.number().min(1),
-  chairRentalPeriod: chairRentalPeriodSchema,
-  commissionRate: z.undefined(),
-  baseSalary: z.undefined(),
+// Chair rental-specific validation
+export const chairRentalEmploymentSchema = employmentConfigurationSchema.extend({
+  employmentType: z.literal('CHAIR_RENTAL'),
+  chairRentalAmount: z
+    .number()
+    .min(50, 'Rental amount must be at least $50'),
+  chairRentalPeriod: rentalPeriodSchema,
 });
 
-// Hybrid employee schema
-export const hybridEmployeeSchema = z.object({
-  employmentType: z.literal('hybrid'),
-  commissionRate: z.number().min(1).max(100),
-  chairRentalAmount: z.number().min(1),
-  chairRentalPeriod: chairRentalPeriodSchema,
-  baseSalary: z.number().min(0).optional(),
+// Hybrid employment validation
+export const hybridEmploymentSchema = employmentConfigurationSchema.extend({
+  employmentType: z.literal('HYBRID'),
+  commissionRate: z
+    .number()
+    .min(5, 'Commission rate must be at least 5%')
+    .max(70, 'Commission rate cannot exceed 70% in hybrid model'),
+  chairRentalAmount: z
+    .number()
+    .min(25, 'Rental amount must be at least $25'),
+  chairRentalPeriod: rentalPeriodSchema,
+  baseSalary: z
+    .number()
+    .min(0, 'Base salary must be positive')
+    .optional(),
 });
-
-// Union schema for all employment types
-export const employmentSchema = z.discriminatedUnion('employmentType', [
-  commissionEmployeeSchema,
-  chairRentalContractorSchema,
-  hybridEmployeeSchema,
-]);
 
 // Employment transition schema
 export const employmentTransitionSchema = z.object({
-  staffId: z.string().cuid(),
+  staffId: z.string().min(1, 'Staff ID is required'),
   fromEmploymentType: employmentTypeSchema,
   toEmploymentType: employmentTypeSchema,
   transitionDate: z.date(),
   reason: z.string().optional(),
-  dataPreservation: z.object({
-    preserveHistoricalCalculations: z.boolean(),
-    migrateOngoingCalculations: z.boolean(),
-  }),
+  preserveHistoricalCalculations: z.boolean().default(true),
+  migrateOngoingCalculations: z.boolean().default(true),
 });
 
-// ============================================================================
-// VALIDATION RULES CONFIGURATION
-// ============================================================================
-
-export const employmentValidationRules: EmploymentValidationRules = {
-  commission: {
-    requiresCommissionRate: true,
-    minCommissionRate: 1,
-    maxCommissionRate: 100,
-    allowsBaseSalary: true,
-  },
-  chair_rental: {
-    requiresRentalAmount: true,
-    requiresRentalPeriod: true,
-    minRentalAmount: 1,
-    allowedPeriods: ['daily', 'weekly', 'monthly'],
-  },
-  hybrid: {
-    requiresBothModels: true,
-    allowsBaseSalary: true,
-  },
+// Dynamic validation based on employment type
+export const createEmploymentValidationSchema = (employmentType: string) => {
+  switch (employmentType) {
+    case 'COMMISSION':
+      return commissionEmploymentSchema;
+    case 'CHAIR_RENTAL':
+      return chairRentalEmploymentSchema;
+    case 'HYBRID':
+      return hybridEmploymentSchema;
+    default:
+      return employmentConfigurationSchema;
+  }
 };
 
-// ============================================================================
-// VALIDATION FUNCTIONS
-// ============================================================================
+// Types
+export type EmploymentType = z.infer<typeof employmentTypeSchema>;
+export type RentalPeriod = z.infer<typeof rentalPeriodSchema>;
+export type EmploymentConfiguration = z.infer<typeof employmentConfigurationSchema>;
+export type CommissionEmployment = z.infer<typeof commissionEmploymentSchema>;
+export type ChairRentalEmployment = z.infer<typeof chairRentalEmploymentSchema>;
+export type HybridEmployment = z.infer<typeof hybridEmploymentSchema>;
+export type EmploymentTransition = z.infer<typeof employmentTransitionSchema>;
 
-/**
- * Validates employment configuration based on employment type
- */
-export function validateEmploymentConfiguration(
-  config: EmploymentConfiguration
-): EmploymentValidationResult {
-  const errors: string[] = [];
-  const warnings: string[] = [];
+// Employment type descriptions for UI
+export const employmentTypeDescriptions = {
+  COMMISSION: {
+    title: 'Commission-Based',
+    description: 'Staff earn a percentage of each service they perform',
+    example: 'Staff keeps 60% of service revenue, business keeps 40%',
+    requiredFields: ['commissionRate'],
+    optionalFields: ['baseSalary'],
+    pros: [
+      'Motivates staff performance',
+      'Scales with business growth',
+      'Lower fixed costs for business',
+    ],
+    cons: [
+      'Variable staff income',
+      'Complex calculations',
+      'Income uncertainty during slow periods',
+    ],
+  },
+  CHAIR_RENTAL: {
+    title: 'Chair Rental',
+    description: 'Staff pay a fixed fee to use workspace and keep all service revenue',
+    example: 'Staff pays $200/week for chair rental, keeps 100% of service revenue',
+    requiredFields: ['chairRentalAmount', 'chairRentalPeriod'],
+    optionalFields: [],
+    pros: [
+      'Predictable business income',
+      'Simple calculations',
+      'Staff independence',
+      'No commission disputes',
+    ],
+    cons: [
+      'Fixed costs for staff',
+      'Less control over pricing',
+      'Staff responsible for slow periods',
+    ],
+  },
+  HYBRID: {
+    title: 'Hybrid Model',
+    description: 'Combination of chair rental and commission structure',
+    example: 'Staff pays $100/week rental plus 30% commission on services',
+    requiredFields: ['commissionRate', 'chairRentalAmount', 'chairRentalPeriod'],
+    optionalFields: ['baseSalary'],
+    pros: [
+      'Balanced risk sharing',
+      'Lower rental costs',
+      'Performance incentives',
+      'Flexible structure',
+    ],
+    cons: [
+      'Complex calculations',
+      'Requires careful planning',
+      'Higher admin overhead',
+    ],
+  },
+} as const;
 
-  try {
-    // Use Zod schema validation
-    employmentSchema.parse(config);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      errors.push(
-        ...error.errors.map(err => `${err.path.join('.')}: ${err.message}`)
-      );
-    }
-  }
+// Rental period descriptions
+export const rentalPeriodDescriptions = {
+  DAILY: {
+    title: 'Daily',
+    description: 'Rental fee charged per day worked',
+    multiplier: 1,
+  },
+  WEEKLY: {
+    title: 'Weekly',
+    description: 'Rental fee charged per week',
+    multiplier: 7,
+  },
+  MONTHLY: {
+    title: 'Monthly',
+    description: 'Rental fee charged per month',
+    multiplier: 30,
+  },
+} as const;
 
-  // Additional business logic validation
-  switch (config.employmentType) {
-    case 'commission':
-      validateCommissionEmployee(config, errors, warnings);
-      break;
-    case 'chair_rental':
-      validateChairRentalContractor(config, errors, warnings);
-      break;
-    case 'hybrid':
-      validateHybridEmployee(config, errors, warnings);
-      break;
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-    warnings,
-  };
-}
-
-/**
- * Validates commission employee configuration
- */
-function validateCommissionEmployee(
-  config: EmploymentConfiguration,
-  errors: string[],
-  warnings: string[]
-): void {
-  const rules = employmentValidationRules.commission;
-
-  if (!config.commissionRate) {
-    errors.push('Commission rate is required for commission employees');
-  } else {
-    if (config.commissionRate < rules.minCommissionRate) {
-      errors.push(
-        `Commission rate must be at least ${rules.minCommissionRate}%`
-      );
-    }
-    if (config.commissionRate > rules.maxCommissionRate) {
-      errors.push(`Commission rate cannot exceed ${rules.maxCommissionRate}%`);
-    }
-  }
-
-  if (config.chairRentalAmount || config.chairRentalPeriod) {
-    errors.push('Chair rental fields are not allowed for commission employees');
-  }
-
-  if (config.baseSalary && config.baseSalary > 0) {
-    warnings.push('Base salary with commission may affect tax classification');
-  }
-}
-
-/**
- * Validates chair rental contractor configuration
- */
-function validateChairRentalContractor(
-  config: EmploymentConfiguration,
-  errors: string[],
-  warnings: string[]
-): void {
-  const rules = employmentValidationRules.chair_rental;
-
-  if (!config.chairRentalAmount) {
-    errors.push('Chair rental amount is required for chair rental contractors');
-  } else if (config.chairRentalAmount < rules.minRentalAmount) {
-    errors.push(
-      `Chair rental amount must be at least $${rules.minRentalAmount}`
-    );
-  }
-
-  if (!config.chairRentalPeriod) {
-    errors.push('Chair rental period is required for chair rental contractors');
-  } else if (!rules.allowedPeriods.includes(config.chairRentalPeriod)) {
-    errors.push(
-      `Chair rental period must be one of: ${rules.allowedPeriods.join(', ')}`
-    );
-  }
-
-  if (config.commissionRate || config.baseSalary) {
-    errors.push(
-      'Commission rate and base salary are not allowed for chair rental contractors'
-    );
-  }
-
-  warnings.push(
-    'Chair rental contractors are typically classified as independent contractors'
-  );
-}
-
-/**
- * Validates hybrid employee configuration
- */
-function validateHybridEmployee(
-  config: EmploymentConfiguration,
-  errors: string[],
-  warnings: string[]
-): void {
-  if (!config.commissionRate) {
-    errors.push('Commission rate is required for hybrid employees');
-  }
-
-  if (!config.chairRentalAmount) {
-    errors.push('Chair rental amount is required for hybrid employees');
-  }
-
-  if (!config.chairRentalPeriod) {
-    errors.push('Chair rental period is required for hybrid employees');
-  }
-
-  if (config.commissionRate && config.commissionRate > 50) {
-    warnings.push(
-      'High commission rates with chair rental may reduce business profitability'
-    );
-  }
-
-  warnings.push(
-    'Hybrid employment models require careful legal and tax consideration'
-  );
-}
-
-/**
- * Validates employment type transition
- */
-export function validateEmploymentTransition(
-  transition: EmploymentTransition
-): EmploymentTransitionValidation {
-  const errors: string[] = [];
-  const warnings: string[] = [];
-  const requiredActions: string[] = [];
-  const dataImpact: string[] = [];
-
-  try {
-    employmentTransitionSchema.parse(transition);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      errors.push(
-        ...error.errors.map(err => `${err.path.join('.')}: ${err.message}`)
-      );
-    }
-  }
-
-  // Check if transition is valid
-  if (transition.fromEmploymentType === transition.toEmploymentType) {
-    errors.push('Cannot transition to the same employment type');
-  }
-
-  // Analyze transition impact
-  analyzeTransitionImpact(transition, requiredActions, dataImpact, warnings);
-
-  return {
-    isValid: errors.length === 0,
-    canTransition: errors.length === 0,
-    requiredActions,
-    dataImpact,
-    warnings,
-  };
-}
-
-/**
- * Analyzes the impact of employment type transition
- */
-function analyzeTransitionImpact(
-  transition: EmploymentTransition,
-  requiredActions: string[],
-  dataImpact: string[],
-  warnings: string[]
-): void {
-  const { fromEmploymentType, toEmploymentType } = transition;
-
-  // Commission to Chair Rental
-  if (
-    fromEmploymentType === 'commission' &&
-    toEmploymentType === 'chair_rental'
-  ) {
-    requiredActions.push(
-      'Update employment classification from employee to contractor'
-    );
-    requiredActions.push('Set up chair rental amount and period');
-    dataImpact.push('Historical commission calculations will be preserved');
-    dataImpact.push('Future earnings will be calculated as rental-based');
-    warnings.push('Tax implications: contractor vs employee classification');
-  }
-
-  // Chair Rental to Commission
-  if (
-    fromEmploymentType === 'chair_rental' &&
-    toEmploymentType === 'commission'
-  ) {
-    requiredActions.push(
-      'Update employment classification from contractor to employee'
-    );
-    requiredActions.push('Set up commission rate and optional base salary');
-    dataImpact.push('Historical rental calculations will be preserved');
-    dataImpact.push('Future earnings will be calculated as commission-based');
-    warnings.push('May require new employment contract and tax setup');
-  }
-
-  // Any type to Hybrid
-  if (toEmploymentType === 'hybrid') {
-    requiredActions.push(
-      'Configure both commission rate and chair rental amount'
-    );
-    requiredActions.push('Set up hybrid calculation logic');
-    dataImpact.push(
-      'Future calculations will include both commission and rental components'
-    );
-    warnings.push('Hybrid models require careful legal review');
-  }
-
-  // Hybrid to any single type
-  if (fromEmploymentType === 'hybrid') {
-    requiredActions.push('Simplify employment model to single type');
-    dataImpact.push('Historical hybrid calculations will be preserved');
-    warnings.push('Ensure staff understands the change in earning structure');
-  }
-}
-
-/**
- * Validates chair rental period value
- */
-export function validateChairRentalPeriod(
-  period: string
-): period is ChairRentalPeriod {
-  return ['daily', 'weekly', 'monthly'].includes(period);
-}
-
-/**
- * Validates employment type value
- */
-export function validateEmploymentType(type: string): type is EmploymentType {
-  return ['commission', 'chair_rental', 'hybrid'].includes(type);
-}
-
-/**
- * Gets validation rules for specific employment type
- */
-export function getEmploymentTypeRules(employmentType: EmploymentType) {
-  return employmentValidationRules[employmentType];
-}
-
-/**
- * Checks if employment configuration is complete
- */
-export function isEmploymentConfigurationComplete(
-  config: EmploymentConfiguration
-): boolean {
-  const validation = validateEmploymentConfiguration(config);
-  return validation.isValid;
-}
+// Validation rules for employment types
+export const employmentValidationRules = {
+  COMMISSION: {
+    requiresCommissionRate: true,
+    minCommissionRate: 10,
+    maxCommissionRate: 90,
+    allowsBaseSalary: true,
+    allowsRental: false,
+  },
+  CHAIR_RENTAL: {
+    requiresRentalAmount: true,
+    requiresRentalPeriod: true,
+    minRentalAmount: 50,
+    allowedPeriods: ['DAILY', 'WEEKLY', 'MONTHLY'] as const,
+    allowsCommission: false,
+  },
+  HYBRID: {
+    requiresBothModels: true,
+    minCommissionRate: 5,
+    maxCommissionRate: 70,
+    minRentalAmount: 25,
+    allowsBaseSalary: true,
+  },
+} as const;

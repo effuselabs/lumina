@@ -287,8 +287,8 @@
 <a name='L222'></a><a href='#L222'>222</a>
 <a name='L223'></a><a href='#L223'>223</a>
 <a name='L224'></a><a href='#L224'>224</a>
-<a name='L225'></a><a href='#L225'>225</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L225'></a><a href='#L225'>225</a>
+<a name='L226'></a><a href='#L226'>226</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -464,20 +464,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -511,9 +508,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { DefaultSession } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
-import type { UserRole, BusinessRole } from '@prisma/client';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { BusinessRole, UserRole } from '@prisma/client';
+import type { DefaultSession } from 'next-auth';
 &nbsp;
 // Extend the built-in session types
 declare module 'next-auth' {
@@ -521,7 +522,7 @@ declare module 'next-auth' {
     user: {
       id: string;
       role: UserRole;
-      businesses: Array&lt;{
+      businesses?: Array&lt;{
         id: string;
         businessId: string;
         role: BusinessRole;
@@ -547,9 +548,9 @@ declare module 'next-auth' {
     } &amp; DefaultSession['user'];
   }
 &nbsp;
-  interface User extends DefaultUser {
+  interface User {
     role: UserRole;
-    businesses: Array&lt;{
+    businesses?: Array&lt;{
       id: string;
       businessId: string;
       role: BusinessRole;
@@ -576,9 +577,9 @@ declare module 'next-auth' {
 }
 &nbsp;
 declare module 'next-auth/jwt' {
-  interface JWT extends DefaultJWT {
+  interface JWT {
     role: UserRole;
-    businesses: Array&lt;{
+    businesses?: Array&lt;{
       id: string;
       businessId: string;
       role: BusinessRole;
@@ -636,7 +637,7 @@ export interface BusinessInviteData {
 }
 &nbsp;
 // Permission types
-export type PermissionAction = 
+export type PermissionAction =
   | 'canManageBusiness'
   | 'canManageStaff'
   | 'canManageServices'
@@ -685,7 +686,8 @@ export const <span class="cstat-no" title="statement not covered" >signUpSchema 
   name: 'string().min(2, "Name must be at least 2 characters")',
   email: 'string().email("Invalid email address")',
   password: 'string().min(8, "Password must be at least 8 characters")',
-  businessName: 'string().min(2, "Business name must be at least 2 characters").optional()',
+  businessName:
+    'string().min(2, "Business name must be at least 2 characters").optional()',
 };
 &nbsp;
 export const <span class="cstat-no" title="statement not covered" >signInSchema </span>= <span class="cstat-no" title="statement not covered" >{</span>
@@ -735,14 +737,15 @@ export interface BusinessMembership {
   };
   createdAt: Date;
   updatedAt: Date;
-}</pre></td></tr></table></pre>
+}
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-28T01:38:39.357Z
+                at 2025-09-01T17:50:59.755Z
             </div>
         <script src="../prettify.js"></script>
         <script>

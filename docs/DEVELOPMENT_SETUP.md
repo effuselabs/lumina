@@ -191,9 +191,9 @@ Lumina includes an intelligent **Steering System** that automatically provides c
 After setting up the development environment:
 
 1. **[📖 Steering System Overview](../.kiro/steering/README.md)** - Learn about automated development guidance
-2. Review the [Git Workflow Guide](./GIT_WORKFLOW.md) for branching strategy
-3. Check the [Authentication Documentation](./AUTHENTICATION.md) for auth system details
-4. Read the [Testing Guide](./TESTING.md) for testing framework usage
+2. Review the [Git Workflow Guide](./project-management/GIT_WORKFLOW.md) for branching strategy
+3. Check the [Authentication Documentation](./features/authentication/AUTHENTICATION.md) for auth system details
+4. Read the [Testing Guide](./testing/README.md) for testing framework usage
 5. Explore the [Brand Guidelines](./LUMINA_PRODUCT_STYLEGUIDE.md) for design system
 6. Review the [Development Plan](./DEVELOPMENT_PLAN.md) for project roadmap
 7. Check the [Changelog](../CHANGELOG.md) for recent updates

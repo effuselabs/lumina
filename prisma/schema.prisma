@@ -28,12 +28,13 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  accounts     Account[]
-  sessions     Session[]
-  businesses   BusinessUser[]
-  staffProfile Staff?
-  appointments Appointment[]  @relation("AppointmentClient")
-  transactions Transaction[]
+  accounts         Account[]
+  sessions         Session[]
+  businesses       BusinessUser[]
+  staffProfile     Staff?
+  appointments     Appointment[]     @relation("AppointmentClient")
+  transactions     Transaction[]
+  staffInvitations StaffInvitation[]
 
   @@map("users")
 }
@@ -131,6 +132,7 @@ model Business {
   appointments        Appointment[]
   transactions        Transaction[]
   paymentCalculations PaymentCalculation[]
+  staffInvitations    StaffInvitation[]
 
   @@map("businesses")
 }
@@ -456,6 +458,41 @@ model PaymentCalculation {
 }
 
 // ============================================================================
+// STAFF INVITATION SYSTEM
+// ============================================================================
+
+model StaffInvitation {
+  id         String   @id @default(cuid())
+  businessId String
+  email      String
+  invitedBy  String
+  token      String   @unique
+  expiresAt  DateTime
+
+  // Invitation details
+  role      BusinessRole @default(STAFF)
+  staffData Json // Employment configuration and profile data
+  message   String?
+
+  // Status tracking
+  status     InvitationStatus @default(PENDING)
+  acceptedAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  inviter  User     @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, email])
+  @@index([token])
+  @@index([businessId])
+  @@map("staff_invitations")
+}
+
+// ============================================================================
 // ENUMS
 // ============================================================================
 
@@ -525,4 +562,11 @@ enum PaymentMethod {
   DIGITAL_WALLET
   BANK_TRANSFER
   OTHER
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
 }

@@ -39,14 +39,14 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 ### ✅ Recently Completed
 
-- **Complete Booking Engine Epic (LUM-42)** - Full booking system with public interface, staff availability management, and email notifications
-- **Public Booking Interface (LUM-49)** - Multi-step booking wizard with service selection, date/time picker, and customer forms
-- **Booking Confirmation System (LUM-50)** - Email notifications with React Email templates and booking management interface
+- **Complete Booking Engine Epic** ([LUM-42](https://linear.app/lumina/issue/LUM-42)) - Full booking system with public interface, staff availability management, and email notifications
+- **Public Booking Interface** ([LUM-49](https://linear.app/lumina/issue/LUM-49)) - Multi-step booking wizard with service selection, date/time picker, and customer forms
+- **Booking Confirmation System** ([LUM-50](https://linear.app/lumina/issue/LUM-50)) - Email notifications with React Email templates and booking management interface
 - **Staff Availability Management** - Intelligent time slot calculation with conflict detection and recurring patterns
-- **Complete Business Management Epic (LUM-41)** - All core business management features implemented and operational
-- **Business Onboarding System (LUM-47)** - Complete 5-step wizard with financial model configuration, website URL validation, and country-specific address forms
-- **Service Management CRUD System (LUM-48)** - Full service creation, editing, listing with search/filter capabilities and business scoping
-- **Client Data Import System (LUM-54)** - CSV upload with drag-and-drop, data mapping, validation, and import preview functionality
+- **Complete Business Management Epic** ([LUM-41](https://linear.app/lumina/issue/LUM-41)) - All core business management features implemented and operational
+- **Business Onboarding System** ([LUM-47](https://linear.app/lumina/issue/LUM-47)) - Complete 5-step wizard with financial model configuration, website URL validation, and country-specific address forms
+- **Service Management CRUD System** ([LUM-48](https://linear.app/lumina/issue/LUM-48)) - Full service creation, editing, listing with search/filter capabilities and business scoping
+- **Client Data Import System** ([LUM-54](https://linear.app/lumina/issue/LUM-54)) - CSV upload with drag-and-drop, data mapping, validation, and import preview functionality
 - **Client Relationship Management (CRM) System** - Complete CRM with client profiles, advanced search/filtering, appointment history tracking, and notes system
 - **Database Relations Fix** - Resolved critical Prisma relation name mismatch enabling proper business dashboard access
 - **End-to-End Authentication Flow** - Full signup → onboarding → dashboard workflow with proper routing and middleware
@@ -237,9 +237,9 @@ Nail Technician & Colorist:
 ### Quick Links
 
 - **[Development Setup](docs/DEVELOPMENT_SETUP.md)** - Get started with local development
-- **[Git Workflow](docs/GIT_WORKFLOW.md)** - Branching and development process
-- **[Testing Guide](docs/TESTING.md)** - Testing framework and best practices
-- **[Authentication System](docs/AUTHENTICATION.md)** - Multi-tenant auth system
+- **[Git Workflow](docs/project-management/GIT_WORKFLOW.md)** - Branching and development process
+- **[Testing Guide](docs/testing/README.md)** - Testing framework and best practices
+- **[Authentication System](docs/features/authentication/AUTHENTICATION.md)** - Multi-tenant auth system
 - **[Brand Guidelines](docs/LUMINA_PRODUCT_STYLEGUIDE.md)** - Design system and UI
 - **[Changelog](CHANGELOG.md)** - Version history and release notes
 

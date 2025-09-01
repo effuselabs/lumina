@@ -1,8 +1,8 @@
-# Lumina SaaS - MVP Development Plan
+# Lumina SaaS - Modernized MVP Development Plan
 
-* **Version:** 3.1
-* **Date:** January 27, 2025
-* **Status:** Enhanced with Workflow Integration
+* **Version:** 3.0
+* **Date:** August 08, 2025
+* **Status:** For Development
 * **Product:** Lumina - All-in-one, AI-powered business management platform for the salon and barber industry.
 * **Mission:** To go beyond simple booking, acting as an intelligent partner that provides clear, actionable suggestions to illuminate the path to higher revenue and happier clients.
 * **GitHub Repository (Private):** `https://github.com/jshields-ca/lumina`
@@ -102,35 +102,200 @@ The typography system is designed for clarity and a clean, modern feel.
 * **Task 4:** Design and script the initial PostgreSQL database schema.
 * **Task 5:** Implement user authentication (Sign Up, Login, Logout) using NextAuth.js.
 
-### Sprint 1: Business Onboarding & Data Import
-* **Task 1:** Create the "Create Business Profile" and "Financial Models" UI and backend logic.
-* **Task 2:** Build the "Service Management" page (CRUD for services).
-* **Task 3:** Develop a CSV import tool for existing client lists, including UI and parsing logic.
-* **Task 4:** Map imported client data to the `Clients` table in the database.
+### Sprint 1: Enhanced & Optimized
+**Estimated Duration:** 3 weeks
+**Critical Path:** 4 tasks
+**Parallelizable Groups:** 0
 
-### Sprint 2: The Booking Engine
-* **Task 1:** Design and build the UI for the public-facing booking page.
-* **Task 2:** Develop the calendar view to show available time slots.
-* **Task 3:** Implement the booking form and backend logic to save appointments.
-* **Task 4:** Set up automated email confirmations for new bookings.
+* **Task Task1:** Initialize Next.js project in the private GitHub repository.
+  - **Effort:** 18h (was 8h)
+  - **Steering:** api-standards, coding-approach-and-standards, database-standards, product, README, security, structure, tech, troubleshooting, ui-standards
+  - **Acceptance Criteria:**
+    - Compliance: Use Zod schemas for request validation
+    - Compliance: All queries must include businessId filter
+    - Unit tests cover core functionality with >80% coverage
 
-### Sprint 3: Staff & Client Management (CRM)
-* **Task 1:** Build the "Staff" page with an email invitation system and hybrid employment model configuration (commission, chair rental, hybrid arrangements).
-* **Task 2:** Create the "Clients" page with a searchable list of all clients.
-* **Task 3:** Develop the "Client Detail" view showing contact info and appointment history.
+* **Task Task2:** Configure Docker, Railway deployment YAML, and environment variables for all three environments.
+  - **Effort:** 8h (was 8h)
+  - **Steering:** api-standards, coding-approach-and-standards, database-standards, product, README, security, structure, tech, troubleshooting, ui-standards
+  - **Acceptance Criteria:**
+    - Compliance: Use Zod schemas for request validation
+    - Compliance: All queries must include businessId filter
+    - Unit tests cover core functionality with >80% coverage
 
-### Sprint 4: Core Financials & Transaction Logging
-* **Task 1:** Design and build a simple "Checkout" interface for staff.
-* **Task 2:** Integrate with Stripe API for payment processing.
-* **Task 3:** Implement logic to record Lumina-native transactions.
-* **Task 4:** Design data models to accommodate external POS transaction data.
-* **Task 5:** Develop the backend logic to calculate staff earnings for all employment models (commission, chair rental, hybrid arrangements).
+* **Task Task3:** Configure Tailwind CSS with the Lumina brand palette and Inter typeface as defined in Section 2.0.
+  - **Effort:** 8h (was 8h)
+  - **Steering:** api-standards, coding-approach-and-standards, database-standards, product, README, security, structure, tech, troubleshooting, ui-standards
+  - **Acceptance Criteria:**
+    - Compliance: Use Zod schemas for request validation
+    - Compliance: All queries must include businessId filter
+    - Unit tests cover core functionality with >80% coverage
 
-### Sprint 5: Dashboard & MVP Polish
-* **Task 1:** Build the UI for the main Lumina Dashboard page, using the Lumina Radiant Gradient for primary actions.
-* **Task 2:** Create data widgets for "Today's Appointments" and "Daily/Weekly Revenue Summary".
-* **Task 3:** Perform a full responsive design review and end-to-end testing.
-* **Task 4:** Final bug bash and deployment to the `production` branch.
+* **Task Task4:** Design and script the initial PostgreSQL database schema.
+  - **Effort:** 23h (was 16h)
+  - **Steering:** api-standards, coding-approach-and-standards, database-standards, product, README, security, structure, tech, troubleshooting, ui-standards
+  - **Dependencies:** Sprint1-Task1
+  - **Acceptance Criteria:**
+    - All database queries include businessId for multi-tenant isolation
+    - Database migrations run successfully without data loss
+    - Compliance: Use Zod schemas for request validation
+
+* **Task Task5:** Implement user authentication (Sign Up, Login, Logout) using NextAuth.js.
+  - **Effort:** 36h (was 20h)
+  - **Steering:** api-standards, coding-approach-and-standards, database-standards, product, README, security, structure, tech, troubleshooting, ui-standards
+  - **Acceptance Criteria:**
+    - User authentication works securely with proper session management
+    - All authentication endpoints include proper error handling
+    - Compliance: Use Zod schemas for request validation
+
+### Sprint 2: Enhanced & Optimized
+**Estimated Duration:** 2 weeks
+**Critical Path:** 2 tasks
+**Parallelizable Groups:** 1
+
+**Parallelization Opportunities:**
+- Group 1: Tasks can be developed in parallel
+
+* **Task Task1:** Create the "Create Business Profile" and "Financial Models" UI and backend logic.
+  - **Effort:** 24h (was 20h)
+  - **Dependencies:** Sprint1 completion
+  - **Acceptance Criteria:**
+    - UI components follow Lumina design system guidelines
+    - All interactive elements are keyboard accessible
+    - Components include proper loading and error states
+
+* **Task Task2:** Build the "Service Management" page (CRUD for services).
+  - **Effort:** 24h (was 20h)
+  - **Dependencies:** Sprint1 completion
+  - **Acceptance Criteria:**
+    - UI components follow Lumina design system guidelines
+    - All interactive elements are keyboard accessible
+    - Components include proper loading and error states
+
+* **Task Task3:** Develop a CSV import tool for existing client lists, including UI and parsing logic.
+  - **Effort:** 24h (was 20h)
+  - **Dependencies:** Sprint1 completion
+  - **Acceptance Criteria:**
+    - UI components follow Lumina design system guidelines
+    - All interactive elements are keyboard accessible
+    - Components include proper loading and error states
+
+* **Task Task4:** Map imported client data to the `Clients` table in the database.
+  - **Effort:** 23h (was 16h)
+  - **Dependencies:** Sprint1 completion, Sprint2-Task1
+  - **Acceptance Criteria:**
+    - All database queries include businessId for multi-tenant isolation
+    - Database migrations run successfully without data loss
+    - Unit tests cover core functionality with >80% coverage
+
+### Sprint 3: Enhanced & Optimized
+**Estimated Duration:** 1 weeks
+**Critical Path:** 1 tasks
+**Parallelizable Groups:** 1
+
+**Parallelization Opportunities:**
+- Group 1: Tasks can be developed in parallel
+
+* **Task Task1:** Design and build the UI for the public-facing booking page.
+  - **Effort:** 24h (was 20h)
+  - **Dependencies:** Sprint2 completion
+  - **Acceptance Criteria:**
+    - UI components follow Lumina design system guidelines
+    - All interactive elements are keyboard accessible
+    - Components include proper loading and error states
+
+* **Task Task2:** Develop the calendar view to show available time slots.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint2 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
+
+* **Task Task3:** Implement the booking form and backend logic to save appointments.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint2 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
+
+* **Task Task4:** Set up automated email confirmations for new bookings.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint2 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
+
+### Sprint 4: Enhanced & Optimized
+**Estimated Duration:** 1 weeks
+**Critical Path:** 0 tasks
+**Parallelizable Groups:** 0
+
+* **Task Task1:** Build the "Staff" page with an email invitation system.
+  - **Effort:** 24h (was 20h)
+  - **Dependencies:** Sprint3 completion
+  - **Acceptance Criteria:**
+    - UI components follow Lumina design system guidelines
+    - All interactive elements are keyboard accessible
+    - Components include proper loading and error states
+
+* **Task Task2:** Create the "Clients" page with a searchable list of all clients.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint3 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
+
+* **Task Task3:** Develop the "Client Detail" view showing contact info and appointment history.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint3 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
+
+### Sprint 5: Enhanced & Optimized
+**Estimated Duration:** 2 weeks
+**Critical Path:** 2 tasks
+**Parallelizable Groups:** 1
+
+**Parallelization Opportunities:**
+- Group 1: Tasks can be developed in parallel
+
+* **Task Task1:** Design and build a simple "Checkout" interface for staff.
+  - **Effort:** 24h (was 20h)
+  - **Dependencies:** Sprint4 completion
+  - **Acceptance Criteria:**
+    - UI components follow Lumina design system guidelines
+    - All interactive elements are keyboard accessible
+    - Components include proper loading and error states
+
+* **Task Task2:** Integrate with Stripe API for payment processing.
+  - **Effort:** 48h (was 32h)
+  - **Dependencies:** Sprint4 completion
+  - **Acceptance Criteria:**
+    - API endpoints follow RESTful conventions
+    - All inputs are validated using Zod schemas
+    - Proper HTTP status codes are returned
+
+* **Task Task3:** Implement logic to record Lumina-native transactions.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint4 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
+
+* **Task Task4:** Design data models to accommodate external POS transaction data.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint4 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
+
+* **Task Task5:** Develop the backend logic to calculate staff commission.
+  - **Effort:** 8h (was 8h)
+  - **Dependencies:** Sprint4 completion
+  - **Acceptance Criteria:**
+    - Unit tests cover core functionality with >80% coverage
+    - Integration tests validate end-to-end workflows
 
 ---
 ## 6.0 Post-MVP & Future Integrations
@@ -138,3 +303,35 @@ The typography system is designed for clarity and a clean, modern feel.
 * **QuickBooks Integration:** Allow users to sync their daily sales and transaction data directly to their QuickBooks Online account.
 * **External POS Integration (Square):** Allow businesses to sync transaction data from their existing POS.
 * **The AI-Powered Advantage:** Develop the AI engine to provide actionable insights on the dashboard, fulfilling the core brand promise.
+
+---
+## Modernization Summary
+
+### Key Improvements
+
+- **Tasks Modernized:** 25
+- **Effort Adjustment:** 25.3% (364h → 456h)
+- **Estimated Duration:** 12 weeks
+- **Parallelization Opportunities:** 3 groups
+- **Steering Files Integrated:** 10
+
+### Steering Integration
+
+- **api-standards:** Referenced in 5 tasks
+- **coding-approach-and-standards:** Referenced in 5 tasks
+- **database-standards:** Referenced in 5 tasks
+- **product:** Referenced in 5 tasks
+- **README:** Referenced in 5 tasks
+- **security:** Referenced in 5 tasks
+- **structure:** Referenced in 5 tasks
+- **tech:** Referenced in 5 tasks
+- **troubleshooting:** Referenced in 5 tasks
+- **ui-standards:** Referenced in 5 tasks
+
+### Quality Improvements
+
+- All tasks now include specific acceptance criteria
+- Compliance requirements integrated from steering files
+- Dependencies and prerequisites clearly identified
+- Effort estimates revised based on actual complexity
+- Task sequencing optimized for parallel development

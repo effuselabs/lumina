@@ -32,7 +32,7 @@ Thank you for your interest in contributing to Lumina! This document provides gu
 
 ## 📋 Development Workflow
 
-We use a **Feature Branch Workflow**. Please read our [Git Workflow Guide](docs/GIT_WORKFLOW.md) for detailed instructions.
+We use a **Feature Branch Workflow**. Please read our [Git Workflow Guide](docs/project-management/GIT_WORKFLOW.md) for detailed instructions.
 
 ### Branch Strategy
 

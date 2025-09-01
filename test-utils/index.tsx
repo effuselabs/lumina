@@ -42,7 +42,7 @@ const customRender = (ui: ReactElement, options: CustomRenderOptions = {}) => {
 
   return render(ui, {
     wrapper: ({ children }: { children: ReactNode }) => (
-      <AllTheProviders session={session} queryClient={queryClient}>
+      <AllTheProviders queryClient={queryClient}>
         {children}
       </AllTheProviders>
     ),

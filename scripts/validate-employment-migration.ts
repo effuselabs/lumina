@@ -11,7 +11,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import { validateEmploymentConfiguration } from '../lib/validations/employment';
+import { employmentConfigurationSchema } from '../lib/validations/employment';
 import type { EmploymentConfiguration } from '../types/employment';
 
 const prisma = new PrismaClient();
@@ -106,19 +106,17 @@ async function validateStaffEmploymentConfigurations(result: ValidationResult): 
         }
 
         // Validate configuration
-        const validation = validateEmploymentConfiguration(config);
-        if (!validation.isValid) {
+        const validationSchema = employmentConfigurationSchema;
+        const validation = validationSchema.safeParse(config);
+        if (!validation.success) {
             result.stats.invalidConfigurations++;
             result.errors.push(
-                `Invalid employment configuration for staff ${staffMember.displayName} (${staffMember.id}): ${validation.errors.join(', ')}`
+                `Invalid employment configuration for staff ${staffMember.displayName} (${staffMember.id}): ${validation.error.errors.map(e => e.message).join(', ')}`
             );
         }
 
-        if (validation.warnings.length > 0) {
-            result.warnings.push(
-                `Warnings for staff ${staffMember.displayName} (${staffMember.id}): ${validation.warnings.join(', ')}`
-            );
-        }
+        // Note: Zod doesn't have warnings, only success/error
+        // Additional validation logic could be added here if needed
     }
 
     console.log(`✅ Validated ${staff.length} staff members`);
@@ -317,3 +315,4 @@ if (require.main === module) {
 }
 
 export { validateEmploymentMigration };
+

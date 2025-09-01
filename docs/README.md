@@ -7,26 +7,43 @@ Welcome to the Lumina documentation hub. This directory contains comprehensive d
 ### Getting Started
 
 - **[Development Setup](DEVELOPMENT_SETUP.md)** - Complete local development environment setup
-- **[Git Workflow](GIT_WORKFLOW.md)** - Branching strategy and development process
+- **[Git Workflow](project-management/GIT_WORKFLOW.md)** - Branching strategy and development process
 
-### Technical Documentation
+### 🎯 Features & Implementation
 
-- **[Authentication System](AUTHENTICATION.md)** - Multi-tenant auth and permissions system
-- **[Testing Guide](TESTING.md)** - Testing framework, best practices, and usage
+- **[Features Documentation](features/)** - Feature-specific implementation docs
+  - [Authentication System](features/authentication/AUTHENTICATION.md) - NextAuth.js implementation
+  - [Booking Engine](features/booking-system/BOOKING_SYSTEM_IMPLEMENTATION.md) - Complete booking system
+  - [CRM & Staff Management](features/crm-staff-management/) - Staff and client management
+
+### 🧪 Testing & Quality
+
+- **[Testing Documentation](testing/)** - Comprehensive testing guides
+  - [Testing Strategy](testing/TESTING_STRATEGY.md) - Complete testing checklist
+  - [Testing Guidelines](testing/README.md) - General testing practices
+
+### 📊 Project Management
+
+- **[Project Management Hub](project-management/)** - Workflow and project management
+  - [Linear Integration](project-management/LINEAR_INTEGRATION.md) - Linear workflow and integration
+  - [Git Workflow](project-management/GIT_WORKFLOW.md) - Branching strategy and development process
+  - [Issue Templates](project-management/templates/) - Standardized Linear issue templates
+
+### 🏗️ Architecture & Operations
+
+- **[Development Plan](DEVELOPMENT_PLAN.md)** - Technical architecture and development roadmap
 - **[Deployment Guide](DEPLOYMENT.md)** - CI/CD pipeline and deployment processes
+- **[Rollback Procedures](ROLLBACK_PROCEDURES.md)** - Emergency rollback and recovery procedures
 
-### Workflow Automation
+### 🎨 Design & Brand
+
+- **[Brand Guidelines](LUMINA_PRODUCT_STYLEGUIDE.md)** - Design system and UI guidelines
+
+### 🤖 Workflow Automation
 
 - **[Agent Hook Workflows](AGENT_HOOK_WORKFLOWS.md)** - Complete documentation sync and compliance automation
 - **[Hybrid Business Model Guide](HYBRID_BUSINESS_MODEL_GUIDE.md)** - Implementation guide for commission, chair rental, and hybrid employment models
-- **[Linear Integration Training](LINEAR_INTEGRATION_TRAINING.md)** - Training materials for enhanced Linear project management
 - **[Workflow Troubleshooting Guide](WORKFLOW_TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting for workflow automation
-
-### Project Management
-
-- **[Development Plan](DEVELOPMENT_PLAN.md)** - Technical architecture and development roadmap
-- **[Brand Guidelines](LUMINA_PRODUCT_STYLEGUIDE.md)** - Design system and UI guidelines
-- **[Rollback Procedures](ROLLBACK_PROCEDURES.md)** - Emergency rollback and recovery procedures
 
 ## 🏗️ Architecture Overview
 
@@ -147,6 +164,20 @@ For questions about the documentation or development process:
 
 ---
 
-**Last Updated**: January 27, 2025  
-**Version**: 0.2.0  
-**Status**: Foundation Phase Complete + CRM System Operational
+## 📚 Documentation Standards & Maintenance
+
+### Quality Assurance
+- **[Documentation Standards](DOCUMENTATION_STANDARDS.md)** - Style guide and formatting standards
+- **[Documentation Maintenance](DOCUMENTATION_MAINTENANCE.md)** - Maintenance schedule and procedures
+- **[Comprehensive Review](DOCUMENTATION_COMPREHENSIVE_REVIEW.md)** - Latest documentation audit results
+
+### Maintenance Schedule
+- **Weekly**: Linear issue updates and link validation
+- **Monthly**: Cross-reference audit and feature status updates  
+- **Quarterly**: Comprehensive documentation review and structure assessment
+
+---
+
+**Last Updated**: January 9, 2025  
+**Version**: 0.3.0  
+**Status**: Foundation Phase Complete + CRM System Operational + Documentation Reorganized

@@ -653,7 +653,7 @@ If workflow data becomes corrupted:
 
 - **Team Documentation**: [Agent Hook Workflows](./AGENT_HOOK_WORKFLOWS.md)
 - **Performance Guide**: [Hybrid Business Model Guide](./HYBRID_BUSINESS_MODEL_GUIDE.md)
-- **Training Materials**: [Linear Integration Training](./LINEAR_INTEGRATION_TRAINING.md)
+- **Training Materials**: [Linear Integration](./project-management/LINEAR_INTEGRATION.md)
 
 ### External Resources
 

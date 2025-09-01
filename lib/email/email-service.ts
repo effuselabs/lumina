@@ -129,7 +129,7 @@ Thank you for choosing ${data.businessName}! We look forward to seeing you.
 
             // Get preview URL for development
             const previewUrl = process.env.NODE_ENV === 'development'
-                ? nodemailer.getTestMessageUrl(info)
+                ? nodemailer.getTestMessageUrl(info) || undefined
                 : undefined
 
             if (previewUrl) {

@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import type { UserWithRelations } from '@/types/database';
 import type { BusinessRole, UserRole } from '@prisma/client';
 import { redirect } from 'next/navigation';
+import { randomBytes } from 'node:crypto';
 import { prisma } from './prisma';
 
 // Get the current session
@@ -194,4 +195,119 @@ export function hasBusinessRole(
     (bu: any) => bu.businessId === businessId
   );
   return businessUser && roles.includes(businessUser.role);
+}
+// Generate secure invitation token
+export function generateInviteToken(): string {
+  return randomBytes(32).toString('hex');
+}
+
+// Verify and consume invitation token
+export async function verifyInviteToken(token: string) {
+  const invitation = await prisma.staffInvitation.findUnique({
+    where: { token },
+    include: {
+      business: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
+      inviter: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  if (!invitation) {
+    throw new Error('Invalid invitation token');
+  }
+
+  if (invitation.status !== 'PENDING') {
+    throw new Error('Invitation has already been used or cancelled');
+  }
+
+  if (invitation.expiresAt < new Date()) {
+    // Mark as expired
+    await prisma.staffInvitation.update({
+      where: { id: invitation.id },
+      data: { status: 'EXPIRED' },
+    });
+    throw new Error('Invitation has expired');
+  }
+
+  return invitation;
+}
+
+// Accept staff invitation and create user/staff profile
+export async function acceptStaffInvitation(
+  token: string,
+  userData: {
+    name: string;
+    password: string;
+  }
+) {
+  const invitation = await verifyInviteToken(token);
+  const staffData = invitation.staffData as any;
+
+  return await prisma.$transaction(async (tx) => {
+    // Create or update user
+    let user = await tx.user.findUnique({
+      where: { email: invitation.email },
+    });
+
+    if (!user) {
+      // Create new user
+      const { hash } = await import('bcryptjs');
+      const hashedPassword = await hash(userData.password, 12);
+
+      user = await tx.user.create({
+        data: {
+          email: invitation.email,
+          name: userData.name,
+          password: hashedPassword,
+          role: 'STAFF',
+        },
+      });
+    }
+
+    // Create business user relationship
+    await tx.businessUser.create({
+      data: {
+        businessId: invitation.businessId,
+        userId: user.id,
+        role: invitation.role,
+      },
+    });
+
+    // Create staff profile
+    const staff = await tx.staff.create({
+      data: {
+        businessId: invitation.businessId,
+        userId: user.id,
+        displayName: staffData.displayName,
+        title: staffData.title,
+        employmentType: staffData.employmentType,
+        commissionRate: staffData.commissionRate,
+        chairRentalAmount: staffData.chairRentalAmount,
+        chairRentalPeriod: staffData.chairRentalPeriod,
+        baseSalary: staffData.baseSalary,
+      },
+    });
+
+    // Mark invitation as accepted
+    await tx.staffInvitation.update({
+      where: { id: invitation.id },
+      data: {
+        status: 'ACCEPTED',
+        acceptedAt: new Date(),
+      },
+    });
+
+    return { user, staff, business: invitation.business };
+  });
 }
