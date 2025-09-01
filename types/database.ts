@@ -1,4 +1,7 @@
 import type { Prisma } from '@prisma/client';
+import type { EmploymentType } from './employment';
+
+type ChairRentalPeriod = 'DAILY' | 'WEEKLY' | 'MONTHLY';
 
 // ============================================================================
 // EXTENDED TYPES WITH RELATIONS
@@ -243,11 +246,7 @@ export interface WorkingHours {
 }
 
 // Operating hours structure for business
-export interface OperatingHours extends WorkingHours {
-  // Inherits all fields from WorkingHours
-  // Additional operating hours specific fields can be added here
-  businessId?: string;
-}
+export type OperatingHours = WorkingHours;
 
 // Appointment booking data
 export interface AppointmentBookingData {

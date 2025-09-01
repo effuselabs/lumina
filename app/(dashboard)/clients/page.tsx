@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { ClientList } from '@/components/clients/client-list';
 import { Button } from '@/components/ui/button';
 import { prisma } from '@/lib/prisma';
 import { Plus, Upload, Users } from 'lucide-react';
@@ -42,7 +43,7 @@ export default async function ClientsPage() {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
                     <p className="text-gray-600">
-                        Manage your client database and import new clients
+                        Manage your client database and relationships
                         {clientCount > 0 && (
                             <span className="ml-2 text-sm">
                                 ({clientCount} client{clientCount !== 1 ? 's' : ''})
@@ -72,26 +73,7 @@ export default async function ClientsPage() {
             {clientCount === 0 ? (
                 <EmptyClientsState />
             ) : (
-                <div className="rounded-lg border border-gray-200 bg-white p-6">
-                    <div className="text-center py-12">
-                        <Users className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-4 text-lg font-medium text-gray-900">
-                            Client Management Coming Soon
-                        </h3>
-                        <p className="mt-2 text-gray-600">
-                            You have {clientCount} clients in your database.
-                            Full client management features will be available soon.
-                        </p>
-                        <div className="mt-6">
-                            <Button asChild variant="outline">
-                                <Link href="/clients/import">
-                                    <Upload className="mr-2 h-4 w-4" />
-                                    Import More Clients
-                                </Link>
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                <ClientList />
             )}
         </div>
     );
