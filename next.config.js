@@ -33,6 +33,7 @@ const nextConfig = {
   // Environment variables that should be available on the client
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   },
@@ -71,11 +72,7 @@ const nextConfig = {
   // Redirects for SEO and user experience
   async redirects() {
     return [
-      {
-        source: '/dashboard',
-        destination: '/dashboard/overview',
-        permanent: false,
-      },
+      // Remove the dashboard redirect since the page exists at /dashboard
     ];
   },
 

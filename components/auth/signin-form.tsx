@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
-import { getSession, signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 const signInSchema = z.object({
@@ -17,9 +17,10 @@ const signInSchema = z.object({
 
 export function SignInForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const { data: session, status } = useSession();
+  const callbackUrl = '/dashboard';
 
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -28,6 +29,32 @@ export function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [generalError, setGeneralError] = useState('');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.push(callbackUrl);
+    }
+  }, [session, status, router, callbackUrl]);
+
+  // Show loading state while session is being determined
+  if (status === 'loading' || !mounted) {
+    return (
+      <div className="w-full max-w-md space-y-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
+          <p className="mt-2 text-gray-600">Sign in to your Lumina account</p>
+        </div>
+        <div className="flex justify-center py-8">
+          <Loader2 className="h-6 w-6 animate-spin text-lumina-coral" />
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,19 +67,34 @@ export function SignInForm() {
       const validatedData = signInSchema.parse(formData);
 
       // Attempt sign in
-      const result = await signIn('credentials', {
-        email: validatedData.email,
-        password: validatedData.password,
-        redirect: false,
-      });
+      console.log('🔐 Attempting signin with:', validatedData.email);
 
-      if (result?.error) {
-        setGeneralError('Invalid email or password');
-      } else if (result?.ok) {
-        // Refresh session and redirect
-        await getSession();
-        router.push(callbackUrl);
-        router.refresh();
+      try {
+        const result = await signIn('credentials', {
+          email: validatedData.email,
+          password: validatedData.password,
+          redirect: false,
+          callbackUrl: callbackUrl,
+        });
+
+        console.log('🔐 Signin result:', result);
+
+        if (result?.error) {
+          console.log('❌ Signin error:', result.error);
+          setGeneralError('Invalid email or password');
+        } else if (result?.ok) {
+          console.log('✅ Signin successful');
+          // The session will update automatically via useSession hook
+          // The useEffect above will handle the redirect when session updates
+          // Clear any previous errors
+          setGeneralError('');
+        } else {
+          console.log('❌ Unexpected signin result:', result);
+          setGeneralError('An unexpected error occurred');
+        }
+      } catch (signInError) {
+        console.error('❌ SignIn threw an error:', signInError);
+        setGeneralError('Authentication service error');
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -73,9 +115,21 @@ export function SignInForm() {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
+    setGeneralError('');
+
     try {
-      await signIn('google', { callbackUrl });
-    } catch {
+      const result = await signIn('google', {
+        callbackUrl,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setGeneralError('Failed to sign in with Google');
+        setIsLoading(false);
+      }
+      // If successful, the session will update and redirect will happen automatically
+    } catch (error) {
+      console.error('Google signin error:', error);
       setGeneralError('Failed to sign in with Google');
       setIsLoading(false);
     }
@@ -93,21 +147,22 @@ export function SignInForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-neutral-off-black">
-          Welcome back
-        </h1>
-        <p className="mt-2 text-neutral-medium-grey">
-          Sign in to your Lumina account
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
+        <p className="mt-2 text-gray-600">Sign in to your Lumina account</p>
       </div>
 
       {generalError && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" role="alert" aria-live="polite">
           <AlertDescription>{generalError}</AlertDescription>
         </Alert>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
+        noValidate
+        aria-label="Sign in form"
+      >
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -141,7 +196,7 @@ export function SignInForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-medium-grey hover:text-neutral-off-black"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900"
               disabled={isLoading}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -170,12 +225,10 @@ export function SignInForm() {
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-neutral-light-grey" />
+          <span className="w-full border-t border-gray-200" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-neutral-medium-grey">
-            Or continue with
-          </span>
+          <span className="bg-white px-2 text-gray-500">Or continue with</span>
         </div>
       </div>
 
@@ -212,9 +265,7 @@ export function SignInForm() {
       </Button>
 
       <div className="text-center text-sm">
-        <span className="text-neutral-medium-grey">
-          Don&apos;t have an account?{' '}
-        </span>
+        <span className="text-gray-600">Don&apos;t have an account? </span>
         <a
           href="/auth/signup"
           className="font-medium text-lumina-coral hover:text-lumina-gold"
@@ -226,7 +277,7 @@ export function SignInForm() {
       <div className="text-center">
         <a
           href="/auth/forgot-password"
-          className="text-sm text-neutral-medium-grey hover:text-neutral-off-black"
+          className="text-sm text-gray-600 hover:text-gray-900"
         >
           Forgot your password?
         </a>

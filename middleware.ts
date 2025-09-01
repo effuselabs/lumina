@@ -12,14 +12,14 @@ export default auth(req => {
     '/auth/signup',
     '/auth/error',
     '/auth/verify-request',
-    '/api/auth',
     '/api/health',
   ];
 
-  // Check if the route is public
-  const isPublicRoute = publicRoutes.some(
-    route => pathname.startsWith(route) || pathname === route
-  );
+  // Check if the route is public or an auth API route
+  const isPublicRoute =
+    publicRoutes.some(
+      route => pathname.startsWith(route) || pathname === route
+    ) || pathname.startsWith('/api/auth/');
 
   // Allow public routes
   if (isPublicRoute) {
