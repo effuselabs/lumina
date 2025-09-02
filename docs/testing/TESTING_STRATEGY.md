@@ -214,7 +214,124 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 
 ---
 
-## 🔗 **7. API Endpoints Testing**
+## 💳 **7. Payment Processing & Financial System**
+
+### ✅ **Payment Form Integration**
+- [ ] **Stripe Elements**
+  - [ ] Payment form loads correctly with Stripe Elements
+  - [ ] Card input validation works in real-time
+  - [ ] Payment processing shows loading states
+  - [ ] Successful payments show confirmation
+  - [ ] Failed payments display appropriate errors
+  - [ ] PCI compliance maintained (no card data on servers)
+
+- [ ] **Payment Intent Creation**
+  - [ ] Payment intents created with correct amount
+  - [ ] Business context metadata included
+  - [ ] Staff employment type and commission rate captured
+  - [ ] Appointment details properly linked
+
+### ✅ **Point of Sale (POS) Interface**
+- [ ] **Checkout Workflow**
+  - [ ] Appointment details display correctly
+  - [ ] Service pricing and duration shown
+  - [ ] Staff information and employment type visible
+  - [ ] Commission calculations preview accurately
+
+- [ ] **Tip Handling**
+  - [ ] Preset tip percentages calculate correctly
+  - [ ] Custom tip amounts accept valid input
+  - [ ] Tip amounts add to total correctly
+  - [ ] Tip transactions created separately
+
+- [ ] **Payment Methods**
+  - [ ] Card payment integration works
+  - [ ] Cash payment processing functions
+  - [ ] Payment method selection persists
+  - [ ] Receipt generation works for both methods
+
+### ✅ **Transaction Management**
+- [ ] **Transaction Creation**
+  - [ ] Transactions created with correct data
+  - [ ] Commission amounts calculated automatically
+  - [ ] Employment type specific logic applied
+  - [ ] Metadata stored properly
+  - [ ] Business scoping enforced
+
+- [ ] **Transaction Status Updates**
+  - [ ] Webhook events update transaction status
+  - [ ] Real-time status changes reflected in UI
+  - [ ] Failed transactions handled gracefully
+  - [ ] Cancelled transactions processed correctly
+
+- [ ] **Commission Processing**
+  - [ ] Commission transactions created automatically
+  - [ ] Commission rates applied correctly
+  - [ ] Hybrid employment calculations accurate
+  - [ ] Chair rental logic functions properly
+
+### ✅ **Financial Reporting**
+- [ ] **Revenue Analytics**
+  - [ ] Total revenue calculations accurate
+  - [ ] Net revenue (after refunds) correct
+  - [ ] Average transaction amounts calculated
+  - [ ] Daily/weekly/monthly breakdowns work
+
+- [ ] **Employment Type Reports**
+  - [ ] Commission staff revenue tracked
+  - [ ] Chair rental revenue calculated
+  - [ ] Hybrid employment breakdowns accurate
+  - [ ] Staff performance metrics correct
+
+- [ ] **Financial Dashboard**
+  - [ ] Key metrics display correctly
+  - [ ] Date range filtering works
+  - [ ] Employment type filtering functions
+  - [ ] Export functionality operates
+  - [ ] Real-time updates when data changes
+
+### ✅ **Refund Processing**
+- [ ] **Refund Creation**
+  - [ ] Full refunds process correctly
+  - [ ] Partial refunds calculate accurately
+  - [ ] Refund reasons captured properly
+  - [ ] Original transaction linked correctly
+
+- [ ] **Refund Workflow**
+  - [ ] Stripe refund creation successful
+  - [ ] Local transaction records updated
+  - [ ] Appointment status updated appropriately
+  - [ ] Commission adjustments processed
+
+### ✅ **Webhook Handling**
+- [ ] **Webhook Security**
+  - [ ] Signature validation prevents unauthorized requests
+  - [ ] Invalid signatures rejected properly
+  - [ ] Webhook secret configuration correct
+
+- [ ] **Event Processing**
+  - [ ] Payment success events processed
+  - [ ] Payment failure events handled
+  - [ ] Payment cancellation events processed
+  - [ ] Dispute events logged correctly
+  - [ ] Unknown events handled gracefully
+
+### ✅ **Multi-Tenant Financial Security**
+- [ ] **Business Data Isolation**
+  - [ ] Transactions scoped to correct business
+  - [ ] Cross-tenant transaction access prevented
+  - [ ] Financial reports business-specific
+  - [ ] Payment processing business-scoped
+
+- [ ] **Access Control**
+  - [ ] Users can only access their business transactions
+  - [ ] API endpoints validate business ownership
+  - [ ] Financial data properly protected
+  - [ ] Audit trails maintained
+
+---
+
+## 🔗 **8. API Endpoints Testing**
 
 ### ✅ **Authentication APIs**
 - [ ] **POST /api/auth/callback/credentials**
@@ -275,9 +392,54 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Validates business ownership
   - [ ] Preserves client history
 
+### ✅ **Payment APIs**
+- [ ] **POST /api/payments**
+  - [ ] Creates payment intent with correct amount
+  - [ ] Includes business and appointment context
+  - [ ] Validates user access to appointment
+  - [ ] Returns payment intent and transaction data
+
+- [ ] **GET /api/payments**
+  - [ ] Retrieves payment intent details
+  - [ ] Validates business ownership
+  - [ ] Returns complete payment information
+
+- [ ] **POST /api/payments/cash**
+  - [ ] Processes cash payments correctly
+  - [ ] Handles tip amounts properly
+  - [ ] Creates appropriate transaction records
+  - [ ] Updates appointment status
+
+- [ ] **POST /api/payments/refund**
+  - [ ] Creates Stripe refunds successfully
+  - [ ] Validates refund amounts
+  - [ ] Links to original transactions
+  - [ ] Updates transaction status
+
+- [ ] **POST /api/payments/webhook**
+  - [ ] Validates webhook signatures
+  - [ ] Processes payment events correctly
+  - [ ] Updates transaction status
+  - [ ] Handles commission creation
+
+### ✅ **Transaction APIs**
+- [ ] **GET /api/transactions**
+  - [ ] Returns business-scoped transactions
+  - [ ] Supports filtering and pagination
+  - [ ] Includes related data (staff, appointments)
+  - [ ] Validates user access
+
+### ✅ **Financial Reporting APIs**
+- [ ] **GET /api/reports/financial**
+  - [ ] Generates accurate revenue reports
+  - [ ] Supports date range filtering
+  - [ ] Includes employment type breakdowns
+  - [ ] Validates business access
+  - [ ] Returns comprehensive analytics
+
 ---
 
-## 🛡️ **8. Security & Data Protection**
+## 🛡️ **9. Security & Data Protection**
 
 ### ✅ **Multi-Tenant Security**
 - [ ] **Business Data Isolation**
@@ -307,7 +469,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 
 ---
 
-## 📱 **9. User Experience & UI**
+## 📱 **10. User Experience & UI**
 
 ### ✅ **Responsive Design**
 - [ ] **Mobile Compatibility**
@@ -344,7 +506,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 
 ---
 
-## 🧪 **10. Integration Testing**
+## 🧪 **11. Integration Testing**
 
 ### ✅ **End-to-End Workflows**
 - [ ] **Complete Staff Management Flow**
@@ -368,9 +530,21 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Client preferences are respected
   - [ ] Client history is maintained
 
+- [ ] **Payment-Employment Integration**
+  - [ ] Commission calculations use correct staff rates
+  - [ ] Employment type changes affect payment processing
+  - [ ] Hybrid employment calculations work correctly
+  - [ ] Chair rental payments process properly
+
+- [ ] **Payment-Appointment Integration**
+  - [ ] Payment completion updates appointment status
+  - [ ] Appointment cancellation triggers refunds
+  - [ ] Service pricing integrates with payment amounts
+  - [ ] Staff assignments affect commission calculations
+
 ---
 
-## 🚀 **11. Performance Testing**
+## 🚀 **12. Performance Testing**
 
 ### ✅ **Database Performance**
 - [ ] **Query Optimization**
@@ -393,7 +567,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 
 ---
 
-## 📋 **Testing Execution Checklist**
+## 📋 **13. Testing Execution Checklist**
 
 ### **Pre-Testing Setup**
 - [ ] Database is seeded with test data
@@ -420,23 +594,31 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ### **High Priority (Must Pass)**
 1. Authentication and session management
 2. Multi-tenant data isolation
-3. Staff CRUD operations
-4. Service management
-5. Client management basics
+3. Payment processing and transaction security
+4. Staff CRUD operations with employment calculations
+5. Service management
+6. Client management basics
+7. PCI compliance and payment security
 
 ### **Medium Priority (Should Pass)**
-1. Advanced filtering and search
-2. Staff invitation system
-3. Complex employment calculations
-4. Dashboard analytics
-5. API endpoint validation
+1. Advanced payment features (refunds, tips, cash payments)
+2. Financial reporting and analytics
+3. Commission calculations and hybrid employment
+4. Advanced filtering and search
+5. Staff invitation system
+6. Dashboard analytics
+7. API endpoint validation
+8. Webhook processing and real-time updates
 
 ### **Low Priority (Nice to Have)**
-1. Advanced UI interactions
-2. Performance optimizations
-3. Accessibility features
-4. Mobile responsiveness
-5. Error boundary handling
+1. Advanced financial analytics and insights
+2. Payment method optimization
+3. Advanced UI interactions
+4. Performance optimizations
+5. Accessibility features
+6. Mobile responsiveness
+7. Error boundary handling
+8. Export and reporting features
 
 ---
 

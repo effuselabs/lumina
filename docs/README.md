@@ -15,12 +15,18 @@ Welcome to the Lumina documentation hub. This directory contains comprehensive d
   - [Authentication System](features/authentication/AUTHENTICATION.md) - NextAuth.js implementation
   - [Booking Engine](features/booking-system/BOOKING_SYSTEM_IMPLEMENTATION.md) - Complete booking system
   - [CRM & Staff Management](features/crm-staff-management/) - Staff and client management
+  - [Payment Processing & Financial System](features/payment-system/) - Stripe integration and financial reporting
 
 ### 🧪 Testing & Quality
 
 - **[Testing Documentation](testing/)** - Comprehensive testing guides
   - [Testing Strategy](testing/TESTING_STRATEGY.md) - Complete testing checklist
   - [Testing Guidelines](testing/README.md) - General testing practices
+
+### 🔗 API Documentation
+
+- **[API Documentation](api/)** - Complete API reference
+  - [Payment Endpoints](api/PAYMENT_ENDPOINTS.md) - Payment processing API reference
 
 ### 📊 Project Management
 
@@ -73,19 +79,20 @@ Lumina is built as a modern, scalable SaaS platform with the following key compo
 - **Workflow integration system** with Agent Hooks for documentation sync and steering compliance
 - **Documentation audit** with comprehensive steering system integration
 - **Hybrid employment model** database architecture and financial calculation engine
+- **Payment processing and financial system** with Stripe integration, POS interface, transaction management, and financial reporting
 - **Production deployment infrastructure** with zero-downtime migration support
 
 ### 🚧 In Development
 
 - Staff management and invitation system
-- Payment processing and financial system
+- Advanced financial features and analytics
 
 ### 📋 Planned (MVP Phase)
 
-- Point of sale (POS) system
-- Financial reporting and analytics
 - Dashboard and analytics foundation
+- Advanced financial analytics and insights
 - Performance optimization and security hardening
+- Mobile applications and advanced integrations
 
 ## 🎯 AI-Powered Development Guidance
 

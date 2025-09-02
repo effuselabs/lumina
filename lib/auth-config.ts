@@ -3,7 +3,6 @@ import type { NextAuthConfig } from 'next-auth';
 export const authConfig = {
   // Ensure proper URL handling in all environments
   trustHost: true,
-  basePath: '/api/auth',
 
   // Session configuration
   session: {
@@ -54,4 +53,5 @@ export const authConfig = {
 
   // Debug mode for development
   debug: process.env.NODE_ENV === 'development',
+  providers: [], // Providers are defined in auth.ts
 } satisfies NextAuthConfig;
