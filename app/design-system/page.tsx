@@ -1,6 +1,5 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -8,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function DesignSystemPage() {
   return (
@@ -251,11 +251,11 @@ export default function DesignSystemPage() {
             <div className="flex flex-wrap gap-3">
               <Badge>Default</Badge>
               <Badge variant="secondary">Secondary</Badge>
-              <Badge variant="success">Success</Badge>
-              <Badge variant="warning">Warning</Badge>
+              <Badge variant="default">Success</Badge>
+              <Badge variant="secondary">Warning</Badge>
               <Badge variant="destructive">Error</Badge>
               <Badge variant="outline">Outline</Badge>
-              <Badge variant="ghost">Ghost</Badge>
+              <Badge variant="outline">Ghost</Badge>
             </div>
           </CardContent>
         </Card>

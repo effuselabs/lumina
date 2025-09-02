@@ -1,4 +1,8 @@
-import { createMockUser, createMockBusiness, resetFactoryCounters } from '@/factories';
+import {
+  createMockBusiness,
+  createMockUser,
+  resetFactoryCounters,
+} from '@/factories';
 
 describe('Testing Setup', () => {
   beforeEach(() => {
@@ -7,7 +11,7 @@ describe('Testing Setup', () => {
 
   it('should create mock users correctly', () => {
     const user = createMockUser();
-    
+
     expect(user).toHaveProperty('id');
     expect(user).toHaveProperty('email');
     expect(user).toHaveProperty('name');
@@ -17,7 +21,7 @@ describe('Testing Setup', () => {
 
   it('should create mock business correctly', () => {
     const business = createMockBusiness();
-    
+
     expect(business).toHaveProperty('id');
     expect(business).toHaveProperty('name');
     expect(business).toHaveProperty('email');
@@ -26,11 +30,11 @@ describe('Testing Setup', () => {
   });
 
   it('should allow overrides in factories', () => {
-    const customUser = createMockUser({ 
+    const customUser = createMockUser({
       name: 'Custom User',
-      role: 'staff' 
+      role: 'staff',
     });
-    
+
     expect(customUser.name).toBe('Custom User');
     expect(customUser.role).toBe('staff');
   });
