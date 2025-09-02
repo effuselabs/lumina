@@ -30,8 +30,12 @@ interface PaymentFormProps {
     onError?: (error: string) => void;
 }
 
-interface PaymentFormInnerProps extends PaymentFormProps {
+interface PaymentFormInnerProps {
+    amount: number;
+    description?: string;
     clientSecret?: string;
+    onSuccess?: (paymentIntent: any) => void;
+    onError?: (error: string) => void;
 }
 
 const CARD_ELEMENT_OPTIONS = {
@@ -55,7 +59,6 @@ const CARD_ELEMENT_OPTIONS = {
  * Inner payment form component that uses Stripe hooks
  */
 function PaymentFormInner({
-    appointmentId,
     amount,
     description,
     clientSecret,
@@ -297,7 +300,13 @@ export default function PaymentForm(props: PaymentFormProps) {
 
     return (
         <Elements stripe={stripePromise} options={options}>
-            <PaymentFormInner {...props} clientSecret={clientSecret} />
+            <PaymentFormInner
+                amount={props.amount}
+                description={props.description}
+                onSuccess={props.onSuccess}
+                onError={props.onError}
+                clientSecret={clientSecret}
+            />
         </Elements>
     );
 }

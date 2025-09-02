@@ -18,9 +18,9 @@ const createPaymentSchema = z.object({
     description: z.string().optional(),
 });
 
-const getPaymentSchema = z.object({
-    paymentIntentId: z.string().min(1, 'Payment intent ID is required'),
-});
+// const getPaymentSchema = z.object({
+//     paymentIntentId: z.string().min(1, 'Payment intent ID is required'),
+// });
 
 /**
  * POST /api/payments

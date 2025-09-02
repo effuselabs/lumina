@@ -116,8 +116,8 @@ export default function TransactionHistory({
     const [typeFilter, setTypeFilter] = useState<string>('');
     const [statusFilter, setStatusFilter] = useState<string>('');
     const [employmentTypeFilter, setEmploymentTypeFilter] = useState<string>('');
-    const [startDate, setStartDate] = useState<string>('');
-    const [endDate, setEndDate] = useState<string>('');
+    const [startDate] = useState<string>('');
+    const [endDate] = useState<string>('');
 
     const fetchTransactions = async (page = 1) => {
         setIsLoading(true);

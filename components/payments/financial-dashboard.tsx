@@ -113,8 +113,8 @@ export default function FinancialDashboard({ businessId }: FinancialDashboardPro
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string>('');
     const [dateRange, setDateRange] = useState('30');
-    const [startDate, setStartDate] = useState<string>('');
-    const [endDate, setEndDate] = useState<string>('');
+    const [startDate] = useState<string>('');
+    const [endDate] = useState<string>('');
 
     const fetchReport = async () => {
         setIsLoading(true);
@@ -191,7 +191,7 @@ export default function FinancialDashboard({ businessId }: FinancialDashboardPro
     }
 
     const totalEmploymentTypes = report.summary.activeEmploymentTypes.length;
-    const hasMultipleEmploymentTypes = totalEmploymentTypes > 1;
+    // const hasMultipleEmploymentTypes = totalEmploymentTypes > 1;
 
     return (
         <div className="space-y-6">
