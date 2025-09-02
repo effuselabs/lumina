@@ -21,6 +21,7 @@ export default async function DashboardLayout({
   // Get the current pathname to determine if we're on onboarding
   const headersList = headers();
   const pathname = headersList.get('x-pathname') || '';
+
   // For onboarding page, render without dashboard navigation and skip business check
   if (pathname === '/onboarding') {
     return <div className="min-h-screen bg-gray-50">{children}</div>;
@@ -40,9 +41,19 @@ export default async function DashboardLayout({
   if (userBusinesses.length === 0) {
     redirect('/onboarding');
   }
+
+  // Extract business slug from pathname for navigation
+  const businessSlugMatch = pathname.match(/^\/dashboard\/([^\/]+)/);
+  const businessSlug = businessSlugMatch ? businessSlugMatch[1] : undefined;
+
+  // For business dashboard pages, let the page handle its own layout
+  if (businessSlug) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <DashboardNav />
+      <DashboardNav businessSlug={businessSlug} />
 
       {/* Main content */}
       <div className="lg:pl-72">
