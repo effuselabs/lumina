@@ -9,6 +9,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 🔐 **1. Authentication & Session Management**
 
 ### ✅ **Authentication Flow**
+
 - [ ] **Sign In with Credentials**
   - [ ] Valid email/password combination redirects to dashboard
   - [ ] Invalid credentials show appropriate error message
@@ -28,6 +29,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] User profile data is properly imported
 
 ### ✅ **Route Protection**
+
 - [ ] **Protected Routes**
   - [ ] Unauthenticated users redirected to signin
   - [ ] Dashboard accessible after authentication
@@ -39,6 +41,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 🏢 **2. Multi-Tenant Business Management**
 
 ### ✅ **Business Context**
+
 - [ ] **Business Scoping**
   - [ ] User can only see their own business data
   - [ ] All queries include businessId filter
@@ -55,6 +58,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 👥 **3. Staff Management System**
 
 ### ✅ **Staff CRUD Operations**
+
 - [ ] **View Staff List**
   - [ ] Staff list displays all business staff members
   - [ ] Staff cards show correct information (name, role, employment type)
@@ -80,6 +84,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Status changes affect booking availability
 
 ### ✅ **Staff Invitation System**
+
 - [ ] **Send Invitations**
   - [ ] Invitation form validates email addresses
   - [ ] Invitation emails are sent successfully
@@ -93,6 +98,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Expired invitations show appropriate error
 
 ### ✅ **Employment Types & Financial Models**
+
 - [ ] **Commission Staff**
   - [ ] Commission rates are calculated correctly
   - [ ] Base salary (if any) is included in calculations
@@ -113,6 +119,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 🛍️ **4. Service Management**
 
 ### ✅ **Service CRUD Operations**
+
 - [ ] **View Services**
   - [ ] Services list displays all business services
   - [ ] Service cards show name, price, duration, category
@@ -138,6 +145,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Status changes affect booking system
 
 ### ✅ **Service Filtering & Search**
+
 - [ ] **Search Functionality**
   - [ ] Search by service name works
   - [ ] Search results update in real-time
@@ -154,6 +162,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 👤 **5. Client Management (CRM)**
 
 ### ✅ **Client CRUD Operations**
+
 - [ ] **View Clients**
   - [ ] Client list displays all business clients
   - [ ] Client information is properly formatted
@@ -179,6 +188,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Contact information is properly formatted
 
 ### ✅ **Client Data Management**
+
 - [ ] **Data Validation**
   - [ ] Email format validation
   - [ ] Phone number format validation
@@ -192,14 +202,43 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 
 ---
 
-## 📊 **6. Dashboard & Analytics**
+## 📊 **6. Dashboard & Analytics** 🚧 **IN PROGRESS**
 
 ### ✅ **Dashboard Overview**
+
 - [ ] **Quick Stats**
   - [ ] Service count is accurate
   - [ ] Client count is accurate
   - [ ] Staff count is accurate
   - [ ] Upcoming appointments count is accurate
+
+- [ ] **Widget-Based Dashboard** 🚧 **NEW**
+  - [ ] Dashboard layout loads correctly with responsive grid
+  - [ ] Widgets display data accurately and update in real-time
+  - [ ] Widget customization and layout preferences work
+  - [ ] Loading states and error handling function properly
+  - [ ] Mobile-responsive dashboard design works on all devices
+
+- [ ] **Revenue Visualization Widgets** 🚧 **NEW**
+  - [ ] Interactive charts display revenue trends correctly
+  - [ ] Employment type breakdowns show accurate data
+  - [ ] Service performance analytics are calculated properly
+  - [ ] Time-based analysis (daily/weekly/monthly) functions correctly
+  - [ ] Chart interactions and tooltips work as expected
+
+- [ ] **Client Metrics Display** 🚧 **NEW**
+  - [ ] Growth indicators show accurate client acquisition trends
+  - [ ] Customer lifetime value calculations are correct
+  - [ ] Appointment history analytics display properly
+  - [ ] Marketing effectiveness tracking functions correctly
+  - [ ] Retention rate calculations are accurate
+
+- [ ] **Appointment Calendar Widget** 🚧 **NEW**
+  - [ ] Calendar displays staff schedules correctly
+  - [ ] Drag-and-drop appointment management works
+  - [ ] Conflict detection identifies scheduling issues
+  - [ ] Real-time availability updates function properly
+  - [ ] Calendar navigation and date selection work
 
 - [ ] **Quick Actions**
   - [ ] "Manage Services" link works
@@ -207,16 +246,39 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Navigation links work correctly
 
 ### ✅ **Business Metrics**
+
 - [ ] **Data Accuracy**
   - [ ] All counts reflect actual database data
   - [ ] Stats update when data changes
   - [ ] Business-specific data only
+
+### ✅ **Data Aggregation & Reporting** 🚧 **NEW**
+
+- [ ] **Real-time Data Services**
+  - [ ] Business-scoped queries return correct data
+  - [ ] Performance optimization with caching works
+  - [ ] Query optimization handles large datasets efficiently
+  - [ ] Data transformation produces meaningful metrics
+
+- [ ] **Report Generation System**
+  - [ ] PDF export generates professional reports with business branding
+  - [ ] CSV/Excel export functionality works correctly
+  - [ ] Custom report builder interface functions properly
+  - [ ] Scheduled report generation and distribution works
+  - [ ] Report sharing and access controls function correctly
+
+- [ ] **Advanced Analytics**
+  - [ ] Trend analysis produces accurate historical insights
+  - [ ] Performance metrics track staff and service efficiency
+  - [ ] Financial insights provide revenue optimization data
+  - [ ] Data retention and archiving policies are enforced
 
 ---
 
 ## 💳 **7. Payment Processing & Financial System**
 
 ### ✅ **Payment Form Integration**
+
 - [ ] **Stripe Elements**
   - [ ] Payment form loads correctly with Stripe Elements
   - [ ] Card input validation works in real-time
@@ -232,6 +294,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Appointment details properly linked
 
 ### ✅ **Point of Sale (POS) Interface**
+
 - [ ] **Checkout Workflow**
   - [ ] Appointment details display correctly
   - [ ] Service pricing and duration shown
@@ -251,6 +314,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Receipt generation works for both methods
 
 ### ✅ **Transaction Management**
+
 - [ ] **Transaction Creation**
   - [ ] Transactions created with correct data
   - [ ] Commission amounts calculated automatically
@@ -271,6 +335,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Chair rental logic functions properly
 
 ### ✅ **Financial Reporting**
+
 - [ ] **Revenue Analytics**
   - [ ] Total revenue calculations accurate
   - [ ] Net revenue (after refunds) correct
@@ -291,6 +356,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Real-time updates when data changes
 
 ### ✅ **Refund Processing**
+
 - [ ] **Refund Creation**
   - [ ] Full refunds process correctly
   - [ ] Partial refunds calculate accurately
@@ -304,6 +370,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Commission adjustments processed
 
 ### ✅ **Webhook Handling**
+
 - [ ] **Webhook Security**
   - [ ] Signature validation prevents unauthorized requests
   - [ ] Invalid signatures rejected properly
@@ -317,6 +384,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Unknown events handled gracefully
 
 ### ✅ **Multi-Tenant Financial Security**
+
 - [ ] **Business Data Isolation**
   - [ ] Transactions scoped to correct business
   - [ ] Cross-tenant transaction access prevented
@@ -334,12 +402,14 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 🔗 **8. API Endpoints Testing**
 
 ### ✅ **Authentication APIs**
+
 - [ ] **POST /api/auth/callback/credentials**
   - [ ] Valid credentials return success
   - [ ] Invalid credentials return error
   - [ ] Session is properly established
 
 ### ✅ **Staff APIs**
+
 - [ ] **GET /api/staff**
   - [ ] Returns business-scoped staff list
   - [ ] Includes proper staff details
@@ -361,6 +431,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Handles dependencies properly
 
 ### ✅ **Service APIs**
+
 - [ ] **GET /api/services**
   - [ ] Returns business-scoped services
   - [ ] Supports filtering and search
@@ -377,6 +448,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Handles price/duration changes
 
 ### ✅ **Client APIs**
+
 - [ ] **GET /api/clients**
   - [ ] Returns business-scoped clients
   - [ ] Supports search and filtering
@@ -393,6 +465,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Preserves client history
 
 ### ✅ **Payment APIs**
+
 - [ ] **POST /api/payments**
   - [ ] Creates payment intent with correct amount
   - [ ] Includes business and appointment context
@@ -423,6 +496,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Handles commission creation
 
 ### ✅ **Transaction APIs**
+
 - [ ] **GET /api/transactions**
   - [ ] Returns business-scoped transactions
   - [ ] Supports filtering and pagination
@@ -430,6 +504,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Validates user access
 
 ### ✅ **Financial Reporting APIs**
+
 - [ ] **GET /api/reports/financial**
   - [ ] Generates accurate revenue reports
   - [ ] Supports date range filtering
@@ -437,11 +512,58 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Validates business access
   - [ ] Returns comprehensive analytics
 
+### ✅ **Dashboard APIs** 🚧 **NEW**
+
+- [ ] **GET /api/dashboard/stats**
+  - [ ] Returns business-scoped quick stats and key metrics
+  - [ ] Includes service, client, staff, and appointment counts
+  - [ ] Validates business ownership and access permissions
+  - [ ] Handles empty results gracefully
+
+- [ ] **GET /api/dashboard/revenue**
+  - [ ] Returns revenue and financial data for widgets
+  - [ ] Supports date range filtering and employment type breakdowns
+  - [ ] Includes trend analysis and performance metrics
+  - [ ] Validates business access and data scoping
+
+- [ ] **GET /api/dashboard/clients**
+  - [ ] Returns client metrics and analytics data
+  - [ ] Includes growth indicators and retention calculations
+  - [ ] Supports filtering and date range selection
+  - [ ] Validates business ownership
+
+- [ ] **GET /api/dashboard/appointments**
+  - [ ] Returns appointment and scheduling analytics
+  - [ ] Includes booking trends and availability data
+  - [ ] Supports staff filtering and date range selection
+  - [ ] Validates business access and permissions
+
+### ✅ **Report Generation APIs** 🚧 **NEW**
+
+- [ ] **POST /api/reports/generate**
+  - [ ] Creates custom reports with specified parameters
+  - [ ] Supports PDF, CSV, and Excel format generation
+  - [ ] Validates business ownership and data access
+  - [ ] Handles large dataset export efficiently
+
+- [ ] **GET /api/reports/export**
+  - [ ] Exports data in requested format (CSV, Excel, JSON)
+  - [ ] Applies proper business scoping and access controls
+  - [ ] Handles large datasets with pagination or streaming
+  - [ ] Logs export activities for audit purposes
+
+- [ ] **POST /api/reports/schedule**
+  - [ ] Creates scheduled report generation tasks
+  - [ ] Validates report parameters and business access
+  - [ ] Sets up proper scheduling and distribution
+  - [ ] Handles recurring report generation
+
 ---
 
 ## 🛡️ **9. Security & Data Protection**
 
 ### ✅ **Multi-Tenant Security**
+
 - [ ] **Business Data Isolation**
   - [ ] Users can only access their business data
   - [ ] API endpoints validate business ownership
@@ -455,6 +577,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Logout clears all session data
 
 ### ✅ **Input Validation**
+
 - [ ] **Form Validation**
   - [ ] All forms validate required fields
   - [ ] Email format validation works
@@ -472,6 +595,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 📱 **10. User Experience & UI**
 
 ### ✅ **Responsive Design**
+
 - [ ] **Mobile Compatibility**
   - [ ] All pages work on mobile devices
   - [ ] Forms are usable on small screens
@@ -485,6 +609,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Tooltips and help text display
 
 ### ✅ **Loading States & Feedback**
+
 - [ ] **Loading Indicators**
   - [ ] Forms show loading states during submission
   - [ ] Lists show skeleton loading
@@ -498,6 +623,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Error boundaries prevent crashes
 
 ### ✅ **Accessibility**
+
 - [ ] **ARIA Support**
   - [ ] Forms have proper labels
   - [ ] Error messages are announced
@@ -509,6 +635,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 🧪 **11. Integration Testing**
 
 ### ✅ **End-to-End Workflows**
+
 - [ ] **Complete Staff Management Flow**
   - [ ] Create staff → Edit details → Manage status → View in list
   - [ ] Send invitation → Accept invitation → Complete setup
@@ -520,6 +647,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Add client → Edit information → View details → Search/filter
 
 ### ✅ **Cross-Feature Integration**
+
 - [ ] **Staff-Service Relationships**
   - [ ] Staff can be assigned to services
   - [ ] Service assignments affect availability
@@ -547,6 +675,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 🚀 **12. Performance Testing**
 
 ### ✅ **Database Performance**
+
 - [ ] **Query Optimization**
   - [ ] Large client lists load quickly
   - [ ] Service filtering is responsive
@@ -559,6 +688,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
   - [ ] Performance remains good with large data
 
 ### ✅ **Frontend Performance**
+
 - [ ] **Page Load Times**
   - [ ] Initial page loads are fast
   - [ ] Navigation between pages is smooth
@@ -570,18 +700,21 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 📋 **13. Testing Execution Checklist**
 
 ### **Pre-Testing Setup**
+
 - [ ] Database is seeded with test data
 - [ ] Test user accounts are created
 - [ ] Multiple business contexts are available
 - [ ] Environment variables are configured
 
 ### **Testing Environment**
+
 - [ ] Development server is running
 - [ ] Database is accessible
 - [ ] Email service is configured (for invitations)
 - [ ] All environment variables are set
 
 ### **Post-Testing**
+
 - [ ] Document any bugs found
 - [ ] Create issues for failed tests
 - [ ] Update test data as needed
@@ -592,6 +725,7 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 ## 🎯 **Priority Testing Areas**
 
 ### **High Priority (Must Pass)**
+
 1. Authentication and session management
 2. Multi-tenant data isolation
 3. Payment processing and transaction security
@@ -601,16 +735,19 @@ This comprehensive testing plan covers all developed features in the Lumina CRM 
 7. PCI compliance and payment security
 
 ### **Medium Priority (Should Pass)**
-1. Advanced payment features (refunds, tips, cash payments)
-2. Financial reporting and analytics
-3. Commission calculations and hybrid employment
-4. Advanced filtering and search
-5. Staff invitation system
-6. Dashboard analytics
-7. API endpoint validation
-8. Webhook processing and real-time updates
+
+1. **Dashboard and Analytics Foundation** 🚧 **NEW** - Widget-based dashboard, revenue visualization, and client metrics
+2. **Data Aggregation and Reporting Services** 🚧 **NEW** - Real-time data services, report generation, and export functionality
+3. Advanced payment features (refunds, tips, cash payments)
+4. Financial reporting and analytics
+5. Commission calculations and hybrid employment
+6. Advanced filtering and search
+7. Staff invitation system
+8. API endpoint validation
+9. Webhook processing and real-time updates
 
 ### **Low Priority (Nice to Have)**
+
 1. Advanced financial analytics and insights
 2. Payment method optimization
 3. Advanced UI interactions
