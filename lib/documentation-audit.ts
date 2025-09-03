@@ -994,7 +994,7 @@ export class DocumentationAuditor {
             console.error('❌ Migration failed:', _error);
             console.log('🔄 Initiating rollback...');
             await this.rollbackMigration(plan);
-            throw error;
+            throw _error;
         }
     }
 
@@ -1054,12 +1054,46 @@ export class DocumentationAuditor {
         const destDir = join(this.rootPath, destination);
         await fs.mkdir(destDir, { recursive: true });
 
-        // Copy all files recursively (Windows compatible)
-        const isWindows = process.platform === 'win32';
-        if (isWindows) {
-            execSync(`xcopy "${source}" "${destination}" /E /I /H /Y`, { cwd: this.rootPath });
+        // For root directory backup, copy specific important directories to avoid cycles
+        if (source === '.') {
+            const importantDirs = ['docs', 'lib', 'scripts', 'types', '__tests__', '.kiro'];
+            const importantFiles = ['README.md', 'package.json', 'tsconfig.json'];
+
+            const isWindows = process.platform === 'win32';
+
+            // Copy important directories
+            for (const dir of importantDirs) {
+                try {
+                    if (isWindows) {
+                        execSync(`xcopy "${dir}" "${destination}\\${dir}" /E /I /H /Y /Q`, { cwd: this.rootPath });
+                    } else {
+                        execSync(`cp -r "${dir}" "${destination}/"`, { cwd: this.rootPath });
+                    }
+                } catch (_error) {
+                    console.warn(`Could not backup directory ${dir}:`, _error);
+                }
+            }
+
+            // Copy important files
+            for (const file of importantFiles) {
+                try {
+                    if (isWindows) {
+                        execSync(`copy "${file}" "${destination}\\"`, { cwd: this.rootPath });
+                    } else {
+                        execSync(`cp "${file}" "${destination}/"`, { cwd: this.rootPath });
+                    }
+                } catch (_error) {
+                    console.warn(`Could not backup file ${file}:`, _error);
+                }
+            }
         } else {
-            execSync(`cp -r "${source}"/* "${destination}"/`, { cwd: this.rootPath });
+            // For specific directories, copy normally
+            const isWindows = process.platform === 'win32';
+            if (isWindows) {
+                execSync(`xcopy "${source}" "${destination}" /E /I /H /Y`, { cwd: this.rootPath });
+            } else {
+                execSync(`cp -r "${source}"/* "${destination}"/`, { cwd: this.rootPath });
+            }
         }
     }
 
