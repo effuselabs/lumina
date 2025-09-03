@@ -145,8 +145,8 @@ export class DocumentationAuditor {
                     files.push(fullPath);
                 }
             }
-        } catch (error) {
-            console.warn(`Warning: Could not scan directory ${dirPath}:`, error);
+        } catch (_error) {
+            console.warn(`Warning: Could not scan directory ${dirPath}:`, _error);
         }
 
         return files;
@@ -182,8 +182,8 @@ export class DocumentationAuditor {
                 category: this.categorizeContent(filePath, content),
                 extractedKnowledge: await this.extractKnowledge(filePath, content, gitHistory)
             };
-        } catch (error) {
-            console.warn(`Warning: Could not analyze file ${filePath}:`, error);
+        } catch (_error) {
+            console.warn(`Warning: Could not analyze file ${filePath}:`, _error);
             return null;
         }
     }
@@ -531,8 +531,8 @@ export class DocumentationAuditor {
                 });
             }
 
-        } catch (error) {
-            console.warn(`Could not perform deep extraction on ${file.path}:`, error);
+        } catch (_error) {
+            console.warn(`Could not perform deep extraction on ${file.path}:`, _error);
         }
 
         return knowledge;
@@ -605,8 +605,8 @@ export class DocumentationAuditor {
                         changes: []
                     };
                 });
-        } catch (error) {
-            console.warn('Could not get recent commits:', error);
+        } catch (_error) {
+            console.warn('Could not get recent commits:', _error);
             return [];
         }
     }
@@ -693,8 +693,8 @@ export class DocumentationAuditor {
                 }
             }
 
-        } catch (error) {
-            console.warn(`Could not extract from code comments in ${file.path}:`, error);
+        } catch (_error) {
+            console.warn(`Could not extract from code comments in ${file.path}:`, _error);
         }
 
         return knowledge;
@@ -816,7 +816,7 @@ export class DocumentationAuditor {
         return categoryMap[category] || 'docs/misc';
     }
 
-    private async createConsolidationPhase(files: DocumentationFile[], allKnowledge: ExtractedKnowledge[]): Promise<MigrationPhase> {
+    private async createConsolidationPhase(files: DocumentationFile[], _allKnowledge: ExtractedKnowledge[]): Promise<MigrationPhase> {
         const consolidationActions: MigrationAction[] = [];
 
         // Find duplicate content for consolidation
@@ -887,7 +887,7 @@ export class DocumentationAuditor {
         return intersection.size / union.size;
     }
 
-    private async createIndexingPhase(files: DocumentationFile[]): Promise<MigrationPhase> {
+    private async createIndexingPhase(_files: DocumentationFile[]): Promise<MigrationPhase> {
         return {
             name: 'Indexing',
             description: 'Create navigation indexes and cross-references',
@@ -976,8 +976,8 @@ export class DocumentationAuditor {
             console.log('✅ Migration completed successfully');
             return guarantee;
 
-        } catch (error) {
-            console.error('❌ Migration failed:', error);
+        } catch (_error) {
+            console.error('❌ Migration failed:', _error);
             console.log('🔄 Initiating rollback...');
             await this.rollbackMigration(plan);
             throw error;
@@ -1006,8 +1006,8 @@ export class DocumentationAuditor {
                     await this.createIndex(action.source, action.destination);
                     break;
             }
-        } catch (error) {
-            throw new Error(`Failed to execute action ${action.type}: ${error}`);
+        } catch (_error) {
+            throw new Error(`Failed to execute action ${action.type}: ${_error}`);
         }
     }
 
@@ -1064,7 +1064,7 @@ export class DocumentationAuditor {
     private async verifyGitHistory(): Promise<boolean> {
         try {
             // Check that git history is intact
-            const gitStatus = execSync('git status --porcelain', { cwd: this.rootPath, encoding: 'utf-8' });
+            execSync('git status --porcelain', { cwd: this.rootPath, encoding: 'utf-8' });
             return true; // If git commands work, history is preserved
         } catch {
             return false;
@@ -1072,7 +1072,7 @@ export class DocumentationAuditor {
     }
 
     private async verifyContentMapping(mapping: Record<string, string>): Promise<boolean> {
-        for (const [oldPath, newPath] of Object.entries(mapping)) {
+        for (const [_oldPath, newPath] of Object.entries(mapping)) {
             try {
                 const newFullPath = join(this.rootPath, newPath);
                 await fs.access(newFullPath);
@@ -1098,8 +1098,8 @@ export class DocumentationAuditor {
         for (const step of plan.rollbackProcedure) {
             try {
                 execSync(step, { cwd: this.rootPath });
-            } catch (error) {
-                console.error(`Rollback step failed: ${step}`, error);
+            } catch (_error) {
+                console.error(`Rollback step failed: ${step}`, _error);
             }
         }
     }
