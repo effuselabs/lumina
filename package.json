@@ -43,7 +43,30 @@
     "deploy:production": "railway up --service lumina-prod",
     "health:check": "curl -f http://localhost:3000/api/health || exit 1",
     "analyze-steering-impact": "tsx scripts/analyze-steering-impact.ts",
-    "modernize-plan": "tsx scripts/modernize-development-plan.ts"
+    "modernize-plan": "tsx scripts/modernize-development-plan.ts",
+    "ai:init-context": "tsx scripts/init-ai-context.ts",
+    "ai:context-report": "tsx scripts/init-ai-context.ts --report --verbose",
+    "project:update-state": "tsx scripts/update-project-state.ts",
+    "decisions:add": "tsx scripts/manage-decisions.ts add",
+    "decisions:list": "tsx scripts/manage-decisions.ts list",
+    "decisions:summary": "tsx scripts/manage-decisions.ts summary",
+    "daily-status": "tsx scripts/manage-daily-status.ts",
+    "daily-status:generate": "tsx scripts/generate-daily-status.ts",
+    "daily-status:init": "tsx scripts/manage-daily-status.ts init",
+    "daily-status:report": "tsx scripts/manage-daily-status.ts report",
+    "daily-status:weekly": "tsx scripts/manage-daily-status.ts weekly",
+    "daily-status:dashboard": "tsx scripts/manage-daily-status.ts dashboard",
+    "daily-status:linear": "tsx scripts/daily-status-linear.ts",
+    "blocker:add": "tsx scripts/daily-status-linear.ts add-blocker",
+    "blocker:resolve": "tsx scripts/daily-status-linear.ts resolve-blocker",
+    "blocker:list": "tsx scripts/daily-status-linear.ts list-blockers",
+    "decision:add": "tsx scripts/daily-status-linear.ts add-decision",
+    "linear:sync": "tsx scripts/daily-status-linear.ts sync",
+    "linear:report": "tsx scripts/daily-status-linear.ts report",
+    "linear:test": "tsx scripts/test-linear-integration.ts",
+    "audit:docs": "tsx scripts/comprehensive-documentation-audit.ts",
+    "audit:docs:dry-run": "tsx scripts/comprehensive-documentation-audit.ts --dry-run --verbose",
+    "audit:docs:plan-only": "tsx scripts/comprehensive-documentation-audit.ts --skip-migration --verbose"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
@@ -90,7 +113,8 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.20.4",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "commander": "^12.0.0"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",

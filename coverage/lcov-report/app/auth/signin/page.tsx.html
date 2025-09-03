@@ -90,7 +90,17 @@
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -99,59 +109,79 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Suspense } from <span class="cstat-no" title="statement not covered" >'react';</span>
-import { SignInForm } from <span class="cstat-no" title="statement not covered" >'@/components/auth/signin-form';</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { SignInForm } from <span class="cstat-no" title="statement not covered" >'@/components/auth/signin-form';</span>
+import { ClientOnly } from <span class="cstat-no" title="statement not covered" >'@/components/ui/client-only';</span>
 import { Loader2 } from <span class="cstat-no" title="statement not covered" >'lucide-react';</span>
-&nbsp;
-export default function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >SignInPage() {</span></span>
-  return (
-    &lt;div className="min-h-screen flex items-center justify-center bg-neutral-light-grey px-4"&gt;
-      &lt;div className="w-full max-w-md"&gt;
-        &lt;div className="bg-white rounded-lg shadow-lumina p-8"&gt;
-          &lt;Suspense
-            fallback={
-              &lt;div className="flex justify-center py-8"&gt;
-                &lt;Loader2 className="h-6 w-6 animate-spin text-lumina-coral" /&gt;
-              &lt;/div&gt;
-            }
-          &gt;
-            &lt;SignInForm /&gt;
-          &lt;/Suspense&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  );
-}
 &nbsp;
 export const <span class="cstat-no" title="statement not covered" >metadata </span>= <span class="cstat-no" title="statement not covered" >{</span>
   title: 'Sign In | Lumina',
   description: 'Sign in to your Lumina account',
-};</pre></td></tr></table></pre>
+};
+&nbsp;
+export default function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >SignInPage() {</span></span>
+  return (
+    &lt;div className="min-h-screen flex items-center justify-center bg-gray-50 px-4"&gt;
+      &lt;div className="w-full max-w-md"&gt;
+        &lt;div className="bg-white rounded-lg shadow-lg p-8"&gt;
+          &lt;ClientOnly
+            fallback={
+              &lt;div className="space-y-6"&gt;
+                &lt;div className="text-center"&gt;
+                  &lt;h1 className="text-2xl font-bold text-gray-900"&gt;
+                    Welcome back
+                  &lt;/h1&gt;
+                  &lt;p className="mt-2 text-gray-600"&gt;
+                    Sign in to your Lumina account
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div className="flex justify-center py-8"&gt;
+                  &lt;Loader2 className="h-6 w-6 animate-spin text-lumina-coral" /&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            }
+          &gt;
+            &lt;SignInForm /&gt;
+          &lt;/ClientOnly&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-01T17:50:59.626Z
+                at 2025-09-02T23:57:57.837Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

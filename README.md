@@ -412,6 +412,35 @@ We use Linear for project tracking with a comprehensive label system:
 - **Stage**: Ready, Blocked, Review, Testing
 - **Area**: Foundation, Business, Scheduling, Client Management, Payments, Analytics, QA, Production
 
+## 🔗 Linear Integration
+
+Lumina includes seamless Linear integration for documentation workflow automation:
+
+### Quick Commands
+
+```bash
+# Add blocker with auto Linear issue creation
+npm run blocker:add "Can't deploy to production" --create-linear-issue
+
+# Add decision linked to Linear issue  
+npm run decision:add "Use PostgreSQL for analytics" --link-linear-issue LUM-123
+
+# List active blockers with Linear status
+npm run blocker:list
+
+# Generate reports with Linear integration
+npm run linear:report
+```
+
+### Key Features
+
+- **🚧 Auto-create Linear issues** for high-priority blockers
+- **📝 Link decisions to Linear issues** for architectural context
+- **🔄 Bi-directional sync** between daily status and Linear
+- **📊 Integrated reporting** with Linear issue tracking
+
+📖 **See [Linear Integration Guide](docs/linear-integration-guide.md) for complete setup and usage**
+
 ## 🎨 Brand Guidelines
 
 Lumina follows a comprehensive brand system:
