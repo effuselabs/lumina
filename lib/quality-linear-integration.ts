@@ -24,14 +24,18 @@ export async function createQualityIssue(
     }
 
     const title = formatIssueTitle(issue);
-    const description = formatIssueDescription(issue);
+    const _description = formatIssueDescription(issue);
 
     try {
         // Note: This would use MCP Linear tools in a real implementation
         // For now, we'll simulate the creation and show what would be created
+        // eslint-disable-next-line no-console
         console.log(`📝 Would create Linear issue: ${title}`);
+        // eslint-disable-next-line no-console
         console.log(`   Project: Documentation Quality & Maintenance`);
+        // eslint-disable-next-line no-console
         console.log(`   Priority: ${getPriorityFromSeverity(issue.severity)}`);
+        // eslint-disable-next-line no-console
         console.log(`   Labels: documentation, maintenance, ${issue.type}`);
 
         return `MOCK-${Date.now()}`;
@@ -61,6 +65,7 @@ export async function processQualityReport(
 
         if (issueId) {
             created++;
+            // eslint-disable-next-line no-console
             console.log(`✅ Created issue ${issueId} for ${issue.file}`);
         } else {
             skipped++;

@@ -4,6 +4,8 @@
  * Run quality checks and optionally create Linear issues
  */
 
+/* eslint-disable no-console */
+
 import { formatQualityReport, runQualityAudit } from '../lib/documentation-quality';
 import { defaultQualityConfig, processQualityReport } from '../lib/quality-linear-integration';
 

@@ -126,6 +126,7 @@ export async function checkStaleContent(rootDir: string = '.'): Promise<QualityI
  * Run complete quality audit
  */
 export async function runQualityAudit(rootDir: string = '.'): Promise<QualityReport> {
+    // eslint-disable-next-line no-console
     console.log('🔍 Running documentation quality audit...');
 
     const [brokenLinkIssues, staleContentIssues] = await Promise.all([
