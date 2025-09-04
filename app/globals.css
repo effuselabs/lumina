@@ -86,7 +86,32 @@
       'calt' 1;
   }
 
-  /* Lumina Typography Scale */
+  /* Lumina Typography Scale (per Design System v2.0) */
+  .text-lumina-h1 {
+    @apply text-lumina-h1; /* 32px, Bold (700), 40px line height */
+  }
+
+  .text-lumina-h2 {
+    @apply text-lumina-h2; /* 24px, SemiBold (600), 32px line height */
+  }
+
+  .text-lumina-h3 {
+    @apply text-lumina-h3; /* 20px, SemiBold (600), 28px line height */
+  }
+
+  .text-lumina-body-lg {
+    @apply text-lumina-body-lg; /* 16px, Regular (400), 24px line height */
+  }
+
+  .text-lumina-body-sm {
+    @apply text-lumina-body-sm; /* 14px, Regular (400), 20px line height */
+  }
+
+  .text-lumina-caption {
+    @apply text-lumina-caption; /* 12px, Medium (500), 16px line height */
+  }
+
+  /* Legacy display classes for backward compatibility */
   .text-display-2xl {
     @apply text-6xl font-bold tracking-tight;
   }
@@ -153,11 +178,15 @@
   --slate-grey: #2e3440;
   --deep-teal: #0b2b33;
 
-  /* Neutral Palette */
-  --off-black: #1d1d21;
+  /* Neutral Palette (per Lumina Design System v2.0) */
+  --off-black: #1d2d35; /* Updated to match design system */
   --medium-grey: #808285;
   --light-grey: #f1f3f5;
   --white: #ffffff;
+
+  /* Tertiary Accent Colors (per v2.0 design system) */
+  --clarity-blue: #89cff0;
+  --soft-peach: #ffe5b4;
 
   /* Semantic Colors */
   --background: var(--white);

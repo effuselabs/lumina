@@ -81,6 +81,29 @@ const config: Config = {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
+        // Lumina Tertiary Accent Colors (per v2.0 design system)
+        'clarity-blue': {
+          DEFAULT: '#89CFF0', // Clarity Blue per Lumina brand v2.0
+          50: '#F0F9FF',
+          100: '#E0F2FE',
+          200: '#BAE6FD',
+          300: '#7DD3FC',
+          400: '#38BDF8',
+          500: '#89CFF0',
+          600: '#0284C7',
+          700: '#0369A1',
+        },
+        'soft-peach': {
+          DEFAULT: '#FFE5B4', // Soft Peach per Lumina brand v2.0
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FED7AA',
+          300: '#FDBA74',
+          400: '#FB923C',
+          500: '#FFE5B4',
+          600: '#EA580C',
+          700: '#C2410C',
+        },
         // Lumina Functional UI Colors (per style guide)
         success: {
           DEFAULT: '#22C58B', // Success Green per Lumina brand
@@ -122,21 +145,35 @@ const config: Config = {
         mono: ['IBM Plex Mono', 'Menlo', 'Monaco', 'monospace'],
         display: ['Inter', 'system-ui', 'sans-serif'],
       },
-      // Typography Scale
+      // Typography Scale (per Lumina Design System v2.0)
       fontSize: {
-        xs: ['0.75rem', { lineHeight: '1rem' }],
-        sm: ['0.875rem', { lineHeight: '1.25rem' }],
-        base: ['1rem', { lineHeight: '1.5rem' }],
+        // Standard Tailwind sizes
+        xs: ['0.75rem', { lineHeight: '1rem' }], // 12px - Caption
+        sm: ['0.875rem', { lineHeight: '1.25rem' }], // 14px - Body Small
+        base: ['1rem', { lineHeight: '1.5rem' }], // 16px - Body Large
         lg: ['1.125rem', { lineHeight: '1.75rem' }],
-        xl: ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],
+        xl: ['1.25rem', { lineHeight: '1.75rem' }], // 20px - Heading 3
+        '2xl': ['1.5rem', { lineHeight: '2rem' }], // 24px - Heading 2
         '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }], // 32px - Heading 1 (closest)
         '5xl': ['3rem', { lineHeight: '1' }],
         '6xl': ['3.75rem', { lineHeight: '1' }],
         '7xl': ['4.5rem', { lineHeight: '1' }],
         '8xl': ['6rem', { lineHeight: '1' }],
         '9xl': ['8rem', { lineHeight: '1' }],
+        // Lumina Design System Typography Scale
+        'lumina-h1': ['2rem', { lineHeight: '2.5rem', fontWeight: '700' }], // 32px, Bold, 40px line height
+        'lumina-h2': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }], // 24px, SemiBold, 32px line height
+        'lumina-h3': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }], // 20px, SemiBold, 28px line height
+        'lumina-body-lg': ['1rem', { lineHeight: '1.5rem', fontWeight: '400' }], // 16px, Regular, 24px line height
+        'lumina-body-sm': [
+          '0.875rem',
+          { lineHeight: '1.25rem', fontWeight: '400' },
+        ], // 14px, Regular, 20px line height
+        'lumina-caption': [
+          '0.75rem',
+          { lineHeight: '1rem', fontWeight: '500' },
+        ], // 12px, Medium, 16px line height
       },
       // Font Weights
       fontWeight: {
