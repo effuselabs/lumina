@@ -138,12 +138,13 @@ function displayVerboseInfo(contextState: any) {
     if (contextState.projectStateSnapshot.activeFeatures.length > 0) {
         console.log('\n🎯 Active Features Detail:');
         contextState.projectStateSnapshot.activeFeatures.forEach((feature: any) => {
-            const statusEmoji = {
+            const statusEmojiMap = {
                 'not_started': '⏳',
                 'in_progress': '🔄',
                 'completed': '✅',
                 'blocked': '🚫'
-            }[feature.status] || '❓';
+            } as const;
+            const statusEmoji = statusEmojiMap[feature.status as keyof typeof statusEmojiMap] || '❓';
 
             console.log(`  ${statusEmoji} ${feature.name} (${feature.completionPercentage || 0}%)`);
         });
@@ -244,3 +245,4 @@ if (require.main === module) {
 }
 
 export { main as initAIContext };
+

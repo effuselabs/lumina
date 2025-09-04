@@ -17,7 +17,7 @@ const mockLinearUpdateIssue = jest.fn()
 jest.mock('@/lib/linear-client', () => ({
     createIssue: mockLinearCreateIssue,
     updateIssue: mockLinearUpdateIssue,
-    listIssues: jest.fn().mockResolvedValue([])
+    listIssues: jest.fn() as jest.MockedFunction<any>
 }))
 
 // Mock file system operations
@@ -142,7 +142,7 @@ describe('Documentation Sync Agent Hook', () => {
             const patterns = documentationSyncHook.trigger.patterns
             const componentFile = 'components/ui/button.tsx'
 
-            const matchesPattern = patterns.some(pattern => {
+            const matchesPattern = patterns.some((pattern: string) => {
                 const regex = new RegExp(pattern.replace('**', '.*').replace('*', '[^/]*'))
                 return regex.test(componentFile)
             })
@@ -154,7 +154,7 @@ describe('Documentation Sync Agent Hook', () => {
             const patterns = documentationSyncHook.trigger.patterns
             const apiFile = 'app/api/auth/signin/route.ts'
 
-            const matchesPattern = patterns.some(pattern => {
+            const matchesPattern = patterns.some((pattern: string) => {
                 const regex = new RegExp(pattern.replace('**', '.*').replace('*', '[^/]*'))
                 return regex.test(apiFile)
             })
@@ -166,7 +166,7 @@ describe('Documentation Sync Agent Hook', () => {
             const patterns = documentationSyncHook.trigger.patterns
             const utilityFile = 'lib/auth.ts'
 
-            const matchesPattern = patterns.some(pattern => {
+            const matchesPattern = patterns.some((pattern: string) => {
                 const regex = new RegExp(pattern.replace('**', '.*').replace('*', '[^/]*'))
                 return regex.test(utilityFile)
             })
@@ -253,7 +253,7 @@ describe('Documentation Sync Agent Hook', () => {
             const results = await executeDocumentationSyncHook(context)
 
             expect(results).toHaveLength(3)
-            expect(results.map(r => r.documentationType)).toEqual(['component', 'api', 'utility'])
+            expect(results.map((r: any) => r.documentationType)).toEqual(['component', 'api', 'utility'])
         })
 
         it('should skip files that do not need documentation', async () => {

@@ -78,12 +78,13 @@ function generateActiveFeaturesSection(features: any[]): string {
     }
 
     return features.map((feature, index) => {
-        const statusEmoji = {
+        const statusEmojiMap = {
             'not_started': '⏳',
             'in_progress': '🔄',
             'completed': '✅',
             'blocked': '🚫'
-        }[feature.status] || '❓';
+        } as const;
+        const statusEmoji = statusEmojiMap[feature.status as keyof typeof statusEmojiMap] || '❓';
 
         return `### ${index + 1}. ${feature.name}
 - **Status**: ${feature.status.replace('_', ' ')} ${statusEmoji}
@@ -160,3 +161,4 @@ if (require.main === module) {
 }
 
 export { updateProjectOverview };
+

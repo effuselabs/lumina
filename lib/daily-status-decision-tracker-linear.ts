@@ -110,9 +110,9 @@ export class DailyStatusDecisionTrackerLinear extends DailyStatusDecisionTracker
                     // Create new Linear issue for architectural decision
                     linkedIssue = await mcpService.createIssue({
                         title: `[DECISION] ${decision.title}`,
-                        description: this.formatDecisionForLinear(decision, decisionId),
-                        teamId: this.linearIntegration.config.teamId,
-                        projectId: this.linearIntegration.config.projectId,
+                        description: this.formatDecisionForLinear({ ...decision, id: decisionId, date: new Date() }, decisionId),
+                        teamId: this.linearIntegration.getTeamId() || 'default-team',
+                        projectId: this.linearIntegration.getProjectId(),
                         priority: 3, // Normal priority for decisions
                         labelIds: await mcpService.findLabels(['decision', 'architecture', 'documentation'])
                     });
@@ -215,7 +215,7 @@ ${Object.entries(updates).map(([key, value]) =>
      * Get decision by ID (helper method)
      */
     private async getDecisionById(decisionId: string): Promise<Decision | null> {
-        const { date } = this.parseDecisionId(decisionId);
+        const { date } = this.parseDecisionIdForLinear(decisionId);
         const decisions = await this.getDecisionsFromDate(date);
         return decisions.find(d => d.id === decisionId) || null;
     }
@@ -258,7 +258,7 @@ ${decision.impact.map(imp => `- ${imp}`).join('\n')}
     /**
      * Parse decision ID to get date (expose protected method)
      */
-    parseDecisionId(decisionId: string): { date: Date; filePath: string } {
+    public parseDecisionIdForLinear(decisionId: string): { date: Date; filePath: string } {
         const match = decisionId.match(/^DEC-(\d{4}-\d{2}-\d{2})-/);
         if (!match) {
             throw new Error(`Invalid decision ID format: ${decisionId}`);
@@ -338,8 +338,8 @@ ${decision.impact.map(imp => `- ${imp}`).join('\n')}
                 const linearIssue = await mcpService.createIssue({
                     title: `[DECISION] ${decision.title}`,
                     description: this.formatDecisionForLinear(decision, decision.id),
-                    teamId: this.linearIntegration.config.teamId,
-                    projectId: this.linearIntegration.config.projectId,
+                    teamId: this.linearIntegration.getTeamId() || 'default-team',
+                    projectId: this.linearIntegration.getProjectId(),
                     priority: 3,
                     labelIds: await mcpService.findLabels(['decision', 'architecture', 'documentation'])
                 });

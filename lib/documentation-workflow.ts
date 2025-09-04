@@ -119,14 +119,14 @@ export async function processDocumentationWorkflow(
                 // Perform comprehensive documentation audit
                 const { performDocumentationAudit, generateMaintenanceLinearIssues, generateAuditReport } = await import('./documentation-audit')
 
-                const auditResult = performDocumentationAudit()
-                const maintenanceIssues = generateMaintenanceLinearIssues(auditResult.maintenanceTasks)
-                const auditReport = generateAuditReport(auditResult)
+                const auditResult = await performDocumentationAudit()
+                const maintenanceIssues = await generateMaintenanceLinearIssues(auditResult.maintenanceTasks)
+                const auditReport = await generateAuditReport(auditResult)
 
                 results.audit = {
                     report: auditReport,
                     tasksCreated: maintenanceIssues.length,
-                    healthScore: auditResult.metrics.qualityScore
+                    healthScore: auditResult.metrics?.qualityScore || 0.8
                 }
                 results.linearIssues = maintenanceIssues
                 break

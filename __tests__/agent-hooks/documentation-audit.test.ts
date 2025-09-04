@@ -11,9 +11,9 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 
 // Mock Linear API
-const mockLinearCreateIssue = jest.fn()
-const mockLinearUpdateIssue = jest.fn()
-const mockLinearListIssues = jest.fn()
+const mockLinearCreateIssue = jest.fn() as jest.MockedFunction<any>
+const mockLinearUpdateIssue = jest.fn() as jest.MockedFunction<any>
+const mockLinearListIssues = jest.fn() as jest.MockedFunction<any>
 
 jest.mock('@/lib/linear-client', () => ({
     createIssue: mockLinearCreateIssue,
@@ -22,10 +22,10 @@ jest.mock('@/lib/linear-client', () => ({
 }))
 
 // Mock file system operations
-const mockReadFile = jest.fn()
-const mockExistsSync = jest.fn()
-const mockReaddirSync = jest.fn()
-const mockStatSync = jest.fn()
+const mockReadFile = jest.fn() as jest.MockedFunction<any>
+const mockExistsSync = jest.fn() as jest.MockedFunction<any>
+const mockReaddirSync = jest.fn() as jest.MockedFunction<any>
+const mockStatSync = jest.fn() as jest.MockedFunction<any>
 
 jest.mock('fs', () => ({
     readFileSync: mockReadFile,
@@ -35,7 +35,7 @@ jest.mock('fs', () => ({
 }))
 
 // Mock glob for file discovery
-const mockGlob = jest.fn()
+const mockGlob = jest.fn() as jest.MockedFunction<any>
 jest.mock('glob', () => ({
     glob: mockGlob
 }))
@@ -94,7 +94,7 @@ async function executeDocumentationAuditHook(context: AgentHookContext): Promise
 }
 
 // Mock documentation audit function
-async function performDocumentationAudit(): Promise<DocumentationAuditResult> {
+async function performDocumentationAudit(workspaceRoot: string): Promise<DocumentationAuditResult> {
     // Mock file discovery
     mockGlob.mockResolvedValue([
         'components/ui/button.tsx',

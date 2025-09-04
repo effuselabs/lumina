@@ -147,7 +147,7 @@ export class DailyStatusBlockerTrackerLinear extends DailyStatusBlockerTracker {
      * Get blocker by ID (helper method)
      */
     private async getBlockerById(blockerId: string): Promise<Blocker | null> {
-        const { date } = this.parseBlockerId(blockerId);
+        const { date } = this.parseBlockerIdForLinear(blockerId);
         const blockers = await this.getBlockersFromDate(date);
         return blockers.find(b => b.id === blockerId) || null;
     }
@@ -160,9 +160,9 @@ export class DailyStatusBlockerTrackerLinear extends DailyStatusBlockerTracker {
     }
 
     /**
-     * Parse blocker ID to get date and file path (expose protected method)
+     * Parse blocker ID to get date and file path (public method for Linear integration)
      */
-    parseBlockerId(blockerId: string): { date: Date; filePath: string } {
+    public parseBlockerIdForLinear(blockerId: string): { date: Date; filePath: string } {
         const match = blockerId.match(/^BLOCK-(\d{4}-\d{2}-\d{2})-/);
         if (!match) {
             throw new Error(`Invalid blocker ID format: ${blockerId}`);

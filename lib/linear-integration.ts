@@ -21,6 +21,20 @@ export class SimpleLinearIntegration {
     }
 
     /**
+     * Get the team ID for Linear integration
+     */
+    public getTeamId(): string | undefined {
+        return this.config.teamId;
+    }
+
+    /**
+     * Get the project ID for Linear integration
+     */
+    public getProjectId(): string | undefined {
+        return this.config.projectId;
+    }
+
+    /**
      * Auto-create Linear issue for a blocker (one-click "remember this")
      */
     async createBlockerIssue(blocker: {

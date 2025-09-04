@@ -42,7 +42,7 @@ export async function GET(
           where: { businessId },
         }),
         prisma.service.count({
-          where: { businessId, active: true },
+          where: { businessId, isActive: true },
         }),
         prisma.appointment.count({
           where: {

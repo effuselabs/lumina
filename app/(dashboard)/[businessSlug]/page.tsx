@@ -59,7 +59,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
     businessSlug: params.businessSlug,
     businessFound: !!business,
     businessName: business?.name,
-    userHasAccess: business?.users?.length > 0,
+    userHasAccess: (business?.users?.length ?? 0) > 0,
   });
 
   if (!business) {

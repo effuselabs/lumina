@@ -16,7 +16,7 @@ const mockLinearUpdateIssue = jest.fn()
 jest.mock('@/lib/linear-client', () => ({
     createIssue: mockLinearCreateIssue,
     updateIssue: mockLinearUpdateIssue,
-    listIssues: jest.fn().mockResolvedValue([])
+    listIssues: jest.fn() as jest.MockedFunction<any>
 }))
 
 // Mock file system operations
@@ -116,7 +116,7 @@ async function analyzeFileCompliance(filePath: string, workspaceRoot: string) {
     applicableSteeringFiles.push('coding-approach-and-standards.md')
 
     // Mock file content analysis
-    const fileContent = mockReadFile(filePath) || ''
+    const fileContent = (mockReadFile(filePath) as string) || ''
 
     // Check for common violations
     if (filePath.includes('app/api/') && !fileContent.includes('businessId')) {
@@ -209,7 +209,7 @@ describe('Steering Compliance Agent Hook', () => {
             const patterns = steeringComplianceHook.trigger.patterns
             const apiFile = 'app/api/auth/signin/route.ts'
 
-            const matchesPattern = patterns.some(pattern => {
+            const matchesPattern = patterns.some((pattern: string) => {
                 const regex = new RegExp(pattern.replace('**', '.*').replace('*', '[^/]*'))
                 return regex.test(apiFile)
             })
@@ -221,7 +221,7 @@ describe('Steering Compliance Agent Hook', () => {
             const patterns = steeringComplianceHook.trigger.patterns
             const componentFile = 'components/ui/button.tsx'
 
-            const matchesPattern = patterns.some(pattern => {
+            const matchesPattern = patterns.some((pattern: string) => {
                 const regex = new RegExp(pattern.replace('**', '.*').replace('*', '[^/]*'))
                 return regex.test(componentFile)
             })
@@ -233,7 +233,7 @@ describe('Steering Compliance Agent Hook', () => {
             const patterns = steeringComplianceHook.trigger.patterns
             const utilityFile = 'lib/auth.ts'
 
-            const matchesPattern = patterns.some(pattern => {
+            const matchesPattern = patterns.some((pattern: string) => {
                 const regex = new RegExp(pattern.replace('**', '.*').replace('*', '[^/]*'))
                 return regex.test(utilityFile)
             })

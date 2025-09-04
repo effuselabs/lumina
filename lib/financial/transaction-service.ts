@@ -178,6 +178,26 @@ export async function createTransaction(
 
   return {
     ...transaction,
+    amount: transaction.amount.toNumber(),
+    paymentMethod: transaction.paymentMethod || undefined,
+    paymentId: transaction.paymentId || undefined,
+    description: transaction.description || undefined,
+    staffEmploymentType: transaction.staffEmploymentType || undefined,
+    commissionRate: transaction.commissionRate ? transaction.commissionRate.toNumber() : undefined,
+    commissionAmount: transaction.commissionAmount ? transaction.commissionAmount.toNumber() : undefined,
+    appointment: transaction.appointment ? {
+      ...transaction.appointment,
+      clientName: transaction.appointment.clientName || undefined,
+      services: transaction.appointment.services.map(service => ({
+        ...service,
+        price: service.price.toNumber()
+      }))
+    } : undefined,
+    staff: transaction.staff ? {
+      ...transaction.staff,
+      commissionRate: transaction.staff.commissionRate ? transaction.staff.commissionRate.toNumber() : undefined,
+      chairRentalAmount: transaction.staff.chairRentalAmount ? transaction.staff.chairRentalAmount.toNumber() : undefined
+    } : undefined,
     appointmentId: transaction.appointmentId || undefined,
     staffId: transaction.staffId || undefined,
     userId: transaction.userId || undefined,
@@ -233,6 +253,26 @@ export async function updateTransactionStatus(
 
   return {
     ...transaction,
+    amount: transaction.amount.toNumber(),
+    paymentMethod: transaction.paymentMethod || undefined,
+    paymentId: transaction.paymentId || undefined,
+    description: transaction.description || undefined,
+    staffEmploymentType: transaction.staffEmploymentType || undefined,
+    commissionRate: transaction.commissionRate ? transaction.commissionRate.toNumber() : undefined,
+    commissionAmount: transaction.commissionAmount ? transaction.commissionAmount.toNumber() : undefined,
+    appointment: transaction.appointment ? {
+      ...transaction.appointment,
+      clientName: transaction.appointment.clientName || undefined,
+      services: transaction.appointment.services.map(service => ({
+        ...service,
+        price: service.price.toNumber()
+      }))
+    } : undefined,
+    staff: transaction.staff ? {
+      ...transaction.staff,
+      commissionRate: transaction.staff.commissionRate ? transaction.staff.commissionRate.toNumber() : undefined,
+      chairRentalAmount: transaction.staff.chairRentalAmount ? transaction.staff.chairRentalAmount.toNumber() : undefined
+    } : undefined,
     appointmentId: transaction.appointmentId || undefined,
     staffId: transaction.staffId || undefined,
     userId: transaction.userId || undefined,
@@ -281,6 +321,26 @@ export async function getTransactionByPaymentId(
 
   return {
     ...transaction,
+    amount: transaction.amount.toNumber(),
+    paymentMethod: transaction.paymentMethod || undefined,
+    paymentId: transaction.paymentId || undefined,
+    description: transaction.description || undefined,
+    staffEmploymentType: transaction.staffEmploymentType || undefined,
+    commissionRate: transaction.commissionRate ? transaction.commissionRate.toNumber() : undefined,
+    commissionAmount: transaction.commissionAmount ? transaction.commissionAmount.toNumber() : undefined,
+    appointment: transaction.appointment ? {
+      ...transaction.appointment,
+      clientName: transaction.appointment.clientName || undefined,
+      services: transaction.appointment.services.map(service => ({
+        ...service,
+        price: service.price.toNumber()
+      }))
+    } : undefined,
+    staff: transaction.staff ? {
+      ...transaction.staff,
+      commissionRate: transaction.staff.commissionRate ? transaction.staff.commissionRate.toNumber() : undefined,
+      chairRentalAmount: transaction.staff.chairRentalAmount ? transaction.staff.chairRentalAmount.toNumber() : undefined
+    } : undefined,
     appointmentId: transaction.appointmentId || undefined,
     staffId: transaction.staffId || undefined,
     userId: transaction.userId || undefined,
@@ -350,6 +410,26 @@ export async function getBusinessTransactions(
 
   return transactions.map(transaction => ({
     ...transaction,
+    amount: transaction.amount.toNumber(),
+    paymentMethod: transaction.paymentMethod || undefined,
+    paymentId: transaction.paymentId || undefined,
+    description: transaction.description || undefined,
+    staffEmploymentType: transaction.staffEmploymentType || undefined,
+    commissionRate: transaction.commissionRate ? transaction.commissionRate.toNumber() : undefined,
+    commissionAmount: transaction.commissionAmount ? transaction.commissionAmount.toNumber() : undefined,
+    appointment: transaction.appointment ? {
+      ...transaction.appointment,
+      clientName: transaction.appointment.clientName || undefined,
+      services: transaction.appointment.services.map(service => ({
+        ...service,
+        price: service.price.toNumber()
+      }))
+    } : undefined,
+    staff: transaction.staff ? {
+      ...transaction.staff,
+      commissionRate: transaction.staff.commissionRate ? transaction.staff.commissionRate.toNumber() : undefined,
+      chairRentalAmount: transaction.staff.chairRentalAmount ? transaction.staff.chairRentalAmount.toNumber() : undefined
+    } : undefined,
     appointmentId: transaction.appointmentId || undefined,
     staffId: transaction.staffId || undefined,
     userId: transaction.userId || undefined,
@@ -606,6 +686,26 @@ export async function getTransactionAuditTrail(transactionId: string): Promise<{
   return {
     transaction: {
       ...transaction,
+      amount: transaction.amount.toNumber(),
+      paymentMethod: transaction.paymentMethod || undefined,
+      paymentId: transaction.paymentId || undefined,
+      description: transaction.description || undefined,
+      staffEmploymentType: transaction.staffEmploymentType || undefined,
+      commissionRate: transaction.commissionRate ? transaction.commissionRate.toNumber() : undefined,
+      commissionAmount: transaction.commissionAmount ? transaction.commissionAmount.toNumber() : undefined,
+      appointment: transaction.appointment ? {
+        ...transaction.appointment,
+        clientName: transaction.appointment.clientName || undefined,
+        services: transaction.appointment.services.map(service => ({
+          ...service,
+          price: service.price.toNumber()
+        }))
+      } : undefined,
+      staff: transaction.staff ? {
+        ...transaction.staff,
+        commissionRate: transaction.staff.commissionRate ? transaction.staff.commissionRate.toNumber() : undefined,
+        chairRentalAmount: transaction.staff.chairRentalAmount ? transaction.staff.chairRentalAmount.toNumber() : undefined
+      } : undefined,
       appointmentId: transaction.appointmentId || undefined,
       staffId: transaction.staffId || undefined,
       userId: transaction.userId || undefined,
@@ -615,6 +715,26 @@ export async function getTransactionAuditTrail(transactionId: string): Promise<{
     },
     relatedTransactions: relatedTransactions.map(t => ({
       ...t,
+      amount: t.amount.toNumber(),
+      paymentMethod: t.paymentMethod || undefined,
+      paymentId: t.paymentId || undefined,
+      description: t.description || undefined,
+      staffEmploymentType: t.staffEmploymentType || undefined,
+      commissionRate: t.commissionRate ? t.commissionRate.toNumber() : undefined,
+      commissionAmount: t.commissionAmount ? t.commissionAmount.toNumber() : undefined,
+      appointment: t.appointment ? {
+        ...t.appointment,
+        clientName: t.appointment.clientName || undefined,
+        services: t.appointment.services.map(service => ({
+          ...service,
+          price: service.price.toNumber()
+        }))
+      } : undefined,
+      staff: t.staff ? {
+        ...t.staff,
+        commissionRate: t.staff.commissionRate ? t.staff.commissionRate.toNumber() : undefined,
+        chairRentalAmount: t.staff.chairRentalAmount ? t.staff.chairRentalAmount.toNumber() : undefined
+      } : undefined,
       appointmentId: t.appointmentId || undefined,
       staffId: t.staffId || undefined,
       userId: t.userId || undefined,

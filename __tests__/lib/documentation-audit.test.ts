@@ -122,13 +122,13 @@ TODO: Add monitoring for service health.`;
             const files = await auditor.discoverAllDocumentation();
             const archFile = files[0];
 
-            expect(archFile.extractedKnowledge).toHaveLength.greaterThan(0);
+            expect(archFile.extractedKnowledge.length).toBeGreaterThan(0);
 
             const decisions = archFile.extractedKnowledge.filter(k => k.type === 'architectural-decision');
-            expect(decisions).toHaveLength.greaterThan(0);
+            expect(decisions.length).toBeGreaterThan(0);
 
             const workarounds = archFile.extractedKnowledge.filter(k => k.type === 'workaround');
-            expect(workarounds).toHaveLength.greaterThan(0);
+            expect(workarounds.length).toBeGreaterThan(0);
         });
     });
 
@@ -348,8 +348,8 @@ ghi789|Bob Wilson|2025-01-03T12:00:00Z|optimize: improve database query performa
             expect(migrationPlan.phases[2].name).toBe('Consolidation');
             expect(migrationPlan.phases[3].name).toBe('Indexing');
 
-            expect(migrationPlan.rollbackProcedure).toHaveLength.greaterThan(0);
-            expect(migrationPlan.verificationSteps).toHaveLength.greaterThan(0);
+            expect(migrationPlan.rollbackProcedure.length).toBeGreaterThan(0);
+            expect(migrationPlan.verificationSteps.length).toBeGreaterThan(0);
             expect(Object.keys(migrationPlan.beforeAfterMapping)).toHaveLength(2);
         });
 
@@ -472,7 +472,7 @@ ghi789|Bob Wilson|2025-01-03T12:00:00Z|optimize: improve database query performa
             expect(report.filesByCategory.general).toBe(1);
             expect(report.criticalKnowledge).toHaveLength(1);
             expect(report.migrationPlan).toBe(mockPlan);
-            expect(report.preservationGuarantee.knowledgeLossRisk).toBe('none');
+            expect(report.preservationGuarantee?.knowledgeLossRisk).toBe('none');
         });
     });
 });

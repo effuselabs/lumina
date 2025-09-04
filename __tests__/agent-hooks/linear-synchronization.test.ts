@@ -8,10 +8,10 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
 
 // Mock Linear API
-const mockLinearCreateIssue = jest.fn()
-const mockLinearUpdateIssue = jest.fn()
-const mockLinearListIssues = jest.fn()
-const mockLinearGetIssue = jest.fn()
+const mockLinearCreateIssue = jest.fn() as jest.MockedFunction<any>
+const mockLinearUpdateIssue = jest.fn() as jest.MockedFunction<any>
+const mockLinearListIssues = jest.fn() as jest.MockedFunction<any>
+const mockLinearGetIssue = jest.fn() as jest.MockedFunction<any>
 
 jest.mock('@/lib/linear-client', () => ({
     createIssue: mockLinearCreateIssue,
@@ -45,7 +45,7 @@ async function createDocumentationIssue(issueData: LinearIssueData): Promise<str
         priority: issueData.priority,
         assigneeId: issueData.assigneeId,
         projectId: issueData.projectId
-    })
+    }) as { id: string }
 
     return issue.id
 }
@@ -58,7 +58,7 @@ async function createComplianceIssue(issueData: LinearIssueData): Promise<string
         priority: issueData.priority,
         assigneeId: issueData.assigneeId,
         projectId: issueData.projectId
-    })
+    }) as { id: string }
 
     return issue.id
 }
@@ -107,10 +107,10 @@ async function syncMaintenanceTasks(tasks: Array<{
 describe('Linear Synchronization Agent Hook Integration', () => {
     beforeEach(() => {
         jest.clearAllMocks()
-        mockLinearCreateIssue.mockResolvedValue({ id: 'issue-123' })
-        mockLinearUpdateIssue.mockResolvedValue({ success: true })
-        mockLinearListIssues.mockResolvedValue([])
-        mockLinearGetIssue.mockResolvedValue({ id: 'issue-123', title: 'Test Issue' })
+        mockLinearCreateIssue.mockResolvedValue({ id: 'issue-123' } as any)
+        mockLinearUpdateIssue.mockResolvedValue({ success: true } as any)
+        mockLinearListIssues.mockResolvedValue([] as any)
+        mockLinearGetIssue.mockResolvedValue({ id: 'issue-123', title: 'Test Issue' } as any)
     })
 
     afterEach(() => {
@@ -297,7 +297,7 @@ describe('Linear Synchronization Agent Hook Integration', () => {
         })
 
         it('should handle errors during maintenance task creation', async () => {
-            mockLinearCreateIssue.mockRejectedValueOnce(new Error('Linear API error'))
+            mockLinearCreateIssue.mockRejectedValueOnce(new Error('Linear API error') as any)
 
             const maintenanceTasks = [
                 {
@@ -440,7 +440,7 @@ describe('Linear Synchronization Agent Hook Integration', () => {
 
     describe('Error Handling', () => {
         it('should handle Linear API errors gracefully', async () => {
-            mockLinearCreateIssue.mockRejectedValue(new Error('Linear API error'))
+            mockLinearCreateIssue.mockRejectedValue(new Error('Linear API error') as any)
 
             const issueData: LinearIssueData = {
                 title: 'Test Issue',
@@ -453,7 +453,7 @@ describe('Linear Synchronization Agent Hook Integration', () => {
         })
 
         it('should handle network errors during issue creation', async () => {
-            mockLinearCreateIssue.mockRejectedValue(new Error('Network error'))
+            mockLinearCreateIssue.mockRejectedValue(new Error('Network error') as any)
 
             const issueData: LinearIssueData = {
                 title: 'Test Issue',
@@ -466,7 +466,7 @@ describe('Linear Synchronization Agent Hook Integration', () => {
         })
 
         it('should handle invalid issue data', async () => {
-            mockLinearCreateIssue.mockRejectedValue(new Error('Invalid issue data'))
+            mockLinearCreateIssue.mockRejectedValue(new Error('Invalid issue data') as any)
 
             const issueData: LinearIssueData = {
                 title: '',
@@ -532,9 +532,9 @@ describe('Linear Synchronization Agent Hook Integration', () => {
 
         it('should continue processing after individual failures', async () => {
             mockLinearCreateIssue
-                .mockResolvedValueOnce({ id: 'issue-1' })
-                .mockRejectedValueOnce(new Error('API error'))
-                .mockResolvedValueOnce({ id: 'issue-3' })
+                .mockResolvedValueOnce({ id: 'issue-1' } as any)
+                .mockRejectedValueOnce(new Error('API error') as any)
+                .mockResolvedValueOnce({ id: 'issue-3' } as any)
 
             const tasks = [
                 { title: 'Task 1', description: 'Desc 1', priority: 'medium' as const, labels: ['doc'] },

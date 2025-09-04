@@ -54,7 +54,7 @@ export function RevenueChart({
       return (
         <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
           <p className="mb-2 font-medium text-gray-900">
-            {format(new Date(label), 'MMMM dd, yyyy')}
+            {label ? format(new Date(label), 'MMMM dd, yyyy') : 'No date'}
           </p>
           {payload.map((entry, index: number) => (
             <div key={index} className="flex items-center space-x-2 text-sm">
@@ -65,7 +65,7 @@ export function RevenueChart({
               <span className="text-gray-600">{entry.name}:</span>
               <span className="font-medium text-gray-900">
                 {entry.name.includes('Revenue') ||
-                entry.name.includes('Earnings')
+                  entry.name.includes('Earnings')
                   ? formatCurrency(entry.value)
                   : entry.value}
               </span>
