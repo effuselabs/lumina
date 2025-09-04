@@ -24,75 +24,27 @@ Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workfl
 
 ## 🚧 Current Status
 
-**Dashboard & Analytics Phase** - Core business features complete, currently troubleshooting dashboard routing and layout issues.
+**Documentation & Infrastructure Phase** - Core business features complete, focusing on documentation quality and system optimization.
 
-### ✅ Implemented Features
+> **📋 For detailed project status, see [Project Overview](docs/project-overview.md)**
 
-- **Project Foundation** - Next.js 14, TypeScript, Docker containerization
-- **Database Architecture** - PostgreSQL with comprehensive Prisma schema
-- **Authentication System** - NextAuth.js v5 with multi-tenant support
-- **UI Design System** - Tailwind CSS component library with Lumina branding
-- **CI/CD Pipeline** - GitHub Actions with Railway deployment
-- **Testing Framework** - Jest, React Testing Library, Playwright setup
-- **User Management** - Role-based access control (Owner, Manager, Staff)
-- **Multi-Tenancy** - Business-scoped data access and permissions
+### ✅ Major Completed Features
 
-### ✅ Recently Completed
+- **✅ Complete Business Management System** ([LUM-41](https://linear.app/scootr-ca/issue/LUM-41)) - Business onboarding, service management, and client CRM
+- **✅ Complete Booking Engine** ([LUM-42](https://linear.app/scootr-ca/issue/LUM-42)) - Public booking interface with real-time availability and email notifications
+- **✅ Complete Payment & Financial System** ([LUM-50](https://linear.app/scootr-ca/issue/LUM-50)) - Stripe integration, POS interface, and financial reporting
+- **✅ Complete Dashboard & Analytics** ([LUM-75](https://linear.app/scootr-ca/issue/LUM-75)) - Widget-based dashboard with interactive charts and real-time analytics
 
-- **Complete Dashboard & Analytics Foundation Epic** ([LUM-75](https://linear.app/scootr-ca/issue/LUM-75)) - ✅ **FULLY COMPLETED** - Widget-based dashboard with interactive charts and real-time analytics
-- **Complete Payment Processing & Financial System Epic** ([LUM-50](https://linear.app/scootr-ca/issue/LUM-50)) - ✅ **FULLY COMPLETED** - All payment, POS, and financial reporting functionality operational
-- **Complete Booking Engine Epic** ([LUM-42](https://linear.app/lumina/issue/LUM-42)) - Full booking system with public interface, staff availability management, and email notifications
-- **Complete Business Management Epic** ([LUM-41](https://linear.app/lumina/issue/LUM-41)) - All core business management features implemented and operational
+### 🔧 Current Focus
 
-### 🔧 Currently Troubleshooting
-
-- **Dashboard Routing Issues** - Resolving route conflicts, layout rendering problems, and business authentication flows
-- **Component Integration** - Fixing dashboard client components and API endpoint integration
-- **CSS/Styling Issues** - Ensuring proper Tailwind CSS loading and responsive design
-- **Business Context Validation** - Enhancing business-scoped data access and permissions
-- **Business Onboarding System** ([LUM-47](https://linear.app/lumina/issue/LUM-47)) - Complete 5-step wizard with financial model configuration, website URL validation, and country-specific address forms
-- **Service Management CRUD System** ([LUM-48](https://linear.app/lumina/issue/LUM-48)) - Full service creation, editing, listing with search/filter capabilities and business scoping
-- **Client Data Import System** - CSV upload with drag-and-drop, data mapping, validation, and import preview functionality
-- **Client Relationship Management (CRM) System** - Complete CRM with client profiles, advanced search/filtering, appointment history tracking, and notes system
-- **Database Relations Fix** - Resolved critical Prisma relation name mismatch enabling proper business dashboard access
-- **End-to-End Authentication Flow** - Full signup → onboarding → dashboard workflow with proper routing and middleware
-- **Hybrid Employment Model** - Database architecture and financial calculation engine for commission, chair rental, and hybrid staff arrangements
-- **Development Environment** - Optimized TypeScript config and VS Code setup
-- **Workflow Integration** - Complete Agent Hook system for documentation sync, steering compliance, and Linear integration
-- **Documentation Audit** - Comprehensive documentation review and steering system integration
-- **Production Infrastructure** - Zero-downtime deployment scripts and monitoring systems
-- **Build Stability** - TypeScript syntax error resolution and enhanced coding standards
-
-### ✅ Recently Completed
-
-- **Dashboard and Analytics Foundation** ([LUM-75](https://linear.app/scootr-ca/issue/LUM-75)) - ✅ **FULLY COMPLETED** - Widget-based dashboard with interactive charts, real-time data aggregation, and comprehensive business analytics
-  - **LUM-63**: Dashboard and Analytics Foundation - ✅ **COMPLETED** - Widget-based architecture with revenue visualization and client metrics
-  - **LUM-64**: Data Aggregation and Reporting Services - ✅ **COMPLETED** - Real-time data services and comprehensive analytics
+- **Documentation Quality System** - Comprehensive documentation framework with automated quality checks
+- **System Optimization** - Performance improvements and security hardening
+- **Testing Enhancement** - Expanding test coverage and E2E scenarios
 
 ### 📋 Next Up
 
-- **Quality Assurance and Testing** ([LUM-76](https://linear.app/scootr-ca/issue/LUM-76)) - Comprehensive testing implementation and performance optimization
-  - **LUM-65**: Quality Assurance and Testing Implementation - Unit, integration, and E2E tests
-  - **LUM-66**: Performance Optimization and Security Hardening - Monitoring and security measures
-- **Production Deployment** ([LUM-77](https://linear.app/scootr-ca/issue/LUM-77)) - Production environment configuration and monitoring
-  - **LUM-67**: Production Deployment and Monitoring - Security settings, backups, and alerting
-
-### 📋 Planned Features
-
-#### 🎯 Core MVP Features
-
-- **✅ Smart Booking System** - Public booking interface with real-time availability, email confirmations, and booking management
-- **✅ Client Management** - Comprehensive CRM with appointment history, advanced search/filtering, and client preferences
-- **✅ Payment Processing & Financial System** - Stripe integration, POS interface, transaction management, and financial reporting
-- **Staff Management** - Hybrid employment model support with commission, chair rental, and mixed arrangements
-- **Business Dashboard** - Real-time insights and performance metrics
-
-#### 🚀 Post-MVP Features
-
-- **AI-Powered Insights** - Predictive analytics and revenue optimization suggestions
-- **QuickBooks Integration** - Seamless accounting software synchronization
-- **Square POS Integration** - External POS system data synchronization
-- **Mobile Applications** - Native mobile apps for staff and clients
+- **Quality Assurance & Testing** ([LUM-76](https://linear.app/scootr-ca/issue/LUM-76)) - Comprehensive testing implementation
+- **Production Deployment** ([LUM-77](https://linear.app/scootr-ca/issue/LUM-77)) - Production environment optimization
 
 ## 🛠 Tech Stack
 
@@ -241,7 +193,7 @@ Nail Technician & Colorist:
 7. **Sign in with demo accounts**
    Use the demo accounts listed above to explore the application
 
-📖 **For detailed setup instructions, see [Development Setup Guide](docs/DEVELOPMENT_SETUP.md)**
+📖 **For detailed setup instructions, see [Development Setup Guide](docs/development-setup.md)**
 
 ## 📚 Documentation
 
@@ -249,11 +201,10 @@ Nail Technician & Colorist:
 
 ### Quick Links
 
-- **[Development Setup](docs/DEVELOPMENT_SETUP.md)** - Get started with local development
-- **[Git Workflow](docs/project-management/GIT_WORKFLOW.md)** - Branching and development process
+- **[Development Setup](docs/development-setup.md)** - Get started with local development
 - **[Testing Guide](docs/testing/README.md)** - Testing framework and best practices
-- **[Authentication System](docs/features/authentication/AUTHENTICATION.md)** - Multi-tenant auth system
-- **[Brand Guidelines](docs/LUMINA_PRODUCT_STYLEGUIDE.md)** - Design system and UI
+- **[Authentication System](docs/features/authentication/README.md)** - Multi-tenant auth system
+- **[Brand Guidelines](docs/design-system/lumina-product-styleguide.md)** - Design system and UI
 - **[Changelog](CHANGELOG.md)** - Version history and release notes
 
 ### 🎯 AI-Powered Development Guidance
@@ -284,6 +235,8 @@ Lumina includes a comprehensive **Steering System** that provides context-aware 
 ## 🏃‍♂️ Development
 
 ### Available Scripts
+
+> ⚠️ **Warning**: Documentation audit scripts in `/scripts/` have critical safety issues - **DO NOT USE**. See [LUM-78](https://linear.app/scootr-ca/issue/LUM-78) for fix tracking.
 
 ```bash
 # Development
@@ -439,7 +392,7 @@ npm run linear:report
 - **🔄 Bi-directional sync** between daily status and Linear
 - **📊 Integrated reporting** with Linear issue tracking
 
-📖 **See [Linear Integration Guide](docs/linear-integration-guide.md) for complete setup and usage**
+📖 **See [Linear Integration Guide](docs/project-management/linear-integration-guide.md) for complete setup and usage**
 
 ## 🎨 Brand Guidelines
 
@@ -471,7 +424,7 @@ We use a **Feature Branch Workflow** for all development. Please follow our [Git
 - **Documentation**: Update relevant documentation and changelog
 - **Reviews**: All changes require code review before merging
 
-📖 **See [Git Workflow Guide](docs/GIT_WORKFLOW.md) for complete development process**
+📖 **See [Complete Documentation Hub](docs/README.md) for all development guides**
 
 ### See Also
 

@@ -1,52 +1,68 @@
 # Feature Request Template
 
-Use this template when requesting new features in Linear.
+Use this template when creating feature requests in Linear.
 
-## 🚀 Feature Description
+## 🎯 Feature Description
+[Clear, concise description of the requested feature]
 
-**Feature Summary:**
-[Provide a clear, concise description of the feature]
+## 👤 User Story
+As a [type of user], I want [goal] so that [benefit].
 
-**Problem Statement:**
-[What problem does this feature solve?]
+## ✅ Acceptance Criteria
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+- [ ] [Criterion 3]
+- [ ] [Add more as needed]
 
-**Proposed Solution:**
-[How should this feature work?]
+## 🎨 Design Requirements
+[UI/UX considerations, mockups, or design specifications]
 
-## 👥 User Story
-
-**As a** [type of user]
-**I want** [some goal]
-**So that** [some reason/benefit]
-
-## 📋 Acceptance Criteria
-
-- [ ] [Specific requirement 1]
-- [ ] [Specific requirement 2]
-- [ ] [Specific requirement 3]
-- [ ] [And so on...]
-
-## 🎨 Design Considerations
-
-**UI/UX Requirements:**
-[Any specific design requirements]
-
-**Technical Considerations:**
-[Any technical constraints or requirements]
+## 🔧 Technical Requirements
+[Technical specifications, constraints, or dependencies]
 
 ## 📊 Business Value
+- **Priority Justification**: [Why this feature is important]
+- **User Impact**: [How many users will benefit]
+- **Business Goals**: [How this aligns with business objectives]
 
-- **Priority:** [Low/Medium/High/Critical]
-- **Business Impact:** [How does this benefit the business?]
-- **User Impact:** [How does this benefit users?]
-- **Effort Estimate:** [Small/Medium/Large]
+## 🔗 Dependencies
+- **Blocked By**: [Other issues that must be completed first]
+- **Blocks**: [Issues that depend on this feature]
+- **Related Issues**: [Link to related Linear issues]
 
-## 🔗 Additional Context
+## 📋 Implementation Notes
+[Technical approach, architecture considerations, or implementation details]
 
-- **Related Features:** [Link to related features or issues]
-- **Research:** [Any user research or data supporting this request]
-- **Mockups/Wireframes:** [Attach any design mockups]
+## 🧪 Testing Requirements
+- **Unit Tests**: [Specific testing requirements]
+- **Integration Tests**: [API or component integration tests needed]
+- **E2E Tests**: [User journey tests required]
+- **Manual Testing**: [Specific manual testing scenarios]
 
-## 🎯 Success Metrics
+## 📚 Documentation Updates
+- [ ] API documentation
+- [ ] User documentation
+- [ ] Developer documentation
+- [ ] README updates
 
-[How will we measure the success of this feature?]
+## 🎯 Definition of Done
+- [ ] Feature implemented according to acceptance criteria
+- [ ] All tests passing (unit, integration, E2E)
+- [ ] Code reviewed and approved
+- [ ] Documentation updated
+- [ ] Deployed to staging and tested
+- [ ] Product owner approval
+
+---
+
+## 🏷️ Suggested Labels
+- `Type: Feature`
+- `P1: Critical` / `P2: High` / `P3: Medium` / `P4: Low`
+- `Module: [Auth/Booking/CRM/Financials/Dashboard/Infrastructure]`
+- `Status: To Do`
+
+## 👥 Assignment
+- **Assignee**: [Team member if known]
+- **Epic**: [Link to related epic]
+- **Sprint**: [Target sprint]
+- **Estimate**: [Story points or time estimate]

@@ -19,7 +19,7 @@ Each decision follows this structure:
 
 ## ADR-001: Multi-Tenant Architecture Pattern
 
-**Date**: November 15, 2024  
+**Date**: Winter 2025 (Early Development)  
 **Status**: Accepted  
 **Context**: Lumina needs to support multiple salon businesses in a single deployment while ensuring complete data isolation and security.
 
@@ -51,7 +51,7 @@ Each decision follows this structure:
 
 ## ADR-002: NextAuth.js v5 for Authentication
 
-**Date**: November 20, 2024  
+**Date**: Winter 2025 (Early Development)  
 **Status**: Accepted  
 **Context**: Need robust authentication system supporting multiple user roles and business contexts.
 
@@ -84,7 +84,7 @@ Each decision follows this structure:
 
 ## ADR-003: Prisma ORM for Database Management
 
-**Date**: November 10, 2024  
+**Date**: Winter 2025 (Early Development)  
 **Status**: Accepted  
 **Context**: Need type-safe database access with multi-tenant support and migration management.
 
@@ -117,7 +117,7 @@ Each decision follows this structure:
 
 ## ADR-004: Documentation-First Development Approach
 
-**Date**: January 5, 2025  
+**Date**: September 2, 2025  
 **Status**: Accepted  
 **Context**: AI-human collaborative development requires comprehensive documentation to maintain context and prevent knowledge loss between sessions.
 
@@ -151,7 +151,7 @@ Each decision follows this structure:
 
 ## ADR-005: Steering System for Development Standards
 
-**Date**: December 10, 2024  
+**Date**: September 3, 2025  
 **Status**: Accepted  
 **Context**: Need automated enforcement of coding standards, documentation requirements, and architectural patterns.
 
@@ -184,7 +184,7 @@ Each decision follows this structure:
 
 ## ADR-006: Next.js App Router Architecture
 
-**Date**: October 25, 2024  
+**Date**: Winter 2025 (Foundation Phase)  
 **Status**: Accepted  
 **Context**: Need modern React architecture with server-side rendering, routing, and API capabilities.
 
@@ -263,5 +263,5 @@ Use this template for new architectural decisions:
 - Quarterly review of all decisions for relevance
 - Annual review for consolidation and archival
 
-**Last Updated**: January 9, 2025  
-**Next Review**: February 9, 2025
+**Last Updated**: September 4, 2025  
+**Next Review**: October 4, 2025
