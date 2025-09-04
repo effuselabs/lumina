@@ -1,68 +1,52 @@
 # Feature Request Template
 
-Use this template when creating feature requests in Linear.
+Use this template when requesting new features in Linear.
 
-## 🎯 Feature Description
-[Clear, concise description of the requested feature]
+## 🚀 Feature Description
 
-## 👤 User Story
-As a [type of user], I want [goal] so that [benefit].
+**Feature Summary:**
+[Provide a clear, concise description of the feature]
 
-## ✅ Acceptance Criteria
-- [ ] [Criterion 1]
-- [ ] [Criterion 2]
-- [ ] [Criterion 3]
-- [ ] [Add more as needed]
+**Problem Statement:**
+[What problem does this feature solve?]
 
-## 🎨 Design Requirements
-[UI/UX considerations, mockups, or design specifications]
+**Proposed Solution:**
+[How should this feature work?]
 
-## 🔧 Technical Requirements
-[Technical specifications, constraints, or dependencies]
+## 👥 User Story
+
+**As a** [type of user]
+**I want** [some goal]
+**So that** [some reason/benefit]
+
+## 📋 Acceptance Criteria
+
+- [ ] [Specific requirement 1]
+- [ ] [Specific requirement 2]
+- [ ] [Specific requirement 3]
+- [ ] [And so on...]
+
+## 🎨 Design Considerations
+
+**UI/UX Requirements:**
+[Any specific design requirements]
+
+**Technical Considerations:**
+[Any technical constraints or requirements]
 
 ## 📊 Business Value
-- **Priority Justification**: [Why this feature is important]
-- **User Impact**: [How many users will benefit]
-- **Business Goals**: [How this aligns with business objectives]
 
-## 🔗 Dependencies
-- **Blocked By**: [Other issues that must be completed first]
-- **Blocks**: [Issues that depend on this feature]
-- **Related Issues**: [Link to related Linear issues]
+- **Priority:** [Low/Medium/High/Critical]
+- **Business Impact:** [How does this benefit the business?]
+- **User Impact:** [How does this benefit users?]
+- **Effort Estimate:** [Small/Medium/Large]
 
-## 📋 Implementation Notes
-[Technical approach, architecture considerations, or implementation details]
+## 🔗 Additional Context
 
-## 🧪 Testing Requirements
-- **Unit Tests**: [Specific testing requirements]
-- **Integration Tests**: [API or component integration tests needed]
-- **E2E Tests**: [User journey tests required]
-- **Manual Testing**: [Specific manual testing scenarios]
+- **Related Features:** [Link to related features or issues]
+- **Research:** [Any user research or data supporting this request]
+- **Mockups/Wireframes:** [Attach any design mockups]
 
-## 📚 Documentation Updates
-- [ ] API documentation
-- [ ] User documentation
-- [ ] Developer documentation
-- [ ] README updates
+## 🎯 Success Metrics
 
-## 🎯 Definition of Done
-- [ ] Feature implemented according to acceptance criteria
-- [ ] All tests passing (unit, integration, E2E)
-- [ ] Code reviewed and approved
-- [ ] Documentation updated
-- [ ] Deployed to staging and tested
-- [ ] Product owner approval
-
----
-
-## 🏷️ Suggested Labels
-- `Type: Feature`
-- `P1: Critical` / `P2: High` / `P3: Medium` / `P4: Low`
-- `Module: [Auth/Booking/CRM/Financials/Dashboard/Infrastructure]`
-- `Status: To Do`
-
-## 👥 Assignment
-- **Assignee**: [Team member if known]
-- **Epic**: [Link to related epic]
-- **Sprint**: [Target sprint]
-- **Estimate**: [Story points or time estimate]
+[How will we measure the success of this feature?]

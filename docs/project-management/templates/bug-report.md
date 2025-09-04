@@ -3,50 +3,41 @@
 Use this template when creating bug reports in Linear.
 
 ## 🐛 Bug Description
-[Clear, concise description of the bug]
 
-## 📋 Steps to Reproduce
+**Brief Summary:**
+[Provide a clear, concise description of the bug]
+
+**Expected Behavior:**
+[What should happen]
+
+**Actual Behavior:**
+[What actually happens]
+
+## 🔍 Reproduction Steps
+
 1. [First step]
 2. [Second step]
 3. [Third step]
-4. [Continue as needed]
+4. [And so on...]
 
-## ✅ Expected Behavior
-[What should happen]
+## 📱 Environment
 
-## ❌ Actual Behavior
-[What actually happens]
+- **Browser/Device:** [e.g., Chrome 120, iPhone 15]
+- **Operating System:** [e.g., Windows 11, macOS 14]
+- **App Version:** [if applicable]
 
-## 🌍 Environment
-- **Browser**: [Browser name and version]
-- **OS**: [Operating system and version]
-- **Device**: [Desktop/Mobile/Tablet]
-- **User Role**: [Owner/Manager/Staff/Client]
-- **Business Context**: [Business name or ID if relevant]
+## 📸 Screenshots/Videos
 
-## 📸 Screenshots/Logs
-[Attach screenshots, error logs, or other relevant information]
+[Attach any relevant screenshots or screen recordings]
 
-## 🔗 Related Issues
-[Link to any related Linear issues]
+## 🔗 Additional Context
+
+- **Error Messages:** [Any error messages you see]
+- **Console Logs:** [Any relevant console output]
+- **Related Issues:** [Link to any related Linear issues]
 
 ## 🎯 Impact
-- **Severity**: [Critical/High/Medium/Low]
-- **Users Affected**: [Number or percentage of users affected]
-- **Workaround Available**: [Yes/No - describe if yes]
 
-## 📝 Additional Context
-[Any other context about the problem]
-
----
-
-## 🏷️ Suggested Labels
-- `Type: Bug`
-- `P1: Critical` / `P2: High` / `P3: Medium` / `P4: Low`
-- `Module: [Auth/Booking/CRM/Financials/Dashboard/Infrastructure]`
-- `Status: To Do`
-
-## 👥 Assignment
-- **Assignee**: [Team member if known]
-- **Epic**: [Link to related epic if applicable]
-- **Sprint**: [Current sprint if urgent]
+- **Severity:** [Low/Medium/High/Critical]
+- **Affected Users:** [Who is impacted by this bug]
+- **Workaround:** [Any temporary workaround available]
