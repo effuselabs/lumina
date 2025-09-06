@@ -33,7 +33,7 @@ npm run blocker:add "Title" --create-linear-issue
 npm run blocker:resolve BLOCK-ID --notes "Resolution"
 npm run blocker:list
 
-# Decision management  
+# Decision management
 npm run decision:add "Title" --create-linear-issue
 npm run decision:add "Title" --link-linear-issue LUM-123
 
@@ -67,7 +67,7 @@ npm run linear:test
 ✅ **Decision Linking**: Links decisions to Linear issues with proper context  
 ✅ **Parsing & Reporting**: Correctly parses and reports Linear integration status  
 ✅ **CLI Interface**: All commands work with proper argument handling  
-✅ **File Format**: Maintains compatibility with existing daily status format  
+✅ **File Format**: Maintains compatibility with existing daily status format
 
 ### Test Output Example
 
@@ -100,7 +100,7 @@ npm run linear:test
    - Links architectural decisions to feature work
    - Maintains context between documentation and Linear
 
-3. **Automated Workflow**: 
+3. **Automated Workflow**:
    - High-priority blockers auto-create Linear issues
    - Architectural decisions auto-link based on keywords
    - Bi-directional sync keeps everything in sync
@@ -115,7 +115,7 @@ npm run blocker:add "API rate limit exceeded" --priority high --create-linear-is
 npm run blocker:list
 npm run linear:report --days 1
 
-# Weekly review  
+# Weekly review
 npm run linear:report --days 7
 npm run linear:sync --days 7
 ```
@@ -147,11 +147,13 @@ npm run linear:sync --days 7
 ## 📊 Success Metrics
 
 ### Integration Rate
+
 - **Blockers with Linear Issues**: 67% (2/3 in test)
 - **Auto-Creation Success**: 100% for high-priority blockers
 - **Parsing Accuracy**: 100% after line ending fix
 
 ### Workflow Efficiency
+
 - **Time to Create Issue**: < 10 seconds with CLI command
 - **Context Preservation**: 100% - all blocker/decision context preserved
 - **Sync Reliability**: Bi-directional sync working correctly
@@ -159,11 +161,13 @@ npm run linear:sync --days 7
 ## 🚀 Next Steps
 
 ### Immediate Usage
+
 1. Use CLI commands for daily blocker and decision management
 2. Run weekly reports to track Linear integration status
 3. Sync existing blockers/decisions with `npm run linear:sync`
 
 ### Future Enhancements (Optional)
+
 1. **Real MCP Integration**: Replace mock Linear calls with actual MCP tool usage
 2. **Webhook Integration**: Auto-update documentation when Linear issues change
 3. **Advanced Templates**: Customize Linear issue templates per project
