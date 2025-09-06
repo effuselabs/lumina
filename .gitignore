@@ -20,7 +20,6 @@
 
 # Next.js
 /.next/
-.next/
 /out/
 /.swc/
 next-env.d.ts
@@ -90,8 +89,7 @@ jspm_packages/
 .cache
 .parcel-cache
 
-# Next.js build output
-.next
+# (Next.js already covered above)
 
 # Nuxt.js build / generate output
 .nuxt
@@ -106,8 +104,10 @@ storybook-static
 tmp/
 temp/
 
-# Editor directories and files
-.vscode/
+# Editor directories and files (keep some VS Code settings)
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/extensions.json
 .idea/
 *.swp
 *.swo
@@ -135,9 +135,8 @@ Thumbs.db
 # Turbo
 .turbo
 
-# TypeScript
+# TypeScript (next-env.d.ts already covered above)
 *.tsbuildinfo
-next-env.d.ts
 
 # Sentry
 .sentryclirc
@@ -160,14 +159,7 @@ steering-impact-report.md
 .local
 .cache/
 
-# IDE and Editor files
-*.swp
-*.swo
-*~
-.vscode/settings.json
-.vscode/launch.json
-.vscode/extensions.json
-.idea/
+# Additional IDE files (duplicates removed above)
 *.sublime-project
 *.sublime-workspace
 

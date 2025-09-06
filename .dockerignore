@@ -46,12 +46,14 @@ jest.config.js
 jest.setup.js
 playwright.config.ts
 
-# Documentation
-README.md
-CHANGELOG.md
+# Documentation (exclude development docs, keep essential ones)
+docs/archive/
+docs/migration/
+docs/project-management/
+docs/documentation-management/
+docs/testing/
 CONTRIBUTING.md
-docs/
-*.md
+# Keep: README.md, CHANGELOG.md, docs/deployment/, docs/api/
 
 # Git
 .git/
@@ -121,5 +123,8 @@ temp/
 # Railway - keep railway.json for deployment config
 # railway.json
 
-# Scripts directory - exclude development scripts
-scripts/
+# Scripts directory - exclude development scripts, keep production ones
+scripts/development/
+scripts/testing/
+scripts/documentation/
+# Keep: scripts/production/, scripts/deployment/

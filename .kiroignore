@@ -1,7 +1,7 @@
 # Kiro IDE Ignore File
 # Exclude these paths from Kiro's file search and indexing
 
-# Archive and migration folders
+# Archive and migration folders (historical, not actively developed)
 docs/archive/
 docs/migration/
 
@@ -11,12 +11,48 @@ node_modules/
 coverage/
 test-results/
 playwright-report/
+dist/
+build/
+
+# Generated files and reports
+*.tsbuildinfo
+steering-impact-report.md
+*-impact-report.md
+*-analysis-report.md
+
+# Cache directories
+.cache/
+.npm/
+.eslintcache
+.stylelintcache
+.kiro/cache/
+.kiro/temp/
 
 # OS and editor files
 .DS_Store
 Thumbs.db
 *.log
+*.swp
+*.swo
+*~
 
 # Temporary files
 *.tmp
 *.temp
+tmp/
+temp/
+
+# Environment files (sensitive)
+.env
+.env.local
+.env.production
+.env.staging
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Lock files (except package-lock.json which we track)
+yarn.lock
+pnpm-lock.yaml
