@@ -1,0 +1,22 @@
+# Kiro IDE Ignore File
+# Exclude these paths from Kiro's file search and indexing
+
+# Archive and migration folders
+docs/archive/
+docs/migration/
+
+# Build and dependency folders
+node_modules/
+.next/
+coverage/
+test-results/
+playwright-report/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.log
+
+# Temporary files
+*.tmp
+*.temp

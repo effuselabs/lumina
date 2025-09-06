@@ -37,7 +37,9 @@
     "**/.next": true,
     "**/coverage": true,
     "**/test-results": true,
-    "**/playwright-report": true
+    "**/playwright-report": true,
+    "**/docs/archive": true,
+    "**/docs/migration": true
   },
   "search.exclude": {
     "**/node_modules": true,
@@ -46,7 +48,9 @@
     "**/.next": true,
     "**/coverage": true,
     "**/test-results": true,
-    "**/playwright-report": true
+    "**/playwright-report": true,
+    "**/docs/archive": true,
+    "**/docs/migration": true
   },
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
