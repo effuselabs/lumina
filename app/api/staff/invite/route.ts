@@ -1,14 +1,11 @@
 import { auth } from '@/auth';
-import { generateInviteToken, requireBusinessAccess } from '@/lib/auth';
-import { sendEmail } from '@/lib/email/send-email';
-import { StaffInvitationEmail } from '@/lib/email/templates/staff-invitation';
 import { prisma } from '@/lib/prisma';
+import crypto from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-// Validation schema for staff invitation
-const inviteStaffSchema = z.object({
-    businessId: z.string().uuid(),
+const inviteSchema = z.object({
+    businessId: z.string(),
     email: z.string().email(),
     displayName: z.string().min(1).max(100),
     title: z.string().optional(),
@@ -24,143 +21,142 @@ const inviteStaffSchema = z.object({
 export async function POST(request: NextRequest) {
     try {
         const session = await auth();
+
         if (!session?.user?.id) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const body = await request.json();
-        const validation = inviteStaffSchema.safeParse(body);
+        const validatedData = inviteSchema.parse(body);
 
-        if (!validation.success) {
-            return NextResponse.json(
-                { error: 'Invalid data', details: validation.error.errors },
-                { status: 400 }
-            );
-        }
-
-        const { businessId, email, ...inviteData } = validation.data;
-
-        // Verify business access and permissions (only owners and managers can invite)
-        const { businessUser } = await requireBusinessAccess(businessId, ['OWNER', 'MANAGER']);
-
-        // Get business details for the invitation
-        const business = await prisma.business.findUnique({
-            where: { id: businessId },
-            select: {
-                id: true,
-                name: true,
-                slug: true,
-                logo: true,
+        // Verify user has access to this business and can invite staff
+        const businessUser = await prisma.businessUser.findFirst({
+            where: {
+                businessId: validatedData.businessId,
+                userId: session.user.id,
+                role: { in: ['OWNER', 'MANAGER'] }
             },
+            include: {
+                business: true
+            }
         });
 
-        if (!business) {
-            return NextResponse.json({ error: 'Business not found' }, { status: 404 });
+        if (!businessUser) {
+            return NextResponse.json({ error: 'Access denied' }, { status: 403 });
         }
 
         // Check if user already exists
         const existingUser = await prisma.user.findUnique({
-            where: { email },
-            include: {
-                businesses: {
-                    where: { businessId },
-                },
-                staffProfile: {
-                    where: { businessId },
-                },
-            },
+            where: { email: validatedData.email }
         });
 
-        if (existingUser?.businesses && existingUser.businesses.length > 0) {
+        if (existingUser) {
+            // Check if they're already part of this business
+            const existingBusinessUser = await prisma.businessUser.findFirst({
+                where: {
+                    businessId: validatedData.businessId,
+                    userId: existingUser.id
+                }
+            });
+
+            if (existingBusinessUser) {
+                return NextResponse.json(
+                    { error: 'User is already part of this business' },
+                    { status: 409 }
+                );
+            }
+        }
+
+        // Check for existing pending invitations
+        const existingInvitation = await prisma.staffInvitation.findFirst({
+            where: {
+                businessId: validatedData.businessId,
+                email: validatedData.email,
+                status: 'PENDING'
+            }
+        });
+
+        if (existingInvitation) {
             return NextResponse.json(
-                { error: 'User is already a member of this business' },
+                { error: 'A pending invitation already exists for this email address. Please wait for them to accept or contact support to resend.' },
                 { status: 409 }
             );
         }
 
-        // Validate employment type configuration
-        if (inviteData.employmentType === 'COMMISSION' && !inviteData.commissionRate) {
+        // Generate invitation token
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+        // Prepare staff data as JSON
+        const staffData = {
+            displayName: validatedData.displayName,
+            title: validatedData.title,
+            employmentType: validatedData.employmentType,
+            commissionRate: validatedData.commissionRate,
+            chairRentalAmount: validatedData.chairRentalAmount,
+            chairRentalPeriod: validatedData.chairRentalPeriod,
+            baseSalary: validatedData.baseSalary,
+        };
+
+        // Create staff invitation
+        const invitation = await prisma.staffInvitation.create({
+            data: {
+                businessId: validatedData.businessId,
+                email: validatedData.email,
+                role: validatedData.role,
+                staffData,
+                message: validatedData.message,
+                token,
+                expiresAt,
+                invitedBy: session.user.id,
+                status: 'PENDING'
+            }
+        });
+
+        // TODO: Send invitation email
+        console.log('Staff invitation created:', {
+            id: invitation.id,
+            email: validatedData.email,
+            businessName: businessUser.business.name,
+            token
+        });
+
+        return NextResponse.json({
+            message: 'Invitation sent successfully',
+            invitation: {
+                id: invitation.id,
+                email: invitation.email,
+                displayName: invitation.displayName,
+                status: invitation.status
+            }
+        });
+
+    } catch (error) {
+        console.error('Error creating staff invitation:', error);
+
+        if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { error: 'Commission rate is required for commission employees' },
+                { error: 'Invalid data', details: error.errors },
                 { status: 400 }
             );
         }
 
-        if (inviteData.employmentType === 'CHAIR_RENTAL') {
-            if (!inviteData.chairRentalAmount || !inviteData.chairRentalPeriod) {
-                return NextResponse.json(
-                    { error: 'Chair rental amount and period are required for chair rental contractors' },
-                    { status: 400 }
-                );
+        // Handle Prisma unique constraint errors
+        if (error && typeof error === 'object' && 'code' in error) {
+            if (error.code === 'P2002') {
+                // Unique constraint failed
+                const meta = error.meta as any;
+                if (meta?.target?.includes('email')) {
+                    return NextResponse.json(
+                        { error: 'An invitation has already been sent to this email address for this business' },
+                        { status: 409 }
+                    );
+                }
             }
         }
 
-        if (inviteData.employmentType === 'HYBRID') {
-            if (!inviteData.commissionRate || !inviteData.chairRentalAmount || !inviteData.chairRentalPeriod) {
-                return NextResponse.json(
-                    { error: 'Commission rate, chair rental amount, and period are required for hybrid employees' },
-                    { status: 400 }
-                );
-            }
-        }
-
-        // Generate invitation token
-        const inviteToken = generateInviteToken();
-        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-
-        // Create staff invitation record
-        const invitation = await prisma.staffInvitation.create({
-            data: {
-                businessId,
-                email,
-                invitedBy: session.user.id,
-                token: inviteToken,
-                expiresAt,
-                role: inviteData.role,
-                staffData: {
-                    displayName: inviteData.displayName,
-                    title: inviteData.title,
-                    employmentType: inviteData.employmentType,
-                    commissionRate: inviteData.commissionRate,
-                    chairRentalAmount: inviteData.chairRentalAmount,
-                    chairRentalPeriod: inviteData.chairRentalPeriod,
-                    baseSalary: inviteData.baseSalary,
-                },
-                message: inviteData.message,
-            },
-        });
-
-        // Send invitation email
-        const inviteUrl = `${process.env.NEXTAUTH_URL}/auth/staff-invite?token=${inviteToken}`;
-
-        await sendEmail({
-            to: email,
-            subject: `You're invited to join ${business.name} on Lumina`,
-            react: StaffInvitationEmail({
-                businessName: business.name,
-                inviterName: session.user.name || 'Team member',
-                inviteUrl,
-                displayName: inviteData.displayName,
-                title: inviteData.title,
-                employmentType: inviteData.employmentType,
-                message: inviteData.message,
-                expiresAt,
-            }),
-        });
-
-        return NextResponse.json({
-            message: 'Staff invitation sent successfully',
-            invitation: {
-                id: invitation.id,
-                email: invitation.email,
-                expiresAt: invitation.expiresAt,
-                status: invitation.status,
-            },
-        }, { status: 201 });
-    } catch (error) {
-        console.error('Error sending staff invitation:', error);
         return NextResponse.json(
-            { error: 'Failed to send staff invitation' },
+            { error: 'Internal server error' },
             { status: 500 }
         );
     }

@@ -77,7 +77,7 @@ export function EmploymentCalculationPreview({
         return (
             <Card className={cn('border-dashed', className)}>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-muted-foreground">
+                    <CardTitle className="flex items-center gap-2 text-gray-700">
                         <CalculatorIcon className="h-5 w-5" />
                         Calculation Preview
                     </CardTitle>
@@ -128,28 +128,28 @@ export function EmploymentCalculationPreview({
                     <TrendingUpIcon className="h-5 w-5 text-green-600" />
                     Earnings Preview
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-gray-700 font-medium">
                     Projected earnings for different revenue scenarios
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 {/* Configuration Summary */}
                 <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="bg-white">
+                    <Badge variant="outline" className="bg-white text-gray-900 font-semibold border-gray-300">
                         {typeInfo?.title}
                     </Badge>
                     {config.commissionRate && (
-                        <Badge variant="outline" className="bg-white">
+                        <Badge variant="outline" className="bg-white text-gray-900 font-semibold border-gray-300">
                             {formatPercentage(config.commissionRate)} Commission
                         </Badge>
                     )}
                     {config.chairRentalAmount && config.chairRentalPeriod && (
-                        <Badge variant="outline" className="bg-white">
+                        <Badge variant="outline" className="bg-white text-gray-900 font-semibold border-gray-300">
                             {formatCurrency(config.chairRentalAmount)} {config.chairRentalPeriod.toLowerCase()}
                         </Badge>
                     )}
                     {config.baseSalary && (
-                        <Badge variant="outline" className="bg-white">
+                        <Badge variant="outline" className="bg-white text-gray-900 font-semibold border-gray-300">
                             {formatCurrency(config.baseSalary)} Base
                         </Badge>
                     )}
@@ -160,25 +160,25 @@ export function EmploymentCalculationPreview({
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b border-green-200">
-                                <th className="text-left py-2 font-medium">Revenue</th>
-                                <th className="text-right py-2 font-medium">Staff Earnings</th>
-                                <th className="text-right py-2 font-medium">Business Retention</th>
-                                <th className="text-right py-2 font-medium">Staff %</th>
+                                <th className="text-left py-2 font-semibold text-gray-900">Revenue</th>
+                                <th className="text-right py-2 font-semibold text-gray-900">Staff Earnings</th>
+                                <th className="text-right py-2 font-semibold text-gray-900">Business Retention</th>
+                                <th className="text-right py-2 font-semibold text-gray-900">Staff %</th>
                             </tr>
                         </thead>
                         <tbody>
                             {calculations.preview?.map(({ revenue, result }, index) => (
                                 <tr key={index} className="border-b border-green-100">
-                                    <td className="py-2 font-medium">
+                                    <td className="py-2 font-semibold text-gray-900">
                                         {formatCurrency(revenue)}
                                     </td>
-                                    <td className="text-right py-2 text-green-700 font-medium">
+                                    <td className="text-right py-2 text-green-700 font-semibold">
                                         {formatCurrency(result.netEarnings)}
                                     </td>
-                                    <td className="text-right py-2">
+                                    <td className="text-right py-2 font-semibold text-gray-900">
                                         {formatCurrency(result.businessRetention)}
                                     </td>
-                                    <td className="text-right py-2 text-sm text-muted-foreground">
+                                    <td className="text-right py-2 text-sm text-gray-600 font-medium">
                                         {formatPercentage((result.netEarnings / revenue) * 100)}
                                     </td>
                                 </tr>
@@ -190,8 +190,8 @@ export function EmploymentCalculationPreview({
                 {/* Detailed Breakdown for First Scenario */}
                 {calculations.preview && calculations.preview.length > 0 && (
                     <div className="mt-4 p-3 bg-white rounded-lg border border-green-200">
-                        <h4 className="font-medium text-sm mb-2 flex items-center gap-2">
-                            <DollarSignIcon className="h-4 w-4" />
+                        <h4 className="font-semibold text-base mb-2 flex items-center gap-2 text-gray-900">
+                            <DollarSignIcon className="h-4 w-4 text-green-600" />
                             Breakdown for {formatCurrency(calculations.preview[1]?.revenue || 1000)}
                         </h4>
                         <div className="grid grid-cols-2 gap-4 text-sm">
@@ -202,14 +202,14 @@ export function EmploymentCalculationPreview({
                                 return (
                                     <>
                                         <div>
-                                            <span className="text-muted-foreground">Gross Revenue:</span>
-                                            <span className="float-right font-medium">
+                                            <span className="text-gray-700 font-medium">Gross Revenue:</span>
+                                            <span className="float-right font-medium text-gray-900">
                                                 {formatCurrency(result.grossRevenue)}
                                             </span>
                                         </div>
                                         {result.commissionEarnings > 0 && (
                                             <div>
-                                                <span className="text-muted-foreground">Commission:</span>
+                                                <span className="text-gray-700 font-medium">Commission:</span>
                                                 <span className="float-right font-medium text-green-600">
                                                     {formatCurrency(result.commissionEarnings)}
                                                 </span>
@@ -217,7 +217,7 @@ export function EmploymentCalculationPreview({
                                         )}
                                         {result.chairRentalDue > 0 && (
                                             <div>
-                                                <span className="text-muted-foreground">Rental Due:</span>
+                                                <span className="text-gray-700 font-medium">Rental Due:</span>
                                                 <span className="float-right font-medium text-orange-600">
                                                     -{formatCurrency(result.chairRentalDue)}
                                                 </span>
@@ -225,20 +225,20 @@ export function EmploymentCalculationPreview({
                                         )}
                                         {result.baseSalaryAmount > 0 && (
                                             <div>
-                                                <span className="text-muted-foreground">Base Salary:</span>
+                                                <span className="text-gray-700 font-medium">Base Salary:</span>
                                                 <span className="float-right font-medium text-blue-600">
                                                     {formatCurrency(result.baseSalaryAmount)}
                                                 </span>
                                             </div>
                                         )}
                                         <div className="col-span-2 border-t pt-2 mt-2">
-                                            <div className="flex justify-between font-medium">
+                                            <div className="flex justify-between font-semibold text-gray-900">
                                                 <span>Net Staff Earnings:</span>
                                                 <span className="text-green-700">
                                                     {formatCurrency(result.netEarnings)}
                                                 </span>
                                             </div>
-                                            <div className="flex justify-between text-sm text-muted-foreground">
+                                            <div className="flex justify-between text-sm text-gray-700 font-medium">
                                                 <span>Business Retention:</span>
                                                 <span>{formatCurrency(result.businessRetention)}</span>
                                             </div>

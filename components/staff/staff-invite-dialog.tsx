@@ -163,7 +163,7 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto [&>button]:text-gray-700 [&>button]:hover:text-gray-900 [&>button]:hover:bg-gray-100">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Mail className="w-5 h-5" />
@@ -180,34 +180,47 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                         <div className="flex items-center justify-center space-x-4 mb-6">
                             {['details', 'employment', 'review'].map((stepName, index) => (
                                 <div key={stepName} className="flex items-center">
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step === stepName
-                                        ? 'bg-primary text-primary-foreground'
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 ${step === stepName
+                                        ? 'bg-blue-500 text-white border-blue-500'
                                         : index < ['details', 'employment', 'review'].indexOf(step)
-                                            ? 'bg-green-500 text-white'
-                                            : 'bg-gray-200 text-gray-600'
+                                            ? 'bg-green-500 text-white border-green-500'
+                                            : 'bg-white text-gray-600 border-gray-300'
                                         }`}>
                                         {index + 1}
                                     </div>
                                     {index < 2 && (
-                                        <div className={`w-12 h-0.5 mx-2 ${index < ['details', 'employment', 'review'].indexOf(step)
+                                        <div className={`w-16 h-1 mx-3 rounded ${index < ['details', 'employment', 'review'].indexOf(step)
                                             ? 'bg-green-500'
-                                            : 'bg-gray-200'
+                                            : 'bg-gray-300'
                                             }`} />
                                     )}
                                 </div>
                             ))}
                         </div>
 
+                        {/* Step Labels */}
+                        <div className="flex justify-center space-x-8 mb-6">
+                            <span className={`text-sm font-medium ${step === 'details' ? 'text-blue-600' : 'text-gray-600'}`}>
+                                Staff Details
+                            </span>
+                            <span className={`text-sm font-medium ${step === 'employment' ? 'text-blue-600' : 'text-gray-600'}`}>
+                                Employment
+                            </span>
+                            <span className={`text-sm font-medium ${step === 'review' ? 'text-blue-600' : 'text-gray-600'}`}>
+                                Review
+                            </span>
+                        </div>
+
                         {/* Step 1: Basic Details */}
                         {step === 'details' && (
                             <div className="space-y-4">
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                            <User className="w-4 h-4" />
+                                <Card className="border border-gray-200 shadow-sm">
+                                    <CardHeader className="bg-gray-50 border-b border-gray-200">
+                                        <CardTitle className="flex items-center gap-2 text-gray-900">
+                                            <User className="w-5 h-5 text-blue-500" />
                                             Staff Details
                                         </CardTitle>
-                                        <CardDescription>
+                                        <CardDescription className="text-gray-600">
                                             Basic information about the new team member
                                         </CardDescription>
                                     </CardHeader>
@@ -217,11 +230,11 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                             name="email"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Email Address</FormLabel>
+                                                    <FormLabel className="text-gray-900 font-medium">Email Address</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="staff@example.com" {...field} />
+                                                        <Input placeholder="staff@example.com" {...field} className="bg-white border-gray-300 text-gray-900" />
                                                     </FormControl>
-                                                    <FormDescription>
+                                                    <FormDescription className="text-gray-600">
                                                         The invitation will be sent to this email address
                                                     </FormDescription>
                                                     <FormMessage />
@@ -234,11 +247,11 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                             name="displayName"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Display Name</FormLabel>
+                                                    <FormLabel className="text-gray-900 font-medium">Display Name</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="John Smith" {...field} />
+                                                        <Input placeholder="John Smith" {...field} className="bg-white border-gray-300 text-gray-900" />
                                                     </FormControl>
-                                                    <FormDescription>
+                                                    <FormDescription className="text-gray-600">
                                                         How this person's name will appear to clients
                                                     </FormDescription>
                                                     <FormMessage />
@@ -251,9 +264,9 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                             name="title"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Job Title (Optional)</FormLabel>
+                                                    <FormLabel className="text-gray-900 font-medium">Job Title (Optional)</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="Senior Stylist" {...field} />
+                                                        <Input placeholder="Senior Stylist" {...field} className="bg-white border-gray-300 text-gray-900" />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -265,19 +278,19 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                             name="role"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Business Role</FormLabel>
+                                                    <FormLabel className="text-gray-900 font-medium">Business Role</FormLabel>
                                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                         <FormControl>
-                                                            <SelectTrigger>
-                                                                <SelectValue placeholder="Select role" />
+                                                            <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                                                                <SelectValue placeholder="Select role" className="text-gray-900" />
                                                             </SelectTrigger>
                                                         </FormControl>
-                                                        <SelectContent>
-                                                            <SelectItem value="STAFF">Staff Member</SelectItem>
-                                                            <SelectItem value="MANAGER">Manager</SelectItem>
+                                                        <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                                                            <SelectItem value="STAFF" className="text-gray-900 hover:bg-gray-100">Staff Member</SelectItem>
+                                                            <SelectItem value="MANAGER" className="text-gray-900 hover:bg-gray-100">Manager</SelectItem>
                                                         </SelectContent>
                                                     </Select>
-                                                    <FormDescription>
+                                                    <FormDescription className="text-gray-600">
                                                         Managers can invite other staff and manage business settings
                                                     </FormDescription>
                                                     <FormMessage />
@@ -292,23 +305,23 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                         {/* Step 2: Employment Configuration */}
                         {step === 'employment' && (
                             <div className="space-y-4">
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                            <DollarSign className="w-4 h-4" />
+                                <Card className="border border-gray-200 shadow-sm">
+                                    <CardHeader className="bg-gray-50 border-b border-gray-200">
+                                        <CardTitle className="flex items-center gap-2 text-gray-900">
+                                            <DollarSign className="w-5 h-5 text-green-500" />
                                             Employment Configuration
                                         </CardTitle>
-                                        <CardDescription>
+                                        <CardDescription className="text-gray-600 font-medium">
                                             Set up how this staff member will be compensated
                                         </CardDescription>
                                     </CardHeader>
-                                    <CardContent className="space-y-6">
+                                    <CardContent className="space-y-8 p-6">
                                         <FormField
                                             control={form.control}
                                             name="employmentType"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Employment Type</FormLabel>
+                                                    <FormLabel className="text-gray-900 font-medium text-base">Employment Type</FormLabel>
                                                     <FormControl>
                                                         <EmploymentTypeSelector
                                                             value={field.value}
@@ -328,7 +341,7 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                                 name="commissionRate"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Commission Rate (%)</FormLabel>
+                                                        <FormLabel className="text-gray-900 font-medium text-base">Commission Rate (%)</FormLabel>
                                                         <FormControl>
                                                             <Input
                                                                 type="number"
@@ -338,9 +351,10 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                                                 placeholder="50"
                                                                 {...field}
                                                                 onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                                                className="bg-white border-gray-300 text-gray-900"
                                                             />
                                                         </FormControl>
-                                                        <FormDescription>
+                                                        <FormDescription className="text-gray-600 font-medium">
                                                             Percentage of service revenue the staff member earns
                                                         </FormDescription>
                                                         <FormMessage />
@@ -357,7 +371,7 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                                     name="chairRentalAmount"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>Rental Amount ($)</FormLabel>
+                                                            <FormLabel className="text-gray-900 font-medium text-base">Rental Amount ($)</FormLabel>
                                                             <FormControl>
                                                                 <Input
                                                                     type="number"
@@ -366,6 +380,7 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                                                     placeholder="100"
                                                                     {...field}
                                                                     onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                                                    className="bg-white border-gray-300 text-gray-900"
                                                                 />
                                                             </FormControl>
                                                             <FormMessage />
@@ -378,10 +393,10 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                                     name="chairRentalPeriod"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>Rental Period</FormLabel>
+                                                            <FormLabel className="text-gray-900 font-medium text-base">Rental Period</FormLabel>
                                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                                 <FormControl>
-                                                                    <SelectTrigger>
+                                                                    <SelectTrigger className="bg-white border-gray-300 text-gray-900">
                                                                         <SelectValue placeholder="Select period" />
                                                                     </SelectTrigger>
                                                                 </FormControl>
@@ -405,7 +420,7 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                                 name="baseSalary"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Base Salary (Optional)</FormLabel>
+                                                        <FormLabel className="text-gray-900 font-medium text-base">Base Salary (Optional)</FormLabel>
                                                         <FormControl>
                                                             <Input
                                                                 type="number"
@@ -414,9 +429,10 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                                                                 placeholder="0"
                                                                 {...field}
                                                                 onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                                                className="bg-white border-gray-300 text-gray-900"
                                                             />
                                                         </FormControl>
-                                                        <FormDescription>
+                                                        <FormDescription className="text-gray-600 font-medium">
                                                             Guaranteed minimum earnings per pay period
                                                         </FormDescription>
                                                         <FormMessage />
@@ -500,31 +516,41 @@ export function StaffInviteDialog({ businessId, open, onOpenChange, onSuccess }:
                         )}
 
                         {/* Navigation Buttons */}
-                        <div className="flex justify-between">
+                        <div className="flex justify-between pt-6 border-t border-gray-200">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={handleBack}
                                 disabled={step === 'details'}
+                                className="px-6 py-2 border-gray-300 text-gray-700 hover:bg-gray-50"
                             >
                                 Back
                             </Button>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-3">
                                 <Button
                                     type="button"
                                     variant="outline"
                                     onClick={() => onOpenChange(false)}
+                                    className="px-6 py-2 border-gray-300 text-gray-700 hover:bg-gray-50"
                                 >
                                     Cancel
                                 </Button>
 
                                 {step !== 'review' ? (
-                                    <Button type="button" onClick={handleNext}>
+                                    <Button
+                                        type="button"
+                                        onClick={handleNext}
+                                        className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium"
+                                    >
                                         Next
                                     </Button>
                                 ) : (
-                                    <Button type="submit" disabled={isSubmitting}>
+                                    <Button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-medium disabled:opacity-50"
+                                    >
                                         {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                                         Send Invitation
                                     </Button>

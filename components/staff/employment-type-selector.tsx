@@ -99,27 +99,27 @@ export function EmploymentTypeSelector({
                                         <CheckCircleIcon className="h-5 w-5 text-orange-500" />
                                     )}
                                 </CardTitle>
-                                <CardDescription className="text-sm">
+                                <CardDescription className="text-sm text-gray-700 font-medium">
                                     {info.description}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="pt-0">
                                 <div className="space-y-2">
-                                    <p className="text-xs text-muted-foreground italic">
+                                    <p className="text-sm text-gray-800 font-semibold bg-gray-50 p-2 rounded">
                                         {info.example}
                                     </p>
 
                                     {/* Required Fields Indicators */}
-                                    <div className="flex flex-wrap gap-1">
+                                    <div className="flex flex-wrap gap-2 mt-3">
                                         {info.requiredFields.map((field) => (
-                                            <Badge key={field} variant="outline" className="text-xs">
+                                            <Badge key={field} className="text-xs bg-blue-500 text-white font-medium border-0">
                                                 {field === 'commissionRate' && 'Commission %'}
                                                 {field === 'chairRentalAmount' && 'Rental $'}
                                                 {field === 'chairRentalPeriod' && 'Period'}
                                             </Badge>
                                         ))}
                                         {info.optionalFields.map((field) => (
-                                            <Badge key={field} variant="secondary" className="text-xs">
+                                            <Badge key={field} className="text-xs bg-gray-500 text-white font-medium border-0">
                                                 {field === 'baseSalary' && 'Base Salary'}
                                             </Badge>
                                         ))}
@@ -141,12 +141,12 @@ export function EmploymentTypeSelector({
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <p className="text-sm">{displayedInfo.description}</p>
+                        <p className="text-sm text-gray-800 font-medium">{displayedInfo.description}</p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <h4 className="font-medium text-green-700 mb-2 text-sm">Advantages</h4>
-                                <ul className="text-sm space-y-1 text-green-600">
+                                <h4 className="font-semibold text-green-700 mb-2 text-sm">Advantages</h4>
+                                <ul className="text-sm space-y-1 text-green-700 font-medium">
                                     {displayedInfo.pros.map((pro, index) => (
                                         <li key={index} className="flex items-start gap-2">
                                             <CheckCircleIcon className="h-3 w-3 mt-0.5 flex-shrink-0" />
@@ -157,8 +157,8 @@ export function EmploymentTypeSelector({
                             </div>
 
                             <div>
-                                <h4 className="font-medium text-orange-700 mb-2 text-sm">Considerations</h4>
-                                <ul className="text-sm space-y-1 text-orange-600">
+                                <h4 className="font-semibold text-orange-700 mb-2 text-sm">Considerations</h4>
+                                <ul className="text-sm space-y-1 text-orange-700 font-medium">
                                     {displayedInfo.cons.map((con, index) => (
                                         <li key={index} className="flex items-start gap-2">
                                             <InfoIcon className="h-3 w-3 mt-0.5 flex-shrink-0" />
@@ -169,10 +169,10 @@ export function EmploymentTypeSelector({
                             </div>
                         </div>
 
-                        <Alert>
-                            <InfoIcon className="h-4 w-4" />
-                            <AlertDescription>
-                                <strong>Example:</strong> {displayedInfo.example}
+                        <Alert className="bg-blue-50 border-blue-200">
+                            <InfoIcon className="h-4 w-4 text-blue-600" />
+                            <AlertDescription className="text-gray-800">
+                                <strong className="text-gray-900">Example:</strong> {displayedInfo.example}
                             </AlertDescription>
                         </Alert>
                     </CardContent>
@@ -181,7 +181,7 @@ export function EmploymentTypeSelector({
 
             {/* Selection Confirmation */}
             {currentValue && (
-                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center justify-center gap-2 text-sm text-gray-700 font-medium">
                     <CheckCircleIcon className="h-4 w-4 text-green-500" />
                     Selected: {employmentTypeDescriptions[currentValue].title}
                 </div>
