@@ -35,9 +35,21 @@ export default auth(req => {
     return NextResponse.redirect(signInUrl);
   }
 
-  // Protected dashboard routes - user must have at least one business
+
+
+  // Protected dashboard routes - require authentication
+  const isDashboardRoute = pathname.startsWith('/dashboard');
+
+  if (isDashboardRoute) {
+    // Authentication is enforced at page level
+    // Business access validation happens in the route handlers
+    const response = NextResponse.next();
+    response.headers.set('x-pathname', pathname);
+    return response;
+  }
+
+  // Other protected routes
   const protectedRoutes = [
-    '/dashboard',
     '/services',
     '/clients',
     '/staff',
@@ -50,8 +62,6 @@ export default auth(req => {
   );
 
   if (isProtectedRoute) {
-    // For now, we just ensure the user is authenticated
-    // Business access will be checked at the API level
     const response = NextResponse.next();
     response.headers.set('x-pathname', pathname);
     return response;

@@ -33,9 +33,20 @@ export const authConfig = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
+      // Handle dashboard redirect with business lookup
+      if (url === `${baseUrl}/dashboard` || url === '/dashboard') {
+        try {
+          // This would need to be implemented with proper session context
+          // For now, redirect to a business-specific URL
+          return `${baseUrl}/dashboard/lumina-demo-salon`;
+        } catch (error) {
+          console.error('Redirect error:', error);
+          return `${baseUrl}/onboarding`;
+        }
+      }
+
+      // Standard NextAuth redirect handling
       if (url.startsWith('/')) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },

@@ -37,9 +37,9 @@ export function SignInForm() {
   // Redirect if already authenticated
   useEffect(() => {
     if (status === 'authenticated' && session) {
-      router.push(callbackUrl);
+      window.location.href = callbackUrl;
     }
-  }, [session, status, router, callbackUrl]);
+  }, [session, status, callbackUrl]);
 
   // Show loading state while session is being determined
   if (status === 'loading' || !mounted) {
@@ -70,31 +70,20 @@ export function SignInForm() {
       console.log('🔐 Attempting signin with:', validatedData.email);
 
       try {
-        const result = await signIn('credentials', {
+        // Use NextAuth's standard redirect pattern
+        console.log('🔐 Attempting signin with NextAuth redirect');
+        await signIn('credentials', {
           email: validatedData.email,
           password: validatedData.password,
-          redirect: false,
           callbackUrl: callbackUrl,
         });
 
-        console.log('🔐 Signin result:', result);
-
-        if (result?.error) {
-          console.log('❌ Signin error:', result.error);
-          setGeneralError('Invalid email or password');
-        } else if (result?.ok) {
-          console.log('✅ Signin successful');
-          // The session will update automatically via useSession hook
-          // The useEffect above will handle the redirect when session updates
-          // Clear any previous errors
-          setGeneralError('');
-        } else {
-          console.log('❌ Unexpected signin result:', result);
-          setGeneralError('An unexpected error occurred');
-        }
+        // If we reach here, signin was successful and redirect will happen automatically
+        console.log('✅ Signin initiated successfully');
+        setGeneralError('');
       } catch (signInError) {
         console.error('❌ SignIn threw an error:', signInError);
-        setGeneralError('Authentication service error');
+        setGeneralError('Authentication failed. Please try again.');
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
