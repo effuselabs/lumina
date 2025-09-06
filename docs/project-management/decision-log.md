@@ -269,6 +269,117 @@ Each decision follows this structure:
 
 ---
 
+## ADR-008: Complete Authentication System Rebuild
+
+**Date**: September 6, 2025  
+**Status**: Accepted  
+**Context**: Original authentication system had multiple routing conflicts, redirect loops, and architectural issues preventing proper functionality. Multiple attempts to fix existing system failed due to fundamental architectural problems.
+
+**Decision**: Completely rebuild authentication system using industry-standard SaaS patterns with single dynamic route structure.
+
+**Rationale**:
+
+- Multiple incremental fixes failed due to fundamental architectural issues
+- Clean rebuild ensures maintainable, secure foundation
+- Industry-standard patterns reduce complexity and improve reliability
+- Eliminates routing conflicts and redirect loops
+- Provides better foundation for multi-tenant security
+
+**Alternatives Considered**:
+
+1. **Incremental fixes to existing system**: Continue patching routing conflicts
+   - Rejected: Multiple attempts failed, underlying architecture was flawed
+2. **Complex middleware-based routing**: Handle redirects in middleware
+   - Rejected: Too fragile and difficult to debug
+3. **Multiple static routes**: Create separate routes for each business function
+   - Rejected: Caused Next.js routing priority conflicts
+
+**Impact**:
+
+- Affects entire application authentication flow and dashboard routing
+- Enables proper multi-tenant security implementation
+- Simplifies maintenance and debugging
+- Provides foundation for scalable SaaS architecture
+- Improves user experience with reliable authentication
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-009: NextAuth Built-in Redirect Pattern
+
+**Date**: September 6, 2025  
+**Status**: Accepted  
+**Context**: Custom redirect logic was causing conflicts between client-side and server-side redirects, leading to users being sent to onboarding instead of their business dashboard.
+
+**Decision**: Use NextAuth's built-in redirect callback system instead of custom redirect handling.
+
+**Rationale**:
+
+- Industry standard approach following NextAuth best practices
+- Eliminates conflicts between multiple redirect mechanisms
+- More maintainable and reliable than custom implementations
+- Reduces complexity in authentication flow
+- Leverages battle-tested redirect handling
+
+**Alternatives Considered**:
+
+1. **Custom client-side redirect logic**: Handle redirects in React components
+   - Rejected: Caused conflicts with NextAuth's server-side redirects
+2. **Middleware-based redirects**: Implement redirect logic in Next.js middleware
+   - Rejected: Too complex and difficult to coordinate with authentication state
+3. **Multiple redirect handlers**: Separate handlers for different scenarios
+   - Rejected: Created fragile system with multiple failure points
+
+**Impact**:
+
+- Simplifies authentication flow and eliminates redirect conflicts
+- Improves reliability of post-login user experience
+- Reduces maintenance overhead for authentication system
+- Follows industry best practices for NextAuth implementation
+- Enables proper business dashboard access after login
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-010: Single Route Structure for Business Dashboards
+
+**Date**: September 6, 2025  
+**Status**: Accepted  
+**Context**: Route groups `(dashboard)` were causing conflicts with static routes and dynamic route matching in Next.js App Router, preventing proper business dashboard access.
+
+**Decision**: Implement clean route structure: `/dashboard` (redirect) → `/dashboard/[businessSlug]` (business dashboard).
+
+**Rationale**:
+
+- Eliminates Next.js routing conflicts and priority issues
+- Follows SaaS industry patterns for multi-tenant applications
+- Easier to maintain and debug than complex route group structures
+- Provides clear separation between redirect logic and business dashboards
+- Improves reliability of routing system
+
+**Alternatives Considered**:
+
+1. **Complex route group structures**: Continue using `(dashboard)` with nested routes
+   - Rejected: Caused routing conflicts and priority issues with Next.js
+2. **Multiple static routes**: Create separate static routes for each function
+   - Rejected: Routing priority issues and maintenance complexity
+3. **Middleware-based routing**: Handle all routing logic in middleware
+   - Rejected: Too complex and difficult to coordinate with authentication
+
+**Impact**:
+
+- Affects all dashboard routing and business access patterns
+- Simplifies architecture and improves maintainability
+- Enables reliable multi-tenant business dashboard access
+- Provides foundation for scalable SaaS routing patterns
+- Improves debugging and development experience
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
 ## Decision Template
 
 Use this template for new architectural decisions:
