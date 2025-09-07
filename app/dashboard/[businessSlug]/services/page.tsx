@@ -1,22 +1,22 @@
 import { auth } from '@/auth';
-import { StaffList } from '@/components/staff/staff-list';
+import { ServiceList } from '@/components/services/service-list';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
-interface StaffPageProps {
+interface ServicesPageProps {
   params: {
     businessSlug: string;
   };
 }
 
-export default async function StaffPage({ params }: StaffPageProps) {
+export default async function ServicesPage({ params }: ServicesPageProps) {
   const session = await auth();
 
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
 
-  // Get business by slug and verify user access
+  // Get business information and verify access
   const business = await prisma.business.findUnique({
     where: { slug: params.businessSlug },
     include: {
@@ -45,7 +45,7 @@ export default async function StaffPage({ params }: StaffPageProps) {
                 ← Back to Dashboard
               </a>
               <div className="text-sm text-gray-400">|</div>
-              <h1 className="text-lg font-semibold text-gray-900">Staff</h1>
+              <h1 className="text-lg font-semibold text-gray-900">Services</h1>
             </div>
           </div>
         </div>
@@ -53,7 +53,14 @@ export default async function StaffPage({ params }: StaffPageProps) {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <StaffList businessId={business.id} />
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Services</h1>
+          <p className="mt-2 text-gray-600">
+            Manage your salon services, pricing, and availability
+          </p>
+        </div>
+
+        <ServiceList businessId={business.id} />
       </main>
     </div>
   );

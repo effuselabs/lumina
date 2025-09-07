@@ -1,33 +1,41 @@
 import { auth } from '@/auth';
-import { StaffList } from '@/components/staff/staff-list';
+import { ClientsPageContent } from '@/components/clients/clients-page-content';
 import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
-interface StaffPageProps {
+interface ClientsPageProps {
   params: {
     businessSlug: string;
   };
 }
 
-export default async function StaffPage({ params }: StaffPageProps) {
+export default async function ClientsPage({ params }: ClientsPageProps) {
   const session = await auth();
 
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
 
-  // Get business by slug and verify user access
+  // Find the business by slug
   const business = await prisma.business.findUnique({
     where: { slug: params.businessSlug },
-    include: {
-      users: {
-        where: { userId: session.user.id },
-        select: { role: true },
-      },
-    },
+    select: { id: true, name: true },
   });
 
-  if (!business || business.users.length === 0) {
+  if (!business) {
+    notFound();
+  }
+
+  // Verify user has access to this business
+  const businessUser = await prisma.businessUser.findFirst({
+    where: {
+      businessId: business.id,
+      userId: session.user.id,
+    },
+    select: { role: true },
+  });
+
+  if (!businessUser) {
     redirect('/onboarding');
   }
 
@@ -45,7 +53,7 @@ export default async function StaffPage({ params }: StaffPageProps) {
                 ← Back to Dashboard
               </a>
               <div className="text-sm text-gray-400">|</div>
-              <h1 className="text-lg font-semibold text-gray-900">Staff</h1>
+              <h1 className="text-lg font-semibold text-gray-900">Clients</h1>
             </div>
           </div>
         </div>
@@ -53,7 +61,7 @@ export default async function StaffPage({ params }: StaffPageProps) {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <StaffList businessId={business.id} />
+        <ClientsPageContent businessId={business.id} />
       </main>
     </div>
   );

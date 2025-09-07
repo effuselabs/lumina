@@ -3,228 +3,239 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-const createClientSchema = z.object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
-    email: z.string().email('Invalid email address').optional().or(z.literal('')),
+// Validation schema for client creation
+const createClientSchema = z
+  .object({
+    businessId: z.string().cuid(),
+    firstName: z.string().min(1, 'First name is required').max(100),
+    lastName: z.string().min(1, 'Last name is required').max(100),
+    email: z.string().email().optional().or(z.literal('')),
     phone: z.string().optional(),
     address: z.string().optional(),
     city: z.string().optional(),
     state: z.string().optional(),
     zipCode: z.string().optional(),
-    preferredStaff: z.string().optional(),
+    preferredStaff: z
+      .string()
+      .optional()
+      .refine(
+        val => {
+          if (!val || val === '' || val === 'none') return true;
+          return /^c[a-z0-9]{24}$/.test(val);
+        },
+        { message: 'preferredStaff must be a valid CUID when provided' }
+      ),
     notes: z.string().optional(),
     emailMarketing: z.boolean().default(true),
     smsMarketing: z.boolean().default(true),
-});
+  })
+  .transform(data => ({
+    ...data,
+    email: data.email || undefined,
+    preferredStaff:
+      data.preferredStaff &&
+      data.preferredStaff !== '' &&
+      data.preferredStaff !== 'none'
+        ? data.preferredStaff
+        : undefined,
+    address: data.address || undefined,
+    city: data.city || undefined,
+    state: data.state || undefined,
+    zipCode: data.zipCode || undefined,
+    notes: data.notes || undefined,
+  }));
 
-const searchClientsSchema = z.object({
-    search: z.string().optional(),
-    staffId: z.string().optional(),
-    page: z.coerce.number().min(1).default(1),
-    limit: z.coerce.number().min(1).max(100).default(20),
-    sortBy: z.enum(['firstName', 'lastName', 'email', 'createdAt']).default('firstName'),
-    sortOrder: z.enum(['asc', 'desc']).default('asc'),
-});
-
+// GET /api/clients - List clients for a business
 export async function GET(request: NextRequest) {
-    try {
-        const session = await auth();
-        if (!session) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        // Get user's business
-        const userBusiness = await prisma.businessUser.findFirst({
-            where: { userId: session.user.id },
-            include: { business: true },
-        });
-
-        if (!userBusiness) {
-            return NextResponse.json({ error: 'Business not found' }, { status: 404 });
-        }
-
-        const { searchParams } = new URL(request.url);
-        const params = Object.fromEntries(searchParams.entries());
-
-        const {
-            search,
-            staffId,
-            page,
-            limit,
-            sortBy,
-            sortOrder,
-        } = searchClientsSchema.parse(params);
-
-        const skip = (page - 1) * limit;
-
-        // Build where clause
-        const where: any = {
-            businessId: userBusiness.businessId,
-        };
-
-        if (search) {
-            where.OR = [
-                { firstName: { contains: search, mode: 'insensitive' } },
-                { lastName: { contains: search, mode: 'insensitive' } },
-                { email: { contains: search, mode: 'insensitive' } },
-                { phone: { contains: search, mode: 'insensitive' } },
-            ];
-        }
-
-        if (staffId) {
-            where.preferredStaff = staffId;
-        }
-
-        // Get clients with appointment count
-        const [clients, totalCount] = await Promise.all([
-            prisma.client.findMany({
-                where,
-                include: {
-                    _count: {
-                        select: {
-                            appointments: true,
-                        },
-                    },
-                    appointments: {
-                        take: 1,
-                        orderBy: { startTime: 'desc' },
-                        include: {
-                            staff: {
-                                select: {
-                                    displayName: true,
-                                },
-                            },
-                            services: {
-                                include: {
-                                    service: {
-                                        select: {
-                                            name: true,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                orderBy: { [sortBy]: sortOrder },
-                skip,
-                take: limit,
-            }),
-            prisma.client.count({ where }),
-        ]);
-
-        const totalPages = Math.ceil(totalCount / limit);
-
-        return NextResponse.json({
-            clients: clients.map(client => ({
-                ...client,
-                appointmentCount: client._count.appointments,
-                lastAppointment: client.appointments[0] || null,
-            })),
-            pagination: {
-                page,
-                limit,
-                totalCount,
-                totalPages,
-                hasNext: page < totalPages,
-                hasPrev: page > 1,
-            },
-        });
-    } catch (error) {
-        console.error('Error fetching clients:', error);
-        return NextResponse.json(
-            { error: 'Failed to fetch clients' },
-            { status: 500 }
-        );
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { searchParams } = new URL(request.url);
+    const businessId = searchParams.get('businessId');
+    const search = searchParams.get('search');
+    const staffId = searchParams.get('staffId');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const sortBy = searchParams.get('sortBy') || 'firstName';
+    const sortOrder = searchParams.get('sortOrder') || 'asc';
+
+    if (!businessId) {
+      return NextResponse.json(
+        { error: 'Business ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Verify user has access to this business
+    const businessUser = await prisma.businessUser.findFirst({
+      where: {
+        businessId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!businessUser) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+    }
+
+    // Build where clause
+    const where: {
+      businessId: string;
+      OR?: Array<{
+        firstName?: { contains: string; mode: 'insensitive' };
+        lastName?: { contains: string; mode: 'insensitive' };
+        email?: { contains: string; mode: 'insensitive' };
+        phone?: { contains: string; mode: 'insensitive' };
+      }>;
+      preferredStaff?: string;
+    } = {
+      businessId,
+    };
+
+    if (search) {
+      where.OR = [
+        { firstName: { contains: search, mode: 'insensitive' } },
+        { lastName: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (staffId && staffId !== 'all') {
+      where.preferredStaff = staffId;
+    }
+
+    // Build order by clause
+    const orderBy: Record<string, 'asc' | 'desc'> = {};
+    if (
+      sortBy === 'firstName' ||
+      sortBy === 'lastName' ||
+      sortBy === 'createdAt'
+    ) {
+      orderBy[sortBy] = sortOrder as 'asc' | 'desc';
+    }
+
+    // Get total count
+    const totalCount = await prisma.client.count({ where });
+
+    // Get clients with pagination
+    const clients = await prisma.client.findMany({
+      where,
+      orderBy,
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        appointments: {
+          orderBy: { startTime: 'desc' },
+          take: 1,
+          include: {
+            staff: {
+              select: {
+                displayName: true,
+              },
+            },
+            services: {
+              include: {
+                service: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            appointments: true,
+          },
+        },
+      },
+    });
+
+    // Transform data for frontend
+    const transformedClients = clients.map(client => ({
+      id: client.id,
+      firstName: client.firstName,
+      lastName: client.lastName,
+      email: client.email,
+      phone: client.phone,
+      preferredStaff: client.preferredStaff,
+      appointmentCount: client._count.appointments,
+      lastAppointment: client.appointments[0] || null,
+      createdAt: client.createdAt.toISOString(),
+    }));
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return NextResponse.json({
+      clients: transformedClients,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalCount,
+        limit,
+      },
+    });
+  } catch (_error) {
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }
 
+// POST /api/clients - Create a new client
 export async function POST(request: NextRequest) {
-    try {
-        const session = await auth();
-        if (!session) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        // Get user's business
-        const userBusiness = await prisma.businessUser.findFirst({
-            where: { userId: session.user.id },
-            include: { business: true },
-        });
-
-        if (!userBusiness) {
-            return NextResponse.json({ error: 'Business not found' }, { status: 404 });
-        }
-
-        const body = await request.json();
-        const data = createClientSchema.parse(body);
-
-        // Check for duplicate email or phone
-        if (data.email) {
-            const existingClient = await prisma.client.findFirst({
-                where: {
-                    businessId: userBusiness.businessId,
-                    email: data.email,
-                },
-            });
-
-            if (existingClient) {
-                return NextResponse.json(
-                    { error: 'A client with this email already exists' },
-                    { status: 400 }
-                );
-            }
-        }
-
-        if (data.phone) {
-            const existingClient = await prisma.client.findFirst({
-                where: {
-                    businessId: userBusiness.businessId,
-                    phone: data.phone,
-                },
-            });
-
-            if (existingClient) {
-                return NextResponse.json(
-                    { error: 'A client with this phone number already exists' },
-                    { status: 400 }
-                );
-            }
-        }
-
-        // Create client
-        const client = await prisma.client.create({
-            data: {
-                ...data,
-                businessId: userBusiness.businessId,
-                email: data.email || null,
-            },
-            include: {
-                _count: {
-                    select: {
-                        appointments: true,
-                    },
-                },
-            },
-        });
-
-        return NextResponse.json({
-            ...client,
-            appointmentCount: client._count.appointments,
-        });
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json(
-                { error: 'Validation error', details: error.errors },
-                { status: 400 }
-            );
-        }
-
-        console.error('Error creating client:', error);
-        return NextResponse.json(
-            { error: 'Failed to create client' },
-            { status: 500 }
-        );
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const body = await request.json();
+    const validatedData = createClientSchema.parse(body);
+
+    // Verify user has access to this business
+    const businessUser = await prisma.businessUser.findFirst({
+      where: {
+        businessId: validatedData.businessId,
+        userId: session.user.id,
+        role: { in: ['OWNER', 'MANAGER', 'STAFF'] }, // All roles can create clients
+      },
+    });
+
+    if (!businessUser) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+    }
+
+    // Create the client
+    const client = await prisma.client.create({
+      data: validatedData,
+      include: {
+        _count: {
+          select: {
+            appointments: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({ client }, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validation error', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }

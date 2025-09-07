@@ -1,0 +1,512 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Edit, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const editClientSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().min(1, 'Last name is required').max(100),
+  email: z.string().email('Invalid email address').optional().or(z.literal('')),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+  preferredStaff: z.string().optional(),
+  notes: z.string().optional(),
+  emailMarketing: z.boolean().default(true),
+  smsMarketing: z.boolean().default(true),
+});
+
+type EditClientFormData = z.infer<typeof editClientSchema>;
+
+interface Staff {
+  id: string;
+  displayName: string;
+}
+
+interface Client {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  preferredStaff?: string;
+  notes?: string;
+  emailMarketing: boolean;
+  smsMarketing: boolean;
+}
+
+interface ClientEditDialogProps {
+  client: Client | null;
+  businessId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
+}
+
+export function ClientEditDialog({
+  client,
+  businessId,
+  open,
+  onOpenChange,
+  onSuccess,
+}: ClientEditDialogProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [staff, setStaff] = useState<Staff[]>([]);
+
+  const form = useForm<EditClientFormData>({
+    resolver: zodResolver(editClientSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      preferredStaff: 'none',
+      notes: '',
+      emailMarketing: true,
+      smsMarketing: true,
+    },
+  });
+
+  // Load staff members
+  useEffect(() => {
+    const loadStaff = async () => {
+      if (!businessId) return;
+
+      try {
+        const response = await fetch(`/api/staff?businessId=${businessId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setStaff(data.staff || []);
+        }
+      } catch (_error) {
+        // Error loading staff - continue without staff options
+      }
+    };
+
+    if (open) {
+      loadStaff();
+    }
+  }, [businessId, open]);
+
+  // Reset form when client changes
+  useEffect(() => {
+    if (client) {
+      form.reset({
+        firstName: client.firstName,
+        lastName: client.lastName,
+        email: client.email || '',
+        phone: client.phone || '',
+        address: client.address || '',
+        city: client.city || '',
+        state: client.state || '',
+        zipCode: client.zipCode || '',
+        preferredStaff: client.preferredStaff || 'none',
+        notes: client.notes || '',
+        emailMarketing: client.emailMarketing,
+        smsMarketing: client.smsMarketing,
+      });
+    }
+  }, [client, form]);
+
+  const onSubmit = async (data: EditClientFormData) => {
+    if (!client) return;
+
+    setIsLoading(true);
+    try {
+      // Clean up empty strings - proper approach
+      const cleanData = {
+        ...data,
+        email: data.email || undefined,
+        phone: data.phone || undefined,
+        address: data.address || undefined,
+        city: data.city || undefined,
+        state: data.state || undefined,
+        zipCode: data.zipCode || undefined,
+        preferredStaff:
+          data.preferredStaff === '' || data.preferredStaff === 'none'
+            ? ''
+            : data.preferredStaff,
+        notes: data.notes || undefined,
+      };
+
+      const response = await fetch(`/api/clients/${client.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cleanData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.details) {
+          // Validation error details available
+        }
+        const errorMessage = errorData.details
+          ? `Validation error: ${JSON.stringify(errorData.details)}`
+          : errorData.error || 'Failed to update client';
+        throw new Error(errorMessage);
+      }
+
+      onSuccess();
+      onOpenChange(false);
+    } catch (error) {
+      alert(
+        `Error updating client: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="lumina-dialog-title flex items-center gap-2">
+            <Edit className="text-lumina-primary h-5 w-5" />
+            Edit Client
+          </DialogTitle>
+          <DialogDescription className="lumina-dialog-description">
+            Update client information and preferences.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Personal Information */}
+            <div className="space-y-4">
+              <h3 className="text-lumina-primary text-lg font-medium">
+                Personal Information
+              </h3>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="lumina-form-label">
+                        First Name *
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter first name"
+                          className="lumina-form-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="lumina-form-label">
+                        Last Name *
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter last name"
+                          className="lumina-form-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="lumina-form-label">Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="client@example.com"
+                          className="lumina-form-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="lumina-form-label">Phone</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="(555) 123-4567"
+                          className="lumina-form-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Address Information */}
+            <div className="space-y-4">
+              <h3 className="text-lumina-primary text-lg font-medium">
+                Address
+              </h3>
+
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="lumina-form-label">
+                      Street Address
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="123 Main Street"
+                        className="lumina-form-input"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="lumina-form-label">City</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="City"
+                          className="lumina-form-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="lumina-form-label">State</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="State"
+                          className="lumina-form-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="zipCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="lumina-form-label">
+                        ZIP Code
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="12345"
+                          className="lumina-form-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Preferences */}
+            <div className="space-y-4">
+              <h3 className="text-lumina-primary text-lg font-medium">
+                Preferences
+              </h3>
+
+              <FormField
+                control={form.control}
+                name="preferredStaff"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="lumina-form-label">
+                      Preferred Staff Member
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="lumina-form-input">
+                          <SelectValue placeholder="Select preferred staff member" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="none">No preference</SelectItem>
+                        {staff.map(member => (
+                          <SelectItem key={member.id} value={member.id}>
+                            {member.displayName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="lumina-form-label">Notes</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Add any notes about this client..."
+                        className="lumina-form-input"
+                        rows={3}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Marketing Preferences */}
+            <div className="space-y-4">
+              <h3 className="text-lumina-primary text-lg font-medium">
+                Marketing Preferences
+              </h3>
+
+              <div className="space-y-3">
+                <FormField
+                  control={form.control}
+                  name="emailMarketing"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="lumina-form-label">
+                          Send email marketing and appointment reminders
+                        </FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="smsMarketing"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="lumina-form-label">
+                          Send SMS marketing and appointment reminders
+                        </FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 border-t pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Update Client
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}

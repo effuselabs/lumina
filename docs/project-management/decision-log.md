@@ -506,5 +506,110 @@ Use this template for new architectural decisions:
 
 ---
 
+## ADR-013: CUID Validation for Prisma Compatibility
+
+**Date**: December 9, 2024  
+**Status**: Accepted  
+**Context**: Client creation and editing forms were failing validation because Prisma uses CUID format for IDs, but validation schemas were expecting UUID format.
+
+**Decision**: Update all validation schemas to use CUID validation instead of UUID validation for Prisma-generated IDs.
+
+**Rationale**:
+
+- Prisma generates CUIDs by default, not UUIDs
+- CUID format is `c[a-z0-9]{24}` vs UUID format `[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}`
+- Validation must match actual database ID format for proper functionality
+- Consistent validation across all API endpoints prevents similar issues
+
+**Alternatives Considered**:
+
+1. **Change Prisma to use UUIDs**: Modify Prisma schema to generate UUIDs
+   - Rejected: Would require database migration and potential data loss
+2. **Accept both formats**: Allow both CUID and UUID in validation
+   - Rejected: Adds unnecessary complexity and potential security issues
+3. **Custom ID generation**: Implement custom UUID generation in Prisma
+   - Rejected: Overrides Prisma defaults and adds maintenance overhead
+
+**Impact**:
+
+- All API validation schemas updated to use CUID validation
+- Client creation and editing now work correctly
+- Consistent ID validation across entire application
+- Foundation for proper Prisma integration patterns
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-014: Null vs Empty String Handling in Forms
+
+**Date**: December 9, 2024  
+**Status**: Accepted  
+**Context**: Client editing forms had issues with "No preference" selections where empty strings were being sent but the API expected null values for database storage.
+
+**Decision**: Implement consistent null/empty string transformation pattern: frontend sends empty strings, API transforms to null for database storage.
+
+**Rationale**:
+
+- Zod validation works better with empty strings than null values
+- Database storage should use null for "no value" semantics
+- Consistent transformation pattern prevents validation errors
+- Clear separation between form handling and database storage
+
+**Alternatives Considered**:
+
+1. **Send null from frontend**: Have forms send null directly
+   - Rejected: Zod validation has issues with null values in union types
+2. **Store empty strings in database**: Use empty strings for "no value"
+   - Rejected: Null is semantically correct for "no value" in databases
+3. **Complex validation schemas**: Handle both null and empty strings everywhere
+   - Rejected: Adds unnecessary complexity and potential bugs
+
+**Impact**:
+
+- Consistent form validation without null-related errors
+- Proper database semantics with null values
+- Clear transformation pattern for future forms
+- Improved user experience with reliable form submissions
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-015: Dynamic Route Consolidation for API Architecture
+
+**Date**: December 9, 2024  
+**Status**: Accepted  
+**Context**: Next.js was throwing errors about conflicting dynamic route names (`[id]` vs `[clientId]`) in the same path structure, preventing proper API functionality.
+
+**Decision**: Consolidate to single dynamic route naming convention and remove duplicate/conflicting routes.
+
+**Rationale**:
+
+- Next.js doesn't allow different dynamic route names in the same path structure
+- Existing `[clientId]` route already included all needed functionality
+- Simpler architecture with fewer API endpoints is easier to maintain
+- Eliminates routing conflicts and improves reliability
+
+**Alternatives Considered**:
+
+1. **Rename all routes to use consistent naming**: Change `[clientId]` to `[id]`
+   - Rejected: Would require updating existing working code
+2. **Use different path structures**: Separate routes into different directories
+   - Rejected: Creates unnecessary complexity and inconsistent API patterns
+3. **Complex route matching**: Use middleware to handle route conflicts
+   - Rejected: Adds complexity and potential failure points
+
+**Impact**:
+
+- Eliminated Next.js routing conflicts
+- Simplified API architecture with fewer endpoints
+- Improved reliability and maintainability
+- Foundation for consistent API routing patterns
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
 **Last Updated**: December 9, 2024  
 **Next Review**: January 9, 2025
