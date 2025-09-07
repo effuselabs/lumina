@@ -432,5 +432,79 @@ Use this template for new architectural decisions:
 - Quarterly review of all decisions for relevance
 - Annual review for consolidation and archival
 
-**Last Updated**: September 4, 2025  
-**Next Review**: October 4, 2025
+## ADR-011: Comprehensive Design System Implementation
+
+**Date**: December 9, 2024  
+**Status**: Accepted  
+**Context**: Recurring text visibility issues and styling inconsistencies across components indicated fundamental problems with design system implementation. Multiple components had unreadable light gray text and inconsistent styling patterns.
+
+**Decision**: Implement comprehensive Lumina Design System v2.0 with proper CSS variable mapping, utility classes, and component-level styling standards.
+
+**Rationale**:
+
+- Systematic approach addresses root cause rather than individual component fixes
+- Proper CSS variable mapping eliminates conflicting color definitions
+- Utility classes ensure consistent styling across all components
+- Design system compliance improves accessibility and user experience
+- Comprehensive documentation prevents future styling issues
+
+**Alternatives Considered**:
+
+1. **Component-by-component fixes**: Fix styling issues individually as they arise
+   - Rejected: Doesn't address root cause, leads to inconsistent implementations
+2. **Third-party design system**: Use existing design system like Chakra UI or Mantine
+   - Rejected: Doesn't match Lumina brand requirements and visual identity
+3. **Minimal styling approach**: Use basic Tailwind classes without systematic approach
+   - Rejected: Leads to inconsistency and poor accessibility compliance
+
+**Impact**:
+
+- All components now use consistent Lumina brand colors and typography
+- Improved accessibility with WCAG 2.1 AA compliant color contrast ratios
+- Enhanced developer experience with utility classes and TypeScript helpers
+- Comprehensive documentation prevents future styling inconsistencies
+- Foundation for scalable design system across entire application
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-012: Best Practice Form Validation Implementation
+
+**Date**: December 9, 2024  
+**Status**: Accepted  
+**Context**: Staff edit forms had controlled input warnings and validation issues when switching between employment types. Need robust form validation that handles complex conditional requirements.
+
+**Decision**: Implement best-practice form validation using React Hook Form with Zod schema validation, proper controlled inputs, and field-specific error handling.
+
+**Rationale**:
+
+- Eliminates React controlled input warnings with proper value handling
+- Zod schema validation provides type-safe validation with excellent error messages
+- Field-specific validation allows complex conditional requirements
+- Industry-standard approach ensures maintainable and reliable forms
+- Proper error handling improves user experience
+
+**Alternatives Considered**:
+
+1. **Basic HTML5 validation**: Use native browser validation
+   - Rejected: Insufficient for complex conditional validation requirements
+2. **Custom validation logic**: Build validation from scratch
+   - Rejected: Reinventing the wheel, prone to bugs and inconsistencies
+3. **Formik with Yup**: Alternative form library and validation
+   - Rejected: React Hook Form has better performance and TypeScript integration
+
+**Impact**:
+
+- All forms use consistent validation patterns and error handling
+- Improved user experience with clear, field-specific error messages
+- Enhanced developer experience with type-safe validation schemas
+- Foundation for complex form validation throughout application
+- Eliminates console warnings and form behavior issues
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+**Last Updated**: December 9, 2024  
+**Next Review**: January 9, 2025

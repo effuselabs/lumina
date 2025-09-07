@@ -5,43 +5,47 @@
 /* Lumina Design System CSS Custom Properties */
 @layer base {
   :root {
-    /* Lumina Brand Colors */
+    /* Lumina Design System v2.0 - Primary Colors */
     --lumina-gold: #ffd25a;
     --lumina-coral: #ff7a5a;
     --deep-teal: #0b2b33;
 
-    /* Lumina UI Colors */
-    --text-primary: #1d2d35;
-    --text-secondary: #808285;
+    /* Lumina Design System v2.0 - UI Colors */
+    --text-primary: #1d2d35; /* Off-Black for primary text */
+    --text-secondary: #808285; /* Medium Grey for secondary text */
     --background-primary: #ffffff;
-    --background-secondary: #f1f3f5;
-    --border-primary: #e4e6e7;
+    --background-secondary: #f1f3f5; /* Light Grey backgrounds */
+    --border-primary: #e4e6e7; /* Light Neutral borders */
 
-    /* Lumina Functional Colors */
+    /* Lumina Design System v2.0 - Functional Colors */
     --success: #22c58b;
     --warning: #ffb800;
     --error: #e5484d;
 
-    /* Semantic Color Mapping for shadcn/ui compatibility */
-    --background: 0 0% 100%;
-    --foreground: 210 40% 15%;
-    --card: 0 0% 100%;
-    --card-foreground: 210 40% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 15%;
-    --primary: 45 100% 66%;
-    --primary-foreground: 210 40% 15%;
-    --secondary: 195 100% 10%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 210 40% 15%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 45 100% 66%;
+    /* Lumina Design System v2.0 - Tertiary Colors */
+    --clarity-blue: #89cff0;
+    --soft-peach: #ffe5b4;
+
+    /* shadcn/ui Semantic Color Mapping - Updated for Lumina */
+    --background: 0 0% 100%; /* White */
+    --foreground: 210 20% 18%; /* Off-Black #1D2D35 */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 210 20% 18%; /* Off-Black */
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 210 20% 18%; /* Off-Black */
+    --primary: 45 100% 66%; /* Lumina Gold */
+    --primary-foreground: 210 20% 18%; /* Off-Black on gold */
+    --secondary: 195 100% 10%; /* Deep Teal */
+    --secondary-foreground: 0 0% 100%; /* White on teal */
+    --muted: 210 20% 96%; /* Light Grey #F1F3F5 */
+    --muted-foreground: 0 0% 50%; /* Medium Grey #808285 */
+    --accent: 45 100% 66%; /* Lumina Gold */
+    --accent-foreground: 210 20% 18%; /* Off-Black */
+    --destructive: 0 84% 60%; /* Error Red */
+    --destructive-foreground: 0 0% 98%; /* White */
+    --border: 220 13% 91%; /* Light Neutral #E4E6E7 */
+    --input: 220 13% 91%; /* Light Neutral */
+    --ring: 45 100% 66%; /* Lumina Gold for focus */
     --radius: 0.5rem;
   }
 
@@ -84,6 +88,8 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+    /* Ensure proper text color inheritance */
+    color: var(--text-primary);
   }
 
   /* Lumina Typography Scale (per Design System v2.0) */
@@ -139,6 +145,15 @@
 
 /* Lumina Component Utilities */
 @layer utilities {
+  /* Lumina Text Colors - Design System v2.0 */
+  .text-lumina-primary {
+    color: var(--text-primary); /* #1D2D35 - Off-Black */
+  }
+
+  .text-lumina-secondary {
+    color: var(--text-secondary); /* #808285 - Medium Grey */
+  }
+
   /* Lumina Gradient Utilities */
   .bg-lumina-radiant {
     background: linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%);
@@ -167,44 +182,26 @@
   .shadow-lumina-xl {
     box-shadow: 0 20px 40px 0 rgba(255, 210, 90, 0.25);
   }
+
+  /* Form Component Defaults */
+  .lumina-form-label {
+    @apply text-lumina-primary text-sm font-medium;
+  }
+
+  .lumina-form-input {
+    @apply text-lumina-primary placeholder:text-lumina-secondary;
+  }
+
+  .lumina-dialog-title {
+    @apply text-lumina-primary text-lg font-semibold;
+  }
+
+  .lumina-dialog-description {
+    @apply text-lumina-secondary text-sm;
+  }
 }
 
-/* Lumina Brand Colors as CSS Custom Properties */
-:root {
-  /* Lumina Primary Colors */
-  --lumina-gold: #ffd25a;
-  --lumina-coral: #ff7a5a;
-  --effuse-teal: #22c5c3;
-  --slate-grey: #2e3440;
-  --deep-teal: #0b2b33;
-
-  /* Neutral Palette (per Lumina Design System v2.0) */
-  --off-black: #1d2d35; /* Updated to match design system */
-  --medium-grey: #808285;
-  --light-grey: #f1f3f5;
-  --white: #ffffff;
-
-  /* Tertiary Accent Colors (per v2.0 design system) */
-  --clarity-blue: #89cff0;
-  --soft-peach: #ffe5b4;
-
-  /* Semantic Colors */
-  --background: var(--white);
-  --foreground: var(--off-black);
-  --muted: var(--light-grey);
-  --muted-foreground: var(--medium-grey);
-  --border: var(--light-grey);
-  --input: var(--white);
-  --primary: var(--lumina-gold);
-  --primary-foreground: var(--off-black);
-  --secondary: var(--deep-teal);
-  --secondary-foreground: var(--white);
-  --accent: var(--effuse-teal);
-  --accent-foreground: var(--off-black);
-  --destructive: #ef4444;
-  --destructive-foreground: var(--white);
-  --ring: var(--lumina-gold);
-}
+/* Additional Lumina Brand Utilities */
 
 /* Dark mode support (future) */
 @media (prefers-color-scheme: dark) {
@@ -216,14 +213,14 @@
   }
 }
 
-/* Base styles */
+/* Base styles - Lumina Design System */
 * {
   border-color: hsl(var(--border));
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   font-feature-settings:
     'rlig' 1,
     'calt' 1;
