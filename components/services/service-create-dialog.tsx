@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { error } from 'console';
 import { Loader2, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -90,7 +89,7 @@ export function ServiceCreateDialog({
       onSuccess();
       onOpenChange(false);
       form.reset();
-    } catch (_error) {
+    } catch (error) {
       // Error creating service
       alert(
         `Error creating service: ${error instanceof Error ? error.message : 'Unknown error'}`

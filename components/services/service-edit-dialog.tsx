@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { error } from 'console';
 import { Edit, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -111,7 +110,7 @@ export function ServiceEditDialog({
 
       onSuccess();
       onOpenChange(false);
-    } catch (_error) {
+    } catch (error) {
       // Error updating service
       alert(
         `Error updating service: ${error instanceof Error ? error.message : 'Unknown error'}`
