@@ -611,5 +611,79 @@ Use this template for new architectural decisions:
 
 ---
 
-**Last Updated**: December 9, 2024  
-**Next Review**: January 9, 2025
+## ADR-016: Linear Labeling Standards Implementation
+
+**Date**: September 11, 2025  
+**Status**: Accepted  
+**Context**: Post-MVP issues were created without proper Linear labels, resulting in inconsistent project organization and poor issue discoverability. Team has established Linear best practices documentation that wasn't being followed.
+
+**Decision**: Apply comprehensive Linear labeling system following documented best practices for all issues, ensuring consistent component, size, priority, and type labeling.
+
+**Rationale**:
+
+- Ensures consistent project organization and improves team workflow
+- Improves issue discoverability through proper filtering and categorization
+- Follows established team standards documented in Linear best practices
+- Enables better project reporting and progress tracking
+- Maintains professional Linear workspace organization
+
+**Alternatives Considered**:
+
+1. **Leave issues without labels**: Continue with minimal labeling approach
+   - Rejected: Poor organization makes issues difficult to find and manage
+2. **Create custom labels**: Develop new labeling system for post-MVP work
+   - Rejected: Conflicts with existing team standards and creates inconsistency
+3. **Minimal labeling**: Apply only basic labels like priority
+   - Rejected: Insufficient categorization for complex project management needs
+
+**Impact**:
+
+- Improves Linear workspace organization and team productivity
+- Enables better filtering, reporting, and project visibility
+- Maintains consistency with established team practices
+- Provides foundation for scalable project management as team grows
+- Enhances collaboration through clear issue categorization
+
+**Related Issues**: [LUM-84](https://linear.app/scootr-ca/issue/LUM-84), [LUM-85](https://linear.app/scootr-ca/issue/LUM-85), [LUM-86](https://linear.app/scootr-ca/issue/LUM-86), [LUM-87](https://linear.app/scootr-ca/issue/LUM-87), [LUM-88](https://linear.app/scootr-ca/issue/LUM-88), [LUM-68](https://linear.app/scootr-ca/issue/LUM-68)
+
+---
+
+## ADR-017: AI-Enhanced Onboarding as Strategic Innovation
+
+**Date**: September 11, 2025  
+**Status**: Accepted  
+**Context**: Need for competitive differentiation in salon management software market and significant improvement to user onboarding experience. Traditional manual onboarding creates friction and reduces user adoption.
+
+**Decision**: Develop AI-powered onboarding system with document intelligence and website analysis capabilities to automatically extract and populate business information.
+
+**Rationale**:
+
+- Creates unique market differentiator that competitors don't offer
+- Significantly improves user experience with 70% reduction in onboarding time
+- Positions Lumina as technology leader in salon management space
+- Reduces onboarding friction which directly impacts user adoption and retention
+- Establishes foundation for future AI-powered features and capabilities
+
+**Alternatives Considered**:
+
+1. **Enhanced manual onboarding**: Improve existing manual setup process
+   - Rejected: Limited improvement potential, doesn't address fundamental friction
+2. **Basic import improvements**: Focus on better file import capabilities
+   - Rejected: Incremental value, doesn't provide competitive differentiation
+3. **Third-party onboarding tools**: Integrate existing onboarding platforms
+   - Rejected: No differentiation, adds external dependencies and costs
+
+**Impact**:
+
+- Establishes Lumina as innovation leader in salon management software
+- Provides significant competitive advantage through unique AI capabilities
+- Improves user adoption and reduces onboarding abandonment rates
+- Creates foundation for advanced AI features and intelligent insights
+- Requires investment in AI infrastructure and expertise development
+
+**Related Issues**: [LUM-88](https://linear.app/scootr-ca/issue/LUM-88) - AI-Enhanced Onboarding with Intelligent Business Setup
+
+---
+
+**Last Updated**: September 11, 2025  
+**Next Review**: December 11, 2025

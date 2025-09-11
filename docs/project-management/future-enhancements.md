@@ -2,7 +2,7 @@
 
 > Strategic roadmap for Lumina platform evolution and enhancement opportunities
 
-**Last Updated**: September 6, 2025  
+**Last Updated**: September 11, 2025  
 **Status**: Active Planning  
 **Review Schedule**: Monthly roadmap review and prioritization
 
@@ -31,6 +31,247 @@ Data-driven features for business intelligence and decision making
 ### 🔌 **Integrations**
 
 Third-party service integrations and API expansions
+
+---
+
+## Post-MVP Enhancements (In Development)
+
+> **Epic**: [LUM-84 - Post-MVP Enhancements & Advanced Features Epic](https://linear.app/scootr-ca/issue/LUM-84/post-mvp-enhancements-and-advanced-features-epic)
+
+The following enhancements are part of the structured post-MVP development plan, organized into implementation phases following MVP completion.
+
+### Phase 1: Infrastructure & Dependencies
+
+#### ENH-P1-001: Prisma ORM Upgrade (5.22.0 → 6.15.0)
+
+**Linear Issue**: [LUM-85](https://linear.app/scootr-ca/issue/LUM-85/upgrade-prisma-orm-from-5220-to-6150)  
+**Category**: 🔧 Technical Infrastructure  
+**Priority**: High  
+**Complexity**: Medium  
+**Business Impact**: Medium  
+**Estimated Effort**: 1-2 weeks
+
+##### Description
+
+Upgrade Prisma ORM to latest version for performance improvements, security enhancements, and access to new features. Critical infrastructure improvement for platform stability and future development.
+
+##### Business Case
+
+- **Performance**: Enhanced query optimization and execution speed
+- **Security**: Latest security patches and vulnerability fixes
+- **Developer Experience**: Better TypeScript integration and debugging capabilities
+- **Future-Proofing**: Access to latest Prisma features and improvements
+
+##### Technical Requirements
+
+- Package updates and dependency management
+- Schema migration and validation
+- Query syntax updates and optimization
+- Comprehensive testing and performance benchmarking
+- Zero-downtime deployment strategy
+
+##### Success Metrics
+
+- Zero data loss during migration
+- Performance benchmarks maintained or improved
+- All existing functionality preserved
+- Development team trained on new features
+
+---
+
+### Phase 2: Core Integrations
+
+#### ENH-P2-001: Square POS Integration
+
+**Linear Issue**: [LUM-86](https://linear.app/scootr-ca/issue/LUM-86/square-pos-integration-for-existing-square-users)  
+**Category**: 🔌 Integrations  
+**Priority**: Medium  
+**Complexity**: High  
+**Business Impact**: High  
+**Estimated Effort**: 4-6 weeks
+
+##### Description
+
+Full integration with Square POS systems to enable businesses already using Square to seamlessly connect their existing setup with Lumina while maintaining familiar payment workflows.
+
+##### Business Case
+
+- **Market Expansion**: Target businesses already using Square POS
+- **Reduced Migration Friction**: No disruption to existing payment workflows
+- **Competitive Advantage**: Unique integration capability
+- **Revenue Growth**: 25% increase in user adoption potential
+
+##### Key Features
+
+- Real-time transaction synchronization
+- Customer data import and sync
+- Service catalog bidirectional sync
+- Staff mapping and performance integration
+- Combined financial reporting
+- Inventory management sync
+
+##### Technical Requirements
+
+- Square Connect API v2 integration
+- OAuth 2.0 authentication flow
+- Webhook subscriptions for real-time updates
+- Database schema extensions for Square data
+- Comprehensive error handling and retry mechanisms
+
+##### Success Metrics
+
+- 99.9% webhook delivery success rate
+- <5 second average sync latency
+- 95% user satisfaction with integration
+- 50% reduction in data entry time
+
+---
+
+#### ENH-P2-002: Enhanced Data Import System
+
+**Linear Issue**: [LUM-87](https://linear.app/scootr-ca/issue/LUM-87/enhanced-data-import-system-for-business-onboarding)  
+**Category**: 🏢 Business & Operations  
+**Priority**: Medium  
+**Complexity**: High  
+**Business Impact**: High  
+**Estimated Effort**: 4-6 weeks
+
+##### Description
+
+Comprehensive data import system supporting multiple formats and popular salon/barbershop software platforms, significantly reducing onboarding friction for businesses migrating from other systems.
+
+##### Business Case
+
+- **Onboarding Efficiency**: 60% reduction in setup time
+- **Market Penetration**: Access to businesses using competitor platforms
+- **User Experience**: Streamlined migration process
+- **Competitive Moat**: Advanced import capabilities
+
+##### Target Integrations
+
+**Salon Software**:
+
+- Schedulicity, Vagaro, Booker, Mindbody
+- Fresha, Phorest, Rosy, Boulevard
+
+**Accounting Software**:
+
+- QuickBooks, Xero, FreshBooks, Wave
+
+**File Formats**:
+
+- Excel (.xlsx, .xls), CSV, JSON, XML
+- PDF document parsing with OCR
+
+##### Key Features
+
+- Multi-entity import (clients, services, staff, appointments, financial data)
+- Intelligent field mapping with ML suggestions
+- Duplicate detection and merging
+- Data validation and quality checks
+- Real-time progress tracking
+- Rollback capabilities for failed imports
+
+##### Success Metrics
+
+- Support for 8+ popular salon software platforms
+- 95% successful import rate for standard formats
+- 99% duplicate detection accuracy
+- 90% user satisfaction with import process
+
+---
+
+### Phase 3: Advanced Features
+
+#### ENH-P3-001: AI-Enhanced Onboarding
+
+**Linear Issue**: [LUM-88](https://linear.app/scootr-ca/issue/LUM-88/ai-enhanced-onboarding-with-intelligent-business-setup)  
+**Category**: 👥 User Experience  
+**Priority**: Medium  
+**Complexity**: High  
+**Business Impact**: High  
+**Estimated Effort**: 6-8 weeks
+
+##### Description
+
+Revolutionary AI-powered onboarding system that automatically extracts and populates business information from uploaded documents or website URLs, transforming the setup experience with intelligent automation.
+
+##### Business Case
+
+- **Innovation Leadership**: First-to-market AI-powered salon onboarding
+- **User Experience**: 70% reduction in manual data entry
+- **Competitive Differentiation**: Unique AI capabilities
+- **Market Positioning**: Technology leader in salon management
+
+##### AI-Enhanced Features
+
+**Document Intelligence**:
+
+- Service menu extraction from PDFs and images
+- Business information parsing from documents
+- Staff profile extraction and enhancement
+- OCR for scanned materials and business cards
+
+**Website Analysis**:
+
+- Automated website content scraping and analysis
+- Service offering extraction and categorization
+- Staff profile identification and parsing
+- Contact information and business details extraction
+
+**Intelligent Processing**:
+
+- Natural Language Processing for unstructured data
+- Computer Vision for document and image analysis
+- Data validation against industry standards
+- Pricing recommendations based on market data
+
+##### Technical Implementation
+
+- OpenAI GPT-4 Vision API integration
+- Google Cloud Vision for OCR capabilities
+- Advanced NLP processing pipeline
+- Web scraping framework with compliance
+- Review and approval workflow with confidence scoring
+
+##### Success Metrics
+
+- 90% accuracy in service extraction from documents
+- 85% accuracy in business information extraction
+- <30 seconds processing time for standard documents
+- 4.5+ star rating for onboarding experience
+
+---
+
+#### ENH-P3-002: Post-MVP Foundation Setup
+
+**Linear Issue**: [LUM-68](https://linear.app/scootr-ca/issue/LUM-68/post-mvp-foundation-setup)  
+**Category**: 🔧 Technical Infrastructure  
+**Priority**: Low  
+**Complexity**: Medium  
+**Business Impact**: Medium  
+**Estimated Effort**: 3-4 weeks
+
+##### Description
+
+Architecture foundation for AI-powered insights, data pipeline infrastructure, feature flag system, and customer feedback collection to support future advanced features and platform evolution.
+
+##### Key Components
+
+- AI integration architecture foundation
+- Data pipeline infrastructure for analytics
+- Feature flag system for gradual rollouts
+- Customer feedback collection system
+- API versioning strategy
+- Webhook system for third-party integrations
+- A/B testing framework foundation
+
+##### Business Case
+
+- **Future-Proofing**: Foundation for advanced AI features
+- **Scalability**: Infrastructure for platform growth
+- **Risk Management**: Feature flags for safe deployments
+- **User Insights**: Feedback system for product iteration
 
 ---
 
@@ -480,6 +721,36 @@ To submit a new enhancement request:
 
 ---
 
+## Recent Updates
+
+### September 11, 2025 - Post-MVP Enhancement Planning
+
+- **Added**: Complete post-MVP enhancement roadmap with Linear issue tracking
+- **Created**: [LUM-84 Epic](https://linear.app/scootr-ca/issue/LUM-84) with 5 comprehensive sub-issues
+- **Organized**: Enhancements into 3 implementation phases (Infrastructure, Integrations, Advanced Features)
+- **Prioritized**: Based on business impact, technical complexity, and market differentiation
+- **Estimated**: Development timelines and resource requirements for each enhancement
+
+### Key Additions
+
+1. **LUM-85**: Prisma ORM upgrade for performance and security improvements
+2. **LUM-86**: Square POS integration for existing Square users
+3. **LUM-87**: Enhanced data import system with multi-platform support
+4. **LUM-88**: AI-enhanced onboarding with document intelligence (NEW INNOVATION)
+5. **LUM-68**: Post-MVP foundation setup for future AI capabilities
+
+---
+
 **Document Maintainer**: Development Team  
 **Review Schedule**: Monthly (first Monday of each month)  
+**Last Updated**: September 11, 2025  
 **Next Review**: October 6, 2025
+
+### Linear Integration
+
+All post-MVP enhancements are tracked in Linear with proper labels and organization:
+
+- **Epic**: [LUM-84 - Post-MVP Enhancements & Advanced Features Epic](https://linear.app/scootr-ca/issue/LUM-84/post-mvp-enhancements-and-advanced-features-epic)
+- **Project**: UseLumina.app
+- **Team**: Lumina-Product
+- **Labels**: Applied according to Linear best practices for component, size, priority, and type
