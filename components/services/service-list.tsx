@@ -26,7 +26,7 @@ import {
   Search,
   Trash2,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ServiceCreateDialog } from './service-create-dialog';
 import { ServiceEditDialog } from './service-edit-dialog';
 
