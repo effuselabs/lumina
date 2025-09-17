@@ -134,54 +134,43 @@ async function generateAppointmentData(businessId: string, days: number = 7) {
 }
 
 async function generateServiceData(businessId: string) {
-    // Get appointment counts per service for the last 30 days
-    const serviceStats = await prisma.appointment.groupBy({
-        by: ['serviceId'],
-        where: {
-            businessId, // Security: Business scoping required
-            status: 'COMPLETED',
-            startTime: {
-                gte: subDays(new Date(), 30),
-            },
-        },
-        _count: {
-            id: true,
-        },
-    });
-
-    // Get service details
+    // Get services with appointment counts (simplified approach)
     const services = await prisma.service.findMany({
         where: {
             businessId, // Security: Business scoping required
             isActive: true,
-            id: {
-                in: serviceStats.map(stat => stat.serviceId).filter(Boolean),
-            },
         },
     });
 
     const colors = ['#22C58B', '#3B82F6', '#8B5CF6', '#F59E0B', '#E5484D', '#06B6D4'];
 
-    return serviceStats
-        .map((stat, index) => {
-            const service = services.find(s => s.id === stat.serviceId);
-            if (!service) return null;
+    // Get appointment counts for each service
+    const serviceData = await Promise.all(
+        services.map(async (service, index) => {
+            const appointmentCount = await prisma.appointment.count({
+                where: {
+                    businessId, // Security: Business scoping required
+                    serviceId: service.id,
+                    status: 'COMPLETED',
+                    startTime: {
+                        gte: subDays(new Date(), 30),
+                    },
+                },
+            });
 
             return {
                 name: service.name,
-                count: stat._count.id,
-                revenue: stat._count.id * Number(service.price),
+                count: appointmentCount,
+                revenue: appointmentCount * Number(service.price),
                 color: colors[index % colors.length],
             };
         })
-        .filter(Boolean)
-        .sort((a, b) => (b?.count || 0) - (a?.count || 0))
-        .slice(0, 6) as Array<{
-            name: string;
-            count: number;
-            revenue: number;
-            color: string;
-        }>;
+    );
+
+    return serviceData
+        .filter(service => service.count > 0)
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 6);
 }
 
 async function generateStaffData(businessId: string) {
@@ -190,9 +179,7 @@ async function generateStaffData(businessId: string) {
             businessId, // Security: Business scoping required
             isActive: true,
         },
-        include: {
-            businessUser: true,
-        },
+        // No includes needed for this calculation
     });
 
     // Get appointment counts and revenue per staff member
