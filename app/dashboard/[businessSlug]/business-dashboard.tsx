@@ -1,7 +1,24 @@
 'use client';
 
+import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
+import { EnhancedStatCard } from '@/components/dashboard/enhanced-stat-card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useDashboardData } from '@/hooks/use-dashboard-data';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { signOut } from 'next-auth/react';
+import {
+  ArrowRight,
+  BarChart3,
+  Calendar,
+  Clock,
+  CreditCard,
+  DollarSign,
+  Plus,
+  TrendingUp,
+  UserCheck,
+  Users,
+} from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface BusinessDashboardProps {
@@ -21,13 +38,14 @@ interface BusinessDashboardProps {
 }
 
 /**
- * Business Dashboard Client Component
+ * Enhanced Business Dashboard Client Component
  *
  * Provides:
- * - Business overview and statistics
- * - Navigation to business features
- * - Role-based UI elements
- * - Real-time data with React Query
+ * - Professional dashboard layout with sidebar navigation
+ * - Real-time business metrics and analytics
+ * - Enhanced stat cards with trends and growth indicators
+ * - Quick actions and financial overview
+ * - Role-based UI elements and permissions
  */
 export function BusinessDashboard({
   business,
@@ -50,162 +68,271 @@ export function BusinessDashboard({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="border-b bg-white shadow-sm">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between py-6">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  {business.name}
-                </h1>
-                <p className="mt-1 text-gray-600">
-                  Welcome back, {userName} • {userRole}
-                </p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-500">
-                  Business ID: {business.id.slice(-8)}
-                </span>
-                <button
-                  onClick={() => signOut({ callbackUrl: '/auth/signin' })}
-                  className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lumina-gold focus:ring-offset-2"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          {/* Stats Grid */}
-          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <StatCard
-              title="Total Clients"
-              value={business._count.clients}
-              icon="👥"
-              color="blue"
-            />
-            <StatCard
-              title="Active Services"
-              value={business._count.services}
-              icon="✂️"
-              color="green"
-            />
-            <StatCard
-              title="Staff Members"
-              value={business._count.staff}
-              icon="👨‍💼"
-              color="purple"
-            />
-            <StatCard
-              title="Appointments"
-              value={business._count.appointments}
-              icon="📅"
-              color="orange"
-            />
-          </div>
-
-          {/* Quick Actions */}
-          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">
-              Quick Actions
-            </h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <ActionCard
-                title="Manage Clients"
-                description="View and manage your client database"
-                href={`/dashboard/${businessSlug}/clients`}
-                icon="👥"
-              />
-              <ActionCard
-                title="Services & Pricing"
-                description="Update your service offerings"
-                href={`/dashboard/${businessSlug}/services`}
-                icon="✂️"
-              />
-              <ActionCard
-                title="Staff Management"
-                description="Manage your team and schedules"
-                href={`/dashboard/${businessSlug}/staff`}
-                icon="👨‍💼"
-              />
-            </div>
-          </div>
-
-          {/* System Status */}
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <span className="text-xl text-green-500">✅</span>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-green-800">
-                  Authentication System Active
-                </h3>
-                <p className="mt-1 text-sm text-green-700">
-                  Multi-tenant security enabled • Business data isolated • User
-                  access verified
-                </p>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
+      <DashboardLayout
+        businessSlug={businessSlug}
+        userRole={userRole}
+        userName={userName}
+        businessName={business.name}
+      >
+        <DashboardContent
+          business={business}
+          businessSlug={businessSlug}
+          userRole={userRole}
+        />
+      </DashboardLayout>
     </QueryClientProvider>
   );
 }
 
-interface StatCardProps {
-  title: string;
-  value: number;
-  icon: string;
-  color: 'blue' | 'green' | 'purple' | 'orange';
-}
-
-function StatCard({ title, value, icon, color }: StatCardProps) {
-  const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600 border-blue-200',
-    green: 'bg-green-50 text-green-600 border-green-200',
-    purple: 'bg-purple-50 text-purple-600 border-purple-200',
-    orange: 'bg-orange-50 text-orange-600 border-orange-200',
+interface DashboardContentProps {
+  business: {
+    id: string;
+    name: string;
+    _count: {
+      staff: number;
+      services: number;
+      clients: number;
+      appointments: number;
+    };
   };
+  businessSlug: string;
+  userRole: string;
+}
+
+function DashboardContent({ business, businessSlug, userRole }: DashboardContentProps) {
+  const { data: metrics, isLoading, error } = useDashboardData({
+    businessId: business.id,
+  });
 
   return (
-    <div className={`rounded-lg border p-6 ${colorClasses[color]}`}>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium opacity-75">{title}</p>
-          <p className="mt-1 text-3xl font-bold">{value}</p>
-        </div>
-        <span className="text-2xl">{icon}</span>
+    <div className="space-y-8">
+      {/* Welcome Section */}
+      <div>
+        <h1 className="dashboard-heading-lg">Dashboard Overview</h1>
+        <p className="text-lumina-secondary">
+          Here's what's happening with your business today.
+        </p>
       </div>
+
+      {/* Key Metrics Grid */}
+      <div className="dashboard-stats-grid">
+        <EnhancedStatCard
+          title="Total Revenue"
+          value={metrics?.revenue.thisMonth || 0}
+          change={metrics?.revenue.growth.monthly ? {
+            value: metrics.revenue.growth.monthly,
+            type: metrics.revenue.growth.monthly > 0 ? 'increase' :
+              metrics.revenue.growth.monthly < 0 ? 'decrease' : 'neutral',
+            period: 'this month'
+          } : undefined}
+          icon={DollarSign}
+          color="revenue"
+          trend={metrics?.revenue.trend}
+          action={{
+            label: 'View Financial Reports',
+            href: `/dashboard/${businessSlug}/payments/reports`
+          }}
+          isLoading={isLoading}
+        />
+
+        <EnhancedStatCard
+          title="Appointments Today"
+          value={metrics?.appointments.today || business._count.appointments}
+          change={metrics?.appointments.completionRate ? {
+            value: metrics.appointments.completionRate,
+            type: 'neutral',
+            period: 'completion rate'
+          } : undefined}
+          icon={Calendar}
+          color="appointments"
+          trend={metrics?.appointments.trend}
+          action={{
+            label: 'View Calendar',
+            href: `/dashboard/${businessSlug}/appointments`
+          }}
+          isLoading={isLoading}
+        />
+
+        <EnhancedStatCard
+          title="Total Clients"
+          value={metrics?.clients.total || business._count.clients}
+          change={metrics?.clients.retentionRate ? {
+            value: metrics.clients.retentionRate,
+            type: 'neutral',
+            period: 'retention rate'
+          } : undefined}
+          icon={Users}
+          color="clients"
+          trend={metrics?.clients.trend}
+          action={{
+            label: 'Manage Clients',
+            href: `/dashboard/${businessSlug}/clients`
+          }}
+          isLoading={isLoading}
+        />
+
+        <EnhancedStatCard
+          title="Active Staff"
+          value={metrics?.staff.active || business._count.staff}
+          change={metrics?.staff.utilization ? {
+            value: metrics.staff.utilization,
+            type: 'neutral',
+            period: 'utilization'
+          } : undefined}
+          icon={UserCheck}
+          color="staff"
+          trend={metrics?.staff.trend}
+          action={{
+            label: 'Manage Staff',
+            href: `/dashboard/${businessSlug}/staff`
+          }}
+          isLoading={isLoading}
+        />
+      </div>
+
+      {/* Quick Actions & Recent Activity */}
+      <div className="dashboard-charts-grid">
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              Quick Actions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Link href={`/dashboard/${businessSlug}/appointments/book`}>
+                <Button className="w-full justify-start bg-lumina-radiant hover:bg-lumina-radiant-hover text-white">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Book Appointment
+                </Button>
+              </Link>
+
+              <Link href={`/dashboard/${businessSlug}/payments/pos`}>
+                <Button variant="outline" className="w-full justify-start">
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  Process Payment
+                </Button>
+              </Link>
+
+              <Link href={`/dashboard/${businessSlug}/clients?action=add`}>
+                <Button variant="outline" className="w-full justify-start">
+                  <Users className="mr-2 h-4 w-4" />
+                  Add Client
+                </Button>
+              </Link>
+
+              <Link href={`/dashboard/${businessSlug}/services?action=add`}>
+                <Button variant="outline" className="w-full justify-start">
+                  <UserCheck className="mr-2 h-4 w-4" />
+                  Add Service
+                </Button>
+              </Link>
+            </div>
+
+            {/* Additional Actions */}
+            <div className="pt-4 border-t space-y-2">
+              <Link
+                href={`/dashboard/${businessSlug}/analytics`}
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <BarChart3 className="h-4 w-4 text-lumina-secondary" />
+                  <span className="text-sm font-medium">View Analytics</span>
+                </div>
+                <ArrowRight className="h-4 w-4 text-lumina-secondary" />
+              </Link>
+
+              <Link
+                href={`/dashboard/${businessSlug}/payments/reports`}
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="h-4 w-4 text-lumina-secondary" />
+                  <span className="text-sm font-medium">Financial Reports</span>
+                </div>
+                <ArrowRight className="h-4 w-4 text-lumina-secondary" />
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Today's Schedule */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Today's Schedule
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {/* Mock upcoming appointments */}
+              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                <div>
+                  <p className="font-medium text-blue-900">Sarah Johnson</p>
+                  <p className="text-sm text-blue-700">Haircut & Style</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-medium text-blue-900">2:00 PM</p>
+                  <p className="text-sm text-blue-700">with Emma</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                <div>
+                  <p className="font-medium text-green-900">Mike Rodriguez</p>
+                  <p className="text-sm text-green-700">Beard Trim</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-medium text-green-900">3:30 PM</p>
+                  <p className="text-sm text-green-700">with Mike</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                <div>
+                  <p className="font-medium text-orange-900">Lisa Chen</p>
+                  <p className="text-sm text-orange-700">Manicure</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-medium text-orange-900">4:15 PM</p>
+                  <p className="text-sm text-orange-700">with Emma</p>
+                </div>
+              </div>
+
+              <Link
+                href={`/dashboard/${businessSlug}/appointments`}
+                className="block text-center py-2 text-sm font-medium text-lumina-coral hover:text-lumina-gold transition-colors"
+              >
+                View Full Schedule →
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* System Status */}
+      <Card className="border-green-200 bg-green-50">
+        <CardContent className="p-6">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">✓</span>
+              </div>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-sm font-medium text-green-800">
+                System Status: All Systems Operational
+              </h3>
+              <p className="mt-1 text-sm text-green-700">
+                Multi-tenant security active • Business data isolated • Real-time sync enabled
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
-}
-
-interface ActionCardProps {
-  title: string;
-  description: string;
-  href: string;
-  icon: string;
-}
-
-function ActionCard({ title, description, href, icon }: ActionCardProps) {
-  return (
-    <a
-      href={href}
-      className="block rounded-lg border border-gray-200 p-4 transition-all hover:border-gray-300 hover:shadow-sm"
-    >
-      <div className="flex items-start space-x-3">
-        <span className="text-xl">{icon}</span>
-        <div>
-          <h3 className="font-medium text-gray-900">{title}</h3>
-          <p className="mt-1 text-sm text-gray-600">{description}</p>
-        </div>
-      </div>
-    </a>
   );
 }
