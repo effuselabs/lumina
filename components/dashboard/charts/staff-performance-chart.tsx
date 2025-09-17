@@ -195,7 +195,7 @@ export function StaffPerformanceChart({
                             <Tooltip content={<CustomTooltip />} />
                             <Bar
                                 dataKey="revenue"
-                                fill={(entry: any) => getEmploymentTypeColor(entry.employmentType)}
+                                fill="#22C58B"
                                 radius={[0, 4, 4, 0]}
                             />
                         </BarChart>

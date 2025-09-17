@@ -87,7 +87,7 @@ export function RevenueChart({
         if (active && payload && payload.length) {
             return (
                 <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-                    <p className="font-medium text-gray-900 mb-2">{formatDate(label)}</p>
+                    <p className="font-medium text-gray-900 mb-2">{formatDate(label || '')}</p>
                     {payload.map((entry: { color: string; name: string; value: number }, index: number) => (
                         <div key={index} className="flex items-center gap-2">
                             <div

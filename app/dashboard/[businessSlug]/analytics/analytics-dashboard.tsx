@@ -94,18 +94,18 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
     };
 
     // Calculate summary metrics
-    const totalRevenue = chartData?.revenue.reduce((sum, item) => sum + item.revenue, 0) || 0;
+    const totalRevenue = chartData?.revenue.reduce((sum: number, item: any) => sum + item.revenue, 0) || 0;
     const revenueGrowth = chartData?.revenue.length >= 2 ?
         Math.round(((chartData.revenue[chartData.revenue.length - 1].revenue - chartData.revenue[0].revenue) / chartData.revenue[0].revenue) * 100) : 0;
 
-    const totalAppointments = chartData?.appointments.reduce((sum, item) =>
+    const totalAppointments = chartData?.appointments.reduce((sum: number, item: any) =>
         sum + item.scheduled + item.completed + item.cancelled + item.noShow, 0) || 0;
-    const completedAppointments = chartData?.appointments.reduce((sum, item) => sum + item.completed, 0) || 0;
+    const completedAppointments = chartData?.appointments.reduce((sum: number, item: any) => sum + item.completed, 0) || 0;
     const completionRate = totalAppointments > 0 ? Math.round((completedAppointments / totalAppointments) * 100) : 0;
 
     const topPerformer = chartData?.staff[0];
     const averageUtilization = chartData?.staff.length > 0 ?
-        Math.round(chartData.staff.reduce((sum, staff) => sum + staff.utilization, 0) / chartData.staff.length) : 0;
+        Math.round(chartData.staff.reduce((sum: number, staff: any) => sum + staff.utilization, 0) / chartData.staff.length) : 0;
 
     return (
         <div className="space-y-8">
