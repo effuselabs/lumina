@@ -75,9 +75,29 @@ export function ClientsPageContent({
     setEditDialogOpen(true);
   };
 
+  const handleEditDialogClose = (open: boolean) => {
+    setEditDialogOpen(open);
+    if (!open) {
+      // Clear selected client when dialog closes to prevent conflicts
+      setTimeout(() => {
+        setSelectedClient(null);
+      }, 100);
+    }
+  };
+
   const handleViewClient = (client: Client) => {
     setSelectedClient(client);
     setDetailsDialogOpen(true);
+  };
+
+  const handleDetailsDialogClose = (open: boolean) => {
+    setDetailsDialogOpen(open);
+    if (!open) {
+      // Clear selected client when dialog closes to prevent conflicts
+      setTimeout(() => {
+        setSelectedClient(null);
+      }, 100);
+    }
   };
 
   return (
@@ -97,9 +117,8 @@ export function ClientsPageContent({
             onEditClient={handleEditClient}
             onViewClient={handleViewClient}
             onCreateClient={() => setCreateDialogOpen(true)}
-            onBookAppointment={(client: Client) => {
+            onBookAppointment={(_client: Client) => {
               // TODO: Implement quick booking functionality
-              console.log('Quick book for', client.firstName);
             }}
           />
 
@@ -116,7 +135,7 @@ export function ClientsPageContent({
             client={selectedClient}
             businessId={business.id}
             open={editDialogOpen}
-            onOpenChange={setEditDialogOpen}
+            onOpenChange={handleEditDialogClose}
             onSuccess={handleClientUpdate}
           />
 
@@ -125,7 +144,7 @@ export function ClientsPageContent({
             client={selectedClient}
             businessId={business.id}
             open={detailsDialogOpen}
-            onOpenChange={setDetailsDialogOpen}
+            onOpenChange={handleDetailsDialogClose}
           />
         </div>
       </DashboardLayout>
