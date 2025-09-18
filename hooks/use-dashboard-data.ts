@@ -54,11 +54,16 @@ export function useDashboardDataManual(businessId: string) {
 }
 
 // Hook for dashboard charts data
-export function useDashboardCharts(businessId: string, period: string = 'weekly') {
+export function useDashboardCharts(
+  businessId: string,
+  period: string = 'weekly'
+) {
   return useQuery({
     queryKey: ['dashboard-charts', businessId, period],
     queryFn: async () => {
-      const response = await fetch(`/api/dashboard/charts?businessId=${businessId}&period=${period}`);
+      const response = await fetch(
+        `/api/dashboard/charts?businessId=${businessId}&period=${period}`
+      );
 
       if (!response.ok) {
         throw new Error('Failed to fetch chart data');
@@ -70,5 +75,31 @@ export function useDashboardCharts(businessId: string, period: string = 'weekly'
     staleTime: 60000, // Consider data stale after 1 minute
     gcTime: 300000, // Keep in cache for 5 minutes
     retry: 2,
+  });
+}
+
+// Hook for dashboard appointments data
+export function useDashboardAppointments(
+  businessId: string,
+  limit: number = 10
+) {
+  return useQuery({
+    queryKey: ['dashboard-appointments', businessId, limit],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/dashboard/appointments?businessId=${businessId}&limit=${limit}`
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch appointments');
+      }
+
+      const data = await response.json();
+      return data;
+    },
+    staleTime: 30000, // Consider data stale after 30 seconds
+    gcTime: 300000, // Keep in cache for 5 minutes
+    retry: 2,
+    refetchInterval: 60000, // Refresh every minute for schedule updates
   });
 }

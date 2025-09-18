@@ -15,6 +15,10 @@ const config: Config = {
         lumina: {
           gold: '#FFD25A', // Primary Accent & Gradient Start
           coral: '#FF7A5A', // Gradient End
+          orange: '#FF7A5A', // Alias for coral
+          peach: '#FFE5B4', // Soft Peach
+          dark: '#1D2D35', // Off-black text
+          gray: '#808285', // Medium grey
           'gold-light': '#FFE066',
           'coral-light': '#FF8666',
           'gold-dark': '#E6BD51',

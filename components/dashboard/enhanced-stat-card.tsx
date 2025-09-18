@@ -146,55 +146,59 @@ export function EnhancedStatCard({
   };
 
   return (
-    <Card className={cn('stat-card hover-lift', color, className)}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex-1 space-y-2">
-            <p className="dashboard-metric-label">{title}</p>
-            <p className="dashboard-metric-value">{formatValue(value)}</p>
-            {change && (
-              <div className="flex items-center space-x-1">
-                <TrendIcon type={change.type} />
-                <span
-                  className={cn(
-                    'dashboard-metric-change',
-                    change.type === 'increase' && 'positive',
-                    change.type === 'decrease' && 'negative',
-                    change.type === 'neutral' && 'neutral'
-                  )}
-                >
-                  {change.type === 'increase'
-                    ? '+'
-                    : change.type === 'decrease'
-                      ? '-'
-                      : ''}
-                  {Math.abs(change.value)}% {change.period}
-                </span>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col items-end space-y-2">
-            <div className="stat-card-icon">
-              <Icon className="h-6 w-6" />
+    <div className={cn('stat-card', className)}>
+      {/* Header with Icon */}
+      <div className="stat-card-header">
+        <div className="stat-card-content">
+          <h3 className="stat-card-title">{title}</h3>
+          <p className="stat-card-value">{formatValue(value)}</p>
+          {change ? (
+            <div className="stat-card-change">
+              <TrendIcon type={change.type} />
+              <span
+                style={{
+                  color:
+                    change.type === 'increase'
+                      ? '#22c58b'
+                      : change.type === 'decrease'
+                        ? '#e5484d'
+                        : '#808285',
+                }}
+              >
+                {change.type === 'increase'
+                  ? '+'
+                  : change.type === 'decrease'
+                    ? '-'
+                    : ''}
+                {Math.abs(change.value)}% {change.period}
+              </span>
             </div>
-            {trend && trend.length > 1 && (
-              <MiniChart data={trend} color={color} />
-            )}
-          </div>
+          ) : (
+            <div className="stat-card-change-placeholder" />
+          )}
         </div>
+        <div className="stat-card-icon-container">
+          <Icon className="stat-card-icon" />
+        </div>
+      </div>
 
-        {action && (
-          <div className="stat-card-action">
-            <Link
-              href={action.href}
-              className="text-sm font-medium text-lumina-coral transition-colors hover:text-lumina-gold hover:underline"
-            >
-              {action.label} →
-            </Link>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      {/* Mini Chart */}
+      {trend && trend.length > 1 && (
+        <div className="mb-4">
+          <MiniChart data={trend} color={color} />
+        </div>
+      )}
+
+      {/* Action Footer */}
+      {action && (
+        <div className="stat-card-footer">
+          <Link href={action.href} className="link-stat-card-action">
+            {action.label}
+            <span className="stat-card-action-icon">→</span>
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -2,24 +2,27 @@
 
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { EnhancedStatCard } from '@/components/dashboard/enhanced-stat-card';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useDashboardData } from '@/hooks/use-dashboard-data';
+import { ScheduleItemData } from '@/components/dashboard/schedule-item';
+import { TodaysScheduleCard } from '@/components/dashboard/todays-schedule-card';
+import { Card, CardContent } from '@/components/ui/card';
+import { LuminaQuickActionCard } from '@/components/ui/lumina-quick-action-card';
+import { LuminaQuickActions } from '@/components/ui/lumina-quick-actions';
+import {
+  useDashboardAppointments,
+  useDashboardData,
+} from '@/hooks/use-dashboard-data';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
-  ArrowRight,
   BarChart3,
   Calendar,
-  Clock,
   CreditCard,
   DollarSign,
-  Plus,
   TrendingUp,
   UserCheck,
   Users,
 } from 'lucide-react';
-import Link from 'next/link';
 import { useState } from 'react';
+import { AppointmentSummary } from '../../../types/dashboard';
 
 interface BusinessDashboardProps {
   business: {
@@ -99,18 +102,68 @@ interface DashboardContentProps {
   userRole: string;
 }
 
-function DashboardContent({ business, businessSlug, userRole }: DashboardContentProps) {
-  const { data: metrics, isLoading, error } = useDashboardData({
+function DashboardContent({
+  business,
+  businessSlug,
+  userRole: _userRole,
+}: DashboardContentProps) {
+  const {
+    data: metrics,
+    isLoading,
+    error: _error,
+  } = useDashboardData({
     businessId: business.id,
   });
+
+  const { data: appointmentsData, isLoading: appointmentsLoading } =
+    useDashboardAppointments(
+      business.id,
+      10 // Get up to 10 appointments for today
+    );
+
+  // Transform appointments data to match ScheduleItemData interface
+  const transformedAppointments: ScheduleItemData[] =
+    appointmentsData?.map((apt: AppointmentSummary) => ({
+      id: apt.id,
+      clientName: apt.clientName,
+      service: apt.serviceName,
+      time: new Date(apt.startTime).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      }),
+      staffMember: apt.staffName,
+      status:
+        apt.status === 'CONFIRMED'
+          ? 'upcoming'
+          : apt.status === 'IN_PROGRESS'
+            ? 'in-progress'
+            : apt.status === 'COMPLETED'
+              ? 'completed'
+              : 'upcoming',
+      duration: 60, // Default duration, could be enhanced to get from service data
+    })) || [];
+
+  // Remove duplicates based on unique combination of client, service, time, and staff
+  const todaysAppointments = transformedAppointments.filter(
+    (appointment, index, self) =>
+      index ===
+      self.findIndex(
+        apt =>
+          apt.clientName === appointment.clientName &&
+          apt.service === appointment.service &&
+          apt.time === appointment.time &&
+          apt.staffMember === appointment.staffMember
+      )
+  );
 
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
       <div>
-        <h1 className="dashboard-heading-lg">Dashboard Overview</h1>
-        <p className="text-lumina-secondary">
-          Here's what's happening with your business today.
+        <h1 className="lumina-heading-2">Dashboard Overview</h1>
+        <p className="lumina-body-large" style={{ color: '#808285' }}>
+          Here&apos;s what&apos;s happening with your business today.
         </p>
       </div>
 
@@ -119,18 +172,26 @@ function DashboardContent({ business, businessSlug, userRole }: DashboardContent
         <EnhancedStatCard
           title="Total Revenue"
           value={metrics?.revenue.thisMonth || 0}
-          change={metrics?.revenue.growth.monthly ? {
-            value: metrics.revenue.growth.monthly,
-            type: metrics.revenue.growth.monthly > 0 ? 'increase' :
-              metrics.revenue.growth.monthly < 0 ? 'decrease' : 'neutral',
-            period: 'this month'
-          } : undefined}
+          change={
+            metrics?.revenue.growth.monthly
+              ? {
+                  value: metrics.revenue.growth.monthly,
+                  type:
+                    metrics.revenue.growth.monthly > 0
+                      ? 'increase'
+                      : metrics.revenue.growth.monthly < 0
+                        ? 'decrease'
+                        : 'neutral',
+                  period: 'this month',
+                }
+              : undefined
+          }
           icon={DollarSign}
           color="revenue"
           trend={metrics?.revenue.trend}
           action={{
             label: 'View Financial Reports',
-            href: `/dashboard/${businessSlug}/payments/reports`
+            href: `/dashboard/${businessSlug}/payments/reports`,
           }}
           isLoading={isLoading}
         />
@@ -138,17 +199,21 @@ function DashboardContent({ business, businessSlug, userRole }: DashboardContent
         <EnhancedStatCard
           title="Appointments Today"
           value={metrics?.appointments.today || business._count.appointments}
-          change={metrics?.appointments.completionRate ? {
-            value: metrics.appointments.completionRate,
-            type: 'neutral',
-            period: 'completion rate'
-          } : undefined}
+          change={
+            metrics?.appointments.completionRate
+              ? {
+                  value: metrics.appointments.completionRate,
+                  type: 'neutral',
+                  period: 'completion rate',
+                }
+              : undefined
+          }
           icon={Calendar}
           color="appointments"
           trend={metrics?.appointments.trend}
           action={{
             label: 'View Calendar',
-            href: `/dashboard/${businessSlug}/appointments`
+            href: `/dashboard/${businessSlug}/appointments`,
           }}
           isLoading={isLoading}
         />
@@ -156,17 +221,21 @@ function DashboardContent({ business, businessSlug, userRole }: DashboardContent
         <EnhancedStatCard
           title="Total Clients"
           value={metrics?.clients.total || business._count.clients}
-          change={metrics?.clients.retentionRate ? {
-            value: metrics.clients.retentionRate,
-            type: 'neutral',
-            period: 'retention rate'
-          } : undefined}
+          change={
+            metrics?.clients.retentionRate
+              ? {
+                  value: metrics.clients.retentionRate,
+                  type: 'neutral',
+                  period: 'retention rate',
+                }
+              : undefined
+          }
           icon={Users}
           color="clients"
           trend={metrics?.clients.trend}
           action={{
             label: 'Manage Clients',
-            href: `/dashboard/${businessSlug}/clients`
+            href: `/dashboard/${businessSlug}/clients`,
           }}
           isLoading={isLoading}
         />
@@ -174,17 +243,21 @@ function DashboardContent({ business, businessSlug, userRole }: DashboardContent
         <EnhancedStatCard
           title="Active Staff"
           value={metrics?.staff.active || business._count.staff}
-          change={metrics?.staff.utilization ? {
-            value: metrics.staff.utilization,
-            type: 'neutral',
-            period: 'utilization'
-          } : undefined}
+          change={
+            metrics?.staff.utilization
+              ? {
+                  value: metrics.staff.utilization,
+                  type: 'neutral',
+                  period: 'utilization',
+                }
+              : undefined
+          }
           icon={UserCheck}
           color="staff"
           trend={metrics?.staff.trend}
           action={{
             label: 'Manage Staff',
-            href: `/dashboard/${businessSlug}/staff`
+            href: `/dashboard/${businessSlug}/staff`,
           }}
           isLoading={isLoading}
         />
@@ -192,142 +265,93 @@ function DashboardContent({ business, businessSlug, userRole }: DashboardContent
 
       {/* Quick Actions & Recent Activity */}
       <div className="dashboard-charts-grid">
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Plus className="h-5 w-5" />
-              Quick Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Link href={`/dashboard/${businessSlug}/appointments/book`}>
-                <Button className="w-full justify-start bg-lumina-radiant hover:bg-lumina-radiant-hover text-white">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Book Appointment
-                </Button>
-              </Link>
+        {/* Enhanced Quick Actions */}
+        <LuminaQuickActions>
+          <LuminaQuickActionCard
+            title="Book Appointment"
+            description="Schedule new client visit"
+            href={`/dashboard/${businessSlug}/appointments/book`}
+            icon={Calendar}
+            variant="primary"
+          />
 
-              <Link href={`/dashboard/${businessSlug}/payments/pos`}>
-                <Button variant="outline" className="w-full justify-start">
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  Process Payment
-                </Button>
-              </Link>
+          <LuminaQuickActionCard
+            title="Process Payment"
+            description="Handle transactions"
+            href={`/dashboard/${businessSlug}/payments/pos`}
+            icon={CreditCard}
+          />
 
-              <Link href={`/dashboard/${businessSlug}/clients?action=add`}>
-                <Button variant="outline" className="w-full justify-start">
-                  <Users className="mr-2 h-4 w-4" />
-                  Add Client
-                </Button>
-              </Link>
+          <LuminaQuickActionCard
+            title="Add Client"
+            description="Register new client"
+            href={`/dashboard/${businessSlug}/clients?action=add`}
+            icon={Users}
+          />
 
-              <Link href={`/dashboard/${businessSlug}/services?action=add`}>
-                <Button variant="outline" className="w-full justify-start">
-                  <UserCheck className="mr-2 h-4 w-4" />
-                  Add Service
-                </Button>
-              </Link>
-            </div>
+          <LuminaQuickActionCard
+            title="Add Service"
+            description="Create new service"
+            href={`/dashboard/${businessSlug}/services?action=add`}
+            icon={UserCheck}
+          />
 
-            {/* Additional Actions */}
-            <div className="pt-4 border-t space-y-2">
-              <Link
-                href={`/dashboard/${businessSlug}/analytics`}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <BarChart3 className="h-4 w-4 text-lumina-secondary" />
-                  <span className="text-sm font-medium">View Analytics</span>
-                </div>
-                <ArrowRight className="h-4 w-4 text-lumina-secondary" />
-              </Link>
+          <LuminaQuickActionCard
+            title="View Analytics"
+            description="Business insights & reports"
+            href={`/dashboard/${businessSlug}/analytics`}
+            icon={BarChart3}
+          />
 
-              <Link
-                href={`/dashboard/${businessSlug}/payments/reports`}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <TrendingUp className="h-4 w-4 text-lumina-secondary" />
-                  <span className="text-sm font-medium">Financial Reports</span>
-                </div>
-                <ArrowRight className="h-4 w-4 text-lumina-secondary" />
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+          <LuminaQuickActionCard
+            title="Financial Reports"
+            description="Revenue & payment reports"
+            href={`/dashboard/${businessSlug}/payments/reports`}
+            icon={TrendingUp}
+          />
+        </LuminaQuickActions>
 
         {/* Today's Schedule */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Today's Schedule
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {/* Mock upcoming appointments */}
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-blue-900">Sarah Johnson</p>
-                  <p className="text-sm text-blue-700">Haircut & Style</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-blue-900">2:00 PM</p>
-                  <p className="text-sm text-blue-700">with Emma</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-green-900">Mike Rodriguez</p>
-                  <p className="text-sm text-green-700">Beard Trim</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-green-900">3:30 PM</p>
-                  <p className="text-sm text-green-700">with Mike</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-orange-900">Lisa Chen</p>
-                  <p className="text-sm text-orange-700">Manicure</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-orange-900">4:15 PM</p>
-                  <p className="text-sm text-orange-700">with Emma</p>
-                </div>
-              </div>
-
-              <Link
-                href={`/dashboard/${businessSlug}/appointments`}
-                className="block text-center py-2 text-sm font-medium text-lumina-coral hover:text-lumina-gold transition-colors"
-              >
-                View Full Schedule →
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+        <TodaysScheduleCard
+          businessSlug={businessSlug}
+          appointments={todaysAppointments}
+          isLoading={appointmentsLoading}
+        />
       </div>
 
       {/* System Status */}
-      <Card className="border-green-200 bg-green-50">
+      <Card style={{ borderColor: '#a7f3d0', backgroundColor: '#ecfdf5' }}>
         <CardContent className="p-6">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">✓</span>
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-full"
+                style={{ backgroundColor: '#22c58b' }}
+              >
+                <span className="text-sm font-bold text-white">✓</span>
               </div>
             </div>
             <div className="ml-4">
-              <h3 className="text-sm font-medium text-green-800">
+              <h3
+                className="lumina-body-small"
+                style={{
+                  color: '#1d2d35',
+                  fontSize: '14px',
+                  fontWeight: '400',
+                }}
+              >
                 System Status: All Systems Operational
               </h3>
-              <p className="mt-1 text-sm text-green-700">
-                Multi-tenant security active • Business data isolated • Real-time sync enabled
+              <p
+                className="lumina-body-small"
+                style={{
+                  color: '#1d2d35',
+                  fontSize: '14px',
+                  fontWeight: '400',
+                }}
+              >
+                Multi-tenant security active • Business data isolated •
+                Real-time sync enabled • ID: {businessSlug}
               </p>
             </div>
           </div>

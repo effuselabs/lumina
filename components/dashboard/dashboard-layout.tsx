@@ -50,6 +50,8 @@ export function DashboardLayout({
         businessSlug={businessSlug}
         userRole={userRole}
         currentPath={pathname}
+        userName={userName}
+        businessName={businessName}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
@@ -66,9 +68,7 @@ export function DashboardLayout({
         />
 
         {/* Main Content */}
-        <main className="dashboard-content">
-          {children}
-        </main>
+        <main className="dashboard-content">{children}</main>
       </div>
     </div>
   );

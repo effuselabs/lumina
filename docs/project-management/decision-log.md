@@ -685,5 +685,421 @@ Use this template for new architectural decisions:
 
 ---
 
-**Last Updated**: September 11, 2025  
-**Next Review**: December 11, 2025
+## ADR-018: Dashboard Enhancement with Professional Analytics
+
+**Date**: January 9, 2025  
+**Status**: Accepted  
+**Context**: Basic dashboard with simple stat cards was insufficient for a best-in-class SaaS platform. Users needed comprehensive business intelligence, real-time analytics, and professional data visualization to make informed business decisions.
+
+**Decision**: Implement comprehensive dashboard enhancement with professional sidebar navigation, real-time analytics, and interactive charts using Recharts library.
+
+**Rationale**:
+
+- Creates competitive advantage through superior user experience and business intelligence
+- Transforms basic management tool into comprehensive business intelligence platform
+- Provides salon owners with actionable insights for data-driven decision making
+- Establishes foundation for advanced AI-powered features and recommendations
+- Meets enterprise-level expectations for SaaS dashboard functionality
+
+**Alternatives Considered**:
+
+1. **Incremental dashboard improvements**: Enhance existing basic dashboard gradually
+   - Rejected: Insufficient transformation, doesn't address fundamental UX limitations
+2. **Third-party dashboard integration**: Use existing business intelligence platforms
+   - Rejected: Vendor lock-in, doesn't align with Lumina brand experience
+3. **Basic chart library**: Use simpler charting solutions like Chart.js
+   - Rejected: Limited customization and professional appearance capabilities
+
+**Impact**:
+
+- Establishes Lumina as premium SaaS platform with enterprise-level capabilities
+- Significantly improves user engagement and business value perception
+- Provides foundation for advanced analytics and AI-powered insights
+- Requires ongoing maintenance of complex data visualization components
+- Creates differentiation from competitors with basic management interfaces
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-019: Recharts for Data Visualization
+
+**Date**: January 9, 2025  
+**Status**: Accepted  
+**Context**: Dashboard enhancement required professional data visualization library that supports Lumina brand theming, interactive features, and responsive design.
+
+**Decision**: Use Recharts library for all dashboard charts and data visualization components.
+
+**Rationale**:
+
+- Excellent React integration with component-based architecture
+- Comprehensive chart types (area, bar, pie, radar) for diverse business metrics
+- Full customization support for Lumina brand colors and styling
+- Interactive features (tooltips, hover states, click events) for enhanced UX
+- Strong TypeScript support and active maintenance community
+- Responsive design capabilities for mobile-first approach
+
+**Alternatives Considered**:
+
+1. **Chart.js with React wrapper**: Popular charting library
+   - Rejected: Limited React integration and customization flexibility
+2. **D3.js direct implementation**: Maximum customization control
+   - Rejected: High development complexity and maintenance overhead
+3. **Victory Charts**: React-native compatible charting
+   - Rejected: Less comprehensive documentation and smaller community
+4. **Nivo Charts**: React charting library
+   - Rejected: Steeper learning curve and less flexible theming
+
+**Impact**:
+
+- Enables professional data visualization with Lumina brand consistency
+- Provides foundation for advanced chart types and interactive features
+- Requires learning Recharts-specific patterns and customization approaches
+- Creates dependency on external library for critical dashboard functionality
+- Enables rapid development of new chart types and visualizations
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-020: Real-time Dashboard Data Strategy
+
+**Date**: January 9, 2025  
+**Status**: Accepted  
+**Context**: Dashboard needs to provide current business data while balancing performance, server load, and user experience expectations for a professional SaaS platform.
+
+**Decision**: Implement 30-second automatic refresh intervals with React Query caching and manual refresh capability.
+
+**Rationale**:
+
+- 30-second intervals provide near real-time feel without excessive server load
+- React Query provides intelligent caching and background updates
+- Manual refresh gives users control over data freshness
+- Stale-while-revalidate pattern ensures responsive UI during updates
+- Configurable refresh intervals allow future optimization based on usage patterns
+
+**Alternatives Considered**:
+
+1. **WebSocket real-time updates**: Live data streaming
+   - Rejected: Complexity overhead and server resource requirements for current scale
+2. **5-second refresh intervals**: More frequent updates
+   - Rejected: Excessive server load and API calls for marginal UX improvement
+3. **Manual refresh only**: User-controlled data updates
+   - Rejected: Doesn't meet expectations for modern SaaS dashboard experience
+4. **Event-driven updates**: Update only when data changes
+   - Rejected: Complex implementation requiring event infrastructure
+
+**Impact**:
+
+- Provides excellent balance of data freshness and performance
+- Enables scalable dashboard experience as user base grows
+- Creates foundation for future real-time features when needed
+- Requires monitoring of API performance and server load
+- Allows easy adjustment of refresh intervals based on usage analytics
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-021: Dashboard-Specific Design System Extension
+
+**Date**: January 9, 2025  
+**Status**: Accepted  
+**Context**: Existing Lumina Design System v2.0 needed extension with dashboard-specific components, layouts, and interaction patterns while maintaining brand consistency.
+
+**Decision**: Extend existing design system with dashboard-specific CSS variables, typography scales, and component patterns rather than creating separate system.
+
+**Rationale**:
+
+- Maintains consistency with established Lumina Design System v2.0
+- Extends existing foundation rather than duplicating design tokens
+- Enables dashboard-specific optimizations (metric typography, chart colors)
+- Preserves design system governance and maintenance efficiency
+- Allows future consolidation of dashboard patterns into main design system
+
+**Alternatives Considered**:
+
+1. **Separate dashboard design system**: Independent styling system
+   - Rejected: Creates maintenance overhead and potential inconsistencies
+2. **Minimal dashboard styling**: Use only existing design system tokens
+   - Rejected: Insufficient for professional dashboard requirements
+3. **Third-party dashboard theme**: Use pre-built dashboard styling
+   - Rejected: Doesn't align with Lumina brand identity and customization needs
+
+**Impact**:
+
+- Maintains design system consistency while enabling dashboard innovation
+- Creates reusable patterns for future dashboard and analytics features
+- Requires careful documentation to prevent design system fragmentation
+- Enables rapid development of new dashboard components
+- Provides foundation for design system evolution and consolidation
+
+**Related Issues**: [LUM-76](https://linear.app/scootr-ca/issue/LUM-76) - Quality Assurance
+
+---
+
+## ADR-022: Documentation Standards Compliance Strategy
+
+**Date**: January 17, 2025  
+**Status**: Accepted  
+**Context**: Previous dashboard enhancement work needed to be properly documented according to established documentation standards and Linear integration guidelines to ensure AI context preservation and team collaboration.
+
+**Decision**: Implement comprehensive documentation update following established steering documentation standards with focus on AI context preservation and Linear integration.
+
+**Rationale**:
+
+- Ensures consistency with established documentation patterns and quality standards
+- Maintains proper context for future AI-human collaboration sessions
+- Provides comprehensive reference for team members and stakeholders
+- Enables proper Linear integration and issue tracking for documentation work
+- Supports documentation-first development approach and quality assurance
+
+**Alternatives Considered**:
+
+1. **Minimal Documentation Update**: Update only essential documentation
+   - Rejected: Doesn't meet established documentation standards for feature completion
+2. **Separate Documentation Session**: Schedule dedicated documentation session later
+   - Rejected: Breaks documentation-first development principle and context continuity
+3. **Automated Documentation Generation**: Use tools to generate documentation automatically
+   - Rejected: Doesn't capture decision rationale and architectural context needed for AI collaboration
+
+**Impact**:
+
+- Establishes comprehensive documentation foundation for dashboard enhancement work
+- Enables proper knowledge transfer and context preservation for future development
+- Provides clear reference for implementation details and architectural decisions
+- Supports Linear integration and project management workflows
+- Maintains documentation quality standards and consistency across project
+
+**Related Issues**: Documentation standards compliance and AI context preservation
+
+---
+
+## ADR-023: Design System Documentation Enhancement Approach
+
+**Date**: January 17, 2025  
+**Status**: Accepted  
+**Context**: Dashboard enhancement introduced new design patterns, components, and CSS variables that needed to be properly documented within the existing Lumina Design System framework.
+
+**Decision**: Extend existing design system documentation with dashboard-specific sections while maintaining consistency with established design system structure and patterns.
+
+**Rationale**:
+
+- Maintains consistency with existing Lumina Design System v2.0 documentation structure
+- Provides comprehensive guidance for dashboard component usage and implementation
+- Enables future developers to properly implement dashboard features following established patterns
+- Supports design system evolution and consolidation efforts
+- Preserves design system governance and prevents fragmentation
+
+**Alternatives Considered**:
+
+1. **Separate Dashboard Design Documentation**: Create independent documentation for dashboard design patterns
+   - Rejected: Creates fragmentation and maintenance overhead for design system
+2. **Minimal Design Documentation**: Document only essential design changes
+   - Rejected: Insufficient for comprehensive design system maintenance and team guidance
+3. **Complete Design System Rewrite**: Restructure entire design system documentation
+   - Rejected: Unnecessary scope expansion and potential disruption to existing workflows
+
+**Impact**:
+
+- Provides comprehensive design guidance for dashboard and analytics components
+- Maintains design system consistency and governance
+- Enables proper implementation of dashboard features by team members
+- Supports future design system evolution and enhancement efforts
+- Creates foundation for design system consolidation and improvement
+
+**Related Issues**: Design system maintenance and component documentation standards
+
+---
+
+## ADR-024: Dashboard Accessibility Enhancement for Color Contrast
+
+**Date**: January 17, 2025  
+**Status**: Accepted  
+**Context**: User feedback identified poor color contrast in dashboard navigation active states and Quick Actions buttons, where white text on orange gradient background was difficult to read and failed WCAG 2.1 AA accessibility standards.
+
+**Decision**: Replace gradient backgrounds with high-contrast color combinations using light gold backgrounds with dark gold text and borders for better accessibility while maintaining Lumina brand identity.
+
+**Rationale**:
+
+- Ensures WCAG 2.1 AA compliance with proper color contrast ratios for accessibility
+- Maintains Lumina brand identity using gold color palette variations
+- Improves user experience for users with visual impairments or color vision deficiencies
+- Provides better legibility across different devices and lighting conditions
+- Establishes accessible design patterns for future dashboard components
+
+**Alternatives Considered**:
+
+1. **Darker gradient backgrounds**: Use darker orange/gold gradients with white text
+   - Rejected: Still insufficient contrast ratio and maintains gradient complexity
+2. **Outline-only buttons**: Use transparent backgrounds with colored borders
+   - Rejected: Insufficient visual prominence for primary actions
+3. **High contrast mode toggle**: Provide accessibility mode with different colors
+   - Rejected: Adds complexity and doesn't address core design issue
+
+**Impact**:
+
+- Improves accessibility compliance and user experience for all users
+- Establishes better design patterns for future dashboard components
+- Maintains Lumina brand consistency while prioritizing accessibility
+- Requires minimal code changes with CSS variable updates
+- Provides foundation for comprehensive accessibility review of entire design system
+
+**Related Issues**: Dashboard accessibility and WCAG 2.1 AA compliance
+
+---
+
+## ADR-024: Today's Schedule Card Component Architecture
+
+**Date**: September 17, 2025  
+**Status**: Accepted  
+**Context**: The existing Today's Schedule card used legacy CSS classes and inline styling that didn't align with the enhanced dashboard components and Lumina design system standards.
+
+**Decision**: Create dedicated reusable components (`ScheduleItem` and `TodaysScheduleCard`) using Tailwind utility classes and proper TypeScript interfaces for appointment data.
+
+**Rationale**:
+
+- Maintains consistency with other enhanced dashboard components
+- Provides proper TypeScript typing for appointment data structures
+- Enables reusability across different dashboard views and contexts
+- Implements proper loading states and empty state handling
+- Supports status-based styling with animated indicators
+- Follows established component architecture patterns
+
+**Alternatives Considered**:
+
+1. **Update Existing CSS Classes**: Modify existing schedule-item CSS classes
+   - Rejected: Doesn't align with Tailwind-first approach and component reusability goals
+2. **Inline Component in Dashboard**: Keep schedule card as inline JSX in business dashboard
+   - Rejected: Reduces reusability and maintainability, doesn't follow component architecture standards
+3. **Simple Styling Update**: Only update colors and spacing without component extraction
+   - Rejected: Misses opportunity for proper TypeScript typing and reusability improvements
+
+**Impact**:
+
+- Establishes reusable schedule components for use across dashboard views
+- Provides proper TypeScript interfaces for appointment data handling
+- Enables consistent status indicators and animations across schedule features
+- Supports future schedule-related feature development with established patterns
+- Maintains design system consistency with other dashboard components
+
+**Related Issues**: Dashboard component standardization and schedule feature development
+
+---
+
+## ADR-025: Dashboard Link Styling Consistency
+
+**Date**: September 17, 2025  
+**Status**: Accepted  
+**Context**: The dashboard had inconsistent link styling across different components - stat cards used professional action links, Today's Schedule card used button styling, and quick actions had secondary links with different visual treatment.
+
+**Decision**: Standardize all dashboard links to use consistent styling patterns based on their context and function.
+
+**Rationale**:
+
+- Improves user experience through consistent visual language
+- Reduces cognitive load by using familiar interaction patterns
+- Maintains design system integrity across all dashboard components
+- Creates clear hierarchy between primary actions (buttons) and navigation links
+- Follows established Lumina design system principles
+
+**Alternatives Considered**:
+
+1. **Keep Mixed Styling**: Maintain different styles for different components
+   - Rejected: Creates inconsistent user experience and violates design system principles
+2. **Convert All to Buttons**: Make all links use button styling
+   - Rejected: Buttons should be reserved for actions, not navigation
+3. **Create New Link Style**: Design a completely new link style for dashboard
+   - Rejected: Existing stat card action links already provide excellent UX
+
+**Impact**:
+
+- Establishes consistent link styling patterns across all dashboard components
+- Improves visual hierarchy and user experience
+- Reduces maintenance overhead by using existing design system components
+- Creates foundation for consistent styling in future dashboard features
+- Enhances accessibility through consistent interaction patterns
+
+**Related Issues**: Dashboard UI consistency and design system compliance
+
+---
+
+## ADR-026: Dashboard Component Design System Standardization
+
+**Date**: September 17, 2025  
+**Status**: Accepted  
+**Context**: The Today's Schedule component and other dashboard elements were using inconsistent typography, spacing, and styling patterns that didn't align with the established design system used in stat cards, headers, and navigation components.
+
+**Decision**: Establish comprehensive design system standards for all dashboard components with consistent typography hierarchy, color usage, spacing patterns, and component structure templates.
+
+**Rationale**:
+
+- Ensures visual consistency across all dashboard components
+- Reduces development time by providing clear patterns and reusable CSS classes
+- Improves maintainability by centralizing design decisions
+- Creates professional, sophisticated appearance aligned with Lumina brand standards
+- Enables scalable component development with established best practices
+- Provides clear documentation for future developers and AI assistance
+
+**Alternatives Considered**:
+
+1. **Component-Specific Styling**: Allow each component to define its own styling
+   - Rejected: Creates inconsistency and maintenance overhead
+2. **Minimal Standardization**: Only standardize colors, leave typography flexible
+   - Rejected: Insufficient for achieving professional, consistent appearance
+3. **Complete Redesign**: Start over with entirely new design system
+   - Rejected: Existing patterns work well, just need proper documentation and application
+
+**Impact**:
+
+- Establishes comprehensive design system documentation for dashboard components
+- Creates reusable CSS classes for consistent typography and styling
+- Improves visual hierarchy and professional appearance across dashboard
+- Reduces future development time through established patterns
+- Enables consistent component development and maintenance
+- Provides foundation for design system evolution and enhancement
+
+**Related Issues**: Design system consistency, dashboard component standardization, and professional UI development
+
+---
+
+## ADR-027: Professional Schedule Item Design Enhancement
+
+**Date**: September 17, 2025  
+**Status**: Accepted  
+**Context**: The schedule items in the Today's Schedule component needed a more sophisticated, professional appearance to match the high-quality standards expected by business owners using Lumina.
+
+**Decision**: Implement a completely redesigned schedule item with structured layout, status indicators, enhanced typography hierarchy, and subtle professional interactions.
+
+**Rationale**:
+
+- Creates a more sophisticated, business-professional appearance
+- Improves information hierarchy and readability through structured layout
+- Provides clear visual status indicators without being overwhelming
+- Enhances user experience with subtle, professional hover interactions
+- Aligns with Lumina's positioning as a premium business tool
+- Establishes patterns for other list-based components in the system
+
+**Alternatives Considered**:
+
+1. **Minor Styling Updates**: Small tweaks to existing design
+   - Rejected: Insufficient for achieving the professional appearance required
+2. **Card-Based Items**: Each appointment as a separate card
+   - Rejected: Would create too much visual noise and take up excessive space
+3. **Table Layout**: Traditional table structure for appointments
+   - Rejected: Less flexible and harder to make responsive
+
+**Impact**:
+
+- Significantly improves the professional appearance of the dashboard
+- Creates reusable patterns for other list-based components
+- Enhances user perception of Lumina as a premium business tool
+- Provides foundation for consistent professional styling across the application
+- Improves information hierarchy and user experience
+
+**Related Issues**: Professional UI design, business user experience, and premium product positioning
+
+---
+
+**Last Updated**: January 17, 2025  
+**Next Review**: April 17, 2025
