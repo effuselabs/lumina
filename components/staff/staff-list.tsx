@@ -280,21 +280,29 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header and Controls */}
+      {/* Controls */}
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Staff Management</h2>
-          <p className="text-gray-600">
-            Manage your team members and their employment settings
-          </p>
+        <div className="flex-1">
+          {/* Header removed - now handled by parent component */}
         </div>
-        <Button
+        <button
           onClick={() => setInviteDialogOpen(true)}
-          className="flex items-center gap-2"
+          className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+          style={{
+            background: 'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background =
+              'linear-gradient(135deg, #ffcd47 0%, #ff6b47 100%)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background =
+              'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
+          }}
         >
-          <UserPlus className="h-4 w-4" />
+          <UserPlus className="mr-2 h-4 w-4" />
           Invite Staff
-        </Button>
+        </button>
       </div>
 
       {/* Filters */}

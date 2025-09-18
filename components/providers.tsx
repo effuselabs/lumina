@@ -13,7 +13,7 @@ export function Providers({ children }: ProvidersProps) {
     <SessionProvider
       basePath="/api/auth"
       refetchInterval={5 * 60} // Refetch session every 5 minutes
-      refetchOnWindowFocus={true}
+      refetchOnWindowFocus={false} // Disable to prevent 404 errors during development
     >
       {children}
       <Toaster />
