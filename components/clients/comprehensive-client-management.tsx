@@ -77,7 +77,11 @@ export function ComprehensiveClientManagement({
   const [metrics, setMetrics] = useState<ClientMetrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
-  const [filterValues, setFilterValues] = useState<Record<string, unknown>>({});
+  const [filterValues, setFilterValues] = useState<Record<string, unknown>>({
+    status: 'all',
+    staff: 'all',
+    loyaltyTier: 'all',
+  });
 
   const loadData = useCallback(async () => {
     if (!businessId) return;
@@ -180,7 +184,7 @@ export function ComprehensiveClientManagement({
       label: 'Status',
       type: 'select' as const,
       options: [
-        { value: '', label: 'All Statuses' },
+        { value: 'all', label: 'All Statuses' },
         { value: 'active', label: 'Active' },
         { value: 'inactive', label: 'Inactive' },
         { value: 'vip', label: 'VIP' },
@@ -191,7 +195,7 @@ export function ComprehensiveClientManagement({
       label: 'Preferred Staff',
       type: 'select' as const,
       options: [
-        { value: '', label: 'All Staff' },
+        { value: 'all', label: 'All Staff' },
         ...staff.map(member => ({
           value: member.id,
           label: member.displayName,
@@ -203,7 +207,7 @@ export function ComprehensiveClientManagement({
       label: 'Loyalty Tier',
       type: 'select' as const,
       options: [
-        { value: '', label: 'All Tiers' },
+        { value: 'all', label: 'All Tiers' },
         { value: 'bronze', label: 'Bronze' },
         { value: 'silver', label: 'Silver' },
         { value: 'gold', label: 'Gold' },
@@ -217,7 +221,11 @@ export function ComprehensiveClientManagement({
   };
 
   const handleClearFilters = () => {
-    setFilterValues({});
+    setFilterValues({
+      status: 'all',
+      staff: 'all',
+      loyaltyTier: 'all',
+    });
   };
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -272,24 +280,18 @@ export function ComprehensiveClientManagement({
     }
 
     // Status filter
-    if (statusFilter && statusFilter.trim()) {
-      const matches = client.status === statusFilter;
-
-      if (!matches) return false;
+    if (statusFilter && statusFilter.trim() && statusFilter !== 'all') {
+      if (client.status !== statusFilter) return false;
     }
 
     // Staff filter
-    if (staffFilter && staffFilter.trim()) {
-      const matches = client.preferredStaff === staffFilter;
-
-      if (!matches) return false;
+    if (staffFilter && staffFilter.trim() && staffFilter !== 'all') {
+      if (client.preferredStaff !== staffFilter) return false;
     }
 
     // Loyalty filter
-    if (loyaltyFilter && loyaltyFilter.trim()) {
-      const matches = client.loyaltyTier === loyaltyFilter;
-
-      if (!matches) return false;
+    if (loyaltyFilter && loyaltyFilter.trim() && loyaltyFilter !== 'all') {
+      if (client.loyaltyTier !== loyaltyFilter) return false;
     }
 
     return true;
