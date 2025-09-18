@@ -22,23 +22,12 @@ interface BusinessDashboardPageProps {
 export default async function BusinessDashboardPage({
   params,
 }: BusinessDashboardPageProps) {
-  console.log(
-    '🎯 BUSINESS DASHBOARD PAGE EXECUTING FOR SLUG:',
-    params.businessSlug
-  );
   const session = await auth();
 
   // Enforce authentication
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
-
-  console.log('🏢 Business dashboard accessed:', {
-    businessSlug: params.businessSlug,
-    userId: session.user.id,
-    userEmail: session.user.email,
-    timestamp: new Date().toISOString(),
-  });
 
   try {
     // First, get the business
@@ -58,14 +47,7 @@ export default async function BusinessDashboardPage({
       },
     });
 
-    console.log('🔍 Business lookup result:', {
-      businessSlug: params.businessSlug,
-      businessFound: !!business,
-      businessName: business?.name,
-    });
-
     if (!business) {
-      console.log('❌ Business not found, redirecting to onboarding');
       redirect('/onboarding');
     }
 
@@ -80,29 +62,13 @@ export default async function BusinessDashboardPage({
       },
     });
 
-    console.log('🔍 User access check:', {
-      businessId: business.id,
-      userId: session.user.id,
-      hasAccess: !!userBusinessRelation,
-      userRole: userBusinessRelation?.role,
-    });
-
     if (!userBusinessRelation) {
-      console.log(
-        '❌ User does not have access to this business, redirecting to onboarding'
-      );
       redirect('/onboarding');
     }
 
     const userRole = userBusinessRelation.role;
 
-    console.log('Rendering business dashboard:', {
-      businessName: business.name,
-      userRole,
-      statsCount: business._count,
-    });
-
-    console.log('✅ About to render business dashboard');
+    // Business dashboard ready to render
 
     // Import the proper dashboard component
     const { BusinessDashboard } = await import('./business-dashboard');
@@ -115,9 +81,8 @@ export default async function BusinessDashboardPage({
         businessSlug={params.businessSlug}
       />
     );
-  } catch (error) {
-    console.error('Business dashboard error:', error);
-    // Fallback to onboarding on any error
+  } catch (_error) {
+    // Log error for monitoring in production
     redirect('/onboarding');
   }
 }

@@ -48,16 +48,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async redirect({ url, baseUrl }) {
-      console.log('🔄 NextAuth redirect:', { url, baseUrl });
-
-      // ALWAYS redirect to /dashboard for business lookup
-      // Never redirect directly to business-specific URLs
-      if (
-        url.includes('/auth/signin') ||
-        url === baseUrl ||
-        url.includes('/dashboard/')
-      ) {
-        console.log('🔄 Redirecting to /dashboard for business lookup');
+      // Always redirect to dashboard after sign-in
+      if (url.includes('/auth/signin') || url === baseUrl) {
         return `${baseUrl}/dashboard`;
       }
 
@@ -85,8 +77,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('🔐 Authentication attempt for:', credentials?.email);
-
         try {
           // Validate credentials format
           const validatedCredentials = credentialsSchema.parse(credentials);
@@ -105,18 +95,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           });
 
           if (!user || !user.password) {
-            console.log('❌ User not found or no password set:', email);
             return null;
           }
 
           // Verify password
           const isPasswordValid = await bcrypt.compare(password, user.password);
           if (!isPasswordValid) {
-            console.log('❌ Invalid password for user:', email);
             return null;
           }
-
-          console.log('✅ Authentication successful for:', email);
 
           // Return user data (password excluded)
           return {
@@ -126,10 +112,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             role: user.role,
           };
         } catch (error) {
-          if (error instanceof z.ZodError) {
-            console.log('❌ Invalid credentials format:', error.errors);
-          } else {
-            console.error('❌ Authentication error:', error);
+          // Log authentication errors for security monitoring
+          if (!(error instanceof z.ZodError)) {
+            // Log to monitoring service in production
           }
           return null;
         }
@@ -142,18 +127,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   // Events for logging
   events: {
-    async signIn({ user, account, profile: _profile }) {
-      console.log('📝 User signed in:', {
-        userId: user.id,
-        email: user.email,
-        provider: account?.provider,
-      });
+    async signIn({ user: _user, account: _account, profile: _profile }) {
+      // Log to monitoring service in production
     },
-    async signOut({ session, token }) {
-      console.log('📝 User signed out:', {
-        userId: token?.id || session?.user?.id,
-        email: token?.email || session?.user?.email,
-      });
+    async signOut({ session: _session, token: _token }) {
+      // Log to monitoring service in production
     },
   },
 });

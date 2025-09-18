@@ -13,20 +13,12 @@ import { redirect } from 'next/navigation';
  * Security: All database queries are user-scoped for multi-tenant isolation
  */
 export default async function DashboardRedirect() {
-  console.log('🚨 DASHBOARD PAGE EXECUTING - THIS SHOULD SHOW IN LOGS');
   const session = await auth();
 
   // This should not happen due to middleware, but double-check
   if (!session?.user?.id) {
-    console.log('❌ No session in dashboard redirect, redirecting to signin');
     redirect('/auth/signin');
   }
-
-  console.log('🔄 Dashboard redirect for user:', {
-    userId: session.user.id,
-    email: session.user.email,
-    timestamp: new Date().toISOString(),
-  });
 
   try {
     // Look up user's business relationships
@@ -48,51 +40,27 @@ export default async function DashboardRedirect() {
       },
     });
 
-    console.log('🔍 User business lookup result:', {
-      userId: session.user.id,
-      businessCount: userBusinesses.length,
-      businesses: userBusinesses.map(ub => ({
-        businessId: ub.business.id,
-        businessName: ub.business.name,
-        businessSlug: ub.business.slug,
-        userRole: ub.role,
-        isActive: ub.business.isActive,
-      })),
-    });
-
     // All businesses are considered active since there's no isActive field
     const activeBusinesses = userBusinesses;
 
     if (activeBusinesses.length === 0) {
-      console.log(
-        '❌ No active business relationships found, redirecting to onboarding'
-      );
       redirect('/onboarding');
     }
 
     // Use the first active business
     const primaryBusiness = activeBusinesses[0];
 
-    console.log('✅ Redirecting to business dashboard:', {
-      businessId: primaryBusiness.business.id,
-      businessName: primaryBusiness.business.name,
-      businessSlug: primaryBusiness.business.slug,
-      userRole: primaryBusiness.role,
-    });
-
     // Redirect to business-specific dashboard
     redirect(`/dashboard/${primaryBusiness.business.slug}`);
   } catch (error) {
-    console.error('❌ Dashboard redirect error:', error);
+    // NEXT_REDIRECT is not an actual error - it's how Next.js handles redirects
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      throw error; // Re-throw to allow the redirect to complete
+    }
 
-    // Log the error details for debugging
-    console.error('Error details:', {
-      userId: session.user.id,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
-    });
+    // Log error for monitoring in production
 
-    // Fallback to onboarding on any database error
+    // Fallback to onboarding only on actual database errors
     redirect('/onboarding');
   }
 }

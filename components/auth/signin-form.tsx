@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
@@ -16,9 +15,7 @@ const signInSchema = z.object({
 });
 
 export function SignInForm() {
-  const router = useRouter();
   const { data: session, status } = useSession();
-  const callbackUrl = '/dashboard';
 
   const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
@@ -37,9 +34,9 @@ export function SignInForm() {
   // Redirect if already authenticated
   useEffect(() => {
     if (status === 'authenticated' && session) {
-      window.location.href = callbackUrl;
+      window.location.href = '/dashboard';
     }
-  }, [session, status, callbackUrl]);
+  }, [session, status]);
 
   // Show loading state while session is being determined
   if (status === 'loading' || !mounted) {
@@ -66,23 +63,23 @@ export function SignInForm() {
       // Validate form data
       const validatedData = signInSchema.parse(formData);
 
-      // Attempt sign in
-      console.log('🔐 Attempting signin with:', validatedData.email);
-
       try {
-        // Use NextAuth's standard redirect pattern
-        console.log('🔐 Attempting signin with NextAuth redirect');
-        await signIn('credentials', {
+        // Use NextAuth's signIn with redirect: false to handle redirect manually
+        const result = await signIn('credentials', {
           email: validatedData.email,
           password: validatedData.password,
-          callbackUrl: callbackUrl,
+          redirect: false,
         });
 
-        // If we reach here, signin was successful and redirect will happen automatically
-        console.log('✅ Signin initiated successfully');
-        setGeneralError('');
-      } catch (signInError) {
-        console.error('❌ SignIn threw an error:', signInError);
+        if (result?.error) {
+          setGeneralError('Invalid email or password. Please try again.');
+        } else if (result?.ok) {
+          // Force redirect to dashboard after successful sign-in
+          window.location.href = '/dashboard';
+        } else {
+          setGeneralError('Authentication failed. Please try again.');
+        }
+      } catch (_signInError) {
         setGeneralError('Authentication failed. Please try again.');
       }
     } catch (error) {
@@ -108,17 +105,19 @@ export function SignInForm() {
 
     try {
       const result = await signIn('google', {
-        callbackUrl,
         redirect: false,
       });
 
       if (result?.error) {
         setGeneralError('Failed to sign in with Google');
         setIsLoading(false);
+      } else if (result?.ok) {
+        window.location.href = '/dashboard';
+      } else {
+        setGeneralError('Failed to sign in with Google');
+        setIsLoading(false);
       }
-      // If successful, the session will update and redirect will happen automatically
-    } catch (error) {
-      console.error('Google signin error:', error);
+    } catch (_error) {
       setGeneralError('Failed to sign in with Google');
       setIsLoading(false);
     }

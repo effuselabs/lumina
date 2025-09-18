@@ -5,12 +5,6 @@ export default auth(req => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  console.log('🛡️ Middleware check:', {
-    pathname,
-    hasSession: !!session,
-    userId: session?.user?.id,
-  });
-
   // Public routes that don't require authentication
   const publicRoutes = [
     '/',
@@ -34,14 +28,12 @@ export default auth(req => {
 
   // Redirect to signin if not authenticated
   if (!session?.user) {
-    console.log('❌ Unauthenticated access attempt to:', pathname);
     const signInUrl = new URL('/auth/signin', req.url);
     signInUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(signInUrl);
   }
 
   // Allow authenticated users to access protected routes
-  console.log('✅ Authenticated access granted to:', pathname);
   return NextResponse.next();
 });
 
