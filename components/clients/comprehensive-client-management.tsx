@@ -92,6 +92,57 @@ export function ComprehensiveClientManagement({
         const clientsData = await clientsResponse.json();
         setClients(clientsData.clients || []);
         setMetrics(clientsData.metrics || null);
+      } else {
+        // For development: Add some test data if API fails
+        const testClients: Client[] = [
+          {
+            id: '1',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phone: '(555) 123-4567',
+            appointmentCount: 5,
+            totalSpent: 250,
+            createdAt: new Date().toISOString(),
+            status: 'active',
+            loyaltyTier: 'gold',
+            preferredStaff: 'staff-1',
+          },
+          {
+            id: '2',
+            firstName: 'Jane',
+            lastName: 'Smith',
+            email: 'jane.smith@example.com',
+            phone: '(555) 987-6543',
+            appointmentCount: 12,
+            totalSpent: 680,
+            createdAt: new Date().toISOString(),
+            status: 'vip',
+            loyaltyTier: 'platinum',
+            preferredStaff: 'staff-2',
+          },
+          {
+            id: '3',
+            firstName: 'Bob',
+            lastName: 'Johnson',
+            email: 'bob.johnson@example.com',
+            phone: '(555) 456-7890',
+            appointmentCount: 2,
+            totalSpent: 120,
+            createdAt: new Date().toISOString(),
+            status: 'inactive',
+            loyaltyTier: 'bronze',
+          },
+        ];
+        setClients(testClients);
+        setMetrics({
+          totalClients: 3,
+          activeClients: 2,
+          newThisMonth: 1,
+          vipClients: 1,
+          averageLifetimeValue: 350,
+          retentionRate: 85,
+        });
       }
 
       // Load staff for filtering
@@ -99,6 +150,12 @@ export function ComprehensiveClientManagement({
       if (staffResponse.ok) {
         const staffData = await staffResponse.json();
         setStaff(staffData.staff || []);
+      } else {
+        // Test staff data
+        setStaff([
+          { id: 'staff-1', displayName: 'Sarah Wilson' },
+          { id: 'staff-2', displayName: 'Mike Chen' },
+        ]);
       }
     } catch (_error) {
       // Error handling would go here
@@ -123,6 +180,7 @@ export function ComprehensiveClientManagement({
       label: 'Status',
       type: 'select' as const,
       options: [
+        { value: '', label: 'All Statuses' },
         { value: 'active', label: 'Active' },
         { value: 'inactive', label: 'Inactive' },
         { value: 'vip', label: 'VIP' },
@@ -132,16 +190,20 @@ export function ComprehensiveClientManagement({
       key: 'staff',
       label: 'Preferred Staff',
       type: 'select' as const,
-      options: staff.map(member => ({
-        value: member.id,
-        label: member.displayName,
-      })),
+      options: [
+        { value: '', label: 'All Staff' },
+        ...staff.map(member => ({
+          value: member.id,
+          label: member.displayName,
+        })),
+      ],
     },
     {
       key: 'loyaltyTier',
       label: 'Loyalty Tier',
       type: 'select' as const,
       options: [
+        { value: '', label: 'All Tiers' },
         { value: 'bronze', label: 'Bronze' },
         { value: 'silver', label: 'Silver' },
         { value: 'gold', label: 'Gold' },
@@ -197,6 +259,12 @@ export function ComprehensiveClientManagement({
     const staffFilter = filterValues.staff as string;
     const loyaltyFilter = filterValues.loyaltyTier as string;
 
+    // Debug logging (remove in production)
+    if (Object.keys(filterValues).length > 0) {
+      console.log('Filter values:', filterValues);
+      console.log('Client being filtered:', client.firstName, client.lastName);
+    }
+
     // Search filter
     if (searchTerm && searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase();
@@ -206,28 +274,51 @@ export function ComprehensiveClientManagement({
         client.email?.toLowerCase().includes(searchLower) ||
         client.phone?.includes(searchTerm);
 
+      console.log('Search filter:', searchTerm, 'matches:', matchesSearch);
       if (!matchesSearch) return false;
     }
 
     // Status filter
-    if (statusFilter && statusFilter.trim() && client.status !== statusFilter)
-      return false;
+    if (statusFilter && statusFilter.trim()) {
+      const matches = client.status === statusFilter;
+      console.log(
+        'Status filter:',
+        statusFilter,
+        'client status:',
+        client.status,
+        'matches:',
+        matches
+      );
+      if (!matches) return false;
+    }
 
     // Staff filter
-    if (
-      staffFilter &&
-      staffFilter.trim() &&
-      client.preferredStaff !== staffFilter
-    )
-      return false;
+    if (staffFilter && staffFilter.trim()) {
+      const matches = client.preferredStaff === staffFilter;
+      console.log(
+        'Staff filter:',
+        staffFilter,
+        'client staff:',
+        client.preferredStaff,
+        'matches:',
+        matches
+      );
+      if (!matches) return false;
+    }
 
     // Loyalty filter
-    if (
-      loyaltyFilter &&
-      loyaltyFilter.trim() &&
-      client.loyaltyTier !== loyaltyFilter
-    )
-      return false;
+    if (loyaltyFilter && loyaltyFilter.trim()) {
+      const matches = client.loyaltyTier === loyaltyFilter;
+      console.log(
+        'Loyalty filter:',
+        loyaltyFilter,
+        'client tier:',
+        client.loyaltyTier,
+        'matches:',
+        matches
+      );
+      if (!matches) return false;
+    }
 
     return true;
   });
