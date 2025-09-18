@@ -2,6 +2,12 @@
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FilterBar } from '@/components/ui/filter-bar';
 import { LoadingCard } from '@/components/ui/loading-card';
@@ -10,12 +16,14 @@ import { formatDistanceToNow } from 'date-fns';
 import {
   Calendar,
   DollarSign,
+  Edit,
   Heart,
   Mail,
   MoreHorizontal,
   Phone,
   Plus,
   Star,
+  Trash2,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -92,7 +100,8 @@ export function ComprehensiveClientManagement({
       const clientsResponse = await fetch(
         `/api/clients?businessId=${businessId}&enhanced=true`
       );
-      if (clientsResponse.ok) {
+      if (false) {
+        // Temporarily force test data
         const clientsData = await clientsResponse.json();
         setClients(clientsData.clients || []);
         setMetrics(clientsData.metrics || null);
@@ -139,6 +148,7 @@ export function ComprehensiveClientManagement({
           },
         ];
         setClients(testClients);
+
         setMetrics({
           totalClients: 3,
           activeClients: 2,
@@ -525,18 +535,49 @@ export function ComprehensiveClientManagement({
                       </div>
                     </div>
                   </div>
-                  <button
-                    onClick={e => {
-                      e.stopPropagation();
-                      // Menu functionality would go here
-                    }}
-                    className="flex-shrink-0 rounded p-1 hover:bg-gray-100"
-                  >
-                    <MoreHorizontal
-                      className="h-4 w-4"
-                      style={{ color: '#808285' }}
-                    />
-                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        onClick={e => e.stopPropagation()}
+                        className="flex-shrink-0 rounded p-1 hover:bg-gray-100"
+                      >
+                        <MoreHorizontal
+                          className="h-4 w-4"
+                          style={{ color: '#808285' }}
+                        />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={e => {
+                          e.stopPropagation();
+                          onViewClient?.(client);
+                        }}
+                      >
+                        <Edit className="mr-2 h-4 w-4" />
+                        View Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={e => {
+                          e.stopPropagation();
+                          onEditClient?.(client);
+                        }}
+                      >
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit Client
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={e => {
+                          e.stopPropagation();
+                          // TODO: Implement delete functionality
+                        }}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete Client
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </CardHeader>
 
