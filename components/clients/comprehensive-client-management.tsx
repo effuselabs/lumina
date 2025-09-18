@@ -532,15 +532,13 @@ export function ComprehensiveClientManagement({
                         {client.firstName} {client.lastName}
                       </h3>
                       <div className="mt-1 flex items-center gap-1">
-                        {client.status && (
-                          <StatusBadge
-                            variant={getStatusColor(client.status)}
-                            size="sm"
-                          >
-                            {client.status.charAt(0).toUpperCase() +
-                              client.status.slice(1)}
-                          </StatusBadge>
-                        )}
+                        <StatusBadge
+                          variant={getStatusColor(client.status || 'active')}
+                          size="sm"
+                        >
+                          {(client.status || 'active').charAt(0).toUpperCase() +
+                            (client.status || 'active').slice(1)}
+                        </StatusBadge>
                         {getLoyaltyIcon(client.loyaltyTier)}
                       </div>
                     </div>
@@ -731,14 +729,12 @@ export function ComprehensiveClientManagement({
                         <h3 className="text-lumina-primary truncate font-medium">
                           {client.firstName} {client.lastName}
                         </h3>
-                        {client.status && (
-                          <StatusBadge
-                            variant={getStatusColor(client.status)}
-                            size="sm"
-                          >
-                            {client.status}
-                          </StatusBadge>
-                        )}
+                        <StatusBadge
+                          variant={getStatusColor(client.status || 'active')}
+                          size="sm"
+                        >
+                          {client.status || 'active'}
+                        </StatusBadge>
                         {getLoyaltyIcon(client.loyaltyTier)}
                       </div>
                       {client.email && (
