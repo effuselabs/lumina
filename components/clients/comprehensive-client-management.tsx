@@ -259,12 +259,6 @@ export function ComprehensiveClientManagement({
     const staffFilter = filterValues.staff as string;
     const loyaltyFilter = filterValues.loyaltyTier as string;
 
-    // Debug logging (remove in production)
-    if (Object.keys(filterValues).length > 0) {
-      console.log('Filter values:', filterValues);
-      console.log('Client being filtered:', client.firstName, client.lastName);
-    }
-
     // Search filter
     if (searchTerm && searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase();
@@ -274,49 +268,27 @@ export function ComprehensiveClientManagement({
         client.email?.toLowerCase().includes(searchLower) ||
         client.phone?.includes(searchTerm);
 
-      console.log('Search filter:', searchTerm, 'matches:', matchesSearch);
       if (!matchesSearch) return false;
     }
 
     // Status filter
     if (statusFilter && statusFilter.trim()) {
       const matches = client.status === statusFilter;
-      console.log(
-        'Status filter:',
-        statusFilter,
-        'client status:',
-        client.status,
-        'matches:',
-        matches
-      );
+
       if (!matches) return false;
     }
 
     // Staff filter
     if (staffFilter && staffFilter.trim()) {
       const matches = client.preferredStaff === staffFilter;
-      console.log(
-        'Staff filter:',
-        staffFilter,
-        'client staff:',
-        client.preferredStaff,
-        'matches:',
-        matches
-      );
+
       if (!matches) return false;
     }
 
     // Loyalty filter
     if (loyaltyFilter && loyaltyFilter.trim()) {
       const matches = client.loyaltyTier === loyaltyFilter;
-      console.log(
-        'Loyalty filter:',
-        loyaltyFilter,
-        'client tier:',
-        client.loyaltyTier,
-        'matches:',
-        matches
-      );
+
       if (!matches) return false;
     }
 
