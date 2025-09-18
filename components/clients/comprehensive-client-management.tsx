@@ -100,10 +100,11 @@ export function ComprehensiveClientManagement({
       const clientsResponse = await fetch(
         `/api/clients?businessId=${businessId}&enhanced=true`
       );
-      if (false) {
-        // Temporarily force test data
+      if (clientsResponse.ok) {
         const clientsData = await clientsResponse.json();
-        setClients(clientsData.clients || []);
+        const clients = clientsData.clients || [];
+        console.log('API clients loaded:', clients);
+        setClients(clients);
         setMetrics(clientsData.metrics || null);
       } else {
         // For development: Add some test data if API fails
@@ -276,6 +277,17 @@ export function ComprehensiveClientManagement({
     const statusFilter = filterValues.status as string;
     const staffFilter = filterValues.staff as string;
     const loyaltyFilter = filterValues.loyaltyTier as string;
+
+    // Debug first client
+    if (client === clients[0]) {
+      console.log('Filtering first client:', client);
+      console.log(
+        'Status filter:',
+        statusFilter,
+        'Client status:',
+        client.status
+      );
+    }
 
     // Search filter
     if (searchTerm && searchTerm.trim()) {
