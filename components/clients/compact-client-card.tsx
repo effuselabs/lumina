@@ -189,10 +189,28 @@ export function CompactClientCard({
               e.stopPropagation();
               onBookAppointment?.(client);
             }}
-            className="flex-1 rounded-md border-2 bg-white px-2 py-1.5 text-xs font-medium transition-colors hover:bg-gray-50"
+            className="flex-1 rounded-md px-2 py-1.5 text-xs font-bold transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:transform"
             style={{
-              borderColor: '#ff7a5a',
-              color: '#ff7a5a',
+              background: 'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
+              color: '#0b2b33',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.3)',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background =
+                'linear-gradient(135deg, #ff7a5a 0%, #ffd25a 100%)';
+              e.currentTarget.style.color = '#ffffff';
+              e.currentTarget.style.textShadow =
+                '0 1px 2px rgba(11, 43, 51, 0.4)';
+              e.currentTarget.style.boxShadow =
+                '0 4px 12px rgba(255, 122, 90, 0.4)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background =
+                'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
+              e.currentTarget.style.color = '#0b2b33';
+              e.currentTarget.style.textShadow =
+                '0 1px 2px rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
             Book Now
