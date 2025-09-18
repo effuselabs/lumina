@@ -162,11 +162,11 @@ export function EnhancedClientManagement({
       case 'active':
         return 'success';
       case 'inactive':
-        return 'secondary';
+        return 'default';
       case 'vip':
         return 'warning';
       default:
-        return 'secondary';
+        return 'default';
     }
   };
 
@@ -192,7 +192,8 @@ export function EnhancedClientManagement({
     const staffFilter = filterValues.staff as string;
     const loyaltyFilter = filterValues.loyaltyTier as string;
 
-    if (searchTerm) {
+    // If search term exists and doesn't match, exclude
+    if (searchTerm && searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase();
       const matchesSearch =
         client.firstName.toLowerCase().includes(searchLower) ||
@@ -203,9 +204,25 @@ export function EnhancedClientManagement({
       if (!matchesSearch) return false;
     }
 
-    if (statusFilter && client.status !== statusFilter) return false;
-    if (staffFilter && client.preferredStaff !== staffFilter) return false;
-    if (loyaltyFilter && client.loyaltyTier !== loyaltyFilter) return false;
+    // If status filter is set and doesn't match, exclude
+    if (statusFilter && statusFilter.trim() && client.status !== statusFilter)
+      return false;
+
+    // If staff filter is set and doesn't match, exclude
+    if (
+      staffFilter &&
+      staffFilter.trim() &&
+      client.preferredStaff !== staffFilter
+    )
+      return false;
+
+    // If loyalty filter is set and doesn't match, exclude
+    if (
+      loyaltyFilter &&
+      loyaltyFilter.trim() &&
+      client.loyaltyTier !== loyaltyFilter
+    )
+      return false;
 
     return true;
   });
@@ -315,23 +332,23 @@ export function EnhancedClientManagement({
           <div className="text-sm" style={{ color: '#808285' }}>
             Showing {filteredClients.length} of {clients.length} clients
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1">
             <button
               onClick={() => setViewMode('cards')}
-              className={`rounded-md px-3 py-1 text-sm transition-colors ${
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 viewMode === 'cards'
-                  ? 'bg-lumina-gold text-white'
-                  : 'text-lumina-secondary hover:bg-gray-100'
+                  ? 'text-lumina-primary bg-white shadow-sm'
+                  : 'hover:text-lumina-primary text-gray-600'
               }`}
             >
               Cards
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`rounded-md px-3 py-1 text-sm transition-colors ${
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 viewMode === 'table'
-                  ? 'bg-lumina-gold text-white'
-                  : 'text-lumina-secondary hover:bg-gray-100'
+                  ? 'text-lumina-primary bg-white shadow-sm'
+                  : 'hover:text-lumina-primary text-gray-600'
               }`}
             >
               Table
@@ -363,7 +380,7 @@ export function EnhancedClientManagement({
           }
         />
       ) : viewMode === 'cards' ? (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredClients.map(client => (
             <Card
               key={client.id}
@@ -509,12 +526,81 @@ export function EnhancedClientManagement({
           ))}
         </div>
       ) : (
-        // Table view would go here - using existing ClientList component
+        // Table view with compact layout
         <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-          <div className="p-6">
-            <p className="text-sm" style={{ color: '#808285' }}>
-              Table view coming soon - enhanced with new features
-            </p>
+          <div className="p-4">
+            <div className="space-y-3">
+              {filteredClients.map(client => (
+                <div
+                  key={client.id}
+                  className="flex items-center justify-between rounded-lg border p-3 transition-colors hover:bg-gray-50"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback
+                        className="text-sm font-medium text-white"
+                        style={{
+                          background:
+                            'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
+                        }}
+                      >
+                        {getInitials(client.firstName, client.lastName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="text-lumina-primary font-medium">
+                        {client.firstName} {client.lastName}
+                      </h3>
+                      <div className="mt-1 flex items-center gap-2">
+                        {client.email && (
+                          <span
+                            className="text-sm"
+                            style={{ color: '#808285' }}
+                          >
+                            {client.email}
+                          </span>
+                        )}
+                        {client.status && (
+                          <StatusBadge
+                            variant={getStatusColor(client.status)}
+                            size="sm"
+                          >
+                            {client.status}
+                          </StatusBadge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <div className="text-lumina-primary text-sm font-medium">
+                        {client.appointmentCount} visits
+                      </div>
+                      <div className="text-xs" style={{ color: '#808285' }}>
+                        ${client.totalSpent?.toLocaleString() || '0'} spent
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => onViewClient?.(client)}
+                        className="text-lumina-primary rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-gray-200"
+                      >
+                        Details
+                      </button>
+                      <button
+                        className="rounded-md border-2 bg-white px-3 py-1.5 text-xs font-medium transition-colors hover:bg-gray-50"
+                        style={{
+                          borderColor: '#ff7a5a',
+                          color: '#ff7a5a',
+                        }}
+                      >
+                        Book
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
