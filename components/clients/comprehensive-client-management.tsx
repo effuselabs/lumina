@@ -102,8 +102,15 @@ export function ComprehensiveClientManagement({
       );
       if (clientsResponse.ok) {
         const clientsData = await clientsResponse.json();
-        const clients = clientsData.clients || [];
-        console.log('API clients loaded:', clients);
+        const clients = (clientsData.clients || []).map((client: any) => ({
+          ...client,
+          // Add default values for missing fields
+          status: client.status || 'active', // Default to 'active' if no status
+          loyaltyTier: client.loyaltyTier || 'bronze', // Default to 'bronze' if no tier
+          totalSpent: client.totalSpent || 0,
+          averageSpent: client.averageSpent || 0,
+        }));
+
         setClients(clients);
         setMetrics(clientsData.metrics || null);
       } else {
@@ -278,17 +285,6 @@ export function ComprehensiveClientManagement({
     const staffFilter = filterValues.staff as string;
     const loyaltyFilter = filterValues.loyaltyTier as string;
 
-    // Debug first client
-    if (client === clients[0]) {
-      console.log('Filtering first client:', client);
-      console.log(
-        'Status filter:',
-        statusFilter,
-        'Client status:',
-        client.status
-      );
-    }
-
     // Search filter
     if (searchTerm && searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase();
@@ -303,7 +299,8 @@ export function ComprehensiveClientManagement({
 
     // Status filter
     if (statusFilter && statusFilter.trim() && statusFilter !== 'all') {
-      if (client.status !== statusFilter) return false;
+      const clientStatus = client.status || 'active'; // Default to 'active' if undefined
+      if (clientStatus !== statusFilter) return false;
     }
 
     // Staff filter
@@ -313,7 +310,8 @@ export function ComprehensiveClientManagement({
 
     // Loyalty filter
     if (loyaltyFilter && loyaltyFilter.trim() && loyaltyFilter !== 'all') {
-      if (client.loyaltyTier !== loyaltyFilter) return false;
+      const clientTier = client.loyaltyTier || 'bronze'; // Default to 'bronze' if undefined
+      if (clientTier !== loyaltyFilter) return false;
     }
 
     return true;
