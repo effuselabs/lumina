@@ -2,12 +2,11 @@
 
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { ClientCreateDialog } from './client-create-dialog';
 import { ClientDetailsDialog } from './client-details-dialog';
 import { ClientEditDialog } from './client-edit-dialog';
-import { EnhancedClientManagement } from './enhanced-client-management';
+import { ComprehensiveClientManagement } from './comprehensive-client-management';
 
 interface Client {
   id: string;
@@ -15,21 +14,18 @@ interface Client {
   lastName: string;
   email?: string;
   phone?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
   preferredStaff?: string;
-  notes?: string;
-  emailMarketing: boolean;
-  smsMarketing: boolean;
-  createdAt: string;
-  appointmentCount?: number;
+  appointmentCount: number;
+  totalSpent?: number;
+  averageSpent?: number;
   lastAppointment?: {
     startTime: string;
     staff: { displayName: string };
     services: Array<{ service: { name: string } }>;
   };
+  createdAt: string;
+  status?: 'active' | 'inactive' | 'vip';
+  loyaltyTier?: 'bronze' | 'silver' | 'gold' | 'platinum';
 }
 
 interface ClientsPageContentProps {
@@ -93,54 +89,18 @@ export function ClientsPageContent({
         businessName={business.name}
       >
         <div className="space-y-8">
-          {/* Page Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="lumina-heading-2">Clients</h1>
-              <p className="lumina-body-large" style={{ color: '#808285' }}>
-                Manage your client relationships and appointment history
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                className="inline-flex h-10 items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                style={{ color: '#0b2b33' }}
-                onClick={() => {
-                  // TODO: Implement bulk import functionality
-                  // console.log('Import clients clicked');
-                }}
-              >
-                Import Clients
-              </button>
-              <button
-                className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                style={{
-                  background:
-                    'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(135deg, #ffcd47 0%, #ff6b47 100%)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background =
-                    'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
-                }}
-                onClick={() => setCreateDialogOpen(true)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Client
-              </button>
-            </div>
-          </div>
-
-          {/* Enhanced Client Management */}
-          <EnhancedClientManagement
+          {/* Comprehensive Client Management */}
+          <ComprehensiveClientManagement
             key={refreshKey}
             businessId={business.id}
             businessSlug={businessSlug}
             onEditClient={handleEditClient}
             onViewClient={handleViewClient}
+            onCreateClient={() => setCreateDialogOpen(true)}
+            onBookAppointment={(client: Client) => {
+              // TODO: Implement quick booking functionality
+              console.log('Quick book for', client.firstName);
+            }}
           />
 
           {/* Client Creation Dialog */}
