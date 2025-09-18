@@ -1,28 +1,24 @@
-/**
- * Payments Dashboard Page
- *
- * Provides access to payment processing, transaction history, and financial reporting
- */
-
 import { auth } from '@/auth';
-import { PaymentsPageContent } from '@/components/payments/payments-page-content';
+import { AppointmentsPageContent } from '@/components/appointments/appointments-page-content';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
-interface PaymentsPageProps {
+interface AppointmentsPageProps {
   params: {
     businessSlug: string;
   };
 }
 
-export default async function PaymentsPage({ params }: PaymentsPageProps) {
+export default async function AppointmentsPage({
+  params,
+}: AppointmentsPageProps) {
   const session = await auth();
 
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
 
-  // Get business information
+  // Get business information and verify access
   const business = await prisma.business.findUnique({
     where: { slug: params.businessSlug },
     include: {
@@ -40,7 +36,7 @@ export default async function PaymentsPage({ params }: PaymentsPageProps) {
   const userRole = business.users[0]?.role || 'STAFF';
 
   return (
-    <PaymentsPageContent
+    <AppointmentsPageContent
       business={business}
       userRole={userRole}
       userName={session.user.name || session.user.email || 'User'}
