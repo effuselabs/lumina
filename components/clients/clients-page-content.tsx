@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { ClientCreateDialog } from './client-create-dialog';
 import { ClientDetailsDialog } from './client-details-dialog';
 import { ClientEditDialog } from './client-edit-dialog';
-import { ClientList } from './client-list';
+import { EnhancedClientManagement } from './enhanced-client-management';
 
 interface Client {
   id: string;
@@ -101,30 +101,44 @@ export function ClientsPageContent({
                 Manage your client relationships and appointment history
               </p>
             </div>
-            <button
-              className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-              style={{
-                background: 'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, #ffcd47 0%, #ff6b47 100%)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
-              }}
-              onClick={() => setCreateDialogOpen(true)}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Client
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                className="inline-flex h-10 items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                style={{ color: '#0b2b33' }}
+                onClick={() => {
+                  // TODO: Implement bulk import functionality
+                  // console.log('Import clients clicked');
+                }}
+              >
+                Import Clients
+              </button>
+              <button
+                className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                style={{
+                  background:
+                    'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background =
+                    'linear-gradient(135deg, #ffcd47 0%, #ff6b47 100%)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background =
+                    'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
+                }}
+                onClick={() => setCreateDialogOpen(true)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Client
+              </button>
+            </div>
           </div>
 
-          {/* Client List */}
-          <ClientList
+          {/* Enhanced Client Management */}
+          <EnhancedClientManagement
             key={refreshKey}
             businessId={business.id}
+            businessSlug={businessSlug}
             onEditClient={handleEditClient}
             onViewClient={handleViewClient}
           />
