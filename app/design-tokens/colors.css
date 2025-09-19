@@ -1,0 +1,260 @@
+/* Lumina Design System - Color Tokens */
+/* Version 2.1 - Enhanced with comprehensive light/dark theme support */
+
+@layer tokens {
+  :root {
+    /* ===== LUMINA BRAND COLORS ===== */
+    /* Primary brand colors from Lumina design system */
+    --lumina-gold: #ffd25a;
+    --lumina-coral: #ff7a5a;
+    --lumina-orange: #ff7a5a; /* Alias for coral */
+    --lumina-peach: #ffe5b4;
+    --deep-teal: #0b2b33;
+    --clarity-blue: #89cff0;
+    
+    /* Brand gradients */
+    --lumina-radiant-gradient: linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%);
+    --lumina-radiant-gradient-reverse: linear-gradient(135deg, #ff7a5a 0%, #ffd25a 100%);
+    
+    /* ===== NEUTRAL COLOR SCALE ===== */
+    /* Comprehensive neutral scale for light/dark theme support */
+    --neutral-50: #fafbfc;
+    --neutral-100: #f8fafc;
+    --neutral-200: #f1f3f5;
+    --neutral-300: #e4e6e7;
+    --neutral-400: #d1d5db;
+    --neutral-500: #9ca3af;
+    --neutral-600: #808285;
+    --neutral-700: #6b7280;
+    --neutral-800: #374151;
+    --neutral-900: #1d2d35;
+    --neutral-950: #0f172a;
+    --neutral-white: #ffffff;
+    --neutral-black: #000000;
+    
+    /* ===== SEMANTIC COLOR TOKENS ===== */
+    /* Functional colors for UI states */
+    --semantic-success: #22c58b;
+    --semantic-success-light: #ecfdf5;
+    --semantic-success-dark: #065f46;
+    
+    --semantic-warning: #ffb800;
+    --semantic-warning-light: #fffbeb;
+    --semantic-warning-dark: #92400e;
+    
+    --semantic-error: #e5484d;
+    --semantic-error-light: #fef2f2;
+    --semantic-error-dark: #991b1b;
+    
+    --semantic-info: #89cff0;
+    --semantic-info-light: #f0f9ff;
+    --semantic-info-dark: #1e40af;
+    
+    /* ===== LIGHT THEME COLOR ASSIGNMENTS ===== */
+    /* Primary semantic tokens for light theme */
+    --color-primary: var(--lumina-gold);
+    --color-primary-foreground: var(--deep-teal);
+    --color-primary-hover: var(--lumina-coral);
+    
+    --color-secondary: var(--deep-teal);
+    --color-secondary-foreground: var(--neutral-white);
+    --color-secondary-hover: #0f3a44;
+    
+    /* Background colors */
+    --color-background: var(--neutral-white);
+    --color-background-secondary: var(--neutral-50);
+    --color-background-tertiary: var(--neutral-100);
+    --color-background-muted: var(--neutral-200);
+    
+    /* Foreground colors */
+    --color-foreground: var(--neutral-900);
+    --color-foreground-secondary: var(--neutral-700); /* Improved from 600 for better contrast */
+    --color-foreground-muted: var(--neutral-600); /* Improved from 500 for better contrast */
+    --color-foreground-inverse: var(--neutral-white);
+    
+    /* Surface colors */
+    --color-surface: var(--neutral-white);
+    --color-surface-secondary: var(--neutral-50);
+    --color-surface-tertiary: var(--neutral-100);
+    --color-surface-hover: var(--neutral-50);
+    --color-surface-active: var(--neutral-100);
+    
+    /* Border colors */
+    --color-border: var(--neutral-300);
+    --color-border-secondary: var(--neutral-200);
+    --color-border-muted: var(--neutral-100);
+    --color-border-focus: var(--lumina-gold);
+    
+    /* Interactive states */
+    --color-interactive-hover: rgba(255, 210, 90, 0.1);
+    --color-interactive-active: rgba(255, 210, 90, 0.2);
+    --color-interactive-focus: var(--lumina-gold);
+    --color-interactive-disabled: var(--neutral-400);
+    --color-interactive-disabled-foreground: var(--neutral-500);
+    
+    /* Status colors - improved for WCAG AA compliance */
+    --color-success: #15803d; /* Even darker green for better contrast */
+    --color-success-foreground: var(--neutral-white);
+    --color-success-background: var(--semantic-success-light);
+    --color-success-border: #a7f3d0;
+    
+    --color-warning: #b45309; /* Even darker orange for better contrast */
+    --color-warning-foreground: var(--neutral-white); /* Changed to white for better contrast */
+    --color-warning-background: var(--semantic-warning-light);
+    --color-warning-border: #fde68a;
+    
+    --color-error: #dc2626; /* Darker red for better contrast */
+    --color-error-foreground: var(--neutral-white);
+    --color-error-background: var(--semantic-error-light);
+    --color-error-border: #fecaca;
+    
+    --color-info: #2563eb; /* Darker blue for better contrast */
+    --color-info-foreground: var(--neutral-white); /* Changed to white for better contrast */
+    --color-info-background: var(--semantic-info-light);
+    --color-info-border: #bae6fd;
+  }
+  
+  /* ===== DARK THEME COLOR ASSIGNMENTS ===== */
+  [data-theme='dark'] {
+    /* Primary colors remain consistent for brand recognition */
+    --color-primary: var(--lumina-gold);
+    --color-primary-foreground: var(--deep-teal);
+    --color-primary-hover: var(--lumina-coral);
+    
+    --color-secondary: var(--deep-teal);
+    --color-secondary-foreground: var(--neutral-white);
+    --color-secondary-hover: #0f3a44;
+    
+    /* Dark theme backgrounds */
+    --color-background: var(--neutral-950);
+    --color-background-secondary: var(--neutral-900);
+    --color-background-tertiary: var(--neutral-800);
+    --color-background-muted: var(--neutral-700);
+    
+    /* Dark theme foregrounds */
+    --color-foreground: var(--neutral-100);
+    --color-foreground-secondary: var(--neutral-400);
+    --color-foreground-muted: var(--neutral-500);
+    --color-foreground-inverse: var(--neutral-900);
+    
+    /* Dark theme surfaces */
+    --color-surface: var(--neutral-900);
+    --color-surface-secondary: var(--neutral-800);
+    --color-surface-tertiary: var(--neutral-700);
+    --color-surface-hover: var(--neutral-800);
+    --color-surface-active: var(--neutral-700);
+    
+    /* Dark theme borders */
+    --color-border: var(--neutral-700);
+    --color-border-secondary: var(--neutral-800);
+    --color-border-muted: var(--neutral-800);
+    --color-border-focus: var(--lumina-gold);
+    
+    /* Dark theme interactive states */
+    --color-interactive-hover: rgba(255, 210, 90, 0.15);
+    --color-interactive-active: rgba(255, 210, 90, 0.25);
+    --color-interactive-focus: var(--lumina-gold);
+    --color-interactive-disabled: var(--neutral-700);
+    --color-interactive-disabled-foreground: var(--neutral-600);
+    
+    /* Dark theme status colors - adjusted for better contrast */
+    --color-success: #10b981;
+    --color-success-foreground: var(--neutral-900);
+    --color-success-background: rgba(16, 185, 129, 0.1);
+    --color-success-border: rgba(16, 185, 129, 0.3);
+    
+    --color-warning: #f59e0b;
+    --color-warning-foreground: var(--neutral-900);
+    --color-warning-background: rgba(245, 158, 11, 0.1);
+    --color-warning-border: rgba(245, 158, 11, 0.3);
+    
+    --color-error: #ef4444;
+    --color-error-foreground: var(--neutral-white);
+    --color-error-background: rgba(239, 68, 68, 0.1);
+    --color-error-border: rgba(239, 68, 68, 0.3);
+    
+    --color-info: #3b82f6;
+    --color-info-foreground: var(--neutral-white);
+    --color-info-background: rgba(59, 130, 246, 0.1);
+    --color-info-border: rgba(59, 130, 246, 0.3);
+  }
+  
+  /* ===== SPECIALIZED COLOR CONTEXTS ===== */
+  /* Dashboard-specific color tokens */
+  :root {
+    --dashboard-background: linear-gradient(135deg, var(--color-background-secondary) 0%, var(--color-background) 100%);
+    --dashboard-card-background: var(--color-surface);
+    --dashboard-border: var(--color-border);
+    --dashboard-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --dashboard-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  [data-theme='dark'] {
+    --dashboard-background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-secondary) 100%);
+    --dashboard-card-background: var(--color-surface);
+    --dashboard-border: var(--color-border);
+    --dashboard-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --dashboard-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Sidebar-specific color tokens */
+  :root {
+    --sidebar-background: var(--color-background-secondary);
+    --sidebar-border: var(--color-border);
+    --sidebar-item-hover: var(--color-surface-hover);
+    --sidebar-item-active: var(--lumina-peach);
+    --sidebar-item-active-border: var(--lumina-gold);
+    --sidebar-text: var(--color-foreground);
+    --sidebar-text-secondary: var(--color-foreground-secondary);
+    --sidebar-text-active: var(--deep-teal);
+    --sidebar-icon: var(--color-foreground-secondary);
+    --sidebar-icon-active: var(--deep-teal);
+  }
+  
+  [data-theme='dark'] {
+    --sidebar-background: var(--color-background-secondary);
+    --sidebar-border: var(--color-border);
+    --sidebar-item-hover: var(--color-surface-hover);
+    --sidebar-item-active: rgba(255, 210, 90, 0.15);
+    --sidebar-item-active-border: var(--lumina-gold);
+    --sidebar-text: var(--color-foreground);
+    --sidebar-text-secondary: var(--color-foreground-secondary);
+    --sidebar-text-active: var(--lumina-gold);
+    --sidebar-icon: var(--color-foreground-secondary);
+    --sidebar-icon-active: var(--lumina-gold);
+  }
+  
+  /* Metric card color tokens */
+  :root {
+    --metric-revenue: var(--color-success);
+    --metric-revenue-background: var(--color-success-background);
+    --metric-revenue-border: var(--color-success-border);
+    
+    --metric-appointments: var(--color-info);
+    --metric-appointments-background: var(--color-info-background);
+    --metric-appointments-border: var(--color-info-border);
+    
+    --metric-clients: var(--deep-teal);
+    --metric-clients-background: var(--color-background-tertiary);
+    --metric-clients-border: var(--color-border-secondary);
+    
+    --metric-staff: var(--lumina-gold);
+    --metric-staff-background: var(--semantic-warning-light);
+    --metric-staff-border: #fde68a;
+  }
+  
+  /* Chart color tokens */
+  :root {
+    --chart-primary: var(--lumina-gold);
+    --chart-secondary: var(--lumina-coral);
+    --chart-tertiary: var(--deep-teal);
+    --chart-quaternary: var(--clarity-blue);
+    --chart-quinary: var(--lumina-peach);
+    --chart-grid: var(--color-border-secondary);
+    --chart-text: var(--color-foreground-secondary);
+    --chart-axis: var(--color-border);
+    --chart-tooltip-background: var(--color-surface);
+    --chart-tooltip-border: var(--color-border);
+    --chart-tooltip-shadow: var(--dashboard-shadow);
+  }
+}

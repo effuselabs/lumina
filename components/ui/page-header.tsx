@@ -1,23 +1,27 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import { ChevronRight, LucideIcon } from 'lucide-react';
+import Link from 'next/link';
 import { ReactNode } from 'react';
 
 interface PageHeaderProps {
   title: string;
+  subtitle?: string;
   description?: string;
   actions?: Array<{
     label: string;
     onClick?: () => void;
     href?: string;
     icon?: LucideIcon;
-    variant?: 'default' | 'outline' | 'ghost';
+    variant?: 'default' | 'outline' | 'ghost' | 'secondary';
     primary?: boolean;
+    disabled?: boolean;
   }>;
   breadcrumbs?: Array<{
     label: string;
     href?: string;
   }>;
+  variant?: 'default' | 'compact';
   className?: string;
   children?: ReactNode;
 }
@@ -26,12 +30,21 @@ interface PageHeaderProps {
  * PageHeader Component
  *
  * Provides consistent page titles with optional actions, descriptions, and breadcrumbs.
- * Follows Lumina design system typography and spacing standards.
+ * Follows Lumina design system typography and spacing standards with responsive behavior.
+ *
+ * Features:
+ * - Dashboard typography hierarchy and spacing patterns
+ * - Responsive behavior for mobile and tablet viewports
+ * - Compact variant for pages with limited vertical space
+ * - Consistent breadcrumb navigation
+ * - Flexible action buttons with proper styling
  *
  * @example
  * <PageHeader
  *   title="Staff Management"
+ *   subtitle="Team Overview"
  *   description="Manage your team members and employment configurations"
+ *   variant="default"
  *   actions={[
  *     { label: 'Add Staff', onClick: handleAdd, icon: Plus, primary: true },
  *     { label: 'Import', onClick: handleImport, icon: Upload, variant: 'outline' }
@@ -44,41 +57,72 @@ interface PageHeaderProps {
  */
 export function PageHeader({
   title,
+  subtitle,
   description,
   actions,
   breadcrumbs,
+  variant = 'default',
   className,
   children,
 }: PageHeaderProps) {
+  const isCompact = variant === 'compact';
+
   return (
-    <div className={cn('space-y-4', className)}>
+    <div
+      className={cn(
+        'page-header',
+        isCompact ? 'page-header--compact' : 'page-header--default',
+        className
+      )}
+    >
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
-          {breadcrumbs.map((crumb, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              {index > 0 && <span>/</span>}
-              {crumb.href ? (
-                <a
-                  href={crumb.href}
-                  className="transition-colors hover:text-foreground"
-                >
-                  {crumb.label}
-                </a>
-              ) : (
-                <span className="text-foreground">{crumb.label}</span>
-              )}
-            </div>
-          ))}
+        <nav
+          className="page-header__breadcrumbs"
+          aria-label="Breadcrumb navigation"
+        >
+          <ol className="flex items-center">
+            {breadcrumbs.map((crumb, index) => (
+              <li key={index} className="flex items-center">
+                {index > 0 && (
+                  <ChevronRight
+                    className="mx-2 h-4 w-4 text-color-foreground-muted"
+                    aria-hidden="true"
+                  />
+                )}
+                {crumb.href ? (
+                  <Link
+                    href={crumb.href}
+                    className="page-header__breadcrumb-link"
+                  >
+                    {crumb.label}
+                  </Link>
+                ) : (
+                  <span className="page-header__breadcrumb-current">
+                    {crumb.label}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ol>
         </nav>
       )}
 
       {/* Header Content */}
-      <div className="flex items-start justify-between">
-        <div className="space-y-2">
-          <h1 className="lumina-heading-2">{title}</h1>
+      <div className="page-header__content">
+        <div className="page-header__text">
+          <div className="page-header__title-group">
+            <h1 className="page-header__title">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="page-header__subtitle">
+                {subtitle}
+              </p>
+            )}
+          </div>
           {description && (
-            <p className="lumina-body-large" style={{ color: '#808285' }}>
+            <p className="page-header__description">
               {description}
             </p>
           )}
@@ -86,29 +130,31 @@ export function PageHeader({
 
         {/* Actions */}
         {actions && actions.length > 0 && (
-          <div className="flex items-center space-x-3">
+          <div className="page-header__actions">
             {actions.map((action, index) => {
               const Icon = action.icon;
               const buttonProps = {
-                variant: action.primary
-                  ? 'default'
-                  : action.variant || 'outline',
+                variant: action.primary ? 'default' : (action.variant || 'outline'),
                 onClick: action.onClick,
-                className: action.primary
-                  ? 'bg-lumina-radiant hover:bg-lumina-radiant-hover text-white'
-                  : undefined,
+                disabled: action.disabled,
+                className: cn(
+                  'page-header__action-button',
+                  action.primary && 'page-header__action-button--primary'
+                ),
               };
 
               const content = (
                 <>
-                  {Icon && <Icon className="mr-2 h-4 w-4" />}
-                  {action.label}
+                  {Icon && <Icon className="h-4 w-4" />}
+                  <span className="page-header__action-label">
+                    {action.label}
+                  </span>
                 </>
               );
 
               return action.href ? (
                 <Button key={index} asChild {...buttonProps}>
-                  <a href={action.href}>{content}</a>
+                  <Link href={action.href}>{content}</Link>
                 </Button>
               ) : (
                 <Button key={index} {...buttonProps}>
@@ -121,7 +167,11 @@ export function PageHeader({
       </div>
 
       {/* Additional Content */}
-      {children}
+      {children && (
+        <div className="page-header__children">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

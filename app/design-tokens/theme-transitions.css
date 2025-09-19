@@ -1,0 +1,220 @@
+/* Lumina Design System - Theme Transitions */
+/* Smooth animations for theme switching with performance optimization */
+
+@layer transitions {
+  /* ===== THEME TRANSITION ANIMATIONS ===== */
+  
+  /* Root element transitions - affects all themed properties */
+  :root {
+    --theme-transition-duration: 200ms;
+    --theme-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    --theme-transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  }
+  
+  /* Apply smooth transitions to all elements during theme changes */
+  * {
+    transition-property: var(--theme-transition-property);
+    transition-duration: var(--theme-transition-duration);
+    transition-timing-function: var(--theme-transition-easing);
+  }
+  
+  /* Disable transitions during initial page load to prevent flash */
+  .theme-loading * {
+    transition: none !important;
+  }
+  
+  /* Enhanced transitions for specific UI elements */
+  .theme-transitioning {
+    /* Smooth background transitions */
+    background-color: var(--color-background);
+    transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* ===== COMPONENT-SPECIFIC TRANSITIONS ===== */
+  
+  /* Card components */
+  .card,
+  [data-component="card"] {
+    transition: 
+      background-color var(--theme-transition-duration) var(--theme-transition-easing),
+      border-color var(--theme-transition-duration) var(--theme-transition-easing),
+      box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* Button components */
+  .btn,
+  button,
+  [role="button"] {
+    transition: 
+      background-color var(--theme-transition-duration) var(--theme-transition-easing),
+      border-color var(--theme-transition-duration) var(--theme-transition-easing),
+      color var(--theme-transition-duration) var(--theme-transition-easing),
+      box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* Input components */
+  input,
+  textarea,
+  select {
+    transition: 
+      background-color var(--theme-transition-duration) var(--theme-transition-easing),
+      border-color var(--theme-transition-duration) var(--theme-transition-easing),
+      color var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* Navigation elements */
+  nav,
+  .nav,
+  .sidebar {
+    transition: 
+      background-color var(--theme-transition-duration) var(--theme-transition-easing),
+      border-color var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* Text elements */
+  h1, h2, h3, h4, h5, h6,
+  p, span, div,
+  .text {
+    transition: color var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* Icon transitions */
+  svg,
+  .icon {
+    transition: 
+      fill var(--theme-transition-duration) var(--theme-transition-easing),
+      stroke var(--theme-transition-duration) var(--theme-transition-easing),
+      color var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* ===== REDUCED MOTION SUPPORT ===== */
+  
+  /* Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+    
+    /* Disable theme transitions for users who prefer reduced motion */
+    :root {
+      --theme-transition-duration: 0ms;
+    }
+  }
+  
+  /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+  
+  /* Use transform and opacity for better performance */
+  .theme-fade-in {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: 
+      opacity var(--theme-transition-duration) var(--theme-transition-easing),
+      transform var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  .theme-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Smooth theme toggle animations */
+  .theme-toggle {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s var(--theme-transition-easing);
+  }
+  
+  .theme-toggle:hover::before {
+    left: 100%;
+  }
+  
+  /* ===== THEME-SPECIFIC ENHANCEMENTS ===== */
+  
+  /* Light theme specific transitions */
+  :root:not([data-theme="dark"]) {
+    /* Subtle glow effects for light theme */
+    --glow-color: rgba(255, 210, 90, 0.1);
+  }
+  
+  /* Dark theme specific transitions */
+  [data-theme="dark"] {
+    /* Enhanced glow effects for dark theme */
+    --glow-color: rgba(255, 210, 90, 0.15);
+  }
+  
+  /* Glow effect for interactive elements */
+  .glow-on-hover:hover {
+    box-shadow: 
+      0 0 20px var(--glow-color),
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* ===== LOADING STATES ===== */
+  
+  /* Skeleton loading with theme awareness */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-background-muted) 25%,
+      var(--color-background-tertiary) 50%,
+      var(--color-background-muted) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+  }
+  
+  @keyframes skeleton-loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  /* Disable skeleton animation for reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton {
+      animation: none;
+      background: var(--color-background-muted);
+    }
+  }
+  
+  /* ===== FOCUS TRANSITIONS ===== */
+  
+  /* Enhanced focus indicators with theme support */
+  .focus-visible,
+  :focus-visible {
+    outline: 2px solid var(--color-interactive-focus);
+    outline-offset: 2px;
+    transition: outline-color var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+  
+  /* Custom focus ring for better visibility */
+  .focus-ring:focus-visible {
+    box-shadow: 
+      0 0 0 2px var(--color-background),
+      0 0 0 4px var(--color-interactive-focus);
+    transition: box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+  }
+}

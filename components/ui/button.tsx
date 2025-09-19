@@ -1,47 +1,78 @@
-import * as React from 'react';
+import { cn } from '@/lib/utils';
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
+import { Spinner } from './spinner';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lumina-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
   {
     variants: {
       variant: {
-        // Primary Lumina Radiant Gradient
-        default:
-          'bg-lumina-radiant text-white hover:bg-lumina-radiant-hover shadow-lumina hover:shadow-lumina-lg',
-        // Deep Teal Secondary
-        secondary:
-          'bg-deep-teal text-white hover:bg-deep-teal-700 shadow-md hover:shadow-lg',
-        // Outline with Lumina colors
-        outline:
-          'border-2 border-lumina-gold bg-transparent text-lumina-gold hover:bg-lumina-gold hover:text-white',
-        // Ghost with Lumina hover
-        ghost:
-          'text-neutral-off-black hover:bg-lumina-gold/10 hover:text-lumina-gold',
-        // Destructive with Lumina error color
-        destructive:
-          'bg-error text-white hover:bg-error-600 shadow-md hover:shadow-lg',
-        // Link style
-        link: 'text-lumina-gold underline-offset-4 hover:underline hover:text-lumina-coral',
-        // Success variant
-        success:
-          'bg-success text-white hover:bg-success-600 shadow-md hover:shadow-lg',
-        // Warning variant
-        warning:
-          'bg-warning text-white hover:bg-warning-600 shadow-md hover:shadow-lg',
+        // Primary - Lumina Radiant Gradient matching dashboard
+        primary: [
+          'bg-gradient-to-r from-lumina-gold to-lumina-coral text-white shadow-md',
+          'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:from-neutral-400 disabled:to-neutral-400 disabled:shadow-none disabled:scale-100',
+          // High contrast mode support
+          'contrast-more:border-2 contrast-more:border-white',
+        ],
+        // Secondary - Deep Teal
+        secondary: [
+          'bg-deep-teal text-white shadow-md',
+          'hover:bg-deep-teal/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'focus-visible:ring-deep-teal focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100',
+          // High contrast mode support
+          'contrast-more:border-2 contrast-more:border-white',
+        ],
+        // Outline - Lumina Gold border
+        outline: [
+          'border-2 border-lumina-gold bg-transparent text-lumina-gold',
+          'hover:bg-lumina-gold hover:text-white hover:shadow-md hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:border-neutral-400 disabled:text-neutral-400 disabled:hover:bg-transparent disabled:hover:text-neutral-400 disabled:scale-100',
+          // High contrast mode support
+          'contrast-more:border-4',
+        ],
+        // Ghost - Subtle hover with Lumina colors
+        ghost: [
+          'bg-transparent text-neutral-700 dark:text-neutral-300',
+          'hover:bg-lumina-gold/10 hover:text-lumina-gold hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:text-neutral-400 disabled:hover:bg-transparent disabled:hover:text-neutral-400 disabled:scale-100',
+          // High contrast mode support
+          'contrast-more:border-2 contrast-more:border-current',
+        ],
+        // Destructive - Error color
+        destructive: [
+          'bg-red-600 text-white shadow-md',
+          'hover:bg-red-700 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'focus-visible:ring-red-600 focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100',
+          // High contrast mode support
+          'contrast-more:border-2 contrast-more:border-white',
+        ],
+        // Link - Text-only style
+        link: [
+          'text-lumina-gold underline-offset-4 bg-transparent shadow-none p-0 h-auto',
+          'hover:underline hover:text-lumina-coral',
+          'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-1',
+          'disabled:text-neutral-400 disabled:no-underline',
+          // High contrast mode support
+          'contrast-more:underline',
+        ],
       },
       size: {
-        sm: 'h-8 rounded-md px-3 text-xs',
-        default: 'h-10 px-4 py-2',
-        lg: 'h-12 rounded-md px-8 text-base',
-        xl: 'h-14 rounded-lg px-10 text-lg',
-        icon: 'h-10 w-10',
+        sm: 'h-8 px-3 text-xs rounded-md min-w-[2rem]',
+        default: 'h-10 px-4 text-sm rounded-md min-w-[2.5rem]',
+        lg: 'h-12 px-6 text-base rounded-lg min-w-[3rem]',
+        icon: 'h-10 w-10 p-0 min-w-[2.5rem]',
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'primary',
       size: 'default',
     },
   }
@@ -49,22 +80,87 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  loading?: boolean;
+  icon?: React.ReactNode;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  'aria-expanded'?: boolean;
+  'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({
+    className,
+    variant,
+    size,
+    asChild = false,
+    loading = false,
+    icon,
+    children,
+    disabled,
+    'aria-label': ariaLabel,
+    'aria-describedby': ariaDescribedBy,
+    'aria-expanded': ariaExpanded,
+    'aria-haspopup': ariaHasPopup,
+    ...props
+  }, ref) => {
     const Comp = asChild ? Slot : 'button';
+    const isDisabled = disabled || loading;
+
+    // Generate accessible label for icon-only buttons
+    const accessibleLabel = ariaLabel || (size === 'icon' && !children ? 'Button' : undefined);
+
+    // Determine if we need to announce loading state
+    const loadingAnnouncement = loading ? 'Loading' : undefined;
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        disabled={isDisabled}
+        aria-disabled={isDisabled}
+        aria-label={accessibleLabel}
+        aria-describedby={ariaDescribedBy}
+        aria-expanded={ariaExpanded}
+        aria-haspopup={ariaHasPopup}
+        aria-busy={loading}
+        role={asChild ? undefined : 'button'}
+        tabIndex={isDisabled ? -1 : 0}
         {...props}
-      />
+      >
+        {loading ? (
+          <>
+            <Spinner
+              size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'default'}
+              className="text-current"
+              aria-hidden="true"
+            />
+            <span className="opacity-70" aria-live="polite" aria-atomic="true">
+              {children}
+            </span>
+            {loadingAnnouncement && (
+              <span className="sr-only" aria-live="assertive">
+                {loadingAnnouncement}
+              </span>
+            )}
+          </>
+        ) : (
+          <>
+            {icon && (
+              <span className="flex-shrink-0" aria-hidden="true">
+                {icon}
+              </span>
+            )}
+            {children}
+          </>
+        )}
+      </Comp>
     );
   }
 );
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };
+

@@ -1,67 +1,106 @@
 import { Button } from '@/components/ui/button';
-import { render, screen } from '@/test-utils';
-import '@testing-library/jest-dom';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { User } from 'lucide-react';
 
 describe('Button Component', () => {
-  it('renders with default props', () => {
+  it('renders with default variant and size', () => {
     render(<Button>Click me</Button>);
-
     const button = screen.getByRole('button', { name: /click me/i });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass('bg-lumina-radiant');
+    expect(button).toHaveClass('h-10', 'px-4', 'text-sm');
   });
 
-  it('renders different variants correctly', () => {
-    const { rerender } = render(<Button variant="outline">Outline</Button>);
+  it('renders all variants correctly', () => {
+    const variants = ['primary', 'secondary', 'outline', 'ghost', 'destructive', 'link'] as const;
 
-    let button = screen.getByRole('button');
-    expect(button).toHaveClass('border-lumina-gold');
-
-    rerender(<Button variant="ghost">Ghost</Button>);
-    button = screen.getByRole('button');
-    expect(button).toHaveClass('hover:bg-lumina-gold/10');
-
-    rerender(<Button variant="destructive">Destructive</Button>);
-    button = screen.getByRole('button');
-    expect(button).toHaveClass('bg-error');
+    variants.forEach((variant) => {
+      const { unmount } = render(<Button variant={variant}>{variant} button</Button>);
+      const button = screen.getByRole('button', { name: new RegExp(`${variant} button`, 'i') });
+      expect(button).toBeInTheDocument();
+      unmount();
+    });
   });
 
-  it('renders different sizes correctly', () => {
-    const { rerender } = render(<Button size="sm">Small</Button>);
+  it('renders all sizes correctly', () => {
+    const sizes = ['sm', 'default', 'lg', 'icon'] as const;
 
-    let button = screen.getByRole('button');
-    expect(button).toHaveClass('h-8');
+    sizes.forEach((size) => {
+      const { unmount } = render(<Button size={size}>{size} button</Button>);
+      const button = screen.getByRole('button', { name: new RegExp(`${size} button`, 'i') });
+      expect(button).toBeInTheDocument();
 
-    rerender(<Button size="lg">Large</Button>);
-    button = screen.getByRole('button');
-    expect(button).toHaveClass('h-12');
+      if (size === 'sm') expect(button).toHaveClass('h-8');
+      if (size === 'default') expect(button).toHaveClass('h-10');
+      if (size === 'lg') expect(button).toHaveClass('h-12');
+      if (size === 'icon') expect(button).toHaveClass('h-10', 'w-10');
+
+      unmount();
+    });
   });
 
-  it('handles click events', async () => {
-    const user = userEvent.setup();
+  it('shows loading state correctly', () => {
+    render(<Button loading>Loading button</Button>);
+    const button = screen.getByRole('button');
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(screen.getByText('Loading button')).toHaveClass('opacity-70');
+  });
+
+  it('renders with icon correctly', () => {
+    render(<Button icon={<User data-testid="user-icon" />}>With Icon</Button>);
+    expect(screen.getByTestId('user-icon')).toBeInTheDocument();
+    expect(screen.getByText('With Icon')).toBeInTheDocument();
+  });
+
+  it('handles disabled state correctly', () => {
+    render(<Button disabled>Disabled button</Button>);
+    const button = screen.getByRole('button');
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('handles click events', () => {
     const handleClick = jest.fn();
-
-    render(<Button onClick={handleClick}>Click me</Button>);
+    render(<Button onClick={handleClick}>Clickable</Button>);
 
     const button = screen.getByRole('button');
-    await user.click(button);
+    fireEvent.click(button);
 
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
-  it('can be disabled', () => {
-    render(<Button disabled>Disabled</Button>);
+  it('does not trigger click when loading', () => {
+    const handleClick = jest.fn();
+    render(<Button loading onClick={handleClick}>Loading</Button>);
 
     const button = screen.getByRole('button');
-    expect(button).toBeDisabled();
-    expect(button).toHaveClass('disabled:pointer-events-none');
+    fireEvent.click(button);
+
+    expect(handleClick).not.toHaveBeenCalled();
   });
 
-  it('applies custom className', () => {
+  it('applies custom className correctly', () => {
     render(<Button className="custom-class">Custom</Button>);
-
     const button = screen.getByRole('button');
     expect(button).toHaveClass('custom-class');
+  });
+
+  it('forwards ref correctly', () => {
+    const ref = jest.fn();
+    render(<Button ref={ref}>Ref button</Button>);
+    expect(ref).toHaveBeenCalled();
+  });
+
+  it('supports asChild prop with Slot', () => {
+    render(
+      <Button asChild>
+        <a href="/test">Link button</a>
+      </Button>
+    );
+
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/test');
+    expect(link).toHaveTextContent('Link button');
   });
 });
