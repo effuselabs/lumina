@@ -1101,5 +1101,42 @@ Use this template for new architectural decisions:
 
 ---
 
-**Last Updated**: January 17, 2025  
-**Next Review**: April 17, 2025
+## ADR-028: Comprehensive Design System Audit Approach
+
+**Date**: September 18, 2025  
+**Status**: Accepted  
+**Context**: The Lumina application showed inconsistent styling patterns across components, with dashboard components demonstrating high-quality design while other pages used generic styling. Need systematic approach to achieve design consistency.
+
+**Decision**: Conduct comprehensive design system audit before implementing fixes, using dashboard components as gold standard template for system-wide consistency.
+
+**Rationale**:
+
+- Systematic audit identifies root causes rather than addressing symptoms
+- Dashboard components demonstrate proper Lumina brand integration and professional quality
+- Comprehensive analysis enables informed prioritization and resource allocation
+- Establishes clear template and patterns for consistent implementation
+- Prevents fragmented fixes that could create new inconsistencies
+
+**Alternatives Considered**:
+
+1. **Component-by-component fixes**: Address styling issues individually as discovered
+   - Rejected: Doesn't address systemic issues, leads to inconsistent implementations
+2. **Complete redesign**: Start over with entirely new design system
+   - Rejected: Dashboard components already demonstrate excellent quality standards
+3. **Minimal standardization**: Focus only on color consistency
+   - Rejected: Insufficient for achieving professional, cohesive user experience
+
+**Impact**:
+
+- Provides comprehensive roadmap for design system improvements
+- Establishes dashboard components as reusable template for quality standards
+- Enables systematic implementation with clear priorities and success metrics
+- Creates foundation for scalable design system maintenance and governance
+- Improves development efficiency through established patterns and documentation
+
+**Related Issues**: Design System Consistency Spec - Task 1 completion
+
+---
+
+**Last Updated**: September 18, 2025  
+**Next Review**: December 18, 2025
