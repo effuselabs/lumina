@@ -380,6 +380,78 @@ Each decision follows this structure:
 
 ---
 
+## ADR-019: Dashboard-Specific Theme Storage Strategy
+
+**Date**: September 19, 2025  
+**Status**: Accepted  
+**Context**: Dashboard layout needed theme support with proper persistence while avoiding conflicts with other application theme contexts.
+
+**Decision**: Implement dashboard-specific theme storage using unique storage key `"lumina-dashboard-theme"` with system theme as default.
+
+**Rationale**:
+
+- Enables independent theme settings for dashboard without affecting other application areas
+- Prevents conflicts between different theme contexts in the application
+- Provides foundation for future dashboard-specific theme customizations
+- Respects user's system preferences by defaulting to system theme
+- Maintains theme preferences persistently across sessions
+
+**Alternatives Considered**:
+
+1. **Global theme storage key**: Use single theme key for entire application
+   - Rejected: Could cause conflicts when different areas need different theme contexts
+2. **No theme persistence**: Don't store theme preferences
+   - Rejected: Poor user experience as preferences would be lost on refresh
+3. **Light theme default**: Always default to light theme
+   - Rejected: Ignores user's system preferences and modern UX patterns
+
+**Impact**:
+
+- Dashboard maintains independent theme state from other application areas
+- Users get consistent theme experience that respects their system preferences
+- Foundation established for scalable theme management across application
+- Improved user experience with persistent theme preferences
+
+**Related Issues**: [LUM-93](https://linear.app/scootr-ca/issue/LUM-93) - Design System Consistency Implementation
+
+---
+
+## ADR-020: ThemeProvider Integration Pattern for Dashboard
+
+**Date**: September 19, 2025  
+**Status**: Accepted  
+**Context**: Dashboard layout required theme support integration while maintaining existing functionality and component structure.
+
+**Decision**: Wrap entire dashboard layout content with ThemeProvider using wrapper pattern, preserving all existing component hierarchy and functionality.
+
+**Rationale**:
+
+- Minimal invasive approach that doesn't disrupt existing dashboard architecture
+- Provides theme context to all dashboard child components automatically
+- Maintains backward compatibility with existing dashboard functionality
+- Follows React context provider patterns and best practices
+- Enables theme switching capabilities throughout dashboard interface
+
+**Alternatives Considered**:
+
+1. **Individual component theme integration**: Add theme support to each dashboard component separately
+   - Rejected: More complex implementation with higher maintenance overhead
+2. **Global theme provider at app level**: Implement theme at root application level
+   - Rejected: Dashboard needs independent theme context for future customizations
+3. **CSS-only theme switching**: Use CSS variables without React context
+   - Rejected: Less flexible and doesn't provide programmatic theme access
+
+**Impact**:
+
+- All dashboard components now have access to theme context automatically
+- Theme switching functionality available throughout dashboard interface
+- Foundation established for consistent theme implementation across dashboard
+- No breaking changes to existing dashboard functionality or component structure
+
+**Related Issues**: [LUM-93](https://linear.app/scootr-ca/issue/LUM-93) - Design System Consistency Implementation
+
+---
+
 ## Decision Template
 
 Use this template for new architectural decisions:
