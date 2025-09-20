@@ -3,12 +3,13 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormField } from '@/components/ui/form-field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { Clock, DollarSign, Mail, MessageSquare, Phone, User } from 'lucide-react'
+import { Clock, DollarSign, User } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -89,11 +90,12 @@ export function CustomerForm({ businessId, bookingDetails, onSubmit, loading = f
     const { date, time } = formatDateTime(bookingDetails.slot.startTime)
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
+            <BookingProgress currentStep={3} steps={defaultBookingSteps} />
             {/* Booking Summary */}
-            <Card>
+            <Card className="shadow-sm border-neutral-200">
                 <CardHeader>
-                    <CardTitle>Booking Summary</CardTitle>
+                    <CardTitle className="text-deep-teal">Booking Summary</CardTitle>
                     <CardDescription>
                         Please review your appointment details
                     </CardDescription>
@@ -137,9 +139,9 @@ export function CustomerForm({ businessId, bookingDetails, onSubmit, loading = f
             </Card>
 
             {/* Customer Information Form */}
-            <Card>
+            <Card className="shadow-sm border-neutral-200">
                 <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
+                    <CardTitle className="flex items-center space-x-2 text-deep-teal">
                         <User className="h-5 w-5" />
                         <span>Your Information</span>
                     </CardTitle>
@@ -150,95 +152,88 @@ export function CustomerForm({ businessId, bookingDetails, onSubmit, loading = f
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="firstName">
-                                    First Name <span className="text-red-500">*</span>
-                                </Label>
+                            <FormField
+                                label="First Name"
+                                required
+                                error={errors.firstName?.message}
+                            >
                                 <Input
-                                    id="firstName"
                                     {...register('firstName')}
                                     placeholder="Enter your first name"
-                                    className={errors.firstName ? 'border-red-500' : ''}
                                 />
-                                {errors.firstName && (
-                                    <p className="text-sm text-red-600">{errors.firstName.message}</p>
-                                )}
-                            </div>
+                            </FormField>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="lastName">
-                                    Last Name <span className="text-red-500">*</span>
-                                </Label>
+                            <FormField
+                                label="Last Name"
+                                required
+                                error={errors.lastName?.message}
+                            >
                                 <Input
-                                    id="lastName"
                                     {...register('lastName')}
                                     placeholder="Enter your last name"
-                                    className={errors.lastName ? 'border-red-500' : ''}
                                 />
-                                {errors.lastName && (
-                                    <p className="text-sm text-red-600">{errors.lastName.message}</p>
-                                )}
-                            </div>
+                            </FormField>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="email" className="flex items-center space-x-2">
-                                <Mail className="h-4 w-4" />
-                                <span>Email Address <span className="text-red-500">*</span></span>
-                            </Label>
+                        <FormField
+                            label="Email Address"
+                            required
+                            error={errors.email?.message}
+                            hint="We'll send your appointment confirmation to this email"
+                        >
                             <Input
-                                id="email"
                                 type="email"
                                 {...register('email')}
                                 placeholder="Enter your email address"
-                                className={errors.email ? 'border-red-500' : ''}
                             />
-                            {errors.email && (
-                                <p className="text-sm text-red-600">{errors.email.message}</p>
-                            )}
-                            <p className="text-sm text-gray-600">
-                                We'll send your appointment confirmation to this email
-                            </p>
-                        </div>
+                        </FormField>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="phone" className="flex items-center space-x-2">
-                                <Phone className="h-4 w-4" />
-                                <span>Phone Number (Optional)</span>
-                            </Label>
+                        <FormField
+                            label="Phone Number"
+                            hint="Optional: For appointment reminders and updates"
+                        >
                             <Input
-                                id="phone"
                                 type="tel"
                                 {...register('phone')}
                                 placeholder="Enter your phone number"
                             />
-                            <p className="text-sm text-gray-600">
-                                Optional: For appointment reminders and updates
-                            </p>
-                        </div>
+                        </FormField>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="notes" className="flex items-center space-x-2">
-                                <MessageSquare className="h-4 w-4" />
-                                <span>Special Requests (Optional)</span>
-                            </Label>
+                        <FormField
+                            label="Special Requests"
+                            hint="Any special requests or notes for your appointment"
+                        >
                             <Textarea
-                                id="notes"
                                 {...register('notes')}
                                 placeholder="Any special requests or notes for your appointment..."
                                 rows={3}
                             />
-                        </div>
+                        </FormField>
 
-                        <div className="pt-4">
-                            <Button
-                                type="submit"
-                                className="w-full"
-                                size="lg"
-                                disabled={loading}
-                            >
-                                {loading ? 'Booking Appointment...' : 'Book Appointment'}
-                            </Button>
+                        <div className="pt-6 border-t border-neutral-200">
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    className="flex-1"
+                                    size="lg"
+                                    loading={loading}
+                                >
+                                    Book Appointment
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="sm:w-auto"
+                                    size="lg"
+                                    onClick={() => window.history.back()}
+                                >
+                                    Back to Services
+                                </Button>
+                            </div>
+                            <p className="text-xs text-neutral-500 mt-3 text-center">
+                                By booking, you agree to receive appointment confirmations and reminders
+                            </p>
                         </div>
                     </form>
                 </CardContent>

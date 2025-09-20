@@ -77,18 +77,23 @@ export function ServiceSelection({ businessId, onServiceSelect, selectedServiceI
 
     if (loading) {
         return (
-            <div className="space-y-4">
-                <div className="h-8 bg-gray-200 rounded animate-pulse" />
-                <div className="grid gap-4 md:grid-cols-2">
-                    {[1, 2, 3, 4].map((i) => (
-                        <Card key={i} className="animate-pulse">
-                            <CardHeader>
-                                <div className="h-4 bg-gray-200 rounded w-3/4" />
-                                <div className="h-3 bg-gray-200 rounded w-1/2" />
+            <div className="space-y-6">
+                <div className="space-y-2">
+                    <div className="h-8 bg-neutral-200 rounded animate-pulse w-3/4" />
+                    <div className="h-4 bg-neutral-200 rounded animate-pulse w-1/2" />
+                </div>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Card key={i} className="animate-pulse shadow-sm border-neutral-200">
+                            <CardHeader className="pb-3">
+                                <div className="h-5 bg-neutral-200 rounded w-3/4" />
+                                <div className="h-3 bg-neutral-200 rounded w-1/2" />
                             </CardHeader>
-                            <CardContent>
-                                <div className="h-3 bg-gray-200 rounded w-full mb-2" />
-                                <div className="h-3 bg-gray-200 rounded w-2/3" />
+                            <CardContent className="pt-0">
+                                <div className="flex items-center space-x-2">
+                                    <div className="h-6 w-16 bg-neutral-200 rounded-full" />
+                                    <div className="h-6 w-12 bg-neutral-200 rounded-full" />
+                                </div>
                             </CardContent>
                         </Card>
                     ))}
@@ -101,7 +106,7 @@ export function ServiceSelection({ businessId, onServiceSelect, selectedServiceI
         return (
             <div className="text-center py-8">
                 <p className="text-red-600 mb-4">{error}</p>
-                <Button onClick={fetchServices} variant="outline">
+                <Button onClick={fetchServices} variant="outline" size="lg">
                     Try Again
                 </Button>
             </div>
@@ -109,13 +114,18 @@ export function ServiceSelection({ businessId, onServiceSelect, selectedServiceI
     }
 
     return (
-        <div className="space-y-6">
-            <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    Book an Appointment at {businessName}
+        <div className="space-y-8">
+            <BookingProgress currentStep={1} steps={defaultBookingSteps} />
+
+            <div className="text-center space-y-3">
+                <h2 className="text-3xl font-bold text-deep-teal tracking-tight">
+                    Book an Appointment
                 </h2>
-                <p className="text-gray-600">
-                    Select a service to get started with your booking.
+                <p className="text-xl text-neutral-600">
+                    at {businessName}
+                </p>
+                <p className="text-neutral-500 max-w-2xl mx-auto">
+                    Select a service to get started with your booking. All appointments include professional consultation and personalized service.
                 </p>
             </div>
 
@@ -129,9 +139,9 @@ export function ServiceSelection({ businessId, onServiceSelect, selectedServiceI
                         {categoryServices.map((service) => (
                             <Card
                                 key={service.id}
-                                className={`cursor-pointer transition-all hover:shadow-md ${selectedServiceId === service.id
-                                        ? 'ring-2 ring-blue-500 border-blue-500'
-                                        : 'hover:border-gray-300'
+                                className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${selectedServiceId === service.id
+                                    ? 'ring-2 ring-lumina-gold border-lumina-gold bg-gradient-to-br from-lumina-gold/5 to-lumina-coral/5'
+                                    : 'hover:border-lumina-gold/50 shadow-sm'
                                     }`}
                                 onClick={() => onServiceSelect(service)}
                             >

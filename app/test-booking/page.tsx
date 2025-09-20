@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useState } from 'react'
 
@@ -30,58 +29,65 @@ export default function TestBookingPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <div className="max-w-2xl mx-auto">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Booking System Test</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <p className="text-gray-600">
-                            Test the booking system implementation to verify it's working correctly.
-                        </p>
+        <div className="min-h-screen bg-neutral-50 p-8">
+            <div className="max-w-4xl mx-auto space-y-8">
+                <PageHeader
+                    title="Booking System Test"
+                    description="Test the booking system implementation to verify it's working correctly"
+                    variant="compact"
+                    actions={[
+                        {
+                            label: 'Test API',
+                            onClick: testBookingAPI,
+                            icon: TestTube,
+                            primary: true,
+                            disabled: loading,
+                        },
+                    ]}
+                />
 
-                        <Button
-                            onClick={testBookingAPI}
-                            disabled={loading}
-                            className="w-full"
-                        >
-                            {loading ? 'Testing...' : 'Test Booking API'}
-                        </Button>
+                <Card className="shadow-sm border-neutral-200">
+                    <CardHeader>
+                        <CardTitle className="text-deep-teal">Test Results</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
 
                         {testResult && (
-                            <div className="p-4 bg-gray-100 rounded-md">
+                            <div className="p-4 bg-neutral-100 rounded-md border border-neutral-200">
                                 <p className="font-mono text-sm">{testResult}</p>
                             </div>
                         )}
 
-                        <div className="space-y-2">
-                            <h3 className="font-semibold">Implemented Features:</h3>
-                            <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
-                                <li>✅ Public booking interface with service selection</li>
-                                <li>✅ Date and time picker with real-time availability</li>
-                                <li>✅ Customer information form with validation</li>
-                                <li>✅ Booking confirmation system</li>
-                                <li>✅ Email notification system (with React Email templates)</li>
-                                <li>✅ Booking management (view, modify, cancel)</li>
-                                <li>✅ Staff availability management system</li>
-                                <li>✅ Conflict detection and resolution</li>
-                            </ul>
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-deep-teal">Implemented Features:</h3>
+                                <ul className="list-disc list-inside space-y-1 text-sm text-neutral-600">
+                                    <li>✅ Public booking interface with service selection</li>
+                                    <li>✅ Date and time picker with real-time availability</li>
+                                    <li>✅ Customer information form with validation</li>
+                                    <li>✅ Booking confirmation system</li>
+                                    <li>✅ Email notification system (with React Email templates)</li>
+                                    <li>✅ Booking management (view, modify, cancel)</li>
+                                    <li>✅ Staff availability management system</li>
+                                    <li>✅ Conflict detection and resolution</li>
+                                </ul>
+                            </div>
+
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-deep-teal">API Endpoints:</h3>
+                                <ul className="list-disc list-inside space-y-1 text-sm text-neutral-600">
+                                    <li><code>/api/booking/services</code> - Get available services</li>
+                                    <li><code>/api/booking/availability</code> - Get available time slots</li>
+                                    <li><code>/api/booking/create</code> - Create new booking</li>
+                                    <li><code>/api/booking/[id]</code> - Get/update/cancel booking</li>
+                                </ul>
+                            </div>
+
                         </div>
 
-                        <div className="space-y-2">
-                            <h3 className="font-semibold">API Endpoints:</h3>
-                            <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
-                                <li><code>/api/booking/services</code> - Get available services</li>
-                                <li><code>/api/booking/availability</code> - Get available time slots</li>
-                                <li><code>/api/booking/create</code> - Create new booking</li>
-                                <li><code>/api/booking/[id]</code> - Get/update/cancel booking</li>
-                            </ul>
-                        </div>
-
-                        <div className="space-y-2">
-                            <h3 className="font-semibold">UI Components:</h3>
-                            <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
+                        <div className="space-y-3">
+                            <h3 className="font-semibold text-deep-teal">UI Components:</h3>
+                            <ul className="list-disc list-inside space-y-1 text-sm text-neutral-600">
                                 <li><code>ServiceSelection</code> - Service selection interface</li>
                                 <li><code>DateTimePicker</code> - Date and time selection</li>
                                 <li><code>CustomerForm</code> - Customer information form</li>

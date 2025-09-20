@@ -67,15 +67,18 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
                         className={cn(
                             'text-sm font-medium leading-none',
                             'text-neutral-900 dark:text-neutral-100',
-                            error && 'text-red-600 dark:text-red-400',
-                            'peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                            error && 'text-error-accessible',
+                            'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+                            required && 'required'
                         )}
                     >
                         {label}
                         {required && (
                             <span
-                                className="ml-1 text-red-500 dark:text-red-400"
-                                aria-label="required"
+                                className="ml-1 text-error-accessible"
+                                aria-label="required field"
+                                role="img"
+                                aria-hidden="false"
                             >
                                 *
                             </span>
@@ -99,6 +102,7 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
                             'text-xs leading-relaxed',
                             'text-neutral-600 dark:text-neutral-400'
                         )}
+                        role="note"
                     >
                         {hint}
                     </p>
@@ -109,11 +113,13 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
                         id={errorId}
                         className={cn(
                             'text-xs font-medium leading-relaxed',
-                            'text-red-600 dark:text-red-400'
+                            'text-error-accessible'
                         )}
                         role="alert"
-                        aria-live="polite"
+                        aria-live="assertive"
+                        aria-atomic="true"
                     >
+                        <span className="sr-only">Error: </span>
                         {error}
                     </p>
                 )}
@@ -124,3 +130,4 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
 FormField.displayName = 'FormField';
 
 export { FormField, formFieldVariants };
+

@@ -294,7 +294,7 @@ export default function GridComponentShowcase() {
                                     </CardHeader>
                                     <CardContent>
                                         <p className="text-sm text-color-foreground-secondary">
-                                            This card spans the full width using colSpan="full".
+                                            This card spans the full width using colSpan=&quot;full&quot;.
                                         </p>
                                     </CardContent>
                                 </Card>

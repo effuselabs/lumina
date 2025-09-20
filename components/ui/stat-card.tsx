@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { forwardRef } from 'react';
+import { useHoverAnimation } from '../../hooks/use-performance-animation';
+import { shallowEqual, useMemoizedValue, usePerformanceMonitor } from '../../lib/performance-utils';
 
 interface StatCardProps {
     title: string;
@@ -43,10 +45,20 @@ interface StatCardProps {
  * @param loading - Show loading skeleton state
  * @param className - Additional CSS classes
  */
-const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
+const StatCard = memo(forwardRef<HTMLDivElement, StatCardProps>(
     ({ title, value, change, icon: Icon, action, size = 'default', loading = false, className }, ref) => {
-        const formatValue = (val: string | number): string => {
-            if (typeof val === 'string') return val;
+        // Performance monitoring
+        const { trackPropsChange } = usePerformanceMonitor('StatCard');
+        trackPropsChange({ title, value, change, size, loading });
+
+        // Performance-optimized hover animation
+        const [hoverRef, hoverHandlers] = useHoverAnimation('translateY(-2px) scale(1.01)', {
+            duration: 200,
+        });
+
+        // Memoize expensive calculations
+        const formattedValue = useMemoizedValue(() => {
+            if (typeof value === 'string') return value;
 
             // Format numbers based on context
             if (
@@ -58,14 +70,15 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
                     currency: 'USD',
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
-                }).format(val);
+                }).format(value);
             }
 
-            return val.toLocaleString();
-        };
+            return value.toLocaleString();
+        }, [value, title]);
 
-        const getTrendIcon = (type: 'increase' | 'decrease' | 'neutral') => {
-            switch (type) {
+        const trendIcon = useMemo(() => {
+            if (!change) return null;
+            switch (change.type) {
                 case 'increase':
                     return '↗';
                 case 'decrease':
@@ -73,7 +86,8 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
                 default:
                     return '→';
             }
-        };
+        }, [change?.type]);
+
 
         const sizeClasses = {
             compact: 'stat-card-compact',
@@ -110,10 +124,21 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
 
         return (
             <article
-                ref={ref}
-                className={cn('stat-card', sizeClasses[size], className)}
+                ref={(node) => {
+                    // Combine refs for both forwarded ref and hover animation
+                    if (typeof ref === 'function') {
+                        ref(node);
+                    } else if (ref) {
+                        ref.current = node;
+                    }
+                    if (hoverRef.current !== node) {
+                        hoverRef.current = node;
+                    }
+                }}
+                className={cn('stat-card hover-lumina-lift-subtle transition-card', sizeClasses[size], className)}
                 role="article"
                 aria-labelledby={`stat-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
+                {...hoverHandlers}
             >
                 {/* Header with Icon */}
                 <div className="stat-card-header">
@@ -124,8 +149,18 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
                         >
                             {title}
                         </h3>
-                        <p className="stat-card-value" aria-label={`Value: ${formatValue(value)}`}>
-                            {formatValue(value)}
+                        <p
+                            className="stat-card-value"
+                            aria-label={`Value: ${formattedValue}`}
+                            role="text"
+                        >
+                            <span aria-hidden="true">{formattedValue}</span>
+                            <span className="sr-only">
+                                {typeof value === 'number' && title.toLowerCase().includes('revenue')
+                                    ? `${value} dollars`
+                                    : formattedValue
+                                }
+                            </span>
                         </p>
                         {change ? (
                             <div
@@ -139,7 +174,7 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
                                         'stat-card-change-neutral': change.type === 'neutral',
                                     })}
                                 >
-                                    {getTrendIcon(change.type)} {Math.abs(change.value)}% {change.period}
+                                    {trendIcon} {Math.abs(change.value)}% {change.period}
                                 </span>
                             </div>
                         ) : (
@@ -167,9 +202,30 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
             </article>
         );
     }
-);
+), (prevProps, nextProps) => {
+    // Custom comparison for memoization
+    return shallowEqual(
+        {
+            title: prevProps.title,
+            value: prevProps.value,
+            change: prevProps.change,
+            size: prevProps.size,
+            loading: prevProps.loading,
+            className: prevProps.className,
+        },
+        {
+            title: nextProps.title,
+            value: nextProps.value,
+            change: nextProps.change,
+            size: nextProps.size,
+            loading: nextProps.loading,
+            className: nextProps.className,
+        }
+    );
+});
 
 StatCard.displayName = 'StatCard';
 
 export { StatCard };
 export type { StatCardProps };
+

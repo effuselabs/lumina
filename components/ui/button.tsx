@@ -2,17 +2,18 @@ import { cn } from '@/lib/utils';
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
+import { shallowEqual, usePerformanceMonitor } from '../../lib/performance-utils';
 import { Spinner } from './spinner';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-button focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden hover-lumina-lift-subtle focus-lumina-ring motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
   {
     variants: {
       variant: {
         // Primary - Lumina Radiant Gradient matching dashboard
         primary: [
-          'bg-gradient-to-r from-lumina-gold to-lumina-coral text-white shadow-md',
-          'hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'bg-gradient-to-r from-lumina-gold to-lumina-coral text-white shadow-md hover-lumina-glow',
+          'hover:shadow-lumina-lg active:shadow-inner motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
           'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:from-neutral-400 disabled:to-neutral-400 disabled:shadow-none disabled:scale-100',
           // High contrast mode support
@@ -21,7 +22,7 @@ const buttonVariants = cva(
         // Secondary - Deep Teal
         secondary: [
           'bg-deep-teal text-white shadow-md',
-          'hover:bg-deep-teal/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'hover:bg-deep-teal/90 hover:shadow-lumina-md active:shadow-inner motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
           'focus-visible:ring-deep-teal focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100',
           // High contrast mode support
@@ -30,7 +31,7 @@ const buttonVariants = cva(
         // Outline - Lumina Gold border
         outline: [
           'border-2 border-lumina-gold bg-transparent text-lumina-gold',
-          'hover:bg-lumina-gold hover:text-white hover:shadow-md hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'hover:bg-lumina-gold hover:text-white hover:shadow-lumina-md active:shadow-inner motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
           'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:border-neutral-400 disabled:text-neutral-400 disabled:hover:bg-transparent disabled:hover:text-neutral-400 disabled:scale-100',
           // High contrast mode support
@@ -39,7 +40,7 @@ const buttonVariants = cva(
         // Ghost - Subtle hover with Lumina colors
         ghost: [
           'bg-transparent text-neutral-700 dark:text-neutral-300',
-          'hover:bg-lumina-gold/10 hover:text-lumina-gold hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'hover:bg-lumina-gold/10 hover:text-lumina-gold active:bg-lumina-gold/20 motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
           'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:text-neutral-400 disabled:hover:bg-transparent disabled:hover:text-neutral-400 disabled:scale-100',
           // High contrast mode support
@@ -48,7 +49,7 @@ const buttonVariants = cva(
         // Destructive - Error color
         destructive: [
           'bg-red-600 text-white shadow-md',
-          'hover:bg-red-700 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
+          'hover:bg-red-700 hover:shadow-lg active:shadow-inner motion-reduce:hover:scale-100 motion-reduce:active:scale-100',
           'focus-visible:ring-red-600 focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100',
           // High contrast mode support
@@ -90,7 +91,7 @@ export interface ButtonProps
   'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.memo(React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({
     className,
     variant,
@@ -106,6 +107,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     'aria-haspopup': ariaHasPopup,
     ...props
   }, ref) => {
+    // Performance monitoring
+    const { trackPropsChange } = usePerformanceMonitor('Button');
+    trackPropsChange({ variant, size, loading, disabled, children });
     const Comp = asChild ? Slot : 'button';
     const isDisabled = disabled || loading;
 
@@ -159,7 +163,27 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       </Comp>
     );
   }
-);
+), (prevProps, nextProps) => {
+  // Custom comparison function for memoization
+  return shallowEqual(
+    {
+      variant: prevProps.variant,
+      size: prevProps.size,
+      loading: prevProps.loading,
+      disabled: prevProps.disabled,
+      className: prevProps.className,
+      children: prevProps.children,
+    },
+    {
+      variant: nextProps.variant,
+      size: nextProps.size,
+      loading: nextProps.loading,
+      disabled: nextProps.disabled,
+      className: nextProps.className,
+      children: nextProps.children,
+    }
+  );
+});
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };

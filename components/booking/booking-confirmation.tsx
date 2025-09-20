@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { format } from 'date-fns'
 import { Calendar, CheckCircle, Clock, DollarSign, Mail, MapPin, User } from 'lucide-react'
+import { BookingProgress, defaultBookingSteps } from './booking-progress'
 
 interface BookingConfirmationData {
     id: string
@@ -67,17 +68,20 @@ export function BookingConfirmation({ booking, onNewBooking }: BookingConfirmati
     const endTime = format(new Date(booking.endTime), 'h:mm a')
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="max-w-2xl mx-auto space-y-8">
+            <BookingProgress currentStep={4} steps={defaultBookingSteps} />
             {/* Success Header */}
-            <Card className="border-green-200 bg-green-50">
+            <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100/50 shadow-sm">
                 <CardContent className="pt-6">
-                    <div className="flex items-center space-x-3">
-                        <CheckCircle className="h-8 w-8 text-green-600" />
-                        <div>
-                            <h2 className="text-2xl font-bold text-green-900">
+                    <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0 p-3 bg-green-100 rounded-full animate-pulse">
+                            <CheckCircle className="h-8 w-8 text-green-600" />
+                        </div>
+                        <div className="space-y-1">
+                            <h2 className="text-3xl font-bold text-green-900 tracking-tight">
                                 Booking Confirmed!
                             </h2>
-                            <p className="text-green-700">
+                            <p className="text-lg text-green-700">
                                 Your appointment has been successfully scheduled
                             </p>
                         </div>
@@ -86,9 +90,9 @@ export function BookingConfirmation({ booking, onNewBooking }: BookingConfirmati
             </Card>
 
             {/* Appointment Details */}
-            <Card>
+            <Card className="shadow-sm border-neutral-200">
                 <CardHeader>
-                    <CardTitle>Appointment Details</CardTitle>
+                    <CardTitle className="text-deep-teal">Appointment Details</CardTitle>
                     <CardDescription>
                         Confirmation ID: {booking.id}
                     </CardDescription>
@@ -164,9 +168,9 @@ export function BookingConfirmation({ booking, onNewBooking }: BookingConfirmati
             </Card>
 
             {/* Next Steps */}
-            <Card>
+            <Card className="shadow-sm border-neutral-200">
                 <CardHeader>
-                    <CardTitle>What's Next?</CardTitle>
+                    <CardTitle className="text-deep-teal">What's Next?</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-y-3">
@@ -206,7 +210,12 @@ export function BookingConfirmation({ booking, onNewBooking }: BookingConfirmati
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3">
                 {onNewBooking && (
-                    <Button onClick={onNewBooking} variant="outline" className="flex-1">
+                    <Button
+                        onClick={onNewBooking}
+                        variant="primary"
+                        className="flex-1"
+                        size="lg"
+                    >
                         Book Another Appointment
                     </Button>
                 )}
@@ -214,6 +223,7 @@ export function BookingConfirmation({ booking, onNewBooking }: BookingConfirmati
                     onClick={() => window.print()}
                     variant="outline"
                     className="flex-1"
+                    size="lg"
                 >
                     Print Confirmation
                 </Button>

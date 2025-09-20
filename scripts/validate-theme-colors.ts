@@ -43,7 +43,7 @@ function main() {
         });
 
         // Generate full report
-        const report = generateAccessibilityReport();
+        const _report = generateAccessibilityReport();
         console.log('\n📄 Full accessibility report generated');
         console.log('To save report to file, run:');
         console.log('npx tsx scripts/validate-theme-colors.ts > theme-accessibility-report.md');

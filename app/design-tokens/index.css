@@ -6,6 +6,8 @@
 @import './typography.css';
 @import './spacing.css';
 @import './effects.css';
+@import './animations.css';
+@import './accessibility.css';
 @import './theme-transitions.css';
 
 /* ===== DESIGN TOKEN UTILITIES ===== */

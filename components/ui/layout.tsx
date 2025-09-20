@@ -1,5 +1,6 @@
-import * as React from 'react';
+import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
+import * as React from 'react';
 
 // Container component with responsive max-widths
 const Container = React.forwardRef<
@@ -207,4 +208,40 @@ const Show = React.forwardRef<
 });
 Show.displayName = 'Show';
 
-export { Container, Grid, Flex, Stack, Show, breakpoints };
+// Layout component with ThemeProvider integration
+const Layout = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    enableTheme?: boolean;
+    defaultTheme?: 'light' | 'dark' | 'system';
+    storageKey?: string;
+  }
+>(({ className, enableTheme = true, defaultTheme = 'system', storageKey = 'lumina-theme', children, ...props }, ref) => {
+  if (enableTheme) {
+    return (
+      <ThemeProvider defaultTheme={defaultTheme} storageKey={storageKey}>
+        <div
+          ref={ref}
+          className={cn('min-h-screen bg-background text-foreground', className)}
+          {...props}
+        >
+          {children}
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={cn('min-h-screen bg-background text-foreground', className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+});
+Layout.displayName = 'Layout';
+
+export { breakpoints, Container, Flex, Grid, Layout, Show, Stack };
+

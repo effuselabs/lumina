@@ -13,7 +13,7 @@ interface PageHeaderProps {
     onClick?: () => void;
     href?: string;
     icon?: LucideIcon;
-    variant?: 'default' | 'outline' | 'ghost' | 'secondary';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
     primary?: boolean;
     disabled?: boolean;
   }>;
@@ -130,25 +130,39 @@ export function PageHeader({
 
         {/* Actions */}
         {actions && actions.length > 0 && (
-          <div className="page-header__actions">
+          <div
+            className="page-header__actions"
+            role="group"
+            aria-label="Page actions"
+          >
             {actions.map((action, index) => {
               const Icon = action.icon;
               const buttonProps = {
-                variant: action.primary ? 'default' : (action.variant || 'outline'),
+                variant: action.primary ? 'primary' : (action.variant || 'outline'),
                 onClick: action.onClick,
                 disabled: action.disabled,
                 className: cn(
-                  'page-header__action-button',
+                  'page-header__action-button touch-target',
                   action.primary && 'page-header__action-button--primary'
                 ),
+                'aria-label': action.label,
+                'aria-describedby': action.primary ? `${action.label.toLowerCase().replace(/\s+/g, '-')}-primary-action` : undefined,
               };
 
               const content = (
                 <>
-                  {Icon && <Icon className="h-4 w-4" />}
+                  {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
                   <span className="page-header__action-label">
                     {action.label}
                   </span>
+                  {action.primary && (
+                    <span
+                      id={`${action.label.toLowerCase().replace(/\s+/g, '-')}-primary-action`}
+                      className="sr-only"
+                    >
+                      Primary action
+                    </span>
+                  )}
                 </>
               );
 

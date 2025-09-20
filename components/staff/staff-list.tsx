@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import type { StaffWithRelations } from '@/types/database';
 import type { EmploymentType } from '@prisma/client';
 import {
@@ -223,16 +224,16 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       member.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getEmploymentBadgeColor = (type: EmploymentType) => {
+  const getEmploymentBadgeVariant = (type: EmploymentType) => {
     switch (type) {
       case 'COMMISSION':
-        return 'bg-blue-500 text-white font-medium';
+        return 'default'; // Blue variant
       case 'CHAIR_RENTAL':
-        return 'bg-green-500 text-white font-medium';
+        return 'secondary'; // Green variant  
       case 'HYBRID':
-        return 'bg-purple-500 text-white font-medium';
+        return 'outline'; // Purple variant
       default:
-        return 'bg-gray-500 text-white font-medium';
+        return 'secondary';
     }
   };
 
@@ -260,16 +261,41 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        {[...Array(3)].map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <div className="h-12 w-12 rounded-full bg-gray-200"></div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 w-1/4 rounded bg-gray-200"></div>
-                  <div className="h-3 w-1/3 rounded bg-gray-200"></div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[...Array(6)].map((_, i) => (
+          <Card key={i} className="border-0 shadow-md animate-pulse">
+            <CardHeader className="pb-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="h-14 w-14 rounded-full bg-neutral-200 dark:bg-neutral-700 ring-2 ring-neutral-100 dark:ring-neutral-800"></div>
+                  <div className="space-y-2">
+                    <div className="h-5 w-24 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                    <div className="h-4 w-20 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  </div>
                 </div>
+                <div className="h-8 w-8 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="space-y-3">
+                <div className="h-6 w-20 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                <div className="h-5 w-32 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+              </div>
+              <div className="grid grid-cols-2 gap-6 border-t border-neutral-100 dark:border-neutral-800 pt-4">
+                <div className="text-center space-y-2">
+                  <div className="h-4 w-20 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="h-8 w-12 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="h-3 w-16 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                </div>
+                <div className="text-center space-y-2">
+                  <div className="h-4 w-20 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="h-8 w-12 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="h-3 w-16 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-4">
+                <div className="h-4 w-12 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                <div className="h-6 w-16 rounded bg-neutral-200 dark:bg-neutral-700"></div>
               </div>
             </CardContent>
           </Card>
@@ -285,24 +311,13 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
         <div className="flex-1">
           {/* Header removed - now handled by parent component */}
         </div>
-        <button
+        <Button
           onClick={() => setInviteDialogOpen(true)}
-          className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-          style={{
-            background: 'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background =
-              'linear-gradient(135deg, #ffcd47 0%, #ff6b47 100%)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background =
-              'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
-          }}
+          variant="primary"
+          icon={<UserPlus className="h-4 w-4" />}
         >
-          <UserPlus className="mr-2 h-4 w-4" />
           Invite Staff
-        </button>
+        </Button>
       </div>
 
       {/* Filters */}
@@ -467,7 +482,8 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
               {/* Employment Info */}
               <div className="space-y-3">
                 <Badge
-                  className={`${getEmploymentBadgeColor(member.employmentType)} px-3 py-1 text-xs uppercase tracking-wide`}
+                  variant={getEmploymentBadgeVariant(member.employmentType)}
+                  className="px-3 py-1 text-xs uppercase tracking-wide font-medium"
                 >
                   {member.employmentType.replace('_', ' ')}
                 </Badge>
@@ -508,11 +524,13 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                   Status
                 </span>
                 <Badge
-                  className={
+                  variant={member.isActive ? 'default' : 'secondary'}
+                  className={cn(
+                    'font-medium',
                     member.isActive
-                      ? 'border-0 bg-green-500 font-medium text-white hover:bg-green-500'
-                      : 'border-0 bg-gray-400 font-medium text-white hover:bg-gray-400'
-                  }
+                      ? 'bg-green-500 text-white hover:bg-green-500'
+                      : 'bg-neutral-400 text-white hover:bg-neutral-400'
+                  )}
                 >
                   {member.isActive ? 'Active' : 'Inactive'}
                 </Badge>

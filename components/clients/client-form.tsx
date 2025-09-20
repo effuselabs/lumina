@@ -1,9 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -169,57 +167,58 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
                 <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <Label htmlFor="firstName">First Name *</Label>
+                    <FormField
+                        label="First Name"
+                        required
+                        error={errors.firstName}
+                    >
                         <Input
                             id="firstName"
                             value={formData.firstName}
                             onChange={(e) => handleInputChange('firstName', e.target.value)}
-                            className={errors.firstName ? 'border-red-500' : ''}
+                            placeholder="Enter first name"
                         />
-                        {errors.firstName && (
-                            <p className="text-sm text-red-600 mt-1">{errors.firstName}</p>
-                        )}
-                    </div>
+                    </FormField>
 
-                    <div>
-                        <Label htmlFor="lastName">Last Name *</Label>
+                    <FormField
+                        label="Last Name"
+                        required
+                        error={errors.lastName}
+                    >
                         <Input
                             id="lastName"
                             value={formData.lastName}
                             onChange={(e) => handleInputChange('lastName', e.target.value)}
-                            className={errors.lastName ? 'border-red-500' : ''}
+                            placeholder="Enter last name"
                         />
-                        {errors.lastName && (
-                            <p className="text-sm text-red-600 mt-1">{errors.lastName}</p>
-                        )}
-                    </div>
+                    </FormField>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <Label htmlFor="email">Email</Label>
+                    <FormField
+                        label="Email"
+                        error={errors.email}
+                    >
                         <Input
                             id="email"
                             type="email"
                             value={formData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
-                            className={errors.email ? 'border-red-500' : ''}
+                            placeholder="client@example.com"
                         />
-                        {errors.email && (
-                            <p className="text-sm text-red-600 mt-1">{errors.email}</p>
-                        )}
-                    </div>
+                    </FormField>
 
-                    <div>
-                        <Label htmlFor="phone">Phone</Label>
+                    <FormField
+                        label="Phone"
+                    >
                         <Input
                             id="phone"
                             type="tel"
                             value={formData.phone}
                             onChange={(e) => handleInputChange('phone', e.target.value)}
+                            placeholder="(555) 123-4567"
                         />
-                    </div>
+                    </FormField>
                 </div>
             </div>
 
@@ -227,42 +226,50 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
             <div className="space-y-4">
                 <h3 className="text-lg font-medium text-gray-900">Address</h3>
 
-                <div>
-                    <Label htmlFor="address">Street Address</Label>
+                <FormField
+                    label="Street Address"
+                >
                     <Input
                         id="address"
                         value={formData.address}
                         onChange={(e) => handleInputChange('address', e.target.value)}
+                        placeholder="123 Main Street"
                     />
-                </div>
+                </FormField>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <Label htmlFor="city">City</Label>
+                    <FormField
+                        label="City"
+                    >
                         <Input
                             id="city"
                             value={formData.city}
                             onChange={(e) => handleInputChange('city', e.target.value)}
+                            placeholder="City"
                         />
-                    </div>
+                    </FormField>
 
-                    <div>
-                        <Label htmlFor="state">State</Label>
+                    <FormField
+                        label="State"
+                    >
                         <Input
                             id="state"
                             value={formData.state}
                             onChange={(e) => handleInputChange('state', e.target.value)}
+                            placeholder="State"
                         />
-                    </div>
+                    </FormField>
 
-                    <div>
-                        <Label htmlFor="zipCode">ZIP Code</Label>
+                    <FormField
+                        label="ZIP Code"
+                    >
                         <Input
                             id="zipCode"
                             value={formData.zipCode}
                             onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                            placeholder="12345"
                         />
-                    </div>
+                    </FormField>
                 </div>
             </div>
 
@@ -270,8 +277,9 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
             <div className="space-y-4">
                 <h3 className="text-lg font-medium text-gray-900">Preferences</h3>
 
-                <div>
-                    <Label htmlFor="preferredStaff">Preferred Staff Member</Label>
+                <FormField
+                    label="Preferred Staff Member"
+                >
                     <Select
                         value={formData.preferredStaff}
                         onValueChange={(value) => handleInputChange('preferredStaff', value)}
@@ -288,10 +296,11 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
                             ))}
                         </SelectContent>
                     </Select>
-                </div>
+                </FormField>
 
-                <div>
-                    <Label htmlFor="notes">Notes</Label>
+                <FormField
+                    label="Notes"
+                >
                     <Textarea
                         id="notes"
                         value={formData.notes}
@@ -299,7 +308,7 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
                         placeholder="Add any notes about this client..."
                         rows={3}
                     />
-                </div>
+                </FormField>
             </div>
 
             {/* Marketing Preferences */}
@@ -307,31 +316,31 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
                 <h3 className="text-lg font-medium text-gray-900">Marketing Preferences</h3>
 
                 <div className="space-y-3">
-                    <div className="flex items-center space-x-2">
-                        <Checkbox
+                    <FormField
+                        label="Send email marketing and appointment reminders"
+                        type="checkbox"
+                    >
+                        <input
+                            type="checkbox"
                             id="emailMarketing"
                             checked={formData.emailMarketing}
-                            onCheckedChange={(checked) =>
-                                handleInputChange('emailMarketing', checked === true)
-                            }
+                            onChange={(e) => handleInputChange('emailMarketing', e.target.checked)}
+                            className="form-checkbox"
                         />
-                        <Label htmlFor="emailMarketing">
-                            Send email marketing and appointment reminders
-                        </Label>
-                    </div>
+                    </FormField>
 
-                    <div className="flex items-center space-x-2">
-                        <Checkbox
+                    <FormField
+                        label="Send SMS marketing and appointment reminders"
+                        type="checkbox"
+                    >
+                        <input
+                            type="checkbox"
                             id="smsMarketing"
                             checked={formData.smsMarketing}
-                            onCheckedChange={(checked) =>
-                                handleInputChange('smsMarketing', checked === true)
-                            }
+                            onChange={(e) => handleInputChange('smsMarketing', e.target.checked)}
+                            className="form-checkbox"
                         />
-                        <Label htmlFor="smsMarketing">
-                            Send SMS marketing and appointment reminders
-                        </Label>
-                    </div>
+                    </FormField>
                 </div>
             </div>
 
@@ -354,10 +363,10 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
                 </Button>
                 <Button
                     type="submit"
-                    disabled={isLoading}
-                    className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
+                    variant="primary"
+                    loading={isLoading}
+                    icon={isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : undefined}
                 >
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {client?.id ? 'Update Client' : 'Create Client'}
                 </Button>
             </div>

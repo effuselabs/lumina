@@ -213,14 +213,25 @@ export default function FinancialDashboard({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Financial Dashboard</h2>
-          <p className="text-gray-600">
-            {format(new Date(report.period.start), 'MMM dd, yyyy')} -{' '}
-            {format(new Date(report.period.end), 'MMM dd, yyyy')}
-          </p>
-        </div>
+      <PageHeader
+        title="Financial Dashboard"
+        description={`${format(new Date(report.period.start), 'MMM dd, yyyy')} - ${format(new Date(report.period.end), 'MMM dd, yyyy')}`}
+        actions={[
+          {
+            label: 'Refresh',
+            onClick: handleRefresh,
+            icon: RefreshCw,
+            variant: 'outline',
+          },
+          {
+            label: 'Export',
+            onClick: handleExport,
+            icon: Download,
+            variant: 'primary',
+            primary: true,
+          },
+        ]}
+      >
         <div className="flex gap-2">
           <Select value={dateRange} onValueChange={setDateRange}>
             <SelectTrigger className="w-40">
@@ -234,105 +245,58 @@ export default function FinancialDashboard({
               ))}
             </SelectContent>
           </Select>
-          <button
-            onClick={handleRefresh}
-            className="inline-flex h-10 items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-            style={{ color: '#0b2b33' }}
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Refresh
-          </button>
-          <button
-            onClick={handleExport}
-            className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-            style={{
-              background: 'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background =
-                'linear-gradient(135deg, #ffcd47 0%, #ff6b47 100%)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background =
-                'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
-            }}
-          >
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </button>
         </div>
-      </div>
+      </PageHeader>
 
-      {/* Key Metrics - Dashboard Style */}
-      <div className="dashboard-stats-grid">
-        <Card className="border border-gray-200 bg-white shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lumina-primary text-sm font-medium">
-              Total Revenue
-            </CardTitle>
-            <DollarSign className="h-4 w-4" style={{ color: '#ff7a5a' }} />
-          </CardHeader>
-          <CardContent>
-            <div className="text-lumina-primary text-2xl font-bold">
-              {formatCurrency(report.revenue.total)}
-            </div>
-            <p className="text-xs" style={{ color: '#808285' }}>
-              {report.revenue.transactionCount} transactions
-            </p>
-          </CardContent>
-        </Card>
+      {/* Key Metrics - Optimized StatCards */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Revenue"
+          value={report.revenue.total}
+          icon={DollarSign}
+          size="compact"
+          change={{
+            value: 0, // TODO: Calculate change from previous period
+            type: 'neutral',
+            period: `${report.revenue.transactionCount} transactions`
+          }}
+        />
 
-        <Card className="border border-gray-200 bg-white shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lumina-primary text-sm font-medium">
-              Net Revenue
-            </CardTitle>
-            <TrendingUp className="h-4 w-4" style={{ color: '#ff7a5a' }} />
-          </CardHeader>
-          <CardContent>
-            <div className="text-lumina-primary text-2xl font-bold">
-              {formatCurrency(report.revenue.net)}
-            </div>
-            <p className="text-xs" style={{ color: '#808285' }}>
-              After {formatCurrency(report.revenue.refunds)} refunds
-            </p>
-          </CardContent>
-        </Card>
+        <StatCard
+          title="Net Revenue"
+          value={report.revenue.net}
+          icon={TrendingUp}
+          size="compact"
+          change={{
+            value: 0, // TODO: Calculate change from previous period
+            type: 'neutral',
+            period: `After ${formatCurrency(report.revenue.refunds)} refunds`
+          }}
+        />
 
-        <Card className="border border-gray-200 bg-white shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lumina-primary text-sm font-medium">
-              Business Retention
-            </CardTitle>
-            <PieChart className="h-4 w-4" style={{ color: '#ff7a5a' }} />
-          </CardHeader>
-          <CardContent>
-            <div className="text-lumina-primary text-2xl font-bold">
-              {formatCurrency(report.summary.totalBusinessRetention)}
-            </div>
-            <p className="text-xs" style={{ color: '#808285' }}>
-              After staff payments
-            </p>
-          </CardContent>
-        </Card>
+        <StatCard
+          title="Business Retention"
+          value={report.summary.totalBusinessRetention}
+          icon={PieChart}
+          size="compact"
+          change={{
+            value: 0, // TODO: Calculate change from previous period
+            type: 'neutral',
+            period: 'After staff payments'
+          }}
+        />
 
-        <Card className="border border-gray-200 bg-white shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lumina-primary text-sm font-medium">
-              Active Staff
-            </CardTitle>
-            <Users className="h-4 w-4" style={{ color: '#ff7a5a' }} />
-          </CardHeader>
-          <CardContent>
-            <div className="text-lumina-primary text-2xl font-bold">
-              {report.summary.totalStaff}
-            </div>
-            <p className="text-xs" style={{ color: '#808285' }}>
-              {totalEmploymentTypes} employment type
-              {totalEmploymentTypes !== 1 ? 's' : ''}
-            </p>
-          </CardContent>
-        </Card>
+        <StatCard
+          title="Active Staff"
+          value={report.summary.totalStaff}
+          icon={Users}
+          size="compact"
+          change={{
+            value: 0, // TODO: Calculate change from previous period
+            type: 'neutral',
+            period: `${totalEmploymentTypes} employment type${totalEmploymentTypes !== 1 ? 's' : ''}`
+          }}
+        />
       </div>
 
       {/* Detailed Reports */}
@@ -389,45 +353,45 @@ export default function FinancialDashboard({
                   {report.summary.activeEmploymentTypes.includes(
                     'COMMISSION'
                   ) && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="default">Commission</Badge>
-                        <span className="text-sm">
-                          {report.employmentBreakdown.commission.staffCount}{' '}
-                          staff
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="default" className="bg-blue-500 text-white hover:bg-blue-500">Commission</Badge>
+                          <span className="text-sm">
+                            {report.employmentBreakdown.commission.staffCount}{' '}
+                            staff
+                          </span>
+                        </div>
+                        <span className="font-medium">
+                          {formatCurrency(
+                            report.employmentBreakdown.commission.totalRevenue
+                          )}
                         </span>
                       </div>
-                      <span className="font-medium">
-                        {formatCurrency(
-                          report.employmentBreakdown.commission.totalRevenue
-                        )}
-                      </span>
-                    </div>
-                  )}
+                    )}
 
                   {report.summary.activeEmploymentTypes.includes(
                     'CHAIR_RENTAL'
                   ) && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary">Chair Rental</Badge>
-                        <span className="text-sm">
-                          {report.employmentBreakdown.chairRental.staffCount}{' '}
-                          staff
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="bg-green-500 text-white hover:bg-green-500">Chair Rental</Badge>
+                          <span className="text-sm">
+                            {report.employmentBreakdown.chairRental.staffCount}{' '}
+                            staff
+                          </span>
+                        </div>
+                        <span className="font-medium">
+                          {formatCurrency(
+                            report.employmentBreakdown.chairRental.totalRevenue
+                          )}
                         </span>
                       </div>
-                      <span className="font-medium">
-                        {formatCurrency(
-                          report.employmentBreakdown.chairRental.totalRevenue
-                        )}
-                      </span>
-                    </div>
-                  )}
+                    )}
 
                   {report.summary.activeEmploymentTypes.includes('HYBRID') && (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">Hybrid</Badge>
+                        <Badge variant="outline" className="border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white">Hybrid</Badge>
                         <span className="text-sm">
                           {report.employmentBreakdown.hybrid.staffCount} staff
                         </span>
@@ -446,130 +410,59 @@ export default function FinancialDashboard({
         </TabsContent>
 
         <TabsContent value="employment" className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {report.summary.activeEmploymentTypes.includes('COMMISSION') && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4" />
-                    Commission Staff
-                  </CardTitle>
-                  <CardDescription>
-                    {report.employmentBreakdown.commission.staffCount} staff
-                    members
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Total Revenue</span>
-                      <span className="font-medium">
-                        {formatCurrency(
-                          report.employmentBreakdown.commission.totalRevenue
-                        )}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Transactions</span>
-                      <span>
-                        {report.employmentBreakdown.commission.transactionCount}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Avg per Staff</span>
-                      <span>
-                        {formatCurrency(
-                          report.employmentBreakdown.commission.averagePerStaff
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <StatCard
+                title="Commission Staff"
+                value={report.employmentBreakdown.commission.totalRevenue}
+                icon={TrendingUp}
+                size="default"
+                change={{
+                  value: 0, // TODO: Calculate change from previous period
+                  type: 'neutral',
+                  period: `${report.employmentBreakdown.commission.staffCount} staff • ${report.employmentBreakdown.commission.transactionCount} transactions`
+                }}
+                action={{
+                  label: `Avg: ${formatCurrency(report.employmentBreakdown.commission.averagePerStaff)} per staff`,
+                  href: '#'
+                }}
+              />
             )}
 
             {report.summary.activeEmploymentTypes.includes('CHAIR_RENTAL') && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Chair Rental
-                  </CardTitle>
-                  <CardDescription>
-                    {report.employmentBreakdown.chairRental.staffCount}{' '}
-                    contractors
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Total Revenue</span>
-                      <span className="font-medium">
-                        {formatCurrency(
-                          report.employmentBreakdown.chairRental.totalRevenue
-                        )}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Transactions</span>
-                      <span>
-                        {
-                          report.employmentBreakdown.chairRental
-                            .transactionCount
-                        }
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Avg per Staff</span>
-                      <span>
-                        {formatCurrency(
-                          report.employmentBreakdown.chairRental.averagePerStaff
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <StatCard
+                title="Chair Rental"
+                value={report.employmentBreakdown.chairRental.totalRevenue}
+                icon={Calendar}
+                size="default"
+                change={{
+                  value: 0, // TODO: Calculate change from previous period
+                  type: 'neutral',
+                  period: `${report.employmentBreakdown.chairRental.staffCount} contractors • ${report.employmentBreakdown.chairRental.transactionCount} transactions`
+                }}
+                action={{
+                  label: `Avg: ${formatCurrency(report.employmentBreakdown.chairRental.averagePerStaff)} per staff`,
+                  href: '#'
+                }}
+              />
             )}
 
             {report.summary.activeEmploymentTypes.includes('HYBRID') && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4" />
-                    Hybrid Staff
-                  </CardTitle>
-                  <CardDescription>
-                    {report.employmentBreakdown.hybrid.staffCount} staff members
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Total Revenue</span>
-                      <span className="font-medium">
-                        {formatCurrency(
-                          report.employmentBreakdown.hybrid.totalRevenue
-                        )}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Transactions</span>
-                      <span>
-                        {report.employmentBreakdown.hybrid.transactionCount}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Avg per Staff</span>
-                      <span>
-                        {formatCurrency(
-                          report.employmentBreakdown.hybrid.averagePerStaff
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <StatCard
+                title="Hybrid Staff"
+                value={report.employmentBreakdown.hybrid.totalRevenue}
+                icon={BarChart3}
+                size="default"
+                change={{
+                  value: 0, // TODO: Calculate change from previous period
+                  type: 'neutral',
+                  period: `${report.employmentBreakdown.hybrid.staffCount} staff • ${report.employmentBreakdown.hybrid.transactionCount} transactions`
+                }}
+                action={{
+                  label: `Avg: ${formatCurrency(report.employmentBreakdown.hybrid.averagePerStaff)} per staff`,
+                  href: '#'
+                }}
+              />
             )}
           </div>
         </TabsContent>
@@ -592,7 +485,20 @@ export default function FinancialDashboard({
                     <div>
                       <p className="font-medium">{staff.name}</p>
                       <div className="mt-1 flex items-center gap-2">
-                        <Badge variant="outline">{staff.employmentType}</Badge>
+                        <Badge
+                          variant="outline"
+                          className={
+                            staff.employmentType === 'COMMISSION'
+                              ? 'border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white'
+                              : staff.employmentType === 'CHAIR_RENTAL'
+                                ? 'border-green-500 text-green-500 hover:bg-green-500 hover:text-white'
+                                : staff.employmentType === 'HYBRID'
+                                  ? 'border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white'
+                                  : ''
+                          }
+                        >
+                          {staff.employmentType.replace('_', ' ')}
+                        </Badge>
                         {staff.commissionRate && (
                           <span className="text-sm text-gray-600">
                             {staff.commissionRate}% commission
@@ -639,6 +545,11 @@ export default function FinancialDashboard({
                             transaction.status === 'COMPLETED'
                               ? 'default'
                               : 'secondary'
+                          }
+                          className={
+                            transaction.status === 'COMPLETED'
+                              ? 'bg-green-500 text-white hover:bg-green-500'
+                              : 'bg-neutral-400 text-white hover:bg-neutral-400'
                           }
                         >
                           {transaction.status}

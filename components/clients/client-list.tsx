@@ -40,6 +40,8 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import { Card } from '../ui/card';
+import { FormField } from '../ui/form';
 
 interface Staff {
   id: string;
@@ -230,55 +232,70 @@ export function ClientList({
   return (
     <div className="space-y-6">
       {/* Search and Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-          <Input
-            placeholder="Search clients by name, email, or phone..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        <div className="flex gap-2">
-          <Select value={selectedStaff} onValueChange={setSelectedStaff}>
-            <SelectTrigger className="w-48">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Filter by staff" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All staff</SelectItem>
-              {staff.map(member => (
-                <SelectItem key={member.id} value={member.id}>
-                  {member.displayName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={`${sortBy}-${sortOrder}`}
-            onValueChange={value => {
-              const [field, order] = value.split('-');
-              setSortBy(field);
-              setSortOrder(order as 'asc' | 'desc');
-            }}
+      <Card className="p-4">
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <FormField
+            label="Search clients"
+            className="flex-1"
           >
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="firstName-asc">First Name A-Z</SelectItem>
-              <SelectItem value="firstName-desc">First Name Z-A</SelectItem>
-              <SelectItem value="lastName-asc">Last Name A-Z</SelectItem>
-              <SelectItem value="lastName-desc">Last Name Z-A</SelectItem>
-              <SelectItem value="createdAt-desc">Newest First</SelectItem>
-              <SelectItem value="createdAt-asc">Oldest First</SelectItem>
-            </SelectContent>
-          </Select>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+              <Input
+                placeholder="Search clients by name, email, or phone..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </FormField>
+
+          <div className="flex gap-2">
+            <FormField
+              label="Filter by staff"
+            >
+              <Select value={selectedStaff} onValueChange={setSelectedStaff}>
+                <SelectTrigger className="w-48">
+                  <Filter className="mr-2 h-4 w-4" />
+                  <SelectValue placeholder="Filter by staff" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All staff</SelectItem>
+                  {staff.map(member => (
+                    <SelectItem key={member.id} value={member.id}>
+                      {member.displayName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
+            <FormField
+              label="Sort by"
+            >
+              <Select
+                value={`${sortBy}-${sortOrder}`}
+                onValueChange={value => {
+                  const [field, order] = value.split('-');
+                  setSortBy(field);
+                  setSortOrder(order as 'asc' | 'desc');
+                }}
+              >
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="firstName-asc">First Name A-Z</SelectItem>
+                  <SelectItem value="firstName-desc">First Name Z-A</SelectItem>
+                  <SelectItem value="lastName-asc">Last Name A-Z</SelectItem>
+                  <SelectItem value="lastName-desc">Last Name Z-A</SelectItem>
+                  <SelectItem value="createdAt-desc">Newest First</SelectItem>
+                  <SelectItem value="createdAt-asc">Oldest First</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormField>
+          </div>
         </div>
-      </div>
+      </Card>
 
       {/* Results Summary */}
       <div className="flex items-center justify-between text-sm text-gray-600">

@@ -54,13 +54,14 @@ export function StaffPageContent({
       >
         <div className="space-y-8">
           {/* Page Header */}
-          <div>
-            <h1 className="lumina-heading-2">Staff Management</h1>
-            <p className="lumina-body-large" style={{ color: '#808285' }}>
-              Manage your team members, employment configurations, and
-              performance tracking.
-            </p>
-          </div>
+          <PageHeader
+            title="Staff Management"
+            description="Manage your team members, employment configurations, and performance tracking."
+            breadcrumbs={[
+              { label: 'Dashboard', href: `/${businessSlug}` },
+              { label: 'Staff' }
+            ]}
+          />
 
           {/* Staff List */}
           <StaffList businessId={business.id} />

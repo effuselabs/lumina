@@ -1,0 +1,368 @@
+/* Lumina Design System - Accessibility Tokens */
+/* Version 1.0 - Comprehensive accessibility support */
+
+@layer tokens {
+  :root {
+    /* ===== FOCUS MANAGEMENT TOKENS ===== */
+    /* Focus ring styles for keyboard navigation */
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
+    --focus-ring-color: var(--lumina-gold);
+    --focus-ring-color-contrast: #0066cc; /* High contrast blue for better visibility */
+    --focus-ring-style: solid;
+    
+    /* Focus ring variations */
+    --focus-ring-thin: 1px;
+    --focus-ring-thick: 3px;
+    --focus-ring-offset-tight: 1px;
+    --focus-ring-offset-loose: 4px;
+    
+    /* ===== SKIP LINK TOKENS ===== */
+    /* Skip navigation styling */
+    --skip-link-background: var(--deep-teal);
+    --skip-link-foreground: var(--neutral-white);
+    --skip-link-padding: 0.75rem 1rem;
+    --skip-link-border-radius: var(--radius-md);
+    --skip-link-font-weight: 600;
+    --skip-link-z-index: 9999;
+    
+    /* ===== SCREEN READER TOKENS ===== */
+    /* Screen reader only content */
+    --sr-only-position: absolute;
+    --sr-only-width: 1px;
+    --sr-only-height: 1px;
+    --sr-only-padding: 0;
+    --sr-only-margin: -1px;
+    --sr-only-overflow: hidden;
+    --sr-only-clip: rect(0, 0, 0, 0);
+    --sr-only-white-space: nowrap;
+    --sr-only-border: 0;
+    
+    /* ===== HIGH CONTRAST TOKENS ===== */
+    /* Enhanced contrast for accessibility */
+    --contrast-border-width: 2px;
+    --contrast-border-color: currentColor;
+    --contrast-outline-width: 3px;
+    --contrast-outline-color: var(--focus-ring-color-contrast);
+    
+    /* ===== REDUCED MOTION TOKENS ===== */
+    /* Animation preferences */
+    --motion-duration-none: 0ms;
+    --motion-duration-reduced: 50ms;
+    --motion-scale-none: 1;
+    --motion-translate-none: 0;
+    
+    /* ===== TOUCH TARGET TOKENS ===== */
+    /* Minimum touch target sizes */
+    --touch-target-min: 44px;
+    --touch-target-comfortable: 48px;
+    --touch-target-large: 56px;
+    
+    /* ===== COLOR CONTRAST TOKENS ===== */
+    /* WCAG AA compliant color combinations */
+    --contrast-aa-normal: 4.5; /* 4.5:1 for normal text */
+    --contrast-aa-large: 3; /* 3:1 for large text */
+    --contrast-aaa-normal: 7; /* 7:1 for AAA normal text */
+    --contrast-aaa-large: 4.5; /* 4.5:1 for AAA large text */
+    
+    /* High contrast color pairs */
+    --text-on-light: var(--neutral-900); /* 16.94:1 contrast ratio */
+    --text-on-dark: var(--neutral-white); /* 21:1 contrast ratio */
+    --text-on-primary: var(--deep-teal); /* 8.2:1 contrast ratio on gold */
+    --text-on-secondary: var(--neutral-white); /* 12.6:1 contrast ratio on teal */
+    
+    /* ===== SEMANTIC ACCESSIBILITY TOKENS ===== */
+    /* Status and state indicators */
+    --status-error-text: #991b1b; /* Dark red for error text */
+    --status-warning-text: #92400e; /* Dark amber for warning text */
+    --status-success-text: #065f46; /* Dark green for success text */
+    --status-info-text: #1e40af; /* Dark blue for info text */
+    
+    /* Required field indicators */
+    --required-indicator-color: var(--status-error-text);
+    --required-indicator-symbol: '*';
+    
+    /* ===== KEYBOARD NAVIGATION TOKENS ===== */
+    /* Tab order and navigation */
+    --tab-index-skip: -1;
+    --tab-index-normal: 0;
+    --tab-index-priority: 1;
+    
+    /* Navigation timing */
+    --nav-transition-duration: var(--duration-fast);
+    --nav-focus-delay: 100ms;
+  }
+  
+  /* ===== DARK THEME ACCESSIBILITY ADJUSTMENTS ===== */
+  [data-theme='dark'] {
+    /* Adjust focus ring for dark theme */
+    --focus-ring-color: var(--lumina-gold);
+    --focus-ring-color-contrast: #66b3ff; /* Lighter blue for dark backgrounds */
+    
+    /* Skip link adjustments */
+    --skip-link-background: var(--lumina-gold);
+    --skip-link-foreground: var(--deep-teal);
+    
+    /* High contrast adjustments */
+    --contrast-outline-color: var(--focus-ring-color-contrast);
+    
+    /* Status colors for dark theme */
+    --status-error-text: #fca5a5; /* Light red for dark backgrounds */
+    --status-warning-text: #fcd34d; /* Light amber for dark backgrounds */
+    --status-success-text: #6ee7b7; /* Light green for dark backgrounds */
+    --status-info-text: #93c5fd; /* Light blue for dark backgrounds */
+  }
+}
+
+/* ===== ACCESSIBILITY UTILITY CLASSES ===== */
+@layer utilities {
+  /* Screen reader only content */
+  .sr-only {
+    position: var(--sr-only-position) !important;
+    width: var(--sr-only-width) !important;
+    height: var(--sr-only-height) !important;
+    padding: var(--sr-only-padding) !important;
+    margin: var(--sr-only-margin) !important;
+    overflow: var(--sr-only-overflow) !important;
+    clip: var(--sr-only-clip) !important;
+    white-space: var(--sr-only-white-space) !important;
+    border: var(--sr-only-border) !important;
+  }
+  
+  /* Screen reader only content that becomes visible on focus */
+  .sr-only-focusable:focus,
+  .sr-only-focusable:active {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: var(--skip-link-padding) !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    border: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+    border-radius: var(--skip-link-border-radius) !important;
+    background: var(--skip-link-background) !important;
+    color: var(--skip-link-foreground) !important;
+    font-weight: var(--skip-link-font-weight) !important;
+    z-index: var(--skip-link-z-index) !important;
+  }
+  
+  /* Skip links */
+  .skip-link {
+    position: absolute !important;
+    top: -40px !important;
+    left: 6px !important;
+    background: var(--skip-link-background) !important;
+    color: var(--skip-link-foreground) !important;
+    padding: var(--skip-link-padding) !important;
+    border-radius: var(--skip-link-border-radius) !important;
+    font-weight: var(--skip-link-font-weight) !important;
+    text-decoration: none !important;
+    z-index: var(--skip-link-z-index) !important;
+    transition: top var(--duration-fast) var(--easing-lumina) !important;
+  }
+  
+  .skip-link:focus {
+    top: 6px !important;
+    outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+  
+  /* Focus management */
+  .focus-visible-only:focus {
+    outline: none !important;
+  }
+  
+  .focus-visible-only:focus-visible {
+    outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+  
+  /* Enhanced focus styles */
+  .focus-ring {
+    outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+  
+  .focus-ring-thin {
+    outline: var(--focus-ring-thin) var(--focus-ring-style) var(--focus-ring-color) !important;
+    outline-offset: var(--focus-ring-offset-tight) !important;
+  }
+  
+  .focus-ring-thick {
+    outline: var(--focus-ring-thick) var(--focus-ring-style) var(--focus-ring-color) !important;
+    outline-offset: var(--focus-ring-offset-loose) !important;
+  }
+  
+  .focus-ring-contrast {
+    outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color-contrast) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+  
+  /* Touch targets */
+  .touch-target {
+    min-height: var(--touch-target-min) !important;
+    min-width: var(--touch-target-min) !important;
+  }
+  
+  .touch-target-comfortable {
+    min-height: var(--touch-target-comfortable) !important;
+    min-width: var(--touch-target-comfortable) !important;
+  }
+  
+  .touch-target-large {
+    min-height: var(--touch-target-large) !important;
+    min-width: var(--touch-target-large) !important;
+  }
+  
+  /* Keyboard navigation helpers */
+  .keyboard-focusable {
+    cursor: pointer !important;
+  }
+  
+  .keyboard-focusable:focus-visible {
+    outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+  
+  /* Tab index utilities */
+  .tab-skip {
+    tab-index: var(--tab-index-skip) !important;
+  }
+  
+  .tab-normal {
+    tab-index: var(--tab-index-normal) !important;
+  }
+  
+  .tab-priority {
+    tab-index: var(--tab-index-priority) !important;
+  }
+  
+  /* Required field indicators */
+  .required::after {
+    content: var(--required-indicator-symbol) !important;
+    color: var(--required-indicator-color) !important;
+    margin-left: 0.25rem !important;
+    font-weight: bold !important;
+  }
+  
+  /* Status text colors for accessibility */
+  .text-error-accessible {
+    color: var(--status-error-text) !important;
+  }
+  
+  .text-warning-accessible {
+    color: var(--status-warning-text) !important;
+  }
+  
+  .text-success-accessible {
+    color: var(--status-success-text) !important;
+  }
+  
+  .text-info-accessible {
+    color: var(--status-info-text) !important;
+  }
+}
+
+/* ===== MEDIA QUERY ACCESSIBILITY ENHANCEMENTS ===== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --focus-ring-width: var(--contrast-outline-width);
+    --focus-ring-color: var(--contrast-outline-color);
+    --contrast-border-width: 3px;
+  }
+  
+  .focus-ring,
+  .focus-visible-only:focus-visible,
+  .keyboard-focusable:focus-visible {
+    outline: var(--contrast-outline-width) var(--focus-ring-style) var(--contrast-outline-color) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+  
+  /* Enhanced borders for better definition */
+  .contrast-more\:border-2 {
+    border-width: var(--contrast-border-width) !important;
+  }
+  
+  .contrast-more\:border-4 {
+    border-width: 4px !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce\:transition-none {
+    transition: none !important;
+  }
+  
+  .motion-reduce\:animate-none {
+    animation: none !important;
+  }
+  
+  .motion-reduce\:hover\:scale-100:hover {
+    transform: scale(var(--motion-scale-none)) !important;
+  }
+  
+  .motion-reduce\:active\:scale-100:active {
+    transform: scale(var(--motion-scale-none)) !important;
+  }
+  
+  .motion-reduce\:transform-none {
+    transform: none !important;
+  }
+}
+
+/* Focus-within support for container focus management */
+.focus-within\:ring-2:focus-within {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+  outline-offset: var(--focus-ring-offset) !important;
+}
+
+/* ===== COMPONENT-SPECIFIC ACCESSIBILITY STYLES ===== */
+
+/* Button accessibility enhancements */
+button:focus-visible,
+[role="button"]:focus-visible,
+.btn:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+  outline-offset: var(--focus-ring-offset) !important;
+}
+
+/* Link accessibility enhancements */
+a:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+  outline-offset: var(--focus-ring-offset) !important;
+  text-decoration: underline !important;
+}
+
+/* Form element accessibility enhancements */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+  outline-offset: var(--focus-ring-offset-tight) !important;
+}
+
+/* Card and interactive element accessibility */
+[tabindex]:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible {
+  outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color) !important;
+  outline-offset: var(--focus-ring-offset) !important;
+}
+
+/* Ensure minimum touch targets on mobile */
+@media (max-width: 768px) {
+  button,
+  [role="button"],
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: var(--touch-target-min) !important;
+    min-width: var(--touch-target-min) !important;
+  }
+}
