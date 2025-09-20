@@ -452,6 +452,124 @@ Each decision follows this structure:
 
 ---
 
+## ADR-021: Comprehensive Design System Implementation Strategy
+
+**Date**: September 19, 2025  
+**Status**: Accepted  
+**Context**: Application had widespread design inconsistencies across components, pages, and user experience patterns. Individual component fixes were proving insufficient to address systemic issues.
+
+**Decision**: Implement comprehensive design system overhaul with 15 major task areas covering design tokens, components, accessibility, performance, testing, and documentation in single coordinated implementation.
+
+**Rationale**:
+
+- Systematic approach addresses root causes rather than symptoms
+- Comprehensive implementation ensures consistency and prevents regression
+- Coordinated approach eliminates integration issues between components
+- Establishes scalable foundation for future development
+- Addresses accessibility, performance, and user experience holistically
+- Creates single source of truth for all design decisions
+
+**Alternatives Considered**:
+
+1. **Incremental component-by-component fixes**: Fix styling issues individually as they arise
+   - Rejected: Doesn't address root cause, leads to inconsistent implementations and maintenance overhead
+2. **Third-party design system adoption**: Use existing design system like Chakra UI or Mantine
+   - Rejected: Doesn't match Lumina brand requirements, creates vendor dependency, limits customization
+3. **Minimal styling approach**: Use basic Tailwind classes without systematic approach
+   - Rejected: Leads to inconsistency, poor accessibility compliance, and maintenance issues
+
+**Impact**:
+
+- Complete transformation of application design consistency and user experience
+- Establishment of enterprise-level design system foundation
+- Comprehensive accessibility support throughout application
+- Performance-optimized user interface with smooth interactions
+- Scalable foundation for continued development and team growth
+- Professional-grade documentation and testing infrastructure
+
+**Related Issues**: [LUM-93](https://linear.app/scootr-ca/issue/LUM-93) - Comprehensive Design System Review & Consistency Implementation
+
+---
+
+## ADR-022: Design Token Foundation as Core Architecture
+
+**Date**: September 19, 2025  
+**Status**: Accepted  
+**Context**: Application had hardcoded colors, inconsistent spacing, and no systematic approach to design values, making theme switching and consistency maintenance impossible.
+
+**Decision**: Implement comprehensive CSS custom properties system with semantic tokens for colors, typography, spacing, shadows, borders, and animations as foundation for entire design system.
+
+**Rationale**:
+
+- Provides single source of truth for all design values across application
+- Enables theme switching without component-level changes
+- Ensures consistency across all components and pages automatically
+- Facilitates maintenance and future design updates
+- Supports accessibility requirements with semantic color tokens
+- Creates scalable foundation for design system evolution
+
+**Alternatives Considered**:
+
+1. **Hardcoded values in components**: Continue using direct color and spacing values
+   - Rejected: Maintenance complexity, inconsistency, impossible theme switching
+2. **Tailwind-only approach**: Rely solely on Tailwind utility classes
+   - Rejected: Limited theme switching capabilities, no semantic meaning, harder maintenance
+3. **SCSS variables**: Use preprocessor variables for design tokens
+   - Rejected: Less flexible than CSS custom properties, no runtime theme switching
+
+**Impact**:
+
+- Scalable design system foundation with comprehensive token system
+- Theme switching capabilities throughout application
+- Automatic consistency across all components and pages
+- Simplified maintenance and design updates
+- Foundation for accessibility compliance with semantic tokens
+- Performance-optimized CSS delivery with minimal runtime overhead
+
+**Related Issues**: [LUM-93](https://linear.app/scootr-ca/issue/LUM-93) - Comprehensive Design System Review & Consistency Implementation
+
+---
+
+## ADR-023: Accessibility-First Implementation Approach
+
+**Date**: September 19, 2025  
+**Status**: Accepted  
+**Context**: Application had significant accessibility gaps including missing ARIA attributes, poor keyboard navigation, insufficient color contrast, and lack of screen reader support.
+
+**Decision**: Implement accessibility features as core requirements rather than afterthoughts, including comprehensive WCAG AA compliance, keyboard navigation, screen reader support, and ARIA attributes throughout all components.
+
+**Rationale**:
+
+- Ensures inclusive user experience for all users including those with disabilities
+- Meets legal compliance requirements and reduces liability
+- Improves overall usability and user experience for all users
+- Establishes accessibility as fundamental design principle
+- Creates competitive advantage through superior accessibility
+- Reduces future remediation costs by building accessibility from ground up
+
+**Alternatives Considered**:
+
+1. **Accessibility as add-on**: Implement accessibility features after core functionality
+   - Rejected: Poor integration, compliance gaps, higher remediation costs, inferior user experience
+2. **Basic compliance only**: Meet minimum legal requirements
+   - Rejected: Limited user experience benefits, doesn't establish accessibility culture
+3. **Third-party accessibility tools**: Rely on external tools for accessibility
+   - Rejected: Doesn't address fundamental design issues, creates dependency, limited customization
+
+**Impact**:
+
+- Comprehensive accessibility support throughout application
+- WCAG 2.1 AA compliance across all components and pages
+- Superior user experience for users with disabilities
+- Competitive advantage through accessibility excellence
+- Reduced legal liability and compliance risk
+- Foundation for accessibility culture and best practices
+- Improved usability for all users through better design patterns
+
+**Related Issues**: [LUM-93](https://linear.app/scootr-ca/issue/LUM-93) - Comprehensive Design System Review & Consistency Implementation
+
+---
+
 ## Decision Template
 
 Use this template for new architectural decisions:
