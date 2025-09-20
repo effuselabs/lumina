@@ -1,143 +1,185 @@
 /* Lumina Design System - Typography Tokens */
 /* Version 2.1 - Comprehensive typography scale and hierarchy */
 
-@layer tokens {
+:root {
+  /* ===== FONT FAMILY TOKENS ===== */
+  --font-family-sans:
+    'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New',
+    monospace;
+
+  /* ===== FONT SIZE SCALE ===== */
+  /* Consistent scale based on 1.125 ratio (major second) */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
+  --font-size-6xl: 3.75rem; /* 60px */
+  --font-size-7xl: 4.5rem; /* 72px */
+  --font-size-8xl: 6rem; /* 96px */
+  --font-size-9xl: 8rem; /* 128px */
+
+  /* ===== FONT WEIGHT TOKENS ===== */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* ===== LINE HEIGHT TOKENS ===== */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* ===== LETTER SPACING TOKENS ===== */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  /* ===== LUMINA TYPOGRAPHY HIERARCHY ===== */
+  /* Display typography for hero sections and major headings */
+  --typography-display-2xl: var(--font-weight-bold) var(--font-size-6xl) /
+    var(--line-height-none) var(--font-family-sans);
+  --typography-display-xl: var(--font-weight-bold) var(--font-size-5xl) /
+    var(--line-height-tight) var(--font-family-sans);
+  --typography-display-lg: var(--font-weight-bold) var(--font-size-4xl) /
+    var(--line-height-tight) var(--font-family-sans);
+  --typography-display-md: var(--font-weight-bold) var(--font-size-3xl) /
+    var(--line-height-tight) var(--font-family-sans);
+  --typography-display-sm: var(--font-weight-bold) var(--font-size-2xl) /
+    var(--line-height-tight) var(--font-family-sans);
+
+  /* Heading typography for page sections and components */
+  --typography-heading-1: var(--font-weight-bold) var(--font-size-2xl) /
+    var(--line-height-tight) var(--font-family-sans);
+  --typography-heading-2: var(--font-weight-semibold) var(--font-size-xl) /
+    var(--line-height-tight) var(--font-family-sans);
+  --typography-heading-3: var(--font-weight-semibold) var(--font-size-lg) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-heading-4: var(--font-weight-semibold) var(--font-size-base) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-heading-5: var(--font-weight-medium) var(--font-size-sm) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-heading-6: var(--font-weight-medium) var(--font-size-xs) /
+    var(--line-height-snug) var(--font-family-sans);
+
+  /* Body typography for content and interface text */
+  --typography-body-xl: var(--font-weight-normal) var(--font-size-lg) /
+    var(--line-height-relaxed) var(--font-family-sans);
+  --typography-body-lg: var(--font-weight-normal) var(--font-size-base) /
+    var(--line-height-normal) var(--font-family-sans);
+  --typography-body-md: var(--font-weight-normal) var(--font-size-sm) /
+    var(--line-height-normal) var(--font-family-sans);
+  --typography-body-sm: var(--font-weight-normal) var(--font-size-xs) /
+    var(--line-height-normal) var(--font-family-sans);
+
+  /* Label typography for form labels and UI elements */
+  --typography-label-lg: var(--font-weight-medium) var(--font-size-base) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-label-md: var(--font-weight-medium) var(--font-size-sm) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-label-sm: var(--font-weight-medium) var(--font-size-xs) /
+    var(--line-height-snug) var(--font-family-sans);
+
+  /* Caption typography for secondary information */
+  --typography-caption-lg: var(--font-weight-medium) var(--font-size-sm) /
+    var(--line-height-normal) var(--font-family-sans);
+  --typography-caption-md: var(--font-weight-medium) var(--font-size-xs) /
+    var(--line-height-normal) var(--font-family-sans);
+
+  /* Code typography for monospace content */
+  --typography-code-lg: var(--font-weight-normal) var(--font-size-base) /
+    var(--line-height-normal) var(--font-family-mono);
+  --typography-code-md: var(--font-weight-normal) var(--font-size-sm) /
+    var(--line-height-normal) var(--font-family-mono);
+  --typography-code-sm: var(--font-weight-normal) var(--font-size-xs) /
+    var(--line-height-normal) var(--font-family-mono);
+
+  /* ===== DASHBOARD-SPECIFIC TYPOGRAPHY ===== */
+  /* Metric display typography */
+  --typography-metric-value: var(--font-weight-bold) var(--font-size-4xl) /
+    var(--line-height-none) var(--font-family-sans);
+  --typography-metric-label: var(--font-weight-medium) var(--font-size-sm) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-metric-change: var(--font-weight-medium) var(--font-size-sm) /
+    var(--line-height-snug) var(--font-family-sans);
+
+  /* Navigation typography */
+  --typography-nav-item: var(--font-weight-medium) var(--font-size-sm) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-nav-section: var(--font-weight-semibold) var(--font-size-xs) /
+    var(--line-height-snug) var(--font-family-sans);
+
+  /* Button typography */
+  --typography-button-lg: var(--font-weight-semibold) var(--font-size-base) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-button-md: var(--font-weight-semibold) var(--font-size-sm) /
+    var(--line-height-snug) var(--font-family-sans);
+  --typography-button-sm: var(--font-weight-medium) var(--font-size-xs) /
+    var(--line-height-snug) var(--font-family-sans);
+
+  /* ===== TYPOGRAPHY UTILITIES ===== */
+  /* Letter spacing for specific contexts */
+  --typography-uppercase-spacing: var(--letter-spacing-wide);
+  --typography-number-spacing: var(--letter-spacing-tight);
+  --typography-brand-spacing: var(--letter-spacing-tight);
+
+  /* Text decoration tokens */
+  --text-decoration-none: none;
+  --text-decoration-underline: underline;
+  --text-decoration-line-through: line-through;
+
+  /* Text transform tokens */
+  --text-transform-none: none;
+  --text-transform-uppercase: uppercase;
+  --text-transform-lowercase: lowercase;
+  --text-transform-capitalize: capitalize;
+}
+
+/* ===== RESPONSIVE TYPOGRAPHY ADJUSTMENTS ===== */
+/* Tablet adjustments */
+@media (max-width: 768px) {
   :root {
-    /* ===== FONT FAMILY TOKENS ===== */
-    --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-    
-    /* ===== FONT SIZE SCALE ===== */
-    /* Consistent scale based on 1.125 ratio (major second) */
-    --font-size-xs: 0.75rem;    /* 12px */
-    --font-size-sm: 0.875rem;   /* 14px */
-    --font-size-base: 1rem;     /* 16px */
-    --font-size-lg: 1.125rem;   /* 18px */
-    --font-size-xl: 1.25rem;    /* 20px */
-    --font-size-2xl: 1.5rem;    /* 24px */
-    --font-size-3xl: 1.875rem;  /* 30px */
-    --font-size-4xl: 2.25rem;   /* 36px */
-    --font-size-5xl: 3rem;      /* 48px */
-    --font-size-6xl: 3.75rem;   /* 60px */
-    --font-size-7xl: 4.5rem;    /* 72px */
-    --font-size-8xl: 6rem;      /* 96px */
-    --font-size-9xl: 8rem;      /* 128px */
-    
-    /* ===== FONT WEIGHT TOKENS ===== */
-    --font-weight-thin: 100;
-    --font-weight-extralight: 200;
-    --font-weight-light: 300;
-    --font-weight-normal: 400;
-    --font-weight-medium: 500;
-    --font-weight-semibold: 600;
-    --font-weight-bold: 700;
-    --font-weight-extrabold: 800;
-    --font-weight-black: 900;
-    
-    /* ===== LINE HEIGHT TOKENS ===== */
-    --line-height-none: 1;
-    --line-height-tight: 1.25;
-    --line-height-snug: 1.375;
-    --line-height-normal: 1.5;
-    --line-height-relaxed: 1.625;
-    --line-height-loose: 2;
-    
-    /* ===== LETTER SPACING TOKENS ===== */
-    --letter-spacing-tighter: -0.05em;
-    --letter-spacing-tight: -0.025em;
-    --letter-spacing-normal: 0em;
-    --letter-spacing-wide: 0.025em;
-    --letter-spacing-wider: 0.05em;
-    --letter-spacing-widest: 0.1em;
-    
-    /* ===== LUMINA TYPOGRAPHY HIERARCHY ===== */
-    /* Display typography for hero sections and major headings */
-    --typography-display-2xl: var(--font-weight-bold) var(--font-size-6xl)/var(--line-height-none) var(--font-family-sans);
-    --typography-display-xl: var(--font-weight-bold) var(--font-size-5xl)/var(--line-height-tight) var(--font-family-sans);
-    --typography-display-lg: var(--font-weight-bold) var(--font-size-4xl)/var(--line-height-tight) var(--font-family-sans);
-    --typography-display-md: var(--font-weight-bold) var(--font-size-3xl)/var(--line-height-tight) var(--font-family-sans);
-    --typography-display-sm: var(--font-weight-bold) var(--font-size-2xl)/var(--line-height-tight) var(--font-family-sans);
-    
-    /* Heading typography for page sections and components */
-    --typography-heading-1: var(--font-weight-bold) var(--font-size-2xl)/var(--line-height-tight) var(--font-family-sans);
-    --typography-heading-2: var(--font-weight-semibold) var(--font-size-xl)/var(--line-height-tight) var(--font-family-sans);
-    --typography-heading-3: var(--font-weight-semibold) var(--font-size-lg)/var(--line-height-snug) var(--font-family-sans);
-    --typography-heading-4: var(--font-weight-semibold) var(--font-size-base)/var(--line-height-snug) var(--font-family-sans);
-    --typography-heading-5: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-snug) var(--font-family-sans);
-    --typography-heading-6: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-snug) var(--font-family-sans);
-    
-    /* Body typography for content and interface text */
-    --typography-body-xl: var(--font-weight-normal) var(--font-size-lg)/var(--line-height-relaxed) var(--font-family-sans);
-    --typography-body-lg: var(--font-weight-normal) var(--font-size-base)/var(--line-height-normal) var(--font-family-sans);
-    --typography-body-md: var(--font-weight-normal) var(--font-size-sm)/var(--line-height-normal) var(--font-family-sans);
-    --typography-body-sm: var(--font-weight-normal) var(--font-size-xs)/var(--line-height-normal) var(--font-family-sans);
-    
-    /* Label typography for form labels and UI elements */
-    --typography-label-lg: var(--font-weight-medium) var(--font-size-base)/var(--line-height-snug) var(--font-family-sans);
-    --typography-label-md: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-snug) var(--font-family-sans);
-    --typography-label-sm: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-snug) var(--font-family-sans);
-    
-    /* Caption typography for secondary information */
-    --typography-caption-lg: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-normal) var(--font-family-sans);
-    --typography-caption-md: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-normal) var(--font-family-sans);
-    
-    /* Code typography for monospace content */
-    --typography-code-lg: var(--font-weight-normal) var(--font-size-base)/var(--line-height-normal) var(--font-family-mono);
-    --typography-code-md: var(--font-weight-normal) var(--font-size-sm)/var(--line-height-normal) var(--font-family-mono);
-    --typography-code-sm: var(--font-weight-normal) var(--font-size-xs)/var(--line-height-normal) var(--font-family-mono);
-    
-    /* ===== DASHBOARD-SPECIFIC TYPOGRAPHY ===== */
-    /* Metric display typography */
-    --typography-metric-value: var(--font-weight-bold) var(--font-size-4xl)/var(--line-height-none) var(--font-family-sans);
-    --typography-metric-label: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-snug) var(--font-family-sans);
-    --typography-metric-change: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-snug) var(--font-family-sans);
-    
-    /* Navigation typography */
-    --typography-nav-item: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-snug) var(--font-family-sans);
-    --typography-nav-section: var(--font-weight-semibold) var(--font-size-xs)/var(--line-height-snug) var(--font-family-sans);
-    
-    /* Button typography */
-    --typography-button-lg: var(--font-weight-semibold) var(--font-size-base)/var(--line-height-snug) var(--font-family-sans);
-    --typography-button-md: var(--font-weight-semibold) var(--font-size-sm)/var(--line-height-snug) var(--font-family-sans);
-    --typography-button-sm: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-snug) var(--font-family-sans);
-    
-    /* ===== TYPOGRAPHY UTILITIES ===== */
-    /* Letter spacing for specific contexts */
-    --typography-uppercase-spacing: var(--letter-spacing-wide);
-    --typography-number-spacing: var(--letter-spacing-tight);
-    --typography-brand-spacing: var(--letter-spacing-tight);
-    
-    /* Text decoration tokens */
-    --text-decoration-none: none;
-    --text-decoration-underline: underline;
-    --text-decoration-line-through: line-through;
-    
-    /* Text transform tokens */
-    --text-transform-none: none;
-    --text-transform-uppercase: uppercase;
-    --text-transform-lowercase: lowercase;
-    --text-transform-capitalize: capitalize;
+    --typography-display-2xl: var(--font-weight-bold) var(--font-size-5xl) /
+      var(--line-height-tight) var(--font-family-sans);
+    --typography-display-xl: var(--font-weight-bold) var(--font-size-4xl) /
+      var(--line-height-tight) var(--font-family-sans);
+    --typography-display-lg: var(--font-weight-bold) var(--font-size-3xl) /
+      var(--line-height-tight) var(--font-family-sans);
+    --typography-display-md: var(--font-weight-bold) var(--font-size-2xl) /
+      var(--line-height-tight) var(--font-family-sans);
+    --typography-metric-value: var(--font-weight-bold) var(--font-size-3xl) /
+      var(--line-height-none) var(--font-family-sans);
   }
-  
-  /* ===== RESPONSIVE TYPOGRAPHY ADJUSTMENTS ===== */
-  /* Tablet adjustments */
-  @media (max-width: 768px) {
-    :root {
-      --typography-display-2xl: var(--font-weight-bold) var(--font-size-5xl)/var(--line-height-tight) var(--font-family-sans);
-      --typography-display-xl: var(--font-weight-bold) var(--font-size-4xl)/var(--line-height-tight) var(--font-family-sans);
-      --typography-display-lg: var(--font-weight-bold) var(--font-size-3xl)/var(--line-height-tight) var(--font-family-sans);
-      --typography-display-md: var(--font-weight-bold) var(--font-size-2xl)/var(--line-height-tight) var(--font-family-sans);
-      --typography-metric-value: var(--font-weight-bold) var(--font-size-3xl)/var(--line-height-none) var(--font-family-sans);
-    }
-  }
-  
-  /* Mobile adjustments */
-  @media (max-width: 480px) {
-    :root {
-      --typography-display-2xl: var(--font-weight-bold) var(--font-size-4xl)/var(--line-height-tight) var(--font-family-sans);
-      --typography-display-xl: var(--font-weight-bold) var(--font-size-3xl)/var(--line-height-tight) var(--font-family-sans);
-      --typography-display-lg: var(--font-weight-bold) var(--font-size-2xl)/var(--line-height-tight) var(--font-family-sans);
-      --typography-metric-value: var(--font-weight-bold) var(--font-size-2xl)/var(--line-height-none) var(--font-family-sans);
-    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  :root {
+    --typography-display-2xl: var(--font-weight-bold) var(--font-size-4xl) /
+      var(--line-height-tight) var(--font-family-sans);
+    --typography-display-xl: var(--font-weight-bold) var(--font-size-3xl) /
+      var(--line-height-tight) var(--font-family-sans);
+    --typography-display-lg: var(--font-weight-bold) var(--font-size-2xl) /
+      var(--line-height-tight) var(--font-family-sans);
+    --typography-metric-value: var(--font-weight-bold) var(--font-size-2xl) /
+      var(--line-height-none) var(--font-family-sans);
   }
 }

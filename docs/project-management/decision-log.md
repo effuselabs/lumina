@@ -570,6 +570,119 @@ Each decision follows this structure:
 
 ---
 
+## ADR-024: Design System Critical Issues Specification
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: User reported critical design system rendering issues on localhost:3000/design-system page with buttons not showing, components not rendering correctly, indicating fundamental CSS architecture problems affecting the entire application's visual consistency.
+
+**Decision**: Create comprehensive design system audit and fix specification addressing CSS architecture, component implementation, framework integration, and brand consistency issues.
+
+**Rationale**:
+
+- Systematic approach addresses root causes of rendering issues rather than symptoms
+- Framework best practices integration prevents future conflicts between Next.js, Tailwind, and Radix UI
+- Preserves existing dark/light theming foundation while fixing critical issues
+- Maintains Lumina brand identity and Creator archetype while solving technical problems
+- Comprehensive specification ensures all related issues are addressed together
+
+**Alternatives Considered**:
+
+1. **Quick component fixes**: Fix individual components as issues are discovered
+   - Rejected: Doesn't address underlying CSS architecture problems causing widespread issues
+2. **Complete design system replacement**: Start over with new design system
+   - Rejected: Would lose existing work and established brand identity
+3. **Minimal fixes only**: Address only the most critical rendering issues
+   - Rejected: Leaves underlying problems that will cause future issues
+
+**Impact**:
+
+- Comprehensive solution to design system rendering and styling issues
+- Framework best practices integration prevents future conflicts
+- Maintains and enhances existing Lumina brand identity
+- Preserves dark/light theming foundation while fixing critical problems
+- Establishes world-class design system matching professional SaaS standards
+- Provides foundation for scalable design system maintenance
+
+**Related Issues**: Design system rendering issues reported by user
+
+---
+
+## ADR-025: Framework Best Practices Integration Strategy
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: Design system issues were caused by conflicts between Next.js SSR, Tailwind CSS configuration, and Radix UI component integration, requiring systematic framework compatibility approach.
+
+**Decision**: Implement framework best practices integration using proper Tailwind extend configuration, Next.js SSR-compatible styling, and correct Radix UI composition patterns.
+
+**Rationale**:
+
+- Prevents conflicts between framework components and ensures long-term maintainability
+- Proper Tailwind extend configuration prevents CSS specificity issues
+- Next.js SSR compatibility ensures consistent rendering across server and client
+- Radix UI composition patterns maintain accessibility while enabling custom styling
+- Framework best practices reduce technical debt and improve developer experience
+
+**Alternatives Considered**:
+
+1. **Override framework defaults**: Force custom styling over framework patterns
+   - Rejected: Creates conflicts, maintenance issues, and breaks framework assumptions
+2. **Minimal framework integration**: Use frameworks without following best practices
+   - Rejected: Leads to conflicts, poor performance, and maintenance problems
+3. **Single framework approach**: Avoid framework integration complexity
+   - Rejected: Loses benefits of modern React ecosystem and component libraries
+
+**Impact**:
+
+- Eliminates conflicts between Next.js, Tailwind CSS, and Radix UI
+- Ensures long-term maintainability and framework compatibility
+- Improves performance through proper framework optimization
+- Reduces technical debt and development complexity
+- Provides foundation for scalable component architecture
+
+**Related Issues**: Design system rendering issues and framework conflicts
+
+---
+
+## ADR-026: Complementary Color Palette Enhancement
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: Existing Lumina brand colors (Gold #FFD25A, Coral #FF7A5A, Deep Teal #0B2B33) needed complementary colors to provide sufficient variety while maintaining brand consistency and professional appearance.
+
+**Decision**: Add complementary color palette including Sage Green (#87A96B), Warm Gray (#8B8680), Lavender Mist (#C8B5D1), and Cream (#F7F5F0) to enhance the existing Lumina brand colors.
+
+**Rationale**:
+
+- Provides additional color options while maintaining brand harmony
+- Sage Green complements warm gold/coral palette with natural balance
+- Warm Gray offers sophisticated neutral for enhanced typography hierarchy
+- Lavender Mist enhances existing Clarity Blue palette
+- Cream provides warmer alternative to pure white for backgrounds
+- All colors work harmoniously in both light and dark themes
+
+**Alternatives Considered**:
+
+1. **Stick with existing colors only**: Use only current Lumina brand colors
+   - Rejected: Insufficient variety for complex UI needs and professional appearance
+2. **Add high-contrast colors**: Include bright, contrasting colors
+   - Rejected: Would conflict with sophisticated brand identity and professional appearance
+3. **Use generic color palette**: Add standard UI colors without brand consideration
+   - Rejected: Would dilute brand identity and visual consistency
+
+**Impact**:
+
+- Enhanced design flexibility while maintaining brand consistency
+- Improved visual hierarchy and user interface sophistication
+- Better support for complex UI patterns and information architecture
+- Maintains professional appearance expected for world-class SaaS platform
+- Provides foundation for scalable color system evolution
+
+**Related Issues**: Design system enhancement and brand consistency requirements
+
+---
+
 ## Decision Template
 
 Use this template for new architectural decisions:

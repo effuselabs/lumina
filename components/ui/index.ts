@@ -7,6 +7,9 @@
 export { Button, buttonVariants } from './button';
 export type { ButtonProps } from './button';
 
+// Performance monitoring variant (client-side only)
+export { ButtonWithMonitoring } from './button-with-monitoring';
+
 export { Spinner, spinnerVariants } from './spinner';
 export type { SpinnerProps } from './spinner';
 
@@ -24,7 +27,8 @@ export const PageHeader = () => import('./page-header').then(m => m.PageHeader);
 export const Card = () => import('./card').then(m => m.Card);
 
 // Navigation Components - Lazy loaded
-export const NavigationMenu = () => import('./navigation-menu').then(m => m.NavigationMenu);
+export const NavigationMenu = () =>
+  import('./navigation-menu').then(m => m.NavigationMenu);
 export const Breadcrumb = () => import('./breadcrumb').then(m => m.Breadcrumb);
 
 // Overlay Components - Lazy loaded for better performance
@@ -45,83 +49,85 @@ export const Progress = () => import('./progress').then(m => m.Progress);
 
 // Utility function for dynamic imports with error handling
 export async function loadComponent<T>(
-    importFn: () => Promise<{ [key: string]: T }>,
-    componentName: string
+  importFn: () => Promise<{ [key: string]: T }>,
+  componentName: string
 ): Promise<T> {
-    try {
-        const module = await importFn();
-        return module[componentName];
-    } catch (error) {
-        console.error(`Failed to load component ${componentName}:`, error);
-        throw error;
-    }
+  try {
+    const moduleResult = await importFn();
+    return moduleResult[componentName];
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Failed to load component ${componentName}:`, error);
+    throw error;
+  }
 }
 
 // Bundle analysis helpers
 export const COMPONENT_SIZES = {
-    // Core components (always loaded)
-    Button: 'small', // ~2KB
-    Spinner: 'small', // ~1KB
-    StatCard: 'medium', // ~4KB
+  // Core components (always loaded)
+  Button: 'small', // ~2KB
+  Spinner: 'small', // ~1KB
+  StatCard: 'medium', // ~4KB
 
-    // Form components
-    Input: 'small', // ~2KB
-    Select: 'medium', // ~5KB
-    Textarea: 'small', // ~2KB
-    FormField: 'medium', // ~3KB
+  // Form components
+  Input: 'small', // ~2KB
+  Select: 'medium', // ~5KB
+  Textarea: 'small', // ~2KB
+  FormField: 'medium', // ~3KB
 
-    // Layout components
-    PageHeader: 'medium', // ~3KB
-    Card: 'small', // ~2KB
+  // Layout components
+  PageHeader: 'medium', // ~3KB
+  Card: 'small', // ~2KB
 
-    // Navigation components
-    NavigationMenu: 'large', // ~8KB
-    Breadcrumb: 'small', // ~2KB
+  // Navigation components
+  NavigationMenu: 'large', // ~8KB
+  Breadcrumb: 'small', // ~2KB
 
-    // Overlay components
-    Dialog: 'large', // ~10KB
-    Modal: 'large', // ~12KB
-    Tooltip: 'medium', // ~4KB
-    Popover: 'medium', // ~5KB
+  // Overlay components
+  Dialog: 'large', // ~10KB
+  Modal: 'large', // ~12KB
+  Tooltip: 'medium', // ~4KB
+  Popover: 'medium', // ~5KB
 
-    // Data display components
-    Table: 'large', // ~8KB
-    Badge: 'small', // ~1KB
-    Avatar: 'small', // ~2KB
+  // Data display components
+  Table: 'large', // ~8KB
+  Badge: 'small', // ~1KB
+  Avatar: 'small', // ~2KB
 
-    // Feedback components
-    Alert: 'medium', // ~3KB
-    Toast: 'medium', // ~4KB
-    Progress: 'small', // ~2KB
+  // Feedback components
+  Alert: 'medium', // ~3KB
+  Toast: 'medium', // ~4KB
+  Progress: 'small', // ~2KB
 } as const;
 
 // Component loading priorities
 export const LOADING_PRIORITIES = {
-    critical: ['Button', 'Spinner', 'StatCard'],
-    high: ['Input', 'FormField', 'PageHeader', 'Card'],
-    medium: ['Select', 'Textarea', 'Badge', 'Avatar', 'Alert'],
-    low: ['NavigationMenu', 'Dialog', 'Modal', 'Table', 'Toast', 'Progress'],
-    lazy: ['Tooltip', 'Popover', 'Breadcrumb'],
+  critical: ['Button', 'Spinner', 'StatCard'],
+  high: ['Input', 'FormField', 'PageHeader', 'Card'],
+  medium: ['Select', 'Textarea', 'Badge', 'Avatar', 'Alert'],
+  low: ['NavigationMenu', 'Dialog', 'Modal', 'Table', 'Toast', 'Progress'],
+  lazy: ['Tooltip', 'Popover', 'Breadcrumb'],
 } as const;
 
 // Performance recommendations
 export function getComponentLoadingRecommendations(usedComponents: string[]): {
-    preload: string[];
-    lazy: string[];
-    critical: string[];
+  preload: string[];
+  lazy: string[];
+  critical: string[];
 } {
-    const critical = usedComponents.filter(comp =>
-        LOADING_PRIORITIES.critical.includes(comp)
-    );
+  const critical = usedComponents.filter(comp =>
+    LOADING_PRIORITIES.critical.includes(comp)
+  );
 
-    const preload = usedComponents.filter(comp =>
-        LOADING_PRIORITIES.high.includes(comp)
-    );
+  const preload = usedComponents.filter(comp =>
+    LOADING_PRIORITIES.high.includes(comp)
+  );
 
-    const lazy = usedComponents.filter(comp =>
-        LOADING_PRIORITIES.low.includes(comp) ||
-        LOADING_PRIORITIES.lazy.includes(comp)
-    );
+  const lazy = usedComponents.filter(
+    comp =>
+      LOADING_PRIORITIES.low.includes(comp) ||
+      LOADING_PRIORITIES.lazy.includes(comp)
+  );
 
-    return { preload, lazy, critical };
+  return { preload, lazy, critical };
 }

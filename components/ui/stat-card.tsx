@@ -1,15 +1,33 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
-import Link from 'next/link';
-import { forwardRef } from 'react';
-import { useHoverAnimation } from '../../hooks/use-performance-animation';
 import {
-  useMemoizedValue,
-  usePerformanceMonitor,
-} from '../../lib/performance-hooks';
-import { shallowEqual } from '../../lib/performance-utils';
+  Activity as ActivityIcon,
+  BarChart3 as BarChartIcon,
+  Calendar as CalendarIcon,
+  Clock as ClockIcon,
+  DollarSign as DollarSignIcon,
+  type LucideIcon,
+  Star as StarIcon,
+  TrendingUp as TrendingUpIcon,
+  Users as UsersIcon,
+} from 'lucide-react';
+import Link from 'next/link';
+import { forwardRef, memo, useMemo } from 'react';
+
+// Icon mapping for server-client component compatibility
+const iconMap = {
+  'trending-up': TrendingUpIcon,
+  calendar: CalendarIcon,
+  users: UsersIcon,
+  'dollar-sign': DollarSignIcon,
+  clock: ClockIcon,
+  star: StarIcon,
+  'bar-chart': BarChartIcon,
+  activity: ActivityIcon,
+} as const;
+
+type IconName = keyof typeof iconMap;
 
 interface StatCardProps {
   title: string;
@@ -19,7 +37,7 @@ interface StatCardProps {
     type: 'increase' | 'decrease' | 'neutral';
     period: string;
   };
-  icon: LucideIcon;
+  icon: IconName | LucideIcon;
   action?: {
     label: string;
     href: string;
@@ -30,20 +48,20 @@ interface StatCardProps {
 }
 
 /**
- * Optimized StatCard Component
+ * StatCard Component - Lumina Design System v2.2
  *
- * Enhanced stat card with size variants and improved design:
- * - Compact variant: 20% smaller height while maintaining readability
- * - Enhanced typography hierarchy with improved contrast
- * - Subtle gradient backgrounds using Lumina brand colors
- * - Smooth hover effects and micro-interactions
- * - Loading skeleton state for data fetching
- * - Proper semantic markup for screen readers
+ * Enhanced stat card following UI standards:
+ * - Proper semantic HTML and ARIA labels
+ * - Size variants with consistent spacing
+ * - Loading skeleton states
+ * - Lumina brand color integration
+ * - Performance optimized with memoization
+ * - Keyboard accessible
  *
  * @param title - Card title (e.g., "Total Revenue")
  * @param value - Main metric value
  * @param change - Optional change indicator with percentage
- * @param icon - Lucide icon component
+ * @param icon - Icon name string or Lucide icon component
  * @param action - Optional action link
  * @param size - Card size variant: 'compact' | 'default' | 'large'
  * @param loading - Show loading skeleton state
@@ -55,7 +73,7 @@ const StatCard = memo(
       title,
       value,
       change,
-      icon: Icon,
+      icon,
       action,
       size = 'default',
       loading = false,
@@ -63,20 +81,15 @@ const StatCard = memo(
     },
     ref
   ) {
-    // Performance monitoring
-    const { trackPropsChange } = usePerformanceMonitor('StatCard');
-    trackPropsChange({ title, value, change, size, loading });
-
-    // Performance-optimized hover animation
-    const [hoverRef, hoverHandlers] = useHoverAnimation(
-      'translateY(-2px) scale(1.01)',
-      {
-        duration: 200,
+    // Resolve icon component from string or use directly if it's already a component
+    const Icon = useMemo(() => {
+      if (typeof icon === 'string') {
+        return iconMap[icon] || TrendingUpIcon; // fallback to TrendingUpIcon
       }
-    );
-
+      return icon;
+    }, [icon]);
     // Memoize expensive calculations
-    const formattedValue = useMemoizedValue(() => {
+    const formattedValue = useMemo(() => {
       if (typeof value === 'string') return value;
 
       // Format numbers based on context
@@ -125,39 +138,31 @@ const StatCard = memo(
           )}
           role="status"
           aria-label="Loading statistics"
+          aria-live="polite"
         >
           <div className="stat-card-header">
             <div className="stat-card-content">
-              <div className="stat-card-skeleton-title" />
-              <div className="stat-card-skeleton-value" />
-              <div className="stat-card-skeleton-change" />
+              <div className="stat-card-skeleton-title" aria-hidden="true" />
+              <div className="stat-card-skeleton-value" aria-hidden="true" />
+              <div className="stat-card-skeleton-change" aria-hidden="true" />
             </div>
             <div className="stat-card-icon-container">
-              <div className="stat-card-skeleton-icon" />
+              <div className="stat-card-skeleton-icon" aria-hidden="true" />
             </div>
           </div>
           {action && (
             <div className="stat-card-footer">
-              <div className="stat-card-skeleton-action" />
+              <div className="stat-card-skeleton-action" aria-hidden="true" />
             </div>
           )}
+          <span className="sr-only">Loading {title} statistics</span>
         </div>
       );
     }
 
     return (
       <article
-        ref={node => {
-          // Combine refs for both forwarded ref and hover animation
-          if (typeof ref === 'function') {
-            ref(node);
-          } else if (ref) {
-            ref.current = node;
-          }
-          if (hoverRef.current !== node) {
-            hoverRef.current = node;
-          }
-        }}
+        ref={ref}
         className={cn(
           'stat-card hover-lumina-lift-subtle transition-card',
           sizeClasses[size],
@@ -165,7 +170,6 @@ const StatCard = memo(
         )}
         role="article"
         aria-labelledby={`stat-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
-        {...hoverHandlers}
       >
         {/* Header with Icon */}
         <div className="stat-card-header">
@@ -233,28 +237,7 @@ const StatCard = memo(
         )}
       </article>
     );
-  }),
-  (prevProps, nextProps) => {
-    // Custom comparison for memoization
-    return shallowEqual(
-      {
-        title: prevProps.title,
-        value: prevProps.value,
-        change: prevProps.change,
-        size: prevProps.size,
-        loading: prevProps.loading,
-        className: prevProps.className,
-      },
-      {
-        title: nextProps.title,
-        value: nextProps.value,
-        change: nextProps.change,
-        size: nextProps.size,
-        loading: nextProps.loading,
-        className: nextProps.className,
-      }
-    );
-  }
+  })
 );
 
 StatCard.displayName = 'StatCard';

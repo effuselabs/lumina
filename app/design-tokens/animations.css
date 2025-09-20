@@ -1,535 +1,574 @@
 /* Lumina Design System - Performance-Optimized Animations */
 /* Version 2.2 - 60fps animations with reduced motion support */
 
-@layer animations {
-  /* ===== KEYFRAME ANIMATIONS ===== */
-  /* Optimized using transform and opacity for 60fps performance */
-  
-  /* Spinner animations */
-  @keyframes lumina-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+/* ===== KEYFRAME ANIMATIONS ===== */
+/* Optimized using transform and opacity for 60fps performance */
+
+/* Spinner animations */
+@keyframes lumina-spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  @keyframes lumina-spin-slow {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
   }
-  
-  /* Pulse animations */
-  @keyframes lumina-pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: scale(0.95);
-    }
+}
+
+@keyframes lumina-spin-slow {
+  from {
+    transform: rotate(0deg);
   }
-  
-  @keyframes lumina-pulse-subtle {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
+  to {
+    transform: rotate(360deg);
   }
-  
-  /* Bounce animations */
-  @keyframes lumina-bounce {
-    0%, 20%, 53%, 80%, 100% {
-      transform: translateY(0);
-    }
-    40%, 43% {
-      transform: translateY(-8px);
-    }
-    70% {
-      transform: translateY(-4px);
-    }
-    90% {
-      transform: translateY(-2px);
-    }
+}
+
+/* Pulse animations */
+@keyframes lumina-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  @keyframes lumina-bounce-subtle {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-4px);
-    }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
   }
-  
-  /* Fade animations */
-  @keyframes lumina-fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+
+@keyframes lumina-pulse-subtle {
+  0%,
+  100% {
+    opacity: 1;
   }
-  
-  @keyframes lumina-fade-out {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
+  50% {
+    opacity: 0.8;
   }
-  
-  /* Scale animations */
-  @keyframes lumina-scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+}
+
+/* Bounce animations */
+@keyframes lumina-bounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translateY(0);
   }
-  
-  @keyframes lumina-scale-out {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.9);
-    }
+  40%,
+  43% {
+    transform: translateY(-8px);
   }
-  
-  /* Slide animations */
-  @keyframes lumina-slide-in-right {
-    from {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  70% {
+    transform: translateY(-4px);
   }
-  
-  @keyframes lumina-slide-in-left {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  90% {
+    transform: translateY(-2px);
   }
-  
-  @keyframes lumina-slide-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+
+@keyframes lumina-bounce-subtle {
+  0%,
+  100% {
+    transform: translateY(0);
   }
-  
-  @keyframes lumina-slide-in-down {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  50% {
+    transform: translateY(-4px);
   }
-  
-  /* Shimmer loading animation */
-  @keyframes lumina-shimmer {
-    0% {
-      background-position: -200px 0;
-    }
-    100% {
-      background-position: calc(200px + 100%) 0;
-    }
+}
+
+/* Fade animations */
+@keyframes lumina-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
-  /* Glow animation for focus states */
-  @keyframes lumina-glow {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(255, 210, 90, 0.4);
-    }
-    50% {
-      box-shadow: 0 0 0 4px rgba(255, 210, 90, 0.2);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Wiggle animation for errors */
-  @keyframes lumina-wiggle {
-    0%, 7%, 14%, 21% {
-      transform: translateX(0);
-    }
-    3.5% {
-      transform: translateX(-2px);
-    }
-    10.5% {
-      transform: translateX(2px);
-    }
-    17.5% {
-      transform: translateX(-1px);
-    }
+}
+
+@keyframes lumina-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Progress bar animation */
-  @keyframes lumina-progress {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  
-  /* Typing indicator animation */
-  @keyframes lumina-typing {
-    0%, 60%, 100% {
-      transform: translateY(0);
-    }
-    30% {
-      transform: translateY(-10px);
-    }
+}
+
+/* Scale animations */
+@keyframes lumina-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  /* ===== ANIMATION UTILITY CLASSES ===== */
-  /* Performance-optimized animation classes */
-  
-  /* Spinner animations */
-  .animate-lumina-spin {
-    animation: lumina-spin var(--duration-slower, 500ms) var(--easing-linear, linear) infinite;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .animate-lumina-spin-slow {
-    animation: lumina-spin-slow 2s var(--easing-linear, linear) infinite;
+}
+
+@keyframes lumina-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  /* Pulse animations */
-  .animate-lumina-pulse {
-    animation: lumina-pulse 2s var(--easing-ease-in-out, ease-in-out) infinite;
+  to {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  .animate-lumina-pulse-subtle {
-    animation: lumina-pulse-subtle 3s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+/* Slide animations */
+@keyframes lumina-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
   }
-  
-  /* Bounce animations */
-  .animate-lumina-bounce {
-    animation: lumina-bounce 1s var(--easing-ease-in-out, ease-in-out) infinite;
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  
-  .animate-lumina-bounce-subtle {
-    animation: lumina-bounce-subtle 2s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+@keyframes lumina-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
   }
-  
-  /* Fade animations */
-  .animate-lumina-fade-in {
-    animation: lumina-fade-in var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  
-  .animate-lumina-fade-out {
-    animation: lumina-fade-out var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+@keyframes lumina-slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  /* Scale animations */
-  .animate-lumina-scale-in {
-    animation: lumina-scale-in var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .animate-lumina-scale-out {
-    animation: lumina-scale-out var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+@keyframes lumina-slide-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
-  
-  /* Slide animations */
-  .animate-lumina-slide-in-right {
-    animation: lumina-slide-in-right var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .animate-lumina-slide-in-left {
-    animation: lumina-slide-in-left var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+/* Shimmer loading animation */
+@keyframes lumina-shimmer {
+  0% {
+    background-position: -200px 0;
   }
-  
-  .animate-lumina-slide-in-up {
-    animation: lumina-slide-in-up var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  100% {
+    background-position: calc(200px + 100%) 0;
   }
-  
-  .animate-lumina-slide-in-down {
-    animation: lumina-slide-in-down var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+/* Glow animation for focus states */
+@keyframes lumina-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 210, 90, 0.4);
   }
-  
-  /* Shimmer loading */
-  .animate-lumina-shimmer {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200px 100%;
-    animation: lumina-shimmer 1.5s infinite;
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 210, 90, 0.2);
   }
-  
-  /* Glow animation */
-  .animate-lumina-glow {
-    animation: lumina-glow 2s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+/* Wiggle animation for errors */
+@keyframes lumina-wiggle {
+  0%,
+  7%,
+  14%,
+  21% {
+    transform: translateX(0);
   }
-  
-  /* Wiggle animation */
-  .animate-lumina-wiggle {
-    animation: lumina-wiggle 0.5s var(--easing-ease-in-out, ease-in-out);
+  3.5% {
+    transform: translateX(-2px);
   }
-  
-  /* Progress animation */
-  .animate-lumina-progress {
-    animation: lumina-progress 2s var(--easing-ease-in-out, ease-in-out) infinite;
+  10.5% {
+    transform: translateX(2px);
   }
-  
-  /* Typing indicator */
-  .animate-lumina-typing {
-    animation: lumina-typing 1.4s var(--easing-ease-in-out, ease-in-out) infinite;
+  17.5% {
+    transform: translateX(-1px);
   }
-  
-  /* ===== HOVER AND INTERACTION ANIMATIONS ===== */
-  /* Optimized hover effects using transform for 60fps */
-  
-  .hover-lumina-lift {
-    transition: var(--transition-transform);
+}
+
+/* Progress bar animation */
+@keyframes lumina-progress {
+  0% {
+    transform: translateX(-100%);
   }
-  
-  .hover-lumina-lift:hover {
-    transform: translateY(-2px) scale(1.02);
+  100% {
+    transform: translateX(100%);
   }
-  
-  .hover-lumina-lift-subtle {
-    transition: var(--transition-transform);
+}
+
+/* Typing indicator animation */
+@keyframes lumina-typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
   }
-  
-  .hover-lumina-lift-subtle:hover {
-    transform: translateY(-1px) scale(1.01);
+  30% {
+    transform: translateY(-10px);
   }
-  
-  .hover-lumina-scale {
-    transition: var(--transition-transform);
+}
+
+/* ===== ANIMATION UTILITY CLASSES ===== */
+/* Performance-optimized animation classes */
+
+/* Spinner animations */
+.animate-lumina-spin {
+  animation: lumina-spin var(--duration-slower, 500ms)
+    var(--easing-linear, linear) infinite;
+}
+
+.animate-lumina-spin-slow {
+  animation: lumina-spin-slow 2s var(--easing-linear, linear) infinite;
+}
+
+/* Pulse animations */
+.animate-lumina-pulse {
+  animation: lumina-pulse 2s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+.animate-lumina-pulse-subtle {
+  animation: lumina-pulse-subtle 3s var(--easing-ease-in-out, ease-in-out)
+    infinite;
+}
+
+/* Bounce animations */
+.animate-lumina-bounce {
+  animation: lumina-bounce 1s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+.animate-lumina-bounce-subtle {
+  animation: lumina-bounce-subtle 2s var(--easing-ease-in-out, ease-in-out)
+    infinite;
+}
+
+/* Fade animations */
+.animate-lumina-fade-in {
+  animation: lumina-fade-in var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+.animate-lumina-fade-out {
+  animation: lumina-fade-out var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+/* Scale animations */
+.animate-lumina-scale-in {
+  animation: lumina-scale-in var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+.animate-lumina-scale-out {
+  animation: lumina-scale-out var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+/* Slide animations */
+.animate-lumina-slide-in-right {
+  animation: lumina-slide-in-right var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+.animate-lumina-slide-in-left {
+  animation: lumina-slide-in-left var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+.animate-lumina-slide-in-up {
+  animation: lumina-slide-in-up var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+.animate-lumina-slide-in-down {
+  animation: lumina-slide-in-down var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+/* Shimmer loading */
+.animate-lumina-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: lumina-shimmer 1.5s infinite;
+}
+
+/* Glow animation */
+.animate-lumina-glow {
+  animation: lumina-glow 2s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+/* Wiggle animation */
+.animate-lumina-wiggle {
+  animation: lumina-wiggle 0.5s var(--easing-ease-in-out, ease-in-out);
+}
+
+/* Progress animation */
+.animate-lumina-progress {
+  animation: lumina-progress 2s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+/* Typing indicator */
+.animate-lumina-typing {
+  animation: lumina-typing 1.4s var(--easing-ease-in-out, ease-in-out) infinite;
+}
+
+/* ===== HOVER AND INTERACTION ANIMATIONS ===== */
+/* Optimized hover effects using transform for 60fps */
+
+.hover-lumina-lift {
+  transition: var(--transition-transform);
+}
+
+.hover-lumina-lift:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.hover-lumina-lift-subtle {
+  transition: var(--transition-transform);
+}
+
+.hover-lumina-lift-subtle:hover {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.hover-lumina-scale {
+  transition: var(--transition-transform);
+}
+
+.hover-lumina-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-lumina-scale-subtle {
+  transition: var(--transition-transform);
+}
+
+.hover-lumina-scale-subtle:hover {
+  transform: scale(1.02);
+}
+
+.hover-lumina-glow {
+  transition: var(--transition-shadow);
+}
+
+.hover-lumina-glow:hover {
+  box-shadow: var(--shadow-glow-md);
+}
+
+/* ===== FOCUS ANIMATIONS ===== */
+/* Accessibility-focused animations */
+
+.focus-lumina-ring {
+  transition: var(--transition-shadow);
+}
+
+.focus-lumina-ring:focus-visible {
+  box-shadow: var(--shadow-focus-visible);
+  animation: lumina-glow 0.3s ease-out;
+}
+
+.focus-lumina-scale {
+  transition: var(--transition-all);
+}
+
+.focus-lumina-scale:focus-visible {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-focus-visible);
+}
+
+/* ===== LOADING STATE ANIMATIONS ===== */
+/* Skeleton and loading animations */
+
+.loading-lumina-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  background-color: #f0f0f0;
+  animation: lumina-shimmer 2s infinite;
+}
+
+.loading-lumina-pulse {
+  animation: lumina-pulse-subtle 2s ease-in-out infinite;
+}
+
+.loading-lumina-dots::after {
+  content: '';
+  animation: lumina-typing 1.4s ease-in-out infinite;
+}
+
+/* ===== STAGGER ANIMATIONS ===== */
+/* Delayed animations for lists and grids */
+
+.stagger-lumina-fade-in {
+  animation: lumina-fade-in var(--duration-normal, 250ms)
+    var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+.stagger-lumina-fade-in:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger-lumina-fade-in:nth-child(2) {
+  animation-delay: 50ms;
+}
+.stagger-lumina-fade-in:nth-child(3) {
+  animation-delay: 100ms;
+}
+.stagger-lumina-fade-in:nth-child(4) {
+  animation-delay: 150ms;
+}
+.stagger-lumina-fade-in:nth-child(5) {
+  animation-delay: 200ms;
+}
+.stagger-lumina-fade-in:nth-child(6) {
+  animation-delay: 250ms;
+}
+.stagger-lumina-fade-in:nth-child(7) {
+  animation-delay: 300ms;
+}
+.stagger-lumina-fade-in:nth-child(8) {
+  animation-delay: 350ms;
+}
+.stagger-lumina-fade-in:nth-child(9) {
+  animation-delay: 400ms;
+}
+.stagger-lumina-fade-in:nth-child(10) {
+  animation-delay: 450ms;
+}
+
+/* ===== REDUCED MOTION SUPPORT ===== */
+/* Respect user preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all animations and transitions */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  
-  .hover-lumina-scale:hover {
-    transform: scale(1.05);
-  }
-  
-  .hover-lumina-scale-subtle {
-    transition: var(--transition-transform);
-  }
-  
-  .hover-lumina-scale-subtle:hover {
-    transform: scale(1.02);
-  }
-  
-  .hover-lumina-glow {
-    transition: var(--transition-shadow);
-  }
-  
-  .hover-lumina-glow:hover {
-    box-shadow: var(--shadow-glow-md);
-  }
-  
-  /* ===== FOCUS ANIMATIONS ===== */
-  /* Accessibility-focused animations */
-  
-  .focus-lumina-ring {
-    transition: var(--transition-shadow);
-  }
-  
-  .focus-lumina-ring:focus-visible {
-    box-shadow: var(--shadow-focus-visible);
-    animation: lumina-glow 0.3s ease-out;
-  }
-  
-  .focus-lumina-scale {
-    transition: var(--transition-all);
-  }
-  
-  .focus-lumina-scale:focus-visible {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-focus-visible);
-  }
-  
-  /* ===== LOADING STATE ANIMATIONS ===== */
-  /* Skeleton and loading animations */
-  
-  .loading-lumina-skeleton {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.2) 20%,
-      rgba(255, 255, 255, 0.5) 60%,
-      rgba(255, 255, 255, 0)
-    );
-    background-color: #f0f0f0;
-    animation: lumina-shimmer 2s infinite;
-  }
-  
-  .loading-lumina-pulse {
-    animation: lumina-pulse-subtle 2s ease-in-out infinite;
-  }
-  
-  .loading-lumina-dots::after {
-    content: '';
-    animation: lumina-typing 1.4s ease-in-out infinite;
-  }
-  
-  /* ===== STAGGER ANIMATIONS ===== */
-  /* Delayed animations for lists and grids */
-  
-  .stagger-lumina-fade-in {
-    animation: lumina-fade-in var(--duration-normal, 250ms) var(--easing-lumina, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
-  }
-  
-  .stagger-lumina-fade-in:nth-child(1) { animation-delay: 0ms; }
-  .stagger-lumina-fade-in:nth-child(2) { animation-delay: 50ms; }
-  .stagger-lumina-fade-in:nth-child(3) { animation-delay: 100ms; }
-  .stagger-lumina-fade-in:nth-child(4) { animation-delay: 150ms; }
-  .stagger-lumina-fade-in:nth-child(5) { animation-delay: 200ms; }
-  .stagger-lumina-fade-in:nth-child(6) { animation-delay: 250ms; }
-  .stagger-lumina-fade-in:nth-child(7) { animation-delay: 300ms; }
-  .stagger-lumina-fade-in:nth-child(8) { animation-delay: 350ms; }
-  .stagger-lumina-fade-in:nth-child(9) { animation-delay: 400ms; }
-  .stagger-lumina-fade-in:nth-child(10) { animation-delay: 450ms; }
-  
-  /* ===== REDUCED MOTION SUPPORT ===== */
-  /* Respect user preferences for reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    /* Disable all animations and transitions */
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-    
-    /* Keep essential loading indicators but make them static */
-    .animate-lumina-spin,
-    .animate-lumina-spin-slow {
-      animation: none;
-    }
-    
-    .animate-lumina-pulse,
-    .animate-lumina-pulse-subtle {
-      animation: none;
-      opacity: 0.8;
-    }
-    
-    /* Remove hover transforms */
-    .hover-lumina-lift:hover,
-    .hover-lumina-lift-subtle:hover,
-    .hover-lumina-scale:hover,
-    .hover-lumina-scale-subtle:hover {
-      transform: none;
-    }
-    
-    /* Keep focus indicators but remove animations */
-    .focus-lumina-ring:focus-visible,
-    .focus-lumina-scale:focus-visible {
-      animation: none;
-    }
-    
-    /* Simplify loading states */
-    .loading-lumina-skeleton {
-      animation: none;
-      background: #f0f0f0;
-    }
-    
-    .loading-lumina-pulse {
-      animation: none;
-      opacity: 0.7;
-    }
-  }
-  
-  /* ===== HIGH CONTRAST MODE SUPPORT ===== */
-  /* Enhanced animations for high contrast mode */
-  @media (prefers-contrast: high) {
-    /* Stronger focus indicators */
-    .focus-lumina-ring:focus-visible {
-      box-shadow: 0 0 0 3px rgba(255, 210, 90, 1);
-    }
-    
-    /* More pronounced hover effects */
-    .hover-lumina-glow:hover {
-      box-shadow: 0 0 0 2px rgba(255, 210, 90, 0.8);
-    }
-    
-    /* Enhanced loading states */
-    .loading-lumina-skeleton {
-      background: linear-gradient(
-        90deg,
-        #e0e0e0 0%,
-        #f0f0f0 50%,
-        #e0e0e0 100%
-      );
-    }
-  }
-  
-  /* ===== PERFORMANCE OPTIMIZATIONS ===== */
-  /* GPU acceleration and performance hints */
-  
+
+  /* Keep essential loading indicators but make them static */
   .animate-lumina-spin,
-  .animate-lumina-spin-slow,
+  .animate-lumina-spin-slow {
+    animation: none;
+  }
+
   .animate-lumina-pulse,
-  .animate-lumina-pulse-subtle,
-  .animate-lumina-bounce,
-  .animate-lumina-bounce-subtle,
-  .hover-lumina-lift,
-  .hover-lumina-lift-subtle,
-  .hover-lumina-scale,
-  .hover-lumina-scale-subtle {
-    /* Force GPU acceleration */
-    will-change: transform;
-    backface-visibility: hidden;
-    perspective: 1000px;
+  .animate-lumina-pulse-subtle {
+    animation: none;
+    opacity: 0.8;
   }
-  
-  /* Remove will-change after animation completes to free GPU memory */
-  .animate-lumina-fade-in,
-  .animate-lumina-fade-out,
-  .animate-lumina-scale-in,
-  .animate-lumina-scale-out,
-  .animate-lumina-slide-in-right,
-  .animate-lumina-slide-in-left,
-  .animate-lumina-slide-in-up,
-  .animate-lumina-slide-in-down {
-    will-change: transform, opacity;
+
+  /* Remove hover transforms */
+  .hover-lumina-lift:hover,
+  .hover-lumina-lift-subtle:hover,
+  .hover-lumina-scale:hover,
+  .hover-lumina-scale-subtle:hover {
+    transform: none;
   }
-  
-  /* Reset will-change after animations */
-  .animate-lumina-fade-in:not(:hover):not(:focus),
-  .animate-lumina-fade-out:not(:hover):not(:focus),
-  .animate-lumina-scale-in:not(:hover):not(:focus),
-  .animate-lumina-scale-out:not(:hover):not(:focus),
-  .animate-lumina-slide-in-right:not(:hover):not(:focus),
-  .animate-lumina-slide-in-left:not(:hover):not(:focus),
-  .animate-lumina-slide-in-up:not(:hover):not(:focus),
-  .animate-lumina-slide-in-down:not(:hover):not(:focus) {
-    will-change: auto;
+
+  /* Keep focus indicators but remove animations */
+  .focus-lumina-ring:focus-visible,
+  .focus-lumina-scale:focus-visible {
+    animation: none;
   }
+
+  /* Simplify loading states */
+  .loading-lumina-skeleton {
+    animation: none;
+    background: #f0f0f0;
+  }
+
+  .loading-lumina-pulse {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* ===== HIGH CONTRAST MODE SUPPORT ===== */
+/* Enhanced animations for high contrast mode */
+@media (prefers-contrast: high) {
+  /* Stronger focus indicators */
+  .focus-lumina-ring:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 210, 90, 1);
+  }
+
+  /* More pronounced hover effects */
+  .hover-lumina-glow:hover {
+    box-shadow: 0 0 0 2px rgba(255, 210, 90, 0.8);
+  }
+
+  /* Enhanced loading states */
+  .loading-lumina-skeleton {
+    background: linear-gradient(90deg, #e0e0e0 0%, #f0f0f0 50%, #e0e0e0 100%);
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+/* GPU acceleration and performance hints */
+
+.animate-lumina-spin,
+.animate-lumina-spin-slow,
+.animate-lumina-pulse,
+.animate-lumina-pulse-subtle,
+.animate-lumina-bounce,
+.animate-lumina-bounce-subtle,
+.hover-lumina-lift,
+.hover-lumina-lift-subtle,
+.hover-lumina-scale,
+.hover-lumina-scale-subtle {
+  /* Force GPU acceleration */
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Remove will-change after animation completes to free GPU memory */
+.animate-lumina-fade-in,
+.animate-lumina-fade-out,
+.animate-lumina-scale-in,
+.animate-lumina-scale-out,
+.animate-lumina-slide-in-right,
+.animate-lumina-slide-in-left,
+.animate-lumina-slide-in-up,
+.animate-lumina-slide-in-down {
+  will-change: transform, opacity;
+}
+
+/* Reset will-change after animations */
+.animate-lumina-fade-in:not(:hover):not(:focus),
+.animate-lumina-fade-out:not(:hover):not(:focus),
+.animate-lumina-scale-in:not(:hover):not(:focus),
+.animate-lumina-scale-out:not(:hover):not(:focus),
+.animate-lumina-slide-in-right:not(:hover):not(:focus),
+.animate-lumina-slide-in-left:not(:hover):not(:focus),
+.animate-lumina-slide-in-up:not(:hover):not(:focus),
+.animate-lumina-slide-in-down:not(:hover):not(:focus) {
+  will-change: auto;
 }

@@ -1,195 +1,193 @@
 /* Lumina Design System - Spacing Tokens */
 /* Version 2.1 - Comprehensive spacing scale for consistent layouts */
 
-@layer tokens {
-  :root {
-    /* ===== BASE SPACING SCALE ===== */
-    /* Based on 0.25rem (4px) increments for precise control */
-    --spacing-0: 0rem;          /* 0px */
-    --spacing-px: 0.0625rem;    /* 1px */
-    --spacing-0-5: 0.125rem;    /* 2px */
-    --spacing-1: 0.25rem;       /* 4px */
-    --spacing-1-5: 0.375rem;    /* 6px */
-    --spacing-2: 0.5rem;        /* 8px */
-    --spacing-2-5: 0.625rem;    /* 10px */
-    --spacing-3: 0.75rem;       /* 12px */
-    --spacing-3-5: 0.875rem;    /* 14px */
-    --spacing-4: 1rem;          /* 16px */
-    --spacing-5: 1.25rem;       /* 20px */
-    --spacing-6: 1.5rem;        /* 24px */
-    --spacing-7: 1.75rem;       /* 28px */
-    --spacing-8: 2rem;          /* 32px */
-    --spacing-9: 2.25rem;       /* 36px */
-    --spacing-10: 2.5rem;       /* 40px */
-    --spacing-11: 2.75rem;      /* 44px */
-    --spacing-12: 3rem;         /* 48px */
-    --spacing-14: 3.5rem;       /* 56px */
-    --spacing-16: 4rem;         /* 64px */
-    --spacing-20: 5rem;         /* 80px */
-    --spacing-24: 6rem;         /* 96px */
-    --spacing-28: 7rem;         /* 112px */
-    --spacing-32: 8rem;         /* 128px */
-    --spacing-36: 9rem;         /* 144px */
-    --spacing-40: 10rem;        /* 160px */
-    --spacing-44: 11rem;        /* 176px */
-    --spacing-48: 12rem;        /* 192px */
-    --spacing-52: 13rem;        /* 208px */
-    --spacing-56: 14rem;        /* 224px */
-    --spacing-60: 15rem;        /* 240px */
-    --spacing-64: 16rem;        /* 256px */
-    --spacing-72: 18rem;        /* 288px */
-    --spacing-80: 20rem;        /* 320px */
-    --spacing-96: 24rem;        /* 384px */
-    
-    /* ===== SEMANTIC SPACING TOKENS ===== */
-    /* Component-specific spacing for consistent application */
-    
-    /* Padding tokens */
-    --padding-component-xs: var(--spacing-2);    /* 8px - Minimal padding */
-    --padding-component-sm: var(--spacing-3);    /* 12px - Small components */
-    --padding-component-md: var(--spacing-4);    /* 16px - Default padding */
-    --padding-component-lg: var(--spacing-6);    /* 24px - Large components */
-    --padding-component-xl: var(--spacing-8);    /* 32px - Extra large padding */
-    
-    /* Margin tokens */
-    --margin-component-xs: var(--spacing-2);     /* 8px - Minimal margin */
-    --margin-component-sm: var(--spacing-4);     /* 16px - Small margin */
-    --margin-component-md: var(--spacing-6);     /* 24px - Default margin */
-    --margin-component-lg: var(--spacing-8);     /* 32px - Large margin */
-    --margin-component-xl: var(--spacing-12);    /* 48px - Extra large margin */
-    
-    /* Gap tokens for flexbox and grid */
-    --gap-xs: var(--spacing-1);                  /* 4px - Minimal gap */
-    --gap-sm: var(--spacing-2);                  /* 8px - Small gap */
-    --gap-md: var(--spacing-4);                  /* 16px - Default gap */
-    --gap-lg: var(--spacing-6);                  /* 24px - Large gap */
-    --gap-xl: var(--spacing-8);                  /* 32px - Extra large gap */
-    --gap-2xl: var(--spacing-12);                /* 48px - 2X large gap */
-    
-    /* ===== LAYOUT-SPECIFIC SPACING ===== */
-    /* Dashboard layout spacing */
-    --dashboard-sidebar-width: 280px;
-    --dashboard-header-height: 64px;
-    --dashboard-content-padding: var(--spacing-8);        /* 32px */
-    --dashboard-content-padding-mobile: var(--spacing-4); /* 16px */
-    
-    /* Card spacing */
-    --card-padding-sm: var(--spacing-4);         /* 16px */
-    --card-padding-md: var(--spacing-6);         /* 24px */
-    --card-padding-lg: var(--spacing-8);         /* 32px */
-    --card-gap: var(--spacing-6);                /* 24px */
-    --card-gap-sm: var(--spacing-4);             /* 16px */
-    
-    /* Form spacing */
-    --form-field-spacing: var(--spacing-4);      /* 16px between fields */
-    --form-label-spacing: var(--spacing-2);      /* 8px between label and input */
-    --form-section-spacing: var(--spacing-8);    /* 32px between sections */
-    --form-padding: var(--spacing-6);            /* 24px form container padding */
-    
-    /* Button spacing */
-    --button-padding-x-sm: var(--spacing-3);     /* 12px horizontal */
-    --button-padding-y-sm: var(--spacing-2);     /* 8px vertical */
-    --button-padding-x-md: var(--spacing-4);     /* 16px horizontal */
-    --button-padding-y-md: var(--spacing-2-5);   /* 10px vertical */
-    --button-padding-x-lg: var(--spacing-6);     /* 24px horizontal */
-    --button-padding-y-lg: var(--spacing-3);     /* 12px vertical */
-    --button-gap: var(--spacing-2);              /* 8px gap between buttons */
-    
-    /* Navigation spacing */
-    --nav-item-padding-x: var(--spacing-3);      /* 12px horizontal */
-    --nav-item-padding-y: var(--spacing-2-5);    /* 10px vertical */
-    --nav-section-spacing: var(--spacing-6);     /* 24px between sections */
-    --nav-item-gap: var(--spacing-1);            /* 4px between items */
-    
-    /* Table spacing */
-    --table-cell-padding-x: var(--spacing-3);    /* 12px horizontal */
-    --table-cell-padding-y: var(--spacing-2-5);  /* 10px vertical */
-    --table-header-padding-y: var(--spacing-3);  /* 12px vertical for headers */
-    --table-row-gap: var(--spacing-px);          /* 1px between rows */
-    
-    /* Modal and dialog spacing */
-    --modal-padding: var(--spacing-6);           /* 24px */
-    --modal-header-padding: var(--spacing-6);    /* 24px */
-    --modal-footer-padding: var(--spacing-6);    /* 24px */
-    --modal-content-gap: var(--spacing-4);       /* 16px */
-    
-    /* ===== RESPONSIVE SPACING ADJUSTMENTS ===== */
-    /* Container max-widths for responsive design */
-    --container-sm: 640px;
-    --container-md: 768px;
-    --container-lg: 1024px;
-    --container-xl: 1280px;
-    --container-2xl: 1536px;
-    
-    /* Responsive padding adjustments */
-    --container-padding-mobile: var(--spacing-4);    /* 16px on mobile */
-    --container-padding-tablet: var(--spacing-6);    /* 24px on tablet */
-    --container-padding-desktop: var(--spacing-8);   /* 32px on desktop */
-    
-    /* Grid spacing */
-    --grid-gap-mobile: var(--spacing-4);         /* 16px on mobile */
-    --grid-gap-tablet: var(--spacing-6);         /* 24px on tablet */
-    --grid-gap-desktop: var(--spacing-8);        /* 32px on desktop */
-    
-    /* Section spacing */
-    --section-spacing-mobile: var(--spacing-12);     /* 48px on mobile */
-    --section-spacing-tablet: var(--spacing-16);     /* 64px on tablet */
-    --section-spacing-desktop: var(--spacing-20);    /* 80px on desktop */
-  }
-  
-  /* ===== RESPONSIVE BREAKPOINT ADJUSTMENTS ===== */
-  /* Tablet spacing adjustments */
-  @media (max-width: 768px) {
-    :root {
-      --dashboard-content-padding: var(--dashboard-content-padding-mobile);
-      --card-padding-lg: var(--spacing-6);       /* Reduce large card padding */
-      --card-gap: var(--spacing-4);              /* Reduce card gaps */
-      --form-section-spacing: var(--spacing-6);  /* Reduce form section spacing */
-      --modal-padding: var(--spacing-4);         /* Reduce modal padding */
-    }
-  }
-  
-  /* Mobile spacing adjustments */
-  @media (max-width: 480px) {
-    :root {
-      --dashboard-content-padding: var(--spacing-4);
-      --card-padding-md: var(--spacing-4);       /* Reduce default card padding */
-      --card-padding-lg: var(--spacing-4);       /* Reduce large card padding */
-      --card-gap: var(--spacing-3);              /* Further reduce card gaps */
-      --form-padding: var(--spacing-4);          /* Reduce form padding */
-      --form-section-spacing: var(--spacing-4);  /* Reduce form section spacing */
-      --modal-padding: var(--spacing-4);         /* Reduce modal padding */
-      --button-padding-x-lg: var(--spacing-4);   /* Reduce large button padding */
-    }
-  }
-  
+:root {
+  /* ===== BASE SPACING SCALE ===== */
+  /* Based on 0.25rem (4px) increments for precise control */
+  --spacing-0: 0rem; /* 0px */
+  --spacing-px: 0.0625rem; /* 1px */
+  --spacing-0-5: 0.125rem; /* 2px */
+  --spacing-1: 0.25rem; /* 4px */
+  --spacing-1-5: 0.375rem; /* 6px */
+  --spacing-2: 0.5rem; /* 8px */
+  --spacing-2-5: 0.625rem; /* 10px */
+  --spacing-3: 0.75rem; /* 12px */
+  --spacing-3-5: 0.875rem; /* 14px */
+  --spacing-4: 1rem; /* 16px */
+  --spacing-5: 1.25rem; /* 20px */
+  --spacing-6: 1.5rem; /* 24px */
+  --spacing-7: 1.75rem; /* 28px */
+  --spacing-8: 2rem; /* 32px */
+  --spacing-9: 2.25rem; /* 36px */
+  --spacing-10: 2.5rem; /* 40px */
+  --spacing-11: 2.75rem; /* 44px */
+  --spacing-12: 3rem; /* 48px */
+  --spacing-14: 3.5rem; /* 56px */
+  --spacing-16: 4rem; /* 64px */
+  --spacing-20: 5rem; /* 80px */
+  --spacing-24: 6rem; /* 96px */
+  --spacing-28: 7rem; /* 112px */
+  --spacing-32: 8rem; /* 128px */
+  --spacing-36: 9rem; /* 144px */
+  --spacing-40: 10rem; /* 160px */
+  --spacing-44: 11rem; /* 176px */
+  --spacing-48: 12rem; /* 192px */
+  --spacing-52: 13rem; /* 208px */
+  --spacing-56: 14rem; /* 224px */
+  --spacing-60: 15rem; /* 240px */
+  --spacing-64: 16rem; /* 256px */
+  --spacing-72: 18rem; /* 288px */
+  --spacing-80: 20rem; /* 320px */
+  --spacing-96: 24rem; /* 384px */
+
+  /* ===== SEMANTIC SPACING TOKENS ===== */
+  /* Component-specific spacing for consistent application */
+
+  /* Padding tokens */
+  --padding-component-xs: var(--spacing-2); /* 8px - Minimal padding */
+  --padding-component-sm: var(--spacing-3); /* 12px - Small components */
+  --padding-component-md: var(--spacing-4); /* 16px - Default padding */
+  --padding-component-lg: var(--spacing-6); /* 24px - Large components */
+  --padding-component-xl: var(--spacing-8); /* 32px - Extra large padding */
+
+  /* Margin tokens */
+  --margin-component-xs: var(--spacing-2); /* 8px - Minimal margin */
+  --margin-component-sm: var(--spacing-4); /* 16px - Small margin */
+  --margin-component-md: var(--spacing-6); /* 24px - Default margin */
+  --margin-component-lg: var(--spacing-8); /* 32px - Large margin */
+  --margin-component-xl: var(--spacing-12); /* 48px - Extra large margin */
+
+  /* Gap tokens for flexbox and grid */
+  --gap-xs: var(--spacing-1); /* 4px - Minimal gap */
+  --gap-sm: var(--spacing-2); /* 8px - Small gap */
+  --gap-md: var(--spacing-4); /* 16px - Default gap */
+  --gap-lg: var(--spacing-6); /* 24px - Large gap */
+  --gap-xl: var(--spacing-8); /* 32px - Extra large gap */
+  --gap-2xl: var(--spacing-12); /* 48px - 2X large gap */
+
+  /* ===== LAYOUT-SPECIFIC SPACING ===== */
+  /* Dashboard layout spacing */
+  --dashboard-sidebar-width: 280px;
+  --dashboard-header-height: 64px;
+  --dashboard-content-padding: var(--spacing-8); /* 32px */
+  --dashboard-content-padding-mobile: var(--spacing-4); /* 16px */
+
+  /* Card spacing */
+  --card-padding-sm: var(--spacing-4); /* 16px */
+  --card-padding-md: var(--spacing-6); /* 24px */
+  --card-padding-lg: var(--spacing-8); /* 32px */
+  --card-gap: var(--spacing-6); /* 24px */
+  --card-gap-sm: var(--spacing-4); /* 16px */
+
+  /* Form spacing */
+  --form-field-spacing: var(--spacing-4); /* 16px between fields */
+  --form-label-spacing: var(--spacing-2); /* 8px between label and input */
+  --form-section-spacing: var(--spacing-8); /* 32px between sections */
+  --form-padding: var(--spacing-6); /* 24px form container padding */
+
+  /* Button spacing */
+  --button-padding-x-sm: var(--spacing-3); /* 12px horizontal */
+  --button-padding-y-sm: var(--spacing-2); /* 8px vertical */
+  --button-padding-x-md: var(--spacing-4); /* 16px horizontal */
+  --button-padding-y-md: var(--spacing-2-5); /* 10px vertical */
+  --button-padding-x-lg: var(--spacing-6); /* 24px horizontal */
+  --button-padding-y-lg: var(--spacing-3); /* 12px vertical */
+  --button-gap: var(--spacing-2); /* 8px gap between buttons */
+
+  /* Navigation spacing */
+  --nav-item-padding-x: var(--spacing-3); /* 12px horizontal */
+  --nav-item-padding-y: var(--spacing-2-5); /* 10px vertical */
+  --nav-section-spacing: var(--spacing-6); /* 24px between sections */
+  --nav-item-gap: var(--spacing-1); /* 4px between items */
+
+  /* Table spacing */
+  --table-cell-padding-x: var(--spacing-3); /* 12px horizontal */
+  --table-cell-padding-y: var(--spacing-2-5); /* 10px vertical */
+  --table-header-padding-y: var(--spacing-3); /* 12px vertical for headers */
+  --table-row-gap: var(--spacing-px); /* 1px between rows */
+
+  /* Modal and dialog spacing */
+  --modal-padding: var(--spacing-6); /* 24px */
+  --modal-header-padding: var(--spacing-6); /* 24px */
+  --modal-footer-padding: var(--spacing-6); /* 24px */
+  --modal-content-gap: var(--spacing-4); /* 16px */
+
+  /* ===== RESPONSIVE SPACING ADJUSTMENTS ===== */
+  /* Container max-widths for responsive design */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  /* Responsive padding adjustments */
+  --container-padding-mobile: var(--spacing-4); /* 16px on mobile */
+  --container-padding-tablet: var(--spacing-6); /* 24px on tablet */
+  --container-padding-desktop: var(--spacing-8); /* 32px on desktop */
+
+  /* Grid spacing */
+  --grid-gap-mobile: var(--spacing-4); /* 16px on mobile */
+  --grid-gap-tablet: var(--spacing-6); /* 24px on tablet */
+  --grid-gap-desktop: var(--spacing-8); /* 32px on desktop */
+
+  /* Section spacing */
+  --section-spacing-mobile: var(--spacing-12); /* 48px on mobile */
+  --section-spacing-tablet: var(--spacing-16); /* 64px on tablet */
+  --section-spacing-desktop: var(--spacing-20); /* 80px on desktop */
+
   /* ===== UTILITY SPACING CLASSES ===== */
   /* Auto margins for centering */
   --margin-auto: auto;
-  
+
   /* Negative spacing for overlapping elements */
-  --spacing-negative-1: -0.25rem;    /* -4px */
-  --spacing-negative-2: -0.5rem;     /* -8px */
-  --spacing-negative-3: -0.75rem;    /* -12px */
-  --spacing-negative-4: -1rem;       /* -16px */
-  --spacing-negative-6: -1.5rem;     /* -24px */
-  --spacing-negative-8: -2rem;       /* -32px */
-  --spacing-negative-12: -3rem;      /* -48px */
-  
+  --spacing-negative-1: -0.25rem; /* -4px */
+  --spacing-negative-2: -0.5rem; /* -8px */
+  --spacing-negative-3: -0.75rem; /* -12px */
+  --spacing-negative-4: -1rem; /* -16px */
+  --spacing-negative-6: -1.5rem; /* -24px */
+  --spacing-negative-8: -2rem; /* -32px */
+  --spacing-negative-12: -3rem; /* -48px */
+
   /* Percentage-based spacing for fluid layouts */
-  --spacing-1-12: 8.333333%;         /* 1/12 */
-  --spacing-2-12: 16.666667%;        /* 2/12 */
-  --spacing-3-12: 25%;               /* 3/12 */
-  --spacing-4-12: 33.333333%;        /* 4/12 */
-  --spacing-6-12: 50%;               /* 6/12 */
-  --spacing-8-12: 66.666667%;        /* 8/12 */
-  --spacing-9-12: 75%;               /* 9/12 */
-  --spacing-10-12: 83.333333%;       /* 10/12 */
-  --spacing-11-12: 91.666667%;       /* 11/12 */
-  --spacing-full: 100%;              /* Full width/height */
-  
+  --spacing-1-12: 8.333333%; /* 1/12 */
+  --spacing-2-12: 16.666667%; /* 2/12 */
+  --spacing-3-12: 25%; /* 3/12 */
+  --spacing-4-12: 33.333333%; /* 4/12 */
+  --spacing-6-12: 50%; /* 6/12 */
+  --spacing-8-12: 66.666667%; /* 8/12 */
+  --spacing-9-12: 75%; /* 9/12 */
+  --spacing-10-12: 83.333333%; /* 10/12 */
+  --spacing-11-12: 91.666667%; /* 11/12 */
+  --spacing-full: 100%; /* Full width/height */
+
   /* Viewport-based spacing */
-  --spacing-screen-h: 100vh;         /* Full viewport height */
-  --spacing-screen-w: 100vw;         /* Full viewport width */
-  --spacing-screen-min-h: 100vh;     /* Minimum full viewport height */
+  --spacing-screen-h: 100vh; /* Full viewport height */
+  --spacing-screen-w: 100vw; /* Full viewport width */
+  --spacing-screen-min-h: 100vh; /* Minimum full viewport height */
+}
+
+/* ===== RESPONSIVE BREAKPOINT ADJUSTMENTS ===== */
+/* Tablet spacing adjustments */
+@media (max-width: 768px) {
+  :root {
+    --dashboard-content-padding: var(--dashboard-content-padding-mobile);
+    --card-padding-lg: var(--spacing-6); /* Reduce large card padding */
+    --card-gap: var(--spacing-4); /* Reduce card gaps */
+    --form-section-spacing: var(--spacing-6); /* Reduce form section spacing */
+    --modal-padding: var(--spacing-4); /* Reduce modal padding */
+  }
+}
+
+/* Mobile spacing adjustments */
+@media (max-width: 480px) {
+  :root {
+    --dashboard-content-padding: var(--spacing-4);
+    --card-padding-md: var(--spacing-4); /* Reduce default card padding */
+    --card-padding-lg: var(--spacing-4); /* Reduce large card padding */
+    --card-gap: var(--spacing-3); /* Further reduce card gaps */
+    --form-padding: var(--spacing-4); /* Reduce form padding */
+    --form-section-spacing: var(--spacing-4); /* Reduce form section spacing */
+    --modal-padding: var(--spacing-4); /* Reduce modal padding */
+    --button-padding-x-lg: var(--spacing-4); /* Reduce large button padding */
+  }
 }
