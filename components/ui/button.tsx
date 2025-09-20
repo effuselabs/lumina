@@ -2,7 +2,8 @@ import { cn } from '@/lib/utils';
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
-import { shallowEqual, usePerformanceMonitor } from '../../lib/performance-utils';
+import { usePerformanceMonitor } from '../../lib/performance-hooks';
+import { shallowEqual } from '../../lib/performance-utils';
 import { Spinner } from './spinner';
 
 const buttonVariants = cva(
@@ -81,110 +82,128 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
   icon?: React.ReactNode;
   'aria-label'?: string;
   'aria-describedby'?: string;
   'aria-expanded'?: boolean;
-  'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+  'aria-haspopup'?:
+    | boolean
+    | 'false'
+    | 'true'
+    | 'menu'
+    | 'listbox'
+    | 'tree'
+    | 'grid'
+    | 'dialog';
 }
 
-const Button = React.memo(React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({
-    className,
-    variant,
-    size,
-    asChild = false,
-    loading = false,
-    icon,
-    children,
-    disabled,
-    'aria-label': ariaLabel,
-    'aria-describedby': ariaDescribedBy,
-    'aria-expanded': ariaExpanded,
-    'aria-haspopup': ariaHasPopup,
-    ...props
-  }, ref) => {
-    // Performance monitoring
-    const { trackPropsChange } = usePerformanceMonitor('Button');
-    trackPropsChange({ variant, size, loading, disabled, children });
-    const Comp = asChild ? Slot : 'button';
-    const isDisabled = disabled || loading;
+const Button = React.memo(
+  React.forwardRef<HTMLButtonElement, ButtonProps>(
+    (
+      {
+        className,
+        variant,
+        size,
+        asChild = false,
+        loading = false,
+        icon,
+        children,
+        disabled,
+        'aria-label': ariaLabel,
+        'aria-describedby': ariaDescribedBy,
+        'aria-expanded': ariaExpanded,
+        'aria-haspopup': ariaHasPopup,
+        ...props
+      },
+      ref
+    ) => {
+      // Performance monitoring
+      const { trackPropsChange } = usePerformanceMonitor('Button');
+      trackPropsChange({ variant, size, loading, disabled, children });
+      const Comp = asChild ? Slot : 'button';
+      const isDisabled = disabled || loading;
 
-    // Generate accessible label for icon-only buttons
-    const accessibleLabel = ariaLabel || (size === 'icon' && !children ? 'Button' : undefined);
+      // Generate accessible label for icon-only buttons
+      const accessibleLabel =
+        ariaLabel || (size === 'icon' && !children ? 'Button' : undefined);
 
-    // Determine if we need to announce loading state
-    const loadingAnnouncement = loading ? 'Loading' : undefined;
+      // Determine if we need to announce loading state
+      const loadingAnnouncement = loading ? 'Loading' : undefined;
 
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        disabled={isDisabled}
-        aria-disabled={isDisabled}
-        aria-label={accessibleLabel}
-        aria-describedby={ariaDescribedBy}
-        aria-expanded={ariaExpanded}
-        aria-haspopup={ariaHasPopup}
-        aria-busy={loading}
-        role={asChild ? undefined : 'button'}
-        tabIndex={isDisabled ? -1 : 0}
-        {...props}
-      >
-        {loading ? (
-          <>
-            <Spinner
-              size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'default'}
-              className="text-current"
-              aria-hidden="true"
-            />
-            <span className="opacity-70" aria-live="polite" aria-atomic="true">
+      return (
+        <Comp
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          disabled={isDisabled}
+          aria-disabled={isDisabled}
+          aria-label={accessibleLabel}
+          aria-describedby={ariaDescribedBy}
+          aria-expanded={ariaExpanded}
+          aria-haspopup={ariaHasPopup}
+          aria-busy={loading}
+          role={asChild ? undefined : 'button'}
+          tabIndex={isDisabled ? -1 : 0}
+          {...props}
+        >
+          {loading ? (
+            <>
+              <Spinner
+                size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'default'}
+                className="text-current"
+                aria-hidden="true"
+              />
+              <span
+                className="opacity-70"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {children}
+              </span>
+              {loadingAnnouncement && (
+                <span className="sr-only" aria-live="assertive">
+                  {loadingAnnouncement}
+                </span>
+              )}
+            </>
+          ) : (
+            <>
+              {icon && (
+                <span className="flex-shrink-0" aria-hidden="true">
+                  {icon}
+                </span>
+              )}
               {children}
-            </span>
-            {loadingAnnouncement && (
-              <span className="sr-only" aria-live="assertive">
-                {loadingAnnouncement}
-              </span>
-            )}
-          </>
-        ) : (
-          <>
-            {icon && (
-              <span className="flex-shrink-0" aria-hidden="true">
-                {icon}
-              </span>
-            )}
-            {children}
-          </>
-        )}
-      </Comp>
+            </>
+          )}
+        </Comp>
+      );
+    }
+  ),
+  (prevProps, nextProps) => {
+    // Custom comparison function for memoization
+    return shallowEqual(
+      {
+        variant: prevProps.variant,
+        size: prevProps.size,
+        loading: prevProps.loading,
+        disabled: prevProps.disabled,
+        className: prevProps.className,
+        children: prevProps.children,
+      },
+      {
+        variant: nextProps.variant,
+        size: nextProps.size,
+        loading: nextProps.loading,
+        disabled: nextProps.disabled,
+        className: nextProps.className,
+        children: nextProps.children,
+      }
     );
   }
-), (prevProps, nextProps) => {
-  // Custom comparison function for memoization
-  return shallowEqual(
-    {
-      variant: prevProps.variant,
-      size: prevProps.size,
-      loading: prevProps.loading,
-      disabled: prevProps.disabled,
-      className: prevProps.className,
-      children: prevProps.children,
-    },
-    {
-      variant: nextProps.variant,
-      size: nextProps.size,
-      loading: nextProps.loading,
-      disabled: nextProps.disabled,
-      className: nextProps.className,
-      children: nextProps.children,
-    }
-  );
-});
+);
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };
-

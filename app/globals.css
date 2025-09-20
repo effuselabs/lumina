@@ -1967,19 +1967,19 @@ body {
   .contrast-more\:border-2 {
     border-width: 2px;
   }
-  
+
   .contrast-more\:border-4 {
     border-width: 4px;
   }
-  
+
   .contrast-more\:border-white {
     border-color: white;
   }
-  
+
   .contrast-more\:border-current {
     border-color: currentColor;
   }
-  
+
   .contrast-more\:underline {
     text-decoration: underline;
   }
@@ -1990,15 +1990,15 @@ body {
   .motion-reduce\:transition-none {
     transition: none;
   }
-  
+
   .motion-reduce\:hover\:scale-100:hover {
     transform: scale(1);
   }
-  
+
   .motion-reduce\:active\:scale-100:active {
     transform: scale(1);
   }
-}/* 
+} /* 
 Optimized StatCard Component Styles */
 
 /* Base StatCard Styles */
@@ -2016,7 +2016,7 @@ Optimized StatCard Component Styles */
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: 
+  box-shadow:
     0 1px 3px 0 rgba(0, 0, 0, 0.1),
     0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
@@ -2041,7 +2041,7 @@ Optimized StatCard Component Styles */
 /* Enhanced hover effects and micro-interactions */
 .stat-card:hover {
   transform: translateY(-2px) scale(1.01);
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(255, 122, 90, 0.12),
     0 4px 12px rgba(255, 210, 90, 0.08);
   border-color: rgba(255, 122, 90, 0.2);
@@ -2405,25 +2405,25 @@ Optimized StatCard Component Styles */
     padding: 1rem;
     min-height: 7rem;
   }
-  
+
   .stat-card-default {
     padding: 1.25rem;
     min-height: 8.5rem;
   }
-  
+
   .stat-card-large {
     padding: 1.5rem;
     min-height: 10rem;
   }
-  
+
   .stat-card-compact .stat-card-value {
     font-size: 1.5rem;
   }
-  
+
   .stat-card-default .stat-card-value {
     font-size: 1.75rem;
   }
-  
+
   .stat-card-large .stat-card-value {
     font-size: 2rem;
   }
@@ -2439,11 +2439,11 @@ Optimized StatCard Component Styles */
     transition: none !important;
     animation: none !important;
   }
-  
+
   .stat-card:hover {
     transform: none !important;
   }
-  
+
   .stat-card:hover .stat-card-icon-container,
   .stat-card:hover .stat-card-icon,
   .link-stat-card-action:hover .stat-card-action-icon {
@@ -2457,32 +2457,32 @@ Optimized StatCard Component Styles */
     border-width: 2px;
     border-color: #000000;
   }
-  
+
   .stat-card-title {
     color: #000000;
     font-weight: 700;
   }
-  
+
   .stat-card-value {
     color: #000000;
   }
-  
+
   .stat-card-change-increase {
     color: #006600;
     background: #ccffcc;
   }
-  
+
   .stat-card-change-decrease {
     color: #cc0000;
     background: #ffcccc;
   }
-  
+
   .link-stat-card-action {
     border-width: 2px !important;
     border-color: #000000 !important;
     color: #000000 !important;
   }
-}/* 
+} /* 
 ===== PAGE HEADER COMPONENT STYLES ===== */
 @layer components {
   /* Page Header Base Styles */
@@ -2620,7 +2620,7 @@ Optimized StatCard Component Styles */
   }
 
   /* ===== RESPONSIVE DESIGN ===== */
-  
+
   /* Tablet Adjustments */
   @media (max-width: 768px) {
     .page-header__content {
@@ -2744,7 +2744,7 @@ Optimized StatCard Component Styles */
       transform: none;
     }
   }
-}/* ====
+} /* ====
 = RESPONSIVE GRID SYSTEM ===== */
 @layer components {
   /* Base Grid Container */
@@ -2754,29 +2754,47 @@ Optimized StatCard Component Styles */
   }
 
   /* ===== STANDARD GRID LAYOUTS ===== */
-  
+
   /* Auto-fit responsive grid - adapts to content */
   .grid-auto-fit {
-    grid-template-columns: repeat(auto-fit, minmax(var(--grid-min-width, 300px), 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(var(--grid-min-width, 300px), 1fr)
+    );
     gap: var(--grid-gap, var(--spacing-6));
   }
 
   /* Auto-fill responsive grid - maintains consistent columns */
   .grid-auto-fill {
-    grid-template-columns: repeat(auto-fill, minmax(var(--grid-min-width, 300px), 1fr));
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--grid-min-width, 300px), 1fr)
+    );
     gap: var(--grid-gap, var(--spacing-6));
   }
 
   /* Fixed column grids */
-  .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
-  .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-  .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
-  .grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
-  .grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .grid-cols-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .grid-cols-6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
 
   /* ===== CARD GRID LAYOUTS ===== */
-  
+
   /* Standard card grid - for stat cards, content cards */
   .grid-cards {
     --grid-min-width: 300px;
@@ -2810,7 +2828,7 @@ Optimized StatCard Component Styles */
   }
 
   /* ===== SPECIALIZED GRID LAYOUTS ===== */
-  
+
   /* Dashboard stats grid - optimized for metric cards */
   .grid-dashboard-stats {
     --grid-min-width: 280px;
@@ -2838,29 +2856,61 @@ Optimized StatCard Component Styles */
   }
 
   /* ===== GRID GAP UTILITIES ===== */
-  
-  .gap-xs { gap: var(--spacing-1); }
-  .gap-sm { gap: var(--spacing-2); }
-  .gap-md { gap: var(--spacing-4); }
-  .gap-lg { gap: var(--spacing-6); }
-  .gap-xl { gap: var(--spacing-8); }
-  .gap-2xl { gap: var(--spacing-12); }
+
+  .gap-xs {
+    gap: var(--spacing-1);
+  }
+  .gap-sm {
+    gap: var(--spacing-2);
+  }
+  .gap-md {
+    gap: var(--spacing-4);
+  }
+  .gap-lg {
+    gap: var(--spacing-6);
+  }
+  .gap-xl {
+    gap: var(--spacing-8);
+  }
+  .gap-2xl {
+    gap: var(--spacing-12);
+  }
 
   /* Row and column specific gaps */
-  .gap-x-xs { column-gap: var(--spacing-1); }
-  .gap-x-sm { column-gap: var(--spacing-2); }
-  .gap-x-md { column-gap: var(--spacing-4); }
-  .gap-x-lg { column-gap: var(--spacing-6); }
-  .gap-x-xl { column-gap: var(--spacing-8); }
+  .gap-x-xs {
+    column-gap: var(--spacing-1);
+  }
+  .gap-x-sm {
+    column-gap: var(--spacing-2);
+  }
+  .gap-x-md {
+    column-gap: var(--spacing-4);
+  }
+  .gap-x-lg {
+    column-gap: var(--spacing-6);
+  }
+  .gap-x-xl {
+    column-gap: var(--spacing-8);
+  }
 
-  .gap-y-xs { row-gap: var(--spacing-1); }
-  .gap-y-sm { row-gap: var(--spacing-2); }
-  .gap-y-md { row-gap: var(--spacing-4); }
-  .gap-y-lg { row-gap: var(--spacing-6); }
-  .gap-y-xl { row-gap: var(--spacing-8); }
+  .gap-y-xs {
+    row-gap: var(--spacing-1);
+  }
+  .gap-y-sm {
+    row-gap: var(--spacing-2);
+  }
+  .gap-y-md {
+    row-gap: var(--spacing-4);
+  }
+  .gap-y-lg {
+    row-gap: var(--spacing-6);
+  }
+  .gap-y-xl {
+    row-gap: var(--spacing-8);
+  }
 
   /* ===== RESPONSIVE GRID BREAKPOINTS ===== */
-  
+
   /* Tablet breakpoint (≤768px) */
   @media (max-width: 768px) {
     .grid-cards {
@@ -2893,9 +2943,15 @@ Optimized StatCard Component Styles */
     }
 
     /* Responsive column overrides */
-    .md\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
-    .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-    .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .md\:grid-cols-1 {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    .md\:grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .md\:grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   /* Mobile breakpoint (≤480px) */
@@ -2945,8 +3001,12 @@ Optimized StatCard Component Styles */
     }
 
     /* Mobile-specific column classes */
-    .sm\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
-    .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .sm\:grid-cols-1 {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    .sm\:grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   /* Large mobile breakpoint (≤640px) - between mobile and tablet */
@@ -2965,47 +3025,99 @@ Optimized StatCard Component Styles */
   }
 
   /* ===== GRID ALIGNMENT UTILITIES ===== */
-  
+
   /* Content alignment */
-  .grid-items-start { align-items: start; }
-  .grid-items-center { align-items: center; }
-  .grid-items-end { align-items: end; }
-  .grid-items-stretch { align-items: stretch; }
+  .grid-items-start {
+    align-items: start;
+  }
+  .grid-items-center {
+    align-items: center;
+  }
+  .grid-items-end {
+    align-items: end;
+  }
+  .grid-items-stretch {
+    align-items: stretch;
+  }
 
   /* Content justification */
-  .grid-justify-start { justify-items: start; }
-  .grid-justify-center { justify-items: center; }
-  .grid-justify-end { justify-items: end; }
-  .grid-justify-stretch { justify-items: stretch; }
+  .grid-justify-start {
+    justify-items: start;
+  }
+  .grid-justify-center {
+    justify-items: center;
+  }
+  .grid-justify-end {
+    justify-items: end;
+  }
+  .grid-justify-stretch {
+    justify-items: stretch;
+  }
 
   /* Grid container alignment */
-  .grid-content-start { align-content: start; }
-  .grid-content-center { align-content: center; }
-  .grid-content-end { align-content: end; }
-  .grid-content-between { align-content: space-between; }
-  .grid-content-around { align-content: space-around; }
-  .grid-content-evenly { align-content: space-evenly; }
+  .grid-content-start {
+    align-content: start;
+  }
+  .grid-content-center {
+    align-content: center;
+  }
+  .grid-content-end {
+    align-content: end;
+  }
+  .grid-content-between {
+    align-content: space-between;
+  }
+  .grid-content-around {
+    align-content: space-around;
+  }
+  .grid-content-evenly {
+    align-content: space-evenly;
+  }
 
   /* ===== GRID ITEM UTILITIES ===== */
-  
+
   /* Column spanning */
-  .col-span-1 { grid-column: span 1 / span 1; }
-  .col-span-2 { grid-column: span 2 / span 2; }
-  .col-span-3 { grid-column: span 3 / span 3; }
-  .col-span-4 { grid-column: span 4 / span 4; }
-  .col-span-5 { grid-column: span 5 / span 5; }
-  .col-span-6 { grid-column: span 6 / span 6; }
-  .col-span-full { grid-column: 1 / -1; }
+  .col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+  .col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+  .col-span-3 {
+    grid-column: span 3 / span 3;
+  }
+  .col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+  .col-span-5 {
+    grid-column: span 5 / span 5;
+  }
+  .col-span-6 {
+    grid-column: span 6 / span 6;
+  }
+  .col-span-full {
+    grid-column: 1 / -1;
+  }
 
   /* Row spanning */
-  .row-span-1 { grid-row: span 1 / span 1; }
-  .row-span-2 { grid-row: span 2 / span 2; }
-  .row-span-3 { grid-row: span 3 / span 3; }
-  .row-span-4 { grid-row: span 4 / span 4; }
-  .row-span-full { grid-row: 1 / -1; }
+  .row-span-1 {
+    grid-row: span 1 / span 1;
+  }
+  .row-span-2 {
+    grid-row: span 2 / span 2;
+  }
+  .row-span-3 {
+    grid-row: span 3 / span 3;
+  }
+  .row-span-4 {
+    grid-row: span 4 / span 4;
+  }
+  .row-span-full {
+    grid-row: 1 / -1;
+  }
 
   /* ===== ACCESSIBILITY AND PERFORMANCE ===== */
-  
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .grid-container,
@@ -3025,9 +3137,9 @@ Optimized StatCard Component Styles */
   }
 
   /* ===== GRID DEBUGGING (Development only) ===== */
-  
+
   .grid-debug {
-    background-image: 
+    background-image:
       linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
     background-size: var(--grid-gap, 24px) var(--grid-gap, 24px);
@@ -3062,11 +3174,11 @@ Optimized StatCard Component Styles */
 }
 
 .page-header__breadcrumb-link {
-  @apply text-color-foreground-muted hover:text-color-foreground transition-colors;
+  @apply text-muted-foreground transition-colors hover:text-foreground;
 }
 
 .page-header__breadcrumb-current {
-  @apply text-color-foreground font-medium;
+  @apply font-medium text-foreground;
 }
 
 /* Header Content */
@@ -3083,7 +3195,7 @@ Optimized StatCard Component Styles */
 }
 
 .page-header__title {
-  @apply text-3xl font-bold tracking-tight text-color-foreground;
+  @apply text-3xl font-bold tracking-tight text-foreground;
   color: var(--deep-teal);
 }
 
@@ -3146,19 +3258,19 @@ Optimized StatCard Component Styles */
   .page-header__content {
     @apply flex-col gap-4;
   }
-  
+
   .page-header__actions {
     @apply w-full justify-stretch;
   }
-  
+
   .page-header__action-button {
     @apply flex-1 justify-center;
   }
-  
+
   .page-header__title {
     @apply text-2xl;
   }
-  
+
   .page-header--compact .page-header__title {
     @apply text-xl;
   }
@@ -3168,15 +3280,15 @@ Optimized StatCard Component Styles */
   .page-header {
     @apply space-y-4;
   }
-  
+
   .page-header--default {
     @apply pb-6;
   }
-  
+
   .page-header--compact {
     @apply pb-4;
   }
-}/* ===
+} /* ===
 ==========================================================================
    Client Management Grid System
    ============================================================================= */
@@ -3266,7 +3378,7 @@ Optimized StatCard Component Styles */
   background-color: var(--background-secondary);
   color: var(--deep-teal);
   @apply font-medium transition-colors hover:bg-gray-200;
-}/* Cli
+} /* Cli
 ent Metrics Cards Enhancement */
 .client-metrics-card {
   @apply transition-all duration-200 hover:shadow-lg;
@@ -3331,7 +3443,8 @@ ent Metrics Cards Enhancement */
   }
 
   .page-header__breadcrumb-link:focus-visible {
-    outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color);
+    outline: var(--focus-ring-width) var(--focus-ring-style)
+      var(--focus-ring-color);
     outline-offset: var(--focus-ring-offset);
   }
 
@@ -3554,7 +3667,7 @@ ent Metrics Cards Enhancement */
       color: #666;
     }
   }
-}/* ===== AC
+} /* ===== AC
 CESSIBLE LAYOUT STYLES ===== */
 @layer components {
   /* Accessible Layout Structure */
@@ -3778,7 +3891,8 @@ CESSIBLE LAYOUT STYLES ===== */
   }
 
   .status-message__dismiss:focus-visible {
-    outline: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color);
+    outline: var(--focus-ring-width) var(--focus-ring-style)
+      var(--focus-ring-color);
     outline-offset: var(--focus-ring-offset);
   }
 
@@ -3893,12 +4007,7 @@ CESSIBLE LAYOUT STYLES ===== */
 .stat-card-skeleton-change,
 .stat-card-skeleton-icon,
 .stat-card-skeleton-action {
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 25%,
-    #e0e0e0 50%,
-    #f0f0f0 75%
-  );
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200px 100%;
   animation: lumina-shimmer 1.5s infinite;
   border-radius: 0.25rem;

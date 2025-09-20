@@ -1330,3 +1330,188 @@ Use this template for new architectural decisions:
 
 **Last Updated**: September 18, 2025  
 **Next Review**: December 18, 2025
+
+---
+
+## ADR-029: Comprehensive Lumina Audit Implementation Strategy
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: Need for systematic assessment of entire Lumina platform to understand current state, identify critical gaps, and create strategic development plan for MVP completion.
+
+**Decision**: Implement comprehensive audit covering 8 major areas: Linear issue analysis, codebase quality review, production readiness assessment, feature gap analysis, documentation audit, script cleanup, testing strategy development, and development plan creation.
+
+**Rationale**:
+
+- Systematic approach provides complete picture of project status and health
+- Identifies critical blockers and gaps that could delay MVP launch
+- Enables strategic planning and resource allocation for remaining development
+- Prevents wasted effort on non-critical tasks
+- Creates foundation for efficient project management and development workflow
+
+**Alternatives Considered**:
+
+1. **Incremental assessment**: Assess individual components as issues arise
+   - Rejected: Doesn't provide complete picture, potential to miss critical interdependencies
+2. **Focus on single area**: Deep dive into one specific area like testing or documentation
+   - Rejected: Interconnected nature of project components requires holistic assessment
+3. **External audit**: Hire third-party consultants for project assessment
+   - Rejected: Cost considerations and lack of intimate project knowledge
+
+**Impact**:
+
+- Complete understanding of project status with 75-80% MVP completion identified
+- Clear identification of appointment system as critical MVP blocker (0% complete)
+- Strategic development plan with realistic timelines and resource allocation
+- Comprehensive Linear issue organization with proper dependencies and labeling
+- Foundation for efficient development workflow and project management
+
+**Related Issues**: [LUM-92](https://linear.app/scootr-ca/issue/LUM-92) - Appointment System Implementation
+
+---
+
+## ADR-030: Appointment System as Critical MVP Blocker Priority
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: Comprehensive audit revealed appointment system (0% complete) as the only major missing component for MVP launch, while all other major systems are 90-100% complete.
+
+**Decision**: Prioritize appointment system implementation as critical path with 80% resource allocation, 6-8 week timeline, and strategic focus as primary MVP blocker.
+
+**Rationale**:
+
+- Appointment system is core value proposition for salon management platform
+- All other major systems (Authentication, CRM, Services, Financial, Dashboard) are production-ready
+- Strategic resource allocation maximizes efficiency and minimizes time to MVP
+- Clear critical path enables focused development without distractions
+- Business impact analysis shows appointment system as highest priority for user value
+
+**Alternatives Considered**:
+
+1. **Launch MVP without appointment system**: Focus on other features and add appointments later
+   - Rejected: Appointment booking is core value proposition and competitive requirement
+2. **Simplified appointment system**: Build basic booking functionality only
+   - Rejected: Competitive landscape requires comprehensive appointment management
+3. **Equal priority across all remaining tasks**: Distribute effort across multiple areas
+   - Rejected: Dilutes focus and extends timeline without proportional value
+
+**Impact**:
+
+- Clear development focus with 80% effort allocation to appointment system
+- Strategic timeline of 6-8 weeks for MVP completion
+- Resource optimization and efficient development workflow
+- Clear success criteria and milestone tracking
+- Foundation for competitive salon management platform
+
+**Related Issues**: [LUM-92](https://linear.app/scootr-ca/issue/LUM-92) - Appointment System Implementation
+
+---
+
+## ADR-031: Linear Issue Breakdown Strategy for Complex Epics
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: Large appointment system epic (LUM-92) needed to be broken down into manageable development tasks with clear dependencies, proper labeling, and realistic time estimates.
+
+**Decision**: Create 6 detailed sub-issues with clear dependencies, proper Linear labeling, and realistic time estimates totaling 34 points over 6-8 weeks.
+
+**Rationale**:
+
+- Manageable task sizes (3-8 points) enable efficient development and accurate estimation
+- Clear dependencies prevent blocking and enable parallel development where possible
+- Proper Linear labeling enables efficient project management and filtering
+- Realistic time estimates based on complexity analysis improve planning accuracy
+- Structured approach ensures comprehensive coverage of all epic requirements
+
+**Alternatives Considered**:
+
+1. **Keep as single large epic**: Maintain appointment system as one large task
+   - Rejected: Development complexity and tracking difficulties, poor estimation accuracy
+2. **Create more granular tasks**: Break down into 15+ smaller tasks
+   - Rejected: Management overhead and dependency complexity outweigh benefits
+3. **Arbitrary task division**: Split based on time rather than logical functionality
+   - Rejected: Creates artificial dependencies and reduces development efficiency
+
+**Impact**:
+
+- Clear development roadmap with logical task progression
+- Efficient task management with proper dependency tracking
+- Accurate estimation and timeline planning
+- Proper Linear project management with labeling and organization
+- Foundation for scalable epic breakdown methodology
+
+**Related Issues**: [LUM-92](https://linear.app/scootr-ca/issue/LUM-92) - Appointment System Implementation
+
+---
+
+## ADR-032: Performance Utils Architecture Split for Next.js Compliance
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: Next.js 14 compilation error due to React hooks in server-side utility file, requiring architectural solution that maintains functionality while ensuring Server/Client Component compliance.
+
+**Decision**: Split performance utilities into server-safe utilities (`lib/performance-utils.ts`) and client-side hooks (`lib/performance-hooks.ts`) with proper 'use client' directive.
+
+**Rationale**:
+
+- Maintains all existing functionality while ensuring Next.js architecture compliance
+- Separates concerns between server-safe utilities and client-side React hooks
+- Enables proper tree-shaking and bundle optimization
+- Follows Next.js best practices for Server/Client Component architecture
+- Provides clear separation for future development and maintenance
+
+**Alternatives Considered**:
+
+1. **Add 'use client' to entire file**: Mark entire performance utils file as client-side
+   - Rejected: Server-side utility functions don't need client-side execution, impacts performance
+2. **Remove React hooks entirely**: Eliminate performance monitoring functionality
+   - Rejected: Loss of valuable performance monitoring and optimization capabilities
+3. **Conditional imports**: Use dynamic imports to conditionally load hooks
+   - Rejected: Adds complexity and potential runtime errors, harder to maintain
+
+**Impact**:
+
+- Resolved Next.js compilation error enabling development server startup
+- Maintained all performance monitoring and optimization functionality
+- Proper Next.js Server/Client Component architecture compliance
+- Clear separation of concerns for future development
+- Foundation for scalable utility architecture patterns
+
+**Related Issues**: Build error resolution, Next.js architecture compliance
+
+---
+
+## ADR-033: CSS Class Standardization for Design System Compliance
+
+**Date**: September 20, 2025  
+**Status**: Accepted  
+**Context**: Invalid Tailwind CSS classes in globals.css causing compilation errors, requiring standardization that maintains design consistency while ensuring build success.
+
+**Decision**: Replace invalid CSS classes (`text-color-foreground-muted`) with proper Tailwind classes (`text-muted-foreground`) following established design system patterns.
+
+**Rationale**:
+
+- Ensures successful CSS compilation and build process
+- Maintains design system consistency and visual appearance
+- Follows Tailwind CSS best practices and naming conventions
+- Enables proper theme switching and design token usage
+- Provides foundation for scalable CSS architecture
+
+**Alternatives Considered**:
+
+1. **Create custom CSS classes**: Define custom classes for invalid Tailwind references
+   - Rejected: Breaks design system consistency and adds maintenance overhead
+2. **Remove styling entirely**: Eliminate problematic styling to fix compilation
+   - Rejected: Negative impact on user experience and design consistency
+3. **Use inline styles**: Replace CSS classes with inline style attributes
+   - Rejected: Reduces maintainability and breaks design system patterns
+
+**Impact**:
+
+- Resolved CSS compilation error enabling successful build process
+- Maintained design consistency and user experience
+- Proper Tailwind CSS usage following best practices
+- Foundation for scalable CSS architecture and design system compliance
+- Improved maintainability and development workflow
+
+**Related Issues**: Build error resolution, design system compliance

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -361,7 +361,9 @@
 <a name='L296'></a><a href='#L296'>296</a>
 <a name='L297'></a><a href='#L297'>297</a>
 <a name='L298'></a><a href='#L298'>298</a>
-<a name='L299'></a><a href='#L299'>299</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -380,8 +382,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -678,21 +682,21 @@ import {
 } from <span class="cstat-no" title="statement not covered" >'@/components/ui/dialog';</span>
 import { Input } from <span class="cstat-no" title="statement not covered" >'@/components/ui/input';</span>
 import { Label } from <span class="cstat-no" title="statement not covered" >'@/components/ui/label';</span>
+import { PageHeader } from <span class="cstat-no" title="statement not covered" >'@/components/ui/page-header';</span>
 &nbsp;
 export default function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >DesignSystemPage() {</span></span>
   return (
-    &lt;div className="min-h-screen bg-neutral-light-grey p-8"&gt;
+    &lt;div className="bg-color-background min-h-screen p-8"&gt;
       &lt;div className="mx-auto max-w-6xl space-y-8"&gt;
-        {/* Header */}
-        &lt;div className="text-center"&gt;
-          &lt;h1 className="text-display-lg text-lumina-radiant mb-4"&gt;
-            Lumina Design System
-          &lt;/h1&gt;
-          &lt;p className="text-lg text-neutral-medium-grey"&gt;
-            A comprehensive UI component library built with Lumina brand
-            guidelines
-          &lt;/p&gt;
-        &lt;/div&gt;
+        &lt;PageHeader
+          title="Lumina Design System"
+          description="A comprehensive UI component library built with Lumina brand guidelines"
+          variant="default"
+          breadcrumbs={[
+            { label: 'Home', href: '/' },
+            { label: 'Design System' },
+          ]}
+        /&gt;
 &nbsp;
         {/* Color Palette */}
         &lt;Card&gt;
@@ -705,24 +709,24 @@ export default function <span class="cstat-no" title="statement not covered" ><s
           &lt;CardContent className="space-y-6"&gt;
             {/* Primary Colors */}
             &lt;div&gt;
-              &lt;h3 className="mb-3 text-lg font-semibold text-neutral-off-black"&gt;
+              &lt;h3 className="text-color-foreground mb-3 text-lg font-semibold"&gt;
                 Primary Colors
               &lt;/h3&gt;
               &lt;div className="flex gap-4"&gt;
                 &lt;div className="text-center"&gt;
                   &lt;div className="mb-2 h-20 w-20 rounded-lg bg-lumina-gold shadow-lumina"&gt;&lt;/div&gt;
                   &lt;p className="text-sm font-medium"&gt;Lumina Gold&lt;/p&gt;
-                  &lt;p className="text-xs text-neutral-medium-grey"&gt;#FFD25A&lt;/p&gt;
+                  &lt;p className="text-color-foreground-muted text-xs"&gt;#FFD25A&lt;/p&gt;
                 &lt;/div&gt;
                 &lt;div className="text-center"&gt;
                   &lt;div className="mb-2 h-20 w-20 rounded-lg bg-lumina-coral shadow-lumina"&gt;&lt;/div&gt;
                   &lt;p className="text-sm font-medium"&gt;Lumina Coral&lt;/p&gt;
-                  &lt;p className="text-xs text-neutral-medium-grey"&gt;#FF7A5A&lt;/p&gt;
+                  &lt;p className="text-color-foreground-muted text-xs"&gt;#FF7A5A&lt;/p&gt;
                 &lt;/div&gt;
                 &lt;div className="text-center"&gt;
                   &lt;div className="mb-2 h-20 w-20 rounded-lg bg-lumina-radiant shadow-lumina"&gt;&lt;/div&gt;
                   &lt;p className="text-sm font-medium"&gt;Radiant Gradient&lt;/p&gt;
-                  &lt;p className="text-xs text-neutral-medium-grey"&gt;
+                  &lt;p className="text-color-foreground-muted text-xs"&gt;
                     Gold → Coral
                   &lt;/p&gt;
                 &lt;/div&gt;
@@ -731,38 +735,38 @@ export default function <span class="cstat-no" title="statement not covered" ><s
 &nbsp;
             {/* Secondary Colors */}
             &lt;div&gt;
-              &lt;h3 className="mb-3 text-lg font-semibold text-neutral-off-black"&gt;
+              &lt;h3 className="text-color-foreground mb-3 text-lg font-semibold"&gt;
                 Secondary Colors
               &lt;/h3&gt;
               &lt;div className="flex gap-4"&gt;
                 &lt;div className="text-center"&gt;
                   &lt;div className="mb-2 h-20 w-20 rounded-lg bg-deep-teal"&gt;&lt;/div&gt;
                   &lt;p className="text-sm font-medium"&gt;Deep Teal&lt;/p&gt;
-                  &lt;p className="text-xs text-neutral-medium-grey"&gt;#0B2B33&lt;/p&gt;
+                  &lt;p className="text-color-foreground-muted text-xs"&gt;#0B2B33&lt;/p&gt;
                 &lt;/div&gt;
               &lt;/div&gt;
             &lt;/div&gt;
 &nbsp;
             {/* Functional Colors */}
             &lt;div&gt;
-              &lt;h3 className="mb-3 text-lg font-semibold text-neutral-off-black"&gt;
+              &lt;h3 className="text-color-foreground mb-3 text-lg font-semibold"&gt;
                 Functional Colors
               &lt;/h3&gt;
               &lt;div className="flex gap-4"&gt;
                 &lt;div className="text-center"&gt;
                   &lt;div className="mb-2 h-20 w-20 rounded-lg bg-success"&gt;&lt;/div&gt;
                   &lt;p className="text-sm font-medium"&gt;Success&lt;/p&gt;
-                  &lt;p className="text-xs text-neutral-medium-grey"&gt;#22C58B&lt;/p&gt;
+                  &lt;p className="text-color-foreground-muted text-xs"&gt;#22C58B&lt;/p&gt;
                 &lt;/div&gt;
                 &lt;div className="text-center"&gt;
                   &lt;div className="mb-2 h-20 w-20 rounded-lg bg-warning"&gt;&lt;/div&gt;
                   &lt;p className="text-sm font-medium"&gt;Warning&lt;/p&gt;
-                  &lt;p className="text-xs text-neutral-medium-grey"&gt;#FFB800&lt;/p&gt;
+                  &lt;p className="text-color-foreground-muted text-xs"&gt;#FFB800&lt;/p&gt;
                 &lt;/div&gt;
                 &lt;div className="text-center"&gt;
                   &lt;div className="mb-2 h-20 w-20 rounded-lg bg-error"&gt;&lt;/div&gt;
                   &lt;p className="text-sm font-medium"&gt;Error&lt;/p&gt;
-                  &lt;p className="text-xs text-neutral-medium-grey"&gt;#E5484D&lt;/p&gt;
+                  &lt;p className="text-color-foreground-muted text-xs"&gt;#E5484D&lt;/p&gt;
                 &lt;/div&gt;
               &lt;/div&gt;
             &lt;/div&gt;
@@ -778,33 +782,35 @@ export default function <span class="cstat-no" title="statement not covered" ><s
             &lt;/CardDescription&gt;
           &lt;/CardHeader&gt;
           &lt;CardContent className="space-y-4"&gt;
-            &lt;div className="text-display-2xl text-neutral-off-black"&gt;
+            &lt;div className="text-display-2xl text-color-foreground"&gt;
               Display 2XL
             &lt;/div&gt;
-            &lt;div className="text-display-xl text-neutral-off-black"&gt;
+            &lt;div className="text-display-xl text-color-foreground"&gt;
               Display XL
             &lt;/div&gt;
-            &lt;div className="text-display-lg text-neutral-off-black"&gt;
+            &lt;div className="text-display-lg text-color-foreground"&gt;
               Display Large
             &lt;/div&gt;
-            &lt;div className="text-display-md text-neutral-off-black"&gt;
+            &lt;div className="text-display-md text-color-foreground"&gt;
               Display Medium
             &lt;/div&gt;
-            &lt;div className="text-display-sm text-neutral-off-black"&gt;
+            &lt;div className="text-display-sm text-color-foreground"&gt;
               Display Small
             &lt;/div&gt;
-            &lt;div className="text-xl font-semibold text-neutral-off-black"&gt;
+            &lt;div className="text-color-foreground text-xl font-semibold"&gt;
               Heading XL
             &lt;/div&gt;
-            &lt;div className="text-lg font-semibold text-neutral-off-black"&gt;
+            &lt;div className="text-color-foreground text-lg font-semibold"&gt;
               Heading Large
             &lt;/div&gt;
-            &lt;div className="text-base font-medium text-neutral-off-black"&gt;
+            &lt;div className="text-color-foreground text-base font-medium"&gt;
               Body Medium
             &lt;/div&gt;
-            &lt;div className="text-base text-neutral-off-black"&gt;Body Regular&lt;/div&gt;
-            &lt;div className="text-sm text-neutral-medium-grey"&gt;Body Small&lt;/div&gt;
-            &lt;div className="text-xs text-neutral-medium-grey"&gt;Caption&lt;/div&gt;
+            &lt;div className="text-color-foreground text-base"&gt;Body Regular&lt;/div&gt;
+            &lt;div className="text-color-foreground-muted text-sm"&gt;
+              Body Small
+            &lt;/div&gt;
+            &lt;div className="text-color-foreground-muted text-xs"&gt;Caption&lt;/div&gt;
           &lt;/CardContent&gt;
         &lt;/Card&gt;
 &nbsp;
@@ -819,7 +825,7 @@ export default function <span class="cstat-no" title="statement not covered" ><s
           &lt;CardContent className="space-y-6"&gt;
             {/* Primary Buttons */}
             &lt;div&gt;
-              &lt;h3 className="mb-3 text-lg font-semibold text-neutral-off-black"&gt;
+              &lt;h3 className="text-color-foreground mb-3 text-lg font-semibold"&gt;
                 Primary Variants
               &lt;/h3&gt;
               &lt;div className="flex flex-wrap gap-3"&gt;
@@ -833,7 +839,7 @@ export default function <span class="cstat-no" title="statement not covered" ><s
 &nbsp;
             {/* Functional Buttons */}
             &lt;div&gt;
-              &lt;h3 className="mb-3 text-lg font-semibold text-neutral-off-black"&gt;
+              &lt;h3 className="text-color-foreground mb-3 text-lg font-semibold"&gt;
                 Functional Variants
               &lt;/h3&gt;
               &lt;div className="flex flex-wrap gap-3"&gt;
@@ -845,7 +851,7 @@ export default function <span class="cstat-no" title="statement not covered" ><s
 &nbsp;
             {/* Button Sizes */}
             &lt;div&gt;
-              &lt;h3 className="mb-3 text-lg font-semibold text-neutral-off-black"&gt;
+              &lt;h3 className="text-color-foreground mb-3 text-lg font-semibold"&gt;
                 Sizes
               &lt;/h3&gt;
               &lt;div className="flex flex-wrap items-center gap-3"&gt;
@@ -964,7 +970,7 @@ export default function <span class="cstat-no" title="statement not covered" ><s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-20T01:11:05.606Z
+                at 2025-09-20T18:37:42.363Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
