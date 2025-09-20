@@ -114,7 +114,7 @@ export function DataTable<T extends Record<string, unknown>>({
         {searchable && (
           <div className="flex items-center space-x-2">
             <div className="relative flex-1">
-              <div className="h-10 animate-pulse rounded bg-gray-200" />
+              <div className="bg-color-background-muted h-10 animate-pulse rounded" />
             </div>
           </div>
         )}
@@ -129,7 +129,10 @@ export function DataTable<T extends Record<string, unknown>>({
                 }}
               >
                 {columns.map((_, i) => (
-                  <div key={i} className="h-4 rounded bg-gray-200" />
+                  <div
+                    key={i}
+                    className="bg-color-background-muted h-4 rounded"
+                  />
                 ))}
               </div>
             </div>
@@ -143,7 +146,10 @@ export function DataTable<T extends Record<string, unknown>>({
                   }}
                 >
                   {columns.map((_, j) => (
-                    <div key={j} className="h-4 rounded bg-gray-200" />
+                    <div
+                      key={j}
+                      className="bg-color-background-muted h-4 rounded"
+                    />
                   ))}
                 </div>
               </div>

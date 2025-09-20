@@ -6,6 +6,7 @@ import { BasicInfoStep } from '@/components/onboarding/steps/basic-info-step';
 import { FinancialModelStep } from '@/components/onboarding/steps/financial-model-step';
 import { OperatingHoursStep } from '@/components/onboarding/steps/operating-hours-step';
 import { SettingsStep } from '@/components/onboarding/steps/settings-step';
+import { PageHeader } from '@/components/ui/page-header';
 import {
   getStepDescription,
   getStepTitle,
@@ -68,14 +69,12 @@ export default function OnboardingPage() {
       {/* Header */}
       <div className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-4xl px-4 py-6">
-          <div className="mb-6 text-center">
-            <h1 className="mb-2 text-3xl font-bold text-gray-900">
-              Welcome to Lumina
-            </h1>
-            <p className="text-gray-600">
-              Let&apos;s set up your business profile to get started
-            </p>
-          </div>
+          <PageHeader
+            title="Welcome to Lumina"
+            description="Let's set up your business profile to get started"
+            variant="compact"
+            className="mb-6 text-center"
+          />
 
           <ProgressIndicator
             currentStep={state.currentStep}

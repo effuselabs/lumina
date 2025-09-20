@@ -1,7 +1,10 @@
 'use client';
 
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageHeader } from '@/components/ui/page-header';
+import { StatCard } from '@/components/ui/stat-card';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Calendar, Clock, Plus, Users } from 'lucide-react';
 import { useState } from 'react';
@@ -62,7 +65,9 @@ export function AppointmentsPageContent({
             actions={[
               {
                 label: 'New Appointment',
-                onClick: () => console.log('New appointment clicked'),
+                onClick: () => {
+                  // TODO: Implement new appointment functionality
+                },
                 icon: Plus,
                 primary: true,
               },
@@ -109,14 +114,14 @@ export function AppointmentsPageContent({
           </div>
 
           {/* Appointment Management Interface */}
-          <Card className="shadow-sm border-neutral-200">
+          <Card className="border-color-border shadow-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-deep-teal">
+                  <CardTitle className="text-color-secondary">
                     Appointment Calendar
                   </CardTitle>
-                  <p className="text-neutral-600">
+                  <p className="text-color-foreground-muted">
                     View and manage your appointment schedule
                   </p>
                 </div>
@@ -125,7 +130,6 @@ export function AppointmentsPageContent({
                   icon={<Plus className="h-4 w-4" />}
                   onClick={() => {
                     // TODO: Implement new appointment functionality
-                    console.log('New appointment clicked');
                   }}
                 >
                   New Appointment
@@ -134,15 +138,15 @@ export function AppointmentsPageContent({
             </CardHeader>
             <CardContent>
               <div className="py-12 text-center">
-                <Calendar className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+                <Calendar className="text-color-foreground-muted mx-auto mb-4 h-12 w-12" />
                 <h3 className="mb-2 text-lg font-semibold">
                   Calendar View Coming Soon
                 </h3>
-                <p className="mb-4 text-muted-foreground">
+                <p className="text-color-foreground-muted mb-4">
                   Full appointment calendar and booking interface will be
                   available here.
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-color-foreground-muted text-sm">
                   Features will include: Calendar view, appointment booking,
                   staff scheduling, client management, and automated reminders.
                 </p>

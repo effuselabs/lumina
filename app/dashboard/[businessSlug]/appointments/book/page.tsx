@@ -48,33 +48,33 @@ export default async function BookAppointmentPage({
         {/* Page Header */}
         <div>
           <h1 className="lumina-heading-2">Book Appointment</h1>
-          <p className="lumina-body-large" style={{ color: '#808285' }}>
+          <p className="lumina-body-large text-color-foreground-muted">
             Schedule a new appointment for your clients
           </p>
         </div>
 
         {/* Booking Interface Placeholder */}
-        <Card className="border border-gray-200 bg-white shadow-sm">
+        <Card className="border-color-border bg-color-surface border shadow-sm">
           <CardHeader>
             <CardTitle className="lumina-heading-3 flex items-center gap-2">
-              <Calendar className="h-5 w-5" style={{ color: '#ff7a5a' }} />
+              <Calendar className="text-color-primary h-5 w-5" />
               Appointment Booking
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="py-12 text-center">
               <div className="mb-6 flex justify-center space-x-4">
-                <Calendar className="h-8 w-8" style={{ color: '#ff7a5a' }} />
-                <Clock className="h-8 w-8" style={{ color: '#ff7a5a' }} />
-                <User className="h-8 w-8" style={{ color: '#ff7a5a' }} />
+                <Calendar className="text-color-primary h-8 w-8" />
+                <Clock className="text-color-primary h-8 w-8" />
+                <User className="text-color-primary h-8 w-8" />
               </div>
               <h3 className="text-lumina-primary mb-2 text-lg font-semibold">
                 Booking Interface Coming Soon
               </h3>
-              <p className="mb-4" style={{ color: '#808285' }}>
+              <p className="text-color-foreground-muted mb-4">
                 Complete appointment booking system will be available here.
               </p>
-              <p className="text-sm" style={{ color: '#808285' }}>
+              <p className="text-color-foreground-muted text-sm">
                 Features will include: Client selection, service booking, staff
                 assignment, time slot selection, and automated confirmations.
               </p>

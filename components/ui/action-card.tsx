@@ -68,7 +68,7 @@ export function ActionCard({
               className={cn('rounded-lg p-2', {
                 'bg-orange-100': variant === 'primary',
                 'bg-teal-100': variant === 'secondary',
-                'bg-gray-100': variant === 'default',
+                'bg-color-background-muted': variant === 'default',
               })}
             >
               <Icon className={iconClasses} />

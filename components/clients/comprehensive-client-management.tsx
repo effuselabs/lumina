@@ -103,7 +103,7 @@ export function ComprehensiveClientManagement({
       );
       if (clientsResponse.ok) {
         const clientsData = await clientsResponse.json();
-        const clients = (clientsData.clients || []).map((client: any) => ({
+        const clients = (clientsData.clients || []).map((client: Client) => ({
           ...client,
           // Add default values for missing fields
           status: client.status || 'active', // Default to 'active' if no status
@@ -338,16 +338,16 @@ export function ComprehensiveClientManagement({
         <div className="dashboard-stats-grid">
           <Card className="client-metrics-card border border-gray-200 bg-white shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: 'var(--deep-teal)' }}>
+              <CardTitle className="text-color-secondary text-sm font-medium">
                 Total Clients
               </CardTitle>
-              <Users className="h-4 w-4" style={{ color: 'var(--lumina-coral)' }} />
+              <Users className="text-color-primary h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: 'var(--deep-teal)' }}>
+              <div className="text-color-secondary text-2xl font-bold">
                 {metrics.totalClients}
               </div>
-              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-color-foreground-muted text-xs">
                 {metrics.activeClients} active
               </p>
             </CardContent>
@@ -355,16 +355,16 @@ export function ComprehensiveClientManagement({
 
           <Card className="client-metrics-card border border-gray-200 bg-white shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: 'var(--deep-teal)' }}>
+              <CardTitle className="text-color-secondary text-sm font-medium">
                 New This Month
               </CardTitle>
-              <TrendingUp className="h-4 w-4" style={{ color: 'var(--success)' }} />
+              <TrendingUp className="text-color-success h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: 'var(--deep-teal)' }}>
+              <div className="text-color-secondary text-2xl font-bold">
                 {metrics.newThisMonth}
               </div>
-              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-color-foreground-muted text-xs">
                 +
                 {Math.round(
                   (metrics.newThisMonth / metrics.totalClients) * 100
@@ -376,33 +376,31 @@ export function ComprehensiveClientManagement({
 
           <Card className="client-metrics-card border border-gray-200 bg-white shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: 'var(--deep-teal)' }}>
+              <CardTitle className="text-color-secondary text-sm font-medium">
                 Avg Lifetime Value
               </CardTitle>
-              <DollarSign className="h-4 w-4" style={{ color: 'var(--lumina-gold)' }} />
+              <DollarSign className="text-color-primary h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: 'var(--deep-teal)' }}>
+              <div className="text-color-secondary text-2xl font-bold">
                 ${metrics.averageLifetimeValue.toLocaleString()}
               </div>
-              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                Per client
-              </p>
+              <p className="text-color-foreground-muted text-xs">Per client</p>
             </CardContent>
           </Card>
 
           <Card className="client-metrics-card border border-gray-200 bg-white shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: 'var(--deep-teal)' }}>
+              <CardTitle className="text-color-secondary text-sm font-medium">
                 VIP Clients
               </CardTitle>
-              <Heart className="h-4 w-4" style={{ color: 'var(--lumina-coral)' }} />
+              <Heart className="text-color-primary h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: 'var(--deep-teal)' }}>
+              <div className="text-color-secondary text-2xl font-bold">
                 {metrics.vipClients}
               </div>
-              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-color-foreground-muted text-xs">
                 {metrics.retentionRate}% retention rate
               </p>
             </CardContent>
@@ -438,51 +436,27 @@ export function ComprehensiveClientManagement({
         />
 
         <div className="flex items-center justify-between">
-          <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <div className="text-color-foreground-muted text-sm">
             Showing {filteredClients.length} of {clients.length} clients
           </div>
-          <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1">
+          <div className="bg-color-background-muted flex items-center gap-1 rounded-lg p-1">
             <button
               onClick={() => setViewMode('cards')}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${viewMode === 'cards'
-                ? 'bg-white shadow-sm'
-                : 'text-gray-600'
-                }`}
-              style={{
-                color: viewMode === 'cards' ? 'var(--deep-teal)' : undefined,
-              }}
-              onMouseEnter={e => {
-                if (viewMode !== 'cards') {
-                  e.currentTarget.style.color = 'var(--lumina-coral)';
-                }
-              }}
-              onMouseLeave={e => {
-                if (viewMode !== 'cards') {
-                  e.currentTarget.style.color = '';
-                }
-              }}
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                viewMode === 'cards'
+                  ? 'text-color-secondary bg-white shadow-sm'
+                  : 'text-gray-600'
+              }`}
             >
               Cards
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${viewMode === 'table'
-                ? 'bg-white shadow-sm'
-                : 'text-gray-600'
-                }`}
-              style={{
-                color: viewMode === 'table' ? 'var(--deep-teal)' : undefined,
-              }}
-              onMouseEnter={e => {
-                if (viewMode !== 'table') {
-                  e.currentTarget.style.color = 'var(--lumina-coral)';
-                }
-              }}
-              onMouseLeave={e => {
-                if (viewMode !== 'table') {
-                  e.currentTarget.style.color = '';
-                }
-              }}
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                viewMode === 'table'
+                  ? 'text-color-secondary bg-white shadow-sm'
+                  : 'text-gray-600'
+              }`}
             >
               Table
             </button>
@@ -503,9 +477,9 @@ export function ComprehensiveClientManagement({
           action={
             Object.keys(filterValues).length === 0
               ? {
-                label: 'Add First Client',
-                onClick: onCreateClient,
-              }
+                  label: 'Add First Client',
+                  onClick: onCreateClient,
+                }
               : undefined
           }
         />
@@ -526,7 +500,7 @@ export function ComprehensiveClientManagement({
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0 flex-1">
-                      <h3 className="truncate text-sm font-semibold" style={{ color: 'var(--deep-teal)' }}>
+                      <h3 className="text-color-secondary truncate text-sm font-semibold">
                         {client.firstName} {client.lastName}
                       </h3>
                       <div className="mt-1 flex items-center gap-1">
@@ -547,10 +521,7 @@ export function ComprehensiveClientManagement({
                         onClick={e => e.stopPropagation()}
                         className="flex-shrink-0 rounded p-1 hover:bg-gray-100"
                       >
-                        <MoreHorizontal
-                          className="h-4 w-4"
-                          style={{ color: '#808285' }}
-                        />
+                        <MoreHorizontal className="text-color-foreground-muted h-4 w-4" />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -591,19 +562,13 @@ export function ComprehensiveClientManagement({
                 {/* Contact Info - Compact */}
                 <div className="space-y-1">
                   {client.email && (
-                    <div
-                      className="flex items-center truncate text-xs"
-                      style={{ color: '#808285' }}
-                    >
+                    <div className="text-color-foreground-muted flex items-center truncate text-xs">
                       <Mail className="mr-1 h-3 w-3 flex-shrink-0" />
                       <span className="truncate">{client.email}</span>
                     </div>
                   )}
                   {client.phone && (
-                    <div
-                      className="flex items-center text-xs"
-                      style={{ color: '#808285' }}
-                    >
+                    <div className="text-color-foreground-muted flex items-center text-xs">
                       <Phone className="mr-1 h-3 w-3 flex-shrink-0" />
                       {client.phone}
                     </div>
@@ -613,18 +578,18 @@ export function ComprehensiveClientManagement({
                 {/* Stats - Compact Grid */}
                 <div className="grid grid-cols-2 gap-2 border-t border-gray-100 py-2">
                   <div className="text-center">
-                    <div className="text-sm font-medium" style={{ color: 'var(--deep-teal)' }}>
+                    <div className="text-color-secondary text-sm font-medium">
                       {client.appointmentCount}
                     </div>
-                    <div className="text-xs" style={{ color: '#808285' }}>
+                    <div className="text-color-foreground-muted text-xs">
                       Visits
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-medium" style={{ color: 'var(--deep-teal)' }}>
+                    <div className="text-color-secondary text-sm font-medium">
                       ${client.totalSpent?.toLocaleString() || '0'}
                     </div>
-                    <div className="text-xs" style={{ color: '#808285' }}>
+                    <div className="text-color-foreground-muted text-xs">
                       Spent
                     </div>
                   </div>
@@ -633,16 +598,13 @@ export function ComprehensiveClientManagement({
                 {/* Last Appointment - Compact */}
                 {client.lastAppointment && (
                   <div className="border-t border-gray-100 pt-2">
-                    <div className="text-xs" style={{ color: 'var(--deep-teal)' }}>
+                    <div className="text-color-secondary text-xs">
                       {formatDistanceToNow(
                         new Date(client.lastAppointment.startTime),
                         { addSuffix: true }
                       )}
                     </div>
-                    <div
-                      className="truncate text-xs"
-                      style={{ color: '#808285' }}
-                    >
+                    <div className="text-color-foreground-muted truncate text-xs">
                       {client.lastAppointment.services
                         .map(s => s.service.name)
                         .join(', ')}
@@ -678,13 +640,13 @@ export function ComprehensiveClientManagement({
         </div>
       ) : (
         // Enhanced Table view with perfect alignment
-        <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div className="border-color-border bg-color-surface rounded-lg border shadow-sm">
           <div className="p-4">
             <div className="space-y-3">
               {filteredClients.map(client => (
                 <div
                   key={client.id}
-                  className="flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors hover:bg-gray-50"
+                  className="hover:bg-color-surface-hover flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors"
                   onClick={() => onViewClient?.(client)}
                 >
                   <div className="flex min-w-0 flex-1 items-center space-x-3">
@@ -695,7 +657,7 @@ export function ComprehensiveClientManagement({
                     </Avatar>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="truncate font-medium" style={{ color: 'var(--deep-teal)' }}>
+                        <h3 className="text-color-secondary truncate font-medium">
                           {client.firstName} {client.lastName}
                         </h3>
                         <StatusBadge
@@ -707,10 +669,7 @@ export function ComprehensiveClientManagement({
                         {getLoyaltyIcon(client.loyaltyTier)}
                       </div>
                       {client.email && (
-                        <div
-                          className="mt-1 flex items-center truncate text-sm"
-                          style={{ color: '#808285' }}
-                        >
+                        <div className="text-color-foreground-muted mt-1 flex items-center truncate text-sm">
                           <Mail className="mr-1 h-3 w-3 flex-shrink-0" />
                           <span className="truncate">{client.email}</span>
                         </div>
@@ -720,10 +679,10 @@ export function ComprehensiveClientManagement({
 
                   <div className="flex flex-shrink-0 items-center gap-4">
                     <div className="text-right">
-                      <div className="text-sm font-medium" style={{ color: 'var(--deep-teal)' }}>
+                      <div className="text-color-secondary text-sm font-medium">
                         {client.appointmentCount} visits
                       </div>
-                      <div className="text-xs" style={{ color: '#808285' }}>
+                      <div className="text-color-foreground-muted text-xs">
                         ${client.totalSpent?.toLocaleString() || '0'} spent
                       </div>
                     </div>

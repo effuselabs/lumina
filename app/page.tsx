@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { PageHeader } from '@/components/ui/page-header';
 
 export default async function HomePage() {
   // TEMPORARILY DISABLED FOR TESTING
@@ -35,41 +35,26 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-16">
+        <PageHeader
+          title="Lumina"
+          subtitle="Intelligent Software for Small Business Growth"
+          description="AI-powered business management platform designed specifically for salons and barbershops. Streamline booking, client management, and financials with intelligent insights."
+          variant="default"
+          actions={[
+            {
+              label: 'Get Started Free',
+              href: '/auth/signup',
+              variant: 'primary',
+            },
+            { label: 'Book a Demo', href: '/book/demo', variant: 'outline' },
+          ]}
+          className="mb-12 text-center"
+        />
+
         <div className="text-center">
-          {/* Hero Section */}
-          <div className="mb-12">
-            <h1 className="mb-6 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              <span className="lumina-gradient-text">Lumina</span>
-            </h1>
-            <p className="mb-8 text-xl text-gray-600 sm:text-2xl">
-              Intelligent Software for Small Business Growth
-            </p>
-            <p className="mx-auto max-w-2xl text-lg text-gray-500">
-              AI-powered business management platform designed specifically for
-              salons and barbershops. Streamline booking, client management, and
-              financials with intelligent insights.
-            </p>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <Link
-              href="/auth/signup"
-              className="lumina-gradient inline-flex items-center justify-center rounded-lg px-8 py-3 text-base font-medium text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-            >
-              Get Started Free
-            </Link>
-            <Link
-              href="/book/demo"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-8 py-3 text-base font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md"
-            >
-              Book a Demo
-            </Link>
-          </div>
-
           {/* Features Preview */}
           <div className="mt-20">
-            <h2 className="mb-12 text-3xl font-bold text-gray-900">
+            <h2 className="text-color-foreground mb-12 text-3xl font-bold">
               Everything you need to grow your business
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
@@ -89,10 +74,10 @@ export default async function HomePage() {
                     />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                <h3 className="text-color-foreground mb-2 text-xl font-semibold">
                   Smart Booking
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-color-foreground-muted">
                   Real-time availability, automated confirmations, and seamless
                   client experience.
                 </p>
@@ -114,10 +99,10 @@ export default async function HomePage() {
                     />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                <h3 className="text-color-foreground mb-2 text-xl font-semibold">
                   Client Management
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-color-foreground-muted">
                   Comprehensive CRM with history, preferences, and automated
                   communications.
                 </p>
@@ -139,10 +124,10 @@ export default async function HomePage() {
                     />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                <h3 className="text-color-foreground mb-2 text-xl font-semibold">
                   AI Insights
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-color-foreground-muted">
                   Intelligent analytics that reveal opportunities and optimize
                   your revenue.
                 </p>

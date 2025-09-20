@@ -64,8 +64,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <a
+          href="#main-content"
+          className="focus:bg-color-primary focus:text-color-primary-foreground sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         <Providers>
-          <div id="root">{children}</div>
+          <div id="root">
+            <main id="main-content">{children}</main>
+          </div>
         </Providers>
       </body>
     </html>

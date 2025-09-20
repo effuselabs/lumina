@@ -46,36 +46,33 @@ export default async function POSPage({ params }: POSPageProps) {
         {/* Page Header */}
         <div>
           <h1 className="lumina-heading-2">Point of Sale</h1>
-          <p className="lumina-body-large" style={{ color: '#808285' }}>
+          <p className="lumina-body-large text-color-foreground-muted">
             Process payments and manage transactions
           </p>
         </div>
 
         {/* POS Interface Placeholder */}
-        <Card className="border border-gray-200 bg-white shadow-sm">
+        <Card className="border-color-border bg-color-surface border shadow-sm">
           <CardHeader>
             <CardTitle className="lumina-heading-3 flex items-center gap-2">
-              <Monitor className="h-5 w-5" style={{ color: '#ff7a5a' }} />
+              <Monitor className="text-color-primary h-5 w-5" />
               POS Terminal
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="py-12 text-center">
               <div className="mb-6 flex justify-center space-x-4">
-                <Monitor className="h-8 w-8" style={{ color: '#ff7a5a' }} />
-                <CreditCard className="h-8 w-8" style={{ color: '#ff7a5a' }} />
-                <ShoppingCart
-                  className="h-8 w-8"
-                  style={{ color: '#ff7a5a' }}
-                />
+                <Monitor className="text-color-primary h-8 w-8" />
+                <CreditCard className="text-color-primary h-8 w-8" />
+                <ShoppingCart className="text-color-primary h-8 w-8" />
               </div>
               <h3 className="text-lumina-primary mb-2 text-lg font-semibold">
                 POS System Coming Soon
               </h3>
-              <p className="mb-4" style={{ color: '#808285' }}>
+              <p className="text-color-foreground-muted mb-4">
                 Complete point of sale system will be available here.
               </p>
-              <p className="text-sm" style={{ color: '#808285' }}>
+              <p className="text-color-foreground-muted text-sm">
                 Features will include: Service selection, payment processing,
                 receipt generation, tip handling, and inventory management.
               </p>

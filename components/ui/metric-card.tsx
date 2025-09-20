@@ -50,12 +50,12 @@ export function MetricCard({
     return (
       <Card className={cn('animate-pulse', className)}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div className="h-4 w-1/3 rounded bg-gray-200" />
-          <div className="h-4 w-4 rounded bg-gray-200" />
+          <div className="bg-color-background-muted h-4 w-1/3 rounded" />
+          <div className="bg-color-background-muted h-4 w-4 rounded" />
         </CardHeader>
         <CardContent>
-          <div className="mb-2 h-8 w-1/2 rounded bg-gray-200" />
-          <div className="h-3 w-2/3 rounded bg-gray-200" />
+          <div className="bg-color-background-muted mb-2 h-8 w-1/2 rounded" />
+          <div className="bg-color-background-muted h-3 w-2/3 rounded" />
         </CardContent>
       </Card>
     );

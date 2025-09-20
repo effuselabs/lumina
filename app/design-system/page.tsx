@@ -17,21 +17,21 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PageHeader } from '@/components/ui/page-header';
 
 export default function DesignSystemPage() {
   return (
-    <div className="min-h-screen bg-neutral-light-grey p-8">
+    <div className="bg-color-background min-h-screen p-8">
       <div className="mx-auto max-w-6xl space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-display-lg text-lumina-radiant mb-4">
-            Lumina Design System
-          </h1>
-          <p className="text-lg text-neutral-medium-grey">
-            A comprehensive UI component library built with Lumina brand
-            guidelines
-          </p>
-        </div>
+        <PageHeader
+          title="Lumina Design System"
+          description="A comprehensive UI component library built with Lumina brand guidelines"
+          variant="default"
+          breadcrumbs={[
+            { label: 'Home', href: '/' },
+            { label: 'Design System' },
+          ]}
+        />
 
         {/* Color Palette */}
         <Card>
@@ -44,24 +44,24 @@ export default function DesignSystemPage() {
           <CardContent className="space-y-6">
             {/* Primary Colors */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-neutral-off-black">
+              <h3 className="text-color-foreground mb-3 text-lg font-semibold">
                 Primary Colors
               </h3>
               <div className="flex gap-4">
                 <div className="text-center">
                   <div className="mb-2 h-20 w-20 rounded-lg bg-lumina-gold shadow-lumina"></div>
                   <p className="text-sm font-medium">Lumina Gold</p>
-                  <p className="text-xs text-neutral-medium-grey">#FFD25A</p>
+                  <p className="text-color-foreground-muted text-xs">#FFD25A</p>
                 </div>
                 <div className="text-center">
                   <div className="mb-2 h-20 w-20 rounded-lg bg-lumina-coral shadow-lumina"></div>
                   <p className="text-sm font-medium">Lumina Coral</p>
-                  <p className="text-xs text-neutral-medium-grey">#FF7A5A</p>
+                  <p className="text-color-foreground-muted text-xs">#FF7A5A</p>
                 </div>
                 <div className="text-center">
                   <div className="mb-2 h-20 w-20 rounded-lg bg-lumina-radiant shadow-lumina"></div>
                   <p className="text-sm font-medium">Radiant Gradient</p>
-                  <p className="text-xs text-neutral-medium-grey">
+                  <p className="text-color-foreground-muted text-xs">
                     Gold → Coral
                   </p>
                 </div>
@@ -70,38 +70,38 @@ export default function DesignSystemPage() {
 
             {/* Secondary Colors */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-neutral-off-black">
+              <h3 className="text-color-foreground mb-3 text-lg font-semibold">
                 Secondary Colors
               </h3>
               <div className="flex gap-4">
                 <div className="text-center">
                   <div className="mb-2 h-20 w-20 rounded-lg bg-deep-teal"></div>
                   <p className="text-sm font-medium">Deep Teal</p>
-                  <p className="text-xs text-neutral-medium-grey">#0B2B33</p>
+                  <p className="text-color-foreground-muted text-xs">#0B2B33</p>
                 </div>
               </div>
             </div>
 
             {/* Functional Colors */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-neutral-off-black">
+              <h3 className="text-color-foreground mb-3 text-lg font-semibold">
                 Functional Colors
               </h3>
               <div className="flex gap-4">
                 <div className="text-center">
                   <div className="mb-2 h-20 w-20 rounded-lg bg-success"></div>
                   <p className="text-sm font-medium">Success</p>
-                  <p className="text-xs text-neutral-medium-grey">#22C58B</p>
+                  <p className="text-color-foreground-muted text-xs">#22C58B</p>
                 </div>
                 <div className="text-center">
                   <div className="mb-2 h-20 w-20 rounded-lg bg-warning"></div>
                   <p className="text-sm font-medium">Warning</p>
-                  <p className="text-xs text-neutral-medium-grey">#FFB800</p>
+                  <p className="text-color-foreground-muted text-xs">#FFB800</p>
                 </div>
                 <div className="text-center">
                   <div className="mb-2 h-20 w-20 rounded-lg bg-error"></div>
                   <p className="text-sm font-medium">Error</p>
-                  <p className="text-xs text-neutral-medium-grey">#E5484D</p>
+                  <p className="text-color-foreground-muted text-xs">#E5484D</p>
                 </div>
               </div>
             </div>
@@ -117,33 +117,35 @@ export default function DesignSystemPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="text-display-2xl text-neutral-off-black">
+            <div className="text-display-2xl text-color-foreground">
               Display 2XL
             </div>
-            <div className="text-display-xl text-neutral-off-black">
+            <div className="text-display-xl text-color-foreground">
               Display XL
             </div>
-            <div className="text-display-lg text-neutral-off-black">
+            <div className="text-display-lg text-color-foreground">
               Display Large
             </div>
-            <div className="text-display-md text-neutral-off-black">
+            <div className="text-display-md text-color-foreground">
               Display Medium
             </div>
-            <div className="text-display-sm text-neutral-off-black">
+            <div className="text-display-sm text-color-foreground">
               Display Small
             </div>
-            <div className="text-xl font-semibold text-neutral-off-black">
+            <div className="text-color-foreground text-xl font-semibold">
               Heading XL
             </div>
-            <div className="text-lg font-semibold text-neutral-off-black">
+            <div className="text-color-foreground text-lg font-semibold">
               Heading Large
             </div>
-            <div className="text-base font-medium text-neutral-off-black">
+            <div className="text-color-foreground text-base font-medium">
               Body Medium
             </div>
-            <div className="text-base text-neutral-off-black">Body Regular</div>
-            <div className="text-sm text-neutral-medium-grey">Body Small</div>
-            <div className="text-xs text-neutral-medium-grey">Caption</div>
+            <div className="text-color-foreground text-base">Body Regular</div>
+            <div className="text-color-foreground-muted text-sm">
+              Body Small
+            </div>
+            <div className="text-color-foreground-muted text-xs">Caption</div>
           </CardContent>
         </Card>
 
@@ -158,7 +160,7 @@ export default function DesignSystemPage() {
           <CardContent className="space-y-6">
             {/* Primary Buttons */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-neutral-off-black">
+              <h3 className="text-color-foreground mb-3 text-lg font-semibold">
                 Primary Variants
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -172,7 +174,7 @@ export default function DesignSystemPage() {
 
             {/* Functional Buttons */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-neutral-off-black">
+              <h3 className="text-color-foreground mb-3 text-lg font-semibold">
                 Functional Variants
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -184,7 +186,7 @@ export default function DesignSystemPage() {
 
             {/* Button Sizes */}
             <div>
-              <h3 className="mb-3 text-lg font-semibold text-neutral-off-black">
+              <h3 className="text-color-foreground mb-3 text-lg font-semibold">
                 Sizes
               </h3>
               <div className="flex flex-wrap items-center gap-3">

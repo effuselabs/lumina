@@ -6,20 +6,20 @@ const statusBadgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-gray-100 text-gray-800',
+        default: 'bg-color-background-muted text-color-foreground',
         success: 'bg-green-100 text-green-800',
         warning: 'bg-yellow-100 text-yellow-800',
         error: 'bg-red-100 text-red-800',
         info: 'bg-blue-100 text-blue-800',
         pending: 'bg-orange-100 text-orange-800',
         active: 'bg-green-100 text-green-800',
-        inactive: 'bg-gray-100 text-gray-600',
+        inactive: 'bg-color-background-muted text-color-foreground-muted',
         scheduled: 'bg-blue-100 text-blue-800',
         confirmed: 'bg-green-100 text-green-800',
         'in-progress': 'bg-orange-100 text-orange-800',
         completed: 'bg-green-100 text-green-800',
         cancelled: 'bg-red-100 text-red-800',
-        'no-show': 'bg-gray-100 text-gray-600',
+        'no-show': 'bg-color-background-muted text-color-foreground-muted',
       },
       size: {
         sm: 'px-2 py-0.5 text-xs',

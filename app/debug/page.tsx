@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { PageHeader } from '@/components/ui/page-header';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
@@ -20,9 +21,14 @@ export default async function DebugPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="bg-color-background min-h-screen p-8">
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-6 text-2xl font-bold">Debug Information</h1>
+        <PageHeader
+          title="Debug Information"
+          description="System debugging and diagnostic information"
+          variant="default"
+          breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Debug' }]}
+        />
 
         <div className="mb-6 rounded-lg bg-white p-6 shadow">
           <h2 className="mb-4 text-lg font-semibold">Session Info</h2>
