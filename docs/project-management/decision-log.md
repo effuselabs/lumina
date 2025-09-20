@@ -238,7 +238,7 @@ Each decision follows this structure:
 
 **Date**: September 6, 2025  
 **Status**: accepted  
-**Context**: The documentation audit spec (`.kiro/specs/documentation-audit-plan/`) was created to manage comprehensive documentation cleanup and migration. However, during development, we discovered that the audit scripts have critical safety issues and the documentation system is already in good shape after manual cleanup efforts.
+**Context**: The documentation audit spec (`.kiro/specs/completed/documentation-audit-plan/`) was created to manage comprehensive documentation cleanup and migration. However, during development, we discovered that the audit scripts have critical safety issues and the documentation system is already in good shape after manual cleanup efforts.
 
 **Decision**: Remove the documentation audit spec from the project and move the work to a separate workspace for future consideration.
 

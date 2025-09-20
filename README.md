@@ -210,7 +210,8 @@ Lumina includes a comprehensive **Steering System** that provides context-aware 
 
 ### 🔧 Project Management & Specifications
 
-- **[📋 Feature Specifications](.kiro/specs/)** - Detailed requirements, designs, and task lists
+- **[📋 Active Specifications](.kiro/specs/)** - Current feature specifications and development plans
+- **[✅ Completed Specifications](.kiro/specs/completed/)** - Finished feature implementations and archived specs
 - **[🎯 Linear Best Practices](.kiro/steering/linear-best-practices.md)** - Issue management and labeling guidelines
 - **[🤖 Agent Hooks](.kiro/hooks/)** - Automated documentation sync and compliance checking
 
