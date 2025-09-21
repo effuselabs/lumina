@@ -125,14 +125,22 @@ model Business {
   updatedAt DateTime @updatedAt
 
   // Relations
-  users               BusinessUser[]
-  staff               Staff[]
-  services            Service[]
-  clients             Client[]
-  appointments        Appointment[]
-  transactions        Transaction[]
-  paymentCalculations PaymentCalculation[]
-  staffInvitations    StaffInvitation[]
+  users                BusinessUser[]
+  staff                Staff[]
+  services             Service[]
+  clients              Client[]
+  appointments         Appointment[]
+  transactions         Transaction[]
+  paymentCalculations  PaymentCalculation[]
+  staffInvitations     StaffInvitation[]
+  products             Product[]
+  productSales         ProductSale[]
+  giftCards            GiftCard[]
+  promotions           Promotion[]
+  marketingCampaigns   MarketingCampaign[]
+  loyaltyPrograms      LoyaltyProgram[]
+  clientReviews        ClientReview[]
+  communicationHistory CommunicationHistory[]
 
   @@map("businesses")
 }
@@ -200,6 +208,8 @@ model Staff {
   appointments        Appointment[]
   transactions        Transaction[]
   paymentCalculations PaymentCalculation[]
+  productSales        ProductSale[]
+  reviews             ClientReview[]
 
   @@index([businessId, employmentType])
   @@index([businessId, isActive])
@@ -293,8 +303,13 @@ model Client {
   updatedAt DateTime @updatedAt
 
   // Relations
-  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  appointments Appointment[]
+  business             Business               @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  appointments         Appointment[]
+  promotionUsage       PromotionUsage[]
+  campaignRecipients   CampaignRecipient[]
+  loyaltyMemberships   LoyaltyMembership[]
+  reviews              ClientReview[]
+  communicationHistory CommunicationHistory[]
 
   @@unique([businessId, email])
   @@unique([businessId, phone])
@@ -333,12 +348,18 @@ model Appointment {
   updatedAt DateTime @updatedAt
 
   // Relations
-  business     Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  client       Client?              @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  staff        Staff                @relation(fields: [staffId], references: [id], onDelete: Cascade)
-  user         User?                @relation("AppointmentClient", fields: [userId], references: [id], onDelete: SetNull)
-  services     AppointmentService[]
-  transactions Transaction[]
+  business             Business               @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  client               Client?                @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  staff                Staff                  @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  user                 User?                  @relation("AppointmentClient", fields: [userId], references: [id], onDelete: SetNull)
+  services             AppointmentService[]
+  transactions         Transaction[]
+  productSales         ProductSale[]
+  giftCardRedemptions  GiftCardRedemption[]
+  promotionUsage       PromotionUsage[]
+  loyaltyTransactions  LoyaltyTransaction[]
+  reviews              ClientReview[]
+  communicationHistory CommunicationHistory[]
 
   @@index([businessId, startTime])
   @@index([staffId, startTime])
@@ -493,6 +514,423 @@ model StaffInvitation {
 }
 
 // ============================================================================
+// BUSINESS OPERATIONS (PRODUCTS, PROMOTIONS, GIFT CARDS)
+// ============================================================================
+
+model Product {
+  id         String @id @default(cuid())
+  businessId String
+
+  // Product Information
+  name        String
+  description String?
+  category    String
+  brand       String?
+  sku         String? // Stock Keeping Unit
+
+  // Pricing
+  costPrice   Decimal? @db.Decimal(10, 2) // Cost to business
+  retailPrice Decimal  @db.Decimal(10, 2) // Selling price
+
+  // Inventory
+  stockLevel    Int     @default(0)
+  lowStockAlert Int?    @default(5) // Alert when stock falls below this level
+  isActive      Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  sales    ProductSale[]
+
+  @@unique([businessId, sku])
+  @@index([businessId, category])
+  @@map("products")
+}
+
+model ProductSale {
+  id            String  @id @default(cuid())
+  businessId    String
+  productId     String
+  appointmentId String?
+  staffId       String?
+
+  // Sale Details
+  quantity    Int
+  unitPrice   Decimal @db.Decimal(10, 2)
+  totalAmount Decimal @db.Decimal(10, 2)
+
+  // Sale Context
+  saleType SaleType @default(RETAIL) // RETAIL or WITH_SERVICE
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business    Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  staff       Staff?       @relation(fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, createdAt])
+  @@index([productId, createdAt])
+  @@map("product_sales")
+}
+
+model GiftCard {
+  id         String @id @default(cuid())
+  businessId String
+
+  // Gift Card Details
+  code           String  @unique
+  initialAmount  Decimal @db.Decimal(10, 2)
+  currentBalance Decimal @db.Decimal(10, 2)
+
+  // Purchase Information
+  purchasedBy  String? // Client name or email
+  purchaseDate DateTime @default(now())
+
+  // Recipient Information
+  recipientName  String?
+  recipientEmail String?
+  message        String?
+
+  // Status and Expiry
+  isActive   Boolean   @default(true)
+  expiryDate DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business    Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  redemptions GiftCardRedemption[]
+
+  @@index([businessId, isActive])
+  @@map("gift_cards")
+}
+
+model GiftCardRedemption {
+  id            String  @id @default(cuid())
+  giftCardId    String
+  appointmentId String?
+
+  // Redemption Details
+  amount         Decimal  @db.Decimal(10, 2)
+  redeemedBy     String? // Client name
+  redemptionDate DateTime @default(now())
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  giftCard    GiftCard     @relation(fields: [giftCardId], references: [id], onDelete: Cascade)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  @@index([giftCardId, redemptionDate])
+  @@map("gift_card_redemptions")
+}
+
+model Promotion {
+  id         String @id @default(cuid())
+  businessId String
+
+  // Promotion Details
+  name        String
+  description String?
+  code        String? // Promo code (optional for automatic promotions)
+
+  // Discount Configuration
+  discountType    DiscountType
+  discountValue   Decimal      @db.Decimal(10, 2) // Amount or percentage
+  minimumSpend    Decimal?     @db.Decimal(10, 2)
+  maximumDiscount Decimal?     @db.Decimal(10, 2) // For percentage discounts
+
+  // Validity Period
+  startDate DateTime
+  endDate   DateTime
+
+  // Usage Limits
+  usageLimit     Int? // Total usage limit
+  usageCount     Int  @default(0)
+  perClientLimit Int? // Usage limit per client
+
+  // Applicability
+  applicableServices String[] // Service IDs (empty array means all services)
+  newClientsOnly     Boolean  @default(false)
+
+  // Status
+  isActive Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  usage    PromotionUsage[]
+
+  @@unique([businessId, code])
+  @@index([businessId, isActive, startDate, endDate])
+  @@map("promotions")
+}
+
+model PromotionUsage {
+  id            String  @id @default(cuid())
+  promotionId   String
+  appointmentId String?
+  clientId      String?
+
+  // Usage Details
+  discountAmount Decimal  @db.Decimal(10, 2)
+  usedAt         DateTime @default(now())
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  promotion   Promotion    @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  client      Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([promotionId, usedAt])
+  @@index([clientId, usedAt])
+  @@map("promotion_usage")
+}
+
+model MarketingCampaign {
+  id         String @id @default(cuid())
+  businessId String
+
+  // Campaign Details
+  name        String
+  description String?
+  type        CampaignType
+
+  // Content
+  subject String? // For email campaigns
+  content String // Email HTML or SMS text
+
+  // Targeting
+  targetAudience Json // Criteria for targeting clients
+
+  // Scheduling
+  scheduledAt DateTime?
+  sentAt      DateTime?
+
+  // Status
+  status CampaignStatus @default(DRAFT)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business             Business               @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  recipients           CampaignRecipient[]
+  communicationHistory CommunicationHistory[]
+
+  @@index([businessId, type, status])
+  @@map("marketing_campaigns")
+}
+
+model CampaignRecipient {
+  id         String  @id @default(cuid())
+  campaignId String
+  clientId   String?
+
+  // Recipient Details
+  email String?
+  phone String?
+  name  String?
+
+  // Delivery Status
+  deliveryStatus DeliveryStatus @default(PENDING)
+  deliveredAt    DateTime?
+
+  // Engagement
+  opened    Boolean   @default(false)
+  openedAt  DateTime?
+  clicked   Boolean   @default(false)
+  clickedAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  campaign MarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  client   Client?           @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([campaignId, deliveryStatus])
+  @@index([clientId])
+  @@map("campaign_recipients")
+}
+
+model LoyaltyProgram {
+  id         String @id @default(cuid())
+  businessId String
+
+  // Program Details
+  name        String
+  description String?
+
+  // Points Configuration
+  pointsPerDollar      Decimal @default(1.00) @db.Decimal(5, 2) // Points earned per dollar spent
+  pointsRedemptionRate Decimal @default(0.01) @db.Decimal(5, 2) // Dollar value per point
+
+  // Tiers
+  tiers Json // Array of tier configurations
+
+  // Status
+  isActive Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business            @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  members  LoyaltyMembership[]
+
+  @@map("loyalty_programs")
+}
+
+model LoyaltyMembership {
+  id               String @id @default(cuid())
+  loyaltyProgramId String
+  clientId         String
+
+  // Membership Details
+  currentPoints Int     @default(0)
+  totalEarned   Int     @default(0)
+  totalRedeemed Int     @default(0)
+  currentTier   String? // Tier name
+
+  // Status
+  isActive Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  loyaltyProgram LoyaltyProgram       @relation(fields: [loyaltyProgramId], references: [id], onDelete: Cascade)
+  client         Client               @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  transactions   LoyaltyTransaction[]
+
+  @@unique([loyaltyProgramId, clientId])
+  @@index([clientId, isActive])
+  @@map("loyalty_memberships")
+}
+
+model LoyaltyTransaction {
+  id                  String  @id @default(cuid())
+  loyaltyMembershipId String
+  appointmentId       String?
+
+  // Transaction Details
+  type        LoyaltyTransactionType
+  points      Int // Positive for earning, negative for redemption
+  description String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  membership  LoyaltyMembership @relation(fields: [loyaltyMembershipId], references: [id], onDelete: Cascade)
+  appointment Appointment?      @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  @@index([loyaltyMembershipId, createdAt])
+  @@map("loyalty_transactions")
+}
+
+model ClientReview {
+  id            String  @id @default(cuid())
+  businessId    String
+  clientId      String
+  appointmentId String?
+  staffId       String?
+
+  // Review Details
+  rating        Int // 1-5 star rating
+  serviceRating Int? // Optional separate service rating
+  staffRating   Int? // Optional separate staff rating
+  comment       String?
+
+  // Review Context
+  serviceType String? // Which service was reviewed
+  isVerified  Boolean @default(false) // Verified purchase/appointment
+  isPublic    Boolean @default(true) // Public display permission
+
+  // Response
+  businessResponse String? // Business reply to review
+  respondedAt      DateTime? // When business responded
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business    Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  client      Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  staff       Staff?       @relation(fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, rating])
+  @@index([staffId, rating])
+  @@index([businessId, createdAt])
+  @@map("client_reviews")
+}
+
+model CommunicationHistory {
+  id         String @id @default(cuid())
+  businessId String
+  clientId   String
+
+  // Communication Details
+  type      CommunicationType
+  direction CommunicationDirection
+  channel   CommunicationChannel
+  subject   String?
+  content   String
+
+  // Delivery and Engagement
+  status      CommunicationStatus @default(SENT)
+  deliveredAt DateTime?
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  respondedAt DateTime?
+
+  // Context
+  campaignId     String? // If part of a marketing campaign
+  appointmentId  String? // If related to an appointment
+  automationType AutomationType? // If automated communication
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business    Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  client      Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  campaign    MarketingCampaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  appointment Appointment?       @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, clientId, createdAt])
+  @@index([businessId, type, createdAt])
+  @@index([clientId, createdAt])
+  @@map("communication_history")
+}
+
+// ============================================================================
 // ENUMS
 // ============================================================================
 
@@ -569,4 +1007,85 @@ enum InvitationStatus {
   ACCEPTED
   EXPIRED
   CANCELLED
+}
+
+enum SaleType {
+  RETAIL
+  WITH_SERVICE
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+enum CampaignType {
+  EMAIL
+  SMS
+  PUSH_NOTIFICATION
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  CANCELLED
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+}
+
+enum LoyaltyTransactionType {
+  EARNED
+  REDEEMED
+  EXPIRED
+  ADJUSTMENT
+}
+
+enum CommunicationType {
+  EMAIL
+  SMS
+  PHONE_CALL
+  IN_PERSON
+  PUSH_NOTIFICATION
+}
+
+enum CommunicationDirection {
+  OUTBOUND
+  INBOUND
+}
+
+enum CommunicationChannel {
+  EMAIL
+  SMS
+  PHONE
+  IN_PERSON
+  MOBILE_APP
+  WEBSITE
+}
+
+enum CommunicationStatus {
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  RESPONDED
+  FAILED
+  BOUNCED
+}
+
+enum AutomationType {
+  APPOINTMENT_REMINDER
+  APPOINTMENT_CONFIRMATION
+  FOLLOW_UP
+  BIRTHDAY_GREETING
+  PROMOTIONAL
+  REVIEW_REQUEST
+  CANCELLATION_NOTICE
 }

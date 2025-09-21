@@ -10,10 +10,10 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Test environment
   testEnvironment: 'jsdom',
-  
+
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  
+
   // Module name mapping for absolute imports
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
@@ -23,13 +23,13 @@ const customJestConfig = {
     '^@/types/(.*)$': '<rootDir>/types/$1',
     '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
   },
-  
+
   // Test file patterns
   testMatch: [
     '<rootDir>/**/__tests__/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/**/*.(test|spec).{js,jsx,ts,tsx}',
   ],
-  
+
   // Files to ignore
   testPathIgnorePatterns: [
     '<rootDir>/.next/',
@@ -37,15 +37,20 @@ const customJestConfig = {
     '<rootDir>/e2e/',
     '<rootDir>/playwright-tests/',
   ],
-  
+
   // Module file extensions
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  
+
   // Transform configuration
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
-  
+
+  // Transform ignore patterns - allow transformation of ES modules
+  transformIgnorePatterns: [
+    'node_modules/(?!(@faker-js/faker)/)',
+  ],
+
   // Coverage configuration
   collectCoverage: true,
   collectCoverageFrom: [
@@ -68,7 +73,7 @@ const customJestConfig = {
     '!**/*.config.{js,ts}',
     '!**/middleware.ts',
   ],
-  
+
   // Coverage thresholds
   coverageThreshold: {
     global: {
@@ -91,27 +96,27 @@ const customJestConfig = {
       statements: 75,
     },
   },
-  
+
   // Coverage reporters
   coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
-  
+
   // Coverage directory
   coverageDirectory: 'coverage',
-  
+
   // Mock configuration
   clearMocks: true,
   restoreMocks: true,
-  
+
   // Verbose output for debugging
   verbose: false,
-  
+
   // Test timeout
   testTimeout: 10000,
-  
+
   // Global setup and teardown
   globalSetup: '<rootDir>/test-utils/global-setup.js',
   globalTeardown: '<rootDir>/test-utils/global-teardown.js',
-  
+
   // Environment variables for testing
   setupFiles: ['<rootDir>/test-utils/env-setup.js'],
 };

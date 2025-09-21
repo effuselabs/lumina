@@ -110,6 +110,18 @@ Lumina is a comprehensive salon/barbershop management SaaS platform built with N
 - **Status**: Complete (90%)
 - **Quality**: Production-ready with excellent user experience and analytics
 
+### PRIORITY 3: BUSINESS EXPANSION FEATURES (Post-MVP - Months 4-6)
+
+#### Epic 7: Inventory Management System (LUM-105) 🆕 **NEW**
+
+- **Status**: 🆕 Ready to Start - Comprehensive inventory system for product sales
+- **Priority**: High - Major business expansion feature
+- **Estimated Effort**: 57 points (10-12 weeks)
+- **Sub-Issues**: 6 detailed sub-issues created (LUM-106 through LUM-111)
+- **Business Impact**: Enables retail product sales, cost management, and operational efficiency
+- **Dependencies**: Existing POS system, financial reporting
+- **Timeline**: Post-MVP launch (Months 4-6)
+
 ## Development Priorities (Post-Audit Strategy)
 
 ### PHASE 1: MVP SPRINT (Next 8 weeks) - 80% Focus on Appointment System
@@ -152,16 +164,18 @@ Lumina is a comprehensive salon/barbershop management SaaS platform built with N
 
 **Resource Allocation:**
 
-- **Primary Focus (70%)**: Advanced Features (LUM-84)
-- **Secondary Focus (20%)**: Enhanced Demo Data (LUM-94)
-- **Maintenance (10%)**: Technical Debt Resolution
+- **Primary Focus (60%)**: Inventory Management System (LUM-105)
+- **Secondary Focus (25%)**: Advanced Features (LUM-84)
+- **Enhancement (10%)**: Enhanced Demo Data (LUM-94)
+- **Maintenance (5%)**: Technical Debt Resolution
 
 **Strategic Enhancements:**
 
-1. **AI Integration (LUM-88)**: AI-powered onboarding and recommendations
-2. **Square Integration (LUM-86)**: Additional payment processor
-3. **Enhanced Import (LUM-87)**: Advanced data migration tools
-4. **Advanced Analytics**: Business intelligence and reporting
+1. **Inventory Management System (LUM-105)**: Complete product catalog, stock tracking, and purchase management
+2. **AI Integration (LUM-88)**: AI-powered onboarding and recommendations
+3. **Square Integration (LUM-86)**: Additional payment processor
+4. **Enhanced Import (LUM-87)**: Advanced data migration tools
+5. **Advanced Analytics**: Business intelligence and reporting
 
 ## Technical Architecture Status (Post-Comprehensive Audit)
 
@@ -312,13 +326,57 @@ Lumina is a comprehensive salon/barbershop management SaaS platform built with N
 
 - **LUM-81**: Staff Invitation Acceptance Workflow (3 points) - Week 3
 
+### Inventory Management System Epic (LUM-105) - 57 Points Total
+
+#### LUM-106: Database Schema & Core Models (7 points)
+
+- **Timeline**: Week 1-2 (1.5 weeks)
+- **Scope**: Database models, relationships, business-scoped data architecture
+- **Dependencies**: None - can start immediately
+- **Acceptance Criteria**: Complete schema with audit trail, business scoping, performance indexes
+
+#### LUM-107: Product Catalog Management (10 points)
+
+- **Timeline**: Week 3-4 (2 weeks)
+- **Scope**: Product CRUD, categories, variants, SKU management, image upload
+- **Dependencies**: LUM-106 (Database Schema)
+- **Acceptance Criteria**: Complete product catalog with search, categories, bulk operations
+
+#### LUM-108: Inventory Tracking & Transactions (10 points)
+
+- **Timeline**: Week 5-6 (2 weeks)
+- **Scope**: Real-time stock tracking, transaction management, stock level monitoring
+- **Dependencies**: LUM-106, LUM-107
+- **Acceptance Criteria**: Real-time inventory updates, complete audit trail, performance optimization
+
+#### LUM-109: Purchase Management & Suppliers (10 points)
+
+- **Timeline**: Week 7-8 (2 weeks)
+- **Scope**: Supplier management, purchase orders, automated reordering
+- **Dependencies**: LUM-106, LUM-107, LUM-108
+- **Acceptance Criteria**: Complete purchase workflow, supplier tracking, automated reorder suggestions
+
+#### LUM-110: POS Integration & Sales Tracking (10 points)
+
+- **Timeline**: Week 9-10 (2 weeks)
+- **Scope**: POS integration, automatic inventory deduction, sales analytics
+- **Dependencies**: All previous inventory issues, existing POS system
+- **Acceptance Criteria**: Seamless POS integration, real-time inventory updates, sales tracking
+
+#### LUM-111: Reporting, Alerts & Analytics (10 points)
+
+- **Timeline**: Week 11-12 (2 weeks)
+- **Scope**: Comprehensive reporting, alert system, analytics dashboard
+- **Dependencies**: All previous inventory issues
+- **Acceptance Criteria**: Complete reporting suite, automated alerts, analytics visualization
+
 ### Linear Issue Management Strategy
 
 #### Labeling System
 
 - **Epic Labels**: `epic`, `mvp-blocker`, `post-mvp`, `technical-debt`
-- **Feature Labels**: `appointment-system`, `staff-management`, `client-management`, `financial-system`
-- **Technical Labels**: `backend`, `frontend`, `api`, `database`, `testing`, `security`
+- **Feature Labels**: `appointment-system`, `staff-management`, `client-management`, `financial-system`, `inventory-system`
+- **Technical Labels**: `backend`, `frontend`, `api`, `database`, `testing`, `security`, `integration`, `analytics`
 - **Priority Labels**: `urgent`, `high`, `medium`, `low`
 
 #### Estimation Guidelines (Fibonacci Scale)

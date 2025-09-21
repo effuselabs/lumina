@@ -645,6 +645,215 @@ Each decision follows this structure:
 
 ---
 
+## ADR-027: Comprehensive Business Logic Validation System
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Need robust validation system to ensure data integrity and business rule compliance during seed generation, preventing invalid appointments, double-booking, and financial inconsistencies.
+
+**Decision**: Implement comprehensive validator system with AvailabilityChecker, ScheduleValidator, ServiceCompatibilityValidator, and FinancialIntegrityValidator classes providing unified business logic validation.
+
+**Rationale**:
+
+- Ensures generated data follows business constraints and prevents invalid data scenarios
+- Prevents double-booking and scheduling conflicts through sophisticated availability checking
+- Validates financial integrity with transaction amount matching and commission calculations
+- Provides modular validation architecture for different business scenarios
+- Enables comprehensive data quality assurance during seed generation
+
+**Alternatives Considered**:
+
+1. **Basic validation only**: Simple data type and format validation
+   - Rejected: Insufficient for complex business logic and relationship validation
+2. **Post-generation validation**: Validate data after generation is complete
+   - Rejected: Inefficient and allows invalid data to be created initially
+3. **External validation service**: Use third-party validation tools
+   - Rejected: Doesn't understand Lumina-specific business logic and constraints
+
+**Impact**:
+
+- Guaranteed data integrity and business rule compliance during seed generation
+- Prevention of invalid appointments, double-booking, and financial inconsistencies
+- Modular validation system that can be extended for new business rules
+- Comprehensive error reporting and validation feedback for debugging
+- Foundation for production data validation and quality assurance
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
+
+---
+
+## ADR-028: Comprehensive Data Reset and Management System
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Need robust data management utilities for seed data lifecycle including clean reset procedures, data validation, and environment-specific configurations to support development, testing, and demonstration workflows.
+
+**Decision**: Implement comprehensive data reset and management system with DataResetManager class, CLI management tool, predefined scenarios, and enhanced seed integration providing complete seed data lifecycle management.
+
+**Rationale**:
+
+- Provides safe and reliable data reset procedures maintaining referential integrity
+- Enables environment-specific seeding with appropriate data volumes and configurations
+- Offers comprehensive data validation ensuring business logic compliance and data quality
+- Includes safety features like dry-run mode and preservation options to prevent data loss
+- Supports development workflow with CLI tools and automated validation processes
+- Establishes foundation for production data management and quality assurance
+
+**Alternatives Considered**:
+
+1. **Manual data management**: Rely on manual database operations for data reset and validation
+   - Rejected: Error-prone, time-consuming, lacks safety features and validation
+2. **Simple reset scripts**: Basic scripts for data deletion without comprehensive management
+   - Rejected: Lacks validation, safety features, and environment-specific configurations
+3. **Third-party data management tools**: Use external tools for seed data management
+   - Rejected: Doesn't understand Lumina-specific business logic and multi-tenant architecture
+
+**Impact**:
+
+- Complete seed data lifecycle management with safety and validation features
+- Environment-specific configurations supporting development, testing, and demonstration workflows
+- CLI tools enabling efficient data management operations for developers and administrators
+- Comprehensive validation ensuring data quality and business logic compliance
+- Foundation for scalable data management supporting team development and production operations
+- Integration with existing factory system and multi-tenant security architecture
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancementides comprehensive error reporting with structured validation results
+- Enables business rule enforcement during data generation and runtime operations
+- Creates foundation for reliable appointment booking and business operations
+
+**Alternatives Considered**:
+
+1. **Basic validation only**: Simple checks without comprehensive business logic
+   - Rejected: Risk of invalid data generation and business rule violations
+2. **External validation service**: Third-party validation system
+   - Rejected: Complexity, performance overhead, and dependency management issues
+3. **Post-generation validation**: Validate data after generation rather than during
+   - Rejected: Inefficient approach with potential for data corruption and waste
+
+**Impact**:
+
+- Guaranteed data integrity and business rule compliance throughout system
+- Prevention of invalid appointments, double-booking, and financial inconsistencies
+- Comprehensive error reporting enabling proper debugging and issue resolution
+- Foundation for reliable appointment booking and business operations
+- Scalable validation architecture supporting future business rule additions
+- Enhanced data quality for analytics and reporting accuracy
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
+
+---
+
+## ADR-028: Temporal Data Distribution Strategy for Historical Appointments
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Historical appointment data needs realistic temporal patterns for meaningful analytics demonstration, including seasonal variations, peak hours, and booking patterns that reflect actual salon business operations.
+
+**Decision**: Implement weighted temporal distribution with seasonal variations, peak hours, and booking patterns using sophisticated algorithms that create realistic business patterns for analytics demonstration.
+
+**Rationale**:
+
+- Creates realistic business patterns that demonstrate platform analytics capabilities effectively
+- Enables meaningful dashboard widgets and reporting with authentic data distributions
+- Showcases seasonal business variations and peak hour patterns for sales demonstrations
+- Provides foundation for testing analytics algorithms with realistic data patterns
+- Demonstrates platform's ability to handle complex business intelligence requirements
+
+**Alternatives Considered**:
+
+1. **Random distribution**: Generate appointments with uniform random distribution
+   - Rejected: Unrealistic patterns that don't demonstrate analytics capabilities effectively
+2. **Linear distribution**: Evenly distribute appointments across time periods
+   - Rejected: Lacks seasonal and business pattern variations needed for meaningful analytics
+3. **Simple pattern distribution**: Basic peak/off-peak patterns only
+   - Rejected: Insufficient complexity to demonstrate advanced analytics capabilities
+
+**Impact**:
+
+- Realistic analytics data that effectively demonstrates platform capabilities
+- Meaningful reporting patterns that showcase business intelligence features
+- Enhanced sales demonstration value with authentic business data patterns
+- Foundation for testing and validating analytics algorithms with realistic data
+- Improved user evaluation experience with recognizable business patterns
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
+
+---
+
+## ADR-028: Comprehensive Business Operations Schema Extension
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Demo data needed to showcase inventory management, promotions, gift cards, marketing campaigns, and loyalty programs to demonstrate complete platform capabilities for sales and evaluation purposes.
+
+**Decision**: Extend database schema with 12 new models for complete business operations including Product, ProductSale, GiftCard, GiftCardRedemption, Promotion, PromotionUsage, MarketingCampaign, CampaignRecipient, LoyaltyProgram, LoyaltyMembership, and LoyaltyTransaction.
+
+**Rationale**:
+
+- Enables demonstration of all platform features with realistic business data
+- Provides comprehensive business operations ecosystem for effective sales presentations
+- Creates foundation for testing all platform capabilities with integrated data
+- Demonstrates platform's scalability and feature completeness
+- Enables realistic business scenario testing and validation
+
+**Alternatives Considered**:
+
+1. **Minimal business operations**: Add only basic product and promotion models
+   - Rejected: Incomplete feature demonstration that doesn't showcase platform capabilities
+2. **External data simulation**: Mock business operations data without database integration
+   - Rejected: Integration complexity, maintenance overhead, and poor demonstration value
+3. **Phased implementation**: Add business operations models incrementally over time
+   - Rejected: Delays comprehensive feature demonstration and creates integration complexity
+
+**Impact**:
+
+- Complete feature showcase enabling effective sales demonstrations and user evaluation
+- Realistic business operations data supporting all platform capabilities
+- Comprehensive platform demonstration with integrated business ecosystem
+- Foundation for testing complex business scenarios and feature interactions
+- Enhanced user evaluation experience with complete business operations visibility
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
+
+---
+
+## ADR-029: Factory Pattern Architecture for Scalable Data Generation
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Comprehensive demo data generation required scalable, maintainable approach for creating diverse realistic data entities across multiple business domains with proper relationships and business logic validation.
+
+**Decision**: Implement comprehensive factory pattern architecture with specialized factories (ProductFactory, GiftCardFactory, PromotionFactory, MarketingCampaignFactory, LoyaltyProgramFactory) orchestrated by BusinessOperationsFactory for coordinated data generation.
+
+**Rationale**:
+
+- Enables reusable, testable data generation with proper separation of concerns
+- Provides scalable architecture for complex business data relationships
+- Ensures business logic validation and realistic data patterns
+- Facilitates maintenance and extension of data generation capabilities
+- Creates foundation for comprehensive testing and validation
+
+**Alternatives Considered**:
+
+1. **Monolithic data generation**: Single large function generating all business operations data
+   - Rejected: Maintainability challenges, testing difficulties, and poor separation of concerns
+2. **Simple data arrays**: Static data arrays without business logic
+   - Rejected: Lack of business logic validation, poor relationship management, unrealistic patterns
+3. **External data services**: Third-party data generation services
+   - Rejected: Vendor dependency, integration complexity, and limited customization capabilities
+
+**Impact**:
+
+- Scalable architecture enabling easy extension and maintenance of data generation
+- Comprehensive business logic validation ensuring realistic and consistent data
+- Testable components with proper separation of concerns
+- Foundation for complex business scenario generation and testing
+- Maintainable codebase supporting long-term development and enhancement
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
+
+---
+
 ## ADR-026: Complementary Color Palette Enhancement
 
 **Date**: September 20, 2025  
@@ -680,6 +889,84 @@ Each decision follows this structure:
 - Provides foundation for scalable color system evolution
 
 **Related Issues**: Design system enhancement and brand consistency requirements
+
+---
+
+## ADR-030: Client Communication and Loyalty System Architecture
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Comprehensive demo data enhancement required realistic client communication tracking, review management, and loyalty program implementation to showcase customer relationship management capabilities and demonstrate platform's marketing and retention features.
+
+**Decision**: Implement comprehensive client communication and loyalty system with ClientReview model for feedback management, CommunicationHistory model for multi-channel tracking, enhanced loyalty program with tier-based rewards, and integrated marketing campaign system with engagement analytics.
+
+**Rationale**:
+
+- Demonstrates complete customer relationship management capabilities essential for salon business success
+- Provides realistic engagement metrics (25% email, 85% SMS open rates) matching industry standards
+- Creates foundation for testing marketing automation and customer retention features
+- Enables comprehensive analytics and reporting for business intelligence demonstration
+- Supports multi-channel communication tracking essential for modern salon operations
+- Implements tier-based loyalty system with realistic point earning and redemption patterns
+
+**Alternatives Considered**:
+
+1. **Basic review system only**: Implement only client reviews without communication tracking
+   - Rejected: Incomplete demonstration of customer relationship management capabilities
+2. **External communication simulation**: Mock communication data without database integration
+   - Rejected: Poor integration with existing appointment and client data, limited demonstration value
+3. **Simplified loyalty program**: Basic points system without tiers or comprehensive tracking
+   - Rejected: Insufficient demonstration of advanced loyalty program capabilities expected in modern salon software
+
+**Impact**:
+
+- Complete customer relationship management demonstration enabling effective sales presentations
+- Realistic communication and engagement data supporting marketing feature validation
+- Comprehensive loyalty program showcasing customer retention capabilities
+- Foundation for testing complex customer journey scenarios and marketing automation
+- Enhanced user evaluation experience with complete customer lifecycle visibility
+- Database schema extensions supporting future CRM and marketing feature development
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
+
+---
+
+## ADR-031: Analytics Data Quality Validation Architecture
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Comprehensive demo data enhancement requires robust validation system to ensure analytics and reporting data quality for sales demonstrations and user evaluations with production-scale seed data (405+ clients, 58 staff, 272 services, 2046+ appointments).
+
+**Decision**: Implement multi-layered analytics validation system with basic mock data tests, database integration tests, API endpoint validation, automated quality assessment script, and comprehensive documentation for continuous data quality assurance.
+
+**Rationale**:
+
+- Ensures dashboard widgets display meaningful, accurate data essential for effective sales demonstrations
+- Validates mathematical accuracy of analytics calculations against known seed data values
+- Provides automated quality assessment with performance benchmarks and scoring system
+- Enables continuous validation of data quality as seed data evolves and expands
+- Supports production-ready analytics with sub-5 second response time requirements
+- Creates foundation for regression testing of analytics features during development
+
+**Alternatives Considered**:
+
+1. **Manual validation only**: Human verification of analytics data quality through dashboard inspection
+   - Rejected: Not scalable, error-prone, time-consuming, and insufficient for comprehensive validation
+2. **Simple unit tests only**: Basic tests without integration, performance, or cross-widget validation
+   - Rejected: Insufficient for validating complex analytics calculations and data relationships
+3. **External validation service**: Third-party data quality validation and monitoring
+   - Rejected: Adds complexity, cost, and doesn't integrate with existing test infrastructure
+
+**Impact**:
+
+- Guaranteed data quality for all dashboard widgets and reporting features with 19+ validation tests
+- Automated validation of revenue patterns, client retention metrics, staff performance, and service analytics
+- Performance validation ensuring sub-5 second response times for all analytics queries
+- Quality scoring system (Excellent/Good/Fair/Poor) with detailed recommendations and troubleshooting
+- Comprehensive test coverage enabling confident sales demonstrations and user evaluations
+- Foundation for continuous integration testing of analytics features and data quality regression prevention
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
 
 ---
 
@@ -2129,3 +2416,42 @@ module.exports = {
 ```
 
 **Related Issues**: [LUM-102](https://linear.app/scootr-ca/issue/LUM-102) - Design System Critical Issues Audit and Fix
+
+## ADR-028: Enhanced Batch Processing System for Seed Performance
+
+**Date**: September 21, 2025  
+**Status**: Accepted  
+**Context**: Seed data generation needed performance optimization for large datasets with memory management, progress tracking, and error handling capabilities to handle production-scale data generation efficiently.
+
+**Decision**: Implement enhanced batch processing system with BatchProcessor class featuring configurable batch sizes, memory monitoring, progress tracking, rollback capabilities, and comprehensive performance monitoring through PerformanceMonitor class.
+
+**Rationale**:
+
+- Enables efficient processing of large datasets (500+ appointments, 400+ transactions) without memory issues
+- Provides real-time progress tracking and performance metrics for better user experience
+- Implements graceful error handling with rollback capabilities to prevent data corruption
+- Offers configurable batch sizes and concurrency limits for optimal performance tuning
+- Includes comprehensive memory management with automatic garbage collection triggers
+- Supports streaming operations for extremely large datasets with memory-efficient processing
+
+**Alternatives Considered**:
+
+1. **Simple batch processing**: Basic batching without performance monitoring or rollback
+   - Rejected: Insufficient for production-scale data generation and lacks error recovery
+2. **Third-party batch processing library**: Use external library for batch operations
+   - Rejected: Additional dependency and may not integrate well with Prisma and multi-tenant architecture
+3. **Database-level batch operations**: Rely on database batch insert capabilities
+   - Rejected: Limited error handling, progress tracking, and doesn't support complex business logic validation
+
+**Impact**:
+
+- Dramatically improved seed performance with thousands of items processed per second
+- Enhanced reliability through comprehensive error handling and rollback capabilities
+- Better user experience with real-time progress tracking and ETA calculations
+- Scalable foundation for handling production-scale data generation requirements
+- Comprehensive performance monitoring enabling optimization and troubleshooting
+- Memory-efficient processing preventing out-of-memory issues during large data generation
+
+**Related Issues**: [LUM-94](https://linear.app/scootr-ca/issue/LUM-94) - Comprehensive Demo Data Enhancement
+
+---
