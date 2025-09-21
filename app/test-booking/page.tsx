@@ -1,6 +1,8 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { PageHeader } from '@/components/ui/page-header'
+import { TestTube } from 'lucide-react'
 import { useState } from 'react'
 
 export default function TestBookingPage() {

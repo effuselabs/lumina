@@ -150,7 +150,11 @@ async function generateServiceData(businessId: string) {
             const appointmentCount = await prisma.appointment.count({
                 where: {
                     businessId, // Security: Business scoping required
-                    serviceId: service.id,
+                    services: {
+                        some: {
+                            serviceId: service.id,
+                        },
+                    },
                     status: 'COMPLETED',
                     startTime: {
                         gte: subDays(new Date(), 30),

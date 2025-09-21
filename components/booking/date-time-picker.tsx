@@ -218,7 +218,7 @@ export function DateTimePicker({ businessId, service, onSlotSelect, selectedSlot
                                                         variant={
                                                             selectedSlot?.staffId === staffAvailability.staffId &&
                                                                 selectedSlot?.slot.startTime === slot.startTime
-                                                                ? "default"
+                                                                ? "primary"
                                                                 : "outline"
                                                         }
                                                         size="sm"

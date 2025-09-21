@@ -130,7 +130,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user: _user, account: _account, profile: _profile }) {
       // Log to monitoring service in production
     },
-    async signOut({ session: _session, token: _token }) {
+    async signOut(params) {
       // Log to monitoring service in production
     },
   },
@@ -156,7 +156,7 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module '@auth/core/jwt' {
   interface JWT {
     id: string;
     email: string;

@@ -234,10 +234,10 @@ export function ClientList({
       {/* Search and Filters */}
       <Card className="p-4">
         <div className="flex flex-col gap-4 sm:flex-row">
-          <FormField
-            label="Search clients"
-            className="flex-1"
-          >
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search clients
+            </label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
               <Input
@@ -247,7 +247,7 @@ export function ClientList({
                 className="pl-10"
               />
             </div>
-          </FormField>
+          </div>
 
           <div className="flex gap-2">
             <FormField

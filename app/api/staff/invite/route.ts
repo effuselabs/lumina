@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
             invitation: {
                 id: invitation.id,
                 email: invitation.email,
-                displayName: invitation.displayName,
+                role: invitation.role,
                 status: invitation.status
             }
         });
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
         if (error && typeof error === 'object' && 'code' in error) {
             if (error.code === 'P2002') {
                 // Unique constraint failed
-                const meta = error.meta as any;
+                const meta = (error as any).meta;
                 if (meta?.target?.includes('email')) {
                     return NextResponse.json(
                         { error: 'An invitation has already been sent to this email address for this business' },

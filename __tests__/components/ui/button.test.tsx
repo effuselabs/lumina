@@ -22,7 +22,7 @@ describe('Button Component', () => {
   });
 
   it('renders all sizes correctly', () => {
-    const sizes = ['sm', 'default', 'lg', 'icon'] as const;
+    const sizes = ['sm', 'default', 'lg', 'xl', 'icon'] as const;
 
     sizes.forEach((size) => {
       const { unmount } = render(<Button size={size}>{size} button</Button>);
@@ -32,6 +32,7 @@ describe('Button Component', () => {
       if (size === 'sm') expect(button).toHaveClass('h-8');
       if (size === 'default') expect(button).toHaveClass('h-10');
       if (size === 'lg') expect(button).toHaveClass('h-12');
+      if (size === 'xl') expect(button).toHaveClass('h-14');
       if (size === 'icon') expect(button).toHaveClass('h-10', 'w-10');
 
       unmount();
@@ -43,8 +44,10 @@ describe('Button Component', () => {
     const button = screen.getByRole('button');
     expect(button).toBeDisabled();
     expect(button).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(button).toHaveAttribute('aria-busy', 'true');
     expect(screen.getByText('Loading button')).toHaveClass('opacity-70');
+    // Check for loading announcement
+    expect(screen.getByText('Loading', { selector: '.sr-only' })).toBeInTheDocument();
   });
 
   it('renders with icon correctly', () => {

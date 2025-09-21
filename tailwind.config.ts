@@ -6,27 +6,64 @@ const config: Config = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
+    './hooks/**/*.{js,ts,jsx,tsx}',
+  ],
+  // Optimize CSS bundle size by purging unused classes
+  safelist: [
+    // Preserve dynamic classes that might be generated at runtime
+    'bg-lumina-gradient',
+    'bg-lumina-gradient-hover',
+    'bg-lumina-gold',
+    'bg-lumina-coral',
+    'bg-lumina-peach',
+    'bg-lumina-radiant',
+    'bg-deep-teal',
+    'bg-clarity-blue',
+    'bg-soft-peach',
+    'bg-sage-green',
+    'bg-warm-gray',
+    'bg-lavender-mist',
+    'bg-cream',
+    'bg-success-600',
+    'bg-warning-600',
+    'bg-error-600',
+    'bg-info-600',
+    'text-lumina-h1',
+    'text-lumina-h2',
+    'text-lumina-h3',
+    'text-lumina-body-lg',
+    'text-lumina-body-sm',
+    'text-lumina-caption',
+    // Preserve theme-related classes
+    'dark',
+    'light',
+    // Preserve animation classes
+    'animate-fade-in',
+    'animate-slide-in',
+    'animate-pulse-glow',
   ],
   theme: {
     extend: {
-      // Lumina Product Brand Colors (per LUMINA_PRODUCT_STYLEGUIDE.md)
+      // Lumina Brand Colors using CSS Custom Properties
       colors: {
-        // Primary Lumina Colors - Radiant Gradient
+        // Primary Lumina Colors - Using CSS Variables
         lumina: {
-          gold: '#FFD25A', // Primary Accent & Gradient Start
-          coral: '#FF7A5A', // Gradient End
-          orange: '#FF7A5A', // Alias for coral
-          peach: '#FFE5B4', // Soft Peach
-          dark: '#1D2D35', // Off-black text
-          gray: '#808285', // Medium grey
-          'gold-light': '#FFE066',
-          'coral-light': '#FF8666',
-          'gold-dark': '#E6BD51',
-          'coral-dark': '#E66E51',
+          gold: 'var(--lumina-gold)',
+          coral: 'var(--lumina-coral)',
+          orange: 'var(--lumina-coral)', // Alias for coral
+          peach: 'var(--lumina-peach)',
+          dark: 'var(--neutral-900)',
+          gray: 'var(--neutral-600)',
         },
-        // Secondary Brand Color
+        // Direct color mappings for easier usage
+        'lumina-gold': 'var(--lumina-gold)',
+        'lumina-coral': 'var(--lumina-coral)',
+        'lumina-peach': 'var(--lumina-peach)',
+        'lumina-radiant': 'var(--lumina-radiant-gradient)',
+        // Secondary Brand Color using CSS Variables
         'deep-teal': {
-          DEFAULT: '#0B2B33', // Secondary Accent per Lumina brand
+          DEFAULT: 'var(--deep-teal)',
           50: '#F0F9FA',
           100: '#D9F0F2',
           200: '#B3E1E5',
@@ -35,149 +72,218 @@ const config: Config = {
           500: '#41B4BE',
           600: '#2E8A95',
           700: '#1B5F6C',
-          800: '#0B2B33',
+          800: 'var(--deep-teal)',
           900: '#081F26',
         },
-        // Lumina Neutral/UI Colors (per style guide)
-        neutral: {
-          'off-black': '#1D2D35', // Text color per Lumina brand
-          'medium-grey': '#808285', // Secondary text
-          'light-grey': '#F1F3F5', // Backgrounds
-          border: '#E4E6E7', // Borders & Dividers
-          50: '#FAFAFA',
-          100: '#F5F5F5',
-          200: '#E5E5E5',
-          300: '#D4D4D4',
-          400: '#A3A3A3',
-          500: '#737373',
-          600: '#525252',
-          700: '#404040',
-          800: '#262626',
-          900: '#171717',
-        },
-        // Semantic Color Mapping
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        // Lumina Tertiary Accent Colors (per v2.0 design system)
+        // Tertiary Colors using CSS Variables
         'clarity-blue': {
-          DEFAULT: '#89CFF0', // Clarity Blue per Lumina brand v2.0
+          DEFAULT: 'var(--clarity-blue)',
           50: '#F0F9FF',
           100: '#E0F2FE',
           200: '#BAE6FD',
           300: '#7DD3FC',
           400: '#38BDF8',
-          500: '#89CFF0',
+          500: 'var(--clarity-blue)',
           600: '#0284C7',
           700: '#0369A1',
         },
         'soft-peach': {
-          DEFAULT: '#FFE5B4', // Soft Peach per Lumina brand v2.0
+          DEFAULT: 'var(--lumina-peach)',
           50: '#FFFBEB',
           100: '#FEF3C7',
           200: '#FED7AA',
           300: '#FDBA74',
           400: '#FB923C',
-          500: '#FFE5B4',
+          500: 'var(--lumina-peach)',
           600: '#EA580C',
           700: '#C2410C',
         },
-        // Lumina Functional UI Colors (per style guide)
+        // Complementary Colors using CSS Variables
+        'sage-green': {
+          DEFAULT: 'var(--sage-green)',
+          50: '#F6F8F3',
+          100: '#EDF1E7',
+          200: '#DBE3CF',
+          300: '#C9D5B7',
+          400: '#B7C79F',
+          500: 'var(--sage-green)', // #87A96B
+          600: '#6C8755',
+          700: '#516540',
+          800: '#36432A',
+          900: '#1B2115',
+        },
+        'warm-gray': {
+          DEFAULT: 'var(--warm-gray)',
+          50: '#F9F8F7',
+          100: '#F3F1EF',
+          200: '#E7E3DF',
+          300: '#DBD5CF',
+          400: '#CFC7BF',
+          500: 'var(--warm-gray)', // #8B8680
+          600: '#6F6B66',
+          700: '#53504D',
+          800: '#373533',
+          900: '#1B1A1A',
+        },
+        'lavender-mist': {
+          DEFAULT: 'var(--lavender-mist)',
+          50: '#FAF8FB',
+          100: '#F5F1F7',
+          200: '#EBE3EF',
+          300: '#E1D5E7',
+          400: '#D7C7DF',
+          500: 'var(--lavender-mist)', // #C8B5D1
+          600: '#A091A7',
+          700: '#786D7D',
+          800: '#504853',
+          900: '#282429',
+        },
+        cream: {
+          DEFAULT: 'var(--cream)',
+          50: '#FEFEFE',
+          100: '#FDFDFC',
+          200: 'var(--cream)', // #F7F5F0
+          300: '#F1EDE6',
+          400: '#EBE5DC',
+          500: '#E5DDD2',
+          600: '#B7B1A8',
+          700: '#89857E',
+          800: '#5B5854',
+          900: '#2D2C2A',
+        },
+        // Enhanced Semantic Colors using CSS Variables
         success: {
-          DEFAULT: '#22C58B', // Success Green per Lumina brand
-          50: '#ECFDF5',
-          100: '#D1FAE5',
-          500: '#22C58B',
-          600: '#16A085',
-          700: '#0F7B6C',
+          DEFAULT: 'var(--color-success)',
+          50: 'var(--color-success-background)',
+          100: 'var(--color-success-background)',
+          500: 'var(--color-success)',
+          600: 'var(--semantic-success)', // #16A085
+          700: '#138B75',
+          800: '#0F7B6C',
+          foreground: 'var(--color-success-foreground)',
         },
         warning: {
-          DEFAULT: '#FFB800', // Warning Amber per Lumina brand
-          50: '#FFFBEB',
-          100: '#FEF3C7',
-          500: '#FFB800',
-          600: '#D97706',
-          700: '#B45309',
+          DEFAULT: 'var(--color-warning)',
+          50: 'var(--color-warning-background)',
+          100: 'var(--color-warning-background)',
+          500: 'var(--color-warning)',
+          600: 'var(--semantic-warning)', // #E6A500
+          700: '#CC9400',
+          800: '#B38300',
+          foreground: 'var(--color-warning-foreground)',
         },
         error: {
-          DEFAULT: '#E5484D', // Error Red per Lumina brand
-          50: '#FEF2F2',
-          100: '#FEE2E2',
-          500: '#E5484D',
-          600: '#DC2626',
-          700: '#B91C1C',
+          DEFAULT: 'var(--color-error)',
+          50: 'var(--color-error-background)',
+          100: 'var(--color-error-background)',
+          500: 'var(--color-error)',
+          600: 'var(--semantic-error)', // #D63031
+          700: '#C12B2C',
+          800: '#AC2627',
+          foreground: 'var(--color-error-foreground)',
         },
+        info: {
+          DEFAULT: 'var(--color-info)',
+          50: 'var(--color-info-background)',
+          100: 'var(--color-info-background)',
+          500: 'var(--color-info)',
+          600: 'var(--semantic-info)', // #5B9BD5
+          700: '#4A8BC2',
+          800: '#397BAF',
+          foreground: 'var(--color-info-foreground)',
+        },
+        // Neutral Colors using CSS Variables
+        neutral: {
+          50: 'var(--neutral-50)',
+          100: 'var(--neutral-100)',
+          200: 'var(--neutral-200)',
+          300: 'var(--neutral-300)',
+          400: 'var(--neutral-400)',
+          500: 'var(--neutral-500)',
+          600: 'var(--neutral-600)',
+          700: 'var(--neutral-700)',
+          800: 'var(--neutral-800)',
+          900: 'var(--neutral-900)',
+          950: 'var(--neutral-950)',
+        },
+        // Semantic Color Mapping using CSS Variables
+        border: 'var(--color-border)',
+        input: 'var(--color-border)',
+        ring: 'var(--color-interactive-focus)',
+        background: 'var(--color-background)',
+        foreground: 'var(--color-foreground)',
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          foreground: 'var(--color-primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--color-secondary)',
+          foreground: 'var(--color-secondary-foreground)',
+        },
+        destructive: {
+          DEFAULT: 'var(--color-error)',
+          foreground: 'var(--color-error-foreground)',
+        },
+        muted: {
+          DEFAULT: 'var(--color-background-muted)',
+          foreground: 'var(--color-foreground-muted)',
+        },
+        accent: {
+          DEFAULT: 'var(--color-primary)',
+          foreground: 'var(--color-primary-foreground)',
+        },
+        popover: {
+          DEFAULT: 'var(--color-surface)',
+          foreground: 'var(--color-foreground)',
+        },
+        card: {
+          DEFAULT: 'var(--color-surface)',
+          foreground: 'var(--color-foreground)',
+        },
+        // Text color variants for proper inheritance
+        'text-primary': 'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'text-muted': 'var(--color-text-muted)',
+        'text-disabled': 'var(--color-text-disabled)',
+        'text-inverse': 'var(--color-text-inverse)',
       },
-      // Lumina Radiant Gradient (per LUMINA_PRODUCT_STYLEGUIDE.md)
+      // Lumina Radiant Gradient using CSS Variables
       backgroundImage: {
-        'lumina-gradient': 'linear-gradient(135deg, #FFD25A 0%, #FF7A5A 100%)',
-        'lumina-gradient-hover':
-          'linear-gradient(135deg, #FFE066 0%, #FF8666 100%)',
-        'lumina-radiant': 'linear-gradient(135deg, #FFD25A 0%, #FF7A5A 100%)',
-        'lumina-radiant-hover':
-          'linear-gradient(135deg, #FFE066 0%, #FF8666 100%)',
+        'lumina-gradient': 'var(--lumina-radiant-gradient)',
+        'lumina-gradient-hover': 'var(--lumina-radiant-gradient-reverse)',
+        'lumina-radiant': 'var(--lumina-radiant-gradient)',
+        'lumina-radiant-hover': 'var(--lumina-radiant-gradient-reverse)',
       },
-      // Typography - Inter Font System
+      // Typography - Inter Font System with CSS Variables
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'Menlo', 'Monaco', 'monospace'],
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        mono: ['SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', 'Consolas', 'Courier New', 'monospace'],
+        display: ['var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        inter: ['var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       // Typography Scale (per Lumina Design System v2.0)
       fontSize: {
-        // Standard Tailwind sizes
-        xs: ['0.75rem', { lineHeight: '1rem' }], // 12px - Caption
-        sm: ['0.875rem', { lineHeight: '1.25rem' }], // 14px - Body Small
-        base: ['1rem', { lineHeight: '1.5rem' }], // 16px - Body Large
-        lg: ['1.125rem', { lineHeight: '1.75rem' }],
-        xl: ['1.25rem', { lineHeight: '1.75rem' }], // 20px - Heading 3
-        '2xl': ['1.5rem', { lineHeight: '2rem' }], // 24px - Heading 2
-        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }], // 32px - Heading 1 (closest)
-        '5xl': ['3rem', { lineHeight: '1' }],
-        '6xl': ['3.75rem', { lineHeight: '1' }],
-        '7xl': ['4.5rem', { lineHeight: '1' }],
-        '8xl': ['6rem', { lineHeight: '1' }],
-        '9xl': ['8rem', { lineHeight: '1' }],
-        // Lumina Design System Typography Scale
+        // Standard Tailwind sizes - updated to match Lumina specs
+        xs: ['0.75rem', { lineHeight: '1rem', fontWeight: '500' }], // 12px - Caption (Medium)
+        sm: ['0.875rem', { lineHeight: '1.25rem', fontWeight: '400' }], // 14px - Body Small (Regular)
+        base: ['1rem', { lineHeight: '1.5rem', fontWeight: '400' }], // 16px - Body Large (Regular)
+        lg: ['1.125rem', { lineHeight: '1.75rem', fontWeight: '400' }], // 18px
+        xl: ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }], // 20px - Heading 3 (SemiBold)
+        '2xl': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }], // 24px - Heading 2 (SemiBold)
+        '3xl': ['1.875rem', { lineHeight: '2.25rem', fontWeight: '700' }], // 30px
+        '4xl': ['2rem', { lineHeight: '2.5rem', fontWeight: '700' }], // 32px - Heading 1 (Bold)
+        '5xl': ['3rem', { lineHeight: '1', fontWeight: '700' }],
+        '6xl': ['3.75rem', { lineHeight: '1', fontWeight: '700' }],
+        '7xl': ['4.5rem', { lineHeight: '1', fontWeight: '700' }],
+        '8xl': ['6rem', { lineHeight: '1', fontWeight: '700' }],
+        '9xl': ['8rem', { lineHeight: '1', fontWeight: '700' }],
+        // Lumina Design System Typography Scale - Exact Specifications
         'lumina-h1': ['2rem', { lineHeight: '2.5rem', fontWeight: '700' }], // 32px, Bold, 40px line height
         'lumina-h2': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }], // 24px, SemiBold, 32px line height
         'lumina-h3': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }], // 20px, SemiBold, 28px line height
         'lumina-body-lg': ['1rem', { lineHeight: '1.5rem', fontWeight: '400' }], // 16px, Regular, 24px line height
-        'lumina-body-sm': [
-          '0.875rem',
-          { lineHeight: '1.25rem', fontWeight: '400' },
-        ], // 14px, Regular, 20px line height
-        'lumina-caption': [
-          '0.75rem',
-          { lineHeight: '1rem', fontWeight: '500' },
-        ], // 12px, Medium, 16px line height
+        'lumina-body-sm': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '400' }], // 14px, Regular, 20px line height
+        'lumina-caption': ['0.75rem', { lineHeight: '1rem', fontWeight: '500' }], // 12px, Medium, 16px line height
       },
       // Font Weights
       fontWeight: {
@@ -191,12 +297,31 @@ const config: Config = {
         extrabold: '800',
         black: '900',
       },
-      // Custom spacing for consistent design
+      // Lumina Spacing Scale - 8px base unit
       spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
-        '144': '36rem',
+        // Additional spacing values following 8px base unit
+        '18': '4.5rem', // 72px
+        '22': '5.5rem', // 88px
+        '26': '6.5rem', // 104px
+        '30': '7.5rem', // 120px
+        '34': '8.5rem', // 136px
+        '38': '9.5rem', // 152px
+        '42': '10.5rem', // 168px
+        '46': '11.5rem', // 184px
+        '50': '12.5rem', // 200px
+        '54': '13.5rem', // 216px
+        '58': '14.5rem', // 232px
+        '62': '15.5rem', // 248px
+        '66': '16.5rem', // 264px
+        '70': '17.5rem', // 280px - Dashboard sidebar width
+        '74': '18.5rem', // 296px
+        '78': '19.5rem', // 312px
+        '82': '20.5rem', // 328px
+        '86': '21.5rem', // 344px
+        '88': '22rem', // 352px
+        '92': '23rem', // 368px
+        '128': '32rem', // 512px
+        '144': '36rem', // 576px
       },
       // Custom border radius
       borderRadius: {
@@ -232,16 +357,47 @@ const config: Config = {
             boxShadow: '0 0 0 10px rgba(255, 210, 90, 0)',
           },
         },
+        'lumina-spin': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'lumina-spin-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'lumina-pulse-subtle': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
+        },
+        'lumina-typing': {
+          '0%, 60%, 100%': { transform: 'translateY(0)' },
+          '30%': { transform: 'translateY(-10px)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out',
         'slide-in': 'slide-in 0.3s ease-out',
         'pulse-glow': 'pulse-glow 2s infinite',
+        'lumina-spin': 'lumina-spin 1s linear infinite',
+        'lumina-spin-slow': 'lumina-spin-slow 2s linear infinite',
+        'lumina-pulse-subtle': 'lumina-pulse-subtle 2s ease-in-out infinite',
+        'lumina-typing': 'lumina-typing 1.4s ease-in-out infinite',
       },
       // Custom shadows
       boxShadow: {
         lumina: '0 4px 14px 0 rgba(255, 210, 90, 0.15)',
         'lumina-lg': '0 10px 25px 0 rgba(255, 210, 90, 0.2)',
+      },
+      // Animation delays for staggered effects
+      animationDelay: {
+        '75': '75ms',
+        '100': '100ms',
+        '150': '150ms',
+        '200': '200ms',
+        '300': '300ms',
+        '500': '500ms',
+        '700': '700ms',
+        '1000': '1000ms',
       },
     },
   },

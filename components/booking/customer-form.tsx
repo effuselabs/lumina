@@ -1,5 +1,6 @@
 'use client'
 
+import { BookingProgress } from '@/components/booking/booking-progress'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +13,13 @@ import { format } from 'date-fns'
 import { Clock, DollarSign, User } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+
+const defaultBookingSteps = [
+    { id: 1, name: 'Select Service' },
+    { id: 2, name: 'Choose Time' },
+    { id: 3, name: 'Customer Details' },
+    { id: 4, name: 'Confirmation' }
+]
 
 const customerFormSchema = z.object({
     firstName: z.string().min(1, 'First name is required'),

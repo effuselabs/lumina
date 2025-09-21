@@ -10,28 +10,33 @@ Our visual regression testing system ensures design system consistency across th
 
 ```
 e2e/
-├── components/                 # Component-specific visual tests
-│   ├── button-visual.spec.ts
-│   ├── stat-card-visual.spec.ts
-│   ├── form-visual.spec.ts
-│   └── layout-visual.spec.ts
+├── design-system-visual-regression.spec.ts  # Main design system visual tests
+├── cross-browser-responsive.spec.ts         # Cross-browser and responsive tests
+├── accessibility-compliance.spec.ts         # Accessibility visual tests
+├── visual-test-runner.spec.ts              # Legacy test orchestration
 ├── utils/
-│   └── visual-test-helpers.ts  # Shared testing utilities
-├── visual-regression.spec.ts   # Comprehensive test suite
-├── visual-test-runner.spec.ts  # Test orchestration
-└── visual-test.config.ts       # Visual testing configuration
+│   └── visual-test-helpers.ts               # Shared testing utilities
+└── visual-test.config.ts                    # Visual testing configuration
+
+scripts/
+├── setup-design-system-visual-baselines.ts # Baseline setup and management
+├── run-cross-browser-tests.ts              # Cross-browser test runner
+├── run-accessibility-tests.ts              # Accessibility test runner
+└── run-comprehensive-design-system-tests.ts # Master test orchestrator
 ```
 
 ### Coverage Matrix
 
-| Component | Light Theme | Dark Theme | Mobile | Tablet | Desktop | States Tested |
-|-----------|-------------|------------|---------|---------|---------|---------------|
-| Button | ✅ | ✅ | ✅ | ✅ | ✅ | default, hover, focus, disabled, loading |
-| StatCard | ✅ | ✅ | ✅ | ✅ | ✅ | default, hover, loading |
-| Input | ✅ | ✅ | ✅ | ✅ | ✅ | default, focus, error, disabled |
-| Select | ✅ | ✅ | ✅ | ✅ | ✅ | default, focus, open, disabled |
-| PageHeader | ✅ | ✅ | ✅ | ✅ | ✅ | default, compact, with-breadcrumbs |
-| Grid | ✅ | ✅ | ✅ | ✅ | ✅ | auto-fit, fixed-columns, compact |
+| Component | Light Theme | Dark Theme | Mobile | Tablet | Desktop | Wide | States Tested |
+|-----------|-------------|------------|---------|---------|---------|------|---------------|
+| Button | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | default, hover, focus, disabled, loading |
+| Colors | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | brand, complementary, semantic, neutral |
+| Typography | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | headings, body, captions, scales |
+| Forms | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | input, textarea, select, checkbox, radio, switch |
+| Cards | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | default, elevated, interactive, outline |
+| Badges | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | all variants and sizes |
+| Theme Toggle | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | switching animations and states |
+| Responsive Layout | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | navigation, content adaptation |
 
 ## Test Categories
 
@@ -97,20 +102,29 @@ test('Accessibility visual states', async ({ page }) => {
 ### Development Workflow
 
 ```bash
+# Setup visual baselines (first time only)
+npm run test:visual:setup
+
 # Run all visual tests
 npm run test:visual
 
 # Run with UI for debugging
 npm run test:visual:ui
 
+# Run with browser visible
+npm run test:visual:headed
+
 # Run specific component tests
 npm run test:visual -- --grep "Button"
 
-# Update baseline screenshots
+# Update baseline screenshots after approved changes
 npm run test:visual:update
 
-# Setup visual testing (first time)
-npm run test:visual:setup
+# Validate existing baselines
+npm run test:visual:setup --validate
+
+# Run complete design system visual tests
+npm run test:design-system
 ```
 
 ### CI/CD Integration

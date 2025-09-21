@@ -1,10 +1,18 @@
 'use client'
 
+import { BookingProgress } from '@/components/booking/booking-progress'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Clock, DollarSign } from 'lucide-react'
 import { useEffect, useState } from 'react'
+
+const defaultBookingSteps = [
+    { id: 1, name: 'Select Service' },
+    { id: 2, name: 'Choose Time' },
+    { id: 3, name: 'Customer Details' },
+    { id: 4, name: 'Confirmation' }
+]
 
 interface Service {
     id: string

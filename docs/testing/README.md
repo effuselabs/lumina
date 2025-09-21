@@ -10,7 +10,11 @@ Lumina follows a comprehensive testing approach covering all aspects of the mult
 
 ### **Core Testing Documentation**
 
-- [Testing Strategy](testing-strategy.md) - Complete testing plan with execution checklist
+- [Design System Testing Overview](design-system-testing-overview.md) - Complete design system testing infrastructure
+- [Testing Commands Reference](testing-commands-reference.md) - All available testing commands
+- [Comprehensive Testing Guide](comprehensive-testing-guide.md) - Detailed testing strategies and configuration
+- [Visual Regression Testing](visual-regression-testing.md) - Visual consistency testing guide
+- [Testing Strategy](testing-strategy.md) - Complete testing plan with execution checklist (legacy)
 
 ## 🎯 **Testing Philosophy**
 
@@ -41,31 +45,69 @@ Our testing approach prioritizes:
 - **Framework**: Jest with React Testing Library
 - **Coverage**: Business logic, utility functions, component behavior
 - **Focus**: Individual function and component testing
+- **Commands**: `npm run test`, `npm run test:unit`, `npm run test:watch`
 
 ### **Integration Testing**
 
 - **Framework**: Jest with database mocking
 - **Coverage**: API endpoints, database operations, service integrations
 - **Focus**: Multi-component interactions and data flow
+- **Commands**: `npm run test:integration`
 
 ### **End-to-End Testing**
 
 - **Framework**: Playwright
 - **Coverage**: Complete user workflows, cross-browser compatibility
 - **Focus**: Real user scenarios and business processes
+- **Commands**: `npm run test:e2e`, `npm run test:e2e:ui`, `npm run test:e2e:headed`
 
 ### **Visual Regression Testing**
 
 - **Framework**: Playwright with screenshot comparison
-- **Coverage**: Design system compliance, responsive layouts
-- **Focus**: UI consistency and brand alignment
+- **Coverage**: Design system compliance, responsive layouts, theme consistency
+- **Focus**: UI consistency and brand alignment across all breakpoints
+- **Commands**: `npm run test:visual`, `npm run test:visual:update`, `npm run test:visual:setup`
+
+### **Cross-Browser Testing**
+
+- **Framework**: Playwright across Chrome, Firefox, Safari, Edge
+- **Coverage**: Browser compatibility, responsive design, touch interactions
+- **Focus**: Consistent functionality across all supported browsers
+- **Commands**: `npm run test:cross-browser`
+
+### **Accessibility Testing**
+
+- **Framework**: Playwright with axe-core integration
+- **Coverage**: WCAG AA compliance, keyboard navigation, screen reader compatibility
+- **Focus**: Inclusive design and accessibility standards
+- **Commands**: `npm run test:accessibility`
+
+### **Design System Testing**
+
+- **Framework**: Comprehensive test suite orchestration
+- **Coverage**: All design system components across themes, breakpoints, and states
+- **Focus**: Complete design system quality assurance
+- **Commands**: `npm run test:design-system`, `npm run test:design-system:required`
 
 ## 🚀 **Quick Start**
 
-### **Run All Tests**
+### **Design System Testing (Recommended)**
 
 ```bash
-# Run complete test suite
+# Run complete design system test suite
+npm run test:design-system
+
+# Run only required tests (faster)
+npm run test:design-system:required
+
+# Setup visual baselines (first time only)
+npm run test:visual:setup
+```
+
+### **Legacy Test Commands**
+
+```bash
+# Run complete test suite (legacy)
 npm run test:all
 
 # Run with coverage
@@ -85,7 +127,16 @@ npm run test:integration
 npm run test:e2e
 
 # Visual regression tests
-npm run test:e2e:visual
+npm run test:visual
+
+# Cross-browser compatibility tests
+npm run test:cross-browser
+
+# Accessibility compliance tests
+npm run test:accessibility
+
+# Complete design system test suite
+npm run test:design-system
 ```
 
 ### **Development Testing**
@@ -99,6 +150,31 @@ npm run test:debug
 
 # UI mode for E2E tests
 npm run test:e2e:ui
+
+# Visual test UI mode
+npm run test:visual:ui
+
+# Setup visual baselines (first time)
+npm run test:visual:setup
+
+# Update visual baselines after changes
+npm run test:visual:update
+```
+
+### **Comprehensive Testing**
+
+```bash
+# Run all design system tests
+npm run test:design-system
+
+# Run only required tests (faster)
+npm run test:design-system:required
+
+# Run comprehensive validation suite
+npm run test:comprehensive
+
+# Run with verbose output
+npm run test:comprehensive:verbose
 ```
 
 ## 📊 **Testing Priorities**

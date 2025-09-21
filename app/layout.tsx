@@ -3,7 +3,15 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap', // Prevent layout shifts
+  variable: '--font-inter',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  // Enable font features for better rendering
+  adjustFontFallback: true,
+});
 
 export const metadata: Metadata = {
   title: {
@@ -62,17 +70,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <head>
+        <meta name="theme-color" content="#F7F5F0" />
+        <meta name="color-scheme" content="light dark" />
+      </head>
+      <body className={`${inter.className} font-sans antialiased`}>
         <a
           href="#main-content"
-          className="focus:bg-color-primary focus:text-color-primary-foreground sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:shadow-lg"
+          className="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           Skip to main content
         </a>
         <Providers>
-          <div id="root">
-            <main id="main-content">{children}</main>
+          <div id="root" className="min-h-screen">
+            <main id="main-content" className="component-container">{children}</main>
           </div>
         </Providers>
       </body>

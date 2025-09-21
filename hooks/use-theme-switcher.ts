@@ -8,15 +8,20 @@ import { useCallback, useEffect, useState } from 'react';
  * Enhanced theme switching hook with additional utilities
  */
 export function useThemeSwitcher() {
-    const { theme, setTheme, resolvedTheme } = useTheme();
-    const [isTransitioning, setIsTransitioning] = useState(false);
+    const { theme, setTheme, resolvedTheme, isTransitioning: contextTransitioning } = useTheme();
+    const [localTransitioning, setLocalTransitioning] = useState(false);
+
+    // Use context transitioning state if available, otherwise use local state
+    const isTransitioning = contextTransitioning ?? localTransitioning;
 
     /**
-     * Toggle between light and dark themes
+     * Toggle between light and dark themes with enhanced logic
      * If current theme is 'system', it toggles to the opposite of the resolved theme
      */
     const toggleTheme = useCallback(() => {
-        setIsTransitioning(true);
+        if (isTransitioning) return; // Prevent rapid toggling
+
+        setLocalTransitioning(true);
 
         if (theme === 'system') {
             // If system theme, switch to opposite of current resolved theme
@@ -29,35 +34,41 @@ export function useThemeSwitcher() {
         }
 
         // Reset transition state after animation
-        setTimeout(() => setIsTransitioning(false), 200);
-    }, [theme, resolvedTheme, setTheme]);
+        setTimeout(() => setLocalTransitioning(false), 250);
+    }, [theme, resolvedTheme, setTheme, isTransitioning]);
 
     /**
-     * Set theme to light mode
+     * Set theme to light mode with transition handling
      */
     const setLightTheme = useCallback(() => {
-        setIsTransitioning(true);
+        if (isTransitioning || theme === 'light') return;
+
+        setLocalTransitioning(true);
         setTheme('light');
-        setTimeout(() => setIsTransitioning(false), 200);
-    }, [setTheme]);
+        setTimeout(() => setLocalTransitioning(false), 250);
+    }, [setTheme, theme, isTransitioning]);
 
     /**
-     * Set theme to dark mode
+     * Set theme to dark mode with transition handling
      */
     const setDarkTheme = useCallback(() => {
-        setIsTransitioning(true);
+        if (isTransitioning || theme === 'dark') return;
+
+        setLocalTransitioning(true);
         setTheme('dark');
-        setTimeout(() => setIsTransitioning(false), 200);
-    }, [setTheme]);
+        setTimeout(() => setLocalTransitioning(false), 250);
+    }, [setTheme, theme, isTransitioning]);
 
     /**
-     * Set theme to system preference
+     * Set theme to system preference with transition handling
      */
     const setSystemTheme = useCallback(() => {
-        setIsTransitioning(true);
+        if (isTransitioning || theme === 'system') return;
+
+        setLocalTransitioning(true);
         setTheme('system');
-        setTimeout(() => setIsTransitioning(false), 200);
-    }, [setTheme]);
+        setTimeout(() => setLocalTransitioning(false), 250);
+    }, [setTheme, theme, isTransitioning]);
 
     /**
      * Check if current theme is dark

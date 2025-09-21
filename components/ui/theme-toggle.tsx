@@ -31,7 +31,7 @@ export function ThemeToggle({
         return (
             <Button
                 variant="ghost"
-                size={size}
+                size={size === 'md' ? 'default' : size}
                 onClick={toggleTheme}
                 disabled={isTransitioning}
                 className="relative"
@@ -52,7 +52,7 @@ export function ThemeToggle({
         return (
             <div className="flex items-center space-x-2">
                 <Button
-                    variant={theme === 'light' ? 'default' : 'ghost'}
+                    variant={theme === 'light' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={setLightTheme}
                     disabled={isTransitioning}
@@ -62,7 +62,7 @@ export function ThemeToggle({
                     {showLabel && <span>Light</span>}
                 </Button>
                 <Button
-                    variant={theme === 'dark' ? 'default' : 'ghost'}
+                    variant={theme === 'dark' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={setDarkTheme}
                     disabled={isTransitioning}
@@ -72,7 +72,7 @@ export function ThemeToggle({
                     {showLabel && <span>Dark</span>}
                 </Button>
                 <Button
-                    variant={theme === 'system' ? 'default' : 'ghost'}
+                    variant={theme === 'system' ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={setSystemTheme}
                     disabled={isTransitioning}

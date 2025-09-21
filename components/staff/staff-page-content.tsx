@@ -2,6 +2,7 @@
 
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { StaffList } from '@/components/staff/staff-list';
+import { PageHeader } from '@/components/ui/page-header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 

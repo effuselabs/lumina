@@ -20,6 +20,11 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
 
+  // Optimize CSS and bundle size
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
   // Enable standalone output for Docker
   output: 'standalone',
 
@@ -77,7 +82,7 @@ const nextConfig = {
   },
 
   // Webpack configuration
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     // Optimize bundle size
     if (!isServer) {
       config.resolve.fallback = {
@@ -87,6 +92,31 @@ const nextConfig = {
         tls: false,
       };
     }
+
+    // Production optimizations
+    if (!dev) {
+      // Enable tree shaking for CSS
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+      };
+
+      // Optimize CSS extraction
+      config.optimization.splitChunks = {
+        ...config.optimization.splitChunks,
+        cacheGroups: {
+          ...config.optimization.splitChunks.cacheGroups,
+          styles: {
+            name: 'styles',
+            type: 'css/mini-extract',
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      };
+    }
+
     return config;
   },
 };

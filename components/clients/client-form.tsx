@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { FormField } from '@/components/ui/form-field';
 import { Input } from '@/components/ui/input';
 import {
     Select,
@@ -318,7 +319,6 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
                 <div className="space-y-3">
                     <FormField
                         label="Send email marketing and appointment reminders"
-                        type="checkbox"
                     >
                         <input
                             type="checkbox"
@@ -331,7 +331,6 @@ export function ClientForm({ client, onSubmit, onCancel }: ClientFormProps) {
 
                     <FormField
                         label="Send SMS marketing and appointment reminders"
-                        type="checkbox"
                     >
                         <input
                             type="checkbox"

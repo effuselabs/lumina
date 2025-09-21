@@ -348,7 +348,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
           </SelectContent>
         </Select>
         <Button
-          variant={showInactive ? 'default' : 'outline'}
+          variant={showInactive ? 'primary' : 'outline'}
           onClick={() => setShowInactive(!showInactive)}
           className="w-full sm:w-auto"
         >

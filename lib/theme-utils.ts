@@ -78,14 +78,32 @@ export function setStoredTheme(
 }
 
 /**
- * Applies theme classes and attributes to the document
+ * Applies theme classes and attributes to the document with enhanced features
  */
-export function applyThemeToDocument(resolvedTheme: ResolvedTheme): void {
+export function applyThemeToDocument(
+    resolvedTheme: ResolvedTheme,
+    options: {
+        withTransition?: boolean;
+        updateMetaTheme?: boolean;
+        preventFlash?: boolean;
+    } = {}
+): void {
     if (typeof document === 'undefined') {
         return;
     }
 
+    const { withTransition = true, updateMetaTheme = true, preventFlash = false } = options;
     const root = document.documentElement;
+
+    // Prevent flash of unstyled content
+    if (preventFlash) {
+        root.classList.add('theme-loading');
+    }
+
+    // Add transition class if enabled
+    if (withTransition) {
+        root.classList.add('theme-transitioning');
+    }
 
     // Remove existing theme classes and attributes
     root.classList.remove('light', 'dark');
@@ -97,6 +115,24 @@ export function applyThemeToDocument(resolvedTheme: ResolvedTheme): void {
 
     // Update color-scheme for better browser integration
     root.style.colorScheme = resolvedTheme;
+
+    // Update meta theme-color for mobile browsers
+    if (updateMetaTheme) {
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute(
+                'content',
+                resolvedTheme === 'dark' ? '#0A0A0A' : '#F7F5F0'
+            );
+        }
+    }
+
+    // Remove transition and loading classes after animation
+    if (withTransition || preventFlash) {
+        setTimeout(() => {
+            root.classList.remove('theme-transitioning', 'theme-loading');
+        }, THEME_CONFIG.TRANSITION_DURATION);
+    }
 }
 
 /**
@@ -155,6 +191,28 @@ export const THEME_CSS_VARIABLES = [
 ] as const;
 
 /**
+ * Enhanced theme change listener for external components
+ */
+export function createThemeChangeListener(
+    callback: (theme: ResolvedTheme) => void
+): () => void {
+    if (typeof window === 'undefined') {
+        return () => { }; // No-op for SSR
+    }
+
+    const handleThemeChange = (event: CustomEvent) => {
+        callback(event.detail.resolvedTheme);
+    };
+
+    window.addEventListener('themeChange', handleThemeChange as EventListener);
+
+    // Return cleanup function
+    return () => {
+        window.removeEventListener('themeChange', handleThemeChange as EventListener);
+    };
+}
+
+/**
  * Validates theme transition performance
  */
 export function validateThemeTransition(): Promise<boolean> {
@@ -175,4 +233,74 @@ export function validateThemeTransition(): Promise<boolean> {
             resolve(duration < 100);
         });
     });
+}
+
+/**
+ * Detects if user prefers reduced motion
+ */
+export function prefersReducedMotion(): boolean {
+    if (typeof window === 'undefined') {
+        return false;
+    }
+
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
+ * Enhanced theme persistence with validation and error handling
+ */
+export function enhancedSetStoredTheme(
+    theme: Theme,
+    storageKey: string = THEME_CONFIG.STORAGE_KEY
+): boolean {
+    if (typeof window === 'undefined') {
+        return false;
+    }
+
+    try {
+        // Validate theme before storing
+        if (!isValidTheme(theme)) {
+            console.warn('Invalid theme value, not storing:', theme);
+            return false;
+        }
+
+        localStorage.setItem(storageKey, theme);
+
+        // Verify storage was successful
+        const stored = localStorage.getItem(storageKey);
+        return stored === theme;
+    } catch (error) {
+        console.warn('Failed to save theme to localStorage:', error);
+        return false;
+    }
+}
+
+/**
+ * Enhanced theme retrieval with fallback chain
+ */
+export function enhancedGetStoredTheme(
+    storageKey: string = THEME_CONFIG.STORAGE_KEY,
+    fallback: Theme = THEME_CONFIG.DEFAULT_THEME
+): Theme {
+    if (typeof window === 'undefined') {
+        return fallback;
+    }
+
+    try {
+        // Try localStorage first
+        const stored = localStorage.getItem(storageKey);
+        if (stored && isValidTheme(stored)) {
+            return stored;
+        }
+
+        // Try sessionStorage as backup
+        const sessionStored = sessionStorage.getItem(storageKey);
+        if (sessionStored && isValidTheme(sessionStored)) {
+            return sessionStored;
+        }
+    } catch (error) {
+        console.warn('Failed to read theme from storage:', error);
+    }
+
+    return fallback;
 }

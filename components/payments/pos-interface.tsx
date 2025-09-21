@@ -302,7 +302,7 @@ export default function POSInterface({
                             {TIP_PERCENTAGES.map((percentage) => (
                                 <Button
                                     key={percentage}
-                                    variant={tipAmount === (subtotal * percentage) / 100 ? "default" : "outline"}
+                                    variant={tipAmount === (subtotal * percentage) / 100 ? "primary" : "outline"}
                                     onClick={() => handleTipPercentage(percentage)}
                                     className="h-12"
                                 >
@@ -351,7 +351,7 @@ export default function POSInterface({
                                 return (
                                     <Button
                                         key={method.value}
-                                        variant={paymentMethod === method.value ? "default" : "outline"}
+                                        variant={paymentMethod === method.value ? "primary" : "outline"}
                                         onClick={() => setPaymentMethod(method.value)}
                                         className="w-full justify-start h-12"
                                     >

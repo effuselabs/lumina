@@ -83,7 +83,7 @@ export function RevenueChartWidget({
             </Button>
 
             <Button
-              variant={showComparison ? 'default' : 'outline'}
+              variant={showComparison ? 'primary' : 'outline'}
               size="sm"
               onClick={toggleComparison}
               className="h-8 px-3"

@@ -11,7 +11,7 @@ interface EmptyStateProps {
     label: string;
     onClick?: () => void;
     href?: string;
-    variant?: 'default' | 'outline' | 'ghost';
+    variant?: 'primary' | 'outline' | 'ghost';
   };
   className?: string;
   children?: ReactNode;
@@ -31,7 +31,7 @@ interface EmptyStateProps {
  *   action={{
  *     label: 'Add Appointment',
  *     onClick: handleAddAppointment,
- *     variant: 'default'
+ *     variant: 'primary'
  *   }}
  * />
  */
@@ -74,9 +74,9 @@ export function EmptyState({
           {action.href ? (
             <Button
               asChild
-              variant={action.variant || 'default'}
+              variant={action.variant || 'primary'}
               className={
-                action.variant === 'default'
+                action.variant === 'primary'
                   ? 'bg-lumina-radiant text-white hover:bg-lumina-radiant-hover'
                   : undefined
               }
@@ -86,9 +86,9 @@ export function EmptyState({
           ) : (
             <Button
               onClick={action.onClick}
-              variant={action.variant || 'default'}
+              variant={action.variant || 'primary'}
               className={
-                action.variant === 'default'
+                action.variant === 'primary'
                   ? 'bg-lumina-radiant text-white hover:bg-lumina-radiant-hover'
                   : undefined
               }
