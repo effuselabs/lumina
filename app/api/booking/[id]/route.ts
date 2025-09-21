@@ -206,7 +206,7 @@ export async function PUT(
         // Send notification email for significant changes
         if (startTime || status === 'CANCELLED') {
             try {
-                let emailSubject = ''
+                let _emailSubject = ''
                 let emailType = ''
 
                 if (status === 'CANCELLED') {
