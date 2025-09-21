@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import {
+    type AccessibilityValidationResult,
     generateAccessibilityReport,
     testKeyboardNavigation,
     testScreenReaderCompatibility,
-    validateAllThemesAccessibility,
-    type AccessibilityValidationResult
+    validateAllThemesAccessibility
 } from '@/lib/theme-accessibility';
 import { useEffect, useState } from 'react';
 
@@ -347,7 +347,7 @@ export default function AccessibilityTestPage() {
                                     <li>• Use Tab key to navigate to theme switcher buttons</li>
                                     <li>• Press Enter or Space to activate buttons</li>
                                     <li>• Verify focus indicators are visible in both themes</li>
-                                    <li>• Check that focus doesn't get trapped or lost</li>
+                                    <li>• Check that focus doesn&apos;t get trapped or lost</li>
                                 </ul>
                             </div>
 
@@ -374,9 +374,9 @@ export default function AccessibilityTestPage() {
                             <div>
                                 <h4 className="font-medium mb-2">4. Motion and Animation</h4>
                                 <ul className="text-sm space-y-1 ml-4">
-                                    <li>• Test with "prefers-reduced-motion" enabled</li>
+                                    <li>• Test with &quot;prefers-reduced-motion&quot; enabled</li>
                                     <li>• Verify theme transitions respect motion preferences</li>
-                                    <li>• Check that animations don't cause seizures or vestibular disorders</li>
+                                    <li>• Check that animations don&apos;t cause seizures or vestibular disorders</li>
                                 </ul>
                             </div>
                         </div>

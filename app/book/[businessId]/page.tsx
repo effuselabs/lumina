@@ -47,7 +47,7 @@ export default function BookingPage() {
 
     const [currentStep, setCurrentStep] = useState<BookingStepType>('service')
     const [bookingData, setBookingData] = useState<BookingStep>({})
-    const [customerData, setCustomerData] = useState<CustomerData | null>(null)
+    const [_customerData, setCustomerData] = useState<CustomerData | null>(null)
     const [confirmedBooking, setConfirmedBooking] = useState<any>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -153,8 +153,8 @@ export default function BookingPage() {
                                 <div key={step.key} className="flex items-center">
                                     <div
                                         className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${index <= currentStepIndex
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-gray-200 text-gray-600'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-gray-200 text-gray-600'
                                             }`}
                                     >
                                         {index + 1}

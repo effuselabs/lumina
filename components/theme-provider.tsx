@@ -194,25 +194,6 @@ export function ThemeProvider({
         return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
     }, [mounted, theme, resolvedTheme]);
 
-    // Prevent hydration mismatch by not rendering until mounted
-    if (!mounted) {
-        return (
-            <div
-                style={{
-                    visibility: 'hidden',
-                    // Prevent layout shift during hydration
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                }}
-            >
-                {children}
-            </div>
-        );
-    }
-
     const contextValue: ThemeContextValue = {
         theme,
         setTheme,
@@ -220,9 +201,26 @@ export function ThemeProvider({
         isTransitioning,
     };
 
+    // Always provide context, but handle mounting state in the wrapper
     return (
         <ThemeContext.Provider value={contextValue}>
-            {children}
+            {!mounted ? (
+                <div
+                    style={{
+                        visibility: 'hidden',
+                        // Prevent layout shift during hydration
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                    }}
+                >
+                    {children}
+                </div>
+            ) : (
+                children
+            )}
         </ThemeContext.Provider>
     );
 }

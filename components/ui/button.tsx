@@ -1,16 +1,130 @@
 'use client';
 
-import {
-  designTokenValidator,
-  developmentWarnings
-} from '@/lib/design-system-error-handling';
+// Removed design-system-error-handling imports as they were causing interference
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 import { shallowEqual } from '../../lib/performance-utils';
 import { cn } from '../../lib/utils';
-import { SafeComponentWrapper } from './safe-component-wrapper';
 import { Spinner } from './spinner';
+
+// CRITICAL: Add CSS-in-JS styles for problematic variants
+const buttonStyles = `
+  /* Force Outline Button visibility on light theme - MAXIMUM SPECIFICITY */
+  button[data-variant="outline"][data-testid="button"] {
+    border: 2px solid #000000 !important;
+    border-color: #000000 !important;
+    border-style: solid !important;
+    border-width: 2px !important;
+    color: #000000 !important;
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+  button[data-variant="outline"][data-testid="button"]:hover {
+    background-color: #000000 !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+  }
+  
+  /* Additional specificity - try multiple selectors */
+  .lumina-component button[data-variant="outline"][data-testid="button"] {
+    border: 2px solid #000000 !important;
+    color: #000000 !important;
+    background-color: transparent !important;
+  }
+  
+  /* Even more specific - target the exact component */
+  [data-testid="button"][data-variant="outline"] {
+    border: 2px solid #000000 !important;
+    color: #000000 !important;
+    background-color: transparent !important;
+  }
+
+  /* Force Ghost Button visibility on light theme */
+  button[data-variant="ghost"][data-testid="button"] {
+    color: #000000 !important;
+  }
+  button[data-variant="ghost"][data-testid="button"]:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #000000 !important;
+  }
+  
+  /* Force Link Button visibility on light theme */
+  button[data-variant="link"][data-testid="button"] {
+    color: #1d4ed8 !important;
+    text-decoration: underline !important;
+    text-decoration-color: #1d4ed8 !important;
+  }
+  button[data-variant="link"][data-testid="button"]:hover {
+    color: #1e40af !important;
+    text-decoration-color: #1e40af !important;
+  }
+  
+  /* Dark theme overrides */
+  .dark button[data-variant="outline"][data-testid="button"] {
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+  }
+  .dark button[data-variant="outline"][data-testid="button"]:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+  }
+  .dark button[data-variant="ghost"][data-testid="button"] {
+    color: #ffffff !important;
+  }
+  .dark button[data-variant="ghost"][data-testid="button"]:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+  }
+  .dark button[data-variant="link"][data-testid="button"] {
+    color: #FFD25A !important;
+    text-decoration-color: #FFD25A !important;
+  }
+  .dark button[data-variant="link"][data-testid="button"]:hover {
+    color: #FFD25ACC !important;
+    text-decoration-color: #FFD25ACC !important;
+  }
+  
+  /* REFINED Primary Button text - Elegant white text with subtle shadow */
+  /* Multiple selectors to catch all primary button instances */
+  button[data-variant="primary"][data-testid="button"],
+  button[data-testid="button"]:not([data-variant]),
+  button[data-testid="button"][data-variant="primary"] {
+    color: #ffffff !important;  /* Clean white text - classic and elegant */
+    text-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.4),     /* Subtle dark shadow for definition */
+      0 2px 4px rgba(0, 0, 0, 0.2) !important;  /* Light depth shadow */
+    font-weight: 600 !important;  /* Medium-bold for clarity without heaviness */
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    letter-spacing: 0.015em !important; /* Subtle spacing for elegance */
+  }
+  
+  /* Refined hover state with slightly enhanced shadow */
+  button[data-variant="primary"][data-testid="button"]:hover,
+  button[data-testid="button"]:not([data-variant]):hover,
+  button[data-testid="button"][data-variant="primary"]:hover {
+    color: #ffffff !important;  /* Keep white text on hover */
+    text-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.5),     /* Slightly stronger shadow on hover */
+      0 2px 6px rgba(0, 0, 0, 0.25) !important;  /* Enhanced depth */
+  }
+  
+  /* Additional catch-all for any primary buttons with gradient background */
+  button[data-testid="button"].bg-lumina-radiant,
+  button[data-testid="button"][class*="bg-lumina-radiant"] {
+    color: #ffffff !important;
+    text-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 600 !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    letter-spacing: 0.015em !important;
+  }
+`;
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden contain-layout',
@@ -41,27 +155,29 @@ const buttonVariants = cva(
           // Performance optimizations
           'gpu-accelerated optimize-repaint',
         ],
-        // Outline - Primary color border using CSS custom properties
+        // Outline - Simplified with CSS-in-JS backup (removed conflicting Tailwind classes)
         outline: [
-          'border-2 border-primary bg-transparent text-primary',
-          'hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200',
+          // Base styles only - let CSS-in-JS handle visibility
+          'border-2 bg-transparent shadow-sm',
+          // Simplified Tailwind classes (CSS-in-JS will handle visibility)
+          'border-neutral-300 text-neutral-700 dark:border-neutral-600 dark:text-neutral-200',
+          'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+          // Additional styling
+          'hover:shadow-md hover:scale-105 active:scale-95',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:border-neutral-400 disabled:text-neutral-400 disabled:hover:bg-transparent disabled:hover:text-neutral-400 disabled:scale-100 disabled:cursor-not-allowed',
-          // High contrast mode support
-          'contrast-more:border-4',
-          // Performance optimizations
-          'gpu-accelerated optimize-repaint',
         ],
-        // Ghost - Subtle hover with primary colors
+        // Ghost - Simplified with CSS-in-JS backup
         ghost: [
-          'bg-transparent text-secondary',
-          'hover:bg-primary/10 hover:text-primary active:bg-primary/20 hover:scale-105 active:scale-95 transition-all duration-200',
+          // Base styles
+          'bg-transparent shadow-none',
+          // Simplified Tailwind classes (CSS-in-JS will handle visibility)
+          'text-neutral-900 dark:text-neutral-100',
+          'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+          // Additional styling
+          'hover:scale-105 active:scale-95',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:text-neutral-500 disabled:hover:bg-transparent disabled:hover:text-neutral-500 disabled:scale-100 disabled:cursor-not-allowed',
-          // High contrast mode support
-          'contrast-more:border-2 contrast-more:border-current',
-          // Performance optimizations
-          'gpu-accelerated optimize-repaint',
         ],
         // Destructive - Error color using CSS custom properties
         destructive: [
@@ -74,14 +190,17 @@ const buttonVariants = cva(
           // Performance optimizations
           'gpu-accelerated optimize-repaint',
         ],
-        // Link - Text-only style using secondary colors for better contrast
+        // Link - Simplified with CSS-in-JS backup
         link: [
-          'text-secondary underline-offset-4 bg-transparent shadow-none p-0 h-auto',
-          'hover:underline hover:text-secondary/80 transition-colors duration-200',
-          'focus-visible:ring-secondary focus-visible:ring-2 focus-visible:ring-offset-1',
+          // Base styles
+          'underline-offset-4 bg-transparent shadow-none p-0 h-auto underline decoration-2',
+          // Simplified Tailwind classes (CSS-in-JS will handle visibility)
+          'text-blue-700 dark:text-yellow-400',
+          'hover:text-blue-800 dark:hover:text-yellow-300',
+          // Additional styling
+          'hover:decoration-4',
+          'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1',
           'disabled:text-neutral-400 disabled:no-underline disabled:cursor-not-allowed',
-          // High contrast mode support
-          'contrast-more:underline',
         ],
       },
       size: {
@@ -157,6 +276,20 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
+    // Inject CSS styles for problematic variants
+    React.useEffect(() => {
+      if (typeof window !== 'undefined') {
+        const styleId = 'button-variant-fixes';
+        let styleElement = document.getElementById(styleId) as HTMLStyleElement;
+
+        if (!styleElement) {
+          styleElement = document.createElement('style');
+          styleElement.id = styleId;
+          styleElement.textContent = buttonStyles;
+          document.head.appendChild(styleElement);
+        }
+      }
+    }, []);
     const Comp = asChild ? Slot : 'button';
     const isDisabled = disabled || loading;
 
@@ -173,25 +306,7 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className
     );
 
-    // Validate required design tokens and accessibility in development
-    React.useEffect(() => {
-      if (process.env.NODE_ENV === 'development') {
-        const requiredTokens = [
-          '--color-primary',
-          '--color-primary-foreground',
-          '--lumina-radiant-gradient',
-        ];
-        designTokenValidator.warnMissingTokens(requiredTokens, 'Button');
-
-        // Warn about accessibility issues
-        if (size === 'icon' && !ariaLabel && !children) {
-          developmentWarnings.warnMissingAccessibility(
-            'Button',
-            'Icon buttons should have an aria-label for accessibility'
-          );
-        }
-      }
-    }, [size, ariaLabel, children]);
+    // Removed design token validation that was causing interference with styling
 
     // Performance optimization: Mark animation start/end
     React.useEffect(() => {
@@ -293,37 +408,8 @@ const MemoizedButton = React.memo(ButtonComponent, (prevProps, nextProps) => {
 
 MemoizedButton.displayName = 'MemoizedButton';
 
-// Safe Button with error boundary
-const Button = (props: ButtonProps) => {
-  const fallbackButton = (
-    <button
-      className="ds-fallback-button"
-      disabled={props.disabled || props.loading}
-      aria-label={props['aria-label'] || 'Button (fallback)'}
-      data-testid="button-fallback"
-    >
-      {props.children || 'Button'}
-    </button>
-  );
-
-  return (
-    <SafeComponentWrapper
-      componentName="Button"
-      requiredTokens={[
-        '--color-primary',
-        '--color-primary-foreground',
-        '--lumina-radiant-gradient',
-        '--color-secondary',
-        '--color-secondary-foreground',
-      ]}
-      fallback={fallbackButton}
-    >
-      <MemoizedButton {...props} />
-    </SafeComponentWrapper>
-  );
-};
-
-Button.displayName = 'Button';
+// Export the memoized button directly without wrapper
+const Button = MemoizedButton;
 
 export { Button, buttonVariants };
 

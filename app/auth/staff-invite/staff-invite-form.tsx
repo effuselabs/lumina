@@ -205,7 +205,7 @@ export function StaffInviteForm() {
                     <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Welcome to the Team!</h3>
                     <p className="text-gray-600 mb-4">
-                        Your account has been created successfully. You'll be redirected to sign in shortly.
+                        Your account has been created successfully. You&apos;ll be redirected to sign in shortly.
                     </p>
                     <div className="animate-pulse">
                         <Loader2 className="w-4 h-4 animate-spin mx-auto" />
@@ -237,7 +237,7 @@ export function StaffInviteForm() {
                         {invitation.business.name}
                     </CardTitle>
                     <CardDescription>
-                        You've been invited by {invitation.inviter.name}
+                        You&apos;ve been invited by {invitation.inviter.name}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -263,7 +263,7 @@ export function StaffInviteForm() {
                     {invitation.message && (
                         <div className="bg-blue-50 p-3 rounded-md">
                             <h4 className="font-medium text-sm text-blue-900 mb-1">Personal Message</h4>
-                            <p className="text-sm text-blue-700">"{invitation.message}"</p>
+                            <p className="text-sm text-blue-700">&quot;{invitation.message}&quot;</p>
                         </div>
                     )}
 

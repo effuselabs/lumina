@@ -145,7 +145,7 @@ async function calculateAvailableSlots(
     service: any,
     date: string,
     operatingHours: any,
-    timezone: string
+    _timezone: string
 ) {
     const slots = []
     const requestDate = new Date(date + 'T00:00:00')
@@ -217,8 +217,8 @@ function generateTimeSlots(
     date: string
 ) {
     const slots = []
-    const [startHour, startMinute] = startTime.split(':').map(Number)
-    const [endHour, endMinute] = endTime.split(':').map(Number)
+    const [_startHour, _startMinute] = startTime.split(':').map(Number)
+    const [_endHour, _endMinute] = endTime.split(':').map(Number)
 
     const startDateTime = new Date(date + 'T' + startTime + ':00')
     const endDateTime = new Date(date + 'T' + endTime + ':00')

@@ -210,10 +210,10 @@ export async function PUT(
                 let emailType = ''
 
                 if (status === 'CANCELLED') {
-                    emailSubject = 'Appointment Cancelled'
+                    const _emailSubject2 = 'Appointment Cancelled'
                     emailType = 'cancellation'
                 } else if (startTime) {
-                    emailSubject = 'Appointment Rescheduled'
+                    const _emailSubject = 'Appointment Rescheduled'
                     emailType = 'reschedule'
                 }
 
@@ -322,7 +322,7 @@ export async function DELETE(
         }
 
         // Update status to cancelled instead of deleting
-        const cancelledAppointment = await prisma.appointment.update({
+        const _cancelledAppointment = await prisma.appointment.update({
             where: { id: bookingId },
             data: { status: 'CANCELLED' },
         })

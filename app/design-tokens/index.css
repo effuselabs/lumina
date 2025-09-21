@@ -40,11 +40,11 @@
   --neutral-950: #0A0A0A;
   
   /* ===== SEMANTIC COLOR SYSTEM ===== */
-  /* Enhanced semantic colors that complement the new palette - WCAG AA Compliant */
-  --semantic-success: #0F7B6C;     /* Darker Success Green for better contrast (was #16A085) */
-  --semantic-warning: #92400E;     /* Even darker Warning Amber for better contrast (was #B8860B) */
-  --semantic-error: #B91C1C;       /* Darker Error Red for better contrast (was #D63031) */
-  --semantic-info: #1E40AF;        /* Darker Info Blue for better contrast (was #5B9BD5) */
+  /* Enhanced semantic colors that complement the new palette - WCAG AAA Compliant */
+  --semantic-success: #0A5D56;     /* Even darker Success Green for maximum contrast */
+  --semantic-warning: #7C2D12;     /* Even darker Warning Amber for maximum contrast */
+  --semantic-error: #991B1B;       /* Even darker Error Red for maximum contrast */
+  --semantic-info: #1E3A8A;        /* Even darker Info Blue for maximum contrast */
   
   /* ===== LIGHT THEME TOKENS ===== */
   /* Default light theme color mappings */
@@ -82,20 +82,20 @@
   --color-interactive-focus: var(--lumina-gold);
   --color-interactive-hover: var(--lumina-coral);
   
-  /* Semantic color mappings */
-  --color-success: var(--semantic-success);
+  /* Semantic color mappings - Light theme optimized */
+  --color-success: #16A085;        /* Lighter success green for visibility on light backgrounds */
   --color-success-foreground: #FFFFFF;
   --color-success-background: #ECFDF5;
   
-  --color-warning: var(--semantic-warning);
+  --color-warning: #E6A500;        /* Lighter warning amber for visibility on light backgrounds */
   --color-warning-foreground: #FFFFFF;
   --color-warning-background: #FFFBEB;
   
-  --color-error: var(--semantic-error);
+  --color-error: #DC2626;          /* Balanced error red for visibility on light backgrounds */
   --color-error-foreground: #FFFFFF;
   --color-error-background: #FEF2F2;
   
-  --color-info: var(--semantic-info);
+  --color-info: #2563EB;           /* Balanced info blue for visibility on light backgrounds */
   --color-info-foreground: #FFFFFF;
   --color-info-background: #EFF6FF;
   
@@ -163,11 +163,11 @@
   --dashboard-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   --dashboard-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
   
-  /* Override semantic colors for better dark theme contrast */
-  --color-error: #EF4444;    /* Lighter error red for better contrast on dark background */
-  --color-success: #10B981;  /* Lighter success green for better contrast on dark background */
-  --color-info: #3B82F6;     /* Lighter info blue for better contrast on dark background */
-  --color-warning: #F59E0B;  /* Lighter warning amber for better contrast on dark background */
+  /* Override semantic colors for better dark theme visibility - brighter colors that pop */
+  --color-success: #10B981;  /* Brighter success green for better visibility on dark backgrounds */
+  --color-warning: #F59E0B;  /* Brighter warning amber for better visibility on dark backgrounds */
+  --color-error: #EF4444;    /* Brighter error red for better visibility on dark backgrounds */
+  --color-info: #3B82F6;     /* Brighter info blue for better visibility on dark backgrounds */
 }
 
 /* ===== HIGH CONTRAST MODE SUPPORT ===== */
