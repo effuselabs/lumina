@@ -2,10 +2,6 @@
 
 > **Intelligent Software for Small Business Growth**
 
-[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/jshields-ca/lumina/ci.yml?branch=main&style=flat-square&logo=github&label=CI)](https://github.com/jshields-ca/lumina/actions/workflows/ci.yml)
-[![Deployment](https://img.shields.io/github/actions/workflow/status/jshields-ca/lumina/deploy.yml?branch=main&style=flat-square&logo=railway&label=Deploy)](https://github.com/jshields-ca/lumina/actions/workflows/deploy.yml)
-[![Production](https://img.shields.io/badge/production-railway-success?style=flat-square&logo=railway)](https://uselumina.app)
-[![Staging](https://img.shields.io/badge/staging-railway-blueviolet?style=flat-square&logo=railway)](https://lumina-staging.railway.app)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14+-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
@@ -14,42 +10,103 @@
 [![License](https://img.shields.io/badge/license-proprietary-red?style=flat-square)](LICENSE)
 [![Linear](https://img.shields.io/badge/project-linear-5E6AD2?style=flat-square&logo=linear)](https://linear.app/scootr-ca/project/useluminaapp-d006c1d51186)
 
-Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for the workflows of modern salons and barbershops. It is a single, elegant solution that consolidates booking, client management, and financials. Its proprietary AI engine sheds light on hidden opportunities and risks, making complex data simple and useful.
+Lumina is a Vertical SaaS (V-SaaS) platform designed specifically for salons and barbershops. It consolidates booking, client management, and financials into a single, elegant solution with AI-powered insights that transform complex business data into actionable intelligence.
 
-> **🚧 Currently in Development** - Foundation phase complete with authentication system and database architecture implemented. Ready for UI development and core feature implementation.
+## 🌟 Vision & Purpose
 
-## 🌟 Vision
+**"Stop managing your business and start building your passion."**
 
-**Stop managing your business and start building your passion.** Lumina handles the administrative burdens so you can focus on your craft and your clients.
+Lumina empowers salon and barbershop owners to focus on their craft and clients by eliminating administrative burdens. Our platform transforms complex business operations into intuitive workflows, providing AI-powered insights that reveal hidden opportunities and optimize business performance.
+
+### Why Lumina?
+
+- **Industry-Specific**: Built exclusively for salon and barbershop workflows
+- **All-in-One Solution**: Eliminates the need for multiple disconnected tools
+- **AI-Powered Intelligence**: Transforms data into actionable business insights
+- **Scalable Growth**: Supports businesses from single-chair operations to multi-location enterprises
 
 ## 🎯 Core Features
 
+### MVP Features (86% Complete)
+
 - **📊 Professional Dashboard** - Real-time analytics with interactive charts and business intelligence
 - **👥 Multi-Tenant Business Management** - Complete business operations with role-based access control
-- **📅 Smart Scheduling System** - Advanced appointment booking with staff and service management
+- **🔐 Enterprise Authentication** - NextAuth.js v5 with business-scoped data isolation and RBAC
 - **💰 Financial Management** - Revenue tracking, commission calculations, and payment processing
-- **🔐 Enterprise Security** - NextAuth.js v5 with business-scoped data isolation and RBAC
+- **👤 Client Management (CRM)** - Complete client lifecycle with appointment history and preferences
+- **⚙️ Service Management** - CRUD operations with advanced search, filtering, and status management
 
-## 🚧 Current Status
+### In Development
 
-**Quality Assurance Phase** - Major business features implemented and tested, focusing on final system validation.
+- **📅 Smart Scheduling System** - Advanced appointment booking with staff and service management (LUM-92)
+- **🔌 Payment Integration** - Stripe payment processing with PCI compliance (LUM-83)
+- **🔑 OAuth Integration** - Google OAuth for enhanced authentication (LUM-79)
 
-> **📋 For detailed project status and progress tracking, see [CHANGELOG.md](CHANGELOG.md) and [Project Documentation](docs/README.md)**
+### Post-MVP Roadmap
+
+- **📦 Inventory Management** - Product tracking, stock management, and sales analytics (LUM-105)
+- **🤖 AI-Powered Insights** - Intelligent business recommendations and predictive analytics (LUM-88)
+- **🔗 Advanced Integrations** - Square POS, enhanced data import, and third-party connectors (LUM-86, LUM-87)
+
+## 🎨 Brand Guidelines
+
+Lumina follows a comprehensive brand system that reflects our Creator archetype:
+
+- **Primary Colors**: Lumina Radiant Gradient (#FFD25A to #FF7A5A)
+- **Secondary Colors**: Deep Teal (#0B2B33)
+- **Typography**: Inter (primary), IBM Plex Mono (accent)
+- **Design Principles**: Clarity, Empowerment, Innovation, Accessibility
+
+**[📖 Complete Brand Guidelines](docs/design-system/lumina-product-styleguide.md)** | **[🎨 Design System Demo](/design-system)**
+
+## 🤖 AI-Assisted Development
+
+Lumina leverages AI-powered development tools for enhanced productivity and code quality:
+
+### Steering System
+
+Comprehensive **Steering System** that provides context-aware development guidance:
+
+- **Automatic Application**: Coding standards and security guidelines are automatically applied based on file types
+- **Specialized Guidance**: API, database, UI, and security standards are applied to relevant files
+- **Consistent Patterns**: Ensures all developers follow the same multi-tenant SaaS best practices
+- **Security First**: Built-in security guidelines for authentication, data protection, and PCI compliance
+
+**[📖 Steering System Overview](.kiro/steering/README.md)** - Learn how automated guidance works
+
+### Development Guidelines
+
+- **[💻 Coding Standards](.kiro/steering/coding-approach-and-standards.md)** - TypeScript, React, and architecture patterns
+- **[🔌 API Standards](.kiro/steering/api-standards.md)** - RESTful API design and implementation
+- **[🗄️ Database Standards](.kiro/steering/database-standards.md)** - Multi-tenant data patterns and Prisma conventions
+- **[🎨 UI Standards](.kiro/steering/ui-standards.md)** - Component design and accessibility guidelines
+- **[🔒 Security Standards](.kiro/steering/security.md)** - Authentication, authorization, and data protection
 
 ## 🛠 Tech Stack
 
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript with strict mode
-- **Database**: PostgreSQL 15+ with Prisma ORM
-- **Authentication**: NextAuth.js v5 (Auth.js) with multi-tenant support
-- **Payments**: Stripe API with PCI-compliant payment processing
-- **Styling**: Tailwind CSS with Lumina design system
-- **Containerization**: Docker with multi-stage builds
-- **Deployment**: Railway with preview deployments
-- **CI/CD**: GitHub Actions (planned)
-- **Testing**: Jest, React Testing Library, Playwright
-- **Monitoring**: Sentry (planned)
-- **Development**: Husky pre-commit hooks, ESLint, Prettier
+### Core Technologies
+
+- **Framework**: Next.js 14 with App Router and React Server Components
+- **Language**: TypeScript with strict mode and comprehensive type safety
+- **Database**: PostgreSQL 15+ with Prisma ORM and multi-tenant architecture
+- **Authentication**: NextAuth.js v5 (Auth.js) with business-scoped sessions
+- **Styling**: Tailwind CSS with custom Lumina design system
+- **UI Components**: Radix UI primitives with shadcn/ui integration
+
+### Development & Deployment
+
+- **Containerization**: Docker with multi-stage builds for development and production
+- **Deployment**: Railway platform with automatic deployments
+- **Testing**: Jest, React Testing Library, and Playwright for comprehensive coverage
+- **Code Quality**: ESLint, Prettier, and Husky pre-commit hooks
+- **Development Tools**: TypeScript strict mode, comprehensive linting, and automated formatting
+
+### Integrations & Services
+
+- **Payments**: Stripe API with PCI-compliant payment processing (in development)
+- **Email**: Resend API for transactional emails and notifications
+- **Monitoring**: Sentry integration for error tracking and performance monitoring
+- **Analytics**: Custom analytics dashboard with Recharts visualization
 
 ## 🏗 Architecture
 
@@ -87,104 +144,6 @@ graph TB
     B --> S
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Docker](https://docs.docker.com/get-docker/) and Docker Compose (recommended)
-- OR Node.js 18+ and PostgreSQL 14+ (for local development)
-
-### Quick Start with Docker (Recommended)
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/jshields-ca/lumina.git
-   cd lumina
-   ```
-
-2. **Start the development environment**
-
-   ```bash
-   npm run docker:dev
-   ```
-
-3. **Initialize the database**
-
-   ```bash
-   npx prisma migrate dev --name init
-   npx prisma db seed
-   ```
-
-4. **Access the application**
-   - Application: [http://localhost:3000](http://localhost:3000)
-   - Authentication: [http://localhost:3000/auth/signin](http://localhost:3000/auth/signin)
-   - Prisma Studio: [http://localhost:5555](http://localhost:5555)
-   - Health Check: [http://localhost:3000/api/health](http://localhost:3000/api/health)
-
-### 🎭 Demo Accounts
-
-After seeding the database, you can use these demo accounts:
-
-```yaml
-Business Owner:
-  Email: owner@lumina-demo.com
-  Password: demo123
-
-Senior Hair Stylist:
-  Email: mike@lumina-demo.com
-  Password: demo123
-
-Nail Technician & Colorist:
-  Email: emma@lumina-demo.com
-  Password: demo123
-```
-
-**Demo Business**: Lumina Demo Salon with pre-configured services, clients, and appointments.
-
-### Local Development (without Docker)
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/jshields-ca/lumina.git
-   cd lumina
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-
-   ```bash
-   cp .env.example .env.local
-   # Edit .env.local with your configuration
-   ```
-
-4. **Set up the database**
-
-   ```bash
-   npx prisma migrate dev --name init
-   npx prisma db seed
-   ```
-
-5. **Start the development server**
-
-   ```bash
-   npm run dev
-   ```
-
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-7. **Sign in with demo accounts**
-   Use the demo accounts listed above to explore the application
-
-📖 **For detailed setup instructions, see [Development Setup Guide](docs/development-setup.md)**
-
 ## 📚 Documentation
 
 **[📋 Complete Documentation Hub](docs/README.md)** - Navigate all project documentation
@@ -194,70 +153,88 @@ Nail Technician & Colorist:
 - **[Development Setup](docs/development-setup.md)** - Get started with local development
 - **[Testing Guide](docs/testing/README.md)** - Testing framework and best practices
 - **[Authentication System](docs/features/authentication/README.md)** - Multi-tenant auth system
-- **[Brand Guidelines](docs/design-system/lumina-product-styleguide.md)** - Design system and UI
+- **[API Documentation](docs/api/README.md)** - RESTful API endpoints and integration
+- **[Feature Documentation](docs/features/README.md)** - Complete feature implementation guides
+- **[Project Management](docs/project-management/README.md)** - Development workflow and Linear integration
 - **[Changelog](CHANGELOG.md)** - Version history and release notes
-
-### 🎯 AI-Powered Development Guidance
-
-Lumina includes a comprehensive **Steering System** that provides context-aware development guidance:
-
-- **Automatic Application**: Coding standards and security guidelines are automatically applied based on file types
-- **Specialized Guidance**: API, database, UI, and security standards are applied to relevant files
-- **Consistent Patterns**: Ensures all developers follow the same multi-tenant SaaS best practices
-- **Security First**: Built-in security guidelines for authentication, data protection, and PCI compliance
-
-**[📖 Steering System Overview](.kiro/steering/README.md)** - Learn how automated guidance works
 
 ### 🔧 Project Management & Specifications
 
 - **[📋 Active Specifications](.kiro/specs/)** - Current feature specifications and development plans
-- **[✅ Completed Specifications](.kiro/specs/completed/)** - Finished feature implementations and archived specs
+- **[✅ Completed Specifications](.kiro/specs/completed-or-archived/)** - Finished feature implementations and archived specs
 - **[🎯 Linear Best Practices](.kiro/steering/linear-best-practices.md)** - Issue management and labeling guidelines
-- **[🤖 Agent Hooks](.kiro/hooks/)** - Automated documentation sync and compliance checking
+- **[📊 Project Management Hub](docs/project-management/README.md)** - Workflow documentation and Linear integration
 
-### 📖 Development Guidelines
+#### Linear Integration
 
-- **[💻 Coding Standards](.kiro/steering/coding-approach-and-standards.md)** - TypeScript, React, and architecture patterns
-- **[🔌 API Standards](.kiro/steering/api-standards.md)** - RESTful API design and implementation
-- **[🗄️ Database Standards](.kiro/steering/database-standards.md)** - Multi-tenant data patterns and Prisma conventions
-- **[🎨 UI Standards](.kiro/steering/ui-standards.md)** - Component design and accessibility guidelines
-- **[🔒 Security Standards](.kiro/steering/security.md)** - Authentication, authorization, and data protection
+Lumina includes seamless Linear integration for project tracking:
+
+- **🚧 Auto-create Linear issues** for high-priority blockers
+- **📝 Link decisions to Linear issues** for architectural context
+- **🔄 Bi-directional sync** between daily status and Linear
+- **📊 Integrated reporting** with Linear issue tracking
+
+**[📖 Linear Integration Guide](docs/project-management/linear-integration-guide.md)** - Complete setup and usage
 
 ## 🏃‍♂️ Development
 
 ### Available Scripts
 
-> ⚠️ **Warning**: Documentation audit scripts in `/scripts/` have critical safety issues - **DO NOT USE**. See [LUM-78](https://linear.app/scootr-ca/issue/LUM-78) for fix tracking.
+> ⚠️ **Critical Warning**: Documentation audit scripts in `/scripts/` have critical safety issues - **DO NOT USE**. See [LUM-78](https://linear.app/scootr-ca/issue/LUM-78) for fix tracking.
+
+#### Development Commands
 
 ```bash
-# Development
-npm run dev              # Start development server
-npm run build            # Build for production
-npm run start            # Start production server
+npm run dev              # Start development server (does not modify code)
+npm run build            # Build for production (does not modify code)
+npm run start            # Start production server (does not modify code)
+```
 
-# Code Quality
-npm run lint             # Run ESLint
-npm run lint:fix         # Fix ESLint issues
-npm run type-check       # Run TypeScript checks
-npm run format           # Format code with Prettier
+#### Code Quality Commands ⚠️ _Modifies Code_
 
-# Testing
-npm run test             # Run unit tests
-npm run test:watch       # Run tests in watch mode
-npm run test:coverage    # Generate coverage report
-npm run test:e2e         # Run end-to-end tests
+```bash
+npm run lint             # Run ESLint (read-only analysis)
+npm run lint:fix         # Fix ESLint issues (MODIFIES CODE)
+npm run type-check       # Run TypeScript checks (read-only analysis)
+npm run format           # Format code with Prettier (MODIFIES CODE)
+```
 
-# Database
-npm run db:generate      # Generate Prisma client
-npm run db:migrate       # Run database migrations
-npm run db:seed          # Seed database with demo data
-npm run db:studio        # Open Prisma Studio
-npm run db:reset         # Reset database
+#### Testing Commands
 
-# Docker
-npm run docker:dev       # Start development environment
-npm run docker:down      # Stop Docker containers
-npm run docker:clean     # Clean Docker volumes
+```bash
+npm run test             # Run unit tests (does not modify code)
+npm run test:watch       # Run tests in watch mode (does not modify code)
+npm run test:coverage    # Generate coverage report (does not modify code)
+npm run test:e2e         # Run end-to-end tests (does not modify code)
+npm run test:all         # Run all tests (does not modify code)
+```
+
+#### Database Commands ⚠️ _Modifies Database_
+
+```bash
+npm run db:generate      # Generate Prisma client (MODIFIES generated files)
+npm run db:migrate       # Run database migrations (MODIFIES DATABASE)
+npm run db:seed          # Seed database with demo data (MODIFIES DATABASE)
+npm run db:studio        # Open Prisma Studio (read-only interface)
+npm run db:reset         # Reset database (DESTROYS ALL DATA)
+```
+
+#### Docker Commands
+
+```bash
+npm run docker:dev       # Start development environment (does not modify code)
+npm run docker:down      # Stop Docker containers (does not modify code)
+npm run docker:clean     # Clean Docker volumes (removes Docker data)
+```
+
+#### Project Management Commands
+
+```bash
+npm run daily-status:init          # Initialize daily status file (creates new file)
+npm run daily-status:add-decision  # Add structured decision (MODIFIES documentation)
+npm run daily-status:add-blocker   # Add blocker tracking (MODIFIES documentation)
+npm run daily-status:report        # Generate status report (does not modify files)
+npm run daily-status:weekly        # Generate weekly summary (does not modify files)
 ```
 
 ### Project Structure
@@ -334,20 +311,44 @@ npm run test:coverage     # Generate coverage report
 
 ### Environments
 
-- **Development**: Local development environment
-- **Staging**: `lumina-staging.up.railway.app` (main branch)
-- **Production**: `uselumina.app` (production branch)
+- **Development**: Local development environment with Docker Compose
+- **Staging**: _Planned_ - Automatic deployment from `main` branch (Railway)
+- **Production**: _Planned_ - `uselumina.app` domain (Railway)
 
 ### Deployment Process
 
-1. **Feature Development**: Create feature branch from `main`
-2. **Pull Request**: Open PR to merge into `main`
-3. **Staging**: Automatic deployment to staging on merge
-4. **Production**: Manual promotion from `main` to `production` branch
+1. **Feature Development**: Create Linear issue and feature branch from `main`
+2. **Development**: Implement feature following Linear issue requirements
+3. **Testing**: Ensure all tests pass and code quality checks succeed
+4. **Merge to Main**: Direct merge to `main` (no PR required for solo development)
+5. **Staging Deployment**: _Future_ - Automatic deployment to staging environment
+6. **Production Deployment**: _Future_ - Manual promotion process (to be defined)
+
+### Current Status
+
+- **Railway Integration**: Platform selected for deployment infrastructure
+- **Staging Environment**: Not yet configured (planned in LUM-112)
+- **Production Environment**: Not yet configured (planned as part of MVP completion)
+- **CI/CD Pipeline**: Basic GitHub Actions configured, full pipeline in development
+
+**Note**: Deployment automation and environments will be established as part of the production readiness phase (LUM-112, LUM-113, LUM-115).
 
 ## 📊 Project Management
 
-We use Linear for project tracking with a comprehensive label system:
+We use Linear for comprehensive project tracking with a systematic approach:
+
+**[📋 Project Management Hub](docs/project-management/README.md)** - Complete workflow documentation
+
+### Linear Integration
+
+Lumina includes seamless Linear integration for project tracking and documentation workflow:
+
+- **Comprehensive Labeling System**: Type, Impact, Module, Size, Stage, and Area labels for precise categorization
+- **Epic Organization**: Clear hierarchy with parent-child relationships for complex features
+- **Automated Workflows**: Integration with daily status tracking and decision logging
+- **Progress Tracking**: Real-time status updates with detailed completion criteria
+
+#### Label System
 
 - **Type**: Epic, Feature, Task, Bug, Integration
 - **Impact**: Critical, High, Medium, Low
@@ -356,84 +357,22 @@ We use Linear for project tracking with a comprehensive label system:
 - **Stage**: Ready, Blocked, Review, Testing
 - **Area**: Foundation, Business, Scheduling, Client Management, Payments, Analytics, QA, Production
 
-## 🔗 Linear Integration
+**[📖 Linear Best Practices Guide](.kiro/steering/linear-best-practices.md)** - Complete labeling and workflow standards
 
-Lumina includes seamless Linear integration for documentation workflow automation:
+### Development Workflow
 
-### Quick Commands
+1. **Linear Issue Creation**: All development work starts with a Linear issue
+2. **Branch Creation**: Create feature branch from `main` using Linear issue identifier
+3. **Implementation**: Follow issue requirements and acceptance criteria
+4. **Testing & Quality**: Ensure comprehensive testing and code quality standards
+5. **Documentation**: Update relevant documentation and link to Linear issue
+6. **Completion**: Mark Linear issue as complete with implementation summary
 
-```bash
-# Add blocker with auto Linear issue creation
-npm run blocker:add "Can't deploy to production" --create-linear-issue
-
-# Add decision linked to Linear issue
-npm run decision:add "Use PostgreSQL for analytics" --link-linear-issue LUM-123
-
-# List active blockers with Linear status
-npm run blocker:list
-
-# Generate reports with Linear integration
-npm run linear:report
-```
-
-### Key Features
-
-- **🚧 Auto-create Linear issues** for high-priority blockers
-- **📝 Link decisions to Linear issues** for architectural context
-- **🔄 Bi-directional sync** between daily status and Linear
-- **📊 Integrated reporting** with Linear issue tracking
-
-📖 **See [Linear Integration Guide](docs/project-management/linear-integration-guide.md) for complete setup and usage**
-
-## 🎨 Brand Guidelines
-
-Lumina follows a comprehensive brand system:
-
-- **Primary Colors**: Lumina Radiant Gradient (#FFD25A to #FF7A5A)
-- **Secondary Colors**: Deep Teal (#0B2B33)
-- **Typography**: Inter (primary), IBM Plex Mono (accent)
-- **Design Principles**: Clarity, Empowerment, Innovation, Accessibility
-
-## 🤝 Contributing
-
-We use a **Feature Branch Workflow** for all development. Please follow our [Git Workflow](docs/GIT_WORKFLOW.md) for detailed instructions.
-
-### Quick Start
-
-1. **Create a feature branch**: `git checkout -b feat/your-feature-name`
-2. **Make your changes** and add tests
-3. **Commit with conventional messages**: `git commit -m 'feat: add amazing feature'`
-4. **Push to your branch**: `git push origin feat/your-feature-name`
-5. **Open a Pull Request** with description and testing notes
-
-### Development Standards
-
-- **Branching**: Feature branch workflow with descriptive names
-- **Code Style**: ESLint + Prettier with pre-commit hooks
-- **Commits**: [Conventional Commits](https://conventionalcommits.org/) specification
-- **Testing**: All new features must include tests (80%+ coverage target)
-- **Documentation**: Update relevant documentation and changelog
-- **Reviews**: All changes require code review before merging
-
-📖 **See [Complete Documentation Hub](docs/README.md) for all development guides**
-
-### See Also
-
-- **[Steering System](/.kiro/steering/README.md)** - Automated development guidance
-- **[Security Guidelines](/.kiro/steering/security.md)** - Multi-tenant security standards
-- **[API Standards](/.kiro/steering/api-standards.md)** - RESTful API design patterns
+**Note**: Currently solo-developed project with direct merges to `main`. Pull request workflow will be implemented for future team collaboration.
 
 ## 📝 License
 
 This project is proprietary software. All rights reserved.
-
-## 🙋‍♂️ Support
-
-For questions or support, please contact:
-
-- **Email**: [Your Email]
-- **Linear**: [Project Link]
-- **GitHub Issues**: For bug reports and feature requests
 
 ---
 

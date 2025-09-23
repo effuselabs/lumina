@@ -1,330 +1,266 @@
 # Contributing to Lumina
 
-Thank you for your interest in contributing to Lumina! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to Lumina! This guide will help you get started with the development process and understand our workflow.
 
 ## 🚀 Getting Started
 
-### Development Setup
+### Prerequisites
 
-1. **Clone and install**
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose (recommended)
+- OR Node.js 18+ and PostgreSQL 14+ (for local development)
+
+### Quick Start with Docker (Recommended)
+
+1. **Clone the repository**
+
    ```bash
    git clone https://github.com/jshields-ca/lumina.git
    cd lumina
-   npm install
    ```
 
-2. **Environment setup**
+2. **Start the development environment**
+
    ```bash
-   cp .env.example .env.local
-   # Configure your environment variables
+   npm run docker:dev
    ```
 
-3. **Database setup**
+3. **Initialize the database**
+
    ```bash
-   npx prisma migrate dev
+   npx prisma migrate dev --name init
    npx prisma db seed
    ```
 
-4. **Start development**
+4. **Access the application**
+   - Application: [http://localhost:3000](http://localhost:3000)
+   - Authentication: [http://localhost:3000/auth/signin](http://localhost:3000/auth/signin)
+   - Prisma Studio: [http://localhost:5555](http://localhost:5555)
+   - Health Check: [http://localhost:3000/api/health](http://localhost:3000/api/health)
+
+### 🎭 Demo Accounts
+
+After seeding the database, you can use these demo accounts:
+
+```yaml
+Business Owner:
+  Email: owner@lumina-demo.com
+  Password: demo123
+
+Senior Hair Stylist:
+  Email: mike@lumina-demo.com
+  Password: demo123
+
+Nail Technician & Colorist:
+  Email: emma@lumina-demo.com
+  Password: demo123
+```
+
+**Demo Business**: Lumina Demo Salon with pre-configured services, clients, and appointments.
+
+### Local Development (without Docker)
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/jshields-ca/lumina.git
+   cd lumina
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+4. **Set up the database**
+
+   ```bash
+   npx prisma migrate dev --name init
+   npx prisma db seed
+   ```
+
+5. **Start the development server**
+
    ```bash
    npm run dev
    ```
 
-## 📋 Development Workflow
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-We use a **Feature Branch Workflow**. Please read our [Git Workflow Guide](docs/project-management/GIT_WORKFLOW.md) for detailed instructions.
+7. **Sign in with demo accounts**
+   Use the demo accounts listed above to explore the application
 
-### Branch Strategy
+📖 **For detailed setup instructions, see [Development Setup Guide](docs/development-setup.md)**
 
-- **`main`**: Production-ready code, always deployable
-- **`feat/feature-name`**: New features and enhancements
-- **`fix/bug-description`**: Bug fixes
-- **`chore/task-description`**: Maintenance tasks
-- **`docs/update-description`**: Documentation updates
+## 🤝 Contributing Workflow
 
-### Quick Workflow
-1. **Create feature branch**: `git checkout -b feat/your-feature-name`
-2. **Develop and test** your changes
-3. **Commit with conventional messages**: `git commit -m 'feat: add new feature'`
-4. **Push and create PR**: `git push origin feat/your-feature-name`
-5. **Address review feedback** and merge
+We use a **Feature Branch Workflow** for all development.
 
-### Commit Convention
+### Current Development Process (Solo Development)
 
-We use [Conventional Commits](https://www.conventionalcommits.org/):
+1. **Create Linear Issue**: All development work starts with a Linear issue
+2. **Create Feature Branch**: `git checkout -b feat/LUM-XXX-feature-name`
+3. **Make Changes**: Implement feature following Linear issue requirements
+4. **Add Tests**: Ensure comprehensive test coverage (80%+ target)
+5. **Commit Changes**: Use conventional commit messages
+6. **Merge to Main**: Direct merge to `main` (no PR required currently)
+7. **Update Linear**: Mark Linear issue as complete with implementation summary
 
-```
-type(scope): description
+### Future Team Workflow (When Team Expands)
 
-feat(auth): add Google OAuth integration
-fix(booking): resolve double booking conflict
-docs(readme): update setup instructions
-chore(deps): update dependencies
-```
+1. **Create Feature Branch**: `git checkout -b feat/your-feature-name`
+2. **Make Changes** and add tests
+3. **Commit with Conventional Messages**: `git commit -m 'feat: add amazing feature'`
+4. **Push to Branch**: `git push origin feat/your-feature-name`
+5. **Open Pull Request** with description and testing notes
+6. **Code Review**: All changes require code review before merging
+7. **Merge to Main**: After approval and CI checks pass
 
-### Changelog Updates
+## 📋 Development Standards
 
-For significant changes, please update the [CHANGELOG.md](CHANGELOG.md):
-- Add entries under the `[Unreleased]` section
-- Follow the [Keep a Changelog](https://keepachangelog.com/) format
-- Include breaking changes and migration notes when applicable
-docs(readme): update installation instructions
-test(crm): add client search integration tests
-```
+### Branching Strategy
 
-**Types:**
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `test`: Adding or updating tests
-- `refactor`: Code refactoring
-- `style`: Code style changes
-- `chore`: Build process or auxiliary tool changes
+- **Feature Branches**: `feat/LUM-XXX-feature-name` (linked to Linear issues)
+- **Bug Fixes**: `fix/LUM-XXX-bug-description`
+- **Documentation**: `docs/update-description`
+- **Refactoring**: `refactor/component-or-area`
 
-### Pull Request Process
+### Code Style
 
-1. **Create feature branch**
-   ```bash
-   git checkout -b feat/LUM-XXX-feature-name
-   ```
+- **ESLint + Prettier**: Automated formatting with pre-commit hooks
+- **TypeScript Strict Mode**: Comprehensive type checking required
+- **Conventional Commits**: Follow [Conventional Commits](https://conventionalcommits.org/) specification
+- **File Naming**: Use kebab-case for files, PascalCase for components
 
-2. **Make changes** following our coding standards
+### Testing Requirements
 
-3. **Test your changes**
-   ```bash
-   npm run test
-   npm run test:e2e
-   npm run lint
-   npm run type-check
-   ```
+- **Unit Tests**: All new features must include unit tests
+- **Integration Tests**: API endpoints require integration tests
+- **E2E Tests**: Critical user flows must have end-to-end tests
+- **Coverage Target**: Maintain 80%+ code coverage
 
-4. **Commit with conventional format**
-   ```bash
-   git commit -m "feat(booking): add real-time availability updates"
-   ```
+### Documentation Requirements
 
-5. **Push and create PR**
-   ```bash
-   git push origin feat/LUM-XXX-feature-name
-   ```
+- **Feature Documentation**: All new features require comprehensive documentation
+- **API Documentation**: Document all new API endpoints
+- **Update Changelog**: Add entries to CHANGELOG.md for all changes
+- **Linear Integration**: Link commits and documentation to Linear issues
 
-6. **Link to Linear issue** in PR description
+## 🔧 Development Guidelines
 
-## 🧪 Testing Standards
+### Multi-Tenant Architecture
 
-### Test Requirements
+All development must follow multi-tenant patterns:
 
-- **Unit Tests**: All business logic must have unit tests
-- **Integration Tests**: All API endpoints must have integration tests
-- **E2E Tests**: Critical user journeys must have E2E tests
-- **Coverage**: Maintain 80%+ code coverage
+- **Business Scoping**: All data operations must include `businessId` filtering
+- **Permission Checks**: Verify user has access to requested business
+- **Security First**: Follow security guidelines for authentication and data protection
 
-### Test Structure
+### Code Quality Standards
 
-```typescript
-// Unit test example
-describe('CommissionCalculator', () => {
-  it('should calculate commission correctly for percentage model', () => {
-    const calculator = new CommissionCalculator('percentage', 0.4);
-    const result = calculator.calculate(100);
-    expect(result).toBe(40);
-  });
-});
+- **TypeScript**: Use strict mode with comprehensive type checking
+- **Error Handling**: Implement proper error handling with user-friendly messages
+- **Performance**: Consider performance implications of all changes
+- **Accessibility**: Ensure all UI changes meet WCAG 2.1 AA standards
 
-// Integration test example
-describe('POST /api/bookings', () => {
-  it('should create booking with valid data', async () => {
-    const response = await request(app)
-      .post('/api/bookings')
-      .send(validBookingData)
-      .expect(201);
-    
-    expect(response.body).toMatchObject({
-      id: expect.any(String),
-      status: 'confirmed'
-    });
-  });
-});
+### Automated Guidance
+
+Lumina includes a comprehensive **Steering System** that provides context-aware development guidance:
+
+- **[💻 Coding Standards](.kiro/steering/coding-approach-and-standards.md)** - TypeScript, React, and architecture patterns
+- **[🔌 API Standards](.kiro/steering/api-standards.md)** - RESTful API design and implementation
+- **[🗄️ Database Standards](.kiro/steering/database-standards.md)** - Multi-tenant data patterns and Prisma conventions
+- **[🎨 UI Standards](.kiro/steering/ui-standards.md)** - Component design and accessibility guidelines
+- **[🔒 Security Standards](.kiro/steering/security.md)** - Authentication, authorization, and data protection
+
+## 🧪 Testing
+
+### Running Tests
+
+```bash
+npm run test              # Run all tests
+npm run test:watch        # Run tests in watch mode
+npm run test:coverage     # Generate coverage report
+npm run test:e2e          # Run end-to-end tests
 ```
 
-## 🎨 Code Style
+### Writing Tests
 
-### TypeScript Standards
+- **Unit Tests**: Place test files next to the code they test (`component.test.tsx`)
+- **Integration Tests**: Place in `__tests__/integration/` directory
+- **E2E Tests**: Place in `e2e/` directory with descriptive names
 
-- **Strict mode**: Always use TypeScript strict mode
-- **Type definitions**: Create proper types for all data structures
-- **No `any`**: Avoid using `any` type, use proper typing
-- **Interfaces**: Use interfaces for object shapes
+## 📚 Documentation
 
-```typescript
-// Good
-interface BookingData {
-  clientId: string;
-  serviceId: string;
-  startTime: Date;
-  duration: number;
-}
+### Required Documentation
 
-// Avoid
-const bookingData: any = { ... };
-```
+- **Feature Documentation**: Create comprehensive documentation in `docs/features/`
+- **API Documentation**: Document endpoints in `docs/api/`
+- **Update README**: Update relevant sections for significant changes
+- **Changelog**: Add entries following [Keep a Changelog](https://keepachangelog.com/) format
 
-### React Standards
+### Documentation Standards
 
-- **Functional Components**: Use functional components with hooks
-- **Custom Hooks**: Extract reusable logic into custom hooks
-- **Props Interface**: Define props interfaces for all components
-- **Error Boundaries**: Implement error boundaries for robust UX
+- **Clear Language**: Write for future team members and contributors
+- **Code Examples**: Include practical examples and usage patterns
+- **Cross-References**: Link related documentation appropriately
+- **Maintenance**: Keep documentation current with code changes
 
-```typescript
-// Good
-interface BookingFormProps {
-  onSubmit: (data: BookingData) => void;
-  initialData?: Partial<BookingData>;
-}
+## 🚀 Deployment
 
-export function BookingForm({ onSubmit, initialData }: BookingFormProps) {
-  // Component implementation
-}
-```
+### Current Process
 
-### File Organization
+- **Development**: Local development with Docker Compose
+- **Staging**: _Planned_ - Automatic deployment from `main` branch
+- **Production**: _Planned_ - Manual promotion process
 
-```
-components/
-├── ui/                 # Base UI components (Button, Input, etc.)
-├── forms/             # Form-specific components
-├── charts/            # Data visualization components
-└── [feature]/         # Feature-specific components
+### Future Process
 
-lib/
-├── auth.ts            # Authentication utilities
-├── db.ts              # Database utilities
-├── validations/       # Zod validation schemas
-└── utils.ts           # General utilities
+- **Feature Branches**: Automatic preview deployments
+- **Staging**: Automatic deployment on merge to `main`
+- **Production**: Manual promotion with approval process
 
-types/
-├── auth.ts            # Authentication types
-├── booking.ts         # Booking-related types
-└── database.ts        # Database model types
-```
+## 📞 Support
 
-## 🏗 Architecture Guidelines
+### Getting Help
 
-### API Design
+- **Documentation**: Check [Complete Documentation Hub](docs/README.md) first
+- **Linear Issues**: Create issues for bugs or feature requests
+- **Development Setup**: See [Development Setup Guide](docs/development-setup.md)
 
-- **RESTful**: Follow REST conventions for API endpoints
-- **Validation**: Use Zod for request/response validation
-- **Error Handling**: Consistent error response format
-- **Authentication**: Protect routes with proper middleware
+### Reporting Issues
 
-```typescript
-// API route example
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const validatedData = bookingSchema.parse(body);
-    
-    const booking = await createBooking(validatedData);
-    return NextResponse.json(booking, { status: 201 });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
-        { status: 400 }
-      );
-    }
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-```
+1. **Check Existing Issues**: Search Linear for existing reports
+2. **Create Linear Issue**: Use appropriate labels and templates
+3. **Provide Context**: Include steps to reproduce, expected behavior, and environment details
+4. **Link Related Work**: Reference related issues or documentation
 
-### Database Guidelines
+## 📋 Checklist for Contributors
 
-- **Prisma Schema**: Use Prisma for database modeling
-- **Migrations**: Always create migrations for schema changes
-- **Relationships**: Define proper foreign key relationships
-- **Indexing**: Add indexes for frequently queried fields
+Before submitting changes:
 
-```prisma
-model Appointment {
-  id          String   @id @default(cuid())
-  clientId    String
-  serviceId   String
-  staffId     String
-  startTime   DateTime
-  endTime     DateTime
-  status      AppointmentStatus @default(SCHEDULED)
-  
-  client      Client   @relation(fields: [clientId], references: [id])
-  service     Service  @relation(fields: [serviceId], references: [id])
-  staff       Staff    @relation(fields: [staffId], references: [id])
-  
-  @@index([startTime])
-  @@index([clientId])
-  @@index([staffId])
-}
-```
+- [ ] Code follows TypeScript strict mode requirements
+- [ ] All tests pass (`npm run test`)
+- [ ] Code coverage meets 80% target
+- [ ] ESLint passes without errors (`npm run lint`)
+- [ ] Documentation updated for new features
+- [ ] CHANGELOG.md updated with changes
+- [ ] Linear issue linked and updated
+- [ ] Multi-tenant security patterns followed
+- [ ] Accessibility standards met (WCAG 2.1 AA)
 
-## 🔒 Security Guidelines
+## 🎯 Project Vision
 
-- **Input Validation**: Validate all user inputs
-- **Authentication**: Use NextAuth.js for authentication
-- **Authorization**: Implement proper role-based access control
-- **Environment Variables**: Never commit secrets to version control
-- **SQL Injection**: Use Prisma ORM to prevent SQL injection
-- **XSS Protection**: Sanitize user-generated content
-
-## 📊 Performance Guidelines
-
-- **Database Queries**: Optimize queries and use proper indexing
-- **Caching**: Implement caching for frequently accessed data
-- **Bundle Size**: Monitor and optimize bundle size
-- **Core Web Vitals**: Maintain good Core Web Vitals scores
-- **Image Optimization**: Use Next.js Image component
-
-## 🐛 Bug Reports
-
-When reporting bugs, please include:
-
-1. **Description**: Clear description of the issue
-2. **Steps to Reproduce**: Detailed steps to reproduce the bug
-3. **Expected Behavior**: What should happen
-4. **Actual Behavior**: What actually happens
-5. **Environment**: Browser, OS, Node.js version
-6. **Screenshots**: If applicable
-
-## 💡 Feature Requests
-
-When requesting features:
-
-1. **Use Case**: Describe the business use case
-2. **User Story**: Write a user story format
-3. **Acceptance Criteria**: Define what "done" looks like
-4. **Priority**: Suggest priority level and reasoning
-
-## 📞 Getting Help
-
-- **Linear Issues**: Check existing issues first
-- **Documentation**: Review README and code comments
-- **Code Review**: Ask for help in PR comments
-- **Architecture Questions**: Tag @jeremy in Linear
-
-## 🎯 Definition of Done
-
-A task is considered complete when:
-
-- [ ] Code is implemented and follows style guidelines
-- [ ] Unit tests are written and passing
-- [ ] Integration tests are written and passing (if applicable)
-- [ ] E2E tests are written and passing (for user-facing features)
-- [ ] Code is reviewed and approved
-- [ ] Documentation is updated (if applicable)
-- [ ] Linear issue is updated and closed
+Remember that Lumina's mission is to **"Stop managing your business and start building your passion."** All contributions should align with this vision of empowering salon and barbershop owners through intelligent, intuitive software.
 
 ---
 
-Thank you for contributing to Lumina! 🚀
+Thank you for contributing to Lumina! Your efforts help democratize the power of technology for small businesses.

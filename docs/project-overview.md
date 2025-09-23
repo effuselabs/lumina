@@ -1,253 +1,225 @@
-# Project Overview
-
-## Current Project State
+# Lumina Project Overview
 
-**Last Updated**: September 21, 2025  
-**Project Phase**: Post-Audit Strategic Planning  
-**Current Sprint**: Comprehensive Audit Completion & Roadmap Validation
+## Product Vision & Mission
 
-## Active Features in Development
+**"Stop managing your business and start building your passion."**
 
-### 1. Comprehensive Project Audit (LUM-103)
+Lumina is a Vertical SaaS (V-SaaS) platform designed exclusively for salons and barbershops. We transform complex business operations into intuitive workflows, providing AI-powered insights that reveal hidden opportunities and optimize business performance.
 
-- **Status**: 🔄 In Progress - Task 9 (Post-MVP Roadmap Validation)
-- **Linear Issue**: [LUM-103](https://linear.app/scootr-ca/issue/LUM-103) - Full Project Audit and Revision of Development Plan
-- **Description**: Comprehensive audit and strategic planning for MVP completion and post-MVP roadmap
-- **Key Components**:
-  - Current Implementation Status Assessment ✅
-  - Development Process Review ✅
-  - Production Readiness Assessment ✅
-  - Feature Gap Analysis ✅
-  - Updated Development Plan Creation ✅
-  - Quality Assurance Strategy ✅
-  - Documentation Review ✅
-  - Integration & Deployment Strategy ✅
-  - Post-MVP Roadmap Validation 🔄 (Current Task)
+### Why Lumina Exists
 
-### 2. Documentation Best Practices System
+- **Industry Pain Point**: Salon owners spend too much time on administrative tasks instead of their craft
+- **Fragmented Solutions**: Current tools are disconnected, creating inefficiencies and data silos
+- **Growth Barriers**: Lack of actionable insights prevents businesses from reaching their potential
+- **Technology Gap**: Most salon software is outdated and doesn't leverage modern AI capabilities
 
-- **Status**: ✅ Complete
-- **Linear Issue**: [LUM-78](https://linear.app/scootr-ca/issue/LUM-78) - Documentation audit script fixes
-- **Description**: Comprehensive documentation framework for AI-human collaboration
-- **Key Components**:
-  - AI Context Preservation System ✅
-  - Daily Status Documentation System ✅
-  - Documentation Quality Assurance Engine ✅
-  - Documentation Consolidation System ✅
-  - Feature Documentation Scaffolding ✅
-  - Documentation Management Hub ✅
-  - Safety Warning System ✅
+### Our Solution
 
-### 2. Multi-Tenant Architecture
+Lumina consolidates booking, client management, and financials into a single, elegant platform with AI-powered intelligence that transforms data into actionable business insights.
 
-- **Status**: Core Implementation Complete
-- **Description**: Business-scoped data isolation and authentication
-- **Key Components**:
-  - Business context middleware ✅
-  - Role-based access control ✅
-  - Multi-tenant database patterns ✅
+## Target Market & Users
 
-### 3. Authentication & Authorization
+### Primary Users
 
-- **Status**: Implemented
-- **Description**: NextAuth.js v5 with multi-tenant support
-- **Key Components**:
-  - User authentication ✅
-  - Business context switching ✅
-  - Role-based permissions ✅
+- **Salon Owners**: Independent salon owners and small chains (1-5 locations)
+- **Barbershop Owners**: Traditional and modern barbershops seeking digital transformation
+- **Managers**: Salon managers responsible for operations and staff coordination
+- **Staff Members**: Stylists, barbers, and technicians who need scheduling and client management tools
 
-## Recently Completed Features
+### Market Characteristics
 
-### Documentation System Overhaul
+- **Size**: 1-20 staff members per location
+- **Revenue**: $100K - $2M annual revenue per location
+- **Technology Adoption**: Moderate to high, seeking modern solutions
+- **Pain Points**: Manual scheduling, fragmented client data, unclear financial insights
 
-- Comprehensive documentation audit and cleanup ✅
-- Quality automation with Linear integration ✅
-- Agent hooks for automated workflows ✅
-- Proper file organization and structure ✅
-- Feature documentation scaffolding for all implemented systems ✅
-- Documentation management hub with maintenance procedures ✅
-- Safety warnings for audit scripts with Linear issue tracking ✅
+## MVP Feature Set (86% Complete)
 
-### Booking System Foundation
+### ✅ Completed Core Features
 
-- Public booking interface
-- Real-time availability checking
-- Basic appointment management
+#### Multi-Tenant Business Management
 
-### Design System
+- **Business Onboarding**: 5-step wizard with progress tracking and financial model configuration
+- **Role-Based Access Control**: Owner, Manager, Staff roles with appropriate permissions
+- **Business Context Switching**: Seamless switching between multiple business locations
+- **Enterprise Security**: NextAuth.js v5 with business-scoped data isolation
 
-- Lumina brand identity implementation ✅
-- Radix UI + shadcn/ui component library
-- Responsive design patterns
-- Complete style guide and design system documentation ✅
+#### Client Management (CRM)
 
-### Development Infrastructure
+- **Complete Client Lifecycle**: Registration, profile management, appointment history
+- **Client Preferences**: Service preferences, notes, and communication preferences
+- **Data Import**: CSV import functionality for existing client databases
+- **Professional Data Display**: Clean, organized client information interface
 
-- Next.js 14 App Router setup
-- TypeScript strict mode configuration
-- Testing framework (Jest, Playwright)
-- CI/CD pipeline with Railway deployment
+#### Service Management
 
-## Current Blockers & Issues
+- **CRUD Operations**: Complete service creation, editing, and management
+- **Advanced Search & Filtering**: Find services quickly with multiple filter options
+- **Status Management**: Active/inactive service status with proper handling
+- **Pricing & Duration**: Flexible pricing models and service duration management
 
-### High Priority
+#### Financial Management
 
-- None currently identified
+- **Revenue Tracking**: Real-time revenue analytics and reporting
+- **Commission Calculations**: Automated staff commission tracking and calculations
+- **Payment Processing Foundation**: Stripe integration framework (configuration pending)
+- **Transaction History**: Complete audit trail of all financial transactions
 
-### Medium Priority
+#### Professional Dashboard
 
-- Performance optimization for booking availability queries
-- Enhanced error handling for multi-tenant operations
-- Documentation audit script fixes ([LUM-78](https://linear.app/scootr-ca/issue/LUM-78))
+- **Real-Time Analytics**: Interactive charts showing revenue, appointments, and performance
+- **Business Intelligence**: Key metrics and insights for decision-making
+- **Staff Performance**: Individual and team performance tracking
+- **Mobile Responsive**: Optimized for desktop, tablet, and mobile devices
 
-### Low Priority
+### 🔄 In Development (MVP Completion)
 
-- Code coverage improvements for newer components
-- Additional E2E test scenarios
+#### Smart Scheduling System (LUM-92)
 
-## Recent Architectural Decisions
+- **Advanced Appointment Booking**: Multi-step booking wizard with real-time availability
+- **Staff Scheduling**: Comprehensive staff schedule management and availability tracking
+- **Calendar Integration**: Professional calendar interface with drag-and-drop functionality
+- **Automated Notifications**: Email and SMS notifications for appointments and reminders
 
-### Decision: Documentation-First Development Approach
+#### Payment Integration (LUM-83)
 
-- **Date**: January 2025
-- **Rationale**: Improve AI-human collaboration and knowledge preservation
-- **Impact**: All new features require comprehensive documentation
-- **Status**: Implemented with quality automation
+- **Stripe Payment Processing**: PCI-compliant payment processing with multiple payment methods
+- **Point of Sale**: Integrated POS system for in-person transactions
+- **Refund Management**: Automated refund processing and tracking
+- **Financial Reporting**: Comprehensive financial reports and tax documentation
 
-### Decision: Steering System Integration
+#### Enhanced Authentication (LUM-79)
 
-- **Date**: December 2024
-- **Rationale**: Automate development standards enforcement
-- **Impact**: Consistent code quality and documentation standards
-- **Status**: Implemented and active
+- **Google OAuth Integration**: Streamlined login with Google accounts
+- **Enhanced Security**: Additional security layers and authentication options
+- **Password Management**: Secure password reset and management features
 
-### Decision: Multi-Tenant Architecture Pattern
+## Post-MVP Roadmap
 
-- **Date**: November 2024
-- **Rationale**: Support multiple salon businesses in single deployment
-- **Impact**: All data operations must be business-scoped
-- **Status**: Implemented across all features
+### Phase 1: Inventory & Operations (Q1 2026)
 
-## Technology Stack Status
+#### Inventory Management System (LUM-105)
 
-### Core Technologies
+- **Product Tracking**: Comprehensive inventory management with stock levels
+- **Sales Analytics**: Product performance and sales trend analysis
+- **Automated Reordering**: Smart reorder points and supplier management
+- **Retail Integration**: Point-of-sale integration for retail product sales
 
-- **Next.js 14**: App Router, Server Components ✅
-- **TypeScript**: Strict mode, comprehensive typing ✅
-- **PostgreSQL**: Multi-tenant schema design ✅
-- **Prisma ORM**: Business-scoped queries ✅
-- **NextAuth.js v5**: Multi-tenant authentication ✅
+#### Advanced Reporting & Analytics
 
-### Development Tools
+- **Custom Reports**: User-defined reports with flexible parameters
+- **Predictive Analytics**: AI-powered insights for business optimization
+- **Benchmark Comparisons**: Industry benchmarking and performance comparisons
+- **Export Capabilities**: PDF, Excel, and CSV export options
 
-- **Testing**: Jest, React Testing Library, Playwright ✅
-- **Code Quality**: ESLint, Prettier, Husky ✅
-- **Deployment**: Railway with Docker ✅
-- **Monitoring**: Sentry integration ✅
+### Phase 2: AI & Automation (Q2 2026)
 
-## Deployment Status
+#### AI-Powered Insights (LUM-88)
 
-### Production Environment
+- **Intelligent Onboarding**: AI-guided business setup and optimization
+- **Predictive Scheduling**: AI recommendations for optimal scheduling
+- **Revenue Optimization**: AI-driven pricing and service recommendations
+- **Customer Insights**: AI analysis of customer behavior and preferences
 
-- **Platform**: Railway
-- **Status**: Active and stable
-- **URL**: https://uselumina.app
-- **Health Check**: `/api/health` endpoint available
+#### Marketing Automation
 
-### Development Environment
+- **Automated Campaigns**: Email and SMS marketing campaigns
+- **Customer Segmentation**: AI-powered customer segmentation and targeting
+- **Loyalty Programs**: Automated loyalty and rewards programs
+- **Review Management**: Automated review requests and reputation management
 
-- **Local Setup**: Docker Compose for PostgreSQL
-- **Development Server**: Next.js dev server
-- **Database**: Local PostgreSQL instance
+### Phase 3: Advanced Integrations (Q3 2026)
 
-## Key Metrics & Health
+#### Third-Party Integrations (LUM-86, LUM-87)
 
-### Code Quality
+- **Square POS Integration**: Seamless integration with Square payment systems
+- **QuickBooks Integration**: Automated accounting and financial sync
+- **Social Media Integration**: Instagram, Facebook booking and marketing
+- **Email Marketing Platforms**: Mailchimp, Constant Contact integration
 
-- **TypeScript Coverage**: >95%
-- **Test Coverage**: >80% (target: >90%)
-- **ESLint Compliance**: 100%
-- **Build Success Rate**: 100%
+#### Multi-Location Management
 
-### Performance
+- **Franchise Support**: Multi-location management and reporting
+- **Centralized Administration**: Corporate-level oversight and management
+- **Location Performance**: Cross-location analytics and benchmarking
+- **Unified Branding**: Consistent branding across all locations
 
-- **Page Load Times**: <2s average
-- **API Response Times**: <500ms average
-- **Database Query Performance**: Optimized with indexes
+## Technical Architecture
 
-### Security
+### Core Technology Stack
 
-- **Authentication**: NextAuth.js v5 with secure sessions
-- **Data Isolation**: Business-scoped queries enforced
-- **Input Validation**: Zod schemas for all inputs
-- **Security Headers**: Implemented via middleware
+- **Framework**: Next.js 14 with App Router and React Server Components
+- **Language**: TypeScript with strict mode and comprehensive type safety
+- **Database**: PostgreSQL 15+ with Prisma ORM and multi-tenant architecture
+- **Authentication**: NextAuth.js v5 with business-scoped sessions
+- **Styling**: Tailwind CSS with custom Lumina design system
+- **Deployment**: Railway platform with Docker containerization
 
-## Documentation Structure
+### Key Architectural Decisions
 
-### Organized Documentation
+- **Multi-Tenant Architecture**: Business-scoped data isolation for security and scalability
+- **API-First Design**: RESTful APIs with comprehensive documentation
+- **Component-Driven Development**: Reusable UI components with design system
+- **Security-First Approach**: Enterprise-grade security with RBAC and data protection
 
-- **Main Hub**: `/docs/README.md`
-- **API Documentation**: `/docs/api/`
-- **Feature Documentation**: `/docs/features/`
-- **Design System**: `/docs/design-system/`
-- **Project Management**: `/docs/project-management/`
-- **Testing**: `/docs/testing/`
-- **Deployment**: `/docs/deployment/`
-- **Migration Records**: `/docs/migration/`
-- **Archive**: `/docs/archive/`
+### Quality & Performance Standards
 
-## Upcoming Priorities (Post-Audit)
+- **Test Coverage**: 80%+ code coverage with comprehensive testing
+- **Performance**: <2s page load times, <500ms API response times
+- **Accessibility**: WCAG 2.1 AA compliance across all interfaces
+- **Security**: PCI compliance, data encryption, and secure authentication
 
-### Immediate Actions (Next 1-2 Weeks)
+## Business Model & Positioning
 
-1. **Complete Comprehensive Audit** - Finish Task 9 and Task 10 deliverables ✅ COMPLETE
-2. **Begin MVP Sprint** - Start appointment system implementation (LUM-92 with LUM-96 through LUM-101) - ALL LINEAR ISSUES READY
-3. **Finalize Integrations** - Complete Stripe (LUM-83) and Google OAuth (LUM-79) configuration
+### Revenue Model
 
-### Next Month (MVP Completion)
+- **SaaS Subscription**: Monthly/annual subscription tiers based on business size
+- **Transaction Fees**: Small percentage on payment processing (competitive rates)
+- **Premium Features**: Advanced analytics, AI insights, and integrations
+- **Professional Services**: Setup, training, and customization services
 
-1. **Appointment System Implementation** - Complete booking, calendar, and management functionality
-2. **Integration Configuration** - Finalize Stripe (LUM-83) and Google OAuth (LUM-79) setup
-3. **Quality Assurance Completion** - Finish testing and validation (LUM-76)
+### Competitive Advantages
 
-### Next Quarter (Post-MVP Features)
+- **Industry-Specific**: Built exclusively for salon and barbershop workflows
+- **AI-Powered**: Advanced analytics and predictive insights
+- **Modern Technology**: Latest web technologies for superior performance
+- **User Experience**: Intuitive design focused on ease of use
+- **Comprehensive Solution**: All-in-one platform eliminating multiple tools
 
-1. **Inventory Management System** - Implement comprehensive product and stock management (LUM-105)
-2. **Advanced Integrations** - Square POS integration and enhanced data import (LUM-86, LUM-87)
-3. **AI-Powered Features** - Intelligent onboarding and business insights (LUM-88)
+### Market Positioning
 
-## Team Context
+- **Premium Quality**: High-end solution for growth-oriented businesses
+- **Innovation Leader**: First to market with AI-powered salon management
+- **Scalable Growth**: Supports businesses from startup to multi-location
+- **Industry Expertise**: Deep understanding of salon and barbershop operations
 
-### Development Approach
+## Success Metrics & KPIs
 
-- **Methodology**: Agile with Linear issue tracking
-- **Code Review**: Required for all changes
-- **Documentation**: Comprehensive and maintained with quality automation
-- **Testing**: Test-driven development encouraged
+### Product Metrics
 
-### Communication
+- **User Adoption**: Monthly active users and feature utilization
+- **Customer Satisfaction**: NPS scores and user feedback ratings
+- **Performance**: System uptime, response times, and error rates
+- **Feature Usage**: Adoption rates for key features and workflows
 
-- **Issue Tracking**: Linear (Lumina Product team)
-- **Documentation**: Centralized in `/docs/` directory with proper organization
-- **Decision Making**: Documented in Decision Log
-- **Status Updates**: Daily status files in `/docs/project-management/daily-status/`
+### Business Metrics
 
-## Quick Links
+- **Customer Acquisition**: New customer sign-ups and conversion rates
+- **Revenue Growth**: Monthly recurring revenue and customer lifetime value
+- **Churn Rate**: Customer retention and satisfaction metrics
+- **Market Penetration**: Market share in target segments
 
-- **Linear Workspace**: [Lumina Product Team](https://linear.app/lumina-product)
-- **Production App**: [UseLumina.app](https://uselumina.app)
-- **Repository**: Current working directory
-- **Documentation Hub**: [/docs/README.md](./docs/README.md)
-- **API Documentation**: [/docs/api/](./docs/api/)
-- **Design System**: [/docs/design-system/](./docs/design-system/)
-- **Project Management**: [/docs/project-management/](./docs/project-management/)
+### Technical Metrics
+
+- **Code Quality**: Test coverage, bug rates, and technical debt
+- **Security**: Security incidents, compliance audits, and vulnerability assessments
+- **Scalability**: Performance under load and system capacity metrics
+- **Development Velocity**: Feature delivery speed and development efficiency
 
 ---
 
-**Maintenance Notes**:
+**For current project status and development progress, see:**
 
-- This document should be updated weekly or when major project changes occur
-- Review and update active features section as development progresses
-- Add new architectural decisions to the Decision Log
-- Update metrics and health indicators monthly
-- Documentation structure is now properly organized and maintained with quality automation
+- **[Development Plan](docs/project-management/development-plan.md)** - Current sprint and task status
+- **[Daily Status Reports](docs/project-management/daily-status/)** - Detailed development progress
+- **[CHANGELOG.md](../CHANGELOG.md)** - Version history and completed features
