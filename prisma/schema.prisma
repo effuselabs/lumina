@@ -125,22 +125,28 @@ model Business {
   updatedAt DateTime @updatedAt
 
   // Relations
-  users                BusinessUser[]
-  staff                Staff[]
-  services             Service[]
-  clients              Client[]
-  appointments         Appointment[]
-  transactions         Transaction[]
-  paymentCalculations  PaymentCalculation[]
-  staffInvitations     StaffInvitation[]
-  products             Product[]
-  productSales         ProductSale[]
-  giftCards            GiftCard[]
-  promotions           Promotion[]
-  marketingCampaigns   MarketingCampaign[]
-  loyaltyPrograms      LoyaltyProgram[]
-  clientReviews        ClientReview[]
-  communicationHistory CommunicationHistory[]
+  users                      BusinessUser[]
+  staff                      Staff[]
+  services                   Service[]
+  clients                    Client[]
+  appointments               Appointment[]
+  transactions               Transaction[]
+  paymentCalculations        PaymentCalculation[]
+  staffInvitations           StaffInvitation[]
+  products                   Product[]
+  productSales               ProductSale[]
+  giftCards                  GiftCard[]
+  promotions                 Promotion[]
+  marketingCampaigns         MarketingCampaign[]
+  loyaltyPrograms            LoyaltyProgram[]
+  clientReviews              ClientReview[]
+  communicationHistory       CommunicationHistory[]
+  businessHours              BusinessHours[]
+  businessHolidays           BusinessHoliday[]
+  staffAvailability          StaffAvailability[]
+  staffAvailabilityOverrides StaffAvailabilityOverride[]
+  timeOffRequests            TimeOffRequest[]
+  availabilityCache          AvailabilityCache[]
 
   @@map("businesses")
 }
@@ -202,14 +208,22 @@ model Staff {
   updatedAt DateTime @updatedAt
 
   // Relations
-  business            Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  services            StaffService[]
-  appointments        Appointment[]
-  transactions        Transaction[]
-  paymentCalculations PaymentCalculation[]
-  productSales        ProductSale[]
-  reviews             ClientReview[]
+  business                   Business                    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user                       User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services                   StaffService[]
+  appointments               Appointment[]
+  transactions               Transaction[]
+  paymentCalculations        PaymentCalculation[]
+  productSales               ProductSale[]
+  reviews                    ClientReview[]
+  staffAvailability          StaffAvailability[]
+  staffAvailabilityOverrides StaffAvailabilityOverride[]
+  timeOffRequests            TimeOffRequest[]
+  approvedTimeOffRequests    TimeOffRequest[]            @relation("TimeOffApprover")
+  availabilityCache          AvailabilityCache[]
+  timeOffRequests            TimeOffRequest[]
+  approvedTimeOffRequests    TimeOffRequest[]            @relation("TimeOffApprover")
+  availabilityCache          AvailabilityCache[]
 
   @@index([businessId, employmentType])
   @@index([businessId, isActive])
@@ -931,6 +945,150 @@ model CommunicationHistory {
 }
 
 // ============================================================================
+// CALENDAR INFRASTRUCTURE & AVAILABILITY MANAGEMENT
+// ============================================================================
+
+model BusinessHours {
+  id         String  @id @default(cuid())
+  businessId String
+  dayOfWeek  Int // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  openTime   String? // Time in HH:MM format
+  closeTime  String? // Time in HH:MM format
+  isClosed   Boolean @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, dayOfWeek])
+  @@index([businessId, dayOfWeek])
+  @@map("business_hours")
+}
+
+model BusinessHoliday {
+  id         String   @id @default(cuid())
+  businessId String
+  date       DateTime @db.Date
+  name       String?
+  isClosed   Boolean  @default(true)
+  openTime   String? // Time in HH:MM format for special hours
+  closeTime  String? // Time in HH:MM format for special hours
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, date])
+  @@index([businessId, date])
+  @@map("business_holidays")
+}
+
+model StaffAvailability {
+  id            String    @id @default(cuid())
+  staffId       String
+  businessId    String
+  dayOfWeek     Int // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  startTime     String // Time in HH:MM format
+  endTime       String // Time in HH:MM format
+  isRecurring   Boolean   @default(true)
+  effectiveDate DateTime? @db.Date // When this availability starts
+  expiryDate    DateTime? @db.Date // When this availability ends
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([staffId, dayOfWeek])
+  @@index([businessId])
+  @@index([effectiveDate, expiryDate])
+  @@map("staff_availability")
+}
+
+model StaffAvailabilityOverride {
+  id          String   @id @default(cuid())
+  staffId     String
+  businessId  String
+  date        DateTime @db.Date
+  startTime   String? // Time in HH:MM format, null if unavailable
+  endTime     String? // Time in HH:MM format, null if unavailable
+  isAvailable Boolean  @default(true)
+  reason      String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([staffId, date])
+  @@index([staffId, date])
+  @@index([businessId])
+  @@map("staff_availability_overrides")
+}
+
+model TimeOffRequest {
+  id           String        @id @default(cuid())
+  staffId      String
+  businessId   String
+  startDate    DateTime      @db.Date
+  endDate      DateTime      @db.Date
+  reason       String?
+  status       TimeOffStatus @default(PENDING)
+  approvedBy   String? // Staff ID of approver
+  approvedAt   DateTime?
+  denialReason String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  approver Staff?   @relation("TimeOffApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+
+  @@index([staffId, startDate, endDate])
+  @@index([businessId, status])
+  @@index([approvedBy, approvedAt])
+  @@map("time_off_requests")
+}
+
+model AvailabilityCache {
+  id             String   @id @default(cuid())
+  businessId     String
+  staffId        String?
+  date           DateTime @db.Date
+  availableSlots Json // Array of available time slots
+  cacheKey       String   @unique
+  expiresAt      DateTime
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  staff    Staff?   @relation(fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, date])
+  @@index([staffId, date])
+  @@index([expiresAt])
+  @@map("availability_cache")
+}
+
+// ============================================================================
 // ENUMS
 // ============================================================================
 
@@ -1088,4 +1246,132 @@ enum AutomationType {
   PROMOTIONAL
   REVIEW_REQUEST
   CANCELLATION_NOTICE
+}
+
+enum TimeOffStatus {
+  PENDING
+  APPROVED
+  DENIED
+  CANCELLED
+}
+
+// Calendar Infrastructure Models
+
+model BusinessHours {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  businessId String   @map("business_id") @db.Uuid
+  dayOfWeek  Int      @map("day_of_week") // 0 = Sunday, 1 = Monday, etc.
+  openTime   String?  @map("open_time") // TIME format as string (HH:MM)
+  closeTime  String?  @map("close_time") // TIME format as string (HH:MM)
+  isClosed   Boolean  @default(false) @map("is_closed")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, dayOfWeek])
+  @@index([businessId, dayOfWeek])
+  @@map("business_hours")
+}
+
+model BusinessHoliday {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  businessId String   @map("business_id") @db.Uuid
+  date       DateTime @db.Date
+  name       String?  @db.VarChar(255)
+  isClosed   Boolean  @default(true) @map("is_closed")
+  openTime   String?  @map("open_time") // TIME format as string (HH:MM)
+  closeTime  String?  @map("close_time") // TIME format as string (HH:MM)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, date])
+  @@index([businessId, date])
+  @@map("business_holidays")
+}
+
+model StaffAvailability {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  staffId       String    @map("staff_id") @db.Uuid
+  businessId    String    @map("business_id") @db.Uuid
+  dayOfWeek     Int       @map("day_of_week") // 0 = Sunday, 1 = Monday, etc.
+  startTime     String    @map("start_time") // TIME format as string (HH:MM)
+  endTime       String    @map("end_time") // TIME format as string (HH:MM)
+  isRecurring   Boolean   @default(true) @map("is_recurring")
+  effectiveDate DateTime? @map("effective_date") @db.Date
+  expiryDate    DateTime? @map("expiry_date") @db.Date
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([staffId, dayOfWeek])
+  @@index([businessId])
+  @@index([effectiveDate, expiryDate])
+  @@map("staff_availability")
+}
+
+model StaffAvailabilityOverride {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  staffId     String   @map("staff_id") @db.Uuid
+  businessId  String   @map("business_id") @db.Uuid
+  date        DateTime @db.Date
+  startTime   String?  @map("start_time") // TIME format as string (HH:MM)
+  endTime     String?  @map("end_time") // TIME format as string (HH:MM)
+  isAvailable Boolean  @default(true) @map("is_available")
+  reason      String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([staffId, date])
+  @@index([staffId, date])
+  @@index([businessId])
+  @@map("staff_availability_overrides")
+}
+
+model TimeOffRequest {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  staffId      String        @map("staff_id") @db.Uuid
+  businessId   String        @map("business_id") @db.Uuid
+  startDate    DateTime      @map("start_date") @db.Date
+  endDate      DateTime      @map("end_date") @db.Date
+  reason       String?       @db.Text
+  status       TimeOffStatus @default(PENDING)
+  approvedBy   String?       @map("approved_by") @db.Uuid
+  approvedAt   DateTime?     @map("approved_at")
+  denialReason String?       @map("denial_reason") @db.Text
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  approver Staff?   @relation("TimeOffApprover", fields: [approvedBy], references: [id])
+
+  @@index([staffId, startDate, endDate])
+  @@index([businessId, status])
+  @@index([approvedBy, approvedAt])
+  @@map("time_off_requests")
+}
+
+model AvailabilityCache {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  businessId     String   @map("business_id") @db.Uuid
+  staffId        String?  @map("staff_id") @db.Uuid
+  date           DateTime @db.Date
+  availableSlots Json     @map("available_slots")
+  cacheKey       String   @unique @map("cache_key") @db.VarChar(255)
+  expiresAt      DateTime @map("expires_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  staff    Staff?   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, date])
+  @@index([staffId, date])
+  @@index([expiresAt])
+  @@map("availability_cache")
 }

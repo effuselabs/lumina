@@ -1081,6 +1081,154 @@ DR-026: CSS-in-JS Hybrid Architecture for Bulletproof Component Visibility
 
 ---
 
+## ADR-030: Comprehensive Error Handling Architecture for Calendar Infrastructure
+
+**Date**: September 25, 2025  
+**Status**: Accepted  
+**Context**: Calendar infrastructure required robust error handling for all availability scenarios with user-friendly messaging and operational insights.
+
+**Decision**: Implement comprehensive error handling system with 9 specific error types, suggested alternatives, structured logging, and graceful degradation capabilities.
+
+**Rationale**:
+
+- Provides excellent user experience through clear, actionable error messages
+- Enables comprehensive debugging and operational insights through structured logging
+- Ensures system reliability through graceful degradation and circuit breaker patterns
+- Supports business intelligence through error analytics and pattern recognition
+- Maintains multi-tenant security through proper business context validation
+
+**Alternatives Considered**:
+
+1. **Generic error handling**: Simple error messages without context
+   - Rejected: Poor user experience and limited debugging capabilities
+2. **Minimal error types**: Basic error classification only
+   - Rejected: Insufficient coverage of availability scenarios and user guidance
+3. **Third-party error service**: External error handling and monitoring
+   - Rejected: Cost considerations and integration complexity with existing architecture
+
+**Impact**:
+
+- Superior user experience with clear error messages and suggested alternatives
+- Comprehensive error tracking and operational insights for system optimization
+- Enhanced system reliability through graceful degradation during failures
+- Business intelligence capabilities through error analytics and pattern recognition
+- Foundation for proactive system management and performance optimization
+
+**Related Issues**: [LUM-96](https://linear.app/scootr-ca/issue/LUM-96) - Calendar Infrastructure Implementation
+
+---
+
+## ADR-031: Circuit Breaker Pattern for System Reliability
+
+**Date**: September 25, 2025  
+**Status**: Accepted  
+**Context**: Calendar infrastructure system reliability required graceful handling of cache failures, service degradation, and automatic recovery mechanisms.
+
+**Decision**: Implement circuit breaker pattern with automatic fallback to database, service health monitoring, and recovery detection for all critical system components.
+
+**Rationale**:
+
+- Ensures system reliability during cache failures and service degradation
+- Provides automatic recovery without manual intervention
+- Maintains user experience during system stress through intelligent fallback
+- Enables proactive system management through health monitoring
+- Reduces operational overhead through automated failure handling
+
+**Alternatives Considered**:
+
+1. **Simple retry logic**: Basic retry with exponential backoff
+   - Rejected: Insufficient reliability during extended failures and cascading issues
+2. **Manual failover**: Human-operated failure recovery
+   - Rejected: Operational complexity and unacceptable response time requirements
+3. **Load balancer failover**: Infrastructure-level failure handling
+   - Rejected: Doesn't address application-level cache and service failures
+
+**Impact**:
+
+- Enhanced system reliability with automatic failure recovery
+- Improved user experience during system stress and degradation
+- Reduced operational overhead through automated failure handling
+- Proactive system management through health monitoring and alerting
+- Foundation for scalable, resilient system architecture
+
+**Related Issues**: [LUM-96](https://linear.app/scootr-ca/issue/LUM-96) - Calendar Infrastructure Implementation
+
+---
+
+## ADR-032: Real-Time Monitoring with Business Intelligence Integration
+
+**Date**: September 25, 2025  
+**Status**: Accepted  
+**Context**: Production calendar infrastructure required comprehensive monitoring for performance, reliability, and business intelligence with configurable thresholds and multi-level alerting.
+
+**Decision**: Implement real-time monitoring system with configurable performance thresholds, multi-level alerting (INFO, WARNING, CRITICAL, EMERGENCY), and business metrics integration for operational insights.
+
+**Rationale**:
+
+- Enables proactive system management through real-time performance monitoring
+- Provides business intelligence through usage analytics and pattern recognition
+- Ensures rapid incident response through multi-level alerting system
+- Supports performance optimization through detailed metrics and analytics
+- Creates operational excellence through comprehensive system visibility
+
+**Alternatives Considered**:
+
+1. **Basic logging only**: Simple log files without real-time monitoring
+   - Rejected: Insufficient operational visibility and reactive problem resolution
+2. **Third-party monitoring service**: External monitoring platform (DataDog, New Relic)
+   - Rejected: Cost considerations and integration complexity with existing architecture
+3. **Minimal alerting**: Basic threshold alerts without business intelligence
+   - Rejected: Limited operational insights and business intelligence capabilities
+
+**Impact**:
+
+- Proactive system management with real-time performance monitoring
+- Business intelligence capabilities through usage analytics and pattern recognition
+- Rapid incident response through intelligent alerting and escalation
+- Performance optimization through detailed metrics and operational insights
+- Operational excellence through comprehensive system visibility and management
+
+**Related Issues**: [LUM-96](https://linear.app/scootr-ca/issue/LUM-96) - Calendar Infrastructure Implementation
+
+---
+
+## ADR-033: Hybrid CSS-in-JS Architecture for Component Reliability
+
+**Date**: September 25, 2025  
+**Status**: Accepted  
+**Context**: Error handling system required bulletproof component visibility across all themes and build configurations after systematic Tailwind CSS generation issues.
+
+**Decision**: Implement CSS-in-JS hybrid architecture where solid background variants use Tailwind utilities and transparency variants use runtime CSS injection for guaranteed visibility.
+
+**Rationale**:
+
+- Guarantees component visibility regardless of build configuration complexity
+- Leverages best of both worlds: Tailwind efficiency for solid backgrounds, CSS-in-JS reliability for transparency
+- Provides systematic architectural pattern for future components with similar requirements
+- Maintains performance optimization while ensuring reliability
+- Enables bulletproof error display critical for user experience
+
+**Alternatives Considered**:
+
+1. **Pure Tailwind with complex selectors**: Continue with attribute selector approach
+   - Rejected: 24 systematic attempts proved Tailwind generation unreliable for complex selectors
+2. **Complete CSS-in-JS solution**: Replace all Tailwind with CSS-in-JS
+   - Rejected: Unnecessary complexity for solid background variants that work perfectly with Tailwind
+3. **Third-party styling solution**: Use styled-components or emotion
+   - Rejected: Adds dependency and doesn't solve fundamental architectural issue
+
+**Impact**:
+
+- Bulletproof component visibility across all themes and build configurations
+- Clear architectural pattern: solid backgrounds use Tailwind, transparency uses CSS-in-JS
+- Scalable solution for future components with similar visibility requirements
+- Maintains performance optimization while ensuring reliability
+- Foundation for world-class design system architecture with guaranteed component visibility
+
+**Related Issues**: [LUM-96](https://linear.app/scootr-ca/issue/LUM-96) - Calendar Infrastructure Implementation
+
+---
+
 ## Decision Template
 
 Use this template for new architectural decisions:
