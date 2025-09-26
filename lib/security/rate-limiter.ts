@@ -162,7 +162,7 @@ export async function withRateLimit(
 ): Promise<{ success: boolean; headers: Record<string, string>; error?: string }> {
     const result = await rateLimiter.checkLimit(req)
 
-    const headers = {
+    const headers: Record<string, string> = {
         'X-RateLimit-Limit': result.limit.toString(),
         'X-RateLimit-Remaining': result.remaining.toString(),
         'X-RateLimit-Reset': result.resetTime.toISOString()

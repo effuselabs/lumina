@@ -14,9 +14,9 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { AppointmentService } from '@/lib/services/appointment-service'
 import {
+    type CancelAppointmentRequest,
     cancelAppointmentSchema,
-    updateAppointmentSchema,
-    type CancelAppointmentRequest
+    updateAppointmentSchema
 } from '@/lib/validations/appointment'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'

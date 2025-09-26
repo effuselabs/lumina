@@ -8,16 +8,18 @@ import {
     AppointmentErrorContext,
     AppointmentErrorFactory,
     CalendarIntegrationFailureError,
+    ClientNotFoundError,
     DatabaseConstraintViolationError,
+    StaffNotFoundError,
     getAppointmentErrorSeverity,
     isAppointmentError
 } from '@/lib/errors/appointment-errors'
 import {
     ErrorSeverity,
-    isAvailabilityError,
-    SuggestedAlternative
+    SuggestedAlternative,
+    isAvailabilityError
 } from '@/lib/errors/availability-errors'
-import { availabilityLogger } from '@/lib/monitoring/availability-logger'
+import { LogLevel, availabilityLogger } from '@/lib/monitoring/availability-logger'
 import { Prisma } from '@prisma/client'
 import { withEnhancedErrorHandling } from './enhanced-error-handler'
 import { gracefulDegradation } from './graceful-degradation'
@@ -182,27 +184,18 @@ class AppointmentErrorHandler {
         const field = error.meta?.field_name as string | undefined
 
         if (field?.includes('clientId')) {
-            return new AppointmentError(
-                'CLIENT_NOT_FOUND',
-                `Client not found: ${context.clientId}`,
-                'The specified client could not be found. Please verify the client information.',
-                [],
-                context,
+            return new ClientNotFoundError(
+                context.clientId || 'unknown',
                 context.appointmentId,
-                context.clientId
+                context
             )
         }
 
         if (field?.includes('staffId')) {
-            return new AppointmentError(
-                'STAFF_NOT_FOUND',
-                `Staff member not found: ${context.staffId}`,
-                'The specified staff member could not be found or is no longer available.',
-                [],
-                context,
+            return new StaffNotFoundError(
+                context.staffId || 'unknown',
                 context.appointmentId,
-                undefined,
-                context.staffId
+                context
             )
         }
 
@@ -394,7 +387,7 @@ class AppointmentErrorHandler {
 
         // Log the error
         availabilityLogger.log(
-            severity === ErrorSeverity.CRITICAL || severity === ErrorSeverity.HIGH ? 'ERROR' : 'WARN',
+            severity === ErrorSeverity.CRITICAL || severity === ErrorSeverity.HIGH ? LogLevel.ERROR : LogLevel.WARN,
             `Appointment ${context.operation} failed: ${errorMessage}`,
             context,
             {
@@ -457,7 +450,7 @@ class AppointmentErrorHandler {
 
     // Trigger monitoring alerts
     private triggerAlert(alertType: string, data: Record<string, any>): void {
-        availabilityLogger.log('ERROR', `ALERT: ${alertType}`, data, {
+        availabilityLogger.log(LogLevel.ERROR, `ALERT: ${alertType}`, data, {
             alertType,
             timestamp: new Date().toISOString(),
             severity: 'CRITICAL'
@@ -470,21 +463,19 @@ class AppointmentErrorHandler {
     // Validate appointment operation context
     validateContext(context: AppointmentErrorContext): void {
         if (!context.businessId) {
-            throw new AppointmentError(
-                'BUSINESS_CONTEXT_MISSING',
-                'Business context is required for appointment operations',
-                'Unable to process your request. Please try again.',
-                [],
+            throw new DatabaseConstraintViolationError(
+                'context_validation',
+                'business_context_missing',
+                { field: 'businessId' },
                 context
             )
         }
 
         if (!context.operation) {
-            throw new AppointmentError(
-                'OPERATION_CONTEXT_MISSING',
-                'Operation context is required for error handling',
-                'Unable to process your request. Please try again.',
-                [],
+            throw new DatabaseConstraintViolationError(
+                'context_validation',
+                'operation_context_missing',
+                { field: 'operation' },
                 context
             )
         }
@@ -568,11 +559,13 @@ export async function withAppointmentErrorHandling<T>(
         }
 
         // Handle unexpected errors
-        const appointmentError = new AppointmentError(
-            'UNEXPECTED_ERROR',
-            `Unexpected error in ${operation}: ${error instanceof Error ? error.message : String(error)}`,
-            'An unexpected error occurred. Please try again or contact support if the problem persists.',
-            [],
+        const appointmentError = new DatabaseConstraintViolationError(
+            operation,
+            'unexpected_error',
+            {
+                originalError: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined
+            },
             context
         )
 

@@ -4,7 +4,7 @@
  */
 
 import { AvailabilityError, CacheFailureError } from '@/lib/errors/availability-errors'
-import { availabilityLogger, LogLevel } from '@/lib/monitoring/availability-logger'
+import { LogLevel, availabilityLogger } from '@/lib/monitoring/availability-logger'
 import { TimeSlot } from './service-duration-validator'
 
 // Circuit breaker states

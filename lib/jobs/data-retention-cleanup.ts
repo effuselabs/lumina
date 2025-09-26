@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { businessContextSecurity } from '@/lib/security/business-context-security'
-import { dataProtection, DataRetentionPolicy } from '@/lib/security/data-protection'
+import { DataRetentionPolicy, dataProtection } from '@/lib/security/data-protection'
 
 // ============================================================================
 // TYPES AND INTERFACES

@@ -5,12 +5,12 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { ZodError, ZodSchema } from 'zod'
-import { availabilityLogger, LogLevel } from '../monitoring/availability-logger'
+import { LogLevel, availabilityLogger } from '../monitoring/availability-logger'
 import {
-    abuseDetector,
-    appointmentRateLimiters,
     CSRFProtection,
     InputSanitizer,
+    abuseDetector,
+    appointmentRateLimiters,
     securityHeaders,
     withRateLimit
 } from './rate-limiter'
@@ -390,7 +390,7 @@ export class ValidationMiddleware {
         context: ValidationContext,
         details?: Record<string, any>
     ): void {
-        availabilityLogger.log(LogLevel.WARN, `Security event: ${event}`, context, {
+        availabilityLogger.log(LogLevel.WARN, `Security event: ${event}`, { ...context, operation: 'security_validation' }, {
             event,
             details,
             timestamp: new Date().toISOString()
@@ -402,7 +402,7 @@ export class ValidationMiddleware {
         context: ValidationContext,
         errors: ValidationError[]
     ): void {
-        availabilityLogger.log(LogLevel.INFO, 'Validation failed', context, {
+        availabilityLogger.log(LogLevel.INFO, 'Validation failed', { ...context, operation: 'validation' }, {
             errors,
             errorCount: errors.length
         })
@@ -410,7 +410,7 @@ export class ValidationMiddleware {
 
     // Log validation success
     private static logValidationSuccess(context: ValidationContext): void {
-        availabilityLogger.log(LogLevel.DEBUG, 'Validation successful', context)
+        availabilityLogger.log(LogLevel.DEBUG, 'Validation successful', { ...context, operation: 'validation' })
     }
 }
 

@@ -5,6 +5,9 @@ import { redirect } from 'next/navigation';
 import { randomBytes } from 'node:crypto';
 import { prisma } from './prisma';
 
+// Re-export auth for use in other modules
+export { auth };
+
 // Get the current session
 export async function getSession() {
   return await auth();

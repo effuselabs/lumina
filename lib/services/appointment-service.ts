@@ -616,7 +616,7 @@ export class AppointmentService {
             if (!availabilityResult.isAvailable) {
                 result.isValid = false
                 result.errors.push('Updated time slot is not available')
-                result.alternatives = availabilityResult.alternatives
+                result.alternatives = availabilityResult.alternatives?.filter(alt => alt.staffId) as { startTime: Date; endTime: Date; staffId: string; }[] | undefined
             }
 
             // 3. Check for conflicts
@@ -635,10 +635,10 @@ export class AppointmentService {
                 result.isValid = false
                 result.errors.push('Updated appointment conflicts with existing bookings')
                 result.conflicts = conflictResult.conflicts.map(c => ({
-                    appointmentId: c.details.appointmentId || 'unknown',
-                    startTime: c.details.startTime || startTime,
-                    endTime: c.details.endTime || endTime,
-                    clientName: c.details.clientName
+                    appointmentId: c.details.conflictingAppointment?.id || 'unknown',
+                    startTime: c.details.conflictingAppointment?.startTime || startTime,
+                    endTime: c.details.conflictingAppointment?.endTime || endTime,
+                    clientName: c.details.conflictingAppointment?.clientName || 'Unknown'
                 }))
             }
 
@@ -1037,7 +1037,7 @@ export class AppointmentService {
             if (!availabilityResult.isAvailable) {
                 result.isValid = false
                 result.errors.push('Time slot is not available')
-                result.alternatives = availabilityResult.alternatives
+                result.alternatives = availabilityResult.alternatives?.filter(alt => alt.staffId) as { startTime: Date; endTime: Date; staffId: string; }[] | undefined
             }
 
             // 2. Detect conflicts
@@ -1056,10 +1056,10 @@ export class AppointmentService {
                 result.isValid = false
                 result.errors.push('Appointment conflicts with existing bookings')
                 result.conflicts = conflictResult.conflicts.map(c => ({
-                    appointmentId: c.details.appointmentId || 'unknown',
-                    startTime: c.details.startTime || startTime,
-                    endTime: c.details.endTime || endTime,
-                    clientName: c.details.clientName
+                    appointmentId: c.details.conflictingAppointment?.id || 'unknown',
+                    startTime: c.details.conflictingAppointment?.startTime || startTime,
+                    endTime: c.details.conflictingAppointment?.endTime || endTime,
+                    clientName: c.details.conflictingAppointment?.clientName || 'Unknown'
                 }))
             }
 
@@ -1082,7 +1082,7 @@ export class AppointmentService {
                 result.isValid = false
                 result.errors.push(`Service duration validation failed: ${durationResult.reason}`)
                 if (durationResult.suggestedAlternatives) {
-                    result.alternatives = durationResult.suggestedAlternatives
+                    result.alternatives = durationResult.suggestedAlternatives.filter(alt => alt.staffId) as { startTime: Date; endTime: Date; staffId: string; }[]
                 }
             }
 

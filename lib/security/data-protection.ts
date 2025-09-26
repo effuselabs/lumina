@@ -607,7 +607,7 @@ export class DataProtectionService {
 
                 // 4. Delete old security logs
                 const securityCutoff = new Date(now.getTime() - retentionPolicy.securityLogs * 24 * 60 * 60 * 1000)
-                const deletedSecurityLogs = await tx.securityLog.deleteMany({
+                const deletedSecurityLogs = await tx.SecurityLog.deleteMany({
                     where: {
                         businessId,
                         createdAt: { lt: securityCutoff }
@@ -616,7 +616,7 @@ export class DataProtectionService {
                 deletedRecords.securityLogs = deletedSecurityLogs.count
 
                 // 5. Log the anonymization process
-                await tx.auditLog.create({
+                await tx.AuditLog.create({
                     data: {
                         userId: 'system',
                         businessId,

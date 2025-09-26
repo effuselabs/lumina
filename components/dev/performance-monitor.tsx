@@ -5,9 +5,9 @@
 
 'use client';
 
-import { animationMonitor, type AnimationMetrics } from '@/lib/animation-utils';
-import { generateCSSOptimizationReport, type CSSOptimizationReport } from '@/lib/css-optimization';
-import { performanceMonitor, type ComponentMetrics } from '@/lib/performance-utils';
+import { type AnimationMetrics, animationMonitor } from '@/lib/animation-utils';
+import { type CSSOptimizationReport, generateCSSOptimizationReport } from '@/lib/css-optimization';
+import { type ComponentMetrics, performanceMonitor } from '@/lib/performance-utils';
 import { useCallback, useEffect, useState } from 'react';
 
 interface PerformanceMonitorProps {

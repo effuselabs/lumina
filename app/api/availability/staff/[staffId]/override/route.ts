@@ -101,7 +101,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         })
 
         // If making unavailable or changing hours, check for conflicts
-        let conflicts = []
+        const conflicts = []
         if (!isAvailable || (isAvailable && startTime && endTime)) {
             for (const appointment of existingAppointments) {
                 const appointmentStart = appointment.startTime.toTimeString().slice(0, 5)

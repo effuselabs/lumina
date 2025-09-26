@@ -81,14 +81,30 @@ const mockBusinessUser = {
     id: 'bu-123',
     businessId: 'business-123',
     userId: 'user-123',
-    role: 'MANAGER'
+    role: 'MANAGER' as const,
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 const mockStaff = {
     id: 'staff-123',
     businessId: 'business-123',
+    userId: 'user-123',
     displayName: 'John Doe',
-    isActive: true
+    title: null,
+    bio: null,
+    avatar: null,
+    employmentType: 'EMPLOYEE' as const,
+    commissionRate: null,
+    baseSalary: null,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    workingHours: {},
+    skills: [],
+    certifications: [],
+    phoneNumber: null,
+    emergencyContact: null
 }
 
 const mockClient = {
@@ -97,7 +113,21 @@ const mockClient = {
     firstName: 'Jane',
     lastName: 'Smith',
     email: 'jane@example.com',
-    phone: '+1234567890'
+    phone: '+1234567890',
+    notes: null,
+    address: null,
+    dateOfBirth: null,
+    preferredStaffId: null,
+    emergencyContact: null,
+    allergies: null,
+    preferences: null,
+    loyaltyPoints: 0,
+    totalSpent: null,
+    lastVisit: null,
+    emailMarketing: false,
+    smsMarketing: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 const mockServices = [
@@ -105,19 +135,27 @@ const mockServices = [
         id: 'service-123',
         businessId: 'business-123',
         name: 'Haircut',
-        price: { toNumber: () => 50 },
+        price: { toNumber: () => 50 } as any,
         duration: 60,
         category: 'Hair',
-        isActive: true
+        isActive: true,
+        description: null,
+        isOnline: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
     },
     {
         id: 'service-456',
         businessId: 'business-123',
         name: 'Styling',
-        price: { toNumber: () => 30 },
+        price: { toNumber: () => 30 } as any,
         duration: 30,
         category: 'Hair',
-        isActive: true
+        isActive: true,
+        description: null,
+        isOnline: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
     }
 ]
 

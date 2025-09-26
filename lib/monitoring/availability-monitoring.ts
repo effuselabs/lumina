@@ -3,7 +3,7 @@
  * Tracks performance metrics, cache hit ratios, conflict detection accuracy, and business usage
  */
 
-import { availabilityLogger, BusinessMetric, CacheMetric, LogLevel, PerformanceMetric } from './availability-logger'
+import { BusinessMetric, CacheMetric, LogLevel, PerformanceMetric, availabilityLogger } from './availability-logger'
 
 // Performance thresholds for alerting
 interface PerformanceThresholds {

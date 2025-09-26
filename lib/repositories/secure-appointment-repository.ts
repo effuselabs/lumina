@@ -1,8 +1,8 @@
 import {
+    SecurityViolationType,
     businessContextSecurity,
     createAuditLog,
-    logSecurityViolation,
-    SecurityViolationType
+    logSecurityViolation
 } from '@/lib/security/business-context-security'
 import { AppointmentWithRelations } from '@/types/database'
 import { AppointmentStatus, BusinessRole } from '@prisma/client'
