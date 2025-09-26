@@ -1285,3 +1285,106 @@ Use this template for new architectural decisions:
 
 **Last Updated**: September 24, 2025  
 **Next Review**: December 24, 2025
+
+## ADR-034: Multi-Service Coordinator Architecture for Complex Appointments
+
+**Date**: September 25, 2025  
+**Status**: Accepted  
+**Context**: Appointment booking engine required sophisticated handling of multi-service appointments with validation, pricing, and coordination capabilities for salon workflows.
+
+**Decision**: Implement comprehensive MultiServiceCoordinator class with service validation, staff coordination, and advanced pricing calculations.
+
+**Rationale**:
+
+- Enables complex salon workflows with multiple services per appointment
+- Supports revenue optimization through intelligent multi-service discounts
+- Provides flexible booking options for clients with service combinations
+- Integrates seamlessly with existing business logic and calendar infrastructure
+
+**Alternatives Considered**:
+
+1. **Simple service list without coordination**:
+   - Rejected: Lack of validation and pricing intelligence
+2. **Separate coordinators for each aspect**:
+   - Rejected: Integration complexity and performance concerns
+3. **Basic validation only**:
+   - Rejected: Business requirements for advanced pricing and optimization
+
+**Impact**:
+
+- Supports complex business workflows and service combinations
+- Enables sophisticated pricing strategies and revenue optimization
+- Provides foundation for advanced appointment management features
+- Requires comprehensive testing for multi-service scenarios
+
+**Related Issues**: [LUM-97](https://linear.app/scootr-ca/issue/LUM-97) - Appointment Booking Engine
+
+---
+
+## ADR-035: Advanced Pricing System with Multiple Discount Types
+
+**Date**: September 25, 2025  
+**Status**: Accepted  
+**Context**: Multi-service appointments required sophisticated pricing with discounts, promotions, loyalty integration, and time-based pricing strategies.
+
+**Decision**: Implement comprehensive pricing system with multi-service discounts, time-based pricing, loyalty integration, and promotion support.
+
+**Rationale**:
+
+- Maximizes revenue potential through intelligent pricing strategies
+- Provides competitive pricing flexibility for different market conditions
+- Integrates seamlessly with existing loyalty and promotion systems
+- Enables automated pricing optimization based on business rules
+
+**Alternatives Considered**:
+
+1. **Simple additive pricing**:
+   - Rejected: Missed revenue optimization opportunities
+2. **External pricing service**:
+   - Rejected: Integration complexity and performance requirements
+3. **Manual discount application**:
+   - Rejected: Poor user experience and lack of automation
+
+**Impact**:
+
+- Enables revenue optimization through automated pricing strategies
+- Provides competitive pricing flexibility and market responsiveness
+- Integrates with existing loyalty and promotion infrastructure
+- Requires comprehensive testing for pricing accuracy and edge cases
+
+**Related Issues**: [LUM-97](https://linear.app/scootr-ca/issue/LUM-97) - Appointment Booking Engine
+
+---
+
+## ADR-036: Service Order Optimization Based on Business Dependencies
+
+**Date**: September 25, 2025  
+**Status**: Accepted  
+**Context**: Multi-service appointments required intelligent ordering for optimal staff workflow and service dependencies (e.g., wash before cut, cut before style).
+
+**Decision**: Implement service order optimization with dependency management and efficiency algorithms.
+
+**Rationale**:
+
+- Improves staff workflow efficiency and service delivery quality
+- Ensures proper service sequencing based on business requirements
+- Optimizes appointment duration and resource utilization
+- Provides flexible ordering while maintaining business logic compliance
+
+**Alternatives Considered**:
+
+1. **User-defined order only**:
+   - Rejected: Potential inefficiencies and dependency violations
+2. **Random ordering**:
+   - Rejected: Poor user experience and workflow disruption
+3. **Fixed service categories**:
+   - Rejected: Lack of flexibility for diverse service combinations
+
+**Impact**:
+
+- Optimizes staff workflow and operational efficiency
+- Ensures proper service delivery and quality standards
+- Improves appointment efficiency and client satisfaction
+- Requires business rule configuration and dependency management
+
+**Related Issues**: [LUM-97](https://linear.app/scootr-ca/issue/LUM-97) - Appointment Booking Engine
