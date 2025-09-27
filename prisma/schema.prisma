@@ -109,11 +109,13 @@ model Business {
   currency       String         @default("USD")
 
   // Booking Settings
-  bookingEnabled     Boolean  @default(true)
-  onlineBooking      Boolean  @default(true)
-  requireDeposit     Boolean  @default(false)
-  depositAmount      Decimal? @db.Decimal(10, 2)
-  cancellationPolicy String?
+  bookingEnabled          Boolean  @default(true)
+  onlineBooking           Boolean  @default(true)
+  requireDeposit          Boolean  @default(false)
+  depositAmount           Decimal? @db.Decimal(10, 2)
+  cancellationPolicy      String?
+  noShowPolicy            String?
+  preparationInstructions String?
 
   // Operating Hours (JSON stored as string)
   operatingHours Json?
@@ -121,6 +123,9 @@ model Business {
   // Branding
   logo         String?
   primaryColor String? @default("#FFD25A")
+
+  // Status
+  isActive Boolean @default(true)
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -147,6 +152,7 @@ model Business {
   communicationHistory       CommunicationHistory[]
   businessHours              BusinessHours[]
   businessHolidays           BusinessHoliday[]
+  publicBookingConfig        PublicBookingConfig?
   staffAvailability          StaffAvailability[]
   staffAvailabilityOverrides StaffAvailabilityOverride[]
   timeOffRequests            TimeOffRequest[]
@@ -256,6 +262,10 @@ model Service {
   // Settings
   isActive Boolean @default(true)
   isOnline Boolean @default(true) // Available for online booking
+
+  // Additional fields for public booking
+  prerequisites   String?
+  recommendations String?
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -1161,6 +1171,44 @@ model AvailabilityCache {
 }
 
 // ============================================================================
+// BUSINESS HOURS & PUBLIC BOOKING
+// ============================================================================
+
+model PublicBookingConfig {
+  id         String @id @default(cuid())
+  businessId String @unique
+
+  // Booking Settings
+  isEnabled             Boolean @default(false)
+  advanceBookingDays    Int     @default(30)
+  minimumNoticeHours    Int     @default(2)
+  maxServicesPerBooking Int     @default(3)
+
+  // Client Requirements
+  requirePhone Boolean @default(true)
+  requireEmail Boolean @default(true)
+  allowNotes   Boolean @default(true)
+
+  // Branding
+  customDomain String?
+  brandColors  Json? // { primary, secondary, accent }
+
+  // Notifications
+  sendConfirmationEmail Boolean @default(true)
+  sendReminderEmail     Boolean @default(true)
+  reminderHours         Int     @default(24)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@map("public_booking_configs")
+}
+
+// ============================================================================
 // ENUMS
 // ============================================================================
 
@@ -1325,6 +1373,16 @@ enum TimeOffStatus {
   APPROVED
   DENIED
   CANCELLED
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 
 enum SecurityViolationType {

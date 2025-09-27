@@ -634,17 +634,20 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-018: Service Layer Architecture Pattern
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need centralized business logic layer to integrate appointment repository, calendar infrastructure, status management, and multi-service coordination  
 **Decision**: Implement AppointmentService as a comprehensive integration hub using service layer pattern  
-**Rationale**: 
+**Rationale**:
+
 - Provides clean separation between business logic and data access
 - Enables easier testing through dependency injection patterns
 - Centralizes complex appointment operations and validations
 - Supports future API layer development with consistent interface
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Clean, maintainable architecture
 - ✅ Comprehensive error handling and validation
 - ✅ Easy integration testing with proper mocking
@@ -656,17 +659,20 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-019: Test Strategy for Service Integration
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need comprehensive testing strategy for service layer that integrates multiple complex dependencies  
 **Decision**: Implement comprehensive mocking strategy for all service dependencies with 100% test coverage requirement  
-**Rationale**: 
+**Rationale**:
+
 - Ensures all integration paths are properly tested
 - Enables fast, reliable test execution without external dependencies
 - Provides confidence in service layer reliability
 - Supports continuous integration and deployment
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ 100% test success rate achieved (12/12 tests passing)
 - ✅ Fast test execution without database dependencies
 - ✅ Clear validation of all integration scenarios
@@ -678,18 +684,21 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-020: Payment System Architecture with Provider Abstraction
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need comprehensive payment processing system supporting multiple payment methods (Stripe, cash) with unified calculation engine and financial reporting  
 **Decision**: Implement unified payment service with provider abstraction, supporting Stripe integration and cash payments with comprehensive calculation engine  
-**Rationale**: 
+**Rationale**:
+
 - Stripe integration provides secure online payment processing with PCI compliance
 - Cash payment support enables in-person transactions for diverse business models
 - Provider abstraction allows future payment method additions without architectural changes
 - Unified calculation service ensures consistent pricing logic across all payment methods
 - Financial dashboard provides essential business insights and reporting
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Flexible payment options supporting diverse salon business models
 - ✅ Secure payment processing with PCI compliance considerations
 - ✅ Comprehensive financial tracking and reporting capabilities
@@ -701,18 +710,21 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-021: Layered Security Architecture for Appointment System
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need robust security measures to protect appointment booking system against common web vulnerabilities and abuse  
 **Decision**: Implement layered security approach with rate limiting, CSRF protection, input sanitization, and abuse detection  
-**Rationale**: 
+**Rationale**:
+
 - Rate limiting prevents system abuse and ensures stability under load
 - CSRF protection secures against cross-site request forgery attacks
 - Input sanitization prevents XSS and injection attacks
 - Abuse detection identifies and prevents suspicious booking patterns
 - Comprehensive validation middleware ensures data integrity and security
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Enhanced system security against common web vulnerabilities
 - ✅ Better user experience with intelligent rate limiting and clear error messages
 - ✅ Improved system reliability and abuse prevention
@@ -724,17 +736,20 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-022: Multi-Layer Performance Optimization Architecture
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need comprehensive performance optimization to meet sub-500ms operation targets with high concurrency support  
 **Decision**: Implement multi-layer performance optimization with database query optimization, connection pooling, and intelligent caching  
-**Rationale**: 
+**Rationale**:
+
 - Database query optimization ensures efficient data access patterns
 - Connection pooling prevents connection exhaustion under high load
 - Multi-layer caching (Redis + memory) provides optimal performance
 - Performance monitoring enables proactive optimization and issue detection
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Consistent sub-500ms response times achieved
 - ✅ High concurrency support with connection pooling
 - ✅ Intelligent caching with business context isolation
@@ -746,17 +761,20 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-023: Comprehensive Monitoring and Analytics System
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need operational monitoring, performance tracking, and business intelligence for production appointment booking system  
 **Decision**: Implement comprehensive monitoring system with performance tracking, alerting, and business analytics  
-**Rationale**: 
+**Rationale**:
+
 - Performance monitoring ensures system reliability and optimal user experience
 - Automated alerting enables proactive issue detection and resolution
 - Business analytics provide valuable insights for salon owners and decision-making
 - Comprehensive metrics tracking supports continuous improvement and optimization
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Real-time performance monitoring with sub-500ms tracking
 - ✅ Proactive alerting for system issues and performance degradation
 - ✅ Comprehensive business intelligence and reporting capabilities
@@ -768,17 +786,20 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-024: Enterprise-Grade Quality Assurance Framework
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need comprehensive testing strategy to ensure production readiness and system reliability  
 **Decision**: Implement comprehensive QA framework with integration testing, performance validation, and security testing  
-**Rationale**: 
+**Rationale**:
+
 - Integration testing ensures all system components work together correctly
 - Performance testing validates sub-500ms targets and high concurrency support
 - Security testing ensures multi-tenant isolation and data protection
 - Comprehensive test coverage provides confidence in production deployment
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ 250+ comprehensive tests covering all system components
 - ✅ Integration testing for complete appointment booking workflows
 - ✅ Performance validation against sub-500ms targets
@@ -790,18 +811,21 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-022: Multi-Layer Caching Architecture for Performance Optimization
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Appointment booking system requires high-performance data access with business context isolation and coordinated cache invalidation across multiple data sources  
 **Decision**: Implement comprehensive multi-layer caching system with Redis integration, memory caching, and intelligent cache warming coordinated with calendar infrastructure  
-**Rationale**: 
+**Rationale**:
+
 - Redis provides distributed caching for scalable multi-tenant architecture
 - Memory caching offers ultra-fast access for frequently used data
 - Intelligent cache warming prevents cold cache performance issues
 - Calendar cache coordinator ensures data consistency across appointment and calendar systems
 - Business context isolation maintains multi-tenant security in cached data
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Significant performance improvements for appointment queries and calendar operations
 - ✅ Scalable caching architecture supporting enterprise-level load
 - ✅ Maintained data consistency through coordinated cache invalidation
@@ -813,18 +837,21 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-023: Database Connection Pooling and Query Optimization Strategy
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: High-performance appointment system requires optimized database access with connection management and query performance monitoring  
 **Decision**: Implement comprehensive database optimization with connection pooling, advanced indexing strategy, and query performance monitoring  
-**Rationale**: 
+**Rationale**:
+
 - Connection pooling prevents database connection exhaustion under load
 - Advanced indexing strategy optimizes appointment query performance
 - Query performance monitoring enables proactive optimization
 - Optimized repository patterns reduce database load and improve response times
 - Health monitoring ensures database reliability and performance
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Improved database performance and connection management
 - ✅ Scalable database architecture supporting high concurrent load
 - ✅ Proactive performance monitoring and optimization capabilities
@@ -836,18 +863,21 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-024: Enterprise Multi-Tenant Security Architecture
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: SaaS platform requires enterprise-grade security with comprehensive business context validation, audit trails, and cross-tenant isolation  
 **Decision**: Implement comprehensive business context security service with violation logging, audit trails, and multi-tenant isolation enforcement  
-**Rationale**: 
+**Rationale**:
+
 - Business context validation ensures all operations are properly scoped to authorized businesses
 - Security violation logging provides comprehensive monitoring and alerting capabilities
 - Audit trails enable compliance tracking and forensic analysis
 - Cross-tenant isolation prevents data leakage between businesses
 - Role-based access control ensures proper authorization for all operations
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Enterprise-grade security with comprehensive audit capabilities
 - ✅ Complete multi-tenant isolation preventing cross-business data access
 - ✅ Comprehensive security monitoring and violation detection
@@ -859,18 +889,21 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-025: GDPR Compliance and Data Protection System
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: SaaS platform handling personal data requires comprehensive GDPR compliance with data encryption, masking, export, and deletion capabilities  
 **Decision**: Implement comprehensive data protection service with AES-256-GCM encryption, data masking, GDPR export/deletion, and automated data retention  
-**Rationale**: 
+**Rationale**:
+
 - AES-256-GCM encryption provides secure protection for sensitive client data
 - Data masking prevents sensitive information exposure in logs and error messages
 - GDPR export functionality enables compliance with data portability requirements
 - GDPR deletion functionality supports right to erasure with proper business record retention
 - Automated data retention ensures compliance with data protection regulations
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Full GDPR compliance with comprehensive data protection capabilities
 - ✅ Secure encryption and masking of all sensitive personal data
 - ✅ Automated data lifecycle management and retention compliance
@@ -882,18 +915,21 @@ ADR-016: Professional Schedule Item Design Enhancement
 ---
 
 ## ADR-022: User-Friendly Error Handling System
+
 **Date**: September 26, 2025  
 **Status**: Accepted  
 **Context**: Need comprehensive error handling system that provides clear, actionable feedback to users while maintaining system security  
 **Decision**: Implement appointment-specific error types with factory pattern, user-friendly messages, and recovery suggestions  
-**Rationale**: 
+**Rationale**:
+
 - Appointment-specific errors provide contextual, relevant error messages
 - Factory pattern ensures consistent error creation and formatting
 - User-friendly messages improve user experience and reduce support burden
 - Recovery suggestions help users resolve issues independently
 - Error severity classification enables appropriate logging and response handling
 
-**Consequences**: 
+**Consequences**:
+
 - ✅ Improved user experience with clear, actionable error messages
 - ✅ Reduced support burden through self-service error resolution
 - ✅ Consistent error handling patterns across the entire system
@@ -1659,3 +1695,42 @@ Use this template for new architectural decisions:
 - Requires business rule configuration and dependency management
 
 **Related Issues**: [LUM-97](https://linear.app/scootr-ca/issue/LUM-97) - Appointment Booking Engine
+
+---
+
+## ADR-037: Multi-Service Selection Interface Architecture for Public Booking
+
+**Date**: September 27, 2025  
+**Status**: Accepted  
+**Context**: LUM-98 Public Booking Interface required a comprehensive service selection component that supports multi-service booking with real-time calculations, filtering, and detailed service information display.
+
+**Decision**: Implement comprehensive multi-service selection interface with real-time pricing calculations, service filtering, and modal-based detail views.
+
+**Rationale**:
+
+- Provides optimal user experience with immediate feedback on pricing and duration
+- Enables complex multi-service bookings with transparent cost calculation
+- Supports service discovery through search and categorization features
+- Displays detailed service information including prerequisites and recommendations
+- Maintains mobile-first responsive design for optimal booking conversion
+
+**Alternatives Considered**:
+
+1. **Simple single-service selection**:
+   - Rejected: Limited functionality for complex salon service combinations
+2. **Separate pages for each service step**:
+   - Rejected: Poor user experience with excessive navigation
+3. **Basic list without filtering**:
+   - Rejected: Poor usability for businesses with many services
+4. **Server-side calculation only**:
+   - Rejected: Poor user experience with delayed feedback
+
+**Impact**:
+
+- Enhanced booking conversion with clear service information and cost transparency
+- Improved user experience with real-time feedback and service discovery
+- Supports complex business models with multi-service appointments
+- Provides foundation for advanced booking features and recommendations
+- Requires client-side calculation logic and state management
+
+**Related Issues**: [LUM-98](https://linear.app/scootr-ca/issue/LUM-98) - Public Booking Interface

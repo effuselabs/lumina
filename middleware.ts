@@ -19,7 +19,9 @@ export default auth(req => {
   const isPublicRoute =
     publicRoutes.some(
       route => pathname === route || pathname.startsWith(route)
-    ) || pathname.startsWith('/api/auth/');
+    ) ||
+    pathname.startsWith('/api/auth/') ||
+    pathname.startsWith('/api/public/');
 
   // Allow public routes
   if (isPublicRoute) {

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Public Booking Brand Colors */
+:root {
+  --brand-primary: #ffd25a;
+  --brand-secondary: #ff7a5a;
+  --brand-accent: #0b2b33;
+}
+
 /* Import Lumina Design System Tokens */
 @import './design-tokens/index.css';
 @import './design-tokens/animations.css';
@@ -23,7 +30,9 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
     color: var(--color-foreground);
     background-color: var(--color-background);
     /* Prevent horizontal scroll on mobile */
@@ -337,11 +346,11 @@
       font-size: 0.875rem;
       line-height: 1.25rem;
     }
-    
+
     .responsive-padding {
       padding: 1rem;
     }
-    
+
     .responsive-margin {
       margin: 0.5rem;
     }
@@ -352,11 +361,11 @@
       font-size: 1rem;
       line-height: 1.5rem;
     }
-    
+
     .responsive-padding {
       padding: 1.5rem;
     }
-    
+
     .responsive-margin {
       margin: 1rem;
     }
@@ -367,11 +376,11 @@
       font-size: 1.125rem;
       line-height: 1.75rem;
     }
-    
+
     .responsive-padding {
       padding: 2rem;
     }
-    
+
     .responsive-margin {
       margin: 1.5rem;
     }
@@ -386,7 +395,7 @@
       border-width: 2px;
       font-weight: 600;
     }
-    
+
     .btn-lumina-primary {
       border: 3px solid var(--color-primary-foreground);
     }
@@ -398,7 +407,7 @@
       animation: none;
       transition: none;
     }
-    
+
     .btn-lumina-primary:hover,
     .btn-lumina-secondary:hover,
     .lumina-card:hover {
@@ -493,7 +502,10 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    font-feature-settings:
+      'kern' 1,
+      'liga' 1,
+      'calt' 1;
   }
 
   /* Background utilities using design tokens */
@@ -615,16 +627,16 @@
   .no-print {
     display: none !important;
   }
-  
+
   .print-only {
     display: block !important;
   }
-  
+
   body {
     background: white !important;
     color: black !important;
   }
-  
+
   .lumina-card {
     box-shadow: none !important;
     border: 1px solid #ccc !important;
