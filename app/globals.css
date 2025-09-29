@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import mobile-specific optimizations */
+@import './booking-mobile.css';
+
 /* Public Booking Brand Colors */
 :root {
   --brand-primary: #ffd25a;

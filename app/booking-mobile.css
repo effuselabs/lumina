@@ -1,0 +1,267 @@
+/* Mobile-specific optimizations for public booking interface */
+
+/* Prevent zoom on input focus (iOS Safari) */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="password"],
+  input[type="date"],
+  input[type="datetime-local"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    transform: translateZ(0); /* Hardware acceleration */
+  }
+}
+
+/* Touch-friendly button sizing */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Smooth scrolling for mobile */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimize for mobile viewport */
+@media screen and (max-width: 768px) {
+  /* Reduce margins and padding for mobile */
+  .mobile-compact {
+    padding: 1rem !important;
+    margin: 0.5rem 0 !important;
+  }
+
+  /* Stack elements vertically on mobile */
+  .mobile-stack {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  /* Full width buttons on mobile */
+  .mobile-full-width {
+    width: 100% !important;
+  }
+
+  /* Larger text for better readability */
+  .mobile-text {
+    font-size: 1.1rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Optimize card spacing */
+  .mobile-card {
+    margin: 0.5rem !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.smooth-transition {
+  transition: all 0.2s ease-out;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .smooth-transition {
+    transition: none !important;
+  }
+  
+  .gpu-accelerated {
+    will-change: auto;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .booking-button {
+    border: 2px solid currentColor !important;
+  }
+  
+  .booking-card {
+    border: 1px solid currentColor !important;
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  .booking-interface {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  .booking-card {
+    background-color: #2a2a2a;
+    border-color: #404040;
+  }
+}
+
+/* Loading states */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Network status indicators */
+.network-status {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.network-offline {
+  background-color: #dc2626;
+  color: white;
+}
+
+.network-slow {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.network-online {
+  background-color: #10b981;
+  color: white;
+}
+
+/* Safe area support for devices with notches */
+@supports (padding: max(0px)) {
+  .safe-area-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  .safe-area-left {
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+  
+  .safe-area-right {
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+/* Optimize for landscape orientation on mobile */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .mobile-landscape-optimize {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .mobile-landscape-header {
+    padding: 0.5rem 1rem !important;
+  }
+  
+  .mobile-landscape-content {
+    padding: 1rem !important;
+  }
+}
+
+/* Focus management for accessibility */
+.focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Improve tap targets */
+@media (pointer: coarse) {
+  .tap-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Optimize for slow connections */
+@media (prefers-reduced-data: reduce) {
+  .data-saver-hide {
+    display: none !important;
+  }
+  
+  .data-saver-simplify {
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Print styles for booking confirmations */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-optimize {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Utility classes for performance */
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-size {
+  contain: size;
+}
+
+.contain-style {
+  contain: style;
+}
+
+/* Intersection observer optimization */
+.lazy-load {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.lazy-load.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Critical CSS for above-the-fold content */
+.critical-content {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Non-critical content that can be lazy loaded */
+.non-critical {
+  content-visibility: auto;
+  contain-intrinsic-size: 200px;
+}

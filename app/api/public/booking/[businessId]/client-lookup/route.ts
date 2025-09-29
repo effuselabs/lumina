@@ -106,45 +106,20 @@ async function validateBusinessForClientLookup(businessId: string) {
   }
 }
 
-// Look up existing client
+// Look up existing client using ClientService
 async function lookupClient(
   businessId: string,
   email?: string,
   phone?: string
 ): Promise<{ clientExists: boolean; clientData?: Partial<ClientData> }> {
   try {
-    // Build where clause for client lookup
-    const whereClause: any = {
+    const result = await ClientService.lookupClient({
       businessId,
-    };
-
-    if (email && phone) {
-      // If both provided, look for either match
-      whereClause.OR = [
-        { email: email.toLowerCase().trim() },
-        { phone: phone.replace(/[^\d]/g, '') }, // Remove non-digits for comparison
-      ];
-    } else if (email) {
-      whereClause.email = email.toLowerCase().trim();
-    } else if (phone) {
-      whereClause.phone = phone.replace(/[^\d]/g, '');
-    }
-
-    const client = await prisma.client.findFirst({
-      where: whereClause,
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        preferredStaff: true,
-        notes: true,
-        createdAt: true,
-      },
+      email,
+      phone,
     });
 
-    if (!client) {
+    if (!result.clientExists || !result.clientData) {
       return {
         clientExists: false,
       };
@@ -154,14 +129,11 @@ async function lookupClient(
     return {
       clientExists: true,
       clientData: {
-        firstName: InputSanitizer.sanitizeString(client.firstName),
-        lastName: InputSanitizer.sanitizeString(client.lastName),
-        email: client.email,
-        phone: client.phone,
-        preferredStaff: client.preferredStaff,
-        notes: client.notes
-          ? InputSanitizer.sanitizeNotes(client.notes)
-          : undefined,
+        firstName: InputSanitizer.sanitizeString(result.clientData.firstName),
+        lastName: InputSanitizer.sanitizeString(result.clientData.lastName),
+        email: result.clientData.email,
+        phone: result.clientData.phone,
+        notes: undefined, // Notes not included in lookup for privacy
         isNewClient: false,
       },
     };

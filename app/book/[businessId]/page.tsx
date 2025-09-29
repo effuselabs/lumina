@@ -1,5 +1,5 @@
 import { BookingErrorBoundary } from '@/components/booking/booking-error-boundary';
-import { BookingInterface } from '@/components/booking/booking-interface';
+import { OptimizedBookingInterface } from '@/components/booking/optimized-booking-interface';
 import { getBusinessForPublicBooking } from '@/lib/services/business-service';
 import { Suspense } from 'react';
 
@@ -18,7 +18,10 @@ export default async function BookingPage({ params }: BookingPageProps) {
         businessEmail={business.email}
       >
         <Suspense fallback={<BookingLoadingSkeleton />}>
-          <BookingInterface businessId={params.businessId} />
+          <OptimizedBookingInterface
+            businessId={params.businessId}
+            business={business}
+          />
         </Suspense>
       </BookingErrorBoundary>
     );

@@ -30,6 +30,34 @@ const customJestConfig = {
     '<rootDir>/**/*.(test|spec).{js,jsx,ts,tsx}',
   ],
 
+  // Test categories for selective running
+  projects: [
+    {
+      displayName: 'unit',
+      testMatch: ['<rootDir>/**/__tests__/**/*.test.{js,jsx,ts,tsx}'],
+      testPathIgnorePatterns: [
+        '<rootDir>/__tests__/integration/',
+        '<rootDir>/__tests__/performance/',
+        '<rootDir>/__tests__/accessibility/',
+      ],
+    },
+    {
+      displayName: 'integration',
+      testMatch: ['<rootDir>/__tests__/integration/**/*.test.{js,jsx,ts,tsx}'],
+      testTimeout: 15000,
+    },
+    {
+      displayName: 'performance',
+      testMatch: ['<rootDir>/__tests__/performance/**/*.test.{js,jsx,ts,tsx}'],
+      testTimeout: 60000,
+    },
+    {
+      displayName: 'accessibility',
+      testMatch: ['<rootDir>/__tests__/accessibility/**/*.test.{js,jsx,ts,tsx}'],
+      testTimeout: 10000,
+    },
+  ],
+
   // Files to ignore
   testPathIgnorePatterns: [
     '<rootDir>/.next/',

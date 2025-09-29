@@ -161,6 +161,8 @@ model Business {
   AuditLog                   AuditLog[]
   PerformanceMetric          PerformanceMetric[]
   BusinessMetric             BusinessMetric[]
+  StaffNotification          StaffNotification[]
+  PublicBookingAuditLog      PublicBookingAuditLog[]
 
   @@map("businesses")
 }
@@ -238,6 +240,7 @@ model Staff {
   timeOffRequests             TimeOffRequest[]
   approvedTimeOffRequests     TimeOffRequest[]            @relation("TimeOffApprover")
   availabilityCache           AvailabilityCache[]
+  StaffNotification           StaffNotification[]
 
   @@index([businessId, employmentType])
   @@index([businessId, isActive])
@@ -343,6 +346,7 @@ model Client {
   loyaltyMemberships     LoyaltyMembership[]
   reviews                ClientReview[]
   communicationHistory   CommunicationHistory[]
+  PublicBookingAuditLog  PublicBookingAuditLog[]
 
   @@unique([businessId, email])
   @@unique([businessId, phone])
@@ -392,19 +396,20 @@ model Appointment {
   updatedAt DateTime @updatedAt
 
   // Relations (existing + enhanced)
-  business             Business                   @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  client               Client?                    @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  staff                Staff                      @relation(fields: [staffId], references: [id], onDelete: Cascade)
-  user                 User?                      @relation("AppointmentClient", fields: [userId], references: [id], onDelete: SetNull)
-  services             AppointmentService[]
-  transactions         Transaction[]
-  productSales         ProductSale[]
-  giftCardRedemptions  GiftCardRedemption[]
-  promotionUsage       PromotionUsage[]
-  loyaltyTransactions  LoyaltyTransaction[]
-  reviews              ClientReview[]
-  communicationHistory CommunicationHistory[]
-  statusHistory        AppointmentStatusHistory[]
+  business              Business                   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  client                Client?                    @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  staff                 Staff                      @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  user                  User?                      @relation("AppointmentClient", fields: [userId], references: [id], onDelete: SetNull)
+  services              AppointmentService[]
+  transactions          Transaction[]
+  productSales          ProductSale[]
+  giftCardRedemptions   GiftCardRedemption[]
+  promotionUsage        PromotionUsage[]
+  loyaltyTransactions   LoyaltyTransaction[]
+  reviews               ClientReview[]
+  communicationHistory  CommunicationHistory[]
+  statusHistory         AppointmentStatusHistory[]
+  PublicBookingAuditLog PublicBookingAuditLog[]
 
   @@index([businessId, startTime])
   @@index([staffId, startTime])
@@ -1520,4 +1525,209 @@ model BusinessMetric {
   @@index([businessId, date])
   @@index([type, date])
   @@map("business_metrics")
+}
+
+// ============================================================================
+// STAFF NOTIFICATIONS
+// ============================================================================
+
+model StaffNotification {
+  id         String                    @id @default(cuid())
+  businessId String
+  staffId    String
+  type       StaffNotificationType
+  title      String
+  message    String
+  metadata   Json?
+  isRead     Boolean                   @default(false)
+  priority   StaffNotificationPriority @default(NORMAL)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  staff    Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, staffId, isRead])
+  @@index([businessId, staffId, createdAt])
+  @@index([staffId, isRead])
+  @@map("staff_notifications")
+}
+
+// ============================================================================
+// PUBLIC BOOKING AUDIT LOGGING
+// ============================================================================
+
+model PublicBookingAuditLog {
+  id            String  @id @default(cuid())
+  event         String // PublicBookingAuditEvent enum value
+  businessId    String
+  sessionId     String?
+  clientId      String?
+  appointmentId String?
+
+  // Request context
+  ipAddress String?
+  userAgent String?
+  referer   String?
+  requestId String?
+
+  // Event data
+  eventData Json?
+
+  // Performance metrics
+  responseTime Int? // milliseconds
+
+  // Security context
+  securityFlags String[] // Array of security flags
+  riskScore     Int      @default(0) // 0-100 risk score
+  riskLevel     String   @default("LOW") // LOW, MEDIUM, HIGH, CRITICAL
+
+  // Error information
+  errorType    String?
+  errorMessage String?
+  stackTrace   String? @db.Text
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  // Relations
+  business    Business?    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  client      Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, createdAt])
+  @@index([event, createdAt])
+  @@index([riskLevel, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([ipAddress, createdAt])
+  @@map("public_booking_audit_logs")
+}
+
+enum StaffNotificationType {
+  NEW_BOOKING
+  BOOKING_CANCELLED
+  BOOKING_MODIFIED
+  SCHEDULE_CHANGE
+  PAYMENT_RECEIVED
+  CLIENT_MESSAGE
+  SYSTEM_ALERT
+  REMINDER
+}
+
+enum StaffNotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ============================================================================
+// ANALYTICS & MONITORING SYSTEM
+// ============================================================================
+
+model BookingAnalyticsEvent {
+  id         String   @id @default(cuid())
+  businessId String
+  eventType  String // booking_started, service_selected, time_selected, form_submitted, booking_completed, booking_abandoned
+  sessionId  String
+  timestamp  DateTime
+  metadata   Json     @default("{}")
+  userId     String?
+  clientId   String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId, eventType, timestamp])
+  @@index([sessionId, timestamp])
+  @@map("booking_analytics_events")
+}
+
+model BookingPerformanceEvent {
+  id         String   @id @default(cuid())
+  businessId String
+  eventType  String // page_load, api_response, error, user_interaction
+  duration   Float? // Duration in milliseconds
+  timestamp  DateTime
+  metadata   Json     @default("{}")
+
+  // Error details
+  errorMessage String?
+  errorStack   String?
+  errorCode    String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId, eventType, timestamp])
+  @@index([businessId, timestamp])
+  @@map("booking_performance_events")
+}
+
+model BookingError {
+  id         String   @id @default(cuid())
+  businessId String
+  errorType  String // validation, availability, payment, system, network
+  severity   String // low, medium, high, critical
+  message    String
+  stack      String?
+  context    Json     @default("{}")
+  userId     String?
+  sessionId  String?
+  timestamp  DateTime
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId, errorType, severity, timestamp])
+  @@index([businessId, timestamp])
+  @@map("booking_errors")
+}
+
+model BookingAlertRule {
+  id         String  @id @default(cuid())
+  businessId String
+  name       String
+  condition  Json // { errorType?, severity?, threshold: number, timeWindow: number }
+  actions    Json // { email?: string[], webhook?: string, sms?: string[] }
+  isActive   Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  alerts BookingAlert[]
+
+  @@index([businessId, isActive])
+  @@map("booking_alert_rules")
+}
+
+model BookingAlert {
+  id         String   @id @default(cuid())
+  businessId String
+  ruleId     String
+  ruleName   String
+  errorType  String
+  severity   String
+  message    String
+  context    Json     @default("{}")
+  timestamp  DateTime
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  rule BookingAlertRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, timestamp])
+  @@index([ruleId, timestamp])
+  @@map("booking_alerts")
 }

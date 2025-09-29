@@ -1,14 +1,10 @@
 import { prisma } from '@/lib/prisma';
-import { InputSanitizer } from '@/lib/security/rate-limiter';
-import { NextRequest, NextResponse } from 'next/server';
+import { format } from 'date-fns';
+import { NextRequest } from 'next/server';
 import { z } from 'zod';
-import {
-  publicBookingAbuseDetector,
-  publicBookingRateLimiters,
-  publicBookingSecurityHeaders,
-  withPublicBookingRateLimit,
-} from '../../../../../../lib/security/public-booking-rate-limiter';
+import { emailService } from '../../../../../../lib/email/email-service';
 import { AvailabilityCacheInvalidation } from '../../../../../../lib/services/availability-cache-invalidation';
+import { ClientService } from '../../../../../../lib/services/client-service';
 
 // Using dedicated public booking rate limiters
 
@@ -272,7 +268,7 @@ async function validateServicesAndCalculateTotals(
       duration: service.duration,
       price: Number(
         service.staff.find(s => s.staffId === staffId)?.customPrice ||
-          service.price
+        service.price
       ),
     })),
     staff: staffMember,
@@ -286,7 +282,8 @@ async function validateTimeSlotAvailability(
   businessId: string,
   staffId: string,
   startTime: Date,
-  endTime: Date
+  endTime: Date,
+  serviceIds?: string[]
 ) {
   // Check for existing appointments that conflict
   const conflictingAppointments = await prisma.appointment.findMany({
@@ -330,6 +327,23 @@ async function validateTimeSlotAvailability(
   });
 
   if (conflictingAppointments.length > 0) {
+    // Find alternative slots when there's a conflict
+    let alternativeSlots: any[] = [];
+    try {
+      const { AlternativeSlotsService } = await import('../../../../../../lib/services/alternative-slots-service');
+      const alternatives = await AlternativeSlotsService.findNearbyAlternatives({
+        businessId,
+        serviceIds: serviceIds,
+        originalStartTime: startTime,
+        staffId,
+        maxAlternatives: 6,
+        timeWindowHours: 4,
+      });
+      alternativeSlots = alternatives;
+    } catch (altError) {
+      console.error('Failed to fetch alternative slots:', altError);
+    }
+
     throw new BookingError(
       BookingErrorType.BOOKING_CONFLICT,
       'Time slot is no longer available',
@@ -337,7 +351,8 @@ async function validateTimeSlotAvailability(
       [
         'Please select a different time slot',
         'Refresh the page to see updated availability',
-      ]
+      ],
+      alternativeSlots
     );
   }
 
@@ -367,7 +382,7 @@ async function validateTimeSlotAvailability(
   }
 }
 
-// Create or find client
+// Create or find client using ClientService
 async function createOrFindClient(
   businessId: string,
   clientData: z.infer<typeof clientDataSchema>
@@ -377,49 +392,23 @@ async function createOrFindClient(
     firstName: InputSanitizer.sanitizeString(clientData.firstName),
     lastName: InputSanitizer.sanitizeString(clientData.lastName),
     email: clientData.email.toLowerCase().trim(),
-    phone: clientData.phone.replace(/[^\d]/g, ''), // Keep only digits
+    phone: clientData.phone,
     notes: clientData.notes
       ? InputSanitizer.sanitizeNotes(clientData.notes)
       : undefined,
     marketingOptIn: clientData.marketingOptIn,
   };
 
-  // Try to find existing client
-  const existingClient = await prisma.client.findFirst({
-    where: {
-      businessId,
-      OR: [{ email: sanitizedData.email }, { phone: sanitizedData.phone }],
-    },
-  });
-
-  if (existingClient) {
-    // Update existing client with any new information
-    return await prisma.client.update({
-      where: { id: existingClient.id },
-      data: {
-        firstName: sanitizedData.firstName,
-        lastName: sanitizedData.lastName,
-        email: sanitizedData.email,
-        phone: sanitizedData.phone,
-        notes: sanitizedData.notes,
-        emailMarketing: sanitizedData.marketingOptIn,
-        smsMarketing: sanitizedData.marketingOptIn,
-      },
-    });
-  }
-
-  // Create new client
-  return await prisma.client.create({
-    data: {
-      businessId,
-      firstName: sanitizedData.firstName,
-      lastName: sanitizedData.lastName,
-      email: sanitizedData.email,
-      phone: sanitizedData.phone,
-      notes: sanitizedData.notes,
-      emailMarketing: sanitizedData.marketingOptIn,
-      smsMarketing: sanitizedData.marketingOptIn,
-    },
+  // Use ClientService to create or update client
+  return await ClientService.createClient({
+    businessId,
+    firstName: sanitizedData.firstName,
+    lastName: sanitizedData.lastName,
+    email: sanitizedData.email,
+    phone: sanitizedData.phone,
+    notes: sanitizedData.notes,
+    marketingOptIn: sanitizedData.marketingOptIn,
+    source: 'public_booking',
   });
 }
 
@@ -481,71 +470,74 @@ async function createAppointmentWithServices(
   });
 }
 
+// Send staff notification for new booking
+async function sendStaffNotification({
+  businessId,
+  staffId,
+  appointment,
+  business,
+}: {
+  businessId: string;
+  staffId: string;
+  appointment: CreatedAppointment;
+  business: any;
+}) {
+  try {
+    // Create a staff notification record in the database
+    await prisma.staffNotification.create({
+      data: {
+        businessId,
+        staffId,
+        type: 'NEW_BOOKING',
+        title: 'New Appointment Booked',
+        message: `New appointment scheduled with ${appointment.client.firstName} ${appointment.client.lastName} for ${appointment.services.map(s => s.name).join(', ')} on ${format(appointment.dateTime, 'EEEE, MMMM d, yyyy')} at ${format(appointment.dateTime, 'h:mm a')}.`,
+        metadata: {
+          appointmentId: appointment.id,
+          confirmationNumber: appointment.confirmationNumber,
+          clientName: `${appointment.client.firstName} ${appointment.client.lastName}`,
+          services: appointment.services.map(s => s.name),
+          dateTime: appointment.dateTime.toISOString(),
+          totalPrice: appointment.totalPrice,
+        },
+        isRead: false,
+        priority: 'NORMAL',
+      },
+    });
+
+    // TODO: In future iterations, add real-time notifications via WebSocket or push notifications
+    console.log(`Staff notification sent to ${staffId} for appointment ${appointment.id}`);
+  } catch (error) {
+    console.error('Error creating staff notification:', error);
+    throw error;
+  }
+}
+
 // POST /api/public/booking/[businessId]/book
 export async function POST(
   request: NextRequest,
   { params }: { params: { businessId: string } }
 ) {
+  const startTime = Date.now();
+
   try {
-    // Apply rate limiting
-    const rateLimitResult = await withPublicBookingRateLimit(
+    // Apply comprehensive security validation
+    const securityResult = await securePublicBookingPOST(
       request,
-      publicBookingRateLimiters.bookingCreation
+      params.businessId,
+      {
+        rateLimiter: 'bookingCreation',
+        auditEvent: PublicBookingAuditEvent.BOOKING_INITIATED,
+      }
     );
 
-    if (!rateLimitResult.success) {
-      return NextResponse.json(
-        {
-          error: {
-            type: 'RATE_LIMIT_EXCEEDED',
-            message:
-              'Too many booking attempts. Please wait before trying again.',
-            userMessage:
-              'Too many booking attempts. Please wait before trying again.',
-            suggestions: ['Wait a few minutes before trying again'],
-          },
-        },
-        {
-          status: 429,
-          headers: {
-            ...publicBookingSecurityHeaders,
-            ...rateLimitResult.headers,
-          },
-        }
-      );
+    if (!securityResult.success) {
+      return securityResult.response!;
     }
 
-    // Parse and validate request body
-    const body = await request.json();
-    const validatedData = bookingRequestSchema.parse(body);
+    // Use sanitized data from security middleware
+    const validatedData = securityResult.sanitizedData || bookingRequestSchema.parse(await request.json());
 
-    // Check for suspicious activity
-    if (
-      publicBookingAbuseDetector.detectSuspiciousActivity(
-        request,
-        validatedData
-      )
-    ) {
-      return NextResponse.json(
-        {
-          error: {
-            type: BookingErrorType.SUSPICIOUS_ACTIVITY,
-            message: 'Suspicious booking activity detected',
-            userMessage:
-              'Your booking request could not be processed. Please contact the business directly.',
-            suggestions: [
-              'Contact the business by phone to schedule your appointment',
-            ],
-          },
-        },
-        {
-          status: 400,
-          headers: publicBookingSecurityHeaders,
-        }
-      );
-    }
-
-    // Validate business context
+    // Validate business context (already done in security middleware, but get business data)
     const business = await validateBusinessForBooking(params.businessId);
 
     // Parse time slot dates
@@ -557,7 +549,8 @@ export async function POST(
       params.businessId,
       validatedData.timeSlot.staffId,
       startTime,
-      endTime
+      endTime,
+      validatedData.services
     );
 
     // Validate services and calculate totals
@@ -640,36 +633,107 @@ export async function POST(
       },
     };
 
-    return NextResponse.json(
+    // Send confirmation email
+    let confirmationSent = false;
+    try {
+      const emailResult = await emailService.sendBookingConfirmation({
+        customerName: `${client.firstName} ${client.lastName}`,
+        customerEmail: client.email || '',
+        businessName: business.name,
+        serviceName: services.map(s => s.name).join(', '),
+        staffName: staff.displayName,
+        appointmentDate: format(appointment.startTime, 'EEEE, MMMM d, yyyy'),
+        appointmentTime: format(appointment.startTime, 'h:mm a'),
+        duration: actualDuration,
+        price: actualPrice,
+        businessAddress: business.address || undefined,
+        businessPhone: business.phone || undefined,
+        businessEmail: business.email || undefined,
+        appointmentId: appointment.confirmationNumber,
+        notes: validatedData.client.notes,
+      });
+
+      confirmationSent = emailResult.success;
+
+      if (emailResult.previewUrl) {
+        console.log('Email preview URL:', emailResult.previewUrl);
+      }
+    } catch (emailError) {
+      console.error('Failed to send confirmation email:', emailError);
+      // Don't fail the booking if email fails
+    }
+
+    // Send staff notification
+    try {
+      await sendStaffNotification({
+        businessId: params.businessId,
+        staffId: validatedData.timeSlot.staffId,
+        appointment: createdAppointment,
+        business,
+      });
+    } catch (notificationError) {
+      console.error('Failed to send staff notification:', notificationError);
+      // Don't fail the booking if notification fails
+    }
+
+    // Log successful booking
+    const responseTime = Date.now() - startTime;
+    await auditPublicBooking.bookingCompleted(
+      params.businessId,
+      request,
+      {
+        appointmentId: appointment.id,
+        clientId: client.id,
+        serviceIds: validatedData.services,
+        staffId: validatedData.timeSlot.staffId,
+        totalAmount: actualPrice,
+        isNewClient: validatedData.client.isNewClient,
+      },
+      responseTime
+    );
+
+    return createSecurePublicBookingResponse(
       {
         appointment: createdAppointment,
-        confirmationSent: false, // Will be implemented in later tasks
+        confirmationSent,
         message: 'Appointment booked successfully!',
       },
+      request,
       {
         status: 201,
-        headers: {
-          ...publicBookingSecurityHeaders,
-          ...rateLimitResult.headers,
-        },
+        addCSRFToken: true,
       }
     );
   } catch (error) {
     console.error('Error in booking creation endpoint:', error);
 
+    // Log booking failure
+    const responseTime = Date.now() - startTime;
+    await auditPublicBooking.bookingFailed(
+      params.businessId,
+      request,
+      {
+        failureReason: error instanceof Error ? error.message : 'Unknown error',
+        serviceIds: validatedData?.services,
+        staffId: validatedData?.timeSlot?.staffId,
+        clientData: validatedData?.client ? 'present' : 'missing',
+      },
+      error instanceof Error ? error : undefined,
+      responseTime
+    );
+
     if (error instanceof BookingError) {
-      return NextResponse.json(
+      return createSecurePublicBookingResponse(
         { error },
+        request,
         {
-          status:
-            error.type === BookingErrorType.BUSINESS_NOT_FOUND ? 404 : 400,
-          headers: publicBookingSecurityHeaders,
+          status: error.type === BookingErrorType.BUSINESS_NOT_FOUND ? 404 : 400,
         }
       );
     }
 
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
+      return createSecurePublicBookingResponse(
         {
           error: {
             type: BookingErrorType.VALIDATION_ERROR,
@@ -682,14 +746,14 @@ export async function POST(
             details: error.errors,
           },
         },
+        request,
         {
           status: 400,
-          headers: publicBookingSecurityHeaders,
         }
       );
     }
 
-    return NextResponse.json(
+    return createSecurePublicBookingResponse(
       {
         error: {
           type: BookingErrorType.SYSTEM_ERROR,
@@ -702,9 +766,9 @@ export async function POST(
           ],
         },
       },
+      request,
       {
         status: 500,
-        headers: publicBookingSecurityHeaders,
       }
     );
   }

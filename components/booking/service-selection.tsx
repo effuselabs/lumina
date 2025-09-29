@@ -52,7 +52,17 @@ export function ServiceSelection({
     null
   );
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<PublicBookingError | Error | null>(null);
+
+  // Network resilience hook
+  const { resilientFetch, networkState, getNetworkErrorMessage } = useNetworkResilience({
+    onConnectionChange: (isOnline) => {
+      if (isOnline && error) {
+        // Auto-retry when connection is restored
+        fetchServices();
+      }
+    },
+  });
 
   // Filter and search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,22 +76,24 @@ export function ServiceSelection({
   const fetchServices = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/public/booking/${businessId}`);
+      setError(null);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error?.userMessage || 'Failed to fetch services'
-        );
-      }
+      const data = await resilientFetch(
+        `/api/public/booking/${businessId}`,
+        {},
+        `services-${businessId}`
+      );
 
-      const data = await response.json();
       setServices(data.servicesByCategory);
       setAllServices(data.services);
       setBusiness(data.business);
       setBookingConfig(data.bookingConfig);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load services');
+      if (err instanceof PublicBookingError) {
+        setError(err);
+      } else {
+        setError(new Error(getNetworkErrorMessage(err as Error)));
+      }
     } finally {
       setLoading(false);
     }
@@ -89,31 +101,9 @@ export function ServiceSelection({
 
   useEffect(() => {
     fetchServices();
-  }, [businessId, fetchServices]);
+  }, [businessId]);
 
-  const fetchServices = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/public/booking/${businessId}`);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error?.userMessage || 'Failed to fetch services'
-        );
-      }
-
-      const data = await response.json();
-      setServices(data.servicesByCategory);
-      setAllServices(data.services);
-      setBusiness(data.business);
-      setBookingConfig(data.bookingConfig);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load services');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -220,40 +210,28 @@ export function ServiceSelection({
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="space-y-2">
-          <div className="h-8 w-3/4 animate-pulse rounded bg-neutral-200" />
-          <div className="h-4 w-1/2 animate-pulse rounded bg-neutral-200" />
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <Card
-              key={i}
-              className="animate-pulse border-neutral-200 shadow-sm"
-            >
-              <CardHeader className="pb-3">
-                <div className="h-5 w-3/4 rounded bg-neutral-200" />
-                <div className="h-3 w-1/2 rounded bg-neutral-200" />
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center space-x-2">
-                  <div className="h-6 w-16 rounded-full bg-neutral-200" />
-                  <div className="h-6 w-12 rounded-full bg-neutral-200" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <NetworkStatusIndicator />
+        <BookingLoadingState
+          type="services"
+          message={networkState.isSlowConnection ? "Loading services (slow connection detected)..." : undefined}
+          estimatedTime={networkState.isSlowConnection ? 10 : 5}
+        />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="py-8 text-center">
-        <p className="mb-4 text-red-600">{error}</p>
-        <Button onClick={fetchServices} variant="outline" size="lg">
-          Try Again
-        </Button>
+      <div className="space-y-6">
+        <NetworkStatusIndicator />
+        <BookingErrorHandler
+          error={error}
+          onRetry={fetchServices}
+          onClearError={() => setError(null)}
+          businessName={business?.name}
+          businessPhone={business?.phone}
+          businessEmail={business?.email}
+        />
       </div>
     );
   }
@@ -262,6 +240,7 @@ export function ServiceSelection({
 
   return (
     <div className="space-y-6">
+      <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-[#0B2B33]">
@@ -408,19 +387,18 @@ export function ServiceSelection({
                 const isAtMaxLimit =
                   bookingConfig &&
                   selectedServices.length >=
-                    bookingConfig.maxServicesPerBooking &&
+                  bookingConfig.maxServicesPerBooking &&
                   !isSelected;
 
                 return (
                   <Card
                     key={service.id}
-                    className={`transition-all duration-200 hover:shadow-lg ${
-                      isSelected
-                        ? 'border-[#FFD25A] bg-gradient-to-br from-[#FFD25A]/5 to-[#FF7A5A]/5 ring-2 ring-[#FFD25A]'
-                        : isAtMaxLimit
-                          ? 'cursor-not-allowed opacity-50'
-                          : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-[#FFD25A]/50'
-                    }`}
+                    className={`transition-all duration-200 hover:shadow-lg ${isSelected
+                      ? 'border-[#FFD25A] bg-gradient-to-br from-[#FFD25A]/5 to-[#FF7A5A]/5 ring-2 ring-[#FFD25A]'
+                      : isAtMaxLimit
+                        ? 'cursor-not-allowed opacity-50'
+                        : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-[#FFD25A]/50'
+                      }`}
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">

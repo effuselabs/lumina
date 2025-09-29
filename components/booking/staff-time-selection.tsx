@@ -17,10 +17,9 @@ import {
   ChevronRight,
   Clock,
   DollarSign,
-  Loader2,
   RefreshCw,
   User,
-  Users,
+  Users
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -87,10 +86,20 @@ export function StaffTimeSelection({
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [qualifiedStaff, setQualifiedStaff] = useState<StaffMember[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<PublicBookingError | Error | null>(null);
   const [nextAvailableDate, setNextAvailableDate] = useState<string | null>(
     null
   );
+  const [alternativeSlots, setAlternativeSlots] = useState<TimeSlot[]>([]);
+
+  // Network resilience hook
+  const { resilientFetch, networkState, getNetworkErrorMessage } = useNetworkResilience({
+    onConnectionChange: (isOnline) => {
+      if (isOnline && error) {
+        fetchAvailableSlots();
+      }
+    },
+  });
 
   // Calendar navigation state
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
@@ -141,21 +150,18 @@ export function StaffTimeSelection({
 
     try {
       const serviceIds = selectedServices.map(s => s.id);
-      const response = await fetch(
-        `/api/public/booking/${businessId}/staff?serviceIds=${serviceIds.join(',')}`
+      const data = await resilientFetch(
+        `/api/public/booking/${businessId}/staff?serviceIds=${serviceIds.join(',')}`,
+        {},
+        `staff-${businessId}-${serviceIds.join('-')}`
       );
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch qualified staff');
-      }
-
-      const data = await response.json();
       setQualifiedStaff(data.staff || []);
     } catch (_err) {
       // Error fetching qualified staff - set empty array
       setQualifiedStaff([]);
     }
-  }, [businessId, selectedServices]);
+  }, [businessId, selectedServices, resilientFetch]);
 
   // Fetch available time slots
   const fetchAvailableSlots = useCallback(async () => {
@@ -163,6 +169,7 @@ export function StaffTimeSelection({
 
     setLoading(true);
     setError(null);
+    setAlternativeSlots([]);
 
     try {
       const serviceIds = selectedServices.map(s => s.id);
@@ -181,28 +188,42 @@ export function StaffTimeSelection({
         params.append('staffId', selectedStaffId);
       }
 
-      const response = await fetch(
-        `/api/public/booking/${businessId}/availability?${params}`
+      const data: AvailabilityResponse = await resilientFetch(
+        `/api/public/booking/${businessId}/availability?${params}`,
+        {},
+        `availability-${businessId}-${selectedDate.toDateString()}-${serviceIds.join('-')}`
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error?.userMessage || 'Failed to fetch availability'
-        );
-      }
-
-      const data: AvailabilityResponse = await response.json();
       setAvailableSlots(data.availableSlots);
       setNextAvailableDate(data.nextAvailableDate || null);
       setLastUpdateTime(new Date());
+
+      // If no slots available, fetch alternatives
+      if (data.availableSlots.length === 0) {
+        try {
+          const alternatives = await AlternativeSlotsService.findAlternativeSlots({
+            businessId,
+            serviceIds,
+            originalStartTime: selectedDate,
+            staffId: selectedStaffId !== 'any' ? selectedStaffId : undefined,
+            maxAlternatives: 6,
+          });
+          setAlternativeSlots(alternatives.alternatives);
+        } catch (altError) {
+          console.error('Failed to fetch alternative slots:', altError);
+        }
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load slots');
+      if (err instanceof PublicBookingError) {
+        setError(err);
+      } else {
+        setError(new Error(getNetworkErrorMessage(err as Error)));
+      }
       setAvailableSlots([]);
     } finally {
       setLoading(false);
     }
-  }, [businessId, selectedServices, selectedDate, selectedStaffId]);
+  }, [businessId, selectedServices, selectedDate, selectedStaffId, resilientFetch, getNetworkErrorMessage]);
 
   // Initial data fetch
   useEffect(() => {
@@ -314,6 +335,7 @@ export function StaffTimeSelection({
 
   return (
     <div className="space-y-6">
+      <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-[#0B2B33]">
@@ -391,11 +413,10 @@ export function StaffTimeSelection({
                     <Button
                       variant={isDateSelected(date) ? 'default' : 'ghost'}
                       size="sm"
-                      className={`h-full w-full p-0 text-sm ${
-                        !isDateSelectable(date)
-                          ? 'cursor-not-allowed opacity-50'
-                          : ''
-                      }`}
+                      className={`h-full w-full p-0 text-sm ${!isDateSelectable(date)
+                        ? 'cursor-not-allowed opacity-50'
+                        : ''
+                        }`}
                       onClick={() => handleDateSelect(date)}
                       disabled={!isDateSelectable(date)}
                     >
@@ -476,26 +497,30 @@ export function StaffTimeSelection({
 
             {/* Loading State */}
             {loading && (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />
-                <span className="ml-2 text-neutral-500">
-                  Loading available times...
-                </span>
+              <div className="py-4">
+                <BookingLoadingState
+                  type="availability"
+                  message={networkState.isSlowConnection ? "Checking availability (slow connection)..." : "Finding available time slots..."}
+                  estimatedTime={networkState.isSlowConnection ? 8 : 3}
+                />
               </div>
             )}
 
             {/* Error State */}
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-center">
-                <p className="text-red-600">{error}</p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleRefresh}
-                  className="mt-2"
-                >
-                  Try Again
-                </Button>
+              <div className="py-4">
+                <BookingErrorHandler
+                  error={error}
+                  onRetry={handleRefresh}
+                  onClearError={() => setError(null)}
+                  alternativeSlots={alternativeSlots}
+                  onAlternativeSlotSelect={(slot) => {
+                    setSelectedDate(slot.startTime);
+                    setSelectedStaffId(slot.staffId);
+                    handleSlotSelect(slot);
+                  }}
+                  showAlternatives={true}
+                />
               </div>
             )}
 
@@ -544,9 +569,9 @@ export function StaffTimeSelection({
                               key={index}
                               variant={
                                 selectedSlot &&
-                                selectedSlot.startTime.getTime() ===
+                                  selectedSlot.startTime.getTime() ===
                                   slot.startTime.getTime() &&
-                                selectedSlot.staffId === slot.staffId
+                                  selectedSlot.staffId === slot.staffId
                                   ? 'default'
                                   : 'outline'
                               }
