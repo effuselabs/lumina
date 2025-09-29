@@ -193,6 +193,8 @@ model Staff {
   userId     String @unique
 
   // Staff Information
+  firstName   String
+  lastName    String
   displayName String
   title       String?
   bio         String?

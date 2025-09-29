@@ -1734,3 +1734,114 @@ Use this template for new architectural decisions:
 - Requires client-side calculation logic and state management
 
 **Related Issues**: [LUM-98](https://linear.app/scootr-ca/issue/LUM-98) - Public Booking Interface
+
+---
+
+## ADR-038: Custom Calendar Component Architecture for Public Booking
+
+**Date**: September 28, 2025  
+**Status**: Accepted  
+**Context**: Public booking interface required calendar component for date and time selection with mobile optimization, real-time availability integration, and touch-friendly interactions.
+
+**Decision**: Implement custom calendar component with month navigation, date selection validation, and mobile-first responsive design rather than using third-party calendar libraries.
+
+**Rationale**:
+
+- Full control over mobile user experience and touch interactions
+- Seamless integration with real-time availability service
+- Consistent design system compliance and branding
+- Optimized performance for booking-specific use cases
+- Reduced bundle size compared to feature-rich calendar libraries
+
+**Alternatives Considered**:
+
+1. **React Calendar Library**: Use established calendar component library
+   - Rejected: Limited customization for mobile booking experience and design system integration
+2. **Date Picker Only**: Simple date picker without calendar interface
+   - Rejected: Poor user experience for appointment booking workflow
+3. **Third-party Booking Widget**: External booking calendar solution
+   - Rejected: Vendor lock-in and limited integration with existing systems
+
+**Impact**:
+
+- Enhanced mobile booking experience with touch-optimized calendar navigation
+- Seamless integration with real-time availability and staff selection
+- Consistent design system compliance and professional appearance
+- Foundation for advanced calendar features and booking optimizations
+- Improved performance and reduced external dependencies
+
+**Related Issues**: [LUM-98](https://linear.app/scootr-ca/issue/LUM-98) - Public Booking Interface
+
+---
+
+## ADR-039: Real-Time Availability Integration Pattern for Public Booking
+
+**Date**: September 28, 2025  
+**Status**: Accepted  
+**Context**: Public booking interface required real-time availability checking with automatic updates, conflict detection, and alternative date suggestions to ensure booking success.
+
+**Decision**: Implement automatic availability refresh every 30 seconds with manual refresh capability and real-time conflict detection integrated with existing availability service.
+
+**Rationale**:
+
+- Ensures users always see current availability and prevents booking conflicts
+- 30-second refresh interval balances freshness with performance and server load
+- Manual refresh provides user control for immediate updates
+- Integration with existing availability service maintains architectural consistency
+- Real-time validation prevents double-booking and improves success rates
+
+**Alternatives Considered**:
+
+1. **WebSocket Real-Time Updates**: Live updates via WebSocket connection
+   - Rejected: Increased complexity and server resource requirements for public interface
+2. **Static Availability**: Load availability once without updates
+   - Rejected: High risk of booking conflicts and poor user experience
+3. **Longer Refresh Intervals**: 60+ second refresh intervals
+   - Rejected: Too slow for competitive booking scenarios
+
+**Impact**:
+
+- Improved booking success rate through real-time conflict detection
+- Enhanced user experience with current availability information
+- Reduced booking conflicts and customer service issues
+- Foundation for advanced availability features and optimizations
+- Balanced performance with real-time functionality
+
+**Related Issues**: [LUM-98](https://linear.app/scootr-ca/issue/LUM-98) - Public Booking Interface, [LUM-96](https://linear.app/scootr-ca/issue/LUM-96) - Calendar Infrastructure
+
+---
+
+## ADR-040: Staff Selection Architecture with Availability Filtering
+
+**Date**: September 28, 2025  
+**Status**: Accepted  
+**Context**: Public booking interface required staff selection functionality with service-based qualification filtering and availability integration to optimize booking success.
+
+**Decision**: Implement staff selection with "any available staff" option and specific staff selection, integrated with service qualification filtering and real-time availability updates.
+
+**Rationale**:
+
+- "Any available staff" option maximizes booking availability and success rates
+- Specific staff selection provides user choice and preference accommodation
+- Service-based qualification ensures only qualified staff are presented
+- Real-time availability integration prevents conflicts and improves experience
+- Dedicated API endpoint provides efficient staff data retrieval
+
+**Alternatives Considered**:
+
+1. **Staff Selection Only**: Require users to select specific staff member
+   - Rejected: Reduces booking availability and increases abandonment
+2. **Random Staff Assignment**: Automatically assign staff without user input
+   - Rejected: Poor user experience and lack of preference accommodation
+3. **Complex Staff Profiles**: Detailed staff information and booking history
+   - Rejected: Unnecessary complexity for public booking interface
+
+**Impact**:
+
+- Improved booking success rate through flexible staff selection
+- Enhanced user experience with clear staff options and availability
+- Efficient staff qualification filtering based on selected services
+- Foundation for advanced staff features and booking optimizations
+- Proper separation of concerns with dedicated API endpoint
+
+**Related Issues**: [LUM-98](https://linear.app/scootr-ca/issue/LUM-98) - Public Booking Interface

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { BookingContainer } from './booking-container';
 import { BookingStep } from './booking-progress';
 import { ServiceSelection } from './service-selection';
+import { StaffTimeSelection, type TimeSlot } from './staff-time-selection';
 
 interface BookingInterfaceProps {
   businessId: string;
@@ -36,6 +37,9 @@ const BOOKING_STEPS: BookingStep[] = [
 export function BookingInterface({ businessId }: BookingInterfaceProps) {
   const [currentStep, setCurrentStep] = useState('services');
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<
+    TimeSlot | undefined
+  >();
 
   const handleNext = () => {
     const currentIndex = BOOKING_STEPS.findIndex(
@@ -71,21 +75,14 @@ export function BookingInterface({ businessId }: BookingInterfaceProps) {
 
       case 'datetime':
         return (
-          <div className="py-12 text-center">
-            <h2 className="mb-4 text-2xl font-bold text-gray-900">
-              Choose Date & Time
-            </h2>
-            <p className="mb-8 text-gray-600">
-              This step will be implemented in task 5: Staff and Time Selection
-              Component
-            </p>
-            <div className="mx-auto max-w-md rounded-lg border border-blue-200 bg-blue-50 p-4">
-              <p className="text-sm text-blue-800">
-                The calendar interface will show available time slots with staff
-                selection and real-time availability updates.
-              </p>
-            </div>
-          </div>
+          <StaffTimeSelection
+            businessId={businessId}
+            selectedServices={selectedServices}
+            onSlotSelect={setSelectedTimeSlot}
+            selectedSlot={selectedTimeSlot}
+            onNext={selectedTimeSlot ? handleNext : undefined}
+            onBack={handleBack}
+          />
         );
 
       case 'details':
