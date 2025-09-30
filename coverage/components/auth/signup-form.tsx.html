@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/68</span>
+                <span class='fraction'>0/58</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/35</span>
+                <span class='fraction'>0/48</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/65</span>
+                <span class='fraction'>0/55</span>
             </div>
         
             
@@ -405,19 +405,7 @@
 <a name='L340'></a><a href='#L340'>340</a>
 <a name='L341'></a><a href='#L341'>341</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -428,7 +416,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -538,8 +538,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -559,6 +558,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -745,17 +745,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use client';
 &nbsp;
-import { Alert, AlertDescription } from <span class="cstat-no" title="statement not covered" >'@/components/ui/alert';</span>
-import { Button } from <span class="cstat-no" title="statement not covered" >'@/components/ui/button';</span>
-import { ClientSelect } from <span class="cstat-no" title="statement not covered" >'@/components/ui/client-select';</span>
-import { Input } from <span class="cstat-no" title="statement not covered" >'@/components/ui/input';</span>
-import { Label } from <span class="cstat-no" title="statement not covered" >'@/components/ui/label';</span>
-import { SelectItem } from <span class="cstat-no" title="statement not covered" >'@/components/ui/select';</span>
-import { CheckCircle, Eye, EyeOff, Loader2 } from <span class="cstat-no" title="statement not covered" >'lucide-react';</span>
-import { signIn } from <span class="cstat-no" title="statement not covered" >'next-auth/react';</span>
-import { useRouter } from <span class="cstat-no" title="statement not covered" >'next/navigation';</span>
-import { useState } from <span class="cstat-no" title="statement not covered" >'react';</span>
-import { z } from <span class="cstat-no" title="statement not covered" >'zod';</span>
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { ClientSelect } from '@/components/ui/client-select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { SelectItem } from '@/components/ui/select';
+import { CheckCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { z } from 'zod';
 &nbsp;
 const signUpSchema = <span class="cstat-no" title="statement not covered" >z.object({</span>
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -768,7 +768,7 @@ const signUpSchema = <span class="cstat-no" title="statement not covered" >z.obj
   role: z.enum(['OWNER', 'STAFF']).default('OWNER'),
 });
 &nbsp;
-export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >SignUpForm() {</span></span>
+export function <span class="fstat-no" title="function not covered" >SignUpForm(</span>) {
   const router = <span class="cstat-no" title="statement not covered" >useRouter();</span>
 &nbsp;
   const [formData, setFormData] = <span class="cstat-no" title="statement not covered" >useState({</span>
@@ -784,7 +784,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
   const [generalError, setGeneralError] = <span class="cstat-no" title="statement not covered" >useState('');</span>
   const [success, setSuccess] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
 &nbsp;
-  const handleSubmit = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async (e</span>: React.FormEvent) =&gt; {</span>
+  const handleSubmit = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (e: React.FormEvent) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    e.preventDefault();</span>
 <span class="cstat-no" title="statement not covered" >    setIsLoading(true);</span>
 <span class="cstat-no" title="statement not covered" >    setErrors({});</span>
@@ -805,7 +805,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
 &nbsp;
       const result = <span class="cstat-no" title="statement not covered" >await response.json();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (!result.success) {</span>
+<span class="cstat-no" title="statement not covered" >      if (!result.success) {</span>
 <span class="cstat-no" title="statement not covered" >        if (result.errors) {</span>
 <span class="cstat-no" title="statement not covered" >          setErrors(result.errors);</span>
         } else {
@@ -818,7 +818,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
 <span class="cstat-no" title="statement not covered" >      setSuccess(true);</span>
 &nbsp;
       // Auto sign in after successful registration
-<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >async () =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {</span>
         const signInResult = <span class="cstat-no" title="statement not covered" >await signIn('credentials', {</span>
           email: validatedData.email,
           password: validatedData.password,
@@ -838,8 +838,8 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      if (error instanceof z.ZodError) {</span>
         const fieldErrors: Record&lt;string, string&gt; = <span class="cstat-no" title="statement not covered" >{};</span>
-<span class="cstat-no" title="statement not covered" >        error.errors.forEach(<span class="fstat-no" title="function not covered" >err =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >          <span class="missing-if-branch" title="if path not taken" >I</span>if (err.path[0]) {</span>
+<span class="cstat-no" title="statement not covered" >        error.errors.forEach(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >          if (err.path[0]) {</span>
 <span class="cstat-no" title="statement not covered" >            fieldErrors[err.path[0] as string] = err.message;</span>
           }
         });
@@ -852,7 +852,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
     }
   };
 &nbsp;
-  const handleGoogleSignIn = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async () =&gt; {</span></span>
+  const handleGoogleSignIn = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setIsLoading(true);</span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
 <span class="cstat-no" title="statement not covered" >      await signIn('google', { callbackUrl: '/onboarding' });</span>
@@ -864,21 +864,21 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
 &nbsp;
   const handleInputChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
     const { name, value } = <span class="cstat-no" title="statement not covered" >e.target;</span>
-<span class="cstat-no" title="statement not covered" >    setFormData(<span class="fstat-no" title="function not covered" >prev =&gt; (<span class="cstat-no" title="statement not covered" >{</span> ...prev, [name]: value }));</span></span>
+<span class="cstat-no" title="statement not covered" >    setFormData(<span class="fstat-no" title="function not covered" >pr</span>ev =&gt; (<span class="cstat-no" title="statement not covered" >{ ...prev, [name]: value })</span>);</span>
     // Clear error when user starts typing
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (errors[name]) {</span>
-<span class="cstat-no" title="statement not covered" >      setErrors(<span class="fstat-no" title="function not covered" >prev =&gt; (<span class="cstat-no" title="statement not covered" >{</span> ...prev, [name]: '' }));</span></span>
+<span class="cstat-no" title="statement not covered" >    if (errors[name]) {</span>
+<span class="cstat-no" title="statement not covered" >      setErrors(<span class="fstat-no" title="function not covered" >pr</span>ev =&gt; (<span class="cstat-no" title="statement not covered" >{ ...prev, [name]: '' })</span>);</span>
     }
   };
 &nbsp;
   const handleRoleChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(v</span>alue: string) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (value === 'OWNER' || value === 'STAFF') {</span>
-<span class="cstat-no" title="statement not covered" >      setFormData(<span class="fstat-no" title="function not covered" >prev =&gt; (<span class="cstat-no" title="statement not covered" >{</span> ...prev, role: value }));</span></span>
+<span class="cstat-no" title="statement not covered" >    if (value === 'OWNER' || value === 'STAFF') {</span>
+<span class="cstat-no" title="statement not covered" >      setFormData(<span class="fstat-no" title="function not covered" >pr</span>ev =&gt; (<span class="cstat-no" title="statement not covered" >{ ...prev, role: value })</span>);</span>
     }
   };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (success) {</span>
-    return (
+<span class="cstat-no" title="statement not covered" >  if (success) {</span>
+<span class="cstat-no" title="statement not covered" >    return (</span>
       &lt;div className="w-full max-w-md space-y-6 text-center"&gt;
         &lt;div className="flex justify-center"&gt;
           &lt;CheckCircle className="h-16 w-16 text-green-500" /&gt;
@@ -898,7 +898,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
     );
   }
 &nbsp;
-  return (
+<span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;div className="w-full max-w-md space-y-6"&gt;
       &lt;div className="text-center"&gt;
         &lt;h1 className="text-2xl font-bold text-neutral-off-black"&gt;
@@ -909,7 +909,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
         &lt;/p&gt;
       &lt;/div&gt;
 &nbsp;
-      {<span class="branch-0 cbranch-no" title="branch not covered" >generalError &amp;&amp; (</span>
+      {generalError &amp;&amp; (
         &lt;Alert variant="destructive"&gt;
           &lt;AlertDescription&gt;{generalError}&lt;/AlertDescription&gt;
         &lt;/Alert&gt;
@@ -941,7 +941,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             disabled={isLoading}
             className={errors.name ? 'border-red-500' : ''}
           /&gt;
-          {<span class="branch-0 cbranch-no" title="branch not covered" >errors.name </span>&amp;&amp; &lt;p className="text-sm text-red-500"&gt;{errors.name}&lt;/p&gt;}
+          {errors.name &amp;&amp; &lt;p className="text-sm text-red-500"&gt;{errors.name}&lt;/p&gt;}
         &lt;/div&gt;
 &nbsp;
         &lt;div className="space-y-2"&gt;
@@ -956,12 +956,12 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             disabled={isLoading}
             className={errors.email ? 'border-red-500' : ''}
           /&gt;
-          {<span class="branch-0 cbranch-no" title="branch not covered" >errors.email </span>&amp;&amp; (
+          {errors.email &amp;&amp; (
             &lt;p className="text-sm text-red-500"&gt;{errors.email}&lt;/p&gt;
           )}
         &lt;/div&gt;
 &nbsp;
-        {<span class="branch-0 cbranch-no" title="branch not covered" >formData.role === 'OWNER' &amp;&amp; (</span>
+        {formData.role === 'OWNER' &amp;&amp; (
           &lt;div className="space-y-2"&gt;
             &lt;Label htmlFor="businessName"&gt;Business Name&lt;/Label&gt;
             &lt;Input
@@ -974,7 +974,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
               disabled={isLoading}
               className={errors.businessName ? 'border-red-500' : ''}
             /&gt;
-            {<span class="branch-0 cbranch-no" title="branch not covered" >errors.businessName </span>&amp;&amp; (
+            {errors.businessName &amp;&amp; (
               &lt;p className="text-sm text-red-500"&gt;{errors.businessName}&lt;/p&gt;
             )}
           &lt;/div&gt;
@@ -995,14 +995,14 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             /&gt;
             &lt;button
               type="button"
-              onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etShowPassword(!showPassword)}</span>
+              onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >setShowPassword(!showPassword)}</span>
               className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-medium-grey hover:text-neutral-off-black"
               disabled={isLoading}
             &gt;
-              {showPassword ? <span class="branch-0 cbranch-no" title="branch not covered" >&lt;EyeOff size={16} /&gt; : &lt;E</span>ye size={16} /&gt;}
+              {showPassword ? &lt;EyeOff size={16} /&gt; : &lt;Eye size={16} /&gt;}
             &lt;/button&gt;
           &lt;/div&gt;
-          {<span class="branch-0 cbranch-no" title="branch not covered" >errors.password </span>&amp;&amp; (
+          {errors.password &amp;&amp; (
             &lt;p className="text-sm text-red-500"&gt;{errors.password}&lt;/p&gt;
           )}
           &lt;p className="text-xs text-neutral-medium-grey"&gt;
@@ -1045,7 +1045,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
         disabled={isLoading}
       &gt;
         {isLoading ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >          &lt;Loader2 className="mr-2 h-4 w-4 animate-spin" /&gt;</span>
+          &lt;Loader2 className="mr-2 h-4 w-4 animate-spin" /&gt;
         ) : (
           &lt;svg className="mr-2 h-4 w-4" viewBox="0 0 24 24"&gt;
             &lt;path
@@ -1090,7 +1090,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-29T19:19:09.737Z
+                at 2025-09-30T13:23:28.477Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

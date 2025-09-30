@@ -13,6 +13,7 @@ const customJestConfig = {
 
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFiles: ['<rootDir>/test-utils/env-setup.js'],
 
   // Module name mapping for absolute imports
   moduleNameMapper: {
@@ -22,6 +23,9 @@ const customJestConfig = {
     '^@/app/(.*)$': '<rootDir>/app/$1',
     '^@/types/(.*)$': '<rootDir>/types/$1',
     '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
+    '^@/factories$': '<rootDir>/factories',
+    '^@/factories/(.*)$': '<rootDir>/factories/$1',
+    '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
   },
 
   // Test file patterns
@@ -53,7 +57,9 @@ const customJestConfig = {
     },
     {
       displayName: 'accessibility',
-      testMatch: ['<rootDir>/__tests__/accessibility/**/*.test.{js,jsx,ts,tsx}'],
+      testMatch: [
+        '<rootDir>/__tests__/accessibility/**/*.test.{js,jsx,ts,tsx}',
+      ],
       testTimeout: 10000,
     },
   ],
@@ -71,13 +77,17 @@ const customJestConfig = {
 
   // Transform configuration
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+    '^.+\\.(js|jsx|ts|tsx)$': [
+      'babel-jest',
+      {
+        presets: ['next/babel'],
+        plugins: [],
+      },
+    ],
   },
 
   // Transform ignore patterns - allow transformation of ES modules
-  transformIgnorePatterns: [
-    'node_modules/(?!(@faker-js/faker)/)',
-  ],
+  transformIgnorePatterns: ['node_modules/(?!(@faker-js/faker)/)'],
 
   // Coverage configuration
   collectCoverage: true,
@@ -145,8 +155,7 @@ const customJestConfig = {
   globalSetup: '<rootDir>/test-utils/global-setup.js',
   globalTeardown: '<rootDir>/test-utils/global-teardown.js',
 
-  // Environment variables for testing
-  setupFiles: ['<rootDir>/test-utils/env-setup.js'],
+  // Environment variables for testing (removed duplicate setupFiles)
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

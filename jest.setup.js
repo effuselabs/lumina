@@ -1,4 +1,8 @@
-import '@testing-library/jest-dom';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('@testing-library/jest-dom');
+
+// eslint-disable-next-line no-console
+console.log('Jest setup file loaded!');
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -23,7 +27,7 @@ jest.mock('next/navigation', () => ({
 // Mock Next.js image component
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props) => {
+  default: props => {
     // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     return <img {...props} />;
   },

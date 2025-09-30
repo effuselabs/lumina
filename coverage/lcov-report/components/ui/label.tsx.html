@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
@@ -86,44 +86,44 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as React from <span class="cstat-no" title="statement not covered" >'react';</span>
-import * as LabelPrimitive from <span class="cstat-no" title="statement not covered" >'@radix-ui/react-label';</span>
-import { type VariantProps, cva } from <span class="cstat-no" title="statement not covered" >'class-variance-authority';</span>
-import { cn } from <span class="cstat-no" title="statement not covered" >'@/lib/utils';</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as React from 'react';
+import * as LabelPrimitive from '@radix-ui/react-label';
+import { type VariantProps, cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 &nbsp;
 const labelVariants = <span class="cstat-no" title="statement not covered" >cva(</span>
   'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 );
 &nbsp;
-const Label = React.forwardRef&lt;
+const Label = <span class="cstat-no" title="statement not covered" >React.forwardRef&lt;</span>
   React.ElementRef&lt;typeof LabelPrimitive.Root&gt;,
   React.ComponentPropsWithoutRef&lt;typeof LabelPrimitive.Root&gt; &amp;
     VariantProps&lt;typeof labelVariants&gt;
-&gt;(({ className, ...props }, ref) =&gt; (
-  &lt;LabelPrimitive.Root
+&gt;(<span class="fstat-no" title="function not covered" >({</span> className, ...props }, ref) =&gt; (
+<span class="cstat-no" title="statement not covered" >  &lt;LabelPrimitive.Root</span>
     ref={ref}
     className={cn(labelVariants(), className)}
     {...props}
@@ -131,7 +131,7 @@ const Label = React.forwardRef&lt;
 ));
 <span class="cstat-no" title="statement not covered" >Label.displayName = LabelPrimitive.Root.displayName;</span>
 &nbsp;
-export { <span class="cstat-no" title="statement not covered" >Label };</span>
+export { Label };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -139,7 +139,7 @@ export { <span class="cstat-no" title="statement not covered" >Label };</span>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-29T19:19:09.335Z
+                at 2025-09-30T13:23:27.735Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
