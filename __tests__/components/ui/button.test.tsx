@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { User } from 'lucide-react';
+import { Button } from '../../../components/ui/button';
 
 describe('Button Component', () => {
   it('renders with default variant and size', () => {
@@ -11,11 +11,22 @@ describe('Button Component', () => {
   });
 
   it('renders all variants correctly', () => {
-    const variants = ['primary', 'secondary', 'outline', 'ghost', 'destructive', 'link'] as const;
+    const variants = [
+      'primary',
+      'secondary',
+      'outline',
+      'ghost',
+      'destructive',
+      'link',
+    ] as const;
 
-    variants.forEach((variant) => {
-      const { unmount } = render(<Button variant={variant}>{variant} button</Button>);
-      const button = screen.getByRole('button', { name: new RegExp(`${variant} button`, 'i') });
+    variants.forEach(variant => {
+      const { unmount } = render(
+        <Button variant={variant}>{variant} button</Button>
+      );
+      const button = screen.getByRole('button', {
+        name: new RegExp(`${variant} button`, 'i'),
+      });
       expect(button).toBeInTheDocument();
       unmount();
     });
@@ -24,9 +35,11 @@ describe('Button Component', () => {
   it('renders all sizes correctly', () => {
     const sizes = ['sm', 'default', 'lg', 'xl', 'icon'] as const;
 
-    sizes.forEach((size) => {
+    sizes.forEach(size => {
       const { unmount } = render(<Button size={size}>{size} button</Button>);
-      const button = screen.getByRole('button', { name: new RegExp(`${size} button`, 'i') });
+      const button = screen.getByRole('button', {
+        name: new RegExp(`${size} button`, 'i'),
+      });
       expect(button).toBeInTheDocument();
 
       if (size === 'sm') expect(button).toHaveClass('h-8');
@@ -47,7 +60,9 @@ describe('Button Component', () => {
     expect(button).toHaveAttribute('aria-busy', 'true');
     expect(screen.getByText('Loading button')).toHaveClass('opacity-70');
     // Check for loading announcement
-    expect(screen.getByText('Loading', { selector: '.sr-only' })).toBeInTheDocument();
+    expect(
+      screen.getByText('Loading', { selector: '.sr-only' })
+    ).toBeInTheDocument();
   });
 
   it('renders with icon correctly', () => {
@@ -75,7 +90,11 @@ describe('Button Component', () => {
 
   it('does not trigger click when loading', () => {
     const handleClick = jest.fn();
-    render(<Button loading onClick={handleClick}>Loading</Button>);
+    render(
+      <Button loading onClick={handleClick}>
+        Loading
+      </Button>
+    );
 
     const button = screen.getByRole('button');
     fireEvent.click(button);
