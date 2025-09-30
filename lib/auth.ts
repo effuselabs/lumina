@@ -247,6 +247,16 @@ export async function verifyInviteToken(token: string) {
 }
 
 // Accept staff invitation and create user/staff profile
+interface StaffInvitationData {
+  displayName: string;
+  title: string;
+  employmentType: string;
+  commissionRate: number;
+  chairRentalAmount?: number;
+  chairRentalPeriod?: string;
+  baseSalary?: number;
+}
+
 export async function acceptStaffInvitation(
   token: string,
   userData: {
@@ -255,9 +265,9 @@ export async function acceptStaffInvitation(
   }
 ) {
   const invitation = await verifyInviteToken(token);
-  const staffData = invitation.staffData as any;
+  const staffData = invitation.staffData as StaffInvitationData;
 
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async tx => {
     // Create or update user
     let user = await tx.user.findUnique({
       where: { email: invitation.email },

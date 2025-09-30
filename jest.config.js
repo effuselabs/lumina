@@ -13,6 +13,7 @@ const customJestConfig = {
 
   // Setup files
   setupFiles: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
 
   // Module name mapping for absolute imports
   moduleNameMapper: {
@@ -25,6 +26,10 @@ const customJestConfig = {
     '^@/factories$': '<rootDir>/factories',
     '^@/factories/(.*)$': '<rootDir>/factories/$1',
     '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
+    // CSS and static asset mocking
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+      'jest-transform-stub',
   },
 
   // Test file patterns
@@ -37,6 +42,23 @@ const customJestConfig = {
   projects: [
     {
       displayName: 'unit',
+      testEnvironment: 'jsdom',
+      setupFiles: ['<rootDir>/jest.setup.ts'],
+      setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/$1',
+        '^@/components/(.*)$': '<rootDir>/components/$1',
+        '^@/lib/(.*)$': '<rootDir>/lib/$1',
+        '^@/app/(.*)$': '<rootDir>/app/$1',
+        '^@/types/(.*)$': '<rootDir>/types/$1',
+        '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
+        '^@/factories$': '<rootDir>/factories',
+        '^@/factories/(.*)$': '<rootDir>/factories/$1',
+        '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+          'jest-transform-stub',
+      },
       testMatch: ['<rootDir>/**/__tests__/**/*.test.{js,jsx,ts,tsx}'],
       testPathIgnorePatterns: [
         '<rootDir>/__tests__/integration/',
@@ -46,16 +68,67 @@ const customJestConfig = {
     },
     {
       displayName: 'integration',
+      testEnvironment: 'jsdom',
+      setupFiles: ['<rootDir>/jest.setup.ts'],
+      setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/$1',
+        '^@/components/(.*)$': '<rootDir>/components/$1',
+        '^@/lib/(.*)$': '<rootDir>/lib/$1',
+        '^@/app/(.*)$': '<rootDir>/app/$1',
+        '^@/types/(.*)$': '<rootDir>/types/$1',
+        '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
+        '^@/factories$': '<rootDir>/factories',
+        '^@/factories/(.*)$': '<rootDir>/factories/$1',
+        '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+          'jest-transform-stub',
+      },
       testMatch: ['<rootDir>/__tests__/integration/**/*.test.{js,jsx,ts,tsx}'],
       testTimeout: 15000,
     },
     {
       displayName: 'performance',
+      testEnvironment: 'jsdom',
+      setupFiles: ['<rootDir>/jest.setup.ts'],
+      setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/$1',
+        '^@/components/(.*)$': '<rootDir>/components/$1',
+        '^@/lib/(.*)$': '<rootDir>/lib/$1',
+        '^@/app/(.*)$': '<rootDir>/app/$1',
+        '^@/types/(.*)$': '<rootDir>/types/$1',
+        '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
+        '^@/factories$': '<rootDir>/factories',
+        '^@/factories/(.*)$': '<rootDir>/factories/$1',
+        '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+          'jest-transform-stub',
+      },
       testMatch: ['<rootDir>/__tests__/performance/**/*.test.{js,jsx,ts,tsx}'],
       testTimeout: 60000,
     },
     {
       displayName: 'accessibility',
+      testEnvironment: 'jsdom',
+      setupFiles: ['<rootDir>/jest.setup.ts'],
+      setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/$1',
+        '^@/components/(.*)$': '<rootDir>/components/$1',
+        '^@/lib/(.*)$': '<rootDir>/lib/$1',
+        '^@/app/(.*)$': '<rootDir>/app/$1',
+        '^@/types/(.*)$': '<rootDir>/types/$1',
+        '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
+        '^@/factories$': '<rootDir>/factories',
+        '^@/factories/(.*)$': '<rootDir>/factories/$1',
+        '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+          'jest-transform-stub',
+      },
       testMatch: [
         '<rootDir>/__tests__/accessibility/**/*.test.{js,jsx,ts,tsx}',
       ],
@@ -158,4 +231,25 @@ const customJestConfig = {
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig);
+module.exports = async () => {
+  const nextJestConfig = await createJestConfig(customJestConfig)();
+
+  // Force our module name mapping to override Next.js defaults
+  return {
+    ...nextJestConfig,
+    moduleNameMapper: {
+      // Our custom mappings first
+      '^@/(.*)$': '<rootDir>/$1',
+      '^@/components/(.*)$': '<rootDir>/components/$1',
+      '^@/lib/(.*)$': '<rootDir>/lib/$1',
+      '^@/app/(.*)$': '<rootDir>/app/$1',
+      '^@/types/(.*)$': '<rootDir>/types/$1',
+      '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
+      '^@/factories$': '<rootDir>/factories',
+      '^@/factories/(.*)$': '<rootDir>/factories/$1',
+      '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
+      // Then Next.js defaults
+      ...nextJestConfig.moduleNameMapper,
+    },
+  };
+};

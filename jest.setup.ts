@@ -1,8 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('@testing-library/jest-dom');
-
 // Environment setup
-process.env.NODE_ENV = 'test';
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = 'test';
+}
 process.env.NEXTAUTH_SECRET = 'test-secret-key-for-testing';
 process.env.NEXTAUTH_URL = 'http://localhost:3000';
 process.env.DATABASE_URL =
@@ -56,13 +55,6 @@ jest.mock('next/link', () => ({
 // Mock NextAuth v5
 jest.mock('next-auth', () => ({
   default: jest.fn(),
-}));
-
-// Mock auth functions
-jest.mock('@/lib/auth', () => ({
-  auth: jest.fn(() => Promise.resolve(null)),
-  signIn: jest.fn(),
-  signOut: jest.fn(),
 }));
 
 // Mock Prisma client
@@ -143,6 +135,26 @@ Object.defineProperty(window, 'scrollTo', {
   value: jest.fn(),
 });
 
+// Mock performance API for component performance monitoring
+Object.defineProperty(global, 'performance', {
+  writable: true,
+  value: {
+    mark: jest.fn(),
+    measure: jest.fn(),
+    now: jest.fn(() => Date.now()),
+    getEntriesByName: jest.fn(() => []),
+    getEntriesByType: jest.fn(() => []),
+  },
+});
+
+// Also add to window object for browser-like environment
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'performance', {
+    writable: true,
+    value: global.performance,
+  });
+}
+
 // Mock localStorage
 const localStorageMock = {
   getItem: jest.fn(),
@@ -168,21 +180,14 @@ Object.defineProperty(window, 'sessionStorage', {
 // Console error suppression for known issues
 // eslint-disable-next-line no-console
 const originalError = console.error;
-beforeAll(() => {
-  // eslint-disable-next-line no-console
-  console.error = (...args: any[]) => {
-    if (
-      typeof args[0] === 'string' &&
-      (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
-        args[0].includes('Warning: An invalid form control'))
-    ) {
-      return;
-    }
-    originalError.call(console, ...args);
-  };
-});
-
-afterAll(() => {
-  // eslint-disable-next-line no-console
-  console.error = originalError;
-});
+// eslint-disable-next-line no-console
+console.error = (...args: any[]) => {
+  if (
+    typeof args[0] === 'string' &&
+    (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
+      args[0].includes('Warning: An invalid form control'))
+  ) {
+    return;
+  }
+  originalError.call(console, ...args);
+};

@@ -1995,3 +1995,178 @@ Use this template for new architectural decisions:
 - Foundation for advanced performance monitoring and optimization strategies
 
 **Related Issues**: Dashboard Appointment Management Testing Implementation
+
+---
+
+## ADR-022: Systematic Error Resolution Methodology
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Codebase had accumulated ~200+ TypeScript errors across 244 files, requiring systematic approach to resolve without breaking functionality.
+
+**Decision**: Implement 4-track systematic error resolution approach: Test Infrastructure, Jest Configuration, Utility Cleanup, and Build Configuration.
+
+**Rationale**:
+
+- Categorizing errors by type enables efficient batch resolution
+- Track-based organization improves execution focus and quality
+- Systematic approach prevents recurring issues through root cause analysis
+- Incremental validation ensures functionality preservation during fixes
+
+**Alternatives Considered**:
+
+1. **Ad-hoc error fixing**: Fix errors as encountered during development
+   - Rejected: Doesn't address systematic problems or prevent recurrence
+2. **Complete rewrite**: Start over with clean codebase
+   - Rejected: Loss of existing functionality and development time
+3. **Ignore errors**: Continue development with TypeScript errors
+   - Rejected: Poor developer experience and potential runtime issues
+
+**Impact**:
+
+- 90%+ error reduction achieved (from ~200+ to <20 errors)
+- Significantly improved developer experience and IDE support
+- Solid foundation for continued development with type safety
+- Established patterns for future technical debt resolution
+
+**Related Issues**: [LUM-117](https://linear.app/scootr-ca/issue/LUM-117) - Foundation: Comprehensive ESLint/TypeScript Error Resolution
+
+---
+
+## ADR-023: Jest Configuration with Module Name Mapping
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Component tests were failing due to path alias resolution issues in Jest environment, preventing reliable testing infrastructure.
+
+**Decision**: Implement comprehensive module name mapping in Jest configuration with project-specific mappings and separate DOM setup.
+
+**Rationale**:
+
+- Path aliases (`@/lib/*`, `@/components/*`) essential for maintainable imports
+- Jest requires explicit module name mapping to resolve TypeScript path aliases
+- Separate DOM setup prevents import conflicts and improves test reliability
+- Project-specific mappings ensure consistency across different test environments
+
+**Alternatives Considered**:
+
+1. **Remove path aliases**: Use relative imports throughout codebase
+   - Rejected: Poor maintainability and developer experience
+2. **Mock all problematic imports**: Create mocks for failing imports
+   - Rejected: Doesn't solve root cause and creates maintenance overhead
+3. **Use ts-jest path mapping**: Automatic path resolution from tsconfig.json
+   - Rejected: Incomplete resolution and additional complexity
+
+**Impact**:
+
+- Component tests now run reliably without configuration errors
+- All `@/` path aliases resolve correctly in test environment
+- Solid foundation for comprehensive test suite development
+- Improved developer experience with working test infrastructure
+
+**Related Issues**: [LUM-117](https://linear.app/scootr-ca/issue/LUM-117) - Jest configuration fixes
+
+---
+
+## ADR-024: Prisma-Generated Type Consistency
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Type mismatches between custom type definitions and Prisma-generated types were causing errors and inconsistencies.
+
+**Decision**: Use Prisma-generated types consistently across application, importing from `@prisma/client` rather than creating duplicate custom types.
+
+**Rationale**:
+
+- Prisma generates accurate types matching database schema
+- Eliminates type mismatches and maintains consistency with data layer
+- Reduces maintenance overhead of duplicate type definitions
+- Ensures type safety between database operations and application logic
+
+**Alternatives Considered**:
+
+1. **Custom type definitions**: Maintain separate application types
+   - Rejected: Creates inconsistencies and maintenance overhead
+2. **Type mapping layer**: Convert between Prisma and application types
+   - Rejected: Unnecessary complexity and potential for errors
+3. **Mixed approach**: Use Prisma types in some places, custom in others
+   - Rejected: Leads to inconsistency and confusion
+
+**Impact**:
+
+- Eliminated type mismatches between database and application layers
+- Improved type safety and consistency across entire application
+- Reduced maintenance overhead for type definitions
+- Better integration between Prisma ORM and TypeScript application
+
+**Related Issues**: [LUM-117](https://linear.app/scootr-ca/issue/LUM-117) - Type consistency improvements
+
+---
+
+## ADR-025: Centralized Utility Function Type Safety
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Utility functions had inconsistent type definitions, unsafe `any` type casts, and import/export issues affecting code quality.
+
+**Decision**: Implement centralized type definitions for utility functions with proper interfaces and eliminate unsafe type casts.
+
+**Rationale**:
+
+- Proper type definitions improve code quality and developer experience
+- Centralized interfaces reduce duplication and ensure consistency
+- Eliminating `any` type casts improves type safety and catches errors
+- Clean import/export patterns improve maintainability
+
+**Alternatives Considered**:
+
+1. **Keep existing patterns**: Maintain current utility function organization
+   - Rejected: Poor type safety and maintenance issues
+2. **Gradual improvement**: Fix utility functions as needed
+   - Rejected: Doesn't address systematic issues comprehensively
+3. **External utility library**: Replace custom utilities with third-party library
+   - Rejected: Loss of customization and additional dependencies
+
+**Impact**:
+
+- All core utility functions now properly typed and maintainable
+- Eliminated unsafe `any` type casts improving type safety
+- Clean import/export patterns across utility modules
+- Solid foundation for future utility function development
+
+**Related Issues**: [LUM-117](https://linear.app/scootr-ca/issue/LUM-117) - Utility function cleanup
+
+---
+
+## ADR-026: Optimal TypeScript Build Configuration
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Build configuration required optimization to ensure proper module resolution, type checking, and development experience.
+
+**Decision**: Maintain strict TypeScript configuration with optimal Next.js integration and comprehensive path alias support.
+
+**Rationale**:
+
+- Strict TypeScript configuration catches errors early and improves code quality
+- Optimal Next.js integration ensures best performance and developer experience
+- Comprehensive path alias support improves code organization and maintainability
+- Proper module resolution prevents build and runtime issues
+
+**Alternatives Considered**:
+
+1. **Relaxed TypeScript configuration**: Reduce strictness for easier development
+   - Rejected: Poor code quality and potential runtime issues
+2. **Minimal configuration**: Basic TypeScript setup without optimization
+   - Rejected: Poor developer experience and build performance
+3. **Complex configuration**: Over-engineered build setup
+   - Rejected: Unnecessary complexity and maintenance overhead
+
+**Impact**:
+
+- Excellent developer experience with full IDE support and error reporting
+- Optimal build performance for development and production
+- All module resolution working correctly across all contexts
+- Solid foundation for scalable application development
+
+**Related Issues**: [LUM-117](https://linear.app/scootr-ca/issue/LUM-117) - Build configuration optimization
