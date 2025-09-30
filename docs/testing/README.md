@@ -11,6 +11,7 @@ Lumina follows a comprehensive testing approach covering all aspects of the mult
 ### **Core Testing Documentation**
 
 - [Design System Testing Overview](design-system-testing-overview.md) - Complete design system testing infrastructure
+- [Appointment Management Testing](appointment-management-testing.md) - Comprehensive appointment system testing
 - [Testing Commands Reference](testing-commands-reference.md) - All available testing commands
 - [Comprehensive Testing Guide](comprehensive-testing-guide.md) - Detailed testing strategies and configuration
 - [Visual Regression Testing](visual-regression-testing.md) - Visual consistency testing guide
@@ -89,6 +90,13 @@ Our testing approach prioritizes:
 - **Focus**: Complete design system quality assurance
 - **Commands**: `npm run test:design-system`, `npm run test:design-system:required`
 
+### **Appointment Management Testing**
+
+- **Framework**: Multi-category testing approach (unit, integration, performance, accessibility, E2E, mobile)
+- **Coverage**: Complete appointment management system with 95%+ code coverage
+- **Focus**: Calendar rendering, real-time updates, mobile interactions, accessibility compliance
+- **Commands**: `npm run test:appointments`, `npm run test:appointments:unit`, `npm run test:appointments:e2e`
+
 ## 🚀 **Quick Start**
 
 ### **Design System Testing (Recommended)**
@@ -99,6 +107,9 @@ npm run test:design-system
 
 # Run only required tests (faster)
 npm run test:design-system:required
+
+# Complete appointment management test suite
+npm run test:appointments
 
 # Setup visual baselines (first time only)
 npm run test:visual:setup
@@ -137,6 +148,9 @@ npm run test:accessibility
 
 # Complete design system test suite
 npm run test:design-system
+
+# Complete appointment management test suite
+npm run test:appointments
 ```
 
 ### **Development Testing**

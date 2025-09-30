@@ -180,6 +180,30 @@ npm run test:design-system:required
 npm run test:design-system --help
 ```
 
+### **Appointment Management Testing**
+
+```bash
+# Run complete appointment management test suite
+npm run test:appointments
+
+# Run specific appointment test categories
+npm run test:appointments:unit           # Unit tests for components
+npm run test:appointments:integration    # Integration workflow tests
+npm run test:appointments:performance    # Performance benchmarking
+npm run test:appointments:accessibility  # WCAG compliance tests
+npm run test:appointments:e2e           # End-to-end scenarios
+npm run test:appointments:mobile        # Mobile device testing
+
+# Development mode
+npm run test:appointments:watch         # Watch mode for unit tests
+npm run test:appointments:coverage      # Coverage reporting
+
+# Advanced options
+npm run test:appointments -- --suite unit --verbose
+npm run test:appointments -- --coverage --parallel
+npm run test:appointments -- --bail --maxWorkers=4
+```
+
 ### **Legacy Comprehensive Testing**
 
 ```bash
@@ -262,11 +286,14 @@ npx playwright test --trace=on
 npx playwright test e2e/design-system-visual-regression.spec.ts
 npx playwright test e2e/cross-browser-responsive.spec.ts
 npx playwright test e2e/accessibility-compliance.spec.ts
+npx playwright test e2e/appointment-management.spec.ts
+npx playwright test e2e/mobile-appointment-management.spec.ts
 
 # Run tests matching pattern
 npx playwright test --grep "visual regression"
 npx playwright test --grep "accessibility"
 npx playwright test --grep "responsive"
+npx playwright test --grep "appointment"
 ```
 
 ### **Jest Commands**
@@ -276,10 +303,15 @@ npx playwright test --grep "responsive"
 npx jest __tests__/components/
 npx jest __tests__/hooks/
 npx jest __tests__/integration/
+npx jest __tests__/components/appointments/
+npx jest __tests__/performance/
+npx jest __tests__/accessibility/
 
 # Run Jest tests matching pattern
 npx jest --testNamePattern="Button"
 npx jest --testPathPattern="theme"
+npx jest --testNamePattern="appointment"
+npx jest --testPathPattern="calendar"
 ```
 
 ## 🚀 **CI/CD and Production**
@@ -375,6 +407,8 @@ npm run type-check                    # Verify TypeScript
 npm run test:design-system:required   # Quick validation
 npm run test:visual:update           # Update baselines after changes
 npm run test:accessibility           # Ensure accessibility compliance
+npm run test:appointments:unit       # Test appointment components
+npm run test:appointments:watch      # Watch mode during development
 ```
 
 ### **Pre-commit**

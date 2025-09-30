@@ -1845,3 +1845,153 @@ Use this template for new architectural decisions:
 - Proper separation of concerns with dedicated API endpoint
 
 **Related Issues**: [LUM-98](https://linear.app/scootr-ca/issue/LUM-98) - Public Booking Interface
+
+---
+
+## ADR-041: Comprehensive Testing Strategy for Dashboard Appointment Management
+
+**Date**: September 29, 2025  
+**Status**: Accepted  
+**Context**: Dashboard appointment management system required comprehensive testing infrastructure to ensure reliability, performance, accessibility, and user experience quality across all interaction methods and devices.
+
+**Decision**: Implement 6-category comprehensive testing approach covering unit tests, integration tests, performance tests, accessibility tests, end-to-end tests, and mobile device tests with 95%+ coverage requirement.
+
+**Rationale**:
+
+- Ensures complete coverage of all user scenarios and system requirements
+- Provides confidence in system reliability and performance under various conditions
+- Validates accessibility compliance (WCAG 2.1 AA) for inclusive user experience
+- Confirms mobile functionality across different devices and interaction patterns
+- Establishes measurable quality standards with automated enforcement
+- Creates foundation for continuous integration and deployment confidence
+
+**Alternatives Considered**:
+
+1. **Basic Unit Testing Only**: Focus only on component-level testing
+   - Rejected: Insufficient coverage for complex appointment management workflows
+2. **Manual Testing Approach**: Rely on manual testing for quality assurance
+   - Rejected: Not scalable and prone to human error, lacks performance validation
+3. **Third-Party Testing Services**: Use external testing platforms
+   - Rejected: Cost considerations and lack of integration with development workflow
+
+**Impact**:
+
+- 95%+ code coverage with comprehensive validation of all system components
+- Automated performance benchmarking with measurable targets (< 1s calendar load)
+- Full WCAG 2.1 AA accessibility compliance with keyboard navigation support
+- Mobile functionality validated across 5 device configurations
+- Foundation for reliable continuous integration and deployment processes
+- Enhanced developer confidence and reduced production issues
+
+**Related Issues**: Dashboard Appointment Management Testing Implementation
+
+---
+
+## ADR-042: Custom Test Runner Architecture for Multi-Category Test Orchestration
+
+**Date**: September 29, 2025  
+**Status**: Accepted  
+**Context**: Multiple test categories (unit, integration, performance, accessibility, E2E, mobile) required unified orchestration system with detailed reporting and performance benchmarking capabilities.
+
+**Decision**: Implement custom test runner with orchestrated execution across all test categories, detailed progress reporting, performance benchmarking, and configurable execution options.
+
+**Rationale**:
+
+- Provides unified test execution experience across different test types and tools
+- Enables comprehensive reporting with performance metrics and quality gates
+- Supports flexible execution modes (watch, coverage, parallel, specific suites)
+- Integrates seamlessly with CI/CD pipelines and development workflows
+- Offers detailed visibility into test results and system performance metrics
+
+**Alternatives Considered**:
+
+1. **Separate Test Scripts**: Individual scripts for each test category
+   - Rejected: Fragmented execution experience and poor reporting visibility
+2. **Existing Test Runners**: Use Jest or Playwright runners exclusively
+   - Rejected: Cannot handle multi-tool orchestration and comprehensive reporting
+3. **CI/CD Pipeline Only**: Rely on pipeline orchestration for test execution
+   - Rejected: Poor developer experience and limited local testing capabilities
+
+**Impact**:
+
+- Streamlined testing workflow with unified execution and reporting
+- Clear visibility into test results, performance metrics, and quality standards
+- Flexible execution options supporting different development and CI/CD scenarios
+- Foundation for automated quality gates and performance regression detection
+- Enhanced developer productivity through comprehensive test orchestration
+
+**Related Issues**: Dashboard Appointment Management Testing Implementation
+
+---
+
+## ADR-043: MSW API Mocking Strategy for Realistic Testing
+
+**Date**: September 29, 2025  
+**Status**: Accepted  
+**Context**: Comprehensive testing required realistic API interactions including conflict scenarios, error handling, and performance simulation without external dependencies.
+
+**Decision**: Implement Mock Service Worker (MSW) for API mocking with realistic response patterns, conflict simulation, error scenario testing, and configurable performance delays.
+
+**Rationale**:
+
+- Enables comprehensive testing without external API dependencies
+- Provides realistic API interaction patterns matching production behavior
+- Supports complex scenarios including conflicts, errors, and edge cases
+- Allows performance simulation with configurable response delays
+- Maintains test reliability and consistency across different environments
+
+**Alternatives Considered**:
+
+1. **Simple Mock Functions**: Basic Jest mocks for API calls
+   - Rejected: Insufficient realism and limited scenario coverage
+2. **Test Database**: Real database with test data for integration testing
+   - Rejected: Complex setup and maintenance, slower test execution
+3. **External Test APIs**: Use staging or test API endpoints
+   - Rejected: External dependencies reduce test reliability and speed
+
+**Impact**:
+
+- Reliable test execution with realistic API interaction patterns
+- Comprehensive coverage of error scenarios and edge cases
+- Fast test execution without external dependencies or network calls
+- Foundation for complex workflow testing including conflict resolution
+- Enhanced confidence in API integration and error handling capabilities
+
+**Related Issues**: Dashboard Appointment Management Testing Implementation
+
+---
+
+## ADR-044: Performance Benchmarking with Automated Validation
+
+**Date**: September 29, 2025  
+**Status**: Accepted  
+**Context**: Dashboard appointment management system required measurable performance standards to ensure optimal user experience and prevent performance regressions during development.
+
+**Decision**: Establish quantifiable performance targets with automated validation: < 1 second calendar load, < 500ms search response, < 300ms view switching, with continuous monitoring and regression detection.
+
+**Rationale**:
+
+- Provides objective performance standards based on user experience requirements
+- Enables automated detection of performance regressions during development
+- Creates accountability for performance optimization and maintenance
+- Supports data-driven performance improvement decisions
+- Ensures consistent performance across different devices and network conditions
+
+**Alternatives Considered**:
+
+1. **Subjective Performance Assessment**: Manual performance evaluation
+   - Rejected: Inconsistent standards and lack of objective measurement
+2. **Basic Load Time Monitoring**: Simple page load time tracking only
+   - Rejected: Insufficient granularity for complex appointment management interactions
+3. **External Performance Monitoring**: Third-party performance tracking services
+   - Rejected: Limited integration with development workflow and testing process
+
+**Impact**:
+
+- Quantifiable performance standards with automated enforcement
+- Early detection of performance issues before production deployment
+- Data-driven performance optimization with clear improvement targets
+- Enhanced user experience through consistent performance standards
+- Foundation for advanced performance monitoring and optimization strategies
+
+**Related Issues**: Dashboard Appointment Management Testing Implementation
