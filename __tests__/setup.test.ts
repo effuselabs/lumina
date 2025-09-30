@@ -2,7 +2,7 @@ import {
   createMockBusiness,
   createMockUser,
   resetFactoryCounters,
-} from '@/factories';
+} from '../factories';
 
 describe('Testing Setup', () => {
   beforeEach(() => {

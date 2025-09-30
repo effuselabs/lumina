@@ -12,8 +12,7 @@ const customJestConfig = {
   testEnvironment: 'jsdom',
 
   // Setup files
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  setupFiles: ['<rootDir>/test-utils/env-setup.js'],
+  setupFiles: ['<rootDir>/jest.setup.ts'],
 
   // Module name mapping for absolute imports
   moduleNameMapper: {

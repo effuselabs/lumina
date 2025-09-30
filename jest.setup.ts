@@ -34,17 +34,22 @@ jest.mock('next/navigation', () => ({
 // Mock Next.js image component
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: props => {
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-    return <img {...props} />;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: (props: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const React = require('react');
+    return React.createElement('img', props);
   },
 }));
 
 // Mock Next.js link component
 jest.mock('next/link', () => ({
   __esModule: true,
-  default: ({ children, ...props }) => {
-    return <a {...props}>{children}</a>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: ({ children, ...props }: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const React = require('react');
+    return React.createElement('a', props, children);
   },
 }));
 
@@ -103,11 +108,6 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
-// Mock environment variables
-process.env.NEXTAUTH_SECRET = 'test-secret';
-process.env.NEXTAUTH_URL = 'http://localhost:3000';
-process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
-
 // Global test utilities
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -125,7 +125,7 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query: string) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -170,7 +170,7 @@ Object.defineProperty(window, 'sessionStorage', {
 const originalError = console.error;
 beforeAll(() => {
   // eslint-disable-next-line no-console
-  console.error = (...args) => {
+  console.error = (...args: any[]) => {
     if (
       typeof args[0] === 'string' &&
       (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
