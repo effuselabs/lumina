@@ -203,6 +203,23 @@ export async function POST(request: NextRequest) {
             }, { status: 400 })
         }
 
+        // Broadcast appointment creation to WebSocket clients
+        try {
+            await broadcastAppointmentChange({
+                type: 'appointment_created',
+                data: {
+                    appointmentId: result.appointment!.id,
+                    businessId: validatedData.businessId,
+                    appointment: result.appointment,
+                    userId: session.user.id,
+                    timestamp: new Date().toISOString(),
+                },
+            });
+        } catch (broadcastError) {
+            console.error('Failed to broadcast appointment creation:', broadcastError);
+            // Don't fail the request if broadcasting fails
+        }
+
         return NextResponse.json({
             appointment: result.appointment,
             warnings: result.warnings

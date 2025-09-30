@@ -150,6 +150,24 @@ export async function PUT(
             }, { status: 400 })
         }
 
+        // Broadcast appointment update to WebSocket clients
+        try {
+            await broadcastAppointmentChange({
+                type: 'appointment_updated',
+                data: {
+                    appointmentId: params.id,
+                    businessId,
+                    appointment: result.appointment,
+                    changes: validatedData,
+                    userId: session.user.id,
+                    timestamp: new Date().toISOString(),
+                },
+            });
+        } catch (broadcastError) {
+            console.error('Failed to broadcast appointment update:', broadcastError);
+            // Don't fail the request if broadcasting fails
+        }
+
         return NextResponse.json({
             appointment: result.appointment,
             warnings: result.warnings
@@ -239,6 +257,23 @@ export async function DELETE(
                 details: result.errors,
                 warnings: result.warnings
             }, { status: 400 })
+        }
+
+        // Broadcast appointment deletion to WebSocket clients
+        try {
+            await broadcastAppointmentChange({
+                type: 'appointment_deleted',
+                data: {
+                    appointmentId: params.id,
+                    businessId,
+                    appointment: result.appointment,
+                    userId: session.user.id,
+                    timestamp: new Date().toISOString(),
+                },
+            });
+        } catch (broadcastError) {
+            console.error('Failed to broadcast appointment deletion:', broadcastError);
+            // Don't fail the request if broadcasting fails
         }
 
         return NextResponse.json({

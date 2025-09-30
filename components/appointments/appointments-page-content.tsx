@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageHeader } from '@/components/ui/page-header';
 import { StatCard } from '@/components/ui/stat-card';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Calendar, Clock, Plus, Users } from 'lucide-react';
+import { Calendar, CalendarDays, Clock, Filter, Plus, Search, Users } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface AppointmentsPageContentProps {
@@ -113,43 +114,120 @@ export function AppointmentsPageContent({
             />
           </div>
 
+          {/* Calendar View Navigation */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <Link href={`/dashboard/${businessSlug}/appointments`}>
+              <Card className="border-color-border hover:border-lumina-coral cursor-pointer transition-colors shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-lumina-radiant/10">
+                      <Calendar className="h-6 w-6 text-lumina-coral" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">All Appointments</h3>
+                      <p className="text-color-foreground-muted text-sm">
+                        View all scheduled appointments
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href={`/dashboard/${businessSlug}/appointments/calendar`}>
+              <Card className="border-color-border hover:border-lumina-coral cursor-pointer transition-colors shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-lumina-radiant/10">
+                      <CalendarDays className="h-6 w-6 text-lumina-coral" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Calendar View</h3>
+                      <p className="text-color-foreground-muted text-sm">
+                        Day, week, and month views
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href={`/dashboard/${businessSlug}/appointments/book`}>
+              <Card className="border-color-border hover:border-lumina-coral cursor-pointer transition-colors shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-lumina-radiant/10">
+                      <Plus className="h-6 w-6 text-lumina-coral" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Book Appointment</h3>
+                      <p className="text-color-foreground-muted text-sm">
+                        Schedule new appointment
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+
           {/* Appointment Management Interface */}
           <Card className="border-color-border shadow-sm">
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div>
                   <CardTitle className="text-color-secondary">
-                    Appointment Calendar
+                    Recent Appointments
                   </CardTitle>
                   <p className="text-color-foreground-muted">
-                    View and manage your appointment schedule
+                    View and manage your recent appointment activity
                   </p>
                 </div>
-                <Button
-                  variant="primary"
-                  icon={<Plus className="h-4 w-4" />}
-                  onClick={() => {
-                    // TODO: Implement new appointment functionality
-                  }}
-                >
-                  New Appointment
-                </Button>
+                <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    icon={<Search className="h-4 w-4" />}
+                  >
+                    Search
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    icon={<Filter className="h-4 w-4" />}
+                  >
+                    Filter
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    icon={<Plus className="h-4 w-4" />}
+                    asChild
+                  >
+                    <Link href={`/dashboard/${businessSlug}/appointments/book`}>
+                      New Appointment
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
               <div className="py-12 text-center">
                 <Calendar className="text-color-foreground-muted mx-auto mb-4 h-12 w-12" />
                 <h3 className="mb-2 text-lg font-semibold">
-                  Calendar View Coming Soon
+                  Appointment Management Dashboard
                 </h3>
                 <p className="text-color-foreground-muted mb-4">
-                  Full appointment calendar and booking interface will be
-                  available here.
+                  This is the foundation for your appointment management system.
                 </p>
-                <p className="text-color-foreground-muted text-sm">
-                  Features will include: Calendar view, appointment booking,
-                  staff scheduling, client management, and automated reminders.
-                </p>
+                <div className="text-color-foreground-muted text-sm space-y-2">
+                  <p>✓ Dashboard layout and navigation integrated</p>
+                  <p>✓ Responsive design for desktop and mobile</p>
+                  <p>✓ Quick access to calendar views and booking</p>
+                  <p>• Calendar components will be implemented next</p>
+                  <p>• Real-time updates and drag-and-drop scheduling</p>
+                  <p>• Advanced search and filtering capabilities</p>
+                </div>
               </div>
             </CardContent>
           </Card>
