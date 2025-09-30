@@ -10,6 +10,7 @@
  * @author Lumina Development Team
  */
 
+import { broadcastAppointmentChange } from '@/app/api/websocket/route'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { AppointmentService } from '@/lib/services/appointment-service'

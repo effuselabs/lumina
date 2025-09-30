@@ -10,6 +10,7 @@
  * @author Lumina Development Team
  */
 
+import { broadcastAppointmentChange } from '@/app/api/websocket/route'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { AppointmentService } from '@/lib/services/appointment-service'
@@ -217,16 +218,20 @@ export async function DELETE(
         }
 
         // Parse cancellation options from request body if provided
-        let cancelOptions: CancelAppointmentRequest = {}
+        let cancelOptions: CancelAppointmentRequest
 
         try {
             const body = await request.text()
             if (body.trim()) {
                 const parsedBody = JSON.parse(body)
                 cancelOptions = cancelAppointmentSchema.parse(parsedBody)
+            } else {
+                // Apply default values when body is empty
+                cancelOptions = cancelAppointmentSchema.parse({})
             }
         } catch {
-            // Body is optional for DELETE requests
+            // Apply default values on parse error
+            cancelOptions = cancelAppointmentSchema.parse({})
         }
 
         // Verify user has access to this business

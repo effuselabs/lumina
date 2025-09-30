@@ -32,6 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.role = user.role;
         token.email = user.email;
         token.name = user.name;
+        token.businessId = user.businessId;
       }
       return token;
     },
@@ -43,6 +44,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = token.role as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
+        session.user.businessId = token.businessId as string | undefined;
       }
       return session;
     },
@@ -82,7 +84,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const validatedCredentials = credentialsSchema.parse(credentials);
           const { email, password } = validatedCredentials;
 
-          // Find user in database
+          // Find user in database with business relationships
           const user = await prisma.user.findUnique({
             where: { email },
             select: {
@@ -91,6 +93,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               name: true,
               password: true,
               role: true,
+              businesses: {
+                select: {
+                  businessId: true,
+                  role: true,
+                },
+                orderBy: {
+                  createdAt: 'asc', // Use the first business as primary
+                },
+                take: 1, // Get the primary business
+              },
             },
           });
 
@@ -110,6 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             email: user.email,
             name: user.name,
             role: user.role,
+            businessId: user.businesses[0]?.businessId, // Primary business
           };
         } catch (error) {
           // Log authentication errors for security monitoring
@@ -145,6 +158,7 @@ declare module 'next-auth' {
       name: string | null;
       image?: string | null;
       role: string;
+      businessId?: string;
     };
   }
 
@@ -153,6 +167,7 @@ declare module 'next-auth' {
     email: string;
     name: string | null;
     role: string;
+    businessId?: string;
   }
 }
 
@@ -162,5 +177,6 @@ declare module '@auth/core/jwt' {
     email: string;
     name: string | null;
     role: string;
+    businessId?: string;
   }
 }

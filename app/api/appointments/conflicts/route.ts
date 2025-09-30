@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
             startTime: conflictRequest.startDate,
             endTime: conflictRequest.endDate,
             serviceIds: [], // Not needed for general conflict checking
-            excludeAppointmentId: conflictRequest.excludeAppointmentId
+            excludeAppointmentId: conflictRequest.excludeAppointmentId || undefined
         })
 
         // Format response
@@ -92,12 +92,12 @@ export async function GET(request: NextRequest) {
                 severity: conflict.severity,
                 message: conflict.message,
                 details: {
-                    appointmentId: conflict.details.appointmentId,
-                    startTime: conflict.details.startTime,
-                    endTime: conflict.details.endTime,
-                    clientName: conflict.details.clientName,
-                    staffName: conflict.details.staffName,
-                    serviceName: conflict.details.serviceName
+                    appointmentId: conflict.details.conflictingAppointment?.id,
+                    startTime: conflict.details.conflictingAppointment?.startTime,
+                    endTime: conflict.details.conflictingAppointment?.endTime,
+                    clientName: conflict.details.conflictingAppointment?.clientName,
+                    staffName: conflict.details.conflictingAppointment?.services?.[0], // Use first service as staff name fallback
+                    serviceName: conflict.details.conflictingAppointment?.services?.join(', ')
                 }
             })),
             warnings: conflictResult.warnings.map(warning => ({

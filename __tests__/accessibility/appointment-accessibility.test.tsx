@@ -1,7 +1,7 @@
-import AppointmentDashboard from '@/components/appointments/appointment-dashboard'
-import AppointmentModal from '@/components/appointments/appointment-modal'
-import CalendarView from '@/components/appointments/calendar-view'
-import { mockAppointments, mockStaffMembers } from '@/test-utils/appointment-mocks'
+import { AppointmentModal } from '@/components/appointments/appointment-modal'
+import { CalendarView } from '@/components/appointments/calendar-view'
+import { MobileAppointmentDashboard } from '@/components/appointments/mobile-appointment-dashboard'
+import { mockAppointment, mockStaff } from '@/test-utils/booking-mocks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
@@ -27,8 +27,8 @@ const renderWithProviders = (component: React.ReactElement) => {
 // Mock hooks for accessibility tests
 jest.mock('@/hooks/use-dashboard-data', () => ({
     useDashboardData: jest.fn(() => ({
-        appointments: mockAppointments,
-        staffMembers: mockStaffMembers,
+        appointments: [mockAppointment],
+        staffMembers: mockStaff,
         isLoading: false,
         error: null,
         refetch: jest.fn()
@@ -39,7 +39,7 @@ describe('Appointment Management Accessibility', () => {
     describe('WCAG Compliance', () => {
         it('should have no accessibility violations in dashboard', async () => {
             const { container } = renderWithProviders(
-                <AppointmentDashboard businessId="business-1" />
+                <MobileAppointmentDashboard businessId="business-1" />
             )
 
             const results = await axe(container)
