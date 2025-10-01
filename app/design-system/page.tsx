@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { HeroBackground } from '@/components/ui/hero-background';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -1048,62 +1048,53 @@ function DesignSystemContent() {
           </Card>
         </section>
 
-        {/* Enhanced Form Components */}
+        {/* Select Component */}
         <section>
           <h2 className="text-3xl font-bold text-foreground mb-6">
-            Enhanced Form Components
+            Select Component
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Radio Groups */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Radio Groups</CardTitle>
-                <CardDescription>
-                  Single selection from multiple options - perfect for appointment types
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RadioGroup defaultValue="appointment-type-1">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="appointment-type-1" id="appointment-type-1" />
-                    <Label htmlFor="appointment-type-1">Regular Appointment</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="appointment-type-2" id="appointment-type-2" />
-                    <Label htmlFor="appointment-type-2">Consultation</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="appointment-type-3" id="appointment-type-3" />
-                    <Label htmlFor="appointment-type-3">Follow-up</Label>
-                  </div>
-                </RadioGroup>
-              </CardContent>
-            </Card>
-
-            {/* Select Dropdown */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Select Dropdown</CardTitle>
-                <CardDescription>
-                  Dropdown selection with search and filtering - essential for service selection
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="haircut">Haircut - $45</SelectItem>
-                    <SelectItem value="coloring">Hair Coloring - $85</SelectItem>
-                    <SelectItem value="styling">Hair Styling - $35</SelectItem>
-                    <SelectItem value="treatment">Hair Treatment - $65</SelectItem>
-                    <SelectItem value="consultation">Consultation - $25</SelectItem>
-                  </SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Select Dropdown</CardTitle>
+              <CardDescription>
+                Dropdown selection with search and filtering - essential for service selection in booking systems
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="service-select">Choose Service</Label>
+                  <Select>
+                    <SelectTrigger id="service-select">
+                      <SelectValue placeholder="Select a service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="haircut">Haircut - $45</SelectItem>
+                      <SelectItem value="coloring">Hair Coloring - $85</SelectItem>
+                      <SelectItem value="styling">Hair Styling - $35</SelectItem>
+                      <SelectItem value="treatment">Hair Treatment - $65</SelectItem>
+                      <SelectItem value="consultation">Consultation - $25</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="staff-select">Choose Staff Member</Label>
+                  <Select>
+                    <SelectTrigger id="staff-select">
+                      <SelectValue placeholder="Select staff member" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sarah">Sarah - Senior Stylist</SelectItem>
+                      <SelectItem value="mike">Mike - Barber</SelectItem>
+                      <SelectItem value="emma">Emma - Color Specialist</SelectItem>
+                      <SelectItem value="any">Any Available</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         {/* Loading States */}
