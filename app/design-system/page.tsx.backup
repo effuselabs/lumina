@@ -831,38 +831,6 @@ function DesignSystemContent() {
           </Card>
         </section>
 
-        {/* Alert Components */}
-        <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Alert Components
-          </h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Alert Variants</CardTitle>
-              <CardDescription>
-                User feedback and notification components with semantic meaning
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Alert>
-                <Info className="h-4 w-4" />
-                <div className="font-medium">Information</div>
-                <AlertDescription>
-                  This is an informational alert with helpful details for the user.
-                </AlertDescription>
-              </Alert>
-
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <div className="font-medium">Error</div>
-                <AlertDescription>
-                  Something went wrong. Please check your input and try again.
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
-        </section>
-
         {/* Specialized Components */}
         <section className="space-y-6">
           <h2 className="text-3xl font-bold tracking-tight text-foreground">
