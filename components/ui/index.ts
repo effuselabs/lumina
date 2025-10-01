@@ -29,13 +29,10 @@ export const Card = () => import('./card').then(m => m.Card);
 // Navigation Components - Lazy loaded
 export const NavigationMenu = () =>
   import('./navigation-menu').then(m => m.NavigationMenu);
-export const Breadcrumb = () => import('./breadcrumb').then(m => m.Breadcrumb);
 
 // Overlay Components - Lazy loaded for better performance
 export const Dialog = () => import('./dialog').then(m => m.Dialog);
-export const Modal = () => import('./modal').then(m => m.Modal);
 export const Tooltip = () => import('./tooltip').then(m => m.Tooltip);
-export const Popover = () => import('./popover').then(m => m.Popover);
 
 // Data Display Components - Lazy loaded
 export const Table = () => import('./table').then(m => m.Table);
@@ -81,13 +78,10 @@ export const COMPONENT_SIZES = {
 
   // Navigation components
   NavigationMenu: 'large', // ~8KB
-  Breadcrumb: 'small', // ~2KB
 
   // Overlay components
   Dialog: 'large', // ~10KB
-  Modal: 'large', // ~12KB
   Tooltip: 'medium', // ~4KB
-  Popover: 'medium', // ~5KB
 
   // Data display components
   Table: 'large', // ~8KB
@@ -105,8 +99,8 @@ export const LOADING_PRIORITIES = {
   critical: ['Button', 'Spinner', 'StatCard'],
   high: ['Input', 'FormField', 'PageHeader', 'Card'],
   medium: ['Select', 'Textarea', 'Badge', 'Avatar', 'Alert'],
-  low: ['NavigationMenu', 'Dialog', 'Modal', 'Table', 'Toast', 'Progress'],
-  lazy: ['Tooltip', 'Popover', 'Breadcrumb'],
+  low: ['NavigationMenu', 'Dialog', 'Table', 'Toast', 'Progress'],
+  lazy: ['Tooltip'],
 } as const;
 
 // Performance recommendations

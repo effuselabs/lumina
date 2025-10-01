@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from '@/components/theme-provider';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,7 @@ import { StatCard } from '@/components/ui/stat-card';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { DollarSign, Loader2, Moon, Sun, TrendingUp, Users } from 'lucide-react';
+import { AlertCircle, DollarSign, Info, Loader2, Moon, Sun, TrendingUp, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { TestimonialCard } from '../../components/ui/testimonial-card';
 
