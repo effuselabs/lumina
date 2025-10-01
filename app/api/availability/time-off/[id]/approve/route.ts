@@ -167,7 +167,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             const overrides = []
 
             for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-                const override = await prisma.staffAvailabilityOverrides.upsert({
+                const override = await prisma.staffAvailabilityOverride.upsert({
                     where: {
                         staffId_date: {
                             staffId: timeOffRequest.staffId,

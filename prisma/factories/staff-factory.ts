@@ -114,7 +114,7 @@ export class StaffFactory extends BaseFactory<Staff> {
                 chairRentalPeriod: profile.chairRentalPeriod,
                 baseSalary: profile.baseSalary,
                 startDate: profile.startDate,
-                workingHours: profile.workingHours,
+                workingHours: profile.workingHours as any,
                 isActive: true,
                 acceptsOnlineBookings: true,
             },

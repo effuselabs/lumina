@@ -665,7 +665,7 @@ export class DataResetManager {
         const appointmentsWithoutServices = await this.prisma.appointment.count({
             where: {
                 businessId,
-                appointmentServices: {
+                services: {
                     none: {},
                 },
             },
@@ -684,7 +684,7 @@ export class DataResetManager {
         const staffWithoutServices = await this.prisma.staff.count({
             where: {
                 businessId,
-                staffServices: {
+                services: {
                     none: {},
                 },
             },
@@ -707,13 +707,13 @@ export class DataResetManager {
                 },
             },
             include: {
-                appointmentServices: true,
+                services: true,
                 transactions: true,
             },
         });
 
         for (const appointment of appointmentsWithTransactions) {
-            const serviceTotal = appointment.appointmentServices.reduce(
+            const serviceTotal = appointment.services.reduce(
                 (sum, service) => sum + service.price,
                 0
             );

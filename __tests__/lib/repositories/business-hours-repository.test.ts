@@ -13,7 +13,7 @@ jest.mock('@/lib/prisma', () => ({
             delete: jest.fn(),
             upsert: jest.fn(),
         },
-        businessHolidays: {
+        businessHoliday: {
             findMany: jest.fn(),
             findFirst: jest.fn(),
             create: jest.fn(),
@@ -321,11 +321,11 @@ describe('BusinessHoursRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.businessHolidays.create.mockResolvedValue(mockHoliday)
+            mockPrisma.businessHoliday.create.mockResolvedValue(mockHoliday)
 
             const result = await repository.addHoliday(businessId, holidayData)
 
-            expect(mockPrisma.businessHolidays.create).toHaveBeenCalledWith({
+            expect(mockPrisma.businessHoliday.create).toHaveBeenCalledWith({
                 data: {
                     businessId,
                     ...holidayData,
@@ -350,7 +350,7 @@ describe('BusinessHoursRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.businessHolidays.create.mockResolvedValue(mockHoliday)
+            mockPrisma.businessHoliday.create.mockResolvedValue(mockHoliday)
 
             const result = await repository.addHoliday(businessId, holidayData)
 
@@ -378,11 +378,11 @@ describe('BusinessHoursRepository', () => {
                 },
             ]
 
-            mockPrisma.businessHolidays.findMany.mockResolvedValue(mockHolidays)
+            mockPrisma.businessHoliday.findMany.mockResolvedValue(mockHolidays)
 
             const result = await repository.getHolidays(businessId, startDate, endDate)
 
-            expect(mockPrisma.businessHolidays.findMany).toHaveBeenCalledWith({
+            expect(mockPrisma.businessHoliday.findMany).toHaveBeenCalledWith({
                 where: {
                     businessId,
                     date: {
