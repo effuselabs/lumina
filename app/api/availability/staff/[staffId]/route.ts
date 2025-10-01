@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             },
             select: {
                 id: true,
-                name: true,
+                displayName: true,
                 workingHours: true
             }
         })
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         // Get availability overrides for the date range if specified
         let overrides = []
         if (startDate && endDate) {
-            overrides = await prisma.staffAvailabilityOverrides.findMany({
+            overrides = await prisma.staffAvailabilityOverride.findMany({
                 where: {
                     staffId,
                     businessId,

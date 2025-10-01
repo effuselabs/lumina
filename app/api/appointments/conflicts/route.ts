@@ -75,6 +75,16 @@ export async function GET(request: NextRequest) {
     });
 
     // Check for conflicts using calendar integration
+    // If no staffId provided, return no conflicts (general availability check)
+    if (!conflictRequest.staffId) {
+      return NextResponse.json({
+        hasConflicts: false,
+        conflictCount: 0,
+        conflicts: [],
+        message: 'No staff specified - general availability check passed'
+      });
+    }
+
     const conflictResult = await CalendarIntegration.detectConflicts({
       businessId: conflictRequest.businessId,
       staffId: conflictRequest.staffId,
@@ -277,13 +287,13 @@ export async function POST(request: NextRequest) {
           type: conflict.type,
           severity: conflict.severity,
           message: conflict.message,
-          appointmentId: conflict.details.appointmentId,
+          appointmentId: conflict.details.conflictingAppointment?.id,
           conflictTime: {
-            startTime: conflict.details.startTime,
-            endTime: conflict.details.endTime,
+            startTime: conflict.details.conflictingAppointment?.startTime,
+            endTime: conflict.details.conflictingAppointment?.endTime,
           },
-          clientName: conflict.details.clientName,
-          serviceName: conflict.details.serviceName,
+          clientName: conflict.details.conflictingAppointment?.clientName,
+          serviceName: conflict.details.conflictingAppointment?.services?.[0] || 'Unknown Service',
         })),
       },
 

@@ -16,6 +16,34 @@ interface BookingProgressProps {
   className?: string;
 }
 
+export const defaultBookingSteps: BookingStep[] = [
+  {
+    id: 'service',
+    title: 'Select Service',
+    description: 'Choose your desired service',
+  },
+  {
+    id: 'staff',
+    title: 'Choose Staff',
+    description: 'Select your preferred stylist',
+  },
+  {
+    id: 'datetime',
+    title: 'Date & Time',
+    description: 'Pick your appointment time',
+  },
+  {
+    id: 'details',
+    title: 'Your Details',
+    description: 'Provide contact information',
+  },
+  {
+    id: 'confirmation',
+    title: 'Confirmation',
+    description: 'Review and confirm booking',
+  },
+];
+
 export function BookingProgress({
   steps,
   currentStep,

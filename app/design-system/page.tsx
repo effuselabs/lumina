@@ -6,21 +6,21 @@ import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 import { HeroBackground } from '@/components/ui/hero-background';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { StatCard } from '@/components/ui/stat-card';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
 import { cn } from '@/lib/utils';
 import { AlertCircle, DollarSign, Info, Loader2, Moon, Sun, TrendingUp, Users } from 'lucide-react';
 import React, { useState } from 'react';
@@ -111,7 +111,7 @@ function ColorSwatch({ name, value, className, description, usage, contrast }: C
 function DesignSystemContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [_selectedDate, _setSelectedDate] = useState<Date | undefined>(new Date());
 
   // Prevent hydration issues by ensuring client-side rendering
   React.useEffect(() => {
@@ -919,183 +919,11 @@ function DesignSystemContent() {
           </Card>
         </section>
 
-        {/* Calendar Component */}
-        <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Calendar Component
-          </h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Date Picker</CardTitle>
-              <CardDescription>
-                Interactive calendar for date selection - essential for booking systems and appointment scheduling
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-center">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="rounded-md border"
-                />
-              </div>
-              <div className="mt-4 text-center">
-                <p className="text-sm text-muted-foreground">
-                  Selected: {selectedDate ? selectedDate.toLocaleDateString() : 'None'}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
 
-        {/* Tooltip Component */}
-        <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Tooltip Component
-          </h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Helpful Information</CardTitle>
-              <CardDescription>
-                Contextual information on hover or focus - essential for user guidance and accessibility
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <TooltipProvider>
-                <div className="flex flex-wrap gap-4">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline">Hover for Help</Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>This button performs a specific action</p>
-                    </TooltipContent>
-                  </Tooltip>
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline">
-                        <Info className="h-4 w-4 mr-2" />
-                        Information
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Additional details about this feature</p>
-                    </TooltipContent>
-                  </Tooltip>
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Badge variant="secondary" className="cursor-help">
-                        Hover Badge
-                      </Badge>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Tooltips work with any component</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              </TooltipProvider>
-            </CardContent>
-          </Card>
-        </section>
 
-        {/* Dialog Component */}
-        <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Dialog Component
-          </h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Modal Dialogs</CardTitle>
-              <CardDescription>
-                Overlay dialogs for complex interactions and forms - essential for mobile UX and detailed workflows
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button>Edit Client Profile</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Edit Client Information</DialogTitle>
-                    <DialogDescription>
-                      Update client details here. All changes will be saved automatically.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="client-name" className="text-right">
-                        Name
-                      </Label>
-                      <Input id="client-name" defaultValue="Sarah Johnson" className="col-span-3" />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="client-phone" className="text-right">
-                        Phone
-                      </Label>
-                      <Input id="client-phone" defaultValue="(555) 123-4567" className="col-span-3" />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Save Changes</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
-        </section>
 
-        {/* Select Component */}
-        <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Select Component
-          </h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Select Dropdown</CardTitle>
-              <CardDescription>
-                Dropdown selection with search and filtering - essential for service selection in booking systems
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="service-select">Choose Service</Label>
-                  <Select>
-                    <SelectTrigger id="service-select">
-                      <SelectValue placeholder="Select a service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="haircut">Haircut - $45</SelectItem>
-                      <SelectItem value="coloring">Hair Coloring - $85</SelectItem>
-                      <SelectItem value="styling">Hair Styling - $35</SelectItem>
-                      <SelectItem value="treatment">Hair Treatment - $65</SelectItem>
-                      <SelectItem value="consultation">Consultation - $25</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label htmlFor="staff-select">Choose Staff Member</Label>
-                  <Select>
-                    <SelectTrigger id="staff-select">
-                      <SelectValue placeholder="Select staff member" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sarah">Sarah - Senior Stylist</SelectItem>
-                      <SelectItem value="mike">Mike - Barber</SelectItem>
-                      <SelectItem value="emma">Emma - Color Specialist</SelectItem>
-                      <SelectItem value="any">Any Available</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
 
         {/* Loading States */}
         <section>

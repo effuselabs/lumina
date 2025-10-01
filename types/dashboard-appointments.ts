@@ -5,6 +5,9 @@
 
 import { AppointmentStatus } from '@prisma/client';
 
+// Re-export for components
+export { AppointmentStatus };
+
 export interface DashboardAppointment {
   // Core appointment data
   id: string;

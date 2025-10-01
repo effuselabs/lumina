@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
 
         // Check for holidays
         const appointmentDate = start.toISOString().split('T')[0] // YYYY-MM-DD format
-        const holiday = await prisma.businessHolidays.findUnique({
+        const holiday = await prisma.businessHoliday.findUnique({
             where: {
                 businessId_date: {
                     businessId,

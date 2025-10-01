@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
             },
             select: {
                 id: true,
-                name: true
+                displayName: true
             }
         })
 
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
             })),
             request: {
                 staffId,
-                staffName: staff.name,
+                staffName: staff.displayName,
                 startTime,
                 endTime,
                 serviceIds,

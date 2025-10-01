@@ -92,9 +92,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
                 id: true,
                 startTime: true,
                 endTime: true,
-                service: {
+                services: {
                     select: {
-                        name: true
+                        service: {
+                            select: {
+                                name: true
+                            }
+                        }
                     }
                 }
             }
@@ -111,7 +115,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
                     conflicts.push({
                         appointmentId: appointment.id,
                         appointmentTime: `${appointmentStart} - ${appointmentEnd}`,
-                        serviceName: appointment.service?.name,
+                        serviceName: appointment.services?.[0]?.service?.name || 'Unknown Service',
                         reason: 'Staff will be unavailable'
                     })
                 } else if (startTime && endTime) {
@@ -120,7 +124,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
                         conflicts.push({
                             appointmentId: appointment.id,
                             appointmentTime: `${appointmentStart} - ${appointmentEnd}`,
-                            serviceName: appointment.service?.name,
+                            serviceName: appointment.services?.[0]?.service?.name || 'Unknown Service',
                             reason: 'Appointment outside new availability window'
                         })
                     }
@@ -129,7 +133,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         }
 
         // Create or update the override
-        const override = await prisma.staffAvailabilityOverrides.upsert({
+        const override = await prisma.staffAvailabilityOverride.upsert({
             where: {
                 staffId_date: {
                     staffId,
@@ -208,7 +212,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         }
 
         // Delete the override
-        await prisma.staffAvailabilityOverrides.delete({
+        await prisma.staffAvailabilityOverride.delete({
             where: {
                 staffId_date: {
                     staffId,

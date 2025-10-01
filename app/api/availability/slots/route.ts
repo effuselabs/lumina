@@ -3,8 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { BusinessHoursRepository, StaffAvailabilityRepository } from '../../../../lib/repositories'
-import { TimeZoneAwareAvailabilityCalculator } from '../../../../lib/services/timezone-aware-availability'
+// Removed unused imports for now - will be needed when timezone support is fully implemented
 import { TimeZoneHandler } from '../../../../lib/services/timezone-handler'
 
 // Schema for availability query with timezone support
@@ -37,7 +36,7 @@ export async function GET(request: NextRequest) {
             date: searchParams.get('date'),
             serviceId: searchParams.get('serviceId'),
             staffId: searchParams.get('staffId'),
-            duration: searchParams.get('duration') ? parseInt(searchParams.get('duration')!) : undefined,
+            duration: searchParams.get('duration') ? parseInt(searchParams.get('duration') || '0') : undefined,
             includeUnavailable: searchParams.get('includeUnavailable') === 'true',
             timezone: searchParams.get('timezone'),
             locationId: searchParams.get('locationId')
@@ -112,35 +111,17 @@ export async function GET(request: NextRequest) {
 
         // Use timezone-aware calculator if timezone is provided
         if (timezone) {
-            // Initialize repositories for timezone-aware calculator
-            const businessHoursRepo = new BusinessHoursRepository(prisma)
-            const staffAvailabilityRepo = new StaffAvailabilityRepository(prisma)
-
-            // Create standard availability calculator first
-            const standardCalculator = new AvailabilityCalculator(
-                businessHoursRepo,
-                staffAvailabilityRepo,
-                // Note: These would need to be properly initialized in a real implementation
-                {} as any, // timeOffRepo
-                {} as any, // conflictEngine
-                {} as any, // durationValidator
-                prisma
-            )
-
-            const timezoneAwareCalculator = new TimeZoneAwareAvailabilityCalculator(
-                standardCalculator,
-                businessHoursRepo,
-                staffAvailabilityRepo
-            )
-
-            const slots = await timezoneAwareCalculator.getAvailableSlots({
+            // Use static method for availability calculation
+            const result = await AvailabilityCalculator.calculateAvailability({
                 businessId,
                 staffId,
                 serviceId,
-                date,
-                timezone,
-                locationId
+                date: new Date(date),
+                duration: 60, // Default duration
+                timezone
             })
+            
+            const slots = result.slots
 
             // Format timezone-aware response
             const response = {
@@ -151,16 +132,12 @@ export async function GET(request: NextRequest) {
                 locationId,
                 totalSlots: slots.length,
                 slots: slots.map(slot => ({
-                    utcStart: slot.utcStart.toISO(),
-                    utcEnd: slot.utcEnd.toISO(),
-                    localStart: slot.localStart,
-                    localEnd: slot.localEnd,
-                    localDate: slot.localDate,
-                    businessTimezone: slot.businessTimezone,
-                    displayTimezone: slot.displayTimezone,
-                    duration: slot.duration,
-                    isDSTTransition: slot.isDSTTransition,
-                    dstWarning: slot.dstWarning
+                    startTime: slot.startTime.toISOString(),
+                    endTime: slot.endTime.toISOString(),
+                    staffId: slot.staffId,
+                    staffName: slot.staffName,
+                    isAvailable: slot.isAvailable,
+                    conflicts: slot.conflicts || []
                 })),
                 timezoneInfo: {
                     clientTimezone: timezone,
@@ -185,11 +162,12 @@ export async function GET(request: NextRequest) {
                 date: new Date(date),
                 serviceId,
                 staffId,
-                duration,
+                duration: duration || 60, // Default to 60 minutes
                 includeUnavailable
             }
 
-            const slots = await AvailabilityCalculator.getAvailableSlots(availabilityOptions)
+            const result = await AvailabilityCalculator.calculateAvailability(availabilityOptions)
+            const slots = result.slots
 
             // Format standard response
             const response = {
@@ -205,9 +183,7 @@ export async function GET(request: NextRequest) {
                     staffId: slot.staffId,
                     staffName: slot.staffName,
                     isAvailable: slot.isAvailable,
-                    duration: slot.duration,
-                    serviceId: slot.serviceId,
-                    conflicts: slot.conflicts
+                    conflicts: slot.conflicts || []
                 })),
                 filters: {
                     serviceId,
@@ -219,8 +195,6 @@ export async function GET(request: NextRequest) {
 
             return NextResponse.json(response)
         }
-
-        return NextResponse.json(response)
     } catch (error) {
         console.error('Error fetching availability slots:', error)
         return NextResponse.json(

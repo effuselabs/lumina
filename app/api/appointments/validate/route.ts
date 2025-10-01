@@ -259,9 +259,9 @@ export async function POST(request: NextRequest) {
                     type: conflict.type,
                     severity: conflict.severity,
                     message: conflict.message,
-                    appointmentId: conflict.details.appointmentId,
-                    clientName: conflict.details.clientName,
-                    serviceName: conflict.details.serviceName
+                    appointmentId: conflict.details.conflictingAppointment?.id,
+                    clientName: conflict.details.conflictingAppointment?.clientName,
+                    serviceName: conflict.details.conflictingAppointment?.services?.[0] || 'Unknown Service'
                 }))
             }
 
