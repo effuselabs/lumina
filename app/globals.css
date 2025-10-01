@@ -72,8 +72,16 @@
   
   /* Interactive Colors */
   --color-interactive-focus: var(--lumina-gold);
-  --color-primary-foreground: #ffffff;
-  --color-secondary-foreground: #ffffff;
+  
+  /* Foreground Colors - Optimized for Contrast */
+  --color-primary-foreground: #0B2B33; /* Dark text on bright gold for better contrast */
+  --color-secondary-foreground: #ffffff; /* White text on dark teal */
+  --color-success-foreground: #ffffff;
+  --color-warning-foreground: #0B2B33; /* Dark text on bright warning */
+  --color-info-foreground: #ffffff;
+  --color-destructive-foreground: #ffffff;
+  
+  /* Secondary Color System */
   --color-secondary: var(--deep-teal);
   --color-secondary-hover: #0f3a44;
   
@@ -208,8 +216,16 @@
     
     /* Interactive Colors */
     --color-interactive-focus: var(--lumina-gold);
-    --color-primary-foreground: #ffffff;
-    --color-secondary-foreground: #ffffff;
+    
+    /* Foreground Colors - Dark Theme Optimized */
+    --color-primary-foreground: #0B2B33; /* Dark text on bright gold (same in dark) */
+    --color-secondary-foreground: #ffffff; /* White text on dark teal (same in dark) */
+    --color-success-foreground: #ffffff;
+    --color-warning-foreground: #0B2B33; /* Dark text on bright warning (same in dark) */
+    --color-info-foreground: #ffffff;
+    --color-destructive-foreground: #ffffff;
+    
+    /* Secondary Color System */
     --color-secondary: var(--deep-teal);
     --color-secondary-hover: #0f3a44;
     
@@ -437,6 +453,60 @@
 
   .text-on-secondary {
     color: var(--color-secondary-foreground);
+  }
+  
+  /* Semantic Foreground Colors for Badges and Components */
+  .text-primary-foreground {
+    color: var(--color-primary-foreground);
+  }
+  
+  .text-secondary-foreground {
+    color: var(--color-secondary-foreground);
+  }
+  
+  .text-success-foreground {
+    color: var(--color-success-foreground);
+  }
+  
+  .text-warning-foreground {
+    color: var(--color-warning-foreground);
+  }
+  
+  .text-info-foreground {
+    color: var(--color-info-foreground);
+  }
+  
+  .text-destructive-foreground {
+    color: var(--color-destructive-foreground);
+  }
+  
+  /* Badge Shadow Colors for Sophisticated Hover Effects */
+  .hover\:shadow-primary\/25:hover {
+    box-shadow: 0 4px 12px rgba(255, 210, 90, 0.25);
+  }
+  
+  .hover\:shadow-secondary\/25:hover {
+    box-shadow: 0 4px 12px rgba(11, 43, 51, 0.25);
+  }
+  
+  .hover\:shadow-success\/25:hover {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  }
+  
+  .hover\:shadow-warning\/25:hover {
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+  }
+  
+  .hover\:shadow-info\/25:hover {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  }
+  
+  .hover\:shadow-destructive\/25:hover {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  }
+  
+  .hover\:shadow-lumina-coral\/25:hover {
+    box-shadow: 0 4px 12px rgba(255, 122, 90, 0.25);
   }
 
   .text-on-success {
@@ -927,6 +997,11 @@
   .bg-lumina-coral {
     background-color: var(--lumina-coral);
   }
+  
+  /* Lumina Coral hover variant for badges */
+  .bg-lumina-coral\/80 {
+    background-color: rgba(255, 122, 90, 0.8);
+  }
 
   .bg-deep-teal {
     background-color: var(--deep-teal);
@@ -1153,9 +1228,11 @@
   /* Gradient Mesh Variant */
   .hero-bg-gradient-mesh {
     background: linear-gradient(135deg, 
-      rgba(255, 210, 90, 0.25) 0%, 
-      rgba(255, 122, 90, 0.18) 50%, 
-      rgba(11, 43, 51, 0.12) 100%);
+      rgba(255, 210, 90, 0.6) 0%, 
+      rgba(255, 122, 90, 0.4) 50%, 
+      rgba(11, 43, 51, 0.3) 100%);
+    position: relative;
+    z-index: 0;
   }
 
   .hero-bg-gradient-mesh-content {
@@ -1168,36 +1245,42 @@
   .hero-bg-gradient-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.6;
+    filter: blur(15px);
+    opacity: 1.0;
     will-change: transform;
   }
 
   .hero-bg-gradient-orb-1 {
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, var(--lumina-gold) 0%, transparent 70%);
+    background: radial-gradient(circle, #FFD25A 0%, transparent 70%);
     top: 10%;
     left: 20%;
-    opacity: 0.8;
+    opacity: 1.0;
+    filter: blur(15px);
+    z-index: 1;
   }
 
   .hero-bg-gradient-orb-2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, var(--lumina-coral) 0%, transparent 70%);
+    background: radial-gradient(circle, #FF7A5A 0%, transparent 70%);
     top: 60%;
     right: 15%;
-    opacity: 0.6;
+    opacity: 1.0;
+    filter: blur(20px);
+    z-index: 1;
   }
 
   .hero-bg-gradient-orb-3 {
     width: 250px;
     height: 250px;
-    background: radial-gradient(circle, var(--clarity-blue) 0%, transparent 70%);
+    background: radial-gradient(circle, #89CFF0 0%, transparent 70%);
     bottom: 20%;
     left: 60%;
-    opacity: 0.4;
+    opacity: 0.8;
+    filter: blur(10px);
+    z-index: 1;
   }
 
   /* Animated gradient orbs */
@@ -1233,50 +1316,62 @@
   /* Particle Field Variant */
   .hero-bg-particle-field {
     background: linear-gradient(135deg, 
-      rgba(255, 210, 90, 0.15) 0%, 
-      rgba(255, 122, 90, 0.10) 50%, 
-      rgba(137, 207, 240, 0.08) 100%);
+      rgba(255, 210, 90, 0.4) 0%, 
+      rgba(255, 122, 90, 0.3) 50%, 
+      rgba(137, 207, 240, 0.2) 100%);
+    position: relative;
+    z-index: 0;
   }
 
   .hero-bg-particle-field-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    display: block !important;
   }
 
   .hero-bg-particle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: var(--lumina-gold);
-    border-radius: 50%;
-    opacity: 0.8;
+    position: absolute !important;
+    width: 12px !important;
+    height: 12px !important;
+    background: #FFD25A !important;
+    border-radius: 50% !important;
+    opacity: 1.0 !important;
     will-change: transform;
-    box-shadow: 0 0 10px var(--lumina-gold);
+    box-shadow: 0 0 25px #FFD25A, 0 0 50px rgba(255, 210, 90, 0.8) !important;
+    z-index: 10 !important;
+    display: block !important;
+    pointer-events: none !important;
+  }
+  
+  /* Fallback positioning for any particles that don't get positioned by nth-child rules */
+  .hero-bg-particle-field-content .hero-bg-particle {
+    position: absolute !important;
+    opacity: 1.0 !important;
   }
 
-  /* Distribute particles across the background */
-  .hero-bg-particle-1 { top: 10%; left: 15%; opacity: 0.9; }
-  .hero-bg-particle-2 { top: 20%; left: 80%; opacity: 0.7; }
-  .hero-bg-particle-3 { top: 30%; left: 45%; opacity: 0.8; }
-  .hero-bg-particle-4 { top: 40%; left: 25%; opacity: 0.6; }
-  .hero-bg-particle-5 { top: 50%; left: 70%; opacity: 0.7; }
-  .hero-bg-particle-6 { top: 60%; left: 35%; opacity: 0.5; }
-  .hero-bg-particle-7 { top: 70%; left: 85%; opacity: 0.8; }
-  .hero-bg-particle-8 { top: 80%; left: 55%; opacity: 0.6; }
-  .hero-bg-particle-9 { top: 15%; left: 65%; opacity: 0.7; }
-  .hero-bg-particle-10 { top: 25%; left: 40%; opacity: 0.5; }
-  .hero-bg-particle-11 { top: 35%; left: 75%; opacity: 0.8; }
-  .hero-bg-particle-12 { top: 45%; left: 20%; opacity: 0.6; }
-  .hero-bg-particle-13 { top: 55%; left: 90%; opacity: 0.7; }
-  .hero-bg-particle-14 { top: 65%; left: 30%; opacity: 0.5; }
-  .hero-bg-particle-15 { top: 75%; left: 60%; opacity: 0.8; }
-  .hero-bg-particle-16 { top: 85%; left: 10%; opacity: 0.6; }
-  .hero-bg-particle-17 { top: 12%; left: 50%; opacity: 0.7; }
-  .hero-bg-particle-18 { top: 22%; left: 95%; opacity: 0.5; }
-  .hero-bg-particle-19 { top: 32%; left: 5%; opacity: 0.8; }
-  .hero-bg-particle-20 { top: 42%; left: 85%; opacity: 0.6; }
+  /* Robust particle distribution using nth-child selectors for maximum specificity */
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(1) { top: 10% !important; left: 15% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(2) { top: 20% !important; left: 80% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(3) { top: 30% !important; left: 45% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(4) { top: 40% !important; left: 25% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(5) { top: 50% !important; left: 70% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(6) { top: 60% !important; left: 35% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(7) { top: 70% !important; left: 85% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(8) { top: 80% !important; left: 55% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(9) { top: 15% !important; left: 65% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(10) { top: 25% !important; left: 40% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(11) { top: 35% !important; left: 10% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(12) { top: 45% !important; left: 90% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(13) { top: 55% !important; left: 20% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(14) { top: 65% !important; left: 75% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(15) { top: 75% !important; left: 30% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(16) { top: 85% !important; left: 60% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(17) { top: 5% !important; left: 50% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(18) { top: 90% !important; left: 40% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(19) { top: 12% !important; left: 85% !important; opacity: 1.0 !important; }
+  .hero-bg-particle-field-content .hero-bg-particle:nth-child(20) { top: 95% !important; left: 10% !important; opacity: 1.0 !important; }
 
   /* Animated particles */
   .hero-bg-animated .hero-bg-particle:nth-child(odd) {
@@ -1399,44 +1494,9 @@
       rgba(255, 122, 90, 0.05) 100%);
   }
 
-  .hero-bg-particle-field-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
+  /* Duplicate particle field content and particle rules removed - using enhanced rules above */
 
-  .hero-bg-particle {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: var(--lumina-gold);
-    border-radius: 50%;
-    opacity: 0.3;
-    will-change: transform, opacity;
-  }
-
-  /* Distribute particles across the screen */
-  .hero-bg-particle-1 { top: 10%; left: 15%; }
-  .hero-bg-particle-2 { top: 25%; left: 80%; }
-  .hero-bg-particle-3 { top: 40%; left: 30%; }
-  .hero-bg-particle-4 { top: 60%; left: 70%; }
-  .hero-bg-particle-5 { top: 80%; left: 20%; }
-  .hero-bg-particle-6 { top: 15%; left: 60%; }
-  .hero-bg-particle-7 { top: 35%; left: 90%; }
-  .hero-bg-particle-8 { top: 55%; left: 10%; }
-  .hero-bg-particle-9 { top: 75%; left: 50%; }
-  .hero-bg-particle-10 { top: 90%; left: 85%; }
-  .hero-bg-particle-11 { top: 5%; left: 45%; }
-  .hero-bg-particle-12 { top: 20%; left: 25%; }
-  .hero-bg-particle-13 { top: 45%; left: 75%; }
-  .hero-bg-particle-14 { top: 65%; left: 40%; }
-  .hero-bg-particle-15 { top: 85%; left: 65%; }
-  .hero-bg-particle-16 { top: 30%; left: 5%; }
-  .hero-bg-particle-17 { top: 50%; left: 95%; }
-  .hero-bg-particle-18 { top: 70%; left: 35%; }
-  .hero-bg-particle-19 { top: 12%; left: 75%; }
-  .hero-bg-particle-20 { top: 88%; left: 15%; }
+  /* All particle positioning handled above with !important declarations */
 
   /* Animated particles */
   .hero-bg-animated .hero-bg-particle {
@@ -1578,7 +1638,7 @@
   }
 
   .hero-bg-intensity-strong .hero-bg-particle {
-    opacity: 0.8;
+    opacity: 1.0 !important;
   }
 
   /* Dark theme adjustments */
@@ -3693,18 +3753,68 @@
 
 /* ===== TESTIMONIAL CARD ANIMATIONS ===== */
 @layer components {
-  /* Base testimonial card animation styles */
+  /* Base testimonial card animation styles - Fast smooth entrance */
   .card-animated {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95) translateZ(0);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0 !important;
+    transform: translateY(100px) scale(0.8) translateZ(0) !important;
+    transition: opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
     will-change: transform, opacity;
   }
 
-  /* Animation when card comes into view */
+  /* Animation when card comes into view - Fast smooth entrance */
   .card-animated.in-view {
-    opacity: 1;
-    transform: translateY(0) scale(1) translateZ(0);
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) translateZ(0) !important;
+  }
+
+  /* Sophisticated testimonial card hover system */
+  .testimonial-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transform: translateY(0) !important;
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+                0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(255, 210, 90, 0.1) !important;
+  }
+  
+  /* Smooth content transitions */
+  .testimonial-card .testimonial-card-content {
+    transition: none !important;
+  }
+  
+  .testimonial-card:hover .testimonial-author-name {
+    color: #FFD25A !important;
+    transition: color 0.25s ease !important;
+  }
+  
+  .testimonial-card .testimonial-quote-icon svg {
+    transition: all 0.25s ease !important;
+  }
+  
+  .testimonial-card:hover .testimonial-quote-icon svg {
+    transform: scale(1.1) !important;
+    color: #FF7A5A !important;
+  }
+
+  /* Staggered animation delays for multiple testimonial cards - Faster sequence */
+  .card-animated:nth-child(1) { 
+    transition-delay: 0ms !important; 
+  }
+  
+  .card-animated:nth-child(2) { 
+    transition-delay: 200ms !important; 
+  }
+  
+  .card-animated:nth-child(3) { 
+    transition-delay: 400ms !important; 
+  }
+  
+  .card-animated:nth-child(4) { 
+    transition-delay: 600ms !important; 
   }
 
   /* Premium testimonial card styles */

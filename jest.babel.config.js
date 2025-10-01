@@ -1,3 +1,5 @@
+// Jest-specific Babel configuration
+// This file is only used by Jest for testing, not by Next.js
 module.exports = {
     presets: [
         [

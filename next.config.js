@@ -20,9 +20,11 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
 
-  // Optimize CSS and bundle size
+  // SWC compiler optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
+    // Enable SWC minification for better performance
+    styledComponents: false, // We're not using styled-components
   },
 
   // Enable standalone output for Docker

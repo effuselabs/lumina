@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 type ResolvedTheme = 'light' | 'dark';
@@ -41,7 +41,7 @@ export function ThemeProvider({
     };
 
     // Resolve theme based on current theme setting
-    const resolveTheme = React.useCallback((currentTheme: Theme): ResolvedTheme => {
+    const resolveTheme = useCallback((currentTheme: Theme): ResolvedTheme => {
         if (currentTheme === 'system') {
             return getSystemTheme();
         }
@@ -49,7 +49,7 @@ export function ThemeProvider({
     }, []);
 
     // Apply theme to document with smooth transitions
-    const applyTheme = React.useCallback((resolvedTheme: ResolvedTheme, withTransition = true) => {
+    const applyTheme = useCallback((resolvedTheme: ResolvedTheme, withTransition = true) => {
         const root = document.documentElement;
 
         // Start transition if enabled

@@ -74,12 +74,12 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
                 .slice(0, 2);
         }, [author]);
 
-        // Intersection observer for animations
+        // Intersection observer for animations - Ultra sensitive for cinematic effect
         const { ref: intersectionRef, isIntersecting } = useIntersectionObserver({
-            threshold: 0.3, // Require 30% of element to be visible
-            rootMargin: '-100px 0px -100px 0px', // Only trigger when well into viewport
-            triggerOnce: false, // Allow re-triggering for testing
-            delay: 0,
+            threshold: 0.1, // Trigger when only 10% of element is visible
+            rootMargin: '0px 0px 0px 0px', // Trigger as soon as element enters viewport
+            triggerOnce: true, // Only animate once for better performance
+            delay: 0, // No delay for immediate response
         });
 
         // Animation state management

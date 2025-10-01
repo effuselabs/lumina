@@ -718,6 +718,84 @@ ADR-016: Professional Schedule Item Design Enhancement
 **Rationale**:
 
 - Rate limiting prevents system abuse and ensures stability under load
+- CSRF protection prevents cross-site request forgery attacks
+- Input sanitization prevents injection attacks and data corruption
+- Abuse detection enables proactive threat mitigation
+
+**Consequences**:
+
+- ✅ Comprehensive security coverage for appointment booking system
+- ✅ Protection against common web vulnerabilities and attack vectors
+- ✅ Proactive threat detection and mitigation capabilities
+- ✅ Compliance with security best practices and standards
+- ⚠️ Requires ongoing monitoring and maintenance of security measures
+
+**Implementation**: Complete - Multi-layered security system with rate limiting, CSRF protection, input sanitization, and abuse detection
+
+---
+
+## ADR-022: Babel/SWC Configuration Resolution for Next.js Compatibility
+
+**Date**: October 1, 2025  
+**Status**: Accepted  
+**Context**: Next.js development server was failing due to Babel/SWC configuration conflicts. The presence of `babel.config.js` forced Next.js to use Babel instead of SWC, causing `next/font` compatibility issues and path resolution errors.
+
+**Decision**: Separate Babel configuration for Jest testing only, allowing Next.js to use SWC for optimal performance and compatibility.
+
+**Rationale**:
+
+- **SWC Performance**: SWC is significantly faster than Babel for Next.js compilation
+- **next/font Compatibility**: `next/font` requires SWC and cannot work with Babel
+- **Industry Best Practice**: Modern Next.js projects use SWC by default for better performance
+- **Clear Separation**: Jest needs Babel for testing, but Next.js should use SWC for compilation
+- **Error Resolution**: Eliminates path resolution errors and configuration conflicts
+
+**Alternatives Considered**:
+
+1. **Fix Babel Configuration**: Attempt to make Babel work with next/font
+   - Rejected: next/font fundamentally requires SWC compilation
+2. **Remove Babel Entirely**: Use SWC for both Next.js and Jest
+   - Rejected: Jest integration with SWC is less mature and reliable
+3. **Use Different Font Loading**: Avoid next/font to keep Babel
+   - Rejected: next/font provides optimal performance and developer experience
+
+**Implementation Details**:
+
+- **Renamed Configuration**: `babel.config.js` → `jest.babel.config.js`
+- **Jest Configuration**: Updated to explicitly use Jest-specific Babel config
+- **Next.js Configuration**: Now uses SWC by default (no Babel interference)
+- **Font Loading**: `next/font` now works correctly with SWC compilation
+- **Path Resolution**: All module resolution errors resolved
+
+**Impact**:
+
+- ✅ **Development Server**: No more Babel/SWC conflict errors
+- ✅ **Font Loading**: `next/font` works correctly with Inter font optimization
+- ✅ **Build Performance**: Faster compilation using SWC instead of Babel
+- ✅ **Testing**: Jest continues to work with Babel for test compilation
+- ✅ **Developer Experience**: Eliminates configuration-related development blockers
+- ✅ **Industry Alignment**: Follows Next.js best practices and recommendations
+
+**Files Modified**:
+
+- `babel.config.js` → `jest.babel.config.js` (renamed and documented)
+- `jest.config.js` (updated to use Jest-specific Babel config)
+- `next.config.js` (verified SWC compiler options)
+
+**Verification**:
+
+- Development server starts without Babel/SWC conflict errors
+- Build process uses SWC compilation successfully
+- Jest tests continue to work with Babel transformation
+- `next/font` Inter font loading works correctly in `app/layout.tsx`
+
+**Related Issues**: Design system page loading failures, development server startup issues
+
+---
+
+## ADR-023: Future Architectural Decisions
+
+**Note**: Continue adding architectural decisions here following the established format. Each decision should include context, rationale, alternatives considered, and impact on the system.r load
 - CSRF protection secures against cross-site request forgery attacks
 - Input sanitization prevents XSS and injection attacks
 - Abuse detection identifies and prevents suspicious booking patterns

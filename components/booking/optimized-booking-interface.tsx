@@ -20,7 +20,7 @@ const StaffTimeSelection = lazy(() =>
 );
 
 const ClientInformation = lazy(() =>
-    import('./client-information').then(module => ({ default: module.ClientInformation }))
+    import('./client-information-form').then(module => ({ default: module.default }))
 );
 
 const BookingConfirmation = lazy(() =>
@@ -55,7 +55,7 @@ export function OptimizedBookingInterface({
 }: OptimizedBookingInterfaceProps) {
     const { trackPropsChange } = usePerformanceMonitor('OptimizedBookingInterface');
     const { recordMetric, measureAsync } = useBookingPerformance(businessId);
-    const { networkState, resilientFetch } = useNetworkResilience();
+    const { networkState: _networkState, resilientFetch } = useNetworkResilience();
 
     const [bookingState, setBookingState] = useState<BookingState>({
         currentStep: 0,
@@ -94,7 +94,7 @@ export function OptimizedBookingInterface({
     useEffect(() => {
         const nextStep = bookingState.currentStep + 1;
         if (nextStep < BOOKING_STEPS.length) {
-            const nextComponent = BOOKING_STEPS[nextStep].component;
+            const _nextComponent = BOOKING_STEPS[nextStep].component;
             // Preload the next component
             import('./service-selection').catch(() => { });
         }
@@ -122,14 +122,14 @@ export function OptimizedBookingInterface({
             }));
 
             endMeasurement();
-        } catch (error) {
+        } catch (_error) {
             setBookingState(prev => ({
                 ...prev,
                 error: 'Failed to proceed to next step',
                 isLoading: false,
             }));
         }
-    }, [bookingState.currentStep, recordMetric]);
+    }, [bookingState.currentStep, recordMetric, validateCurrentStep]);
 
     const handleBack = useCallback(() => {
         setBookingState(prev => ({
@@ -140,7 +140,7 @@ export function OptimizedBookingInterface({
     }, []);
 
     // Validate current step data
-    const validateCurrentStep = async (): Promise<boolean> => {
+    const validateCurrentStep = useCallback(async (): Promise<boolean> => {
         const currentStepId = BOOKING_STEPS[bookingState.currentStep].id;
 
         switch (currentStepId) {
@@ -153,7 +153,7 @@ export function OptimizedBookingInterface({
             default:
                 return true;
         }
-    };
+    }, [bookingState.currentStep, bookingState.selectedServices, bookingState.selectedDateTime, bookingState.selectedStaff, bookingState.clientInfo]);
 
     // Handle service selection
     const handleServiceSelection = useCallback((services: any[]) => {
@@ -189,7 +189,7 @@ export function OptimizedBookingInterface({
                 client: bookingState.clientInfo,
             };
 
-            const result = await measureAsync('booking-creation', async () => {
+            const _result = await measureAsync('booking-creation', async () => {
                 return await resilientFetch('/api/public/booking', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -204,7 +204,7 @@ export function OptimizedBookingInterface({
                 currentStep: BOOKING_STEPS.length - 1, // Go to confirmation
             }));
 
-        } catch (error) {
+        } catch (_error) {
             setBookingState(prev => ({
                 ...prev,
                 error: 'Failed to create booking. Please try again.',

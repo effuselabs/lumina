@@ -11,6 +11,11 @@ const customJestConfig = {
   // Test environment
   testEnvironment: 'jsdom',
 
+  // Transform configuration - use our Jest-specific Babel config
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+  },
+
   // Setup files
   setupFiles: ['<rootDir>/jest.setup.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
@@ -45,6 +50,9 @@ const customJestConfig = {
       testEnvironment: 'jsdom',
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      transform: {
+        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+      },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
         '^@/components/(.*)$': '<rootDir>/components/$1',
@@ -71,6 +79,9 @@ const customJestConfig = {
       testEnvironment: 'jsdom',
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      transform: {
+        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+      },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
         '^@/components/(.*)$': '<rootDir>/components/$1',
@@ -93,6 +104,9 @@ const customJestConfig = {
       testEnvironment: 'jsdom',
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      transform: {
+        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+      },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
         '^@/components/(.*)$': '<rootDir>/components/$1',
@@ -115,6 +129,9 @@ const customJestConfig = {
       testEnvironment: 'jsdom',
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
+      transform: {
+        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+      },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
         '^@/components/(.*)$': '<rootDir>/components/$1',
