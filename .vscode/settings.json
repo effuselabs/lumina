@@ -1,5 +1,7 @@
 {
   "kiroAgent.configureMCP": "Enabled",
+  "kiroAgent.autofix": false,
+  "kiroAgent.formatOnSave": false,
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.suggest.autoImports": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
@@ -7,8 +9,12 @@
   "editor.defaultFormatter": null,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "never",
-    "source.organizeImports": "explicit"
+    "source.fixAll": "never",
+    "source.organizeImports": "never",
+    "source.removeUnusedImports": "never"
   },
+  "typescript.suggest.autoImports": false,
+  "typescript.preferences.includePackageJsonAutoImports": "off",
   "files.associations": {
     "*.css": "tailwindcss"
   },
