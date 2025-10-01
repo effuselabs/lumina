@@ -1,18 +1,22 @@
 'use client';
 
 import { useTheme } from '@/components/theme-provider';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { HeroBackground } from '@/components/ui/hero-background';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { StatCard } from '@/components/ui/stat-card';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { Loader2, Moon, Sun } from 'lucide-react';
+import { DollarSign, Loader2, Moon, Sun, TrendingUp, Users } from 'lucide-react';
 import React, { useState } from 'react';
+import { TestimonialCard } from '../../components/ui/testimonial-card';
 
 // Theme Toggle Component
 function ThemeToggle() {
@@ -23,10 +27,10 @@ function ThemeToggle() {
       variant="outline"
       size="sm"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="h-9 w-9 p-0"
+      className="h-9 w-9 p-0 border-2 border-foreground/20 hover:border-foreground/40 hover:bg-foreground/5"
     >
-      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className="h-4 w-4 text-foreground rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 text-foreground rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
@@ -50,8 +54,8 @@ function ColorSwatch({ name, value, className, description, usage, contrast }: C
       await navigator.clipboard.writeText(value);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy color value:', err);
+    } catch {
+      // Silently handle copy failure
     }
   };
 
@@ -521,10 +525,10 @@ function DesignSystemContent() {
                   <Badge variant="destructive">Destructive</Badge>
                 </div>
                 <div className="flex flex-wrap gap-4">
-                  <Badge className="bg-success text-success-foreground hover:bg-success/90">Success</Badge>
-                  <Badge className="bg-warning text-warning-foreground hover:bg-warning/90">Warning</Badge>
-                  <Badge className="bg-info text-info-foreground hover:bg-info/90">Info</Badge>
-                  <Badge className="bg-primary text-primary-foreground hover:bg-primary/90">Feature</Badge>
+                  <Badge variant="success">Success</Badge>
+                  <Badge variant="warning">Warning</Badge>
+                  <Badge variant="info">Info</Badge>
+                  <Badge variant="feature">Feature</Badge>
                 </div>
               </div>
             </CardContent>
@@ -559,7 +563,7 @@ function DesignSystemContent() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Badge>New Feature</Badge>
+                  <Badge variant="feature">New Feature</Badge>
                   <p className="text-muted-foreground">
                     Cards are versatile components that can hold various types of content.
                   </p>
@@ -666,6 +670,124 @@ function DesignSystemContent() {
           </div>
         </section>
 
+        {/* Enhanced StatCard Components */}
+        <section>
+          <h2 className="text-3xl font-bold text-foreground mb-6">
+            Enhanced StatCard Components
+          </h2>
+          <div className="space-y-8">
+            {/* Basic StatCards */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Animated StatCards</CardTitle>
+                <CardDescription>
+                  StatCards with scroll-triggered animations and count-up effects
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <StatCard
+                    title="Monthly Revenue"
+                    value={45750}
+                    change={{
+                      value: 15.3,
+                      type: 'increase',
+                      period: 'from last month'
+                    }}
+                    icon="dollar-sign"
+                    animated={true}
+                    countUp={true}
+                  />
+
+                  <StatCard
+                    title="Active Users"
+                    value={1234}
+                    change={{
+                      value: 23.1,
+                      type: 'increase',
+                      period: 'this month'
+                    }}
+                    icon="users"
+                    animated={true}
+                    countUp={true}
+                    animationDelay={100}
+                  />
+
+                  <StatCard
+                    title="Completed Orders"
+                    value={1847}
+                    change={{
+                      value: 5.7,
+                      type: 'increase',
+                      period: 'from last week'
+                    }}
+                    icon="bar-chart"
+                    animated={true}
+                    countUp={true}
+                    animationDelay={200}
+                  />
+
+                  <StatCard
+                    title="Average Rating"
+                    value="4.8"
+                    change={{
+                      value: 0.2,
+                      type: 'increase',
+                      period: 'from last month'
+                    }}
+                    icon="star"
+                    animated={true}
+                    animationDelay={300}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <p className="text-sm text-muted-foreground">
+                  <strong>Note:</strong> Visit the{' '}
+                  <a href="/design-system/stat-cards" className="text-primary hover:underline">
+                    StatCard showcase page
+                  </a>{' '}
+                  to see the full animated versions with count-up effects and scroll triggers.
+                </p>
+              </CardFooter>
+            </Card>
+
+            {/* StatCard Features */}
+            <Card>
+              <CardHeader>
+                <CardTitle>StatCard Features</CardTitle>
+                <CardDescription>
+                  Advanced features for data visualization and user engagement
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-card-foreground">Animation Features</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Scroll-triggered animations with Intersection Observer</li>
+                      <li>• Smooth count-up effects for numeric values</li>
+                      <li>• Staggered animation delays for multiple cards</li>
+                      <li>• Visual progress indicators with gradient effects</li>
+                      <li>• Customizable animation timing and easing</li>
+                    </ul>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-card-foreground">Accessibility & Performance</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Respects prefers-reduced-motion setting</li>
+                      <li>• GPU-accelerated animations for 60fps</li>
+                      <li>• Proper ARIA labels during animations</li>
+                      <li>• CSS containment for optimized rendering</li>
+                      <li>• Automatic cleanup to prevent memory leaks</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
         {/* Accessibility Information */}
         <section>
           <h2 className="text-3xl font-bold text-foreground mb-6">
@@ -704,6 +826,151 @@ function DesignSystemContent() {
                     Clear focus indicators and logical tab order
                   </p>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Specialized Components */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">
+            Specialized Components
+          </h2>
+
+          {/* Hero Background */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Hero Background</CardTitle>
+              <CardDescription>
+                Animated background components for hero sections with multiple variants
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-foreground">Gradient Mesh</h4>
+                  <div className="relative h-32 rounded-lg overflow-hidden border-2 border-border bg-background">
+                    <HeroBackground
+                      variant="gradient-mesh"
+                      animation={true}
+                      intensity="strong"
+                      className="w-full h-full opacity-100"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-foreground bg-background/90 px-3 py-1 rounded-md border border-border shadow-sm">
+                        Gradient Mesh
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-foreground">Particle Field</h4>
+                  <div className="relative h-32 rounded-lg overflow-hidden border-2 border-border bg-background">
+                    <HeroBackground
+                      variant="particle-field"
+                      animation={true}
+                      intensity="strong"
+                      className="w-full h-full opacity-100"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-foreground bg-background/90 px-3 py-1 rounded-md border border-border shadow-sm">
+                        Particle Field
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Testimonial Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Testimonial Card</CardTitle>
+              <CardDescription>
+                Social proof components with ratings, avatars, and hover effects
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <TestimonialCard
+                  quote="Lumina has transformed how we manage our salon. The booking system is intuitive and our clients love it."
+                  author="Sarah Martinez"
+                  role="Owner"
+                  company="Bella Salon"
+                  rating={5}
+                  variant="floating"
+                  hover="lift"
+                  animated={true}
+                />
+
+                <TestimonialCard
+                  quote="The analytics and insights help us make better business decisions. Revenue is up 30% since we started using Lumina."
+                  author="Michael Johnson"
+                  role="Manager"
+                  company="Urban Cuts"
+                  rating={5}
+                  variant="gradient-border"
+                  hover="glow"
+                  animated={true}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Animated Counter */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Animated Counter</CardTitle>
+              <CardDescription>
+                Statistics components with smooth count-up animations and multiple formats
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <AnimatedCounter
+                  value={125000}
+                  format="currency"
+                  duration={1500}
+                  icon={<DollarSign />}
+                  iconPosition="top"
+                  label="Revenue Generated"
+                  labelPosition="bottom"
+                  variant="success"
+                  size="default"
+                  triggerOnScroll={false}
+                  preserveValue={true}
+                />
+
+                <AnimatedCounter
+                  value={98.5}
+                  format="percentage"
+                  duration={1500}
+                  icon={<TrendingUp />}
+                  iconPosition="top"
+                  label="Customer Satisfaction"
+                  labelPosition="bottom"
+                  variant="primary"
+                  size="default"
+                  triggerOnScroll={false}
+                  preserveValue={true}
+                />
+
+                <AnimatedCounter
+                  value={2500}
+                  format="integer"
+                  suffix="+"
+                  duration={1500}
+                  icon={<Users />}
+                  iconPosition="top"
+                  label="Happy Clients"
+                  labelPosition="bottom"
+                  variant="info"
+                  size="default"
+                  triggerOnScroll={false}
+                  preserveValue={true}
+                />
               </div>
             </CardContent>
           </Card>

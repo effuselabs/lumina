@@ -1,258 +1,119 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
+import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ThemeIndicator, ThemeStatus, ThemeSwitcher } from '@/components/ui/theme-switcher';
-import { useThemeSwitcher } from '@/hooks/use-theme-switcher';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Moon, Sun } from 'lucide-react';
 
-function ThemeTestContent() {
-    const { theme, resolvedTheme, isDark, isLight, isSystem, isTransitioning } = useThemeSwitcher();
+export default function ThemeTestPage() {
+    const { theme, setTheme, resolvedTheme } = useTheme();
 
     return (
-        <div className="min-h-screen bg-background p-8 transition-colors duration-200">
-            <div className="mx-auto max-w-4xl space-y-8">
-                {/* Header */}
-                <div className="text-center">
-                    <h1 className="text-lumina-h1 mb-4 text-foreground">
-                        Theme System Test Page
-                    </h1>
-                    <p className="text-lumina-body-lg text-muted-foreground">
-                        Test the enhanced dark/light theme implementation with smooth transitions
-                    </p>
+        <div className="min-h-screen bg-background text-foreground p-8">
+            <div className="max-w-4xl mx-auto space-y-8">
+                <div className="flex items-center justify-between">
+                    <h1 className="text-3xl font-bold">Theme Test Page</h1>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setTheme(resolvedTheme === 'light' ? 'dark' : 'light')}
+                        className="h-9 w-9 p-0"
+                    >
+                        <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                        <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                        <span className="sr-only">Toggle theme</span>
+                    </Button>
                 </div>
 
-                {/* Theme Controls */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Theme Controls</CardTitle>
-                        <CardDescription>
-                            Switch between light, dark, and system themes
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        {/* Default Theme Switcher */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Default Theme Switcher</h3>
-                            <ThemeSwitcher />
-                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Theme Information</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                            <p><strong>Current theme:</strong> {theme}</p>
+                            <p><strong>Resolved theme:</strong> {resolvedTheme}</p>
+                            <p><strong>HTML class:</strong> {typeof document !== 'undefined' ? document.documentElement.className : 'N/A'}</p>
+                        </CardContent>
+                    </Card>
 
-                        {/* Compact Theme Switcher */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Compact Theme Switcher</h3>
-                            <ThemeSwitcher variant="compact" />
-                        </div>
-
-                        {/* Theme Indicator */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Theme Indicator</h3>
-                            <ThemeIndicator />
-                        </div>
-
-                        {/* Theme Status (Debug) */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Theme Status (Debug)</h3>
-                            <ThemeStatus />
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Theme Information */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Current Theme Information</CardTitle>
-                        <CardDescription>
-                            Real-time theme state information
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Color Test</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <p className="text-sm font-medium">Theme Setting</p>
-                                <Badge variant={theme === 'system' ? 'default' : 'secondary'}>
-                                    {theme}
-                                </Badge>
+                                <p className="text-foreground">Foreground text</p>
+                                <p className="text-muted-foreground">Muted foreground text</p>
+                                <p className="text-lumina-gold">Lumina gold text</p>
+                                <p className="text-lumina-coral">Lumina coral text</p>
+                                <p className="text-success">Success text</p>
+                                <p className="text-error">Error text</p>
                             </div>
 
                             <div className="space-y-2">
-                                <p className="text-sm font-medium">Resolved Theme</p>
-                                <Badge variant={resolvedTheme === 'dark' ? 'default' : 'secondary'}>
-                                    {resolvedTheme}
-                                </Badge>
+                                <div className="w-full h-4 bg-lumina-gold rounded"></div>
+                                <div className="w-full h-4 bg-lumina-coral rounded"></div>
+                                <div className="w-full h-4 bg-deep-teal rounded"></div>
+                                <div className="w-full h-4 bg-primary rounded"></div>
+                                <div className="w-full h-4 bg-secondary rounded"></div>
                             </div>
+                        </CardContent>
+                    </Card>
 
-                            <div className="space-y-2">
-                                <p className="text-sm font-medium">States</p>
-                                <div className="flex flex-wrap gap-1">
-                                    {isDark && <Badge variant="outline">Dark</Badge>}
-                                    {isLight && <Badge variant="outline">Light</Badge>}
-                                    {isSystem && <Badge variant="outline">System</Badge>}
-                                    {isTransitioning && <Badge variant="destructive">Transitioning</Badge>}
-                                </div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Button Variants</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex flex-wrap gap-2">
+                                <Button variant="primary">Primary</Button>
+                                <Button variant="secondary">Secondary</Button>
+                                <Button variant="outline">Outline</Button>
+                                <Button variant="ghost">Ghost</Button>
+                                <Button variant="link">Link</Button>
+                                <Button variant="destructive">Destructive</Button>
                             </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
 
-                {/* Component Showcase */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Component Showcase</CardTitle>
-                        <CardDescription>
-                            Test how components look in different themes
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        {/* Buttons */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Buttons</h3>
-                            <div className="flex flex-wrap gap-3">
-                                <Button variant="primary">Primary Button</Button>
-                                <Button variant="secondary">Secondary Button</Button>
-                                <Button variant="outline">Outline Button</Button>
-                                <Button variant="ghost">Ghost Button</Button>
-                                <Button variant="destructive">Destructive Button</Button>
-                                <Button variant="link">Link Button</Button>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>CSS Variables Test</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                            <div
+                                className="w-full h-8 rounded"
+                                style={{ backgroundColor: 'var(--lumina-gold)' }}
+                            >
+                                <span className="text-xs p-1">--lumina-gold</span>
                             </div>
-                        </div>
-
-                        {/* Typography */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Typography</h3>
-                            <div className="space-y-2">
-                                <h1 className="text-lumina-h1">Heading 1 - Bold Leadership</h1>
-                                <h2 className="text-lumina-h2">Heading 2 - Clear Direction</h2>
-                                <h3 className="text-lumina-h3">Heading 3 - Focused Sections</h3>
-                                <p className="text-lumina-body-lg">
-                                    Body Large - Primary content for readability and engagement
-                                </p>
-                                <p className="text-lumina-body-sm text-muted-foreground">
-                                    Body Small - Secondary content and supporting information
-                                </p>
-                                <p className="text-lumina-caption text-muted-foreground">
-                                    Caption - Labels, metadata, and supporting text
-                                </p>
+                            <div
+                                className="w-full h-8 rounded"
+                                style={{ backgroundColor: 'var(--lumina-coral)' }}
+                            >
+                                <span className="text-xs p-1">--lumina-coral</span>
                             </div>
-                        </div>
-
-                        {/* Colors */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Brand Colors</h3>
-                            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-lumina-gold"></div>
-                                    <p className="text-sm">Lumina Gold</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-lumina-coral"></div>
-                                    <p className="text-sm">Lumina Coral</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-deep-teal"></div>
-                                    <p className="text-sm">Deep Teal</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-lumina-radiant"></div>
-                                    <p className="text-sm">Radiant Gradient</p>
-                                </div>
+                            <div
+                                className="w-full h-8 rounded"
+                                style={{ backgroundColor: 'var(--deep-teal)' }}
+                            >
+                                <span className="text-xs p-1 text-white">--deep-teal</span>
                             </div>
-                        </div>
-
-                        {/* Semantic Colors */}
-                        <div>
-                            <h3 className="text-lumina-h3 mb-3">Semantic Colors</h3>
-                            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-success"></div>
-                                    <p className="text-sm">Success</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-warning"></div>
-                                    <p className="text-sm">Warning</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-error"></div>
-                                    <p className="text-sm">Error</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="h-16 w-full rounded bg-info"></div>
-                                    <p className="text-sm">Info</p>
-                                </div>
+                            <div
+                                className="w-full h-8 rounded border"
+                                style={{
+                                    backgroundColor: 'var(--color-background)',
+                                    color: 'var(--color-foreground)',
+                                    borderColor: 'var(--color-border)'
+                                }}
+                            >
+                                <span className="text-xs p-1">--color-background / --color-foreground</span>
                             </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Document Classes Test */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Document Classes Test</CardTitle>
-                        <CardDescription>
-                            Verify that theme classes are applied to the document
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-2 font-mono text-sm">
-                            <p>
-                                <span className="font-medium">Document classes:</span>{' '}
-                                {typeof document !== 'undefined' ? document.documentElement.className : 'N/A'}
-                            </p>
-                            <p>
-                                <span className="font-medium">Data theme:</span>{' '}
-                                {typeof document !== 'undefined' ? document.documentElement.getAttribute('data-theme') || 'None' : 'N/A'}
-                            </p>
-                            <p>
-                                <span className="font-medium">Color scheme:</span>{' '}
-                                {typeof document !== 'undefined' ? document.documentElement.style.colorScheme || 'None' : 'N/A'}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Instructions */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Test Instructions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            <div>
-                                <h4 className="font-medium">1. Theme Switching</h4>
-                                <p className="text-sm text-muted-foreground">
-                                    Use the theme switchers above to change between light, dark, and system themes.
-                                    Verify that the transition is smooth and there's no flash of unstyled content.
-                                </p>
-                            </div>
-
-                            <div>
-                                <h4 className="font-medium">2. System Theme Detection</h4>
-                                <p className="text-sm text-muted-foreground">
-                                    Set the theme to "System" and then change your OS theme preference.
-                                    The page should automatically switch to match your system preference.
-                                </p>
-                            </div>
-
-                            <div>
-                                <h4 className="font-medium">3. Persistence</h4>
-                                <p className="text-sm text-muted-foreground">
-                                    Change the theme and refresh the page. Your theme preference should be remembered.
-                                </p>
-                            </div>
-
-                            <div>
-                                <h4 className="font-medium">4. Accessibility</h4>
-                                <p className="text-sm text-muted-foreground">
-                                    Test keyboard navigation with Tab and Enter keys. All theme controls should be accessible.
-                                </p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
     );
-}
-
-export default function ThemeTestPage() {
-    return <ThemeTestContent />;
 }

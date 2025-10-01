@@ -1,5 +1,7 @@
 'use client';
 
+import { currencyFormatter, useCountUp } from '@/hooks/use-count-up';
+import { useStatCardIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { cn } from '@/lib/utils';
 import {
   Activity as ActivityIcon,
@@ -13,7 +15,7 @@ import {
   Users as UsersIcon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useEffect, useMemo } from 'react';
 
 // Icon mapping for server-client component compatibility
 const iconMap = {
@@ -45,6 +47,11 @@ interface StatCardProps {
   size?: 'compact' | 'default' | 'large';
   loading?: boolean;
   className?: string;
+  // Animation capabilities
+  animated?: boolean;
+  countUp?: boolean;
+  animationDelay?: number;
+  formatter?: (value: number) => string;
 }
 
 /**
@@ -78,6 +85,10 @@ const StatCard = memo(
       size = 'default',
       loading = false,
       className,
+      animated = false,
+      countUp = false,
+      animationDelay = 0,
+      formatter,
     },
     ref
   ) {
@@ -88,8 +99,34 @@ const StatCard = memo(
       }
       return icon;
     }, [icon]);
+
+    // Animation hooks
+    const { ref: intersectionRef, isIntersecting } = useStatCardIntersectionObserver(animationDelay);
+
+    // Count-up animation for numeric values
+    const numericValue = typeof value === 'number' ? value : 0;
+    const shouldUseCountUp = countUp && typeof value === 'number' && !loading;
+
+    const { value: animatedValue, start: startCountUp } = useCountUp({
+      end: numericValue,
+      duration: 2000,
+      formatter: formatter || (shouldUseCountUp && title.toLowerCase().includes('revenue') ? currencyFormatter : undefined),
+      preserveValue: false,
+    });
+
+    // Start count-up animation when element comes into view
+    useEffect(() => {
+      if (shouldUseCountUp && isIntersecting && !loading) {
+        startCountUp();
+      }
+    }, [shouldUseCountUp, isIntersecting, loading, startCountUp]);
     // Memoize expensive calculations
     const formattedValue = useMemo(() => {
+      // Use animated value if count-up is enabled and animation is active
+      if (shouldUseCountUp) {
+        return animatedValue;
+      }
+
       if (typeof value === 'string') return value;
 
       // Format numbers based on context
@@ -106,7 +143,7 @@ const StatCard = memo(
       }
 
       return value.toLocaleString();
-    }, [value, title]);
+    }, [value, title, shouldUseCountUp, animatedValue]);
 
     const trendIcon = useMemo(() => {
       if (!change) return null;
@@ -160,12 +197,31 @@ const StatCard = memo(
       );
     }
 
+    // Combine refs for both forwarded ref and intersection observer
+    const combinedRef = (element: HTMLDivElement | null) => {
+      if (ref) {
+        if (typeof ref === 'function') {
+          ref(element);
+        } else {
+          ref.current = element;
+        }
+      }
+      if (intersectionRef) {
+        intersectionRef.current = element;
+      }
+    };
+
     return (
       <article
-        ref={ref}
+        ref={combinedRef}
         className={cn(
           'stat-card hover-lumina-lift-subtle transition-card',
           sizeClasses[size],
+          {
+            'stat-card-animated': animated,
+            'in-view': animated && isIntersecting,
+            'stat-card-progress': animated && isIntersecting,
+          },
           className
         )}
         role="article"
@@ -181,14 +237,20 @@ const StatCard = memo(
               {title}
             </h3>
             <p
-              className="stat-card-value"
+              className={cn(
+                'stat-card-value',
+                {
+                  'stat-card-value-counting': shouldUseCountUp,
+                  'stat-card-value-enhanced': animated,
+                }
+              )}
               aria-label={`Value: ${formattedValue}`}
               role="text"
             >
               <span aria-hidden="true">{formattedValue}</span>
               <span className="sr-only">
                 {typeof value === 'number' &&
-                title.toLowerCase().includes('revenue')
+                  title.toLowerCase().includes('revenue')
                   ? `${value} dollars`
                   : formattedValue}
               </span>
@@ -244,3 +306,4 @@ StatCard.displayName = 'StatCard';
 
 export { StatCard };
 export type { StatCardProps };
+

@@ -1,24 +1,23 @@
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
 import { Grid, GridItem } from '@/components/ui/grid';
 import { StatCard } from '@/components/ui/stat-card';
 import {
-  ArrowRight,
-  Calendar,
-  Check,
-  Shield,
-  Sparkles,
-  Star,
-  TrendingUp,
-  Users,
-  Zap,
+    ArrowRight,
+    Calendar,
+    Check,
+    Shield,
+    Sparkles,
+    Star,
+    TrendingUp,
+    Users,
+    Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -55,9 +54,9 @@ export default async function HomePage() {
   //   }
   // }
   return (
-    <div className="from-lumina-gold/5 to-lumina-coral/5 theme-transitioning min-h-screen bg-gradient-to-br via-cream">
+    <div className="theme-transitioning min-h-screen page-bg-gradient">
       {/* Enhanced Navigation Header */}
-      <header className="bg-surface/95 border-border/50 theme-transitioning relative z-10 border-b backdrop-blur-md">
+      <header className="nav-enhanced theme-transitioning relative z-10">
         <div className="container mx-auto px-4 lg:px-6">
           <nav
             className="flex items-center justify-between py-4 lg:py-6"
@@ -65,7 +64,7 @@ export default async function HomePage() {
           >
             {/* Enhanced Logo */}
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-lumina-radiant shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl nav-logo-enhanced">
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <div className="flex flex-col">
@@ -80,39 +79,32 @@ export default async function HomePage() {
 
             {/* Enhanced Navigation */}
             <div className="hidden items-center gap-2 md:flex">
-              <Button asChild variant="ghost" size="sm" className="font-medium">
-                <Link href="/features">Features</Link>
-              </Button>
-              <Button asChild variant="ghost" size="sm" className="font-medium">
-                <Link href="/pricing">Pricing</Link>
-              </Button>
-              <Button asChild variant="ghost" size="sm" className="font-medium">
-                <Link href="/design-system">Design System</Link>
-              </Button>
+              <Link href="/features" className="nav-link">Features</Link>
+              <Link href="/pricing" className="nav-link">Pricing</Link>
+              <Link href="/design-system" className="nav-link">Design System</Link>
               <div className="mx-2 h-6 w-px bg-border" aria-hidden="true" />
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="font-medium"
+              <Link
+                href="/auth/signin"
+                className="btn-nav-ghost inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300"
               >
-                <Link href="/auth/signin">Sign In</Link>
-              </Button>
-              <Button
-                asChild
-                variant="primary"
-                size="sm"
-                className="font-semibold shadow-md hover:shadow-lg"
+                Sign In
+              </Link>
+              <Link
+                href="/auth/signup"
+                className="btn-nav-primary inline-flex items-center justify-center px-5 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
               >
-                <Link href="/auth/signup">Get Started Free</Link>
-              </Button>
+                Get Started Free
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden">
-              <Button asChild variant="primary" size="sm">
-                <Link href="/auth/signup">Get Started</Link>
-              </Button>
+              <Link
+                href="/auth/signup"
+                className="btn-nav-primary inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
+              >
+                Get Started
+              </Link>
             </div>
           </nav>
         </div>
@@ -124,11 +116,11 @@ export default async function HomePage() {
       >
         {/* Enhanced Background */}
         <div
-          className="from-lumina-gold/8 to-lumina-coral/8 absolute inset-0 bg-gradient-to-br via-transparent"
+          className="absolute inset-0 hero-bg-gradient"
           aria-hidden="true"
         />
         <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,210,90,0.1),transparent_50%)] bg-[radial-gradient(circle_at_70%_80%,rgba(255,122,90,0.1),transparent_50%)]"
+          className="absolute inset-0 hero-radial-bg"
           aria-hidden="true"
         />
 
@@ -137,7 +129,7 @@ export default async function HomePage() {
             {/* Enhanced Brand Badge */}
             <Badge
               variant="secondary"
-              className="border-lumina-gold/30 bg-lumina-gold/15 animate-lumina-fade-in mb-8 px-4 py-2 text-sm font-semibold text-deep-teal shadow-sm"
+              className="animate-lumina-fade-in mb-8 px-4 py-2 text-sm font-semibold shadow-sm badge-lumina-gold"
             >
               <Sparkles className="mr-2 h-4 w-4" />
               AI-Powered Business Management Platform
@@ -145,24 +137,22 @@ export default async function HomePage() {
 
             {/* Enhanced Hero Title */}
             <div
-              className="animate-lumina-fade-in mb-8"
-              style={{ animationDelay: '100ms' }}
+              className="animate-lumina-fade-in mb-8 animate-delay-100"
             >
               <h1
                 id="hero-title"
-                className="mb-4 text-5xl font-bold tracking-tight text-deep-teal lg:text-7xl"
+                className="mb-4 text-5xl font-bold tracking-tight lg:text-7xl text-deep-teal"
               >
                 Lumina
               </h1>
-              <p className="bg-gradient-to-r from-lumina-coral to-lumina-gold bg-clip-text text-2xl font-semibold tracking-tight text-transparent lg:text-4xl">
+              <p className="text-2xl font-semibold tracking-tight lg:text-4xl text-gradient-lumina">
                 Intelligent Software for Salon Success
               </p>
             </div>
 
             {/* Enhanced Hero Description */}
             <p
-              className="text-foreground-muted animate-lumina-fade-in mx-auto mb-12 max-w-3xl text-lg leading-relaxed lg:text-xl"
-              style={{ animationDelay: '200ms' }}
+              className="text-foreground-muted animate-lumina-fade-in mx-auto mb-12 max-w-3xl text-lg leading-relaxed lg:text-xl animate-delay-200"
             >
               Transform your salon or barbershop with our AI-powered platform.
               Streamline appointments, delight clients, and boost revenue while
@@ -171,46 +161,36 @@ export default async function HomePage() {
 
             {/* Enhanced CTA Section */}
             <div
-              className="animate-lumina-fade-in mb-16"
-              style={{ animationDelay: '300ms' }}
+              className="animate-lumina-fade-in mb-16 animate-delay-300"
             >
               <div
                 className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
                 role="group"
                 aria-label="Get started actions"
               >
-                <Button
-                  asChild
-                  variant="primary"
-                  size="xl"
-                  className="min-w-[14rem] shadow-lg hover:shadow-xl"
+                <Link
+                  href="/auth/signup"
+                  aria-describedby="signup-description"
+                  className="btn-primary-gradient min-w-[14rem] inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300"
                 >
-                  <Link
-                    href="/auth/signup"
-                    aria-describedby="signup-description"
-                  >
-                    Start Free Trial
-                    <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="xl"
-                  className="hover:bg-surface/50 min-w-[14rem] border-2"
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/book/demo"
+                  aria-describedby="demo-description"
+                  className="btn-secondary-outline min-w-[14rem] inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300"
                 >
-                  <Link href="/book/demo" aria-describedby="demo-description">
-                    Watch Demo
-                    <Zap className="ml-2 h-5 w-5" aria-hidden="true" />
-                  </Link>
-                </Button>
+                  Watch Demo
+                  <Zap className="ml-2 h-5 w-5" aria-hidden="true" />
+                </Link>
               </div>
 
               {/* Enhanced Social Proof */}
               <div className="text-foreground-muted flex flex-wrap items-center justify-center gap-6 text-sm lg:gap-8">
                 <div className="flex items-center gap-2">
-                  <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                    <Check className="h-3 w-3 text-success" />
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full check-success-bg">
+                    <Check className="h-3 w-3 text-semantic-success" />
                   </div>
                   <span className="font-medium">14-day free trial</span>
                 </div>
@@ -242,23 +222,114 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Value Proposition Section */}
+      <section className="section-py-md section-bg-soft-peach theme-transitioning">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+                Stop managing your business. Start building your passion.
+              </h2>
+              <p className="text-foreground-muted text-lg leading-relaxed mb-8">
+                Lumina handles the administrative burden so you can focus on what you love most—creating beautiful experiences for your clients.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-center gap-3">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-success-subtle">
+                    <TrendingUp className="h-4 w-4 text-success" />
+                  </div>
+                  <span className="font-medium">24% average revenue increase</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-info-subtle">
+                    <Calendar className="h-4 w-4 text-info" />
+                  </div>
+                  <span className="font-medium">8.5 hours saved weekly</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-warning-subtle">
+                    <Users className="h-4 w-4 text-warning" />
+                  </div>
+                  <span className="font-medium">89% client retention rate</span>
+                </li>
+              </ul>
+            </div>
+            <div className="relative">
+              <div className="aspect-video rounded-2xl bg-lumina-section border-2 border-lumina-gold-subtle flex items-center justify-center">
+                <div className="text-center">
+                  <Sparkles className="h-16 w-16 mx-auto mb-4 text-lumina-coral" />
+                  <p className="text-foreground-muted font-medium">Product Preview Coming Soon</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="section-py-lg section-bg-clarity-blue theme-transitioning">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="text-center mb-16">
+            <Badge variant="secondary" className="mb-6 badge-lumina-gold">
+              <Zap className="mr-2 h-4 w-4" />
+              Simple Process
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+              Get started in minutes, not months
+            </h2>
+            <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
+              Our streamlined onboarding gets your salon up and running quickly
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span className="text-white font-bold text-xl">1</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-4 text-deep-teal">Sign Up & Setup</h3>
+              <p className="text-foreground-muted">
+                Create your account and customize your salon profile in under 5 minutes.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span className="text-white font-bold text-xl">2</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-4 text-deep-teal">Import Your Data</h3>
+              <p className="text-foreground-muted">
+                Easily migrate your existing client data and service information.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span className="text-white font-bold text-xl">3</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-4 text-deep-teal">Start Growing</h3>
+              <p className="text-foreground-muted">
+                Begin accepting bookings and watch your business thrive with AI insights.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Enhanced Features Section */}
       <section
-        className="bg-surface/50 theme-transitioning py-20 lg:py-32"
+        className="section-bg-white section-py-xl theme-transitioning"
         aria-labelledby="features-title"
       >
         <div className="container mx-auto px-4 lg:px-6">
           <div className="mb-20 text-center">
             <Badge
               variant="secondary"
-              className="border-lumina-coral/20 bg-lumina-coral/10 mb-6 text-deep-teal"
+              className="mb-6 badge-lumina-coral"
             >
               <TrendingUp className="mr-2 h-4 w-4" />
               Powerful Features
             </Badge>
             <h2
               id="features-title"
-              className="mb-6 text-4xl font-bold tracking-tight text-deep-teal lg:text-5xl"
+              className="mb-6 text-4xl font-bold tracking-tight lg:text-5xl text-deep-teal"
             >
               Everything you need to grow your business
             </h2>
@@ -272,13 +343,13 @@ export default async function HomePage() {
           <Grid variant="cards" gap="lg" className="mb-20">
             <GridItem>
               <Card
-                className="border-lumina-gold/20 from-surface to-surface/50 hover:border-lumina-gold/40 group h-full border-2 bg-gradient-to-br transition-all duration-300 hover:-translate-y-1 hover:shadow-lumina"
+                className="group h-full border-2 transition-all duration-300 hover:-translate-y-1 feature-card"
                 role="article"
                 aria-labelledby="booking-title"
               >
                 <CardHeader className="pb-4">
                   <div
-                    className="from-lumina-gold/20 to-lumina-coral/20 group-hover:from-lumina-gold/30 group-hover:to-lumina-coral/30 mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br transition-all duration-300"
+                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 feature-icon-bg"
                     aria-hidden="true"
                   >
                     <Calendar className="h-7 w-7 text-lumina-coral" />
@@ -328,13 +399,13 @@ export default async function HomePage() {
 
             <GridItem>
               <Card
-                className="border-lumina-gold/20 from-surface to-surface/50 hover:border-lumina-gold/40 group h-full border-2 bg-gradient-to-br transition-all duration-300 hover:-translate-y-1 hover:shadow-lumina"
+                className="group h-full border-2 transition-all duration-300 hover:-translate-y-1 feature-card"
                 role="article"
                 aria-labelledby="client-title"
               >
                 <CardHeader className="pb-4">
                   <div
-                    className="from-lumina-gold/20 to-lumina-coral/20 group-hover:from-lumina-gold/30 group-hover:to-lumina-coral/30 mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br transition-all duration-300"
+                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 feature-icon-bg"
                     aria-hidden="true"
                   >
                     <Users className="h-7 w-7 text-lumina-coral" />
@@ -384,13 +455,13 @@ export default async function HomePage() {
 
             <GridItem>
               <Card
-                className="border-lumina-gold/20 from-surface to-surface/50 hover:border-lumina-gold/40 group h-full border-2 bg-gradient-to-br transition-all duration-300 hover:-translate-y-1 hover:shadow-lumina"
+                className="group h-full border-2 transition-all duration-300 hover:-translate-y-1 feature-card"
                 role="article"
                 aria-labelledby="insights-title"
               >
                 <CardHeader className="pb-4">
                   <div
-                    className="from-lumina-gold/20 to-lumina-coral/20 group-hover:from-lumina-gold/30 group-hover:to-lumina-coral/30 mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br transition-all duration-300"
+                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 feature-icon-bg"
                     aria-hidden="true"
                   >
                     <TrendingUp className="h-7 w-7 text-lumina-coral" />
@@ -437,29 +508,26 @@ export default async function HomePage() {
               </Card>
             </GridItem>
           </Grid>
+        </div>
+      </section>
 
-          {/* Enhanced Stats Section */}
-          <div className="mb-12 text-center">
-            <Badge
-              variant="secondary"
-              className="border-deep-teal/20 bg-deep-teal/10 mb-6 text-deep-teal"
-            >
+      {/* Social Proof & Stats Section */}
+      <section className="section-py-lg section-bg-gradient-gold theme-transitioning">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="mb-16 text-center">
+            <Badge variant="secondary" className="mb-6 badge-deep-teal">
               <Star className="mr-2 h-4 w-4" />
               Proven Results
             </Badge>
-            <h3
-              id="stats-title"
-              className="mb-4 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl"
-            >
+            <h3 className="mb-6 text-3xl font-bold tracking-tight lg:text-4xl text-deep-teal">
               See the impact in action
             </h3>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
-              Real results from salon and barbershop owners who transformed
-              their business with Lumina
+              Real results from salon and barbershop owners who transformed their business with Lumina
             </p>
           </div>
 
-          <Grid variant="dashboard-stats" gap="lg">
+          <Grid variant="dashboard-stats" gap="lg" className="mb-16">
             <GridItem>
               <StatCard
                 title="Average Revenue Increase"
@@ -471,7 +539,7 @@ export default async function HomePage() {
                 }}
                 icon="trending-up"
                 size="default"
-                className="hover-lumina-lift-subtle border-success/20 from-surface to-success/5 border-2 bg-gradient-to-br"
+                className="hover-lumina-lift-subtle border-2 bg-success-subtle"
               />
             </GridItem>
             <GridItem>
@@ -485,7 +553,7 @@ export default async function HomePage() {
                 }}
                 icon="calendar"
                 size="default"
-                className="hover-lumina-lift-subtle border-info/20 from-surface to-info/5 border-2 bg-gradient-to-br"
+                className="hover-lumina-lift-subtle border-2 bg-info-subtle"
               />
             </GridItem>
             <GridItem>
@@ -499,84 +567,162 @@ export default async function HomePage() {
                 }}
                 icon="users"
                 size="default"
-                className="hover-lumina-lift-subtle border-warning/20 from-surface to-warning/5 border-2 bg-gradient-to-br"
+                className="hover-lumina-lift-subtle border-2 bg-warning-subtle"
               />
             </GridItem>
           </Grid>
+
+          {/* Customer Success Quote */}
+          <div className="text-center">
+            <blockquote className="mx-auto max-w-3xl">
+              <p className="text-xl font-medium text-foreground-muted italic mb-6">
+                "                &ldquo;Lumina transformed how we run our salon. We&apos;re booking 40% more appointments and our clients love the seamless experience.&rdquo;"
+              </p>
+              <footer className="flex items-center justify-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-lumina-section flex items-center justify-center">
+                  <Users className="h-6 w-6 text-lumina-coral" />
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-deep-teal">Sarah Chen</div>
+                  <div className="text-sm text-foreground-muted">Owner, Bloom Beauty Salon</div>
+                </div>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Preview Section */}
+      <section className="section-py-lg section-bg-lavender-mist theme-transitioning">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="text-center mb-16">
+            <Badge variant="secondary" className="mb-6 badge-lumina-coral">
+              <TrendingUp className="mr-2 h-4 w-4" />
+              Simple Pricing
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+              Simple, transparent pricing
+            </h2>
+            <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
+              Start free during our development phase, scale as you grow
+            </p>
+          </div>
+
+          <div className="max-w-md mx-auto">
+            <Card className="text-center p-8 border-2 border-lumina-gold-subtle bg-surface-translucent shadow-xl">
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2 text-deep-teal">Early Access</h3>
+                <p className="text-foreground-muted">Perfect for getting started</p>
+              </div>
+
+              <div className="mb-6">
+                <div className="text-5xl font-bold mb-2 text-gradient-lumina">Free</div>
+                <p className="text-foreground-muted">During development phase</p>
+              </div>
+
+              <ul className="space-y-3 mb-8 text-left">
+                <li className="flex items-center gap-3">
+                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <span className="text-sm">Full platform access</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <span className="text-sm">Priority support</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <span className="text-sm">Shape the product roadmap</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <span className="text-sm">Grandfathered pricing</span>
+                </li>
+              </ul>
+
+              <Link
+                href="/auth/signup"
+                className="w-full btn-primary-gradient inline-flex items-center justify-center py-3 text-base font-semibold rounded-lg transition-all duration-300"
+              >
+                Join Early Access
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+
+              <p className="text-xs text-foreground-muted mt-4">
+                No credit card required • Cancel anytime
+              </p>
+            </Card>
+          </div>
         </div>
       </section>
 
       {/* Enhanced Development Status */}
-      <section className="from-lumina-gold/10 via-lumina-coral/5 to-lumina-gold/10 theme-transitioning bg-gradient-to-r py-20">
+      <section className="section-py-lg section-bg-gradient-coral theme-transitioning">
         <div className="container mx-auto px-4 lg:px-6">
-          <Card className="border-lumina-gold/30 bg-surface/95 mx-auto max-w-3xl border-2 text-center shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl">
+          <Card className="mx-auto max-w-3xl border-2 text-center shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl border-lumina-gold-subtle bg-surface-translucent">
             <CardHeader className="pb-6">
-              <div className="mx-auto mb-6 flex h-20 w-20 animate-lumina-pulse-subtle items-center justify-center rounded-2xl bg-lumina-radiant shadow-lg">
+              <div className="mx-auto mb-6 flex h-20 w-20 animate-lumina-pulse-subtle items-center justify-center rounded-2xl shadow-lg bg-lumina-radiant">
                 <Sparkles className="h-10 w-10 text-white" />
               </div>
               <Badge
                 variant="secondary"
-                className="border-lumina-coral/30 bg-lumina-coral/15 mx-auto mb-4 text-deep-teal"
+                className="mx-auto mb-4 badge-lumina-coral"
               >
                 <Zap className="mr-2 h-4 w-4" />
                 Early Access Available
               </Badge>
-              <CardTitle className="mb-4 text-2xl font-bold text-deep-teal lg:text-3xl">
-                🚧 Building the Future of Salon Management
+              <CardTitle className="mb-4 text-2xl font-bold lg:text-3xl text-deep-teal">
+                🎯 Be Part of Something Revolutionary
               </CardTitle>
               <CardDescription className="text-foreground-muted text-lg leading-relaxed lg:text-xl">
-                Lumina is currently in active development. Join our early access
-                program to help shape the platform and get exclusive access to
-                new features as they launch.
+                Join forward-thinking salon owners who are shaping the future of beauty business management. Get exclusive early access, priority support, and help us build the perfect platform for your needs.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="mb-6 flex flex-col justify-center gap-4 sm:flex-row">
-                <Button
-                  asChild
-                  variant="primary"
-                  size="lg"
-                  className="shadow-lg hover:shadow-xl"
+                <Link
+                  href="/auth/signup"
+                  className="btn-primary-gradient inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
-                  <Link href="/auth/signup">Join Early Access</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-2"
+                  Join Early Access
+                </Link>
+                <Link
+                  href="/design-system"
+                  className="btn-secondary-outline inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300 border-2"
                 >
-                  <Link href="/design-system">View Design System</Link>
-                </Button>
+                  View Design System
+                </Link>
               </div>
 
               {/* Progress Indicators */}
               <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
-                <div className="bg-success/10 flex flex-col items-center gap-2 rounded-lg p-3">
-                  <div className="bg-success/20 flex h-8 w-8 items-center justify-center rounded-full">
-                    <Check className="h-4 w-4 text-success" />
+                <div className="flex flex-col items-center gap-2 rounded-lg p-3 progress-success">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full progress-success-icon">
+                    <Check className="h-4 w-4 text-semantic-success" />
                   </div>
-                  <span className="font-medium text-success">
+                  <span className="font-medium text-semantic-success">
                     Core Platform
                   </span>
                   <span className="text-foreground-muted text-xs">Ready</span>
                 </div>
-                <div className="bg-warning/10 flex flex-col items-center gap-2 rounded-lg p-3">
-                  <div className="bg-warning/20 flex h-8 w-8 items-center justify-center rounded-full">
-                    <Zap className="h-4 w-4 text-warning" />
+                <div className="flex flex-col items-center gap-2 rounded-lg p-3 progress-warning">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full progress-warning-icon">
+                    <Zap className="h-4 w-4 text-semantic-warning" />
                   </div>
-                  <span className="font-medium text-warning">
+                  <span className="font-medium text-semantic-warning">
                     Booking System
                   </span>
                   <span className="text-foreground-muted text-xs">
                     In Progress
                   </span>
                 </div>
-                <div className="bg-info/10 flex flex-col items-center gap-2 rounded-lg p-3">
-                  <div className="bg-info/20 flex h-8 w-8 items-center justify-center rounded-full">
-                    <Star className="h-4 w-4 text-info" />
+                <div className="flex flex-col items-center gap-2 rounded-lg p-3 progress-info">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full progress-info-icon">
+                    <Star className="h-4 w-4 text-semantic-info" />
                   </div>
-                  <span className="font-medium text-info">AI Features</span>
+                  <span className="font-medium text-semantic-info">AI Features</span>
                   <span className="text-foreground-muted text-xs">
                     Coming Soon
                   </span>
@@ -587,10 +733,77 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="section-py-lg section-bg-sage-green theme-transitioning">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="text-center mb-16">
+            <Badge variant="secondary" className="mb-6 badge-lumina-gold">
+              <Shield className="mr-2 h-4 w-4" />
+              Frequently Asked
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+              Questions & Answers
+            </h2>
+            <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
+              Everything you need to know about Lumina and our early access program
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-6">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+                Is Lumina really free during early access?
+              </h3>
+              <p className="text-foreground-muted">
+                Yes! Early access is completely free with no hidden costs. You&apos;ll get full platform access and help shape our development roadmap. Early access users will also receive grandfathered pricing when we launch.
+              </p>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+                How do I migrate my existing client data?
+              </h3>
+              <p className="text-foreground-muted">
+                Our onboarding team will help you import your existing client data, appointment history, and service information. We support imports from most major salon management systems and spreadsheets.
+              </p>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+                What happens when Lumina officially launches?
+              </h3>
+              <p className="text-foreground-muted">
+                Early access users will automatically transition to our launch version with special grandfathered pricing. You&apos;ll keep all your data and settings, plus get priority access to new features.
+              </p>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+                Do you offer training and support?
+              </h3>
+              <p className="text-foreground-muted">
+                Absolutely! Early access users get priority support, personalized onboarding, and direct access to our development team. We&apos;re here to ensure your success every step of the way.
+              </p>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-foreground-muted mb-6">Still have questions?</p>
+            <Link
+              href="/contact"
+              className="btn-contact-prominent inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300"
+            >
+              Contact Our Team
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Enhanced Footer */}
       <footer className="theme-transitioning bg-deep-teal py-16 text-white">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-12">
             {/* Enhanced Brand Section */}
             <div className="lg:col-span-2">
               <div className="mb-6 flex items-center gap-3">
@@ -599,45 +812,41 @@ export default async function HomePage() {
                 </div>
                 <div>
                   <span className="text-2xl font-bold">Lumina</span>
-                  <div className="text-sm font-medium text-white/70">
+                  <div className="text-sm font-medium footer-text-secondary">
                     Salon Management Platform
                   </div>
                 </div>
               </div>
-              <p className="mb-6 max-w-md text-lg leading-relaxed text-white/80">
+              <p className="mb-6 max-w-md text-lg leading-relaxed footer-text-muted">
                 AI-powered business management platform designed specifically
                 for salons and barbershops. Focus on your craft, not paperwork.
               </p>
 
               {/* CTA in Footer */}
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Button
-                  asChild
-                  variant="secondary"
-                  size="sm"
-                  className="border-white/20 bg-white/10 text-white hover:bg-white/20"
+                <Link
+                  href="/auth/signup"
+                  className="btn-white-elevated inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
                 >
-                  <Link href="/auth/signup">Start Free Trial</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="sm"
-                  className="text-white/80 hover:bg-white/10 hover:text-white"
+                  Start Free Trial
+                </Link>
+                <Link
+                  href="/contact"
+                  className="btn-footer-ghost inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
                 >
-                  <Link href="/contact">Contact Sales</Link>
-                </Button>
+                  Contact Sales
+                </Link>
               </div>
             </div>
 
             {/* Product Links */}
             <div>
               <h4 className="mb-6 text-lg font-semibold">Product</h4>
-              <ul className="space-y-3 text-white/80">
+              <ul className="space-y-3 footer-text-muted">
                 <li>
                   <Link
                     href="/features"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
+                    className="footer-link"
                   >
                     Features
                   </Link>
@@ -645,7 +854,7 @@ export default async function HomePage() {
                 <li>
                   <Link
                     href="/pricing"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
+                    className="footer-link"
                   >
                     Pricing
                   </Link>
@@ -653,7 +862,7 @@ export default async function HomePage() {
                 <li>
                   <Link
                     href="/integrations"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
+                    className="footer-link"
                   >
                     Integrations
                   </Link>
@@ -661,7 +870,7 @@ export default async function HomePage() {
                 <li>
                   <Link
                     href="/api"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
+                    className="footer-link"
                   >
                     API
                   </Link>
@@ -669,56 +878,9 @@ export default async function HomePage() {
                 <li>
                   <Link
                     href="/design-system"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
+                    className="footer-link"
                   >
                     Design System
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company Links */}
-            <div>
-              <h4 className="mb-6 text-lg font-semibold">Company</h4>
-              <ul className="space-y-3 text-white/80">
-                <li>
-                  <Link
-                    href="/about"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
-                  >
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/blog"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
-                  >
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
-                  >
-                    Privacy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="inline-block transition-colors hover:translate-x-1 hover:text-white"
-                  >
-                    Terms
                   </Link>
                 </li>
               </ul>
@@ -726,26 +888,26 @@ export default async function HomePage() {
           </div>
 
           {/* Enhanced Footer Bottom */}
-          <div className="mt-12 border-t border-white/20 pt-8">
+          <div className="mt-12 border-t footer-border pt-8">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <div className="text-center text-white/60 md:text-left">
+              <div className="text-center footer-text-subtle md:text-left">
                 <p>&copy; 2024 Lumina. All rights reserved.</p>
                 <p className="mt-1 text-sm">
-                  Built with passion for salon and barbershop owners.
+                  Created by <Link href="https://effuselabs.com" target="_blank" rel="noopener noreferrer" className="footer-link font-medium">Effuse Labs</Link>
                 </p>
               </div>
 
               {/* Social Links Placeholder */}
               <div className="flex items-center gap-4">
-                <span className="text-sm text-white/60">Follow us:</span>
+                <span className="text-sm footer-text-subtle">Follow us:</span>
                 <div className="flex gap-2">
-                  <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full btn-social">
                     <span className="text-xs">𝕏</span>
                   </div>
-                  <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full btn-social">
                     <span className="text-xs">in</span>
                   </div>
-                  <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full btn-social">
                     <span className="text-xs">ig</span>
                   </div>
                 </div>

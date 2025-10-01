@@ -2170,3 +2170,377 @@ Use this template for new architectural decisions:
 - Solid foundation for scalable application development
 
 **Related Issues**: [LUM-117](https://linear.app/scootr-ca/issue/LUM-117) - Build configuration optimization
+
+---
+
+## ADR-045: Landing Page Button Implementation Strategy
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Landing page buttons were not displaying properly due to Button component wrapper issues, affecting user experience and conversion potential.
+
+**Decision**: Convert Button components to direct Link elements with proper CSS classes while maintaining existing design system styling.
+
+**Rationale**:
+
+- Ensures buttons display correctly with proper styling
+- Maintains existing bulletproof CSS-in-JS hybrid architecture
+- Preserves design system consistency and theme switching
+- Improves user experience and conversion potential
+- Follows existing component patterns and accessibility standards
+
+**Alternatives Considered**:
+
+1. **Fix Button component wrapper issues**: Debug and fix existing Button component
+   - Rejected: Complex debugging with uncertain timeline and potential for regression
+2. **Create new button components**: Build separate landing page button components
+   - Rejected: Creates parallel systems and maintenance overhead
+3. **Use inline styling**: Apply styles directly without CSS classes
+   - Rejected: Breaks design system consistency and maintainability
+
+**Impact**:
+
+- Improved landing page user experience with properly styled buttons
+- Maintained design system consistency and theme switching capabilities
+- Preserved existing accessibility features and component patterns
+- Foundation for future landing page enhancements
+- Better conversion potential through improved visual presentation
+
+**Related Issues**: Landing page button styling fixes
+
+---
+
+## ADR-046: Landing Page Footer Structure Simplification
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Landing page footer contained unnecessary "Company" section and needed proper attribution to Effuse Labs as the software creator.
+
+**Decision**: Remove "Company" section from footer and add Effuse Labs attribution as software creator with proper linking.
+
+**Rationale**:
+
+- Simplifies footer structure and reduces visual clutter
+- Provides proper attribution to software creator (Effuse Labs)
+- Maintains professional appearance while improving clarity
+- Follows client requirements for company attribution
+- Reduces maintenance overhead for unnecessary links
+
+**Alternatives Considered**:
+
+1. **Keep Company section with Effuse Labs links**: Maintain existing structure
+   - Rejected: Creates confusion about company identity and adds unnecessary complexity
+2. **Remove all company information**: Minimal footer approach
+   - Rejected: Doesn't provide proper attribution to software creator
+3. **Add Effuse Labs as separate section**: Create dedicated company section
+   - Rejected: Adds unnecessary complexity to footer structure
+
+**Impact**:
+
+- Cleaner, more focused footer design
+- Proper attribution to Effuse Labs as software creator
+- Reduced maintenance overhead for footer links
+- Improved clarity about company relationships
+- Better alignment with client branding requirements
+
+**Related Issues**: Footer structure optimization
+
+---
+
+## ADR-047: Landing Page Spec Consolidation Strategy
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Previous `landing-page-color-alignment` spec was largely completed but had narrow scope, while new comprehensive enhancement needs required broader approach.
+
+**Decision**: Archive completed `landing-page-color-alignment` spec and create comprehensive `landing-page-premium-enhancements` spec that builds upon existing work.
+
+**Rationale**:
+
+- Prevents duplicate work and conflicting specifications
+- Builds upon completed color alignment foundation
+- Provides comprehensive approach to landing page enhancement
+- Maintains proper documentation standards and project organization
+- Creates clear migration path from previous work
+
+**Alternatives Considered**:
+
+1. **Continue with color alignment spec**: Extend existing spec scope
+   - Rejected: Spec was too narrowly focused and mostly completed
+2. **Create parallel specs**: Maintain both specifications
+   - Rejected: Creates confusion and potential conflicts
+3. **Start fresh without archiving**: Ignore previous work
+   - Rejected: Loses valuable completed work and documentation
+
+**Impact**:
+
+- Clean project organization with proper spec archival
+- Comprehensive approach to landing page enhancement
+- Clear foundation building upon completed color work
+- Proper documentation standards maintained
+- Efficient use of previous development work
+
+**Related Issues**: Spec consolidation and project organization
+
+---
+
+## ADR-048: Design System Extension Strategy for Premium Enhancements
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Landing page premium enhancements needed to build upon existing bulletproof v3.0 design system rather than creating parallel systems.
+
+**Decision**: Extend existing design system components with premium variants while maintaining backward compatibility and existing architecture.
+
+**Rationale**:
+
+- Preserves existing bulletproof CSS-in-JS hybrid architecture
+- Maintains backward compatibility with all existing usage patterns
+- Builds upon proven 50+ production-ready components
+- Ensures consistent theme switching and accessibility compliance
+- Creates reusable enhancements for entire application
+
+**Alternatives Considered**:
+
+1. **Create separate premium design system**: Build parallel component library
+   - Rejected: Creates maintenance overhead and potential inconsistencies
+2. **Replace existing components**: Rebuild components with premium features
+   - Rejected: Breaks existing functionality and creates regression risk
+3. **Minimal enhancements only**: Basic improvements without system integration
+   - Rejected: Doesn't provide comprehensive premium experience
+
+**Impact**:
+
+- Enhanced design system with premium capabilities
+- Maintained existing architecture and compatibility
+- Reusable premium components across entire application
+- Consistent theme switching and accessibility compliance
+- Foundation for world-class user experience
+
+**Related Issues**: [Landing Page Premium Enhancements Spec](../.kiro/specs/landing-page-premium-enhancements/)
+
+---
+
+## ADR-049: Comprehensive Landing Page Enhancement Scope
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Landing page required transformation to world-class experience with sophisticated visual design, micro-interactions, and premium features while maintaining existing functionality.
+
+**Decision**: Implement comprehensive enhancement plan covering typography, animations, visual elements, performance, accessibility, mobile optimization, SEO, and design system integration.
+
+**Rationale**:
+
+- Creates competitive advantage through premium user experience
+- Builds upon existing solid foundation rather than starting over
+- Addresses all aspects of modern web application requirements
+- Provides systematic approach to enhancement implementation
+- Creates reusable patterns for entire application
+
+**Alternatives Considered**:
+
+1. **Incremental improvements only**: Small, focused enhancements
+   - Rejected: Doesn't achieve world-class experience goals
+2. **Complete redesign**: Start over with new design approach
+   - Rejected: Loses existing work and creates unnecessary risk
+3. **Third-party template integration**: Use external landing page template
+   - Rejected: Poor integration with existing design system and brand
+
+**Impact**:
+
+- World-class landing page experience with premium features
+- Comprehensive enhancement across all user experience aspects
+- Systematic implementation approach with clear deliverables
+- Enhanced design system benefiting entire application
+- Competitive advantage through sophisticated user experience
+
+**Related Issues**: [Landing Page Premium Enhancements Spec](../.kiro/specs/landing-page-premium-enhancements/)
+
+---
+
+## ADR-050: Theme System Integration for Premium Features
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: All premium landing page enhancements must work seamlessly with existing dark/light theme switching system to maintain consistent user experience.
+
+**Decision**: Ensure all premium variants, animations, and visual effects are fully compatible with existing theme system and provide optimal experience in both light and dark modes.
+
+**Rationale**:
+
+- Maintains consistent user experience across theme modes
+- Preserves existing theme switching functionality
+- Ensures premium features don't break accessibility compliance
+- Provides optimal visual experience in both themes
+- Builds upon existing bulletproof theme architecture
+
+**Alternatives Considered**:
+
+1. **Light mode only premium features**: Focus on single theme implementation
+   - Rejected: Breaks existing theme switching functionality
+2. **Separate premium themes**: Create dedicated themes for premium features
+   - Rejected: Creates complexity and maintenance overhead
+3. **Basic theme support**: Minimal theme compatibility
+   - Rejected: Doesn't provide optimal user experience
+
+**Impact**:
+
+- Seamless premium experience across both theme modes
+- Maintained existing theme switching functionality
+- Enhanced accessibility compliance in all theme modes
+- Optimal visual experience for all users
+- Foundation for future theme-aware premium features
+
+**Related Issues**: Theme system integration requirements
+
+---
+
+## ADR-025: Testimonial Card Animation Architecture
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Testimonial cards required premium scroll-triggered animations to enhance user experience and align with Lumina's sophisticated brand positioning.
+
+**Decision**: Implement scroll-triggered animation system using Intersection Observer API with sophisticated timing, easing, and GPU acceleration.
+
+**Rationale**:
+
+- Provides premium user experience that enhances perceived quality
+- Uses performant Intersection Observer API for optimal scroll performance
+- Implements sophisticated animation timing and easing for professional feel
+- Maintains accessibility compliance with reduced motion support
+- Integrates seamlessly with existing design system and theme switching
+
+**Alternatives Considered**:
+
+1. **CSS-only animations**: Use pure CSS animations without JavaScript
+   - Rejected: Limited control over timing and scroll-based triggering
+2. **Scroll event listeners**: Use traditional scroll event handling
+   - Rejected: Performance issues and complexity of throttling/debouncing
+3. **Third-party animation library**: Use Framer Motion or similar
+   - Rejected: Adds bundle size and architectural complexity
+4. **Simple fade-in effects**: Basic opacity transitions only
+   - Rejected: Insufficient for premium brand positioning
+
+**Impact**:
+
+- Enhanced user experience with professional-grade animations
+- Established reusable animation patterns for other components
+- Improved perceived quality and brand positioning
+- Foundation for premium component enhancement strategy
+- Maintained excellent performance with GPU acceleration
+
+**Related Issues**: Landing Page Premium Enhancements
+
+---
+
+## ADR-026: Animation Performance Optimization Strategy
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Premium animations required optimal performance to maintain 60fps across all devices while providing sophisticated visual effects.
+
+**Decision**: Implement GPU-accelerated animations with CSS containment, proper will-change management, and performance monitoring.
+
+**Rationale**:
+
+- GPU acceleration ensures smooth 60fps animations across devices
+- CSS containment prevents layout thrashing and improves rendering performance
+- Proper will-change management optimizes browser rendering pipeline
+- Performance monitoring ensures animations don't impact page performance
+- Accessibility compliance through comprehensive reduced motion support
+
+**Alternatives Considered**:
+
+1. **CPU-based animations**: Use standard CSS transitions without GPU acceleration
+   - Rejected: Performance issues on lower-end devices
+2. **JavaScript-based animations**: Use requestAnimationFrame for custom animations
+   - Rejected: More complex implementation with potential performance issues
+3. **Simplified animations**: Reduce animation complexity for better performance
+   - Rejected: Insufficient for premium brand positioning requirements
+
+**Impact**:
+
+- Consistent 60fps animation performance across all devices
+- Optimal browser rendering with minimal performance impact
+- Professional animation quality that enhances brand perception
+- Established performance patterns for future animation development
+- Comprehensive accessibility compliance with reduced motion support
+
+**Related Issues**: Landing Page Premium Enhancements
+
+---
+
+## ADR-027: CSS Architecture for Premium Component Enhancements
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Premium component enhancements required clean CSS architecture that integrates with existing design system while adding sophisticated styling.
+
+**Decision**: Layer premium enhancement styles in global CSS with proper specificity, containment, and theme integration.
+
+**Rationale**:
+
+- Maintains existing CSS-in-JS hybrid architecture patterns
+- Provides proper specificity management to prevent style conflicts
+- Integrates seamlessly with existing theme switching system
+- Enables reusable animation and styling patterns
+- Maintains clean separation between base components and premium enhancements
+
+**Alternatives Considered**:
+
+1. **Component-level CSS modules**: Separate CSS files for each component
+   - Rejected: Fragments styling and makes theme integration complex
+2. **CSS-in-JS for animations**: Use styled-components or emotion
+   - Rejected: Architectural change that conflicts with existing patterns
+3. **Inline styles for animations**: Use React style props
+   - Rejected: Poor performance and maintainability for complex animations
+4. **Separate premium stylesheet**: Create dedicated premium.css file
+   - Rejected: Creates maintenance overhead and potential conflicts
+
+**Impact**:
+
+- Clean, maintainable CSS architecture for premium enhancements
+- Seamless integration with existing design system and theme switching
+- Reusable patterns for future premium component development
+- Optimal performance through proper CSS organization
+- Foundation for systematic premium enhancement rollout
+
+**Related Issues**: Landing Page Premium Enhancements
+
+---
+
+## ADR-028: Development Workflow Optimization for Animation Development
+
+**Date**: September 30, 2025  
+**Status**: Accepted  
+**Context**: Animation development required efficient debugging workflow to iterate quickly on complex visual effects and timing.
+
+**Decision**: Disable VSCode autofix during animation development and implement systematic debugging approach with temporary visual indicators.
+
+**Rationale**:
+
+- VSCode autofix interference prevented effective animation debugging
+- Temporary visual indicators (debug borders) enabled precise timing validation
+- Systematic debugging approach improved development efficiency
+- Clean production code achieved through proper cleanup process
+- Established efficient workflow for future animation development
+
+**Alternatives Considered**:
+
+1. **Work around autofix**: Develop animations despite autofix interference
+   - Rejected: Inefficient development process with constant code restoration
+2. **Disable all formatting**: Turn off all code formatting during development
+   - Rejected: Too broad and affects code quality for non-animation work
+3. **Use separate development branch**: Develop animations in isolation
+   - Rejected: Creates integration complexity and workflow overhead
+
+**Impact**:
+
+- Efficient animation development workflow with minimal interference
+- Systematic debugging approach that can be reused for future work
+- Clean production code through proper development and cleanup process
+- Established best practices for complex visual effect development
+- Improved developer experience for animation-focused work
+
+**Related Issues**: Landing Page Premium Enhancements

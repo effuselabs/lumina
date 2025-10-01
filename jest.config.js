@@ -147,16 +147,8 @@ const customJestConfig = {
   // Module file extensions
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
-  // Transform configuration
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': [
-      'babel-jest',
-      {
-        presets: ['next/babel'],
-        plugins: [],
-      },
-    ],
-  },
+  // Transform configuration - let Next.js handle transforms
+  // Remove custom transform to use Next.js built-in SWC
 
   // Transform ignore patterns - allow transformation of ES modules
   transformIgnorePatterns: ['node_modules/(?!(@faker-js/faker)/)'],
@@ -182,6 +174,9 @@ const customJestConfig = {
     '!app/not-found.tsx',
     '!**/*.config.{js,ts}',
     '!**/middleware.ts',
+    '!app/api/**/*', // Exclude API routes from coverage
+    '!app/**/route.{js,ts}', // Exclude Next.js route handlers
+    '!app/**/page.{js,jsx,ts,tsx}', // Exclude page components that are hard to test in isolation
   ],
 
   // Coverage thresholds

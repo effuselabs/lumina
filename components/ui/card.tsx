@@ -1,19 +1,40 @@
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200 hover:shadow-md dark:border-border',
-      className
-    )}
-    {...props}
-  />
-));
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'glass' | 'gradient-border' | 'floating' | 'premium';
+  hover?: 'lift' | 'glow' | 'scale' | 'none';
+  animated?: boolean;
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant = 'default', hover = 'none', animated = false, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        // Base card styles
+        'rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200',
+        // Default hover effect
+        hover === 'none' && 'hover:shadow-md',
+        // Variant styles
+        variant === 'glass' && 'card-glass',
+        variant === 'gradient-border' && 'card-gradient-border',
+        variant === 'floating' && 'card-floating',
+        variant === 'premium' && 'card-premium',
+        // Hover effect styles
+        hover === 'lift' && 'card-hover-lift',
+        hover === 'glow' && 'card-hover-glow',
+        hover === 'scale' && 'card-hover-scale',
+        // Animation styles
+        animated && 'card-animated',
+        // Dark theme border
+        'dark:border-border',
+        className
+      )}
+      {...props}
+    />
+  )
+);
 Card.displayName = 'Card';
 
 const CardHeader = React.forwardRef<

@@ -41,15 +41,15 @@ export function ThemeProvider({
     };
 
     // Resolve theme based on current theme setting
-    const resolveTheme = (currentTheme: Theme): ResolvedTheme => {
+    const resolveTheme = React.useCallback((currentTheme: Theme): ResolvedTheme => {
         if (currentTheme === 'system') {
             return getSystemTheme();
         }
         return currentTheme;
-    };
+    }, []);
 
     // Apply theme to document with smooth transitions
-    const applyTheme = (resolvedTheme: ResolvedTheme, withTransition = true) => {
+    const applyTheme = React.useCallback((resolvedTheme: ResolvedTheme, withTransition = true) => {
         const root = document.documentElement;
 
         // Start transition if enabled
@@ -69,6 +69,19 @@ export function ThemeProvider({
         // Update color-scheme for better browser integration
         root.style.colorScheme = resolvedTheme;
 
+        // Force CSS custom properties update
+        if (resolvedTheme === 'dark') {
+            root.style.setProperty('--color-background', '#0a0a0a');
+            root.style.setProperty('--color-foreground', '#fafafa');
+            root.style.setProperty('--color-surface', '#171717');
+            root.style.setProperty('--color-border', '#27272a');
+        } else {
+            root.style.setProperty('--color-background', '#ffffff');
+            root.style.setProperty('--color-foreground', '#0B2B33');
+            root.style.setProperty('--color-surface', '#ffffff');
+            root.style.setProperty('--color-border', '#e5e7eb');
+        }
+
         // Update meta theme-color for mobile browsers
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
@@ -85,13 +98,12 @@ export function ThemeProvider({
                 root.classList.remove('theme-transitioning');
             }, 200);
         }
-    };
+    }, [enableTransitions, mounted]);
 
     // Set theme with persistence and validation
     const setTheme = (newTheme: Theme) => {
         // Validate theme value
         if (!['light', 'dark', 'system'].includes(newTheme)) {
-            console.warn('Invalid theme value:', newTheme);
             return;
         }
 
@@ -100,8 +112,8 @@ export function ThemeProvider({
         // Persist theme preference
         try {
             localStorage.setItem(storageKey, newTheme);
-        } catch (error) {
-            console.warn('Failed to save theme preference:', error);
+        } catch {
+            // Silently handle storage error
         }
 
         const resolved = resolveTheme(newTheme);
@@ -136,8 +148,7 @@ export function ThemeProvider({
 
                 // Apply theme without transition on initial load
                 applyTheme(resolved, false);
-            } catch (error) {
-                console.warn('Failed to load theme preference:', error);
+            } catch {
                 // Fallback to default theme
                 const resolved = resolveTheme(defaultTheme);
                 setResolvedTheme(resolved);
@@ -147,7 +158,7 @@ export function ThemeProvider({
 
         initializeTheme();
         setMounted(true);
-    }, [defaultTheme, storageKey]);
+    }, [defaultTheme, storageKey, applyTheme, resolveTheme]);
 
     // Listen for system theme changes with improved handling
     useEffect(() => {
@@ -174,7 +185,7 @@ export function ThemeProvider({
 
         mediaQuery.addEventListener('change', handleSystemThemeChange);
         return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
-    }, [theme, mounted, resolvedTheme]);
+    }, [theme, mounted, resolvedTheme, applyTheme]);
 
     // Handle visibility change to sync theme when tab becomes active
     useEffect(() => {
@@ -192,7 +203,7 @@ export function ThemeProvider({
 
         document.addEventListener('visibilitychange', handleVisibilityChange);
         return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-    }, [mounted, theme, resolvedTheme]);
+    }, [mounted, theme, resolvedTheme, applyTheme]);
 
     const contextValue: ThemeContextValue = {
         theme,

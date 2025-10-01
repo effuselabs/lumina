@@ -155,29 +155,23 @@ const buttonVariants = cva(
           // Performance optimizations
           'gpu-accelerated optimize-repaint',
         ],
-        // Outline - Simplified with CSS-in-JS backup (removed conflicting Tailwind classes)
+        // Outline - Fixed visibility with proper contrast
         outline: [
-          // Base styles only - let CSS-in-JS handle visibility
           'border-2 bg-transparent shadow-sm',
-          // Simplified Tailwind classes (CSS-in-JS will handle visibility)
-          'border-neutral-300 text-neutral-700 dark:border-neutral-600 dark:text-neutral-200',
-          'hover:bg-neutral-100 dark:hover:bg-neutral-800',
-          // Additional styling
+          'border-foreground/30 text-foreground',
+          'hover:bg-foreground hover:text-background',
           'hover:shadow-md hover:scale-105 active:scale-95',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:border-neutral-400 disabled:text-neutral-400 disabled:hover:bg-transparent disabled:hover:text-neutral-400 disabled:scale-100 disabled:cursor-not-allowed',
+          'disabled:border-muted-foreground disabled:text-muted-foreground disabled:hover:bg-transparent disabled:scale-100 disabled:cursor-not-allowed',
         ],
-        // Ghost - Simplified with CSS-in-JS backup
+        // Ghost - Fixed visibility with proper contrast
         ghost: [
-          // Base styles
           'bg-transparent shadow-none',
-          // Simplified Tailwind classes (CSS-in-JS will handle visibility)
-          'text-neutral-900 dark:text-neutral-100',
-          'hover:bg-neutral-100 dark:hover:bg-neutral-800',
-          // Additional styling
+          'text-foreground',
+          'hover:bg-foreground/10',
           'hover:scale-105 active:scale-95',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:text-neutral-500 disabled:hover:bg-transparent disabled:hover:text-neutral-500 disabled:scale-100 disabled:cursor-not-allowed',
+          'disabled:text-muted-foreground disabled:hover:bg-transparent disabled:scale-100 disabled:cursor-not-allowed',
         ],
         // Destructive - Error color using CSS custom properties
         destructive: [
@@ -190,17 +184,50 @@ const buttonVariants = cva(
           // Performance optimizations
           'gpu-accelerated optimize-repaint',
         ],
-        // Link - Simplified with CSS-in-JS backup
+        // Link - Fixed visibility with proper contrast
         link: [
-          // Base styles
           'underline-offset-4 bg-transparent shadow-none p-0 h-auto underline decoration-2',
-          // Simplified Tailwind classes (CSS-in-JS will handle visibility)
-          'text-blue-700 dark:text-yellow-400',
-          'hover:text-blue-800 dark:hover:text-yellow-300',
-          // Additional styling
+          'text-primary hover:text-primary/80',
           'hover:decoration-4',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1',
-          'disabled:text-neutral-400 disabled:no-underline disabled:cursor-not-allowed',
+          'disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed',
+        ],
+        // Premium Glass - Glassmorphism effect with theme-aware styling
+        'premium-glass': [
+          'bg-transparent backdrop-blur-md border-2 shadow-lg',
+          'border-white/20 text-white dark:border-white/30 dark:text-white',
+          'hover:bg-white/10 hover:border-white/30 dark:hover:bg-white/20 dark:hover:border-white/40',
+          'hover:shadow-xl hover:scale-105 active:scale-95',
+          'focus-visible:ring-white/50 focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:bg-transparent disabled:border-white/10 disabled:text-white/50 disabled:backdrop-blur-none disabled:scale-100 disabled:cursor-not-allowed',
+          // Performance optimizations
+          'gpu-accelerated optimize-repaint transition-all-smooth',
+        ],
+        // Premium Glow - Enhanced glow effect with theme-specific colors
+        'premium-glow': [
+          'bg-lumina-radiant text-white shadow-lg border-0',
+          'hover:shadow-xl hover:scale-105 active:scale-95',
+          'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
+          // Enhanced text readability
+          '[text-shadow:0_1px_2px_rgba(0,0,0,0.4)]',
+          // Performance optimizations
+          'gpu-accelerated optimize-repaint transition-all-smooth',
+          // Theme-aware glow effects (handled by CSS classes)
+          'btn-premium-glow',
+        ],
+        // Premium Floating - Elevated floating effect
+        'premium-floating': [
+          'bg-white text-deep-teal shadow-xl border border-white/20',
+          'dark:bg-neutral-900 dark:text-white dark:border-neutral-700',
+          'hover:shadow-2xl hover:scale-105 active:scale-95',
+          'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
+          'disabled:bg-neutral-100 disabled:text-neutral-400 disabled:shadow-md disabled:scale-100 disabled:cursor-not-allowed',
+          'dark:disabled:bg-neutral-800 dark:disabled:text-neutral-600',
+          // Performance optimizations
+          'gpu-accelerated optimize-repaint transition-all-smooth',
+          // Floating effect (handled by CSS classes)
+          'btn-premium-floating',
         ],
       },
       size: {
@@ -227,6 +254,8 @@ export interface ButtonProps
   loading?: boolean;
   /** Icon to display alongside button text */
   icon?: React.ReactNode;
+  /** Animation type for hover interactions */
+  animation?: 'hover-lift' | 'hover-glow' | 'hover-scale' | 'none';
   /** Accessible label for screen readers */
   'aria-label'?: string;
   /** ID of element that describes this button */
@@ -262,6 +291,7 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       loading = false,
       icon,
+      animation,
       children,
       disabled,
       'aria-label': ariaLabel,
@@ -301,8 +331,10 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const loadingAnnouncement = loading ? 'Loading' : undefined;
 
     // Build class names with proper fallbacks
+    const animationClass = animation && animation !== 'none' ? `btn-animation-${animation.replace('hover-', '')}` : '';
     const buttonClassName = cn(
       buttonVariants({ variant, size }),
+      animationClass,
       className
     );
 
