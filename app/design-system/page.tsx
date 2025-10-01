@@ -914,55 +914,6 @@ function DesignSystemContent() {
           </Card>
         </section>
 
-
-
-        {/* Avatar Components */}
-        <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Avatar Components
-          </h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Avatar Variants</CardTitle>
-              <CardDescription>
-                User profile images with fallbacks and different sizes - essential for salon client management
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap items-center gap-6">
-                <div className="space-y-2">
-                  <Label>With Image</Label>
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="Client Profile" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Fallback Only</Label>
-                  <Avatar>
-                    <AvatarFallback>SM</AvatarFallback>
-                  </Avatar>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Small (32px)</Label>
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="text-xs">SM</AvatarFallback>
-                  </Avatar>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Large (64px)</Label>
-                  <Avatar className="h-16 w-16">
-                    <AvatarFallback className="text-lg">LG</AvatarFallback>
-                  </Avatar>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
         {/* Loading States */}
         <section>
           <h2 className="text-3xl font-bold text-foreground mb-6">
@@ -972,23 +923,43 @@ function DesignSystemContent() {
             <CardHeader>
               <CardTitle>Skeleton Loading</CardTitle>
               <CardDescription>
-                Placeholder content while data loads - improves perceived performance
+                Placeholder content while data loads - improves perceived performance. Enhanced contrast for better visibility across themes.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[300px]" />
-                <Skeleton className="h-4 w-[150px]" />
-              </div>
-              <div className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Text Content Loading</Label>
                 <div className="space-y-2">
-                  <Skeleton className="h-4 w-[200px]" />
-                  <Skeleton className="h-4 w-[160px]" />
+                  <Skeleton className="h-4 w-[250px] bg-muted-foreground/20" />
+                  <Skeleton className="h-4 w-[200px] bg-muted-foreground/20" />
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Article Loading</Label>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[300px] bg-muted-foreground/20" />
+                  <Skeleton className="h-4 w-[280px] bg-muted-foreground/20" />
+                  <Skeleton className="h-4 w-[150px] bg-muted-foreground/20" />
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Profile Card Loading</Label>
+                <div className="flex items-center space-x-4">
+                  <Skeleton className="h-12 w-12 rounded-full bg-muted-foreground/20" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-[200px] bg-muted-foreground/20" />
+                    <Skeleton className="h-3 w-[160px] bg-muted-foreground/15" />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Button Loading</Label>
+                <div className="flex gap-2">
+                  <Skeleton className="h-10 w-[100px] rounded-md bg-muted-foreground/20" />
+                  <Skeleton className="h-10 w-[80px] rounded-md bg-muted-foreground/15" />
                 </div>
               </div>
             </CardContent>
