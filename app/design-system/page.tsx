@@ -3,6 +3,7 @@
 import { useTheme } from '@/components/theme-provider';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AnimatedCounter } from '@/components/ui/animated-counter';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +12,7 @@ import { HeroBackground } from '@/components/ui/hero-background';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { StatCard } from '@/components/ui/stat-card';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
@@ -104,6 +106,7 @@ function ColorSwatch({ name, value, className, description, usage, contrast }: C
 function DesignSystemContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   // Prevent hydration issues by ensuring client-side rendering
   React.useEffect(() => {
@@ -860,6 +863,134 @@ function DesignSystemContent() {
                   Something went wrong. Please check your input and try again.
                 </AlertDescription>
               </Alert>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Avatar Components */}
+        <section>
+          <h2 className="text-3xl font-bold text-foreground mb-6">
+            Avatar Components
+          </h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Avatar Variants</CardTitle>
+              <CardDescription>
+                User profile images with fallbacks and different sizes - essential for salon client management
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="space-y-2">
+                  <Label>With Image</Label>
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" alt="Client Profile" />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Fallback Only</Label>
+                  <Avatar>
+                    <AvatarFallback>SM</AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Small (32px)</Label>
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="text-xs">SM</AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Large (64px)</Label>
+                  <Avatar className="h-16 w-16">
+                    <AvatarFallback className="text-lg">LG</AvatarFallback>
+                  </Avatar>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+
+
+        {/* Avatar Components */}
+        <section>
+          <h2 className="text-3xl font-bold text-foreground mb-6">
+            Avatar Components
+          </h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Avatar Variants</CardTitle>
+              <CardDescription>
+                User profile images with fallbacks and different sizes - essential for salon client management
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="space-y-2">
+                  <Label>With Image</Label>
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" alt="Client Profile" />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Fallback Only</Label>
+                  <Avatar>
+                    <AvatarFallback>SM</AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Small (32px)</Label>
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="text-xs">SM</AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Large (64px)</Label>
+                  <Avatar className="h-16 w-16">
+                    <AvatarFallback className="text-lg">LG</AvatarFallback>
+                  </Avatar>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Loading States */}
+        <section>
+          <h2 className="text-3xl font-bold text-foreground mb-6">
+            Loading States
+          </h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Skeleton Loading</CardTitle>
+              <CardDescription>
+                Placeholder content while data loads - improves perceived performance
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[300px]" />
+                <Skeleton className="h-4 w-[150px]" />
+              </div>
+              <div className="flex items-center space-x-4">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[200px]" />
+                  <Skeleton className="h-4 w-[160px]" />
+                </div>
+              </div>
             </CardContent>
           </Card>
         </section>
