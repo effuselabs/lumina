@@ -718,6 +718,144 @@ ADR-016: Professional Schedule Item Design Enhancement
 **Rationale**:
 
 - Rate limiting prevents system abuse and ensures stability under load
+- CSRF protection prevents unauthorized actions from malicious sites
+- Input sanitization prevents injection attacks and data corruption
+- Abuse detection identifies and blocks suspicious activity patterns
+
+**Consequences**:
+
+- ✅ Comprehensive protection against common web vulnerabilities
+- ✅ System stability under high load and abuse scenarios
+- ✅ Secure appointment booking process for public-facing forms
+- ✅ Foundation for advanced security monitoring and alerting
+- ⚠️ Requires ongoing monitoring and tuning of security parameters
+
+**Implementation**: Complete - Security middleware with rate limiting, CSRF protection, input validation, and abuse detection
+
+---
+
+## ADR-022: Prioritize TypeScript Technical Debt Over Feature Development
+
+**Date**: October 1, 2025  
+**Status**: Accepted  
+**Context**: Discovered systematic TypeScript type safety issues preventing successful builds and blocking design system development during LUM-104 work  
+**Decision**: Pause LUM-104 design system enhancement to address critical TypeScript technical debt in dedicated issue LUM-118  
+**Rationale**:
+
+- Build failures prevent proper testing and development of design system components
+- TypeScript errors affect multiple systems (API routes, services, components, types)
+- Technical debt compounds over time and affects entire project development velocity
+- Stable build foundation is prerequisite for effective component development
+- Systematic approach prevents regression and ensures project-wide type safety
+
+**Alternatives Considered**:
+
+1. **Continue with workarounds**: Fix issues incrementally alongside feature work
+   - Rejected: Workarounds compound technical debt and create fragile solutions
+2. **Fix issues ad-hoc**: Address TypeScript errors as encountered
+   - Rejected: Doesn't address systematic problems or root causes
+3. **Ignore non-critical type errors**: Focus only on build-blocking errors
+   - Rejected: Type safety is critical for maintainable codebase
+
+**Consequences**:
+
+- ✅ Ensures stable foundation for all future development
+- ✅ Enables proper testing and CI/CD pipeline functionality
+- ✅ Prevents accumulation of additional technical debt
+- ✅ Provides clear roadmap for systematic type safety improvements
+- ⚠️ Delays design system feature completion temporarily
+
+**Impact**:
+
+- Affects LUM-104 timeline but ensures quality foundation
+- Enables proper design system testing after completion
+- Improves overall project development velocity long-term
+- Provides systematic approach to technical debt management
+
+**Related Issues**: [LUM-118](https://linear.app/scootr-ca/issue/LUM-118) - Comprehensive TypeScript Type Safety Audit and Cleanup
+
+---
+
+## ADR-023: Remove Components with Missing Dependencies Strategy
+
+**Date**: October 1, 2025  
+**Status**: Accepted  
+**Context**: Multiple UI components (Dialog, Select, Tooltip, Radio Group) require Radix UI packages not installed in project, preventing design system page from loading  
+**Decision**: Temporarily remove components from design system showcase rather than install dependencies immediately during TypeScript cleanup phase  
+**Rationale**:
+
+- Focus on working components first to enable design system page functionality
+- Avoid compounding issues by installing dependencies during unstable build phase
+- Clear separation of concerns: fix build issues first, then enhance components
+- Provides immediate value with working components while planning future enhancements
+
+**Alternatives Considered**:
+
+1. **Install all Radix UI dependencies immediately**: Add missing packages
+   - Rejected: Could compound TypeScript issues and complicate debugging
+2. **Create placeholder components**: Mock components without functionality
+   - Rejected: Provides no real value and creates maintenance overhead
+3. **Keep broken components**: Leave non-functional components in showcase
+   - Rejected: Poor user experience and prevents design system page from loading
+
+**Consequences**:
+
+- ✅ Design system page loads successfully with 3 working components
+- ✅ Clear path for future component enhancement after TypeScript cleanup
+- ✅ Immediate value from working components (Avatar, Skeleton, Calendar)
+- ✅ Avoids compounding technical issues during cleanup phase
+- ⚠️ Temporarily reduced component showcase until dependencies installed
+
+**Impact**:
+
+- Enables design system development to continue with stable foundation
+- Provides clear roadmap for component enhancement in future iterations
+- Demonstrates working components while planning comprehensive expansion
+- Supports iterative development approach with incremental improvements
+
+**Related Issues**: [LUM-104](https://linear.app/scootr-ca/issue/LUM-104) - Design System Enhancement
+
+---
+
+## ADR-024: Create Dedicated Linear Issue for TypeScript Audit
+
+**Date**: October 1, 2025  
+**Status**: Accepted  
+**Context**: TypeScript errors span multiple systems (API routes, services, components, types) requiring systematic approach beyond scope of individual feature issues  
+**Decision**: Create dedicated Linear issue (LUM-118) with comprehensive audit plan and phased approach for TypeScript cleanup  
+**Rationale**:
+
+- Scope too large for ad-hoc fixes or inclusion in feature issues
+- Systematic approach prevents regression and ensures comprehensive coverage
+- Dedicated issue enables proper planning, tracking, and resource allocation
+- Phased approach allows for incremental progress and validation
+- Clear separation from feature work enables focused technical debt resolution
+
+**Alternatives Considered**:
+
+1. **Fix issues incrementally in feature branches**: Address errors as encountered
+   - Rejected: Doesn't address systematic problems or prevent regression
+2. **Ignore non-critical type errors**: Focus only on build-blocking issues
+   - Rejected: Type safety is critical for maintainable codebase
+3. **Include TypeScript fixes in existing issues**: Add to LUM-104 scope
+   - Rejected: Scope creep and mixing concerns reduces focus and effectiveness
+
+**Consequences**:
+
+- ✅ Provides clear roadmap for technical debt resolution
+- ✅ Enables systematic approach to type safety improvements
+- ✅ Proper resource allocation and progress tracking
+- ✅ Prevents regression through comprehensive testing
+- ✅ Foundation for project-wide type safety standards
+
+**Impact**:
+
+- Creates dedicated focus on technical debt resolution
+- Enables proper planning and execution of TypeScript improvements
+- Provides foundation for all future development work
+- Establishes pattern for systematic technical debt management
+
+**Related Issues**: [LUM-118](https://linear.app/scootr-ca/issue/LUM-118) - Comprehensive TypeScript Type Safety Audit and Cleanupr load
 - CSRF protection prevents cross-site request forgery attacks
 - Input sanitization prevents injection attacks and data corruption
 - Abuse detection enables proactive threat mitigation
