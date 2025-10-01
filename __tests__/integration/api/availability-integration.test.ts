@@ -251,7 +251,7 @@ describe('Availability API Integration Tests', () => {
             // Staff validation
             const staff = await mockPrisma.staff.findFirst({
                 where: { id: staffId, businessId },
-                select: { id: true, name: true },
+                select: { id: true, displayName: true },
             })
 
             // Conflict detection
@@ -264,7 +264,7 @@ describe('Availability API Integration Tests', () => {
             // Verify integration calls
             expect(mockPrisma.staff.findFirst).toHaveBeenCalledWith({
                 where: { id: staffId, businessId },
-                select: { id: true, name: true },
+                select: { id: true, displayName: true },
             })
 
             expect(ConflictDetectionEngine.detectConflicts).toHaveBeenCalledWith(appointmentRequest)
@@ -306,7 +306,7 @@ describe('Availability API Integration Tests', () => {
             // Staff validation
             const staff = await mockPrisma.staff.findFirst({
                 where: { id: staffId, businessId },
-                select: { id: true, name: true },
+                select: { id: true, displayName: true },
             })
 
             // Service validation
@@ -315,7 +315,7 @@ describe('Availability API Integration Tests', () => {
                     id: { in: validationRequest.serviceIds },
                     businessId,
                 },
-                select: { id: true, name: true, duration: true },
+                select: { id: true, displayName: true, duration: true },
             })
 
             // Appointment validation
@@ -335,7 +335,7 @@ describe('Availability API Integration Tests', () => {
             // Verify integration calls
             expect(mockPrisma.staff.findFirst).toHaveBeenCalledWith({
                 where: { id: staffId, businessId },
-                select: { id: true, name: true },
+                select: { id: true, displayName: true },
             })
 
             expect(mockPrisma.service.findMany).toHaveBeenCalledWith({
@@ -343,7 +343,7 @@ describe('Availability API Integration Tests', () => {
                     id: { in: [serviceId] },
                     businessId,
                 },
-                select: { id: true, name: true, duration: true },
+                select: { id: true, displayName: true, duration: true },
             })
 
             expect(ConflictDetectionEngine.validateAppointmentSlot).toHaveBeenCalledWith(
@@ -393,7 +393,7 @@ describe('Availability API Integration Tests', () => {
             // Staff validation
             const staff = await mockPrisma.staff.findUnique({
                 where: { id: staffId },
-                select: { id: true, businessId: true, name: true },
+                select: { id: true, businessId: true, displayName: true },
             })
 
             // Verify staff belongs to business
@@ -420,7 +420,7 @@ describe('Availability API Integration Tests', () => {
             // Verify integration calls
             expect(mockPrisma.staff.findUnique).toHaveBeenCalledWith({
                 where: { id: staffId },
-                select: { id: true, businessId: true, name: true },
+                select: { id: true, businessId: true, displayName: true },
             })
 
             expect(mockPrisma.staffAvailability.deleteMany).toHaveBeenCalledWith({
@@ -449,7 +449,7 @@ describe('Availability API Integration Tests', () => {
             // Simulate staff validation
             const staff = await mockPrisma.staff.findUnique({
                 where: { id: otherBusinessStaffId },
-                select: { id: true, businessId: true, name: true },
+                select: { id: true, businessId: true, displayName: true },
             })
 
             // Should detect business mismatch
@@ -459,7 +459,7 @@ describe('Availability API Integration Tests', () => {
             // Verify query was made
             expect(mockPrisma.staff.findUnique).toHaveBeenCalledWith({
                 where: { id: otherBusinessStaffId },
-                select: { id: true, businessId: true, name: true },
+                select: { id: true, businessId: true, displayName: true },
             })
         })
     })
@@ -503,7 +503,7 @@ describe('Availability API Integration Tests', () => {
             // Staff validation
             const staff = await mockPrisma.staff.findUnique({
                 where: { id: staffId },
-                select: { id: true, businessId: true, name: true },
+                select: { id: true, businessId: true, displayName: true },
             })
 
             // Conflict checking - appointments
@@ -557,7 +557,7 @@ describe('Availability API Integration Tests', () => {
             // Verify integration calls
             expect(mockPrisma.staff.findUnique).toHaveBeenCalledWith({
                 where: { id: staffId },
-                select: { id: true, businessId: true, name: true },
+                select: { id: true, businessId: true, displayName: true },
             })
 
             expect(mockPrisma.appointment.findMany).toHaveBeenCalledWith({
@@ -604,10 +604,10 @@ describe('Availability API Integration Tests', () => {
                 orderBy: { createdAt: 'desc' },
                 include: {
                     staff: {
-                        select: { id: true, name: true, email: true },
+                        select: { id: true, displayName: true, email: true },
                     },
                     approver: {
-                        select: { id: true, name: true, email: true },
+                        select: { id: true, displayName: true, email: true },
                     },
                 },
             })
@@ -622,10 +622,10 @@ describe('Availability API Integration Tests', () => {
                 orderBy: { createdAt: 'desc' },
                 include: {
                     staff: {
-                        select: { id: true, name: true, email: true },
+                        select: { id: true, displayName: true, email: true },
                     },
                     approver: {
-                        select: { id: true, name: true, email: true },
+                        select: { id: true, displayName: true, email: true },
                     },
                 },
             })
