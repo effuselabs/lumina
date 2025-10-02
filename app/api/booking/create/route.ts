@@ -157,6 +157,8 @@ export async function POST(request: NextRequest) {
                 endTime: new Date(endTime),
                 status: 'SCHEDULED',
                 notes,
+                totalDuration: service.duration,
+                totalPrice: service.price,
                 services: {
                     create: {
                         serviceId,

@@ -41,9 +41,13 @@ export default async function AppointmentCalendarPage({
                     id: true,
                     firstName: true,
                     lastName: true,
-                    email: true,
-                    role: true,
+                    displayName: true,
                     isActive: true,
+                    user: {
+                        select: {
+                            email: true,
+                        },
+                    },
                 },
             },
             services: {

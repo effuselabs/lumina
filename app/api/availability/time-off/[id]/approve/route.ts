@@ -42,7 +42,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         const { action, denialReason } = validation.data
 
         // Find the time-off request
-        const timeOffRequest = await prisma.timeOffRequests.findFirst({
+        const timeOffRequest = await prisma.timeOffRequest.findFirst({
             where: {
                 id,
                 businessId
@@ -51,7 +51,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
                 staff: {
                     select: {
                         id: true,
-                        name: true
+                        displayName: true
                     }
                 }
             }
@@ -72,14 +72,14 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         }
 
         // Check if user has permission to approve (business owner or manager)
-        const currentUser = await prisma.staff.findFirst({
+        const businessUser = await prisma.businessUser.findFirst({
             where: {
-                id: session.user.id,
+                userId: session.user.id,
                 businessId
             }
         })
 
-        if (!currentUser || (currentUser.role !== 'OWNER' && currentUser.role !== 'MANAGER')) {
+        if (!businessUser || (businessUser.role !== 'OWNER' && businessUser.role !== 'MANAGER')) {
             return NextResponse.json(
                 { error: 'Insufficient permissions to approve time-off requests' },
                 { status: 403 }
@@ -93,7 +93,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             )
         }
 
-        let conflicts = []
+        let conflicts: any[] = []
 
         if (action === 'approve') {
             // Check for existing appointments during the approved period
@@ -113,14 +113,19 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
                     id: true,
                     startTime: true,
                     endTime: true,
-                    service: {
+                    services: {
                         select: {
-                            name: true
+                            service: {
+                                select: {
+                                    name: true
+                                }
+                            }
                         }
                     },
                     client: {
                         select: {
-                            name: true
+                            firstName: true,
+                            lastName: true
                         }
                     }
                 }
@@ -130,17 +135,17 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
                 appointmentId: apt.id,
                 startTime: apt.startTime,
                 endTime: apt.endTime,
-                serviceName: apt.service?.name,
-                clientName: apt.client?.name
+                serviceName: apt.services?.[0]?.service?.name || 'Service',
+                clientName: apt.client ? `${apt.client.firstName} ${apt.client.lastName}` : 'Unknown Client'
             }))
         }
 
         // Update the time-off request
-        const updatedRequest = await prisma.timeOffRequests.update({
+        const updatedRequest = await prisma.timeOffRequest.update({
             where: { id },
             data: {
                 status: action === 'approve' ? 'APPROVED' : 'DENIED',
-                approvedBy: currentUser.id,
+                approvedBy: businessUser.userId,
                 approvedAt: new Date(),
                 denialReason: action === 'deny' ? denialReason : null
             },
@@ -148,13 +153,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
                 staff: {
                     select: {
                         id: true,
-                        name: true
+                        displayName: true
                     }
                 },
-                approvedByStaff: {
+                approver: {
                     select: {
                         id: true,
-                        name: true
+                        displayName: true
                     }
                 }
             }

@@ -16,7 +16,7 @@ import {
     SuggestedAlternative,
     TimeOffConflictError
 } from '@/lib/errors/availability-errors'
-import { availabilityLogger, withPerformanceLogging } from '@/lib/monitoring/availability-logger'
+import { availabilityLogger, withPerformanceLogging, LogLevel } from '@/lib/monitoring/availability-logger'
 import { gracefulDegradation } from '@/lib/services/graceful-degradation'
 import { Conflict, ConflictType } from './conflict-detection-engine'
 import { TimeSlot } from './service-duration-validator'
@@ -66,7 +66,7 @@ class EnhancedErrorHandler {
                     errors.push(error)
                 }
             } catch (conversionError) {
-                availabilityLogger.log('ERROR', `Failed to convert conflict to error: ${conflict.type}`, context, {
+                availabilityLogger.log(LogLevel.ERROR, `Failed to convert conflict to error: ${conflict.type}`, context, {
                     conflict,
                     conversionError: conversionError instanceof Error ? conversionError.message : String(conversionError)
                 })
@@ -101,7 +101,7 @@ class EnhancedErrorHandler {
                 return this.createInsufficientDurationError(conflict, context, suggestions)
 
             default:
-                availabilityLogger.log('WARN', `Unknown conflict type: ${conflict.type}`, context)
+                availabilityLogger.log(LogLevel.WARN, `Unknown conflict type: ${conflict.type}`, context)
                 return null
         }
     }
@@ -235,7 +235,7 @@ class EnhancedErrorHandler {
                 suggestions.push({
                     type: 'time_slot',
                     title: `Available at ${slot.startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`,
-                    description: `${slot.duration} minutes available`,
+                    description: `${Math.round((slot.endTime.getTime() - slot.startTime.getTime()) / (1000 * 60))} minutes available`,
                     data: { timeSlot: slot }
                 })
             })
@@ -260,7 +260,7 @@ class EnhancedErrorHandler {
             }
 
         } catch (error) {
-            availabilityLogger.log('WARN', `Failed to generate suggestions for conflict: ${conflict.type}`, context, {
+            availabilityLogger.log(LogLevel.WARN, `Failed to generate suggestions for conflict: ${conflict.type}`, context, {
                 error: error instanceof Error ? error.message : String(error)
             })
         }
@@ -403,7 +403,7 @@ class EnhancedErrorHandler {
         const message = error instanceof Error ? error.message : String(error)
         const stack = error instanceof Error ? error.stack : undefined
 
-        availabilityLogger.log('ERROR', `Unexpected error in ${context.operation}: ${message}`, context, {
+        availabilityLogger.log(LogLevel.ERROR, `Unexpected error in ${context.operation}: ${message}`, context, {
             error: message,
             stack
         })

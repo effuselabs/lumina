@@ -382,13 +382,19 @@ export class ConflictDetectionEngine {
                     staffId: request.staffId,
                     dayOfWeek,
                     isRecurring: true,
-                    OR: [
-                        { effectiveDate: null },
-                        { effectiveDate: { lte: date } }
-                    ],
-                    OR: [
-                        { expiryDate: null },
-                        { expiryDate: { gte: date } }
+                    AND: [
+                        {
+                            OR: [
+                                { effectiveDate: null },
+                                { effectiveDate: { lte: date } }
+                            ]
+                        },
+                        {
+                            OR: [
+                                { expiryDate: null },
+                                { expiryDate: { gte: date } }
+                            ]
+                        }
                     ]
                 }
             })
@@ -1495,13 +1501,19 @@ export class ConflictDetectionEngine {
                     staffId,
                     dayOfWeek,
                     isRecurring: true,
-                    OR: [
-                        { effectiveDate: null },
-                        { effectiveDate: { lte: date } }
-                    ],
-                    OR: [
-                        { expiryDate: null },
-                        { expiryDate: { gte: date } }
+                    AND: [
+                        {
+                            OR: [
+                                { effectiveDate: null },
+                                { effectiveDate: { lte: date } }
+                            ]
+                        },
+                        {
+                            OR: [
+                                { expiryDate: null },
+                                { expiryDate: { gte: date } }
+                            ]
+                        }
                     ]
                 }
             })

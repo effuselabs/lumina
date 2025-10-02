@@ -82,7 +82,7 @@ export class ClientService {
                         lastName: existingClient.lastName,
                         email: existingClient.email,
                         phone: existingClient.phone,
-                        marketingOptIn: existingClient.marketingOptIn || false,
+                        marketingOptIn: existingClient.emailMarketing || false,
                     },
                 };
             }
@@ -130,7 +130,8 @@ export class ClientService {
                         lastName: normalizedData.lastName,
                         email: normalizedData.email,
                         phone: normalizedData.phone,
-                        marketingOptIn: normalizedData.marketingOptIn,
+                        emailMarketing: normalizedData.marketingOptIn,
+                        smsMarketing: normalizedData.marketingOptIn,
                         notes: normalizedData.notes,
                         updatedAt: new Date(),
                     },
@@ -145,10 +146,9 @@ export class ClientService {
                     lastName: normalizedData.lastName,
                     email: normalizedData.email,
                     phone: normalizedData.phone,
-                    marketingOptIn: normalizedData.marketingOptIn,
+                    emailMarketing: normalizedData.marketingOptIn,
+                    smsMarketing: normalizedData.marketingOptIn,
                     notes: normalizedData.notes,
-                    source: normalizedData.source,
-                    isActive: true,
                 },
             });
 
@@ -168,7 +168,6 @@ export class ClientService {
                 where: {
                     id: clientId,
                     businessId,
-                    isActive: true,
                 },
             });
         } catch (error) {
@@ -199,7 +198,10 @@ export class ClientService {
             if (data.email) updateData.email = data.email.toLowerCase().trim();
             if (data.phone) updateData.phone = this.normalizePhoneNumber(data.phone);
             if (data.notes !== undefined) updateData.notes = data.notes?.trim() || null;
-            if (data.marketingOptIn !== undefined) updateData.marketingOptIn = data.marketingOptIn;
+            if (data.marketingOptIn !== undefined) {
+                updateData.emailMarketing = data.marketingOptIn;
+                updateData.smsMarketing = data.marketingOptIn;
+            }
 
             updateData.updatedAt = new Date();
 
@@ -296,7 +298,6 @@ export class ClientService {
             return await prisma.client.findMany({
                 where: {
                     businessId,
-                    isActive: true,
                     OR: [
                         { firstName: { contains: searchTerm, mode: 'insensitive' } },
                         { lastName: { contains: searchTerm, mode: 'insensitive' } },

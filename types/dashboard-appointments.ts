@@ -4,10 +4,19 @@
  */
 
 import { AppointmentStatus } from '@prisma/client';
-import { StaffMember } from './booking';
 
-// Re-export StaffMember for backward compatibility
-export { StaffMember } from './booking';
+// StaffMember interface (duplicated to avoid circular dependency)
+export interface StaffMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  avatar?: string;
+  specialties?: string[];
+  color: string;
+  isActive: boolean;
+  role?: string;
+}
 
 // Re-export for components
 export { AppointmentStatus };

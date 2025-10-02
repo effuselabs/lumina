@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { AlertTriangle, CalendarIcon, Clock, TrendingUp } from 'lucide-react';
@@ -150,8 +150,8 @@ export default function BookingAnalyticsDashboard({ businessId }: BookingAnalyti
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Booking Analytics</h2>
-                <Popover>
-                    <PopoverTrigger asChild>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="w-[280px] justify-start text-left font-normal">
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {dateRange.from ? (
@@ -167,8 +167,8 @@ export default function BookingAnalyticsDashboard({ businessId }: BookingAnalyti
                                 <span>Pick a date range</span>
                             )}
                         </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-auto p-0" align="start">
                         <Calendar
                             initialFocus
                             mode="range"
@@ -181,8 +181,8 @@ export default function BookingAnalyticsDashboard({ businessId }: BookingAnalyti
                             }}
                             numberOfMonths={2}
                         />
-                    </PopoverContent>
-                </Popover>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
 
             {/* Conversion Metrics */}

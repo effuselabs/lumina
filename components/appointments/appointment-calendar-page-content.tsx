@@ -22,16 +22,18 @@ interface Staff {
     id: string;
     firstName: string;
     lastName: string;
-    email: string;
-    role: string;
+    displayName: string;
     isActive: boolean;
+    user?: {
+        email: string;
+    };
 }
 
 interface Service {
     id: string;
     name: string;
     duration: number;
-    price: number;
+    price: any; // Prisma Decimal type
 }
 
 interface AppointmentCalendarPageContentProps {
@@ -78,20 +80,20 @@ export function AppointmentCalendarPageContent({
             })
     );
 
-    const [currentView, setCurrentView] = useState<CalendarViewType>('week');
+    const [currentView, setCurrentView] = useState<'day' | 'week' | 'month'>('week');
     const [currentDate, setCurrentDate] = useState(new Date());
 
     // Mock data - will be replaced with real data from API
     const mockAppointments: DashboardAppointment[] = [];
-    const mockBusinessHours = [
-        { dayOfWeek: 1, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Monday
-        { dayOfWeek: 2, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Tuesday
-        { dayOfWeek: 3, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Wednesday
-        { dayOfWeek: 4, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Thursday
-        { dayOfWeek: 5, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Friday
-        { dayOfWeek: 6, openTime: '10:00', closeTime: '16:00', isClosed: false }, // Saturday
-        { dayOfWeek: 0, openTime: null, closeTime: null, isClosed: true }, // Sunday
-    ];
+    const mockBusinessHours = {
+        monday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
+        tuesday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
+        wednesday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
+        thursday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
+        friday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
+        saturday: { isOpen: true, openTime: '10:00', closeTime: '16:00' },
+        sunday: { isOpen: false, openTime: '09:00', closeTime: '17:00' },
+    };
 
     const mockStaffMembers = business.staff.map(staff => ({
         id: staff.id,
@@ -100,7 +102,6 @@ export function AppointmentCalendarPageContent({
         displayName: `${staff.firstName} ${staff.lastName}`,
         color: '#FF7A5A', // Lumina coral color
         isActive: staff.isActive,
-        role: staff.role,
     }));
 
     const navigateDate = (direction: 'prev' | 'next') => {
@@ -261,7 +262,7 @@ export function AppointmentCalendarPageContent({
                                                         {staff.firstName} {staff.lastName}
                                                     </p>
                                                     <p className="text-color-foreground-muted text-xs truncate">
-                                                        {staff.role}
+                                                        Staff Member
                                                     </p>
                                                 </div>
                                             </div>

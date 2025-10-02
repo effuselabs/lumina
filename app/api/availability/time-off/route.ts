@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Check for overlapping time-off requests
-        const overlappingRequests = await prisma.timeOffRequests.findMany({
+        const overlappingRequests = await prisma.timeOffRequest.findMany({
             where: {
                 staffId,
                 businessId,
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json(
                 {
                     error: 'Overlapping time-off request exists',
-                    conflicts: overlappingRequests.map(req => ({
+                    conflicts: overlappingRequests.map((req: any) => ({
                         id: req.id,
                         startDate: req.startDate,
                         endDate: req.endDate,
@@ -120,21 +120,26 @@ export async function POST(request: NextRequest) {
                 id: true,
                 startTime: true,
                 endTime: true,
-                service: {
+                services: {
                     select: {
-                        name: true
+                        service: {
+                            select: {
+                                name: true
+                            }
+                        }
                     }
                 },
                 client: {
                     select: {
-                        name: true
+                        firstName: true,
+                        lastName: true
                     }
                 }
             }
         })
 
         // Create the time-off request
-        const timeOffRequest = await prisma.timeOffRequests.create({
+        const timeOffRequest = await prisma.timeOffRequest.create({
             data: {
                 staffId,
                 businessId,
@@ -146,7 +151,7 @@ export async function POST(request: NextRequest) {
             include: {
                 staff: {
                     select: {
-                        name: true
+                        displayName: true
                     }
                 }
             }
@@ -159,8 +164,8 @@ export async function POST(request: NextRequest) {
                 appointmentId: apt.id,
                 startTime: apt.startTime,
                 endTime: apt.endTime,
-                serviceName: apt.service?.name,
-                clientName: apt.client?.name
+                serviceName: apt.services?.[0]?.service?.name || 'Service',
+                clientName: apt.client ? `${apt.client.firstName} ${apt.client.lastName}` : 'Unknown Client'
             })) : undefined,
             warning: existingAppointments.length > 0 ? 'This request conflicts with existing appointments' : undefined
         })
@@ -229,19 +234,19 @@ export async function GET(request: NextRequest) {
             ]
         }
 
-        const timeOffRequests = await prisma.timeOffRequests.findMany({
+        const timeOffRequests = await prisma.timeOffRequest.findMany({
             where,
             include: {
                 staff: {
                     select: {
                         id: true,
-                        name: true
+                        displayName: true
                     }
                 },
-                approvedByStaff: {
+                approver: {
                     select: {
                         id: true,
-                        name: true
+                        displayName: true
                     }
                 }
             },

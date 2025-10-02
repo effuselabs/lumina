@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@/lib/auth'
-import { businessContextSecurity } from '@/lib/security/business-context-security'
+import { businessContextSecurity, SecurityViolationType } from '@/lib/security/business-context-security'
 import { dataProtection } from '@/lib/security/data-protection'
 import { createSecurityMetadata, extractServerSecurityContext } from '@/lib/security/security-middleware'
 import { NextRequest, NextResponse } from 'next/server'
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         if (confirmationCode !== expectedCode) {
             // Log security violation for invalid confirmation code
             await businessContextSecurity.logSecurityViolation({
-                type: 'SUSPICIOUS_ACTIVITY',
+                type: SecurityViolationType.SUSPICIOUS_ACTIVITY,
                 userId: user.id,
                 businessId,
                 resourceId: clientId,

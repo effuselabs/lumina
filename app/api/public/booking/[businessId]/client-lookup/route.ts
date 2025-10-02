@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { InputSanitizer } from '@/lib/security/rate-limiter';
+import { ClientService } from '@/lib/services/client-service';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import {

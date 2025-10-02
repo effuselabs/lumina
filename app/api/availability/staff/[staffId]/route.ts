@@ -102,7 +102,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         }
 
         // Get availability overrides for the date range if specified
-        let overrides = []
+        let overrides: any[] = []
         if (startDate && endDate) {
             overrides = await prisma.staffAvailabilityOverride.findMany({
                 where: {
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         return NextResponse.json({
             staff: {
                 id: staff.id,
-                name: staff.name
+                name: staff.displayName
             },
             availability,
             overrides

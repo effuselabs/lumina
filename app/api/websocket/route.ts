@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Verify user has access to the business
-        const userBusiness = await prisma.userBusiness.findFirst({
+        const userBusiness = await prisma.businessUser.findFirst({
             where: {
                 userId: session.user.id,
                 businessId,

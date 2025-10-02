@@ -57,103 +57,116 @@ jest.mock('next-auth', () => ({
   default: jest.fn(),
 }));
 
-// Mock Prisma client
+// Mock Prisma client with comprehensive model coverage
+const createMockPrismaModel = () => ({
+  findUnique: jest.fn(),
+  findFirst: jest.fn(),
+  findMany: jest.fn(),
+  create: jest.fn(),
+  createMany: jest.fn(),
+  update: jest.fn(),
+  updateMany: jest.fn(),
+  upsert: jest.fn(),
+  delete: jest.fn(),
+  deleteMany: jest.fn(),
+  count: jest.fn(),
+  aggregate: jest.fn(),
+  groupBy: jest.fn(),
+});
+
 jest.mock('@/lib/prisma', () => ({
   prisma: {
-    user: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    business: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    service: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    appointment: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    client: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    bookingAnalyticsEvent: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    bookingPerformanceEvent: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    bookingAlertRule: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    bookingError: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    bookingAlert: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    businessHours: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      upsert: jest.fn(),
-    },
-    staff: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
-    staffAvailability: {
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    },
+    // Core models
+    user: createMockPrismaModel(),
+    account: createMockPrismaModel(),
+    session: createMockPrismaModel(),
+    verificationToken: createMockPrismaModel(),
+    
+    // Business models
+    business: createMockPrismaModel(),
+    businessUser: createMockPrismaModel(),
+    
+    // Staff models
+    staff: createMockPrismaModel(),
+    staffService: createMockPrismaModel(),
+    staffInvitation: createMockPrismaModel(),
+    staffAvailability: createMockPrismaModel(),
+    staffAvailabilityOverride: createMockPrismaModel(),
+    staffNotification: createMockPrismaModel(),
+    
+    // Service models
+    service: createMockPrismaModel(),
+    
+    // Client models
+    client: createMockPrismaModel(),
+    
+    // Appointment models
+    appointment: createMockPrismaModel(),
+    appointmentService: createMockPrismaModel(),
+    appointmentStatusHistory: createMockPrismaModel(),
+    appointmentPreferences: createMockPrismaModel(),
+    
+    // Transaction models
+    transaction: createMockPrismaModel(),
+    paymentCalculation: createMockPrismaModel(),
+    
+    // Product models
+    product: createMockPrismaModel(),
+    productSale: createMockPrismaModel(),
+    
+    // Gift card models
+    giftCard: createMockPrismaModel(),
+    giftCardRedemption: createMockPrismaModel(),
+    
+    // Promotion models
+    promotion: createMockPrismaModel(),
+    promotionUsage: createMockPrismaModel(),
+    
+    // Marketing models
+    marketingCampaign: createMockPrismaModel(),
+    campaignRecipient: createMockPrismaModel(),
+    
+    // Loyalty models
+    loyaltyProgram: createMockPrismaModel(),
+    loyaltyMembership: createMockPrismaModel(),
+    loyaltyTransaction: createMockPrismaModel(),
+    
+    // Review models
+    clientReview: createMockPrismaModel(),
+    communicationHistory: createMockPrismaModel(),
+    
+    // Availability models
+    businessHours: createMockPrismaModel(),
+    businessHoliday: createMockPrismaModel(),
+    timeOffRequest: createMockPrismaModel(),
+    availabilityCache: createMockPrismaModel(),
+    
+    // Booking config models
+    publicBookingConfig: createMockPrismaModel(),
+    
+    // Security models
+    securityLog: createMockPrismaModel(),
+    auditLog: createMockPrismaModel(),
+    
+    // Performance models
+    performanceMetric: createMockPrismaModel(),
+    systemAlert: createMockPrismaModel(),
+    businessMetric: createMockPrismaModel(),
+    
+    // Booking analytics models
+    bookingAnalyticsEvent: createMockPrismaModel(),
+    bookingPerformanceEvent: createMockPrismaModel(),
+    bookingError: createMockPrismaModel(),
+    bookingAlertRule: createMockPrismaModel(),
+    bookingAlert: createMockPrismaModel(),
+    publicBookingAuditLog: createMockPrismaModel(),
+    
+    // Prisma client methods
     $transaction: jest.fn(),
     $disconnect: jest.fn(),
+    $connect: jest.fn(),
+    $executeRaw: jest.fn(),
+    $queryRaw: jest.fn(),
   },
 }));
 
