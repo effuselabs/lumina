@@ -2,7 +2,8 @@ import { AppointmentBlock } from '@/components/appointments/appointment-block';
 import { CalendarHeader } from '@/components/appointments/calendar-header';
 import { CalendarView } from '@/components/appointments/calendar-view';
 import { TimeSlot } from '@/components/appointments/time-slot';
-import { AppointmentStatus, BusinessHours, CalendarSlot, DashboardAppointment, StaffMember } from '@/types/dashboard-appointments';
+import { AppointmentStatus, CalendarSlot, DashboardAppointment } from '@/types/dashboard-appointments';
+import { BusinessHours, StaffMember } from '@/types/booking';
 import { render, screen } from '@testing-library/react';
 
 // Mock data for testing

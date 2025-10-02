@@ -10,7 +10,7 @@
  * @author Lumina Development Team
  */
 
-import { AppointmentCacheManager, CacheKeyGenerator } from '@/lib/cache/appointment-cache'
+import { appointmentCache, useAppointmentCache } from '@/lib/cache/appointment-cache'
 import { CalendarCacheCoordinator } from '@/lib/cache/calendar-cache-coordinator'
 import { AppointmentWithRelations } from '@/types/database'
 import { AppointmentStatus } from '@prisma/client'

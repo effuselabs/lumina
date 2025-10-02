@@ -19,7 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { DashboardAppointment } from '@/types/appointment-types';
+import { DashboardAppointment } from '@/types';
 import { addDays, format, setHours, setMinutes } from 'date-fns';
 import { AlertTriangle, Calendar as CalendarIcon, Clock } from 'lucide-react';
 import React, { useState } from 'react';

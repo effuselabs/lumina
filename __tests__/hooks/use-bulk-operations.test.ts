@@ -1,6 +1,6 @@
 import { useBulkOperations } from '@/hooks/use-bulk-operations';
 import { getBulkOperationsService } from '@/lib/services/bulk-operations-service';
-import { AppointmentStatus } from '@/types/appointment-types';
+import { AppointmentStatus } from '@/types';
 import { act, renderHook } from '@testing-library/react';
 
 // Mock the service

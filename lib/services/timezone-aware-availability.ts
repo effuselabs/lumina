@@ -8,8 +8,8 @@
  */
 
 import { DateTime } from 'luxon'
-import { BusinessHoursRepository } from '../repositories/business-hours-repository-enhanced'
-import { StaffAvailabilityRepository } from '../repositories/staff-availability-repository-enhanced'
+import { EnhancedBusinessHoursRepository as BusinessHoursRepository } from '../repositories/business-hours-repository-enhanced'
+import { EnhancedStaffAvailabilityRepository as StaffAvailabilityRepository } from '../repositories/staff-availability-repository-enhanced'
 import { AvailabilityCalculator } from './availability-calculator'
 import { MultiLocationTimeZoneManager, TimeZoneHandler } from './timezone-handler'
 

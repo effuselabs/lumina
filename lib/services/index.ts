@@ -19,7 +19,7 @@ export type {
 } from './time-slot-analysis-engine'
 
 export type {
-    AvailabilityConstraints, AvailabilityOptions, AvailabilitySlot, DateRange, StaffAvailabilityOptions
+    AvailabilityConstraints, AvailabilitySlot, AvailabilityQuery, AvailabilityResult
 } from './availability-calculator'
 
 export type {

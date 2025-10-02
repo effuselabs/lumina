@@ -5,7 +5,7 @@ import {
     BulkOperationResult,
     getBulkOperationsService
 } from '@/lib/services/bulk-operations-service';
-import { AppointmentStatus } from '@/types/appointment-types';
+import { AppointmentStatus } from '@/types';
 import { useCallback, useState } from 'react';
 
 interface UseBulkOperationsProps {

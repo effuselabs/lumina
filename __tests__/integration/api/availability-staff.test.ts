@@ -1,4 +1,5 @@
-import { GET, POST } from '@/app/api/availability/staff/route'
+import { POST } from '@/app/api/availability/staff/route'
+// Note: GET function not implemented yet
 import { prisma } from '@/lib/prisma'
 import { Staff, StaffAvailability } from '@prisma/client'
 import { NextRequest } from 'next/server'

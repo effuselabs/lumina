@@ -11,7 +11,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { AppointmentStatus, DashboardAppointment } from '@/types/appointment-types';
+import { AppointmentStatus, DashboardAppointment } from '@/types';
 import { format } from 'date-fns';
 import { AlertTriangle, Calendar, Clock, XCircle } from 'lucide-react';
 import React from 'react';

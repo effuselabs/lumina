@@ -1,5 +1,5 @@
 import { GET as getBusinessHours } from '@/app/api/availability/business-hours/route'
-import { GET as getStaffAvailability } from '@/app/api/availability/staff/route'
+// import { GET as getStaffAvailability } from '@/app/api/availability/staff/route' // GET not implemented yet
 import { GET as getTimeOffRequests } from '@/app/api/availability/time-off/route'
 import { prisma } from '@/lib/prisma'
 import { BusinessHours, Staff, StaffAvailability } from '@prisma/client'

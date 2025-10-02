@@ -4,9 +4,53 @@
  */
 
 import { AppointmentStatus } from '@prisma/client';
+import { StaffMember } from './booking';
 
 // Re-export for components
 export { AppointmentStatus };
+
+// Calendar view types
+export type CalendarView = 'day' | 'week' | 'month';
+
+export interface CalendarViewProps {
+  view: CalendarView;
+  currentDate: Date;
+  appointments: DashboardAppointment[];
+  staffMembers: StaffMember[];
+  businessHours: BusinessHours;
+  onAppointmentClick?: (appointment: DashboardAppointment) => void;
+  onAppointmentDrop?: (appointmentId: string, newSlot: any) => Promise<void>;
+  onTimeSlotClick?: (date: Date, staffId?: string) => void;
+}
+
+export interface BusinessHours {
+  [key: string]: {
+    isOpen: boolean;
+    openTime: string;
+    closeTime: string;
+  };
+}
+
+// StaffMember imported from booking types to avoid duplication
+
+export interface AppointmentBlockProps {
+  appointment: DashboardAppointment;
+  view: CalendarView;
+  onClick?: (appointment: DashboardAppointment) => void;
+  onDragStart?: (appointment: DashboardAppointment) => void;
+  onDragEnd?: () => void;
+  isDragging?: boolean;
+  className?: string;
+}
+
+export interface CalendarHeaderProps {
+  view: CalendarView;
+  currentDate: Date;
+  onViewChange: (view: CalendarView) => void;
+  onDateChange: (date: Date) => void;
+  onNavigate: (direction: 'prev' | 'next') => void;
+  onToday: () => void;
+}
 
 export interface DashboardAppointment {
   // Core appointment data
