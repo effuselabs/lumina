@@ -120,8 +120,8 @@ export class TimeZoneHandler {
             timezone,
             offset: dt.offset,
             isDST: dt.isInDST,
-            abbreviation: dt.offsetNameShort,
-            offsetName: dt.offsetNameLong
+            abbreviation: dt.offsetNameShort || 'UTC',
+            offsetName: dt.offsetNameLong || 'Coordinated Universal Time'
         }
     }
 

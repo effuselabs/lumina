@@ -29,6 +29,11 @@ export interface CommunicationSystemResult {
 }
 
 export class ComprehensiveCommunicationFactory extends BaseFactory<any> {
+    async generate(options?: any): Promise<any> {
+        // Implementation for generating comprehensive communication data
+        return this.generateComprehensiveCommunicationPlan(options);
+    }
+
     private clientCommunicationFactory: ClientCommunicationFactory;
     private loyaltyProgramFactory: LoyaltyProgramFactory;
     private marketingCampaignFactory: MarketingCampaignFactory;

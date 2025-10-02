@@ -301,9 +301,9 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
      * Get services that complement the primary service
      */
     private getComplementaryServices(
-        primaryService: { id: string; name: string; category?: string },
-        availableServices: Array<{ id: string; name: string; category?: string }>
-    ): Array<{ id: string; name: string; category?: string }> {
+        primaryService: { id: string; name: string; category: string | null },
+        availableServices: Array<{ id: string; name: string; category: string | null }>
+    ): Array<{ id: string; name: string; category: string | null }> {
         const complementaryPairs: Record<string, string[]> = {
             'Hair': ['Hair', 'Brows'],
             'Nails': ['Nails'],

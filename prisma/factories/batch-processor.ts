@@ -56,7 +56,7 @@ export class BatchProcessor {
     private prisma: PrismaClient;
     private defaultOptions: EnhancedBatchOptions;
     private progressTracker?: ProgressTracker;
-    private memoryMonitor?: NodeJS.Timer;
+    private memoryMonitor?: NodeJS.Timeout;
     private rollbackOperations: Array<() => Promise<void>> = [];
 
     constructor(prisma: PrismaClient, defaultOptions?: Partial<EnhancedBatchOptions>) {
@@ -684,7 +684,7 @@ export class BatchProcessor {
                     const result = await (this.prisma as any)[entityName].deleteMany({
                         where: {
                             id: {
-                                in: batch.map(record => record.id)
+                                in: batch.map((record: any) => record.id)
                             }
                         }
                     });
@@ -699,7 +699,7 @@ export class BatchProcessor {
 
                 } catch (error) {
                     console.error(`❌ Rollback batch ${i + 1} failed:`, error);
-                    batch.forEach(record => {
+                    batch.forEach((record: any) => {
                         errors.push({ id: record.id, error: error as Error });
                     });
                 }

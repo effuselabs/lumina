@@ -75,7 +75,8 @@ export class DataResetManager {
 
     constructor(prisma: PrismaClient) {
         this.prisma = prisma;
-        this.validator = new DataIntegrityValidator(prisma);
+        // Note: DataIntegrityValidator will be initialized per business when needed
+        this.validator = null as any; // Temporary fix
     }
 
     /**
@@ -553,7 +554,8 @@ export class DataResetManager {
 
             // Use the validator for comprehensive checks if available
             try {
-                const validationResult = await this.validator.validateBusinessData(businessId);
+                const validator = new DataIntegrityValidator(this.prisma, businessId);
+                const validationResult = await validator.validateFinancialIntegrity();
 
                 // Convert validator results to our format
                 validationResult.errors.forEach(error => {
@@ -714,11 +716,11 @@ export class DataResetManager {
 
         for (const appointment of appointmentsWithTransactions) {
             const serviceTotal = appointment.services.reduce(
-                (sum, service) => sum + service.price,
+                (sum, service) => sum + service.price.toNumber(),
                 0
             );
             const transactionTotal = appointment.transactions.reduce(
-                (sum, transaction) => sum + transaction.amount,
+                (sum, transaction) => sum + transaction.amount.toNumber(),
                 0
             );
 
@@ -753,7 +755,7 @@ export class DataResetManager {
 
                 if (dayHours && !dayHours.isOpen) {
                     warnings.push({
-                        type: 'business_logic',
+                        type: 'data_quality',
                         entity: 'appointment',
                         field: 'start_time',
                         message: `Appointment ${appointment.id} scheduled on closed day (${dayName})`,
