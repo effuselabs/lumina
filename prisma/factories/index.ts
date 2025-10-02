@@ -3,11 +3,26 @@
  */
 
 export * from './base-factory';
-export * from './batch-processor';
 export * from './performance-monitor';
 export * from './seed-config';
-export * from './types';
 export * from './validators';
+
+// Export batch processor with explicit exports to avoid conflicts
+export { BatchProcessor } from './batch-processor';
+
+// Export types with explicit exports to avoid conflicts
+export type { 
+    SeedConfiguration, 
+    BusinessConfiguration, 
+    ClientConfiguration,
+    AppointmentConfiguration,
+    StaffConfiguration,
+    ServiceConfiguration,
+    PromotionConfiguration,
+    CommunicationConfiguration,
+    AnalyticsConfiguration,
+    ValidationConfiguration
+} from './types';
 
 // Export specific validator classes
 export {

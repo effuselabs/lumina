@@ -30,7 +30,7 @@ class FinalAccessibilityAuditor {
         const complianceScore = this.calculateComplianceScore(auditResults);
 
         // Count critical issues
-        const criticalIssues = auditResults.issues.filter(i => i.severity === 'error').length;
+        const criticalIssues = auditResults.issues.filter((i: any) => i.severity === 'error').length;
 
         // Determine deployment readiness
         const readyForDeployment = this.assessDeploymentReadiness(auditResults, complianceScore);
@@ -69,7 +69,7 @@ class FinalAccessibilityAuditor {
     }
 
     private assessDeploymentReadiness(auditResults: any, complianceScore: number): boolean {
-        const criticalIssues = auditResults.issues.filter(i => i.severity === 'error').length;
+        const criticalIssues = auditResults.issues.filter((i: any) => i.severity === 'error').length;
         const levelAIssues = auditResults.wcagCompliance.A;
 
         // Ready if no critical errors, no Level A issues, and compliance score > 80%
@@ -79,7 +79,7 @@ class FinalAccessibilityAuditor {
     private generateFinalRecommendations(auditResults: any): string[] {
         const recommendations: string[] = [];
 
-        const criticalIssues = auditResults.issues.filter(i => i.severity === 'error').length;
+        const criticalIssues = auditResults.issues.filter((i: any) => i.severity === 'error').length;
         const ariaIssues = auditResults.summary.aria;
         const keyboardIssues = auditResults.summary.keyboard;
         const contrastIssues = auditResults.summary.contrast;
@@ -172,17 +172,17 @@ ${result.readyForDeployment ?
 
 ### Critical Issues Requiring Immediate Attention
 
-${result.auditResults.issues.filter(i => i.severity === 'error').map(issue =>
+${result.auditResults.issues.filter((i: any) => i.severity === 'error').map((issue: any) =>
                 `- **${issue.file}:${issue.line}** - ${issue.issue} (${issue.category}, WCAG ${issue.wcagLevel})`
             ).join('\n')}
 
 ## Recommendations
 
 ### Immediate Actions (Before Deployment)
-${result.recommendations.filter(r => r.includes('Fix') || r.includes('critical')).map(r => `- ${r}`).join('\n')}
+${result.recommendations.filter((r: any) => r.includes('Fix') || r.includes('critical')).map((r: any) => `- ${r}`).join('\n')}
 
 ### Post-Deployment Improvements
-${result.recommendations.filter(r => !r.includes('Fix') && !r.includes('critical')).map(r => `- ${r}`).join('\n')}
+${result.recommendations.filter((r: any) => !r.includes('Fix') && !r.includes('critical')).map((r: any) => `- ${r}`).join('\n')}
 
 ## Testing Checklist
 

@@ -341,4 +341,5 @@ if (require.main === module) {
     main()
 }
 
-export { AppointmentTestRunner, TestOptions, TestSuite }
+export { AppointmentTestRunner }
+export type { TestOptions, TestSuite }

@@ -172,7 +172,7 @@ class AnalyticsDataQualityValidator {
 
                 // Extract error messages
                 const errorLines = (stdout + stderr).split('\n')
-                    .filter(line => line.includes('Error:') || line.includes('FAIL') || line.includes('Expected'))
+                    .filter((line: any) => line.includes('Error:') || line.includes('FAIL') || line.includes('Expected'))
                     .slice(0, 5); // Limit to first 5 errors
 
                 errors.push(...errorLines);

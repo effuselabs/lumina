@@ -104,6 +104,8 @@ export class StaffFactory extends BaseFactory<Staff> {
             data: {
                 businessId: this.businessId,
                 userId: user.id,
+                firstName: profile.firstName,
+                lastName: profile.lastName,
                 displayName: profile.displayName,
                 title: profile.title,
                 bio: profile.bio,

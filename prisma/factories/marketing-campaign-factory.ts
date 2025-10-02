@@ -3,6 +3,7 @@
  */
 
 import { faker } from '@faker-js/faker';
+import { CampaignType } from '@prisma/client';
 import { BaseFactory } from './base-factory';
 import { ValidationError, ValidationResult } from './types';
 
