@@ -36,6 +36,7 @@ jest.mock('@/lib/prisma', () => ({
 
 import { prisma } from '@/lib/prisma'
 import { AppointmentRepository } from '@/lib/repositories/appointment-repository'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>
 
@@ -79,11 +80,11 @@ describe('AppointmentRepository', () => {
 
         it('should create an appointment with services', async () => {
             // Mock staff validation
-            mockPrisma.staff.findFirst.mockResolvedValue({ id: mockStaffId, businessId: mockBusinessId } as any)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue({ id: mockStaffId, businessId: mockBusinessId } as any)
             // Mock client validation
-            mockPrisma.client.findFirst.mockResolvedValue({ id: mockClientId, businessId: mockBusinessId } as any)
+            asMock(mockPrisma.client.findFirst).mockResolvedValue({ id: mockClientId, businessId: mockBusinessId } as any)
             // Mock appointment creation
-            mockPrisma.appointment.create.mockResolvedValue(mockCreatedAppointment as any)
+            asMock(mockPrisma.appointment.create).mockResolvedValue(mockCreatedAppointment as any)
 
             const result = await repository.create(mockAppointmentData)
 
@@ -148,7 +149,7 @@ describe('AppointmentRepository', () => {
         }
 
         it('should find appointment by id with business validation', async () => {
-            mockPrisma.appointment.findFirst.mockResolvedValue(mockAppointment as any)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(mockAppointment as any)
 
             const result = await repository.findById('appointment-123', mockBusinessId)
 
@@ -179,7 +180,7 @@ describe('AppointmentRepository', () => {
         })
 
         it('should return null if appointment not found', async () => {
-            mockPrisma.appointment.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(null)
 
             const result = await repository.findById('nonexistent', mockBusinessId)
 
@@ -201,9 +202,9 @@ describe('AppointmentRepository', () => {
 
         it('should update appointment with business validation', async () => {
             // Mock findById for validation
-            mockPrisma.appointment.findFirst.mockResolvedValue({ id: 'appointment-123', businessId: mockBusinessId } as any)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue({ id: 'appointment-123', businessId: mockBusinessId } as any)
             // Mock update
-            mockPrisma.appointment.update.mockResolvedValue(mockUpdatedAppointment as any)
+            asMock(mockPrisma.appointment.update).mockResolvedValue(mockUpdatedAppointment as any)
 
             const result = await repository.update('appointment-123', mockBusinessId, updateData)
 
@@ -237,9 +238,9 @@ describe('AppointmentRepository', () => {
     describe('delete', () => {
         it('should delete appointment with business validation', async () => {
             // Mock findById for validation
-            mockPrisma.appointment.findFirst.mockResolvedValue({ id: 'appointment-123', businessId: mockBusinessId } as any)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue({ id: 'appointment-123', businessId: mockBusinessId } as any)
             // Mock delete
-            mockPrisma.appointment.delete.mockResolvedValue({ id: 'appointment-123' } as any)
+            asMock(mockPrisma.appointment.delete).mockResolvedValue({ id: 'appointment-123' } as any)
 
             await repository.delete('appointment-123', mockBusinessId)
 
@@ -283,22 +284,22 @@ describe('AppointmentRepository', () => {
 
         it('should add services to an existing appointment', async () => {
             // Mock findById
-            mockPrisma.appointment.findFirst.mockResolvedValue(mockExistingAppointment as any)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(mockExistingAppointment as any)
             // Mock service validation
-            mockPrisma.service.findMany.mockResolvedValue([
+            asMock(mockPrisma.service.findMany).mockResolvedValue([
                 { id: 'service-2', businessId: mockBusinessId, isActive: true }
             ] as any)
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 { staffId: mockStaffId, serviceId: 'service-2' }
             ] as any)
             // Mock existing services query
-            mockPrisma.appointmentService.findMany.mockResolvedValue([
+            asMock(mockPrisma.appointmentService.findMany).mockResolvedValue([
                 { serviceOrder: 1 }
             ] as any)
             // Mock service creation
-            mockPrisma.appointmentService.createMany.mockResolvedValue({ count: 1 } as any)
+            asMock(mockPrisma.appointmentService.createMany).mockResolvedValue({ count: 1 } as any)
             // Mock update
-            mockPrisma.appointment.update.mockResolvedValue({
+            asMock(mockPrisma.appointment.update).mockResolvedValue({
                 ...mockExistingAppointment,
                 totalPrice: 80,
                 totalDuration: 50
@@ -321,7 +322,7 @@ describe('AppointmentRepository', () => {
         })
 
         it('should throw error when appointment not found', async () => {
-            mockPrisma.appointment.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(null)
 
             await expect(repository.addServices('nonexistent', mockBusinessId, newServices))
                 .rejects.toThrow('Appointment not found or access denied')
@@ -358,13 +359,13 @@ describe('AppointmentRepository', () => {
 
         it('should remove services from an existing appointment', async () => {
             // Mock findById
-            mockPrisma.appointment.findFirst.mockResolvedValue(mockExistingAppointment as any)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(mockExistingAppointment as any)
             // Mock service deletion
-            mockPrisma.appointmentService.deleteMany.mockResolvedValue({ count: 1 } as any)
+            asMock(mockPrisma.appointmentService.deleteMany).mockResolvedValue({ count: 1 } as any)
             // Mock service reordering
-            mockPrisma.appointmentService.update.mockResolvedValue({} as any)
+            asMock(mockPrisma.appointmentService.update).mockResolvedValue({} as any)
             // Mock appointment update
-            mockPrisma.appointment.update.mockResolvedValue({
+            asMock(mockPrisma.appointment.update).mockResolvedValue({
                 ...mockExistingAppointment,
                 totalPrice: 50,
                 totalDuration: 30
@@ -385,7 +386,7 @@ describe('AppointmentRepository', () => {
                 ...mockExistingAppointment,
                 services: [mockExistingAppointment.services[0]]
             }
-            mockPrisma.appointment.findFirst.mockResolvedValue(singleServiceAppointment as any)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(singleServiceAppointment as any)
 
             await expect(repository.removeServices('appointment-123', mockBusinessId, ['service-1']))
                 .rejects.toThrow('Cannot remove all services from an appointment')
@@ -420,11 +421,11 @@ describe('AppointmentRepository', () => {
 
         it('should reorder services within an appointment', async () => {
             // Mock findById
-            mockPrisma.appointment.findFirst.mockResolvedValue(mockExistingAppointment as any)
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(mockExistingAppointment as any)
             // Mock service reordering
-            mockPrisma.appointmentService.updateMany.mockResolvedValue({ count: 1 } as any)
+            asMock(mockPrisma.appointmentService.updateMany).mockResolvedValue({ count: 1 } as any)
             // Mock appointment update
-            mockPrisma.appointment.update.mockResolvedValue(mockExistingAppointment as any)
+            asMock(mockPrisma.appointment.update).mockResolvedValue(mockExistingAppointment as any)
 
             const serviceOrders = [
                 { serviceId: 'service-1', newOrder: 2 },

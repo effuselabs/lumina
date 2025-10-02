@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { AvailabilityCache } from '@/lib/services/availability-cache'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -46,7 +47,7 @@ describe('AvailabilityCache', () => {
         it('should return cached slots when cache hit', async () => {
             const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes from now
 
-            mockPrisma.availabilityCache.findUnique.mockResolvedValue({
+            asMock(mockPrisma.availabilityCache.findUnique).mockResolvedValue({
                 availableSlots: mockSlots,
                 expiresAt
             } as any)
@@ -73,7 +74,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should return null when cache miss', async () => {
-            mockPrisma.availabilityCache.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.availabilityCache.findUnique).mockResolvedValue(null)
 
             const result = await AvailabilityCache.get({
                 businessId,
@@ -92,12 +93,12 @@ describe('AvailabilityCache', () => {
         it('should return null and clean up expired cache entry', async () => {
             const expiredDate = new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
 
-            mockPrisma.availabilityCache.findUnique.mockResolvedValue({
+            asMock(mockPrisma.availabilityCache.findUnique).mockResolvedValue({
                 availableSlots: mockSlots,
                 expiresAt: expiredDate
             } as any)
 
-            mockPrisma.availabilityCache.delete.mockResolvedValue({} as any)
+            asMock(mockPrisma.availabilityCache.delete).mockResolvedValue({} as any)
 
             const result = await AvailabilityCache.get({
                 businessId,
@@ -116,7 +117,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.availabilityCache.findUnique.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.availabilityCache.findUnique).mockRejectedValue(new Error('Database error'))
 
             const result = await AvailabilityCache.get({
                 businessId,
@@ -134,8 +135,8 @@ describe('AvailabilityCache', () => {
 
     describe('set', () => {
         it('should cache availability slots', async () => {
-            mockPrisma.availabilityCache.count.mockResolvedValue(100) // Below limit
-            mockPrisma.availabilityCache.upsert.mockResolvedValue({} as any)
+            asMock(mockPrisma.availabilityCache.count).mockResolvedValue(100) // Below limit
+            asMock(mockPrisma.availabilityCache.upsert).mockResolvedValue({} as any)
 
             await AvailabilityCache.set({
                 businessId,
@@ -163,8 +164,8 @@ describe('AvailabilityCache', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.availabilityCache.count.mockResolvedValue(100)
-            mockPrisma.availabilityCache.upsert.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.availabilityCache.count).mockResolvedValue(100)
+            asMock(mockPrisma.availabilityCache.upsert).mockRejectedValue(new Error('Database error'))
 
             // Should not throw error
             await expect(AvailabilityCache.set({
@@ -176,13 +177,13 @@ describe('AvailabilityCache', () => {
         })
 
         it('should cleanup old entries when approaching limit', async () => {
-            mockPrisma.availabilityCache.count.mockResolvedValue(10000) // At limit
-            mockPrisma.availabilityCache.findMany.mockResolvedValue([
+            asMock(mockPrisma.availabilityCache.count).mockResolvedValue(10000) // At limit
+            asMock(mockPrisma.availabilityCache.findMany).mockResolvedValue([
                 { id: 'old-1' },
                 { id: 'old-2' }
             ] as any)
-            mockPrisma.availabilityCache.deleteMany.mockResolvedValue({ count: 2 } as any)
-            mockPrisma.availabilityCache.upsert.mockResolvedValue({} as any)
+            asMock(mockPrisma.availabilityCache.deleteMany).mockResolvedValue({ count: 2 } as any)
+            asMock(mockPrisma.availabilityCache.upsert).mockResolvedValue({} as any)
 
             await AvailabilityCache.set({
                 businessId,
@@ -203,7 +204,7 @@ describe('AvailabilityCache', () => {
 
     describe('invalidate', () => {
         it('should invalidate cache by business ID', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockResolvedValue({ count: 5 } as any)
+            asMock(mockPrisma.availabilityCache.deleteMany).mockResolvedValue({ count: 5 } as any)
 
             await AvailabilityCache.invalidate({ businessId })
 
@@ -213,7 +214,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should invalidate cache by staff ID', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockResolvedValue({ count: 3 } as any)
+            asMock(mockPrisma.availabilityCache.deleteMany).mockResolvedValue({ count: 3 } as any)
 
             await AvailabilityCache.invalidate({ businessId, staffId })
 
@@ -223,7 +224,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should invalidate cache by date', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockResolvedValue({ count: 2 } as any)
+            asMock(mockPrisma.availabilityCache.deleteMany).mockResolvedValue({ count: 2 } as any)
 
             await AvailabilityCache.invalidate({ businessId, date: testDate })
 
@@ -233,7 +234,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.availabilityCache.deleteMany).mockRejectedValue(new Error('Database error'))
 
             // Should not throw error
             await expect(AvailabilityCache.invalidate({ businessId })).resolves.toBeUndefined()
@@ -242,7 +243,7 @@ describe('AvailabilityCache', () => {
 
     describe('invalidateStaffAvailability', () => {
         it('should invalidate all cache entries for a staff member', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockResolvedValue({ count: 10 } as any)
+            asMock(mockPrisma.availabilityCache.deleteMany).mockResolvedValue({ count: 10 } as any)
 
             await AvailabilityCache.invalidateStaffAvailability(staffId, businessId)
 
@@ -257,7 +258,7 @@ describe('AvailabilityCache', () => {
 
     describe('invalidateBusinessHours', () => {
         it('should invalidate all cache entries for a business', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockResolvedValue({ count: 50 } as any)
+            asMock(mockPrisma.availabilityCache.deleteMany).mockResolvedValue({ count: 50 } as any)
 
             await AvailabilityCache.invalidateBusinessHours(businessId)
 
@@ -277,8 +278,8 @@ describe('AvailabilityCache', () => {
             }
 
             // Mock cache misses
-            mockPrisma.availabilityCache.findUnique.mockResolvedValue(null)
-            mockPrisma.availabilityCache.count.mockResolvedValue(100)
+            asMock(mockPrisma.availabilityCache.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.availabilityCache.count).mockResolvedValue(100)
             mockPrisma.availabilityCache.$transaction.mockResolvedValue([])
 
             await AvailabilityCache.batchCalculateAndCache(
@@ -303,7 +304,7 @@ describe('AvailabilityCache', () => {
             }
 
             // Mock cache hit
-            mockPrisma.availabilityCache.findUnique.mockResolvedValue({
+            asMock(mockPrisma.availabilityCache.findUnique).mockResolvedValue({
                 availableSlots: mockSlots,
                 expiresAt: new Date(Date.now() + 10 * 60 * 1000)
             } as any)
@@ -323,7 +324,7 @@ describe('AvailabilityCache', () => {
 
     describe('cleanupExpired', () => {
         it('should clean up expired cache entries', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockResolvedValue({ count: 15 } as any)
+            asMock(mockPrisma.availabilityCache.deleteMany).mockResolvedValue({ count: 15 } as any)
 
             const result = await AvailabilityCache.cleanupExpired()
 
@@ -338,7 +339,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.availabilityCache.deleteMany.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.availabilityCache.deleteMany).mockRejectedValue(new Error('Database error'))
 
             const result = await AvailabilityCache.cleanupExpired()
 
@@ -352,7 +353,7 @@ describe('AvailabilityCache', () => {
                 .mockResolvedValueOnce(100) // total entries
                 .mockResolvedValueOnce(10) // expired entries
 
-            mockPrisma.availabilityCache.groupBy.mockResolvedValue([
+            asMock(mockPrisma.availabilityCache.groupBy).mockResolvedValue([
                 { businessId: 'business-1', _count: { businessId: 60 } },
                 { businessId: 'business-2', _count: { businessId: 40 } }
             ] as any)
@@ -376,7 +377,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.availabilityCache.count.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.availabilityCache.count).mockRejectedValue(new Error('Database error'))
 
             const stats = await AvailabilityCache.getCacheStats()
 
@@ -434,7 +435,7 @@ describe('AvailabilityCache', () => {
 
     describe('cache key generation', () => {
         it('should generate consistent cache keys', async () => {
-            mockPrisma.availabilityCache.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.availabilityCache.findUnique).mockResolvedValue(null)
 
             await AvailabilityCache.get({
                 businessId: 'business-1',
@@ -454,7 +455,7 @@ describe('AvailabilityCache', () => {
         })
 
         it('should handle missing optional parameters in cache key', async () => {
-            mockPrisma.availabilityCache.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.availabilityCache.findUnique).mockResolvedValue(null)
 
             await AvailabilityCache.get({
                 businessId: 'business-1',

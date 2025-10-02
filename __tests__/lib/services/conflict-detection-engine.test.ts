@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { AppointmentRequest, ConflictDetectionEngine, ConflictSeverity, ConflictType } from '@/lib/services/conflict-detection-engine'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -46,7 +47,7 @@ describe('ConflictDetectionEngine', () => {
         jest.clearAllMocks()
 
         // Default business validation
-        mockPrisma.business.findUnique.mockResolvedValue({
+        asMock(mockPrisma.business.findUnique).mockResolvedValue({
             id: mockBusinessId
         } as any)
     })
@@ -62,7 +63,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should detect no conflicts for valid appointment', async () => {
             // Mock business hours (Monday = 1)
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -71,8 +72,8 @@ describe('ConflictDetectionEngine', () => {
             } as any)
 
             // Mock staff availability
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId: mockStaffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -81,13 +82,13 @@ describe('ConflictDetectionEngine', () => {
             }] as any)
 
             // Mock no overlapping appointments
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Mock no time-off requests
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             // Mock service duration
-            mockPrisma.service.findMany.mockResolvedValue([{
+            asMock(mockPrisma.service.findMany).mockResolvedValue([{
                 id: mockServiceId,
                 name: 'Test Service',
                 duration: 60
@@ -100,7 +101,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should detect business hours violation', async () => {
             // Mock business closed on this day
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: null,
@@ -117,7 +118,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should detect overlapping appointment conflict', async () => {
             // Mock valid business hours and staff availability
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -125,8 +126,8 @@ describe('ConflictDetectionEngine', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId: mockStaffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -135,7 +136,7 @@ describe('ConflictDetectionEngine', () => {
             }] as any)
 
             // Mock overlapping appointment
-            mockPrisma.appointment.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([{
                 id: 'existing-appointment',
                 startTime: new Date('2024-01-15T10:30:00Z'),
                 endTime: new Date('2024-01-15T11:30:00Z'),
@@ -148,8 +149,8 @@ describe('ConflictDetectionEngine', () => {
                 }]
             }] as any)
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.service.findMany.mockResolvedValue([{
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.service.findMany).mockResolvedValue([{
                 id: mockServiceId,
                 name: 'Test Service',
                 duration: 60
@@ -165,7 +166,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should detect staff unavailability', async () => {
             // Mock business hours
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -174,13 +175,13 @@ describe('ConflictDetectionEngine', () => {
             } as any)
 
             // Mock staff not available (no availability records)
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
 
             // Mock no overlapping appointments
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.service.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.service.findMany).mockResolvedValue([{
                 id: mockServiceId,
                 name: 'Test Service',
                 duration: 60
@@ -195,7 +196,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should detect time-off conflict', async () => {
             // Mock valid business hours and staff availability
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -203,8 +204,8 @@ describe('ConflictDetectionEngine', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId: mockStaffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -212,10 +213,10 @@ describe('ConflictDetectionEngine', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Mock approved time-off request
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([{
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([{
                 id: 'time-off-1',
                 staffId: mockStaffId,
                 startDate: new Date('2024-01-15T00:00:00Z'),
@@ -233,7 +234,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should detect insufficient duration conflict', async () => {
             // Mock valid business hours and staff availability that matches the request time
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -241,8 +242,8 @@ describe('ConflictDetectionEngine', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId: mockStaffId,
                 dayOfWeek: 1,
                 startTime: '10:00', // Matches the request start time
@@ -250,11 +251,11 @@ describe('ConflictDetectionEngine', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             // Mock service requiring more time than available
-            mockPrisma.service.findMany.mockResolvedValue([{
+            asMock(mockPrisma.service.findMany).mockResolvedValue([{
                 id: mockServiceId,
                 name: 'Long Service',
                 duration: 120 // 2 hours, but appointment is only 1 hour
@@ -274,7 +275,7 @@ describe('ConflictDetectionEngine', () => {
     describe('validateAppointmentSlot', () => {
         it('should validate valid appointment slot', async () => {
             // Mock valid conditions
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -282,8 +283,8 @@ describe('ConflictDetectionEngine', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId: mockStaffId,
                 dayOfWeek: 1,
                 startTime: '10:00', // Matches the appointment time
@@ -291,9 +292,9 @@ describe('ConflictDetectionEngine', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.service.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.service.findMany).mockResolvedValue([{
                 id: mockServiceId,
                 name: 'Test Service',
                 duration: 60
@@ -313,7 +314,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should invalidate appointment slot with conflicts', async () => {
             // Mock business closed
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: null,
@@ -322,8 +323,8 @@ describe('ConflictDetectionEngine', () => {
             } as any)
 
             // Mock staff availability to avoid additional conflicts
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
 
             const result = await ConflictDetectionEngine.validateAppointmentSlot(
                 mockStaffId,
@@ -348,7 +349,7 @@ describe('ConflictDetectionEngine', () => {
         }
 
         it('should detect precise time overlap', async () => {
-            mockPrisma.appointment.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([{
                 id: 'overlapping-appointment',
                 startTime: new Date('2024-01-15T10:30:00Z'),
                 endTime: new Date('2024-01-15T11:30:00Z'),
@@ -371,7 +372,7 @@ describe('ConflictDetectionEngine', () => {
         })
 
         it('should handle walk-in client names', async () => {
-            mockPrisma.appointment.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([{
                 id: 'walk-in-appointment',
                 startTime: new Date('2024-01-15T10:15:00Z'),
                 endTime: new Date('2024-01-15T10:45:00Z'),
@@ -394,7 +395,7 @@ describe('ConflictDetectionEngine', () => {
                 excludeAppointmentId: 'appointment-to-exclude'
             }
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             const conflicts = await ConflictDetectionEngine.checkOverlappingAppointments(requestWithExclusion)
 
@@ -409,7 +410,7 @@ describe('ConflictDetectionEngine', () => {
         })
 
         it('should detect appointment that completely encompasses requested time', async () => {
-            mockPrisma.appointment.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([{
                 id: 'encompassing-appointment',
                 startTime: new Date('2024-01-15T09:30:00Z'),
                 endTime: new Date('2024-01-15T11:30:00Z'),
@@ -440,7 +441,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should perform comprehensive validation with all checks enabled', async () => {
             // Mock valid conditions
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -448,8 +449,8 @@ describe('ConflictDetectionEngine', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId: mockStaffId,
                 dayOfWeek: 1,
                 startTime: '10:00', // Matches the request time
@@ -457,11 +458,11 @@ describe('ConflictDetectionEngine', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             // Mock service with staff override
-            mockPrisma.staffService.findUnique.mockResolvedValue({
+            asMock(mockPrisma.staffService.findUnique).mockResolvedValue({
                 staffId: mockStaffId,
                 serviceId: mockServiceId,
                 customDuration: 45,
@@ -484,7 +485,7 @@ describe('ConflictDetectionEngine', () => {
 
         it('should generate warnings for scheduling issues', async () => {
             // Mock valid conditions but with back-to-back appointments
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: mockBusinessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -492,8 +493,8 @@ describe('ConflictDetectionEngine', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId: mockStaffId,
                 dayOfWeek: 1,
                 startTime: '10:00', // Matches the request time
@@ -511,8 +512,8 @@ describe('ConflictDetectionEngine', () => {
                     client: { firstName: 'Adjacent', lastName: 'Client' }
                 }] as any)
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.service.findMany.mockResolvedValue([{
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.service.findMany).mockResolvedValue([{
                 id: mockServiceId,
                 name: 'Test Service',
                 duration: 60
@@ -538,7 +539,7 @@ describe('ConflictDetectionEngine', () => {
         }
 
         it('should detect conflicts with buffer time consideration', async () => {
-            mockPrisma.appointment.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([{
                 id: 'close-appointment',
                 startTime: new Date('2024-01-15T11:05:00Z'), // 5 minutes after requested end
                 endTime: new Date('2024-01-15T12:00:00Z'),
@@ -562,7 +563,7 @@ describe('ConflictDetectionEngine', () => {
         })
 
         it('should provide detailed overlap information', async () => {
-            mockPrisma.appointment.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([{
                 id: 'overlapping-appointment',
                 startTime: new Date('2024-01-15T10:30:00Z'),
                 endTime: new Date('2024-01-15T11:30:00Z'),
@@ -585,7 +586,7 @@ describe('ConflictDetectionEngine', () => {
 
     describe('Error Handling', () => {
         it('should handle database errors gracefully', async () => {
-            mockPrisma.business.findUnique.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.business.findUnique).mockRejectedValue(new Error('Database error'))
 
             const request: AppointmentRequest = {
                 businessId: mockBusinessId,
@@ -600,7 +601,7 @@ describe('ConflictDetectionEngine', () => {
         })
 
         it('should handle invalid business context', async () => {
-            mockPrisma.business.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(null)
 
             const request: AppointmentRequest = {
                 businessId: 'invalid-business',
@@ -615,7 +616,7 @@ describe('ConflictDetectionEngine', () => {
         })
 
         it('should return error result when validation fails', async () => {
-            mockPrisma.business.findUnique.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.business.findUnique).mockRejectedValue(new Error('Database error'))
 
             const result = await ConflictDetectionEngine.validateAppointmentSlot(
                 mockStaffId,

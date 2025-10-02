@@ -122,7 +122,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
 
     const setupMonitoringAwareMocks = () => {
         // Repository operations with performance tracking
-        repositoryInstance.create.mockImplementation(async (data) => {
+        repositoryInstance.create.mockImplementation(async (data: any) => {
             const startTime = performance.now()
 
             // Simulate variable performance
@@ -193,7 +193,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
         })
 
         // Service operations with error simulation
-        serviceInstance.createAppointment.mockImplementation(async (data) => {
+        serviceInstance.createAppointment.mockImplementation(async (data: any) => {
             const startTime = performance.now()
 
             // Simulate occasional errors
@@ -221,7 +221,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
         })
 
         // Cache operations with hit/miss tracking
-        cacheInstance.get.mockImplementation(async (key) => {
+        cacheInstance.get.mockImplementation(async (key: any) => {
             const startTime = performance.now()
 
             await new Promise(resolve => setTimeout(resolve, 2 + Math.random() * 8))

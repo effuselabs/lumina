@@ -25,7 +25,21 @@ import { WebSocketService } from './websocket-service'
 // INTERFACES AND TYPES
 // ============================================================================
 
-export interface DashboardAppointmentData extends AppointmentWithRelations {
+export interface DashboardAppointmentData {
+    // Base appointment data
+    id: string
+    businessId: string
+    clientId: string | null
+    staffId: string
+    startTime: Date
+    endTime: Date
+    status: AppointmentStatus
+    totalDuration: number
+    totalPrice: number
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+
     // Enhanced data for dashboard display
     client: {
         id: string
@@ -34,7 +48,7 @@ export interface DashboardAppointmentData extends AppointmentWithRelations {
         email: string
         phone: string
         avatar?: string
-    }
+    } | null
 
     staff: {
         id: string
@@ -43,6 +57,24 @@ export interface DashboardAppointmentData extends AppointmentWithRelations {
         displayName: string
         color: string // For calendar color coding
     }
+
+    // Services data
+    services: Array<{
+        id: string
+        name: string
+        duration: number
+        price: number
+        category?: string
+    }>
+
+    // Transactions data
+    transactions: Array<{
+        id: string
+        amount: number
+        type: string
+        status: string
+        createdAt: Date
+    }>
 
     // Computed properties
     isConflicted: boolean
@@ -92,13 +124,58 @@ export interface NotificationPayload {
 
 export class DashboardIntegrationService {
     private appointmentService: AppointmentService
-    private webSocketService: WebSocketService
-    private realTimeSyncService: RealTimeSyncService
+    private webSocketService: WebSocketService | null = null
+    private realTimeSyncService: RealTimeSyncService | null = null
 
     constructor() {
         this.appointmentService = new AppointmentService()
-        this.webSocketService = new WebSocketService()
-        this.realTimeSyncService = new RealTimeSyncService()
+        // WebSocketService and RealTimeSyncService are initialized on-demand with proper context
+    }
+
+    /**
+     * Initialize real-time services with business context
+     */
+    private initializeRealTimeServices(businessId: string, userId: string): void {
+        if (!this.webSocketService) {
+            const wsConfig = {
+                url: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3001',
+                businessId,
+                userId,
+                reconnectInterval: 5000,
+                maxReconnectAttempts: 5
+            }
+            
+            const wsCallbacks = {
+                onOpen: () => console.log('WebSocket connected'),
+                onClose: () => console.log('WebSocket disconnected'),
+                onError: (error: Error) => console.error('WebSocket error:', error),
+                onMessage: (data: any) => this.handleWebSocketMessage(data)
+            }
+            
+            this.webSocketService = new WebSocketService(wsConfig, wsCallbacks)
+        }
+
+        if (!this.realTimeSyncService) {
+            const syncCallbacks = {
+                onSync: (appointments: any[]) => console.log('Synced appointments:', appointments.length),
+                onConflict: (conflict: any) => console.warn('Sync conflict:', conflict),
+                onError: (error: Error) => console.error('Sync error:', error)
+            }
+            
+            this.realTimeSyncService = new RealTimeSyncService(businessId, userId, syncCallbacks)
+            
+            if (this.webSocketService) {
+                this.realTimeSyncService.initialize(this.webSocketService)
+            }
+        }
+    }
+
+    /**
+     * Handle incoming WebSocket messages
+     */
+    private handleWebSocketMessage(data: any): void {
+        // Handle real-time updates
+        console.log('Received WebSocket message:', data)
     }
 
     // ============================================================================

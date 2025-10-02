@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { AppointmentStatusManager } from '@/lib/services/appointment-status-manager';
 import { AppointmentStatus } from '@prisma/client';
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -171,8 +172,8 @@ describe('AppointmentStatusManager', () => {
         };
 
         beforeEach(() => {
-            mockPrisma.appointment.findFirst.mockResolvedValue(mockAppointment);
-            mockPrisma.$transaction.mockImplementation(async (callback) => {
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(mockAppointment);
+            mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                 return await callback(mockPrisma);
             });
         });
@@ -184,8 +185,8 @@ describe('AppointmentStatusManager', () => {
                 confirmedAt: new Date(),
             };
 
-            mockPrisma.appointment.update.mockResolvedValue(updatedAppointment);
-            mockPrisma.appointmentStatusHistory.create.mockResolvedValue({} as any);
+            asMock(mockPrisma.appointment.update).mockResolvedValue(updatedAppointment);
+            asMock(mockPrisma.appointmentStatusHistory.create).mockResolvedValue({} as any);
 
             const result = await statusManager.updateStatus(
                 'appointment-1',
@@ -245,7 +246,7 @@ describe('AppointmentStatusManager', () => {
         });
 
         it('should handle appointment not found', async () => {
-            mockPrisma.appointment.findFirst.mockResolvedValue(null);
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(null);
 
             const result = await statusManager.updateStatus(
                 'nonexistent-appointment',
@@ -264,8 +265,8 @@ describe('AppointmentStatusManager', () => {
                 startedAt: new Date(),
             };
 
-            mockPrisma.appointment.update.mockResolvedValue(updatedAppointment);
-            mockPrisma.appointmentStatusHistory.create.mockResolvedValue({} as any);
+            asMock(mockPrisma.appointment.update).mockResolvedValue(updatedAppointment);
+            asMock(mockPrisma.appointmentStatusHistory.create).mockResolvedValue({} as any);
 
             const result = await statusManager.updateStatus(
                 'appointment-1',
@@ -288,7 +289,7 @@ describe('AppointmentStatusManager', () => {
             ];
 
             for (const testCase of testCases) {
-                mockPrisma.appointment.update.mockResolvedValue({
+                asMock(mockPrisma.appointment.update).mockResolvedValue({
                     ...mockAppointment,
                     status: testCase.status,
                     [testCase.timestampField]: new Date(),
@@ -347,7 +348,7 @@ describe('AppointmentStatusManager', () => {
                 },
             ];
 
-            mockPrisma.appointmentStatusHistory.findMany.mockResolvedValue(mockHistory);
+            asMock(mockPrisma.appointmentStatusHistory.findMany).mockResolvedValue(mockHistory);
 
             const result = await statusManager.getStatusHistory('appointment-1', 'business-1');
 
@@ -374,7 +375,7 @@ describe('AppointmentStatusManager', () => {
 
     describe('validateBusinessContext', () => {
         it('should return true for valid business context', async () => {
-            mockPrisma.appointment.findFirst.mockResolvedValue({ id: 'appointment-1' });
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue({ id: 'appointment-1' });
 
             const result = await statusManager.validateBusinessContext('appointment-1', 'business-1');
 
@@ -389,7 +390,7 @@ describe('AppointmentStatusManager', () => {
         });
 
         it('should return false for invalid business context', async () => {
-            mockPrisma.appointment.findFirst.mockResolvedValue(null);
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(null);
 
             const result = await statusManager.validateBusinessContext('appointment-1', 'wrong-business');
 
@@ -482,7 +483,7 @@ describe('AppointmentStatusManager', () => {
 
     describe('bulkUpdateStatus', () => {
         beforeEach(() => {
-            mockPrisma.$transaction.mockImplementation(async (callback) => {
+            mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                 return await callback(mockPrisma);
             });
         });
@@ -497,13 +498,13 @@ describe('AppointmentStatusManager', () => {
                 cancelledAt: null,
             };
 
-            mockPrisma.appointment.findFirst.mockResolvedValue(mockAppointment);
-            mockPrisma.appointment.update.mockResolvedValue({
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue(mockAppointment);
+            asMock(mockPrisma.appointment.update).mockResolvedValue({
                 ...mockAppointment,
                 status: AppointmentStatus.CONFIRMED,
                 confirmedAt: new Date(),
             });
-            mockPrisma.appointmentStatusHistory.create.mockResolvedValue({} as any);
+            asMock(mockPrisma.appointmentStatusHistory.create).mockResolvedValue({} as any);
 
             const result = await statusManager.bulkUpdateStatus(
                 ['appointment-1', 'appointment-2'],
@@ -528,7 +529,7 @@ describe('AppointmentStatusManager', () => {
                 })
                 .mockResolvedValueOnce(null); // Second appointment not found
 
-            mockPrisma.appointment.update.mockResolvedValue({
+            asMock(mockPrisma.appointment.update).mockResolvedValue({
                 id: 'appointment-1',
                 status: AppointmentStatus.CONFIRMED,
                 confirmedAt: new Date(),
@@ -536,7 +537,7 @@ describe('AppointmentStatusManager', () => {
                 completedAt: null,
                 cancelledAt: null,
             });
-            mockPrisma.appointmentStatusHistory.create.mockResolvedValue({} as any);
+            asMock(mockPrisma.appointmentStatusHistory.create).mockResolvedValue({} as any);
 
             const result = await statusManager.bulkUpdateStatus(
                 ['appointment-1', 'appointment-2'],
@@ -554,7 +555,7 @@ describe('AppointmentStatusManager', () => {
         it('should validate successful status update', async () => {
             const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
 
-            mockPrisma.appointment.findFirst.mockResolvedValue({
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue({
                 id: 'appointment-1',
                 status: AppointmentStatus.SCHEDULED,
                 startTime: futureDate,
@@ -577,7 +578,7 @@ describe('AppointmentStatusManager', () => {
         it('should detect invalid status transitions', async () => {
             const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-            mockPrisma.appointment.findFirst.mockResolvedValue({
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue({
                 id: 'appointment-1',
                 status: AppointmentStatus.COMPLETED,
                 startTime: futureDate,
@@ -602,7 +603,7 @@ describe('AppointmentStatusManager', () => {
         it('should warn about late cancellations', async () => {
             const soonDate = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12 hours from now
 
-            mockPrisma.appointment.findFirst.mockResolvedValue({
+            asMock(mockPrisma.appointment.findFirst).mockResolvedValue({
                 id: 'appointment-1',
                 status: AppointmentStatus.CONFIRMED,
                 startTime: soonDate,
@@ -631,7 +632,7 @@ describe('AppointmentStatusManager', () => {
             const pastDate = new Date(now.getTime() - 60 * 60 * 1000); // 1 hour ago
             const pastEndDate = new Date(now.getTime() - 30 * 60 * 1000); // 30 minutes ago
 
-            mockPrisma.appointment.findMany.mockResolvedValue([
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([
                 {
                     id: 'appointment-1',
                     status: AppointmentStatus.SCHEDULED,

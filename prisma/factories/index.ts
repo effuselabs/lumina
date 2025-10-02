@@ -12,16 +12,20 @@ export { BatchProcessor } from './batch-processor';
 
 // Export types with explicit exports to avoid conflicts
 export type { 
-    SeedConfiguration, 
-    BusinessConfiguration, 
-    ClientConfiguration,
-    AppointmentConfiguration,
-    StaffConfiguration,
-    ServiceConfiguration,
-    PromotionConfiguration,
-    CommunicationConfiguration,
-    AnalyticsConfiguration,
-    ValidationConfiguration
+    SeedConfiguration,
+    DemographicDistribution,
+    StaffSpecialty,
+    ServiceCategory,
+    ServiceDefinition,
+    BookingPatterns,
+    BatchProcessingOptions,
+    EnhancedBatchOptions,
+    BatchOperationResult,
+    ValidationResult,
+    ValidationError,
+    ValidationWarning,
+    WeeklySchedule,
+    DaySchedule
 } from './types';
 
 // Export specific validator classes

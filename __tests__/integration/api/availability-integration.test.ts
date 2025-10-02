@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { Business, Service, Staff, TimeOffRequest, TimeOffStatus } from '@prisma/client'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -93,7 +94,7 @@ describe('Availability API Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
             AvailabilityCalculator.getAvailableSlots.mockResolvedValue(mockSlots)
 
             // Simulate API logic
@@ -155,8 +156,8 @@ describe('Availability API Integration Tests', () => {
                 duration: 60,
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findFirst.mockResolvedValue(mockService as Service)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findFirst).mockResolvedValue(mockService as Service)
 
             // Simulate staff validation
             const staff = await mockPrisma.staff.findFirst({
@@ -188,8 +189,8 @@ describe('Availability API Integration Tests', () => {
             const otherBusinessServiceId = 'other-service-456'
 
             // Mock staff not found in user's business
-            mockPrisma.staff.findFirst.mockResolvedValue(null)
-            mockPrisma.service.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null)
+            asMock(mockPrisma.service.findFirst).mockResolvedValue(null)
 
             const staff = await mockPrisma.staff.findFirst({
                 where: { id: otherBusinessStaffId, businessId },
@@ -236,7 +237,7 @@ describe('Availability API Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.detectConflicts.mockResolvedValue(mockConflicts)
 
             // Simulate conflict detection API logic
@@ -291,8 +292,8 @@ describe('Availability API Integration Tests', () => {
                 warnings: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue(mockServices as Service[])
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             // Simulate validation API logic
@@ -376,9 +377,9 @@ describe('Availability API Integration Tests', () => {
                 ],
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 1 })
-            mockPrisma.staffAvailability.create.mockResolvedValue({
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 1 })
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue({
                 id: 'availability-1',
                 staffId,
                 businessId,
@@ -444,7 +445,7 @@ describe('Availability API Integration Tests', () => {
                 name: 'Jane Doe',
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
 
             // Simulate staff validation
             const staff = await mockPrisma.staff.findUnique({
@@ -494,10 +495,10 @@ describe('Availability API Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.appointment.findMany.mockResolvedValue([]) // No conflicting appointments
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([]) // No conflicting time-off
-            mockPrisma.timeOffRequest.create.mockResolvedValue(mockCreatedRequest)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([]) // No conflicting appointments
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([]) // No conflicting time-off
+            asMock(mockPrisma.timeOffRequest.create).mockResolvedValue(mockCreatedRequest)
 
             // Simulate time-off request API logic
             // Staff validation
@@ -596,7 +597,7 @@ describe('Availability API Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue(mockTimeOffRequests as any)
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(mockTimeOffRequests as any)
 
             // Simulate time-off list API logic
             const requests = await mockPrisma.timeOffRequest.findMany({
@@ -638,15 +639,15 @@ describe('Availability API Integration Tests', () => {
             const otherBusinessId = 'other-business-456'
 
             // Mock data from different businesses
-            mockPrisma.staff.findMany.mockResolvedValue([
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([
                 { id: 'staff-1', businessId: userBusinessId, name: 'User Staff' },
             ])
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([
                 { id: 'request-1', businessId: userBusinessId, staffId: 'staff-1' },
             ])
 
-            mockPrisma.businessHours.findMany.mockResolvedValue([
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([
                 { id: 'hours-1', businessId: userBusinessId, dayOfWeek: 1 },
             ])
 
@@ -687,8 +688,8 @@ describe('Availability API Integration Tests', () => {
             const otherBusinessId = 'other-business-456'
 
             // Mock queries that should return empty for other business data
-            mockPrisma.staff.findFirst.mockResolvedValue(null)
-            mockPrisma.service.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null)
+            asMock(mockPrisma.service.findFirst).mockResolvedValue(null)
 
             // Attempt to access other business data
             const otherBusinessStaff = await mockPrisma.staff.findFirst({
@@ -749,7 +750,7 @@ describe('Availability API Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
             AvailabilityCalculator.getAvailableSlots
                 .mockResolvedValueOnce(initialSlots)
                 .mockResolvedValueOnce(updatedSlots)
@@ -769,10 +770,10 @@ describe('Availability API Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.create.mockResolvedValue({
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.create).mockResolvedValue({
                 id: 'request-1',
                 staffId,
                 businessId,

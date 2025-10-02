@@ -127,6 +127,8 @@ export interface CalendarSlot {
   staffId: string;
   isAvailable: boolean;
   appointment?: DashboardAppointment;
+  appointments: DashboardAppointment[]; // Support both singular and plural for compatibility
+  conflicts: ConflictInfo[];
 }
 
 export interface ConflictInfo {
@@ -134,8 +136,21 @@ export interface ConflictInfo {
     | 'time_overlap'
     | 'staff_unavailable'
     | 'business_hours'
-    | 'service_conflict';
+    | 'service_conflict'
+    | 'overlap'
+    | 'business_closed';
+  severity: 'warning' | 'error';
   message: string;
+  affectedAppointments: string[];
   conflictingAppointments?: DashboardAppointment[];
   suggestedTimes?: Date[];
+  suggestedAlternatives?: TimeSlotAlternative[];
+}
+
+export interface TimeSlotAlternative {
+  startTime: Date;
+  endTime: Date;
+  staffId: string;
+  staffName: string;
+  confidence: number; // 0-1 score for how good this alternative is
 }

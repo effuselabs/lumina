@@ -18,6 +18,7 @@ import { prisma } from '@/lib/prisma'
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { AppointmentStatus } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock dependencies
 jest.mock('@/auth')
@@ -134,10 +135,10 @@ describe('Appointments API', () => {
     beforeEach(() => {
         jest.clearAllMocks()
         mockAuth.mockResolvedValue(mockSession)
-        mockPrisma.businessUser.findFirst.mockResolvedValue(mockBusinessUser)
-        mockPrisma.staff.findFirst.mockResolvedValue(mockStaff)
-        mockPrisma.client.findFirst.mockResolvedValue(mockClient)
-        mockPrisma.service.findMany.mockResolvedValue([mockService])
+        asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(mockBusinessUser)
+        asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff)
+        asMock(mockPrisma.client.findFirst).mockResolvedValue(mockClient)
+        asMock(mockPrisma.service.findMany).mockResolvedValue([mockService])
     })
 
     afterEach(() => {
@@ -197,7 +198,7 @@ describe('Appointments API', () => {
         })
 
         it('should return 403 when user has no access to business', async () => {
-            mockPrisma.businessUser.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(null)
 
             const url = new URL('http://localhost/api/appointments?businessId=business-123')
             const request = new NextRequest(url)
@@ -283,7 +284,7 @@ describe('Appointments API', () => {
         })
 
         it('should return 403 when user has no access to business', async () => {
-            mockPrisma.businessUser.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest('http://localhost/api/appointments', {
                 method: 'POST',
@@ -298,7 +299,7 @@ describe('Appointments API', () => {
         })
 
         it('should return 400 when staff not found in business', async () => {
-            mockPrisma.staff.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest('http://localhost/api/appointments', {
                 method: 'POST',
@@ -313,7 +314,7 @@ describe('Appointments API', () => {
         })
 
         it('should return 400 when client not found in business', async () => {
-            mockPrisma.client.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.client.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest('http://localhost/api/appointments', {
                 method: 'POST',
@@ -328,7 +329,7 @@ describe('Appointments API', () => {
         })
 
         it('should return 400 when services not found in business', async () => {
-            mockPrisma.service.findMany.mockResolvedValue([])
+            asMock(mockPrisma.service.findMany).mockResolvedValue([])
 
             const request = new NextRequest('http://localhost/api/appointments', {
                 method: 'POST',

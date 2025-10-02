@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
 import { ConflictDetectionEngine } from '@/lib/services/conflict-detection-engine'
 import { PerformanceTestRunner, PerformanceTestUtils } from './performance-test-runner'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma for benchmarking
 jest.mock('@/lib/prisma', () => ({
@@ -52,7 +53,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
 
     function setupBenchmarkMocks() {
         // Mock business data
-        mockPrisma.business.findUnique.mockResolvedValue({
+        asMock(mockPrisma.business.findUnique).mockResolvedValue({
             id: businessId,
             name: 'Benchmark Business',
             timezone: 'America/New_York',
@@ -61,7 +62,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
         } as any)
 
         // Mock staff data
-        mockPrisma.staff.findMany.mockResolvedValue(
+        asMock(mockPrisma.staff.findMany).mockResolvedValue(
             staffIds.map(id => ({
                 id,
                 businessId,
@@ -75,7 +76,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
         )
 
         // Mock services data
-        mockPrisma.service.findMany.mockResolvedValue(
+        asMock(mockPrisma.service.findMany).mockResolvedValue(
             serviceIds.map((id, index) => ({
                 id,
                 businessId,
@@ -89,7 +90,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
         )
 
         // Mock business hours
-        mockPrisma.businessHours.findMany.mockResolvedValue(
+        asMock(mockPrisma.businessHours.findMany).mockResolvedValue(
             Array.from({ length: 6 }, (_, i) => ({
                 id: `hours-${i}`,
                 businessId,
@@ -103,7 +104,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
         )
 
         // Mock staff availability
-        mockPrisma.staffAvailability.findMany.mockResolvedValue(
+        asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(
             staffIds.flatMap(staffId =>
                 Array.from({ length: 6 }, (_, i) => ({
                     id: `availability-${staffId}-${i}`,
@@ -122,9 +123,9 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
         )
 
         // Mock appointments and time-off
-        mockPrisma.appointment.findMany.mockResolvedValue([])
-        mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-        mockPrisma.availabilityCache.findFirst.mockResolvedValue(null)
+        asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+        asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+        asMock(mockPrisma.availabilityCache.findFirst).mockResolvedValue(null)
     }
 
     describe('Availability Query Performance Benchmarks', () => {
@@ -399,7 +400,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
                 const limitedStaffIds = staffIds.slice(0, staffCount)
 
                 // Update mock to return limited staff
-                mockPrisma.staff.findMany.mockResolvedValue(
+                asMock(mockPrisma.staff.findMany).mockResolvedValue(
                     limitedStaffIds.map(id => ({
                         id,
                         businessId,

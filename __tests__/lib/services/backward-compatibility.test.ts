@@ -73,7 +73,7 @@ describe('BackwardCompatibilityService', () => {
 
             // Mock auto-migration
             (mockPrisma.businessHours.count as jest.Mock).mockResolvedValue(0);
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     businessHours: {
                         create: jest.fn().mockResolvedValue({ id: 'bh-1' }),
@@ -184,7 +184,7 @@ describe('BackwardCompatibilityService', () => {
 
             // Mock auto-migration
             (mockPrisma.staffAvailability.count as jest.Mock).mockResolvedValue(0);
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     staffAvailability: {
                         create: jest.fn().mockResolvedValue({ id: 'sa-1' }),
@@ -309,7 +309,7 @@ describe('BackwardCompatibilityService', () => {
             });
 
             (mockPrisma.businessHours.count as jest.Mock).mockResolvedValue(0);
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     businessHours: {
                         create: jest.fn().mockResolvedValue({ id: 'bh-1' }),
@@ -352,7 +352,7 @@ describe('BackwardCompatibilityService', () => {
             });
 
             (mockPrisma.staffAvailability.count as jest.Mock).mockResolvedValue(0);
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     staffAvailability: {
                         create: jest.fn().mockResolvedValue({ id: 'sa-1' }),

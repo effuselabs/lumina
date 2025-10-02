@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
 import { ConflictDetectionEngine } from '@/lib/services/conflict-detection-engine'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -59,17 +60,17 @@ describe('AvailabilityCalculator', () => {
         jest.clearAllMocks()
 
         // Default business validation
-        mockPrisma.business.findUnique.mockResolvedValue({ id: businessId } as any)
+        asMock(mockPrisma.business.findUnique).mockResolvedValue({ id: businessId } as any)
 
         // Default staff validation
-        mockPrisma.staff.findUnique.mockResolvedValue({
+        asMock(mockPrisma.staff.findUnique).mockResolvedValue({
             id: staffId,
             displayName: 'Test Staff',
             businessId
         } as any)
 
         // Default conflict engine response
-        mockConflictEngine.validateAppointmentSlot.mockResolvedValue({
+        asMock(mockConflictEngine.validateAppointmentSlot).mockResolvedValue({
             isValid: true,
             conflicts: []
         } as any)
@@ -78,16 +79,16 @@ describe('AvailabilityCalculator', () => {
     describe('getAvailableSlots', () => {
         it('should return available slots for a specific service', async () => {
             // Setup mocks
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: serviceId,
                 duration: 60
             } as any)
 
-            mockPrisma.staff.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{
                 id: staffId
             }] as any)
 
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1, // Monday
                 openTime: '09:00',
@@ -95,7 +96,7 @@ describe('AvailabilityCalculator', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -103,10 +104,10 @@ describe('AvailabilityCalculator', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -126,13 +127,13 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should return empty array when business is closed', async () => {
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 isClosed: true
             } as any)
 
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -144,13 +145,13 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should return unavailable slots when includeUnavailable is true', async () => {
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 isClosed: true
             } as any)
 
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -169,14 +170,14 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should handle staff with time-off', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: serviceId,
                 duration: 60
             } as any)
 
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -184,7 +185,7 @@ describe('AvailabilityCalculator', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -192,18 +193,18 @@ describe('AvailabilityCalculator', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Staff has approved time-off
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([{
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([{
                 staffId,
                 startDate: testDate,
                 endDate: testDate,
                 status: 'APPROVED'
             }] as any)
 
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -220,14 +221,14 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should handle existing appointments as conflicts', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: serviceId,
                 duration: 60
             } as any)
 
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -235,7 +236,7 @@ describe('AvailabilityCalculator', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -243,7 +244,7 @@ describe('AvailabilityCalculator', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
 
             // Existing appointment from 10:00-11:00
             const appointmentStart = new Date(testDate)
@@ -251,15 +252,15 @@ describe('AvailabilityCalculator', () => {
             const appointmentEnd = new Date(testDate)
             appointmentEnd.setHours(11, 0, 0, 0)
 
-            mockPrisma.appointment.findMany.mockResolvedValue([{
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([{
                 staffId,
                 startTime: appointmentStart,
                 endTime: appointmentEnd,
                 status: 'SCHEDULED'
             }] as any)
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -280,9 +281,9 @@ describe('AvailabilityCalculator', () => {
         it('should use custom duration when provided', async () => {
             const customDuration = 90 // 1.5 hours
 
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -290,7 +291,7 @@ describe('AvailabilityCalculator', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -298,10 +299,10 @@ describe('AvailabilityCalculator', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -315,14 +316,14 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should handle staff availability override', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: serviceId,
                 duration: 60
             } as any)
 
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -331,7 +332,7 @@ describe('AvailabilityCalculator', () => {
             } as any)
 
             // Staff has override for shorter hours
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue({
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue({
                 staffId,
                 date: testDate,
                 startTime: '10:00',
@@ -339,9 +340,9 @@ describe('AvailabilityCalculator', () => {
                 isAvailable: true
             } as any)
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -360,7 +361,7 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should throw error for invalid business context', async () => {
-            mockPrisma.business.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(null)
 
             await expect(AvailabilityCalculator.getAvailableSlots({
                 businessId: 'invalid-business',
@@ -375,7 +376,7 @@ describe('AvailabilityCalculator', () => {
             const startDate = new Date('2024-01-15T00:00:00.000Z') // Monday
             const endDate = new Date('2024-01-17T00:00:00.000Z') // Wednesday
 
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: serviceId,
                 duration: 60
             } as any)
@@ -405,7 +406,7 @@ describe('AvailabilityCalculator', () => {
                 } as any)
 
             // Mock staff availability for multiple days
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -425,10 +426,10 @@ describe('AvailabilityCalculator', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             const result = await AvailabilityCalculator.getStaffSpecificAvailability({
                 businessId,
@@ -446,7 +447,7 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should throw error for invalid staff context', async () => {
-            mockPrisma.staff.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(null)
 
             await expect(AvailabilityCalculator.getStaffSpecificAvailability({
                 businessId,
@@ -462,13 +463,13 @@ describe('AvailabilityCalculator', () => {
     describe('edge cases and error handling', () => {
         it('should handle database errors gracefully', async () => {
             // Mock business validation to pass first
-            mockPrisma.business.findUnique.mockResolvedValue({ id: businessId } as any)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue({ id: businessId } as any)
 
             // Mock staff to exist
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
             // Make business hours query fail
-            mockPrisma.businessHours.findUnique.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.businessHours.findUnique).mockRejectedValue(new Error('Database error'))
 
             await expect(AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -478,11 +479,11 @@ describe('AvailabilityCalculator', () => {
         })
 
         it('should handle missing service gracefully', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue(null)
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.service.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
             // Should use default duration when service not found
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -490,7 +491,7 @@ describe('AvailabilityCalculator', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -498,10 +499,10 @@ describe('AvailabilityCalculator', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             const result = await AvailabilityCalculator.getAvailableSlots({
                 businessId,
@@ -517,14 +518,14 @@ describe('AvailabilityCalculator', () => {
         it('should handle conflict detection engine errors', async () => {
             mockConflictEngine.validateAppointmentSlot.mockRejectedValue(new Error('Conflict engine error'))
 
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: serviceId,
                 duration: 60
             } as any)
 
-            mockPrisma.staff.findMany.mockResolvedValue([{ id: staffId }] as any)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([{ id: staffId }] as any)
 
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId,
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -532,7 +533,7 @@ describe('AvailabilityCalculator', () => {
                 isClosed: false
             } as any)
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 staffId,
                 dayOfWeek: 1,
                 startTime: '09:00',
@@ -540,10 +541,10 @@ describe('AvailabilityCalculator', () => {
                 isRecurring: true
             }] as any)
 
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.businessHoliday.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue([])
 
             // Should not throw error, just continue without conflict engine validation
             const result = await AvailabilityCalculator.getAvailableSlots({

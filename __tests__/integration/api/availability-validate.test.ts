@@ -2,6 +2,7 @@ import { POST } from '@/app/api/availability/validate/route'
 import { prisma } from '@/lib/prisma'
 import { Service, Staff } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -68,7 +69,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -138,7 +139,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -188,8 +189,8 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue(mockServices as Service[])
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -248,8 +249,8 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue(mockServices as Service[])
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -298,7 +299,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 ],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -341,7 +342,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -421,7 +422,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 serviceIds: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
                 method: 'POST',
@@ -451,8 +452,8 @@ describe('/api/availability/validate Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue([]) // No services found
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue([]) // No services found
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
                 method: 'POST',
@@ -478,7 +479,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 serviceIds: [],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(null) // Not found in user's business
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null) // Not found in user's business
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
                 method: 'POST',
@@ -511,8 +512,8 @@ describe('/api/availability/validate Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue([]) // Not found in user's business
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue([]) // Not found in user's business
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
                 method: 'POST',
@@ -547,7 +548,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockRejectedValue(new Error('Validation engine failed'))
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -617,8 +618,8 @@ describe('/api/availability/validate Integration Tests', () => {
                 ],
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue(mockServices as Service[])
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -685,7 +686,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
 
             // First validation: slot is available
             const initialValidationResult = {

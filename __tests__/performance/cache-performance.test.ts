@@ -4,6 +4,7 @@ import { StaffAvailabilityRepository } from '@/lib/repositories/staff-availabili
 import { TimeOffRequestRepository } from '@/lib/repositories/time-off-request-repository'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
 import { performance } from 'perf_hooks'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Redis for cache testing
 const mockRedis = {
@@ -71,7 +72,7 @@ describe('Cache Performance and Invalidation Tests', () => {
 
     function setupCacheTestMocks() {
         // Mock business data
-        mockPrisma.business.findUnique.mockResolvedValue({
+        asMock(mockPrisma.business.findUnique).mockResolvedValue({
             id: businessId,
             name: 'Cache Test Business',
             timezone: 'America/New_York',
@@ -80,7 +81,7 @@ describe('Cache Performance and Invalidation Tests', () => {
         } as any)
 
         // Mock staff data
-        mockPrisma.staff.findMany.mockResolvedValue(
+        asMock(mockPrisma.staff.findMany).mockResolvedValue(
             staffIds.map(id => ({
                 id,
                 businessId,
@@ -94,7 +95,7 @@ describe('Cache Performance and Invalidation Tests', () => {
         )
 
         // Mock services data
-        mockPrisma.service.findMany.mockResolvedValue(
+        asMock(mockPrisma.service.findMany).mockResolvedValue(
             serviceIds.map((id, index) => ({
                 id,
                 businessId,
@@ -108,7 +109,7 @@ describe('Cache Performance and Invalidation Tests', () => {
         )
 
         // Mock business hours
-        mockPrisma.businessHours.findMany.mockResolvedValue(
+        asMock(mockPrisma.businessHours.findMany).mockResolvedValue(
             Array.from({ length: 6 }, (_, i) => ({
                 id: `hours-${i}`,
                 businessId,
@@ -122,7 +123,7 @@ describe('Cache Performance and Invalidation Tests', () => {
         )
 
         // Mock staff availability
-        mockPrisma.staffAvailability.findMany.mockResolvedValue(
+        asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(
             staffIds.flatMap(staffId =>
                 Array.from({ length: 6 }, (_, i) => ({
                     id: `availability-${staffId}-${i}`,
@@ -141,8 +142,8 @@ describe('Cache Performance and Invalidation Tests', () => {
         )
 
         // Mock minimal appointments and time-off
-        mockPrisma.appointment.findMany.mockResolvedValue([])
-        mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+        asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+        asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
         // Mock cache operations
         mockRedis.get.mockResolvedValue(null) // Cache miss by default
@@ -328,7 +329,7 @@ describe('Cache Performance and Invalidation Tests', () => {
                 `availability:${businessId}:staff-2:2024-01-15`,
             ])
 
-            mockPrisma.businessHours.upsert.mockResolvedValue({
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue({
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -371,8 +372,8 @@ describe('Cache Performance and Invalidation Tests', () => {
                 `availability:${businessId}:2024-01-15`, // Business-wide cache
             ])
 
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 1 })
-            mockPrisma.staffAvailability.create.mockResolvedValue({
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 1 })
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue({
                 id: 'availability-new',
                 staffId: staffIds[0],
                 businessId,
@@ -418,7 +419,7 @@ describe('Cache Performance and Invalidation Tests', () => {
 
             mockRedis.keys.mockResolvedValue(cacheKeys)
 
-            mockPrisma.timeOffRequest.create.mockResolvedValue({
+            asMock(mockPrisma.timeOffRequest.create).mockResolvedValue({
                 id: 'timeoff-1',
                 staffId: staffIds[0],
                 businessId,

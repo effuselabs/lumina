@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { MultiServiceBooking, ServiceDurationValidator, TimeSlot } from '@/lib/services/service-duration-validator'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -29,7 +30,7 @@ describe('ServiceDurationValidator', () => {
     describe('validateServiceFit', () => {
         it('should validate that a 30-minute service fits in a 60-minute slot', async () => {
             // Mock service duration
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-1',
                 duration: 30,
                 name: 'Haircut'
@@ -54,7 +55,7 @@ describe('ServiceDurationValidator', () => {
         })
 
         it('should reject a 120-minute service in a 60-minute slot', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-2',
                 duration: 120,
                 name: 'Color Treatment'
@@ -80,7 +81,7 @@ describe('ServiceDurationValidator', () => {
         })
 
         it('should use staff custom duration when available', async () => {
-            mockPrisma.staffService.findUnique.mockResolvedValue({
+            asMock(mockPrisma.staffService.findUnique).mockResolvedValue({
                 staffId: 'staff-1',
                 serviceId: 'service-1',
                 customDuration: 45,
@@ -108,8 +109,8 @@ describe('ServiceDurationValidator', () => {
         })
 
         it('should handle service not found', async () => {
-            mockPrisma.staffService.findUnique.mockResolvedValue(null)
-            mockPrisma.service.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staffService.findUnique).mockResolvedValue(null)
+            asMock(mockPrisma.service.findUnique).mockResolvedValue(null)
 
             const timeSlot: TimeSlot = {
                 startTime: new Date('2024-01-15T10:00:00Z'),
@@ -157,7 +158,7 @@ describe('ServiceDurationValidator', () => {
         })
 
         it('should use custom duration when provided', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-1',
                 duration: 30,
                 name: 'Haircut'
@@ -176,7 +177,7 @@ describe('ServiceDurationValidator', () => {
         })
 
         it('should throw error for nonexistent service', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.service.findUnique).mockResolvedValue(null)
 
             const services: MultiServiceBooking[] = [
                 { serviceId: 'nonexistent-service' }
@@ -263,7 +264,7 @@ describe('ServiceDurationValidator', () => {
 
     describe('edge cases', () => {
         it('should handle exact duration match', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-1',
                 duration: 60,
                 name: 'Haircut'
@@ -288,7 +289,7 @@ describe('ServiceDurationValidator', () => {
         })
 
         it('should handle very short time slots', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-1',
                 duration: 30,
                 name: 'Quick Service'

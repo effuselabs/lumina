@@ -27,6 +27,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 import { AppointmentStatus } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { performance } from 'perf_hooks'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock dependencies
 jest.mock('@/auth')
@@ -170,11 +171,11 @@ describe('End-to-End Appointment Booking Workflows', () => {
 
         // Setup default mocks
         mockAuth.mockResolvedValue(testData.session)
-        mockPrisma.businessUser.findFirst.mockResolvedValue(testData.businessUser)
-        mockPrisma.staff.findFirst.mockResolvedValue(testData.staff[0])
-        mockPrisma.staff.findMany.mockResolvedValue(testData.staff)
-        mockPrisma.client.findFirst.mockResolvedValue(testData.client)
-        mockPrisma.service.findMany.mockResolvedValue(testData.services)
+        asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(testData.businessUser)
+        asMock(mockPrisma.staff.findFirst).mockResolvedValue(testData.staff[0])
+        asMock(mockPrisma.staff.findMany).mockResolvedValue(testData.staff)
+        asMock(mockPrisma.client.findFirst).mockResolvedValue(testData.client)
+        asMock(mockPrisma.service.findMany).mockResolvedValue(testData.services)
     })
 
     afterEach(() => {

@@ -2,6 +2,7 @@ import { GET } from '@/app/api/availability/conflicts/route'
 import { prisma } from '@/lib/prisma'
 import { Service, Staff } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -85,7 +86,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.detectConflicts.mockResolvedValue(mockConflicts)
 
             const request = new NextRequest(
@@ -110,7 +111,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.detectConflicts.mockResolvedValue([])
 
             const request = new NextRequest(
@@ -140,8 +141,8 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue(mockServices as Service[])
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.detectConflicts.mockResolvedValue([])
 
             const request = new NextRequest(
@@ -181,8 +182,8 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue(mockServices as Service[])
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.detectConflicts.mockResolvedValue([])
 
             const request = new NextRequest(
@@ -207,7 +208,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.detectConflicts.mockResolvedValue([])
 
             const request = new NextRequest(
@@ -260,7 +261,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
         })
 
         it('should return 404 when staff not found or not authorized', async () => {
-            mockPrisma.staff.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest(
                 `http://localhost:3000/api/availability/conflicts?staffId=${staffId}&startTime=2024-01-15T09:00:00Z&endTime=2024-01-15T10:00:00Z`
@@ -278,8 +279,8 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue([]) // No services found
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue([]) // No services found
 
             const request = new NextRequest(
                 `http://localhost:3000/api/availability/conflicts?staffId=${staffId}&startTime=2024-01-15T09:00:00Z&endTime=2024-01-15T10:00:00Z&serviceIds=${serviceId}`
@@ -293,7 +294,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
 
         it('should enforce business context isolation for staff', async () => {
             const otherBusinessStaffId = 'other-staff-456'
-            mockPrisma.staff.findFirst.mockResolvedValue(null) // Not found in user's business
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null) // Not found in user's business
 
             const request = new NextRequest(
                 `http://localhost:3000/api/availability/conflicts?staffId=${otherBusinessStaffId}&startTime=2024-01-15T09:00:00Z&endTime=2024-01-15T10:00:00Z`
@@ -314,8 +315,8 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.service.findMany.mockResolvedValue([]) // Not found in user's business
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.service.findMany).mockResolvedValue([]) // Not found in user's business
 
             const request = new NextRequest(
                 `http://localhost:3000/api/availability/conflicts?staffId=${staffId}&startTime=2024-01-15T09:00:00Z&endTime=2024-01-15T10:00:00Z&serviceIds=${otherBusinessServiceId}`
@@ -337,7 +338,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.detectConflicts.mockRejectedValue(new Error('Conflict detection failed'))
 
             const request = new NextRequest(
@@ -407,7 +408,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             ConflictDetectionEngine.detectConflicts.mockResolvedValue(mockConflicts)
 
             const request = new NextRequest(
@@ -432,7 +433,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
 
             // First request: no conflicts
             ConflictDetectionEngine.detectConflicts.mockResolvedValueOnce([])

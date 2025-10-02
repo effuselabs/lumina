@@ -128,7 +128,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
 
     const setupDefaultMocks = () => {
         // Repository mocks
-        repositoryInstance.create.mockImplementation(async (data) => ({
+        repositoryInstance.create.mockImplementation(async (data: any) => ({
             id: `appointment-${Date.now()}-${Math.random()}`,
             ...data,
             status: AppointmentStatus.SCHEDULED,
@@ -159,7 +159,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
         repositoryInstance.findConflictsOptimized.mockResolvedValue([])
 
         // Service mocks
-        serviceInstance.createAppointment.mockImplementation(async (data) => ({
+        serviceInstance.createAppointment.mockImplementation(async (data: any) => ({
             success: true,
             appointment: {
                 id: `appointment-${Date.now()}-${Math.random()}`,
@@ -583,7 +583,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             let cacheHits = 0
             let cacheMisses = 0
 
-            cacheInstance.get.mockImplementation(async (key) => {
+            cacheInstance.get.mockImplementation(async (key: any) => {
                 await new Promise(resolve => setTimeout(resolve, 1 + Math.random() * 3)) // 1-4ms delay
 
                 // Simulate 70% cache hit rate

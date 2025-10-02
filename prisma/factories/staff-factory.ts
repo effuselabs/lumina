@@ -8,6 +8,8 @@ import { BaseFactory } from './base-factory';
 import { ExperienceLevel, StaffSpecialty, ValidationResult } from './types';
 
 export interface StaffProfile {
+    firstName: string;
+    lastName: string;
     displayName: string;
     title: string;
     bio: string;
