@@ -352,7 +352,7 @@ describe('AppointmentCacheManager', () => {
 
     describe('Cache Statistics', () => {
         it('should return cache statistics', async () => {
-            mockRedisInstance.info.mockImplementation((section) => {
+            mockRedisInstance.info.mockImplementation((section: string) => {
                 if (section === 'memory') {
                     return Promise.resolve('used_memory:1048576\n') // 1MB
                 }

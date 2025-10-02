@@ -71,7 +71,6 @@ export interface StaffMember {
   color: string;
   isActive: boolean;
   role?: string;
-  isActive: boolean;
 }
 
 export interface TimeSlot {

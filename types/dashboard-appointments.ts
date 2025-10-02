@@ -6,6 +6,9 @@
 import { AppointmentStatus } from '@prisma/client';
 import { StaffMember } from './booking';
 
+// Re-export StaffMember for backward compatibility
+export { StaffMember } from './booking';
+
 // Re-export for components
 export { AppointmentStatus };
 
@@ -19,7 +22,7 @@ export interface CalendarViewProps {
   staffMembers: StaffMember[];
   businessHours: BusinessHours;
   onAppointmentClick?: (appointment: DashboardAppointment) => void;
-  onAppointmentDrop?: (appointmentId: string, newSlot: any) => Promise<void>;
+  onAppointmentDrop?: (appointmentId: string, newSlot: unknown) => Promise<void>;
   onTimeSlotClick?: (date: Date, staffId?: string) => void;
 }
 
@@ -50,6 +53,14 @@ export interface CalendarHeaderProps {
   onDateChange: (date: Date) => void;
   onNavigate: (direction: 'prev' | 'next') => void;
   onToday: () => void;
+}
+
+export interface TimeSlotProps {
+  slot: CalendarSlot;
+  view: CalendarView;
+  isSelected?: boolean;
+  onClick?: (slot: CalendarSlot) => void;
+  className?: string;
 }
 
 export interface DashboardAppointment {

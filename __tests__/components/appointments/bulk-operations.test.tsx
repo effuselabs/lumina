@@ -1,7 +1,7 @@
 import { BulkOperationConfirmationDialog } from '@/components/appointments/bulk-operation-confirmation-dialog';
 import { BulkOperationsToolbar } from '@/components/appointments/bulk-operations-toolbar';
 import { BulkSelectionProvider, useBulkSelection } from '@/components/appointments/bulk-selection-provider';
-import { AppointmentStatus, DashboardAppointment } from '@/types';
+import { AppointmentStatus, DashboardAppointment } from '@/types/dashboard-appointments';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { addHours } from 'date-fns';
 import React from 'react';

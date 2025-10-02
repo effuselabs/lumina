@@ -1,6 +1,6 @@
 'use client';
 
-import { DashboardAppointment } from '@/types';
+import { DashboardAppointment } from '@/types/dashboard-appointments';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface BulkSelectionContextType {

@@ -15,7 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { AppointmentStatus, DashboardAppointment } from '@/types';
+import { AppointmentStatus, DashboardAppointment } from '@/types/dashboard-appointments';
 import {
     Calendar,
     CheckSquare,
