@@ -49,6 +49,34 @@ function fixImplicitAnyTypes(content: string): { content: string; changes: numbe
     return `(key: any)${arrow}`;
   });
 
+  // Fix: (apt) => ... to (apt: any) => ...
+  const aptPattern = /\(apt\)(\s*=>)/g;
+  fixed = fixed.replace(aptPattern, (match, arrow) => {
+    changes++;
+    return `(apt: any)${arrow}`;
+  });
+
+  // Fix: (staff) => ... to (staff: any) => ...
+  const staffPattern = /\(staff\)(\s*=>)/g;
+  fixed = fixed.replace(staffPattern, (match, arrow) => {
+    changes++;
+    return `(staff: any)${arrow}`;
+  });
+
+  // Fix: (service) => ... to (service: any) => ...
+  const servicePattern = /\(service\)(\s*=>)/g;
+  fixed = fixed.replace(servicePattern, (match, arrow) => {
+    changes++;
+    return `(service: any)${arrow}`;
+  });
+
+  // Fix: (client) => ... to (client: any) => ...
+  const clientPattern = /\(client\)(\s*=>)/g;
+  fixed = fixed.replace(clientPattern, (match, arrow) => {
+    changes++;
+    return `(client: any)${arrow}`;
+  });
+
   // Fix: (value) => ... to (value: any) => ...
   const valuePattern = /\(value\)(\s*=>)/g;
   fixed = fixed.replace(valuePattern, (match, arrow) => {
@@ -68,20 +96,6 @@ function fixImplicitAnyTypes(content: string): { content: string; changes: numbe
   fixed = fixed.replace(reqResCtxPattern, (match, arrow) => {
     changes++;
     return `(req: any, res: any, ctx: any)${arrow}`;
-  });
-
-  // Fix: (apt) => ... to (apt: any) => ...
-  const aptPattern = /\(apt\)(\s*=>)/g;
-  fixed = fixed.replace(aptPattern, (match, arrow) => {
-    changes++;
-    return `(apt: any)${arrow}`;
-  });
-
-  // Fix: (service) => ... to (service: any) => ...
-  const servicePattern = /\(service\)(\s*=>)/g;
-  fixed = fixed.replace(servicePattern, (match, arrow) => {
-    changes++;
-    return `(service: any)${arrow}`;
   });
 
   return { content: fixed, changes };

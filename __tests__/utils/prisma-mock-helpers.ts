@@ -169,6 +169,66 @@ export function asMock<T = any>(method: any): jest.Mock<T> {
 }
 
 /**
+ * Type-safe mock for one-time resolved value (mockResolvedValueOnce)
+ */
+export function mockFindManyOnce<T>(
+  method: any,
+  data: T[]
+): void {
+  (method as jest.Mock).mockResolvedValueOnce(data);
+}
+
+/**
+ * Type-safe mock for one-time findUnique
+ */
+export function mockFindUniqueOnce<T>(
+  method: any,
+  data: T | null
+): void {
+  (method as jest.Mock).mockResolvedValueOnce(data);
+}
+
+/**
+ * Type-safe mock for one-time findFirst
+ */
+export function mockFindFirstOnce<T>(
+  method: any,
+  data: T | null
+): void {
+  (method as jest.Mock).mockResolvedValueOnce(data);
+}
+
+/**
+ * Type-safe mock for one-time create
+ */
+export function mockCreateOnce<T>(
+  method: any,
+  data: T
+): void {
+  (method as jest.Mock).mockResolvedValueOnce(data);
+}
+
+/**
+ * Type-safe mock for one-time update
+ */
+export function mockUpdateOnce<T>(
+  method: any,
+  data: T
+): void {
+  (method as jest.Mock).mockResolvedValueOnce(data);
+}
+
+/**
+ * Type-safe mock for one-time rejected promise
+ */
+export function mockRejectedOnce(
+  method: any,
+  error: Error
+): void {
+  (method as jest.Mock).mockRejectedValueOnce(error);
+}
+
+/**
  * Create a mock Prisma transaction
  */
 export function mockTransaction<T>(
@@ -178,6 +238,50 @@ export function mockTransaction<T>(
   (prisma.$transaction as jest.Mock).mockImplementation(async (fn: any) => {
     return await fn(prisma);
   });
+}
+
+/**
+ * Helper to mock service methods with proper typing
+ */
+export function mockServiceMethod<T = any>(
+  service: any,
+  methodName: string,
+  returnValue: T
+): void {
+  if (!service[methodName]) {
+    service[methodName] = jest.fn();
+  }
+  (service[methodName] as jest.Mock).mockResolvedValue(returnValue);
+}
+
+/**
+ * Helper to mock service methods with one-time return value
+ */
+export function mockServiceMethodOnce<T = any>(
+  service: any,
+  methodName: string,
+  returnValue: T
+): void {
+  if (!service[methodName]) {
+    service[methodName] = jest.fn();
+  }
+  (service[methodName] as jest.Mock).mockResolvedValueOnce(returnValue);
+}
+
+/**
+ * Helper to add missing methods to mocked objects
+ */
+export function addMockMethod<T = any>(
+  obj: any,
+  methodName: string,
+  returnValue?: T
+): jest.Mock {
+  const mock = jest.fn();
+  if (returnValue !== undefined) {
+    mock.mockResolvedValue(returnValue);
+  }
+  obj[methodName] = mock;
+  return mock;
 }
 
 // Export common types for convenience
