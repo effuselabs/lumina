@@ -1,4 +1,7 @@
 import { prisma } from '@/lib/prisma';
+import { InputSanitizer } from '@/lib/security/rate-limiter';
+import { PublicBookingAuditEvent, auditPublicBooking } from '@/lib/security/public-booking-audit';
+import { securePublicBookingPOST, createSecurePublicBookingResponse } from '@/lib/security/public-booking-security-middleware';
 import { format } from 'date-fns';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
@@ -333,7 +336,7 @@ async function validateTimeSlotAvailability(
       const { AlternativeSlotsService } = await import('../../../../../../lib/services/alternative-slots-service');
       const alternatives = await AlternativeSlotsService.findNearbyAlternatives({
         businessId,
-        serviceIds: serviceIds,
+        serviceIds: serviceIds || [],
         originalStartTime: startTime,
         staffId,
         maxAlternatives: 6,
@@ -440,7 +443,6 @@ async function createAppointmentWithServices(
         totalDuration,
         totalPrice,
         notes,
-        clientNotes: notes,
         // Add confirmation number as internal note for now
         internalNotes: `Confirmation: ${confirmationNumber}`,
       },
@@ -517,7 +519,8 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { businessId: string } }
 ) {
-  const startTime = Date.now();
+  const requestStartTime: number = Date.now();
+  let validatedData: any = null;
 
   try {
     // Apply comprehensive security validation
@@ -535,7 +538,7 @@ export async function POST(
     }
 
     // Use sanitized data from security middleware
-    const validatedData = securityResult.sanitizedData || bookingRequestSchema.parse(await request.json());
+    validatedData = securityResult.sanitizedData || bookingRequestSchema.parse(await request.json());
 
     // Validate business context (already done in security middleware, but get business data)
     const business = await validateBusinessForBooking(params.businessId);
@@ -677,7 +680,7 @@ export async function POST(
     }
 
     // Log successful booking
-    const responseTime = Date.now() - startTime;
+    const responseTime = Date.now() - requestStartTime;
     await auditPublicBooking.bookingCompleted(
       params.businessId,
       request,
@@ -708,7 +711,7 @@ export async function POST(
     console.error('Error in booking creation endpoint:', error);
 
     // Log booking failure
-    const responseTime = Date.now() - startTime;
+    const responseTime = Date.now() - requestStartTime;
     await auditPublicBooking.bookingFailed(
       params.businessId,
       request,

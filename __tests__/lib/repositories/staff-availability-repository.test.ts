@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { StaffAvailabilityRepository } from '@/lib/repositories/staff-availability-repository'
 import { DayOfWeek, StaffAvailability, StaffAvailabilityOverride } from '@prisma/client'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -58,7 +59,7 @@ describe('StaffAvailabilityRepository', () => {
                 },
             ]
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue(mockAvailability)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(mockAvailability)
 
             const result = await repository.getStaffAvailability(staffId, startDate, endDate)
 
@@ -89,7 +90,7 @@ describe('StaffAvailabilityRepository', () => {
             const startDate = new Date('2024-01-15')
             const endDate = new Date('2024-01-21')
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
 
             const result = await repository.getStaffAvailability(staffId, startDate, endDate)
 
@@ -117,7 +118,7 @@ describe('StaffAvailabilityRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staffAvailability.create.mockResolvedValue(mockCreatedAvailability)
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue(mockCreatedAvailability)
 
             const result = await repository.setStaffAvailability(staffId, businessId, availabilityData)
 
@@ -150,7 +151,7 @@ describe('StaffAvailabilityRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staffAvailability.create.mockResolvedValue(mockCreatedAvailability)
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue(mockCreatedAvailability)
 
             const result = await repository.setStaffAvailability(staffId, businessId, availabilityData)
 
@@ -187,7 +188,7 @@ describe('StaffAvailabilityRepository', () => {
                 updatedAt: new Date(),
             }))
 
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 2 })
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 2 })
             mockPrisma.staffAvailability.create
                 .mockResolvedValueOnce(mockCreatedAvailability[0])
                 .mockResolvedValueOnce(mockCreatedAvailability[1])
@@ -223,7 +224,7 @@ describe('StaffAvailabilityRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.staffAvailabilityOverride.upsert.mockResolvedValue(mockOverride)
+            asMock(mockPrisma.staffAvailabilityOverride.upsert).mockResolvedValue(mockOverride)
 
             const result = await repository.overrideAvailability(staffId, businessId, overrideData)
 
@@ -270,7 +271,7 @@ describe('StaffAvailabilityRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.staffAvailabilityOverride.upsert.mockResolvedValue(mockOverride)
+            asMock(mockPrisma.staffAvailabilityOverride.upsert).mockResolvedValue(mockOverride)
 
             const result = await repository.overrideAvailability(staffId, businessId, overrideData)
 
@@ -299,7 +300,7 @@ describe('StaffAvailabilityRepository', () => {
                 },
             ]
 
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue(mockOverrides)
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue(mockOverrides)
 
             const result = await repository.getAvailabilityOverrides(staffId, startDate, endDate)
 
@@ -338,8 +339,8 @@ describe('StaffAvailabilityRepository', () => {
                 },
             ]
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue(mockAvailability)
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(mockAvailability)
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
             const result = await repository.getAvailableStaff(businessId, dateTime, serviceDuration)
 
@@ -381,8 +382,8 @@ describe('StaffAvailabilityRepository', () => {
                 },
             ]
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue(mockAvailability)
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue(mockOverrides)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(mockAvailability)
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue(mockOverrides)
 
             const result = await repository.getAvailableStaff(businessId, dateTime, serviceDuration)
 
@@ -409,8 +410,8 @@ describe('StaffAvailabilityRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staffAvailability.findFirst.mockResolvedValue(mockAvailability)
-            mockPrisma.staffAvailabilityOverride.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailability.findFirst).mockResolvedValue(mockAvailability)
+            asMock(mockPrisma.staffAvailabilityOverride.findFirst).mockResolvedValue(null)
 
             const result = await repository.validateAvailability(staffId, startTime, endTime)
 
@@ -435,7 +436,7 @@ describe('StaffAvailabilityRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staffAvailability.findFirst.mockResolvedValue(mockAvailability)
+            asMock(mockPrisma.staffAvailability.findFirst).mockResolvedValue(mockAvailability)
 
             const result = await repository.validateAvailability(staffId, startTime, endTime)
 
@@ -448,7 +449,7 @@ describe('StaffAvailabilityRepository', () => {
             const startDate = new Date('2024-01-15')
             const endDate = new Date('2024-01-21')
 
-            mockPrisma.staffAvailability.findMany.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.staffAvailability.findMany).mockRejectedValue(new Error('Database error'))
 
             await expect(repository.getStaffAvailability(staffId, startDate, endDate))
                 .rejects.toThrow('Database error')

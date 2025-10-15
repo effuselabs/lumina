@@ -59,8 +59,6 @@ export function AppointmentBlock({
                 return 'bg-red-100 border-red-300 text-red-800';
             case AppointmentStatus.NO_SHOW:
                 return 'bg-orange-100 border-orange-300 text-orange-800';
-            case AppointmentStatus.RESCHEDULED:
-                return 'bg-purple-100 border-purple-300 text-purple-800';
             default:
                 return 'bg-gray-100 border-gray-300 text-gray-600';
         }
@@ -98,7 +96,7 @@ export function AppointmentBlock({
         if (isSelectionMode && enableSelection) {
             toggleAppointment(appointment.id);
         } else {
-            onClick(appointment);
+            onClick?.(appointment);
         }
     };
 
@@ -131,6 +129,7 @@ export function AppointmentBlock({
 
         // Notify context and parent
         const currentSlot = {
+            id: `slot-${appointment.id}`,
             startTime: appointment.startTime,
             endTime: appointment.endTime,
             staffId: appointment.staffId,

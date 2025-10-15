@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { ServiceAvailabilityOptions, TimeSlotAnalysisEngine } from '@/lib/services/time-slot-analysis-engine'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -42,14 +43,14 @@ describe('TimeSlotAnalysisEngine', () => {
     describe('findSuitableSlots', () => {
         it('should find available slots for a service', async () => {
             // Mock service
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-1',
                 duration: 60,
                 name: 'Haircut'
             } as any)
 
             // Mock business hours
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: 'business-1',
                 dayOfWeek: 1, // Monday
                 openTime: '09:00',
@@ -58,12 +59,12 @@ describe('TimeSlotAnalysisEngine', () => {
             } as any)
 
             // Mock staff services
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 { staffId: 'staff-1' }
             ] as any)
 
             // Mock staff availability
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([
                 {
                     staffId: 'staff-1',
                     dayOfWeek: 1,
@@ -74,13 +75,13 @@ describe('TimeSlotAnalysisEngine', () => {
             ] as any)
 
             // Mock no overrides
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
 
             // Mock no appointments
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Mock no time off
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             const options: ServiceAvailabilityOptions = {
                 businessId: 'business-1',
@@ -96,14 +97,14 @@ describe('TimeSlotAnalysisEngine', () => {
 
         it('should return empty array when business is closed', async () => {
             // Mock service
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-1',
                 duration: 60,
                 name: 'Haircut'
             } as any)
 
             // Mock business closed
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: 'business-1',
                 dayOfWeek: 0, // Sunday
                 isClosed: true
@@ -122,14 +123,14 @@ describe('TimeSlotAnalysisEngine', () => {
 
         it('should exclude slots with appointments', async () => {
             // Mock service
-            mockPrisma.service.findUnique.mockResolvedValue({
+            asMock(mockPrisma.service.findUnique).mockResolvedValue({
                 id: 'service-1',
                 duration: 60,
                 name: 'Haircut'
             } as any)
 
             // Mock business hours
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: 'business-1',
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -138,12 +139,12 @@ describe('TimeSlotAnalysisEngine', () => {
             } as any)
 
             // Mock staff services
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 { staffId: 'staff-1' }
             ] as any)
 
             // Mock staff availability
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([
                 {
                     staffId: 'staff-1',
                     dayOfWeek: 1,
@@ -154,10 +155,10 @@ describe('TimeSlotAnalysisEngine', () => {
             ] as any)
 
             // Mock no overrides
-            mockPrisma.staffAvailabilityOverride.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staffAvailabilityOverride.findUnique).mockResolvedValue(null)
 
             // Mock existing appointment
-            mockPrisma.appointment.findMany.mockResolvedValue([
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([
                 {
                     staffId: 'staff-1',
                     startTime: new Date('2024-01-15T10:00:00Z'),
@@ -167,7 +168,7 @@ describe('TimeSlotAnalysisEngine', () => {
             ] as any)
 
             // Mock no time off
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             const options: ServiceAvailabilityOptions = {
                 businessId: 'business-1',
@@ -188,7 +189,7 @@ describe('TimeSlotAnalysisEngine', () => {
 
     describe('validateBusinessHoursBoundaries', () => {
         it('should validate slot within business hours', async () => {
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: 'business-1',
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -211,7 +212,7 @@ describe('TimeSlotAnalysisEngine', () => {
         })
 
         it('should reject slot starting before business opens', async () => {
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: 'business-1',
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -235,7 +236,7 @@ describe('TimeSlotAnalysisEngine', () => {
         })
 
         it('should reject slot ending after business closes', async () => {
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: 'business-1',
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -259,7 +260,7 @@ describe('TimeSlotAnalysisEngine', () => {
         })
 
         it('should handle business closed day', async () => {
-            mockPrisma.businessHours.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findUnique).mockResolvedValue({
                 businessId: 'business-1',
                 dayOfWeek: 0,
                 isClosed: true
@@ -284,10 +285,10 @@ describe('TimeSlotAnalysisEngine', () => {
     describe('validateContinuousTimeSlot', () => {
         it('should validate continuous slot without gaps', async () => {
             // Mock no appointments
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Mock no time off
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             const timeSlot = {
                 startTime: new Date('2024-01-15T10:00:00Z'),
@@ -309,7 +310,7 @@ describe('TimeSlotAnalysisEngine', () => {
 
         it('should detect gaps from appointments', async () => {
             // Mock appointment that creates a gap
-            mockPrisma.appointment.findMany.mockResolvedValue([
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([
                 {
                     staffId: 'staff-1',
                     startTime: new Date('2024-01-15T10:15:00Z'),
@@ -319,7 +320,7 @@ describe('TimeSlotAnalysisEngine', () => {
             ] as any)
 
             // Mock no time off
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             const timeSlot = {
                 startTime: new Date('2024-01-15T10:00:00Z'),
@@ -342,10 +343,10 @@ describe('TimeSlotAnalysisEngine', () => {
 
         it('should detect gaps from time off', async () => {
             // Mock no appointments
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Mock time off that creates a gap
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([
                 {
                     staffId: 'staff-1',
                     startDate: new Date('2024-01-15T10:00:00Z'),
@@ -375,7 +376,7 @@ describe('TimeSlotAnalysisEngine', () => {
 
     describe('error handling', () => {
         it('should handle service not found gracefully', async () => {
-            mockPrisma.service.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.service.findUnique).mockResolvedValue(null)
 
             const options: ServiceAvailabilityOptions = {
                 businessId: 'business-1',
@@ -389,7 +390,7 @@ describe('TimeSlotAnalysisEngine', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.service.findUnique.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.service.findUnique).mockRejectedValue(new Error('Database error'))
 
             const options: ServiceAvailabilityOptions = {
                 businessId: 'business-1',

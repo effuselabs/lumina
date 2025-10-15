@@ -104,7 +104,7 @@ describe('DataMigrationService', () => {
             ];
 
             // Mock transaction
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     business: {
                         findMany: jest.fn().mockResolvedValue(mockBusinesses),
@@ -113,13 +113,13 @@ describe('DataMigrationService', () => {
                         findMany: jest.fn().mockResolvedValue(mockStaff),
                     },
                     businessHours: {
-                        create: jest.fn().mockImplementation((data) => ({
+                        create: jest.fn().mockImplementation((data: any) => ({
                             id: `bh-${Date.now()}`,
                             ...data.data,
                         })),
                     },
                     staffAvailability: {
-                        create: jest.fn().mockImplementation((data) => ({
+                        create: jest.fn().mockImplementation((data: any) => ({
                             id: `sa-${Date.now()}`,
                             ...data.data,
                         })),
@@ -150,7 +150,7 @@ describe('DataMigrationService', () => {
             ];
 
             // Mock transaction
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     business: {
                         findMany: jest.fn().mockResolvedValue(mockBusinesses),
@@ -277,7 +277,7 @@ describe('DataMigrationService', () => {
             };
 
             // Mock transaction
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     businessHours: {
                         deleteMany: jest.fn().mockResolvedValue({ count: 2 }),
@@ -338,7 +338,7 @@ describe('DataMigrationService', () => {
             let createdBusinessHours: any[] = [];
 
             // Mock transaction
-            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (mockPrisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 const mockTx = {
                     business: {
                         findMany: jest.fn().mockResolvedValue(mockBusinesses),
@@ -347,7 +347,7 @@ describe('DataMigrationService', () => {
                         findMany: jest.fn().mockResolvedValue([]),
                     },
                     businessHours: {
-                        create: jest.fn().mockImplementation((data) => {
+                        create: jest.fn().mockImplementation((data: any) => {
                             const businessHour = {
                                 id: `bh-${Date.now()}-${data.data.dayOfWeek}`,
                                 ...data.data,

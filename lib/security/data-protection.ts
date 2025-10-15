@@ -88,7 +88,7 @@ export class DataProtectionService {
             let encrypted = cipher.update(plaintext, 'utf8', 'hex')
             encrypted += cipher.final('hex')
 
-            const tag = cipher.getAuthTag()
+            const tag = (cipher as any).getAuthTag()
 
             return {
                 encryptedValue: encrypted,
@@ -108,7 +108,7 @@ export class DataProtectionService {
             const iv = Buffer.from(encryptedData.iv, 'hex')
             const tag = Buffer.from(encryptedData.tag || '', 'hex')
 
-            const decipher = createDecipheriv(this.encryptionConfig.algorithm, this.encryptionKey, iv)
+            const decipher: any = createDecipheriv(this.encryptionConfig.algorithm, this.encryptionKey, iv)
             decipher.setAuthTag(tag)
 
             let decrypted = decipher.update(encryptedData.encryptedValue, 'hex', 'utf8')
@@ -338,13 +338,13 @@ export class DataProtectionService {
                     lastName: client.lastName,
                     email: client.email,
                     phone: client.phone,
-                    dateOfBirth: client.dateOfBirth,
+                    dateOfBirth: (client as any).dateOfBirth,
                     address: client.address,
                     city: client.city,
                     state: client.state,
                     zipCode: client.zipCode,
-                    country: client.country,
-                    preferences: client.preferences,
+                    country: (client as any).country,
+                    preferences: (client as any).preferences,
                     notes: client.notes,
                     createdAt: client.createdAt,
                     updatedAt: client.updatedAt
@@ -387,9 +387,8 @@ export class DataProtectionService {
                     exportDate: new Date(),
                     dataRetentionPeriod: '7 years', // Default retention period
                     businessId,
-                    clientId,
-                    businessName: business?.name || 'Unknown Business'
-                }
+                    clientId
+                } as any
             }
 
             // Log the export request
@@ -607,7 +606,7 @@ export class DataProtectionService {
 
                 // 4. Delete old security logs
                 const securityCutoff = new Date(now.getTime() - retentionPolicy.securityLogs * 24 * 60 * 60 * 1000)
-                const deletedSecurityLogs = await tx.SecurityLog.deleteMany({
+                const deletedSecurityLogs = await tx.securityLog.deleteMany({
                     where: {
                         businessId,
                         createdAt: { lt: securityCutoff }
@@ -616,7 +615,7 @@ export class DataProtectionService {
                 deletedRecords.securityLogs = deletedSecurityLogs.count
 
                 // 5. Log the anonymization process
-                await tx.AuditLog.create({
+                await tx.auditLog.create({
                     data: {
                         userId: 'system',
                         businessId,
@@ -628,7 +627,7 @@ export class DataProtectionService {
                             anonymizedRecords,
                             deletedRecords,
                             processDate: now
-                        }
+                        } as any
                     }
                 })
             })

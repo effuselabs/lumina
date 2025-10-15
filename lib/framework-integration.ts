@@ -5,7 +5,7 @@
  */
 
 import { Slot } from '@radix-ui/react-slot';
-import { type ComponentProps, type ReactNode, forwardRef } from 'react';
+import React, { type ComponentProps, type ReactNode, forwardRef } from 'react';
 import { cn } from './utils';
 
 // Type definitions for framework integration

@@ -1,7 +1,9 @@
-import { GET, POST } from '@/app/api/availability/staff/route'
+import { POST } from '@/app/api/availability/staff/route'
+// Note: GET function not implemented yet
 import { prisma } from '@/lib/prisma'
 import { Staff, StaffAvailability } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -77,9 +79,9 @@ describe('/api/availability/staff Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findMany.mockResolvedValue(mockStaff)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue(mockAvailability)
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(mockAvailability)
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff')
             const response = await GET(request)
@@ -116,7 +118,7 @@ describe('/api/availability/staff Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findMany.mockResolvedValue(mockStaff)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff)
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff')
             const response = await GET(request)
@@ -158,9 +160,9 @@ describe('/api/availability/staff Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findMany.mockResolvedValue(mockStaff)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([])
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
             const request = new NextRequest(
                 `http://localhost:3000/api/availability/staff?startDate=${startDate}&endDate=${endDate}`
@@ -217,8 +219,8 @@ describe('/api/availability/staff Integration Tests', () => {
                 updatedAt: new Date(),
             }))
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 0 })
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 0 })
             mockPrisma.staffAvailability.create
                 .mockResolvedValueOnce(mockCreatedAvailability[0])
                 .mockResolvedValueOnce(mockCreatedAvailability[1])
@@ -264,7 +266,7 @@ describe('/api/availability/staff Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff', {
                 method: 'POST',
@@ -295,7 +297,7 @@ describe('/api/availability/staff Integration Tests', () => {
                 ],
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(null)
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff', {
                 method: 'POST',
@@ -403,9 +405,9 @@ describe('/api/availability/staff Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 2 }) // Deleted existing
-            mockPrisma.staffAvailability.create.mockResolvedValue(mockCreatedAvailability)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 2 }) // Deleted existing
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue(mockCreatedAvailability)
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff', {
                 method: 'POST',
@@ -457,9 +459,9 @@ describe('/api/availability/staff Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findMany.mockResolvedValue(mixedStaff)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([])
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(mixedStaff)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff')
             const response = await GET(request)
@@ -491,7 +493,7 @@ describe('/api/availability/staff Integration Tests', () => {
                 name: 'Jane Doe',
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff', {
                 method: 'POST',
@@ -541,9 +543,9 @@ describe('/api/availability/staff Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 0 })
-            mockPrisma.staffAvailability.create.mockResolvedValue(mockCreatedAvailability)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 0 })
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue(mockCreatedAvailability)
 
             const postRequest = new NextRequest('http://localhost:3000/api/availability/staff', {
                 method: 'POST',
@@ -557,9 +559,9 @@ describe('/api/availability/staff Integration Tests', () => {
             expect(postResponse.status).toBe(200)
 
             // Immediately query to verify the change is reflected
-            mockPrisma.staff.findMany.mockResolvedValue([mockStaff as Staff])
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([mockCreatedAvailability])
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([mockStaff as Staff])
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([mockCreatedAvailability])
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
             const getRequest = new NextRequest('http://localhost:3000/api/availability/staff')
             const getResponse = await GET(getRequest)
@@ -591,9 +593,9 @@ describe('/api/availability/staff Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 0 })
-            mockPrisma.staffAvailability.create.mockRejectedValue(new Error('Transaction failed'))
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 0 })
+            asMock(mockPrisma.staffAvailability.create).mockRejectedValue(new Error('Transaction failed'))
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff', {
                 method: 'POST',
@@ -623,8 +625,8 @@ describe('/api/availability/staff Integration Tests', () => {
                 name: 'John Doe',
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 2 }) // Clear existing
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 2 }) // Clear existing
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff', {
                 method: 'POST',

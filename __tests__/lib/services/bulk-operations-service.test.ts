@@ -1,5 +1,5 @@
 import { BulkOperationsService, getBulkOperationsService } from '@/lib/services/bulk-operations-service';
-import { AppointmentStatus } from '@/types/appointment-types';
+import { AppointmentStatus } from '@/types/dashboard-appointments';
 
 // Mock fetch globally
 global.fetch = jest.fn();

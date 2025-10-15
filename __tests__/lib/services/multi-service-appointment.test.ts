@@ -13,6 +13,7 @@ jest.mock('@/lib/prisma', () => ({
 
 import { prisma } from '@/lib/prisma'
 import { MultiServiceAppointmentService, ServiceSelection } from '../../../lib/services/multi-service-appointment'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>
 
@@ -47,13 +48,13 @@ describe('MultiServiceAppointmentService', () => {
 
         it('should validate services successfully when all conditions are met', async () => {
             // Mock existing services
-            mockPrisma.service.findMany.mockResolvedValue([
+            asMock(mockPrisma.service.findMany).mockResolvedValue([
                 { id: 'service-1', businessId: mockBusinessId, isActive: true },
                 { id: 'service-2', businessId: mockBusinessId, isActive: true }
             ] as any)
 
             // Mock staff services
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 { staffId: mockStaffId, serviceId: 'service-1' },
                 { staffId: mockStaffId, serviceId: 'service-2' }
             ] as any)
@@ -72,11 +73,11 @@ describe('MultiServiceAppointmentService', () => {
         })
 
         it('should fail validation when services do not exist', async () => {
-            mockPrisma.service.findMany.mockResolvedValue([
+            asMock(mockPrisma.service.findMany).mockResolvedValue([
                 { id: 'service-1', businessId: mockBusinessId, isActive: true }
             ] as any)
 
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 { staffId: mockStaffId, serviceId: 'service-1' }
             ] as any)
 
@@ -91,12 +92,12 @@ describe('MultiServiceAppointmentService', () => {
         })
 
         it('should fail validation when staff cannot perform services', async () => {
-            mockPrisma.service.findMany.mockResolvedValue([
+            asMock(mockPrisma.service.findMany).mockResolvedValue([
                 { id: 'service-1', businessId: mockBusinessId, isActive: true },
                 { id: 'service-2', businessId: mockBusinessId, isActive: true }
             ] as any)
 
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 { staffId: mockStaffId, serviceId: 'service-1' }
             ] as any)
 
@@ -130,12 +131,12 @@ describe('MultiServiceAppointmentService', () => {
                 }
             ]
 
-            mockPrisma.service.findMany.mockResolvedValue([
+            asMock(mockPrisma.service.findMany).mockResolvedValue([
                 { id: 'service-1', businessId: mockBusinessId, isActive: true },
                 { id: 'service-2', businessId: mockBusinessId, isActive: true }
             ] as any)
 
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 { staffId: mockStaffId, serviceId: 'service-1' },
                 { staffId: mockStaffId, serviceId: 'service-2' }
             ] as any)
@@ -181,7 +182,7 @@ describe('MultiServiceAppointmentService', () => {
         it('should return staff who can perform all services', async () => {
             const serviceIds = ['service-1', 'service-2']
 
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 {
                     staffId: 'staff-1',
                     serviceId: 'service-1',
@@ -210,7 +211,7 @@ describe('MultiServiceAppointmentService', () => {
         it('should return empty array when no staff can perform all services', async () => {
             const serviceIds = ['service-1', 'service-2', 'service-3']
 
-            mockPrisma.staffService.findMany.mockResolvedValue([
+            asMock(mockPrisma.staffService.findMany).mockResolvedValue([
                 {
                     staffId: 'staff-1',
                     serviceId: 'service-1',

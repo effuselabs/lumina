@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { ClientService } from '@/lib/services/client-service';
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -33,7 +34,7 @@ describe('ClientService', () => {
                 marketingOptIn: true,
             };
 
-            mockPrisma.client.findFirst.mockResolvedValueOnce(mockClient);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(mockClient);
 
             const result = await ClientService.lookupClient({
                 businessId,
@@ -78,7 +79,7 @@ describe('ClientService', () => {
                 marketingOptIn: false,
             };
 
-            mockPrisma.client.findFirst.mockResolvedValueOnce(mockClient);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(mockClient);
 
             const result = await ClientService.lookupClient({
                 businessId,
@@ -123,7 +124,7 @@ describe('ClientService', () => {
                 marketingOptIn: true,
             };
 
-            mockPrisma.client.findFirst.mockResolvedValueOnce(mockClient);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(mockClient);
 
             const result = await ClientService.lookupClient({
                 businessId,
@@ -153,7 +154,7 @@ describe('ClientService', () => {
         });
 
         it('returns clientExists false when no client found', async () => {
-            mockPrisma.client.findFirst.mockResolvedValueOnce(null);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(null);
 
             const result = await ClientService.lookupClient({
                 businessId,
@@ -178,7 +179,7 @@ describe('ClientService', () => {
         });
 
         it('throws error when database operation fails', async () => {
-            mockPrisma.client.findFirst.mockRejectedValueOnce(new Error('Database error'));
+            asMock(mockPrisma.client.findFirst).mockRejectedValueOnce(new Error('Database error'));
 
             await expect(
                 ClientService.lookupClient({
@@ -212,8 +213,8 @@ describe('ClientService', () => {
                 isActive: true,
             };
 
-            mockPrisma.client.findFirst.mockResolvedValueOnce(null);
-            mockPrisma.client.create.mockResolvedValueOnce(mockCreatedClient);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(null);
+            asMock(mockPrisma.client.create).mockResolvedValueOnce(mockCreatedClient);
 
             const result = await ClientService.createClient(clientData);
 
@@ -253,8 +254,8 @@ describe('ClientService', () => {
                 updatedAt: new Date(),
             };
 
-            mockPrisma.client.findFirst.mockResolvedValueOnce(existingClient);
-            mockPrisma.client.update.mockResolvedValueOnce(updatedClient);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(existingClient);
+            asMock(mockPrisma.client.update).mockResolvedValueOnce(updatedClient);
 
             const result = await ClientService.createClient(clientData);
 
@@ -284,8 +285,8 @@ describe('ClientService', () => {
             ];
 
             for (const testCase of testCases) {
-                mockPrisma.client.findFirst.mockResolvedValueOnce(null);
-                mockPrisma.client.create.mockResolvedValueOnce({
+                asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(null);
+                asMock(mockPrisma.client.create).mockResolvedValueOnce({
                     id: 'test-client',
                     phone: testCase.expected,
                 } as any);
@@ -308,8 +309,8 @@ describe('ClientService', () => {
         });
 
         it('trims and normalizes text fields', async () => {
-            mockPrisma.client.findFirst.mockResolvedValueOnce(null);
-            mockPrisma.client.create.mockResolvedValueOnce({
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(null);
+            asMock(mockPrisma.client.create).mockResolvedValueOnce({
                 id: 'test-client',
             } as any);
 
@@ -332,8 +333,8 @@ describe('ClientService', () => {
         });
 
         it('handles null notes correctly', async () => {
-            mockPrisma.client.findFirst.mockResolvedValueOnce(null);
-            mockPrisma.client.create.mockResolvedValueOnce({
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(null);
+            asMock(mockPrisma.client.create).mockResolvedValueOnce({
                 id: 'test-client',
             } as any);
 
@@ -350,7 +351,7 @@ describe('ClientService', () => {
         });
 
         it('throws error when database operation fails', async () => {
-            mockPrisma.client.findFirst.mockRejectedValueOnce(new Error('Database error'));
+            asMock(mockPrisma.client.findFirst).mockRejectedValueOnce(new Error('Database error'));
 
             await expect(ClientService.createClient(clientData)).rejects.toThrow(
                 'Failed to create client profile'
@@ -368,7 +369,7 @@ describe('ClientService', () => {
                 isActive: true,
             };
 
-            mockPrisma.client.findFirst.mockResolvedValueOnce(mockClient);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(mockClient);
 
             const result = await ClientService.getClientById('client-123', 'business-123');
 
@@ -383,7 +384,7 @@ describe('ClientService', () => {
         });
 
         it('returns null when client not found', async () => {
-            mockPrisma.client.findFirst.mockResolvedValueOnce(null);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(null);
 
             const result = await ClientService.getClientById('nonexistent', 'business-123');
 
@@ -391,7 +392,7 @@ describe('ClientService', () => {
         });
 
         it('throws error when database operation fails', async () => {
-            mockPrisma.client.findFirst.mockRejectedValueOnce(new Error('Database error'));
+            asMock(mockPrisma.client.findFirst).mockRejectedValueOnce(new Error('Database error'));
 
             await expect(
                 ClientService.getClientById('client-123', 'business-123')
@@ -415,8 +416,8 @@ describe('ClientService', () => {
                 updatedAt: new Date(),
             };
 
-            mockPrisma.client.findFirst.mockResolvedValueOnce(existingClient);
-            mockPrisma.client.update.mockResolvedValueOnce(updatedClient);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(existingClient);
+            asMock(mockPrisma.client.update).mockResolvedValueOnce(updatedClient);
 
             const result = await ClientService.updateClient('client-123', 'business-123', {
                 firstName: 'Jane',
@@ -433,7 +434,7 @@ describe('ClientService', () => {
         });
 
         it('throws error when client not found', async () => {
-            mockPrisma.client.findFirst.mockResolvedValueOnce(null);
+            asMock(mockPrisma.client.findFirst).mockResolvedValueOnce(null);
 
             await expect(
                 ClientService.updateClient('nonexistent', 'business-123', { firstName: 'Jane' })
@@ -532,7 +533,7 @@ describe('ClientService', () => {
                 },
             ];
 
-            mockPrisma.client.findMany.mockResolvedValueOnce(mockClients);
+            asMock(mockPrisma.client.findMany).mockResolvedValueOnce(mockClients);
 
             const result = await ClientService.searchClients('business-123', 'doe');
 
@@ -557,7 +558,7 @@ describe('ClientService', () => {
         });
 
         it('limits search results', async () => {
-            mockPrisma.client.findMany.mockResolvedValueOnce([]);
+            asMock(mockPrisma.client.findMany).mockResolvedValueOnce([]);
 
             await ClientService.searchClients('business-123', 'test', 5);
 

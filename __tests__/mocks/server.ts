@@ -5,7 +5,7 @@ import { setupServer } from 'msw/node'
 // Mock API handlers
 export const handlers = [
     // Get appointments
-    rest.get('/api/appointments', (req, res, ctx) => {
+    rest.get('/api/appointments', (req: any, res: any, ctx: any) => {
         const url = new URL(req.url)
         const businessId = url.searchParams.get('businessId')
         const searchTerm = url.searchParams.get('searchTerm')
@@ -62,7 +62,7 @@ export const handlers = [
     }),
 
     // Get single appointment
-    rest.get('/api/appointments/:id', (req, res, ctx) => {
+    rest.get('/api/appointments/:id', (req: any, res: any, ctx: any) => {
         const { id } = req.params
         const appointment = mockAppointments.find(apt => apt.id === id)
 
@@ -80,7 +80,7 @@ export const handlers = [
     }),
 
     // Create appointment
-    rest.post('/api/appointments', async (req, res, ctx) => {
+    rest.post('/api/appointments', async (req: any, res: any, ctx: any) => {
         const appointmentData = await req.json()
 
         // Simulate validation
@@ -131,7 +131,7 @@ export const handlers = [
     }),
 
     // Update appointment
-    rest.put('/api/appointments/:id', async (req, res, ctx) => {
+    rest.put('/api/appointments/:id', async (req: any, res: any, ctx: any) => {
         const { id } = req.params
         const updateData = await req.json()
 
@@ -176,7 +176,7 @@ export const handlers = [
     }),
 
     // Delete appointment
-    rest.delete('/api/appointments/:id', (req, res, ctx) => {
+    rest.delete('/api/appointments/:id', (req: any, res: any, ctx: any) => {
         const { id } = req.params
         const appointmentIndex = mockAppointments.findIndex(apt => apt.id === id)
 
@@ -194,7 +194,7 @@ export const handlers = [
     }),
 
     // Check availability
-    rest.post('/api/appointments/check-availability', async (req, res, ctx) => {
+    rest.post('/api/appointments/check-availability', async (req: any, res: any, ctx: any) => {
         const { staffId, startTime, endTime, excludeAppointmentId } = await req.json()
 
         const hasConflict = mockAppointments.some(apt =>
@@ -231,7 +231,7 @@ export const handlers = [
     }),
 
     // Get staff members
-    rest.get('/api/staff', (req, res, ctx) => {
+    rest.get('/api/staff', (req: any, res: any, ctx: any) => {
         const url = new URL(req.url)
         const businessId = url.searchParams.get('businessId')
 
@@ -246,7 +246,7 @@ export const handlers = [
     }),
 
     // Get services
-    rest.get('/api/services', (req, res, ctx) => {
+    rest.get('/api/services', (req: any, res: any, ctx: any) => {
         const url = new URL(req.url)
         const businessId = url.searchParams.get('businessId')
 
@@ -261,7 +261,7 @@ export const handlers = [
     }),
 
     // Get clients
-    rest.get('/api/clients', (req, res, ctx) => {
+    rest.get('/api/clients', (req: any, res: any, ctx: any) => {
         const url = new URL(req.url)
         const businessId = url.searchParams.get('businessId')
         const searchTerm = url.searchParams.get('searchTerm')
@@ -285,7 +285,7 @@ export const handlers = [
     }),
 
     // Bulk operations
-    rest.post('/api/appointments/bulk-update', async (req, res, ctx) => {
+    rest.post('/api/appointments/bulk-update', async (req: any, res: any, ctx: any) => {
         const { appointmentIds, updateData } = await req.json()
 
         // Simulate processing time
@@ -307,7 +307,7 @@ export const handlers = [
         )
     }),
 
-    rest.post('/api/appointments/bulk-delete', async (req, res, ctx) => {
+    rest.post('/api/appointments/bulk-delete', async (req: any, res: any, ctx: any) => {
         const { appointmentIds } = await req.json()
 
         // Simulate processing time
@@ -323,19 +323,19 @@ export const handlers = [
     }),
 
     // Error simulation handlers
-    rest.get('/api/appointments/error', (req, res, ctx) => {
+    rest.get('/api/appointments/error', (req: any, res: any, ctx: any) => {
         return res(
             ctx.status(500),
             ctx.json({ error: 'Internal server error' })
         )
     }),
 
-    rest.post('/api/appointments/network-error', (req, res, ctx) => {
+    rest.post('/api/appointments/network-error', (req: any, res: any, ctx: any) => {
         return res.networkError('Network connection failed')
     }),
 
     // WebSocket simulation (for testing purposes)
-    rest.get('/api/appointments/websocket-token', (req, res, ctx) => {
+    rest.get('/api/appointments/websocket-token', (req: any, res: any, ctx: any) => {
         return res(
             ctx.status(200),
             ctx.json({ token: 'mock-websocket-token' })
@@ -349,7 +349,7 @@ export const server = setupServer(...handlers)
 // Helper functions for test scenarios
 export const simulateNetworkError = () => {
     server.use(
-        rest.get('/api/appointments', (req, res, ctx) => {
+        rest.get('/api/appointments', (req: any, res: any, ctx: any) => {
             return res.networkError('Network connection failed')
         })
     )
@@ -357,7 +357,7 @@ export const simulateNetworkError = () => {
 
 export const simulateServerError = () => {
     server.use(
-        rest.get('/api/appointments', (req, res, ctx) => {
+        rest.get('/api/appointments', (req: any, res: any, ctx: any) => {
             return res(
                 ctx.status(500),
                 ctx.json({ error: 'Internal server error' })
@@ -368,7 +368,7 @@ export const simulateServerError = () => {
 
 export const simulateSlowResponse = (delay: number = 2000) => {
     server.use(
-        rest.get('/api/appointments', (req, res, ctx) => {
+        rest.get('/api/appointments', (req: any, res: any, ctx: any) => {
             return res(
                 ctx.delay(delay),
                 ctx.status(200),

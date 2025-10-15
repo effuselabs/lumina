@@ -31,6 +31,8 @@ describe('TransactionFactory', () => {
                     id: 'staff-commission',
                     businessId,
                     userId: 'user-commission',
+                    firstName: 'Commission',
+                    lastName: 'Staff',
                     displayName: 'Commission Staff',
                     employmentType: 'COMMISSION',
                     commissionRate: 60
@@ -39,6 +41,8 @@ describe('TransactionFactory', () => {
                     id: 'staff-chair-rental',
                     businessId,
                     userId: 'user-chair-rental',
+                    firstName: 'Chair',
+                    lastName: 'Rental',
                     displayName: 'Chair Rental Staff',
                     employmentType: 'CHAIR_RENTAL',
                     chairRentalAmount: 200
@@ -47,6 +51,8 @@ describe('TransactionFactory', () => {
                     id: 'staff-hybrid',
                     businessId,
                     userId: 'user-hybrid',
+                    firstName: 'Hybrid',
+                    lastName: 'Staff',
                     displayName: 'Hybrid Staff',
                     employmentType: 'HYBRID',
                     commissionRate: 45,
@@ -96,6 +102,8 @@ describe('TransactionFactory', () => {
                     staffId: 'staff-commission',
                     startTime: new Date('2025-01-15T10:00:00Z'),
                     endTime: new Date('2025-01-15T11:00:00Z'),
+                    totalDuration: 60,
+                    totalPrice: 85.00,
                     status: 'COMPLETED'
                 },
                 {
@@ -105,6 +113,8 @@ describe('TransactionFactory', () => {
                     staffId: 'staff-chair-rental',
                     startTime: new Date('2025-01-16T14:00:00Z'),
                     endTime: new Date('2025-01-16T16:00:00Z'),
+                    totalDuration: 120,
+                    totalPrice: 120.00,
                     status: 'COMPLETED'
                 }
             ]

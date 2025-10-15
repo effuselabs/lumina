@@ -56,6 +56,8 @@ async function testClientFactory() {
                 data: {
                     businessId: business.id,
                     userId: testUser.id,
+                    firstName: 'Test',
+                    lastName: 'Stylist',
                     displayName: 'Test Stylist',
                     title: 'Senior Stylist',
                     employmentType: 'COMMISSION',

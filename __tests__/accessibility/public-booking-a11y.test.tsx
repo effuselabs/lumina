@@ -4,7 +4,7 @@
  */
 
 import { BookingConfirmation } from '@/components/booking/booking-confirmation'
-import { ClientInformationForm } from '@/components/booking/client-information-form'
+import ClientInformationForm from '@/components/booking/client-information-form'
 import { PublicBookingInterface } from '@/components/booking/public-booking-interface'
 import { ServiceSelection } from '@/components/booking/service-selection'
 import { StaffTimeSelection } from '@/components/booking/staff-time-selection'

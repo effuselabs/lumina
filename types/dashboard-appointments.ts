@@ -5,8 +5,72 @@
 
 import { AppointmentStatus } from '@prisma/client';
 
+// StaffMember interface (duplicated to avoid circular dependency)
+export interface StaffMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  avatar?: string;
+  specialties?: string[];
+  color: string;
+  isActive: boolean;
+  role?: string;
+}
+
 // Re-export for components
 export { AppointmentStatus };
+
+// Calendar view types
+export type CalendarView = 'day' | 'week' | 'month';
+
+export interface CalendarViewProps {
+  view: CalendarView;
+  currentDate: Date;
+  appointments: DashboardAppointment[];
+  staffMembers: StaffMember[];
+  businessHours: BusinessHours;
+  onAppointmentClick?: (appointment: DashboardAppointment) => void;
+  onAppointmentDrop?: (appointmentId: string, newSlot: unknown) => Promise<void>;
+  onTimeSlotClick?: (date: Date, staffId?: string) => void;
+}
+
+export interface BusinessHours {
+  [key: string]: {
+    isOpen: boolean;
+    openTime: string;
+    closeTime: string;
+  };
+}
+
+// StaffMember imported from booking types to avoid duplication
+
+export interface AppointmentBlockProps {
+  appointment: DashboardAppointment;
+  view: CalendarView;
+  onClick?: (appointment: DashboardAppointment) => void;
+  onDragStart?: (appointment: DashboardAppointment) => void;
+  onDragEnd?: () => void;
+  isDragging?: boolean;
+  className?: string;
+}
+
+export interface CalendarHeaderProps {
+  view: CalendarView;
+  currentDate: Date;
+  onViewChange: (view: CalendarView) => void;
+  onDateChange: (date: Date) => void;
+  onNavigate: (direction: 'prev' | 'next') => void;
+  onToday: () => void;
+}
+
+export interface TimeSlotProps {
+  slot: CalendarSlot;
+  view: CalendarView;
+  isSelected?: boolean;
+  onClick?: (slot: CalendarSlot) => void;
+  className?: string;
+}
 
 export interface DashboardAppointment {
   // Core appointment data
@@ -63,6 +127,8 @@ export interface CalendarSlot {
   staffId: string;
   isAvailable: boolean;
   appointment?: DashboardAppointment;
+  appointments: DashboardAppointment[]; // Support both singular and plural for compatibility
+  conflicts: ConflictInfo[];
 }
 
 export interface ConflictInfo {
@@ -70,8 +136,21 @@ export interface ConflictInfo {
     | 'time_overlap'
     | 'staff_unavailable'
     | 'business_hours'
-    | 'service_conflict';
+    | 'service_conflict'
+    | 'overlap'
+    | 'business_closed';
+  severity: 'warning' | 'error';
   message: string;
+  affectedAppointments: string[];
   conflictingAppointments?: DashboardAppointment[];
   suggestedTimes?: Date[];
+  suggestedAlternatives?: TimeSlotAlternative[];
+}
+
+export interface TimeSlotAlternative {
+  startTime: Date;
+  endTime: Date;
+  staffId: string;
+  staffName: string;
+  confidence: number; // 0-1 score for how good this alternative is
 }

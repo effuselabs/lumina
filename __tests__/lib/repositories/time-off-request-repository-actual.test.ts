@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { TimeOffRequestRepository } from '@/lib/repositories/time-off-request-repository'
 import { Staff, TimeOffRequest, TimeOffStatus } from '@prisma/client'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -60,8 +61,8 @@ describe('TimeOffRequestRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.timeOffRequest.create.mockResolvedValue(mockRequest)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.timeOffRequest.create).mockResolvedValue(mockRequest)
 
             const result = await repository.createTimeOffRequest(requestData)
 
@@ -90,7 +91,7 @@ describe('TimeOffRequestRepository', () => {
                 reason: 'Vacation',
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(null)
 
             await expect(repository.createTimeOffRequest(requestData))
                 .rejects.toThrow('Staff member not found')
@@ -120,8 +121,8 @@ describe('TimeOffRequestRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
-            mockPrisma.timeOffRequest.create.mockResolvedValue(mockRequest)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.timeOffRequest.create).mockResolvedValue(mockRequest)
 
             const result = await repository.createTimeOffRequest(requestData)
 
@@ -154,7 +155,7 @@ describe('TimeOffRequestRepository', () => {
                 approver: null,
             }
 
-            mockPrisma.timeOffRequest.findUnique.mockResolvedValue(mockRequest as any)
+            asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValue(mockRequest as any)
 
             const result = await repository.getTimeOffRequestById(requestId)
 
@@ -183,7 +184,7 @@ describe('TimeOffRequestRepository', () => {
         it('should return null when request not found', async () => {
             const requestId = 'nonexistent-request'
 
-            mockPrisma.timeOffRequest.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValue(null)
 
             const result = await repository.getTimeOffRequestById(requestId)
 
@@ -218,9 +219,9 @@ describe('TimeOffRequestRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockApprover as Staff)
-            mockPrisma.timeOffRequest.findUnique.mockResolvedValue(mockRequest as TimeOffRequest)
-            mockPrisma.timeOffRequest.update.mockResolvedValue(mockApprovedRequest)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockApprover as Staff)
+            asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValue(mockRequest as TimeOffRequest)
+            asMock(mockPrisma.timeOffRequest.update).mockResolvedValue(mockApprovedRequest)
 
             const result = await repository.approveTimeOffRequest(requestId, approverId)
 
@@ -239,7 +240,7 @@ describe('TimeOffRequestRepository', () => {
         it('should throw error when approver not found', async () => {
             const requestId = 'request-1'
 
-            mockPrisma.staff.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(null)
 
             await expect(repository.approveTimeOffRequest(requestId, 'nonexistent-approver'))
                 .rejects.toThrow('Approver not found')
@@ -249,8 +250,8 @@ describe('TimeOffRequestRepository', () => {
             const requestId = 'nonexistent-request'
 
             const mockApprover = { id: approverId, businessId, name: 'Manager' }
-            mockPrisma.staff.findUnique.mockResolvedValue(mockApprover as Staff)
-            mockPrisma.timeOffRequest.findUnique.mockResolvedValue(null)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockApprover as Staff)
+            asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValue(null)
 
             await expect(repository.approveTimeOffRequest(requestId, approverId))
                 .rejects.toThrow('Time-off request not found')
@@ -284,9 +285,9 @@ describe('TimeOffRequestRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockApprover as Staff)
-            mockPrisma.timeOffRequest.findUnique.mockResolvedValue(mockRequest as TimeOffRequest)
-            mockPrisma.timeOffRequest.update.mockResolvedValue(mockDeniedRequest)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockApprover as Staff)
+            asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValue(mockRequest as TimeOffRequest)
+            asMock(mockPrisma.timeOffRequest.update).mockResolvedValue(mockDeniedRequest)
 
             const result = await repository.denyTimeOffRequest(requestId, approverId, denialReason)
 
@@ -327,8 +328,8 @@ describe('TimeOffRequestRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.timeOffRequest.findUnique.mockResolvedValue(mockRequest as TimeOffRequest)
-            mockPrisma.timeOffRequest.update.mockResolvedValue(mockCancelledRequest)
+            asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValue(mockRequest as TimeOffRequest)
+            asMock(mockPrisma.timeOffRequest.update).mockResolvedValue(mockCancelledRequest)
 
             const result = await repository.cancelTimeOffRequest(requestId, staffId)
 
@@ -353,7 +354,7 @@ describe('TimeOffRequestRepository', () => {
                 status: TimeOffStatus.PENDING,
             }
 
-            mockPrisma.timeOffRequest.findUnique.mockResolvedValue(mockRequest as TimeOffRequest)
+            asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValue(mockRequest as TimeOffRequest)
 
             await expect(repository.cancelTimeOffRequest(requestId, wrongStaffId))
                 .rejects.toThrow('You can only cancel your own time-off requests')
@@ -376,8 +377,8 @@ describe('TimeOffRequestRepository', () => {
                 },
             ]
 
-            mockPrisma.appointment.findMany.mockResolvedValue(mockConflictingAppointments)
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue(mockConflictingAppointments)
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             const result = await repository.checkTimeOffConflicts(staffId, startDate, endDate)
 
@@ -433,8 +434,8 @@ describe('TimeOffRequestRepository', () => {
                 },
             ]
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue(mockConflictingTimeOff)
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(mockConflictingTimeOff)
 
             const result = await repository.checkTimeOffConflicts(staffId, startDate, endDate)
 
@@ -446,8 +447,8 @@ describe('TimeOffRequestRepository', () => {
             const startDate = new Date('2024-01-15')
             const endDate = new Date('2024-01-17')
 
-            mockPrisma.appointment.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             const result = await repository.checkTimeOffConflicts(staffId, startDate, endDate)
 
@@ -477,7 +478,7 @@ describe('TimeOffRequestRepository', () => {
                 },
             ]
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue(mockApprovedTimeOff)
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(mockApprovedTimeOff)
 
             const result = await repository.getApprovedTimeOff(staffId, startDate, endDate)
 
@@ -533,7 +534,7 @@ describe('TimeOffRequestRepository', () => {
                 },
             ]
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue(mockTimeOffRequests)
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(mockTimeOffRequests)
 
             const result = await repository.hasApprovedTimeOffOnDate(staffId, testDate)
 
@@ -543,7 +544,7 @@ describe('TimeOffRequestRepository', () => {
         it('should return false when staff has no approved time-off on date', async () => {
             const testDate = new Date('2024-01-20')
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             const result = await repository.hasApprovedTimeOffOnDate(staffId, testDate)
 
@@ -571,17 +572,17 @@ describe('TimeOffRequestRepository', () => {
                 updatedAt: new Date(),
             }))
 
-            mockPrisma.staff.findUnique.mockResolvedValue(mockApprover as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockApprover as Staff)
 
             // Mock individual approvals
             requestIds.forEach((id, index) => {
-                mockPrisma.timeOffRequest.findUnique.mockResolvedValueOnce({
+                asMock(mockPrisma.timeOffRequest.findUnique).mockResolvedValueOnce({
                     id,
                     staffId: `staff-${index + 1}`,
                     businessId,
                     status: TimeOffStatus.PENDING,
                 } as TimeOffRequest)
-                mockPrisma.timeOffRequest.update.mockResolvedValueOnce(mockApprovedRequests[index])
+                asMock(mockPrisma.timeOffRequest.update).mockResolvedValueOnce(mockApprovedRequests[index])
             })
 
             const result = await repository.bulkApproveTimeOffRequests(requestIds, approverId)
@@ -600,7 +601,7 @@ describe('TimeOffRequestRepository', () => {
                 reason: 'Vacation',
             }
 
-            mockPrisma.staff.findUnique.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.staff.findUnique).mockRejectedValue(new Error('Database error'))
 
             await expect(repository.createTimeOffRequest(requestData))
                 .rejects.toThrow('Database error')
@@ -627,7 +628,7 @@ describe('TimeOffRequestRepository', () => {
             }
 
             const mockStaff = { id: staffId, businessId, name: 'John Doe' }
-            mockPrisma.staff.findUnique.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
 
             await expect(repository.createTimeOffRequest(invalidRequestData))
                 .rejects.toThrow('End date must be after start date')

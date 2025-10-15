@@ -1,5 +1,6 @@
 import { BackwardCompatibilityService } from '@/lib/services/backward-compatibility'
 import { DataMigrationService } from '@/lib/services/data-migration'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 const mockPrisma = {
@@ -59,7 +60,7 @@ describe('Migration and Compatibility Integration Tests', () => {
                     },
                 ]
 
-                mockPrisma.businessHours.findMany.mockResolvedValue(mockStructuredHours)
+                asMock(mockPrisma.businessHours.findMany).mockResolvedValue(mockStructuredHours)
 
                 const result = await backwardCompatibilityService.getBusinessHours(businessId)
 
@@ -84,8 +85,8 @@ describe('Migration and Compatibility Integration Tests', () => {
                     sunday: { isOpen: false, openTime: '00:00', closeTime: '00:00' },
                 }
 
-                mockPrisma.businessHours.findMany.mockResolvedValue([])
-                mockPrisma.business.findUnique.mockResolvedValue({
+                asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+                asMock(mockPrisma.business.findUnique).mockResolvedValue({
                     operatingHours: mockJsonData,
                 })
 
@@ -102,8 +103,8 @@ describe('Migration and Compatibility Integration Tests', () => {
             })
 
             it('should use default hours when no data available', async () => {
-                mockPrisma.businessHours.findMany.mockResolvedValue([])
-                mockPrisma.business.findUnique.mockResolvedValue({
+                asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+                asMock(mockPrisma.business.findUnique).mockResolvedValue({
                     operatingHours: null,
                 })
 
@@ -120,8 +121,8 @@ describe('Migration and Compatibility Integration Tests', () => {
                     monday: { isOpen: 'invalid', openTime: '25:00', closeTime: '17:00' },
                 }
 
-                mockPrisma.businessHours.findMany.mockResolvedValue([])
-                mockPrisma.business.findUnique.mockResolvedValue({
+                asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+                asMock(mockPrisma.business.findUnique).mockResolvedValue({
                     operatingHours: invalidJsonData,
                 })
 
@@ -143,15 +144,15 @@ describe('Migration and Compatibility Integration Tests', () => {
                     sunday: { isOpen: false, openTime: '00:00', closeTime: '00:00' },
                 }
 
-                mockPrisma.businessHours.findMany.mockResolvedValue([])
-                mockPrisma.business.findUnique.mockResolvedValue({
+                asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+                asMock(mockPrisma.business.findUnique).mockResolvedValue({
                     operatingHours: mockJsonData,
                 })
-                mockPrisma.businessHours.count.mockResolvedValue(0)
-                mockPrisma.$transaction.mockImplementation(async (callback) => {
+                asMock(mockPrisma.businessHours.count).mockResolvedValue(0)
+                mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                     return await callback(mockPrisma)
                 })
-                mockPrisma.businessHours.create.mockResolvedValue({
+                asMock(mockPrisma.businessHours.create).mockResolvedValue({
                     id: 'hours-1',
                     businessId,
                     dayOfWeek: 1,
@@ -191,7 +192,7 @@ describe('Migration and Compatibility Integration Tests', () => {
                     },
                 ]
 
-                mockPrisma.staffAvailability.findMany.mockResolvedValue(mockStructuredAvailability)
+                asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(mockStructuredAvailability)
 
                 const result = await backwardCompatibilityService.getStaffAvailability(staffId)
 
@@ -216,8 +217,8 @@ describe('Migration and Compatibility Integration Tests', () => {
                     sunday: { isAvailable: false, startTime: '00:00', endTime: '00:00' },
                 }
 
-                mockPrisma.staffAvailability.findMany.mockResolvedValue([])
-                mockPrisma.staff.findUnique.mockResolvedValue({
+                asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
+                asMock(mockPrisma.staff.findUnique).mockResolvedValue({
                     workingHours: mockJsonData,
                     businessId,
                 })
@@ -235,8 +236,8 @@ describe('Migration and Compatibility Integration Tests', () => {
             })
 
             it('should return empty availability when no data available', async () => {
-                mockPrisma.staffAvailability.findMany.mockResolvedValue([])
-                mockPrisma.staff.findUnique.mockResolvedValue({
+                asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
+                asMock(mockPrisma.staff.findUnique).mockResolvedValue({
                     workingHours: null,
                     businessId,
                 })
@@ -260,16 +261,16 @@ describe('Migration and Compatibility Integration Tests', () => {
                     sunday: { isAvailable: false, startTime: '00:00', endTime: '00:00' },
                 }
 
-                mockPrisma.staffAvailability.findMany.mockResolvedValue([])
-                mockPrisma.staff.findUnique.mockResolvedValue({
+                asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
+                asMock(mockPrisma.staff.findUnique).mockResolvedValue({
                     workingHours: mockJsonData,
                     businessId,
                 })
-                mockPrisma.staffAvailability.count.mockResolvedValue(0)
-                mockPrisma.$transaction.mockImplementation(async (callback) => {
+                asMock(mockPrisma.staffAvailability.count).mockResolvedValue(0)
+                mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                     return await callback(mockPrisma)
                 })
-                mockPrisma.staffAvailability.create.mockResolvedValue({
+                asMock(mockPrisma.staffAvailability.create).mockResolvedValue({
                     id: 'availability-1',
                     staffId,
                     businessId,
@@ -305,8 +306,8 @@ describe('Migration and Compatibility Integration Tests', () => {
                     { id: 'staff-2', displayName: 'Staff 2', businessId: 'business-2' },
                 ]
 
-                mockPrisma.business.findMany.mockResolvedValue(mockBusinesses)
-                mockPrisma.staff.findMany.mockResolvedValue(mockStaff)
+                asMock(mockPrisma.business.findMany).mockResolvedValue(mockBusinesses)
+                asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff)
 
                 const result = await backwardCompatibilityService.getMigrationCandidates()
 
@@ -329,8 +330,8 @@ describe('Migration and Compatibility Integration Tests', () => {
             })
 
             it('should check availability status for business hours', async () => {
-                mockPrisma.businessHours.count.mockResolvedValue(5)
-                mockPrisma.business.findUnique.mockResolvedValue({
+                asMock(mockPrisma.businessHours.count).mockResolvedValue(5)
+                asMock(mockPrisma.business.findUnique).mockResolvedValue({
                     operatingHours: { monday: { isOpen: true, openTime: '09:00', closeTime: '17:00' } },
                 })
 
@@ -342,8 +343,8 @@ describe('Migration and Compatibility Integration Tests', () => {
             })
 
             it('should check availability status for staff availability', async () => {
-                mockPrisma.staffAvailability.count.mockResolvedValue(0)
-                mockPrisma.staff.findUnique.mockResolvedValue({
+                asMock(mockPrisma.staffAvailability.count).mockResolvedValue(0)
+                asMock(mockPrisma.staff.findUnique).mockResolvedValue({
                     workingHours: { monday: { isAvailable: true, startTime: '09:00', endTime: '17:00' } },
                 })
 
@@ -363,14 +364,14 @@ describe('Migration and Compatibility Integration Tests', () => {
                     wednesday: { isOpen: false, openTime: '00:00', closeTime: '00:00' },
                 }
 
-                mockPrisma.business.findUnique.mockResolvedValue({
+                asMock(mockPrisma.business.findUnique).mockResolvedValue({
                     operatingHours: mockJsonData,
                 })
-                mockPrisma.businessHours.count.mockResolvedValue(0)
-                mockPrisma.$transaction.mockImplementation(async (callback) => {
+                asMock(mockPrisma.businessHours.count).mockResolvedValue(0)
+                mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                     return await callback(mockPrisma)
                 })
-                mockPrisma.businessHours.create.mockResolvedValue({
+                asMock(mockPrisma.businessHours.create).mockResolvedValue({
                     id: 'hours-1',
                     businessId,
                     dayOfWeek: 1,
@@ -393,15 +394,15 @@ describe('Migration and Compatibility Integration Tests', () => {
                     wednesday: { isAvailable: false, startTime: '00:00', endTime: '00:00' },
                 }
 
-                mockPrisma.staff.findUnique.mockResolvedValue({
+                asMock(mockPrisma.staff.findUnique).mockResolvedValue({
                     workingHours: mockJsonData,
                     businessId,
                 })
-                mockPrisma.staffAvailability.count.mockResolvedValue(0)
-                mockPrisma.$transaction.mockImplementation(async (callback) => {
+                asMock(mockPrisma.staffAvailability.count).mockResolvedValue(0)
+                mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                     return await callback(mockPrisma)
                 })
-                mockPrisma.staffAvailability.create.mockResolvedValue({
+                asMock(mockPrisma.staffAvailability.create).mockResolvedValue({
                     id: 'availability-1',
                     staffId,
                     businessId,
@@ -467,7 +468,7 @@ describe('Migration and Compatibility Integration Tests', () => {
                     },
                 ]
 
-                mockPrisma.$transaction.mockImplementation(async (callback) => {
+                mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                     // Mock the transaction callback
                     const tx = {
                         business: {
@@ -525,7 +526,7 @@ describe('Migration and Compatibility Integration Tests', () => {
                     },
                 ]
 
-                mockPrisma.$transaction.mockImplementation(async (callback) => {
+                mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                     const tx = {
                         business: {
                             findMany: jest.fn().mockResolvedValue(mockBusinesses),
@@ -578,10 +579,10 @@ describe('Migration and Compatibility Integration Tests', () => {
         describe('Migration Validation', () => {
             it('should validate migration integrity successfully', async () => {
                 // Mock successful validation queries
-                mockPrisma.business.findMany.mockResolvedValue([])
-                mockPrisma.businessHours.findMany.mockResolvedValue([])
-                mockPrisma.staff.findMany.mockResolvedValue([])
-                mockPrisma.staffAvailability.findMany.mockResolvedValue([])
+                asMock(mockPrisma.business.findMany).mockResolvedValue([])
+                asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+                asMock(mockPrisma.staff.findMany).mockResolvedValue([])
+                asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
 
                 const result = await dataMigrationService.validateMigrationIntegrity()
 
@@ -591,12 +592,12 @@ describe('Migration and Compatibility Integration Tests', () => {
 
             it('should detect integrity issues', async () => {
                 // Mock businesses with JSON but no structured data
-                mockPrisma.business.findMany.mockResolvedValue([
+                asMock(mockPrisma.business.findMany).mockResolvedValue([
                     { id: 'business-1' },
                 ])
 
                 // Mock invalid time formats
-                mockPrisma.businessHours.findMany.mockResolvedValue([
+                asMock(mockPrisma.businessHours.findMany).mockResolvedValue([
                     {
                         id: 'hours-1',
                         businessId: 'business-1',
@@ -605,8 +606,8 @@ describe('Migration and Compatibility Integration Tests', () => {
                     },
                 ])
 
-                mockPrisma.staff.findMany.mockResolvedValue([])
-                mockPrisma.staffAvailability.findMany.mockResolvedValue([])
+                asMock(mockPrisma.staff.findMany).mockResolvedValue([])
+                asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
 
                 const result = await dataMigrationService.validateMigrationIntegrity()
 
@@ -628,7 +629,7 @@ describe('Migration and Compatibility Integration Tests', () => {
                     ],
                 }
 
-                mockPrisma.$transaction.mockImplementation(async (callback) => {
+                mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                     const tx = {
                         businessHours: {
                             deleteMany: jest.fn().mockResolvedValue({ count: 2 }),
@@ -682,17 +683,17 @@ describe('Migration and Compatibility Integration Tests', () => {
             }
 
             // Setup compatibility service to find JSON data
-            mockPrisma.businessHours.findMany.mockResolvedValue([])
-            mockPrisma.business.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+            asMock(mockPrisma.business.findUnique).mockResolvedValue({
                 operatingHours: mockJsonData,
             })
 
             // Setup migration service
-            mockPrisma.businessHours.count.mockResolvedValue(0)
-            mockPrisma.$transaction.mockImplementation(async (callback) => {
+            asMock(mockPrisma.businessHours.count).mockResolvedValue(0)
+            mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                 return await callback(mockPrisma)
             })
-            mockPrisma.businessHours.create.mockResolvedValue({
+            asMock(mockPrisma.businessHours.create).mockResolvedValue({
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -726,18 +727,18 @@ describe('Migration and Compatibility Integration Tests', () => {
             }
 
             // Setup for concurrent access
-            mockPrisma.businessHours.findMany.mockResolvedValue([])
-            mockPrisma.business.findUnique.mockResolvedValue({
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+            asMock(mockPrisma.business.findUnique).mockResolvedValue({
                 operatingHours: mockJsonData,
             })
             mockPrisma.businessHours.count
                 .mockResolvedValueOnce(0) // First check: no structured data
                 .mockResolvedValueOnce(1) // Second check: migration completed
 
-            mockPrisma.$transaction.mockImplementation(async (callback) => {
+            mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                 return await callback(mockPrisma)
             })
-            mockPrisma.businessHours.create.mockResolvedValue({
+            asMock(mockPrisma.businessHours.create).mockResolvedValue({
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -761,7 +762,7 @@ describe('Migration and Compatibility Integration Tests', () => {
 
     describe('Error Handling and Edge Cases', () => {
         it('should handle database connection failures gracefully', async () => {
-            mockPrisma.businessHours.findMany.mockRejectedValue(new Error('Database connection failed'))
+            asMock(mockPrisma.businessHours.findMany).mockRejectedValue(new Error('Database connection failed'))
 
             const result = await backwardCompatibilityService.getBusinessHours(businessId)
 
@@ -786,7 +787,7 @@ describe('Migration and Compatibility Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.$transaction.mockImplementation(async (callback) => {
+            mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                 const tx = {
                     business: {
                         findMany: jest.fn().mockResolvedValue(mockBusinesses),
@@ -813,7 +814,7 @@ describe('Migration and Compatibility Integration Tests', () => {
         })
 
         it('should handle empty datasets', async () => {
-            mockPrisma.$transaction.mockImplementation(async (callback) => {
+            mockPrisma.$transaction.mockImplementation(async (callback: any) => {
                 const tx = {
                     business: {
                         findMany: jest.fn().mockResolvedValue([]),

@@ -195,7 +195,7 @@ describe('StaffFactory', () => {
 
             // Should throw error for invalid data
             const invalidStaffFactory = new (class extends StaffFactory {
-                protected validate() {
+                protected override validate() {
                     return {
                         isValid: false,
                         errors: [{ field: 'test', message: 'Test error', code: 'TEST' }],

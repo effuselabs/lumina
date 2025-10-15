@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { Business, Service, Staff } from '@prisma/client'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -93,7 +94,7 @@ describe('/api/availability/slots Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
             AvailabilityCalculator.getAvailableSlots.mockResolvedValue(mockSlots)
 
             // Simulate API call logic
@@ -161,8 +162,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
-            mockPrisma.staff.findFirst.mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
             AvailabilityCalculator.getAvailableSlots.mockResolvedValue(mockSlots)
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&staffId=${staffId}`)
@@ -202,8 +203,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
-            mockPrisma.service.findFirst.mockResolvedValue(mockService as Service)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.service.findFirst).mockResolvedValue(mockService as Service)
             AvailabilityCalculator.getAvailableSlots.mockResolvedValue(mockSlots)
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&serviceId=${serviceId}`)
@@ -263,8 +264,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 timezone: 'America/New_York',
             }
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
-            mockPrisma.staff.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&staffId=${staffId}`)
             const response = await GET(request)
@@ -280,8 +281,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 timezone: 'America/New_York',
             }
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
-            mockPrisma.service.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.service.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&serviceId=${serviceId}`)
             const response = await GET(request)
@@ -298,8 +299,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 timezone: 'America/New_York',
             }
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
-            mockPrisma.staff.findFirst.mockResolvedValue(null) // Staff not found in user's business
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null) // Staff not found in user's business
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&staffId=${otherBusinessStaffId}`)
             const response = await GET(request)
@@ -350,7 +351,7 @@ describe('/api/availability/slots Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
             AvailabilityCalculator.getAvailableSlots.mockResolvedValue(mockSlots)
 
             const request = new NextRequest('http://localhost:3000/api/availability/slots?date=2024-01-15&includeUnavailable=true')
@@ -365,7 +366,7 @@ describe('/api/availability/slots Integration Tests', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.business.findUnique.mockRejectedValue(new Error('Database connection failed'))
+            asMock(mockPrisma.business.findUnique).mockRejectedValue(new Error('Database connection failed'))
 
             const request = new NextRequest('http://localhost:3000/api/availability/slots?date=2024-01-15')
             const response = await GET(request)
@@ -382,7 +383,7 @@ describe('/api/availability/slots Integration Tests', () => {
                 timezone: 'America/New_York',
             }
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
             AvailabilityCalculator.getAvailableSlots.mockRejectedValue(new Error('Calculation failed'))
 
             const request = new NextRequest('http://localhost:3000/api/availability/slots?date=2024-01-15')
@@ -410,8 +411,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 name: 'Other Staff',
             }
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
-            mockPrisma.staff.findFirst.mockResolvedValue(null) // Not found in user's business
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(null) // Not found in user's business
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&staffId=other-staff-123`)
             const response = await GET(request)
@@ -429,8 +430,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 timezone: 'America/New_York',
             }
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
-            mockPrisma.service.findFirst.mockResolvedValue(null) // Not found in user's business
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.service.findFirst).mockResolvedValue(null) // Not found in user's business
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&serviceId=other-service-123`)
             const response = await GET(request)
@@ -477,7 +478,7 @@ describe('/api/availability/slots Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as Business)
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
             AvailabilityCalculator.getAvailableSlots
                 .mockResolvedValueOnce(initialSlots)
                 .mockResolvedValueOnce(updatedSlots)

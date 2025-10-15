@@ -11,6 +11,7 @@ import { prisma } from '@/lib/prisma';
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator';
 import { CalendarIntegration } from '@/lib/services/calendar-integration';
 import { RealTimeAvailabilityService } from '@/lib/services/real-time-availability-service';
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock dependencies
 jest.mock('@/lib/prisma', () => ({
@@ -51,14 +52,14 @@ describe('RealTimeAvailabilityService', () => {
   describe('getAvailableSlots', () => {
     it('should return available slots with real-time validation', async () => {
       // Mock business validation
-      mockPrisma.business.findUnique.mockResolvedValue({
+      asMock(mockPrisma.business.findUnique).mockResolvedValue({
         id: businessId,
         bookingEnabled: true,
         onlineBooking: true,
       } as any);
 
       // Mock service details
-      mockPrisma.service.findMany.mockResolvedValue([
+      asMock(mockPrisma.service.findMany).mockResolvedValue([
         {
           id: 'service-1',
           name: 'Haircut',
@@ -74,7 +75,7 @@ describe('RealTimeAvailabilityService', () => {
       ] as any);
 
       // Mock qualified staff
-      mockPrisma.staff.findMany.mockResolvedValue([
+      asMock(mockPrisma.staff.findMany).mockResolvedValue([
         {
           id: staffId,
           displayName: 'John Doe',
@@ -165,14 +166,14 @@ describe('RealTimeAvailabilityService', () => {
 
     it('should filter out slots that fail real-time validation', async () => {
       // Mock business validation
-      mockPrisma.business.findUnique.mockResolvedValue({
+      asMock(mockPrisma.business.findUnique).mockResolvedValue({
         id: businessId,
         bookingEnabled: true,
         onlineBooking: true,
       } as any);
 
       // Mock service details
-      mockPrisma.service.findMany.mockResolvedValue([
+      asMock(mockPrisma.service.findMany).mockResolvedValue([
         {
           id: 'service-1',
           name: 'Haircut',
@@ -182,7 +183,7 @@ describe('RealTimeAvailabilityService', () => {
       ] as any);
 
       // Mock qualified staff
-      mockPrisma.staff.findMany.mockResolvedValue([
+      asMock(mockPrisma.staff.findMany).mockResolvedValue([
         {
           id: staffId,
           displayName: 'John Doe',
@@ -265,7 +266,7 @@ describe('RealTimeAvailabilityService', () => {
 
     it('should handle business validation errors', async () => {
       // Mock business not found
-      mockPrisma.business.findUnique.mockResolvedValue(null);
+      asMock(mockPrisma.business.findUnique).mockResolvedValue(null);
 
       await expect(
         RealTimeAvailabilityService.getAvailableSlots({
@@ -278,14 +279,14 @@ describe('RealTimeAvailabilityService', () => {
 
     it('should handle service validation errors', async () => {
       // Mock business validation
-      mockPrisma.business.findUnique.mockResolvedValue({
+      asMock(mockPrisma.business.findUnique).mockResolvedValue({
         id: businessId,
         bookingEnabled: true,
         onlineBooking: true,
       } as any);
 
       // Mock no services found
-      mockPrisma.service.findMany.mockResolvedValue([]);
+      asMock(mockPrisma.service.findMany).mockResolvedValue([]);
 
       await expect(
         RealTimeAvailabilityService.getAvailableSlots({

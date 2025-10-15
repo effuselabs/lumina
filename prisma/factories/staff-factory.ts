@@ -8,6 +8,8 @@ import { BaseFactory } from './base-factory';
 import { ExperienceLevel, StaffSpecialty, ValidationResult } from './types';
 
 export interface StaffProfile {
+    firstName: string;
+    lastName: string;
     displayName: string;
     title: string;
     bio: string;
@@ -104,6 +106,8 @@ export class StaffFactory extends BaseFactory<Staff> {
             data: {
                 businessId: this.businessId,
                 userId: user.id,
+                firstName: profile.firstName,
+                lastName: profile.lastName,
                 displayName: profile.displayName,
                 title: profile.title,
                 bio: profile.bio,
@@ -114,7 +118,7 @@ export class StaffFactory extends BaseFactory<Staff> {
                 chairRentalPeriod: profile.chairRentalPeriod,
                 baseSalary: profile.baseSalary,
                 startDate: profile.startDate,
-                workingHours: profile.workingHours,
+                workingHours: profile.workingHours as any,
                 isActive: true,
                 acceptsOnlineBookings: true,
             },

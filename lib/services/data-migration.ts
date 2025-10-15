@@ -5,7 +5,7 @@
  * to structured database tables with validation and rollback capabilities.
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 // Validation schemas for existing JSON data
@@ -128,7 +128,7 @@ export class DataMigrationService {
         const businesses = await tx.business.findMany({
             where: {
                 operatingHours: {
-                    not: null,
+                    not: Prisma.JsonNull,
                 },
             },
             select: {
@@ -205,7 +205,7 @@ export class DataMigrationService {
         const staffMembers = await tx.staff.findMany({
             where: {
                 workingHours: {
-                    not: null,
+                    not: Prisma.JsonNull,
                 },
             },
             select: {
@@ -311,7 +311,7 @@ export class DataMigrationService {
         // Check for businesses with JSON data but no structured data
         const businessesWithoutStructuredData = await this.prisma.business.findMany({
             where: {
-                operatingHours: { not: null },
+                operatingHours: { not: Prisma.JsonNull },
                 businessHours: { none: {} },
             },
             select: { id: true },
@@ -327,15 +327,15 @@ export class DataMigrationService {
         }
 
         // Check for invalid time formats
-        const invalidTimeFormats = await this.prisma.businessHours.findMany({
-            where: {
-                OR: [
-                    { openTime: { not: { regex: '^\\d{2}:\\d{2}$' } } },
-                    { closeTime: { not: { regex: '^\\d{2}:\\d{2}$' } } },
-                ],
-            },
+        const allBusinessHours = await this.prisma.businessHours.findMany({
             select: { id: true, businessId: true, openTime: true, closeTime: true },
         });
+        
+        const timeFormatRegex = /^\d{2}:\d{2}$/;
+        const invalidTimeFormats = allBusinessHours.filter(bh => 
+            (bh.openTime && !timeFormatRegex.test(bh.openTime)) ||
+            (bh.closeTime && !timeFormatRegex.test(bh.closeTime))
+        );
 
         for (const businessHour of invalidTimeFormats) {
             errors.push({
@@ -383,7 +383,7 @@ export class DataMigrationService {
         // Check for staff with JSON data but no structured data
         const staffWithoutStructuredData = await this.prisma.staff.findMany({
             where: {
-                workingHours: { not: null },
+                workingHours: { not: Prisma.JsonNull },
                 staffAvailability: { none: {} },
             },
             select: { id: true },
@@ -399,15 +399,14 @@ export class DataMigrationService {
         }
 
         // Check for invalid time formats
-        const invalidTimeFormats = await this.prisma.staffAvailability.findMany({
-            where: {
-                OR: [
-                    { startTime: { not: { regex: '^\\d{2}:\\d{2}$' } } },
-                    { endTime: { not: { regex: '^\\d{2}:\\d{2}$' } } },
-                ],
-            },
+        const allStaffAvailability = await this.prisma.staffAvailability.findMany({
             select: { id: true, staffId: true, startTime: true, endTime: true },
         });
+        
+        const timeFormatRegex = /^\d{2}:\d{2}$/;
+        const invalidTimeFormats = allStaffAvailability.filter(sa => 
+            !timeFormatRegex.test(sa.startTime) || !timeFormatRegex.test(sa.endTime)
+        );
 
         for (const availability of invalidTimeFormats) {
             errors.push({
@@ -516,10 +515,10 @@ export class DataMigrationService {
             staffWithStructured,
         ] = await Promise.all([
             this.prisma.business.count(),
-            this.prisma.business.count({ where: { operatingHours: { not: null } } }),
+            this.prisma.business.count({ where: { operatingHours: { not: Prisma.JsonNull } } }),
             this.prisma.business.count({ where: { businessHours: { some: {} } } }),
             this.prisma.staff.count(),
-            this.prisma.staff.count({ where: { workingHours: { not: null } } }),
+            this.prisma.staff.count({ where: { workingHours: { not: Prisma.JsonNull } } }),
             this.prisma.staff.count({ where: { staffAvailability: { some: {} } } }),
         ]);
 

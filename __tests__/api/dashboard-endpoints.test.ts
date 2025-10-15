@@ -26,7 +26,7 @@ describe('Dashboard API Endpoints Data Quality', () => {
         // Get test business and user
         const business = await prisma.business.findFirst({
             include: {
-                businessUsers: {
+                users: {
                     include: {
                         user: true,
                     },
@@ -34,12 +34,12 @@ describe('Dashboard API Endpoints Data Quality', () => {
             },
         });
 
-        if (!business || !business.businessUsers[0]) {
+        if (!business || !business.users[0]) {
             throw new Error('No test business or user found. Please run seed data first.');
         }
 
         testBusinessId = business.id;
-        testUserId = business.businessUsers[0].userId;
+        testUserId = business.users[0].userId;
 
         // Mock authentication
         mockAuth.mockResolvedValue({

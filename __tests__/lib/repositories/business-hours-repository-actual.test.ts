@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { BusinessHoursRepository } from '@/lib/repositories/business-hours-repository'
 import { BusinessHoliday, BusinessHours } from '@prisma/client'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -52,7 +53,7 @@ describe('BusinessHoursRepository', () => {
                 },
             ]
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(mockBusinessHours)
 
             const result = await repository.getBusinessHours(businessId)
 
@@ -77,7 +78,7 @@ describe('BusinessHoursRepository', () => {
                 },
             ]
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(mockBusinessHours)
 
             const result = await repository.getBusinessHours(businessId, 1)
 
@@ -89,7 +90,7 @@ describe('BusinessHoursRepository', () => {
         })
 
         it('should return empty array when no business hours found', async () => {
-            mockPrisma.businessHours.findMany.mockResolvedValue([])
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
 
             const result = await repository.getBusinessHours(businessId)
 
@@ -122,8 +123,8 @@ describe('BusinessHoursRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.businessHours.findFirst.mockResolvedValue(mockBusinessHours)
-            mockPrisma.businessHoliday.findFirst.mockResolvedValue(mockHoliday)
+            asMock(mockPrisma.businessHours.findFirst).mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHoliday.findFirst).mockResolvedValue(mockHoliday)
 
             const result = await repository.getBusinessHoursForDate(businessId, testDate)
 
@@ -144,8 +145,8 @@ describe('BusinessHoursRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.findFirst.mockResolvedValue(mockBusinessHours)
-            mockPrisma.businessHoliday.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessHours.findFirst).mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHoliday.findFirst).mockResolvedValue(null)
 
             const result = await repository.getBusinessHoursForDate(businessId, testDate)
 
@@ -171,7 +172,7 @@ describe('BusinessHoursRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.upsert.mockResolvedValue(mockCreatedHours)
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue(mockCreatedHours)
 
             const result = await repository.setBusinessHours(businessId, schedule)
 
@@ -215,7 +216,7 @@ describe('BusinessHoursRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.upsert.mockResolvedValue(mockCreatedHours)
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue(mockCreatedHours)
 
             const result = await repository.setBusinessHours(businessId, schedule)
 
@@ -240,8 +241,8 @@ describe('BusinessHoursRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.findFirst.mockResolvedValue(mockBusinessHours)
-            mockPrisma.businessHoliday.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessHours.findFirst).mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHoliday.findFirst).mockResolvedValue(null)
 
             const result = await repository.isBusinessOpen(businessId, testDateTime)
 
@@ -262,8 +263,8 @@ describe('BusinessHoursRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.findFirst.mockResolvedValue(mockBusinessHours)
-            mockPrisma.businessHoliday.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessHours.findFirst).mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHoliday.findFirst).mockResolvedValue(null)
 
             const result = await repository.isBusinessOpen(businessId, testDateTime)
 
@@ -284,8 +285,8 @@ describe('BusinessHoursRepository', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.findFirst.mockResolvedValue(mockBusinessHours)
-            mockPrisma.businessHoliday.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessHours.findFirst).mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHoliday.findFirst).mockResolvedValue(null)
 
             const result = await repository.isBusinessOpen(businessId, testDateTime)
 
@@ -317,8 +318,8 @@ describe('BusinessHoursRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.businessHours.findFirst.mockResolvedValue(mockBusinessHours)
-            mockPrisma.businessHoliday.findFirst.mockResolvedValue(mockHoliday)
+            asMock(mockPrisma.businessHours.findFirst).mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHoliday.findFirst).mockResolvedValue(mockHoliday)
 
             const result = await repository.isBusinessOpen(businessId, testDateTime)
 
@@ -343,7 +344,7 @@ describe('BusinessHoursRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.businessHoliday.upsert.mockResolvedValue(mockHoliday)
+            asMock(mockPrisma.businessHoliday.upsert).mockResolvedValue(mockHoliday)
 
             const result = await repository.addHoliday(businessId, holidayData)
 
@@ -385,7 +386,7 @@ describe('BusinessHoursRepository', () => {
                 createdAt: new Date(),
             }
 
-            mockPrisma.businessHoliday.upsert.mockResolvedValue(mockHoliday)
+            asMock(mockPrisma.businessHoliday.upsert).mockResolvedValue(mockHoliday)
 
             const result = await repository.addHoliday(businessId, holidayData)
 
@@ -413,7 +414,7 @@ describe('BusinessHoursRepository', () => {
                 },
             ]
 
-            mockPrisma.businessHoliday.findMany.mockResolvedValue(mockHolidays)
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue(mockHolidays)
 
             const result = await repository.getHolidays(businessId, startDate, endDate)
 
@@ -444,7 +445,7 @@ describe('BusinessHoursRepository', () => {
                 },
             ]
 
-            mockPrisma.businessHoliday.findMany.mockResolvedValue(mockHolidays)
+            asMock(mockPrisma.businessHoliday.findMany).mockResolvedValue(mockHolidays)
 
             const result = await repository.getHolidays(businessId)
 
@@ -488,7 +489,7 @@ describe('BusinessHoursRepository', () => {
 
     describe('error handling', () => {
         it('should handle database errors gracefully', async () => {
-            mockPrisma.businessHours.findMany.mockRejectedValue(new Error('Database error'))
+            asMock(mockPrisma.businessHours.findMany).mockRejectedValue(new Error('Database error'))
 
             await expect(repository.getBusinessHours(businessId)).rejects.toThrow('Database error')
         })

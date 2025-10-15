@@ -13,7 +13,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { DashboardAppointment } from '@/types/appointment-types';
+import { DashboardAppointment } from '@/types/dashboard-appointments';
 import { format } from 'date-fns';
 import {
     AlertTriangle,

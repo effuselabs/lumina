@@ -3,6 +3,7 @@ import { BusinessHoursRepository } from '@/lib/repositories/business-hours-repos
 import { StaffAvailabilityRepository } from '@/lib/repositories/staff-availability-repository'
 import { TimeOffRequestRepository } from '@/lib/repositories/time-off-request-repository'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -53,7 +54,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
         availabilityCalculator = new AvailabilityCalculator()
 
         // Mock business data
-        mockPrisma.business.findUnique.mockResolvedValue({
+        asMock(mockPrisma.business.findUnique).mockResolvedValue({
             id: businessId,
             name: 'Test Business',
             timezone: 'America/New_York',
@@ -62,7 +63,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
         })
 
         // Mock staff data
-        mockPrisma.staff.findUnique.mockResolvedValue({
+        asMock(mockPrisma.staff.findUnique).mockResolvedValue({
             id: staffId,
             businessId,
             name: 'John Doe',
@@ -84,7 +85,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 isClosed: false,
             }
 
-            mockPrisma.businessHours.upsert.mockResolvedValue({
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue({
                 id: 'hours-1',
                 businessId,
                 ...initialHours,
@@ -96,7 +97,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             await businessHoursRepo.setBusinessHours(businessId, initialHours)
 
             // Mock initial availability calculation
-            mockPrisma.businessHours.findMany.mockResolvedValue([{
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([{
                 id: 'hours-1',
                 businessId,
                 ...initialHours,
@@ -104,9 +105,9 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Get initial availability (should have slots from 9 AM - 5 PM)
             const initialSlots = await availabilityCalculator.getAvailableSlots({
@@ -129,7 +130,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 isClosed: false,
             }
 
-            mockPrisma.businessHours.upsert.mockResolvedValue({
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue({
                 id: 'hours-1',
                 businessId,
                 ...updatedHours,
@@ -141,7 +142,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             await businessHoursRepo.setBusinessHours(businessId, updatedHours)
 
             // Mock updated availability calculation
-            mockPrisma.businessHours.findMany.mockResolvedValue([{
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([{
                 id: 'hours-1',
                 businessId,
                 ...updatedHours,
@@ -170,7 +171,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
     describe('Staff Availability Updates', () => {
         it('should immediately reflect staff availability changes', async () => {
             // Set up business hours
-            mockPrisma.businessHours.findMany.mockResolvedValue([{
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([{
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -189,7 +190,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 isRecurring: true,
             }
 
-            mockPrisma.staffAvailability.create.mockResolvedValue({
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue({
                 id: 'availability-1',
                 staffId,
                 businessId,
@@ -202,7 +203,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             await staffAvailabilityRepo.setStaffAvailability(staffId, businessId, initialAvailability)
 
             // Mock initial availability calculation
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 id: 'availability-1',
                 staffId,
                 businessId,
@@ -211,8 +212,8 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Get initial availability
             const initialSlots = await availabilityCalculator.getAvailableSlots({
@@ -232,8 +233,8 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 isRecurring: true,
             }
 
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 1 })
-            mockPrisma.staffAvailability.create.mockResolvedValue({
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 1 })
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue({
                 id: 'availability-2',
                 staffId,
                 businessId,
@@ -246,7 +247,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             await staffAvailabilityRepo.setStaffAvailability(staffId, businessId, updatedAvailability)
 
             // Mock updated availability calculation
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 id: 'availability-2',
                 staffId,
                 businessId,
@@ -276,7 +277,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
     describe('Time-Off Request Updates', () => {
         it('should immediately reflect time-off requests in availability', async () => {
             // Set up business hours and staff availability
-            mockPrisma.businessHours.findMany.mockResolvedValue([{
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([{
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -287,7 +288,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 id: 'availability-1',
                 staffId,
                 businessId,
@@ -299,8 +300,8 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Get initial availability (full day available)
             const initialSlots = await availabilityCalculator.getAvailableSlots({
@@ -322,7 +323,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 status: 'APPROVED' as const,
             }
 
-            mockPrisma.timeOffRequest.create.mockResolvedValue({
+            asMock(mockPrisma.timeOffRequest.create).mockResolvedValue({
                 id: 'timeoff-1',
                 ...timeOffRequest,
                 createdAt: new Date(),
@@ -333,7 +334,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             await timeOffRepo.createTimeOffRequest(timeOffRequest)
 
             // Mock updated availability calculation with time-off
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([{
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([{
                 id: 'timeoff-1',
                 ...timeOffRequest,
                 createdAt: new Date(),
@@ -361,7 +362,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
     describe('Concurrent Updates', () => {
         it('should handle concurrent availability updates correctly', async () => {
             // Set up initial state
-            mockPrisma.businessHours.findMany.mockResolvedValue([{
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([{
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -372,7 +373,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 id: 'availability-1',
                 staffId,
                 businessId,
@@ -384,8 +385,8 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
-            mockPrisma.appointment.findMany.mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
+            asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
             // Simulate concurrent updates
             const businessHoursUpdate = businessHoursRepo.setBusinessHours(businessId, {
@@ -412,7 +413,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             // Mock all updates
-            mockPrisma.businessHours.upsert.mockResolvedValue({
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue({
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -423,8 +424,8 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             })
 
-            mockPrisma.staffAvailability.deleteMany.mockResolvedValue({ count: 1 })
-            mockPrisma.staffAvailability.create.mockResolvedValue({
+            asMock(mockPrisma.staffAvailability.deleteMany).mockResolvedValue({ count: 1 })
+            asMock(mockPrisma.staffAvailability.create).mockResolvedValue({
                 id: 'availability-2',
                 staffId,
                 businessId,
@@ -436,7 +437,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             })
 
-            mockPrisma.timeOffRequest.create.mockResolvedValue({
+            asMock(mockPrisma.timeOffRequest.create).mockResolvedValue({
                 id: 'timeoff-1',
                 staffId,
                 businessId,
@@ -456,7 +457,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             ])
 
             // Mock final state for availability calculation
-            mockPrisma.businessHours.findMany.mockResolvedValue([{
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([{
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,
@@ -467,7 +468,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.staffAvailability.findMany.mockResolvedValue([{
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([{
                 id: 'availability-2',
                 staffId,
                 businessId,
@@ -479,7 +480,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([{
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([{
                 id: 'timeoff-1',
                 staffId,
                 businessId,
@@ -524,7 +525,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             }))
 
             // Set up initial state
-            mockPrisma.businessHours.upsert.mockResolvedValue({
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue({
                 id: 'hours-1',
                 businessId,
                 dayOfWeek: 1,

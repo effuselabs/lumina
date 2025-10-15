@@ -126,7 +126,7 @@ describe('DataResetManager', () => {
             });
 
             // Mock transaction
-            (prisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+            (prisma.$transaction as jest.Mock).mockImplementation(async (callback: any) => {
                 return await callback(prisma);
             });
 

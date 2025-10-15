@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import 'jest-axe/extend-expect';
 
 declare global {
     namespace jest {
@@ -9,6 +10,8 @@ declare global {
             toHaveLength: {
                 greaterThan(expected: number): R;
             } & ((expected: number) => R);
+            toHaveNoViolations(): R;
+            toBeOneOf(expected: any[]): R;
         }
     }
 }

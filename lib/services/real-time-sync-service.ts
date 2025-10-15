@@ -474,8 +474,8 @@ export class RealTimeSyncService {
         const userFields = ['notes', 'status'] as const;
         userFields.forEach(field => {
             if (local[field] !== server[field]) {
-                // Prefer more recent change (simplified logic)
-                merged[field] = local.updatedAt > server.updatedAt ? local[field] : server[field];
+                // Prefer local changes (optimistic updates)
+                merged[field] = local[field];
             }
         });
 

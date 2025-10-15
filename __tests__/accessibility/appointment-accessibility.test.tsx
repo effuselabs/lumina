@@ -2,6 +2,10 @@ import { AppointmentModal } from '@/components/appointments/appointment-modal'
 import { CalendarView } from '@/components/appointments/calendar-view'
 import { MobileAppointmentDashboard } from '@/components/appointments/mobile-appointment-dashboard'
 import { mockAppointment, mockStaff } from '@/test-utils/booking-mocks'
+
+// Create arrays for the tests
+const mockAppointments = [mockAppointment]
+const mockStaffMembers = mockStaff
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'

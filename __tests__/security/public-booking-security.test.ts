@@ -9,6 +9,7 @@ import { publicBookingCSRF } from '@/lib/security/public-booking-csrf';
 import { publicBookingSanitizer } from '@/lib/security/public-booking-sanitizer';
 import { publicBookingSecurityMiddleware } from '@/lib/security/public-booking-security-middleware';
 import { NextRequest } from 'next/server';
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock prisma
 jest.mock('@/lib/prisma', () => ({
@@ -39,8 +40,8 @@ describe('Public Booking Security', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockPrisma.business.findUnique.mockResolvedValue(mockBusiness as any);
-        mockPrisma.publicBookingAuditLog.create.mockResolvedValue({} as any);
+        asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as any);
+        asMock(mockPrisma.publicBookingAuditLog.create).mockResolvedValue({} as any);
     });
 
     describe('CSRF Protection', () => {
@@ -276,7 +277,7 @@ describe('Public Booking Security', () => {
         });
 
         it('should reject requests for inactive business', async () => {
-            mockPrisma.business.findUnique.mockResolvedValue({
+            asMock(mockPrisma.business.findUnique).mockResolvedValue({
                 ...mockBusiness,
                 isActive: false,
             } as any);
@@ -303,7 +304,7 @@ describe('Public Booking Security', () => {
         });
 
         it('should reject requests for business with booking disabled', async () => {
-            mockPrisma.business.findUnique.mockResolvedValue({
+            asMock(mockPrisma.business.findUnique).mockResolvedValue({
                 ...mockBusiness,
                 bookingEnabled: false,
             } as any);
@@ -396,7 +397,7 @@ describe('Public Booking Security', () => {
         });
 
         it('should reject non-existent business', async () => {
-            mockPrisma.business.findUnique.mockResolvedValue(null);
+            asMock(mockPrisma.business.findUnique).mockResolvedValue(null);
 
             const mockRequest = new NextRequest(`https://example.com/api/public/booking/${mockBusinessId}`, {
                 method: 'GET',
@@ -426,7 +427,7 @@ describe('Security Integration', () => {
         const mockBusinessId = 'cltest123456789012345678';
 
         // Mock business exists and is active
-        mockPrisma.business.findUnique.mockResolvedValue({
+        asMock(mockPrisma.business.findUnique).mockResolvedValue({
             id: mockBusinessId,
             name: 'Test Salon',
             isActive: true,

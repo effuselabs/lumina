@@ -17,6 +17,7 @@ import { prisma } from '@/lib/prisma'
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { AppointmentStatus } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock dependencies
 jest.mock('@/auth')
@@ -85,7 +86,7 @@ describe('Appointment Management API', () => {
     beforeEach(() => {
         jest.clearAllMocks()
         mockAuth.mockResolvedValue(mockSession)
-        mockPrisma.businessUser.findFirst.mockResolvedValue(mockBusinessUser)
+        asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(mockBusinessUser)
         mockAppointmentService.getAppointmentById.mockResolvedValue(mockAppointment)
     })
 
@@ -160,7 +161,7 @@ describe('Appointment Management API', () => {
         })
 
         it('should return 403 when user has no access to business', async () => {
-            mockPrisma.businessUser.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(null)
 
             const request = new NextRequest('http://localhost/api/appointments/appointment-123', {
                 method: 'PUT',
@@ -443,7 +444,7 @@ describe('Appointment Management API', () => {
         })
 
         it('should return 403 when user has no access to business', async () => {
-            mockPrisma.businessUser.findFirst.mockResolvedValue(null)
+            asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(null)
 
             const url = new URL('http://localhost/api/appointments/appointment-123/status?businessId=business-123')
             const request = new NextRequest(url)

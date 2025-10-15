@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
 import { ConflictDetectionEngine } from '@/lib/services/conflict-detection-engine'
 import { performance } from 'perf_hooks'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma for load testing
 jest.mock('@/lib/prisma', () => ({
@@ -50,7 +51,7 @@ describe('Availability System Load Testing', () => {
 
     function setupLoadTestMocks() {
         // Mock business data
-        mockPrisma.business.findUnique.mockResolvedValue({
+        asMock(mockPrisma.business.findUnique).mockResolvedValue({
             id: businessId,
             name: 'Load Test Business',
             timezone: 'America/New_York',
@@ -59,7 +60,7 @@ describe('Availability System Load Testing', () => {
         } as any)
 
         // Mock staff data (20 staff members for load testing)
-        mockPrisma.staff.findMany.mockResolvedValue(
+        asMock(mockPrisma.staff.findMany).mockResolvedValue(
             staffIds.map(id => ({
                 id,
                 businessId,
@@ -73,7 +74,7 @@ describe('Availability System Load Testing', () => {
         )
 
         // Mock services data (50 services)
-        mockPrisma.service.findMany.mockResolvedValue(
+        asMock(mockPrisma.service.findMany).mockResolvedValue(
             serviceIds.map((id, index) => ({
                 id,
                 businessId,
@@ -87,7 +88,7 @@ describe('Availability System Load Testing', () => {
         )
 
         // Mock business hours
-        mockPrisma.businessHours.findMany.mockResolvedValue(
+        asMock(mockPrisma.businessHours.findMany).mockResolvedValue(
             Array.from({ length: 7 }, (_, i) => ({
                 id: `hours-${i}`,
                 businessId,
@@ -101,7 +102,7 @@ describe('Availability System Load Testing', () => {
         )
 
         // Mock staff availability
-        mockPrisma.staffAvailability.findMany.mockResolvedValue(
+        asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(
             staffIds.flatMap(staffId =>
                 Array.from({ length: 6 }, (_, i) => ({
                     id: `availability-${staffId}-${i}`,
@@ -131,13 +132,13 @@ describe('Availability System Load Testing', () => {
             updatedAt: new Date(),
         }))
 
-        mockPrisma.appointment.findMany.mockResolvedValue(existingAppointments as any)
+        asMock(mockPrisma.appointment.findMany).mockResolvedValue(existingAppointments as any)
 
         // Mock minimal time-off requests
-        mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+        asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
         // Mock cache misses for load testing
-        mockPrisma.availabilityCache.findFirst.mockResolvedValue(null)
+        asMock(mockPrisma.availabilityCache.findFirst).mockResolvedValue(null)
     }
 
     describe('Concurrent User Load Testing (100+ Users)', () => {

@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { ConflictDetectionEngine } from '@/lib/services/conflict-detection-engine'
+import { ConflictDetectionEngine, ConflictType, ConflictSeverity } from '@/lib/services/conflict-detection-engine'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
             },
             select: {
                 id: true,
-                name: true
+                displayName: true
             }
         })
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Verify services belong to business if provided
-        let services = []
+        let services: any[] = []
         if (serviceIds.length > 0) {
             services = await prisma.service.findMany({
                 where: {
@@ -108,8 +108,8 @@ export async function POST(request: NextRequest) {
             // Add service duration conflict if invalid
             if (totalServiceDuration > duration) {
                 validationResult.conflicts.push({
-                    type: 'INSUFFICIENT_DURATION',
-                    severity: 'ERROR',
+                    type: ConflictType.INSUFFICIENT_DURATION,
+                    severity: ConflictSeverity.ERROR,
                     message: `Services require ${totalServiceDuration} minutes but only ${duration} minutes requested`,
                     details: {
                         serviceDuration: {
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
             serviceDurationValidation,
             request: {
                 staffId,
-                staffName: staff.name,
+                staffName: staff.displayName,
                 startTime,
                 endTime: new Date(new Date(startTime).getTime() + duration * 60000).toISOString(),
                 duration,

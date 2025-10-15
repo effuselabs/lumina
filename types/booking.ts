@@ -67,8 +67,10 @@ export interface StaffMember {
   lastName: string;
   displayName: string;
   avatar?: string;
-  specialties: string[];
+  specialties?: string[];
+  color: string;
   isActive: boolean;
+  role?: string;
 }
 
 export interface TimeSlot {

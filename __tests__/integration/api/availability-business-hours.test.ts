@@ -2,6 +2,7 @@ import { GET, POST } from '@/app/api/availability/business-hours/route'
 import { prisma } from '@/lib/prisma'
 import { BusinessHours } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -64,7 +65,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(mockBusinessHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const response = await GET(request)
@@ -106,7 +107,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(mockBusinessHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(mockBusinessHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const response = await GET(request)
@@ -119,7 +120,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
         })
 
         it('should handle database errors gracefully', async () => {
-            mockPrisma.businessHours.findMany.mockRejectedValue(new Error('Database connection failed'))
+            asMock(mockPrisma.businessHours.findMany).mockRejectedValue(new Error('Database connection failed'))
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const response = await GET(request)
@@ -148,7 +149,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.upsert.mockResolvedValue(mockUpdatedHours)
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue(mockUpdatedHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours', {
                 method: 'POST',
@@ -250,7 +251,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.upsert.mockResolvedValue(mockUpdatedHours)
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue(mockUpdatedHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours', {
                 method: 'POST',
@@ -296,7 +297,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            mockPrisma.businessHours.upsert.mockResolvedValue(mockUpdatedHours)
+            asMock(mockPrisma.businessHours.upsert).mockResolvedValue(mockUpdatedHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours', {
                 method: 'POST',
@@ -344,7 +345,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
             ]
 
             // Mock database returning mixed data (this shouldn't happen in real scenario)
-            mockPrisma.businessHours.findMany.mockResolvedValue(mixedBusinessHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(mixedBusinessHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const response = await GET(request)
@@ -437,7 +438,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
                 isClosed: false,
             }
 
-            mockPrisma.businessHours.upsert.mockRejectedValue(
+            asMock(mockPrisma.businessHours.upsert).mockRejectedValue(
                 new Error('Unique constraint violation')
             )
 

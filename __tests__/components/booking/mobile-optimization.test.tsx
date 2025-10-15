@@ -32,14 +32,14 @@ Object.defineProperty(window, 'performance', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation((callback) => ({
+global.IntersectionObserver = jest.fn().mockImplementation((callback: any) => ({
     observe: jest.fn(),
     disconnect: jest.fn(),
     unobserve: jest.fn(),
 }));
 
 // Mock PerformanceObserver
-global.PerformanceObserver = jest.fn().mockImplementation((callback) => ({
+global.PerformanceObserver = jest.fn().mockImplementation((callback: any) => ({
     observe: jest.fn(),
     disconnect: jest.fn(),
 }));

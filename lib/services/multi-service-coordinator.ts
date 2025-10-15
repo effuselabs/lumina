@@ -637,11 +637,14 @@ export class MultiServiceCoordinator {
         }
 
         // Check minimum service count
-        if (
-          promotion.minimumServices &&
-          services.length < promotion.minimumServices
-        ) {
-          return false;
+        // Check if promotion applies to selected services
+        if (promotion.applicableServices.length > 0) {
+          const hasApplicableService = services.some(service => 
+            promotion.applicableServices.includes(service.id)
+          );
+          if (!hasApplicableService) {
+            return false;
+          }
         }
 
         // Check minimum spend
@@ -665,7 +668,12 @@ export class MultiServiceCoordinator {
         return true;
       });
 
-      return applicablePromotions;
+      return applicablePromotions.map(promotion => ({
+        discountType: promotion.discountType,
+        discountValue: promotion.discountValue.toNumber(),
+        maximumDiscount: promotion.maximumDiscount?.toNumber(),
+        applicableServices: promotion.applicableServices,
+      }));
     } catch (_error) {
       // Log error but don't fail the calculation
       // TODO: Replace with proper logging service
@@ -720,23 +728,8 @@ export class MultiServiceCoordinator {
           discountAmount = new Decimal(promotion.discountValue);
           break;
 
-        case 'SERVICE_DISCOUNT':
-          // Apply discount only to specific services
-          const applicableServiceIds = promotion.applicableServices || [];
-          if (applicableServiceIds.length > 0) {
-            const applicableServicePrice = services
-              .filter(s => applicableServiceIds.includes(s.serviceId))
-              .reduce((sum, service) => sum + service.price, 0);
-
-            if (promotion.discountType === 'PERCENTAGE') {
-              discountAmount = new Decimal(applicableServicePrice)
-                .mul(promotion.discountValue)
-                .div(100);
-            } else {
-              discountAmount = new Decimal(promotion.discountValue);
-            }
-          }
-          break;
+        // Service-specific discounts are handled by checking applicableServices
+        // The discount type (PERCENTAGE or FIXED_AMOUNT) determines how the discount is calculated
 
         default:
           return totalPrice;

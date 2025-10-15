@@ -8,8 +8,8 @@
  */
 
 import { DateTime } from 'luxon'
-import { BusinessHoursRepository } from '../repositories/business-hours-repository-enhanced'
-import { StaffAvailabilityRepository } from '../repositories/staff-availability-repository-enhanced'
+import { EnhancedBusinessHoursRepository as BusinessHoursRepository } from '../repositories/business-hours-repository-enhanced'
+import { EnhancedStaffAvailabilityRepository as StaffAvailabilityRepository } from '../repositories/staff-availability-repository-enhanced'
 import { AvailabilityCalculator } from './availability-calculator'
 import { MultiLocationTimeZoneManager, TimeZoneHandler } from './timezone-handler'
 
@@ -99,7 +99,7 @@ export class TimeZoneAwareAvailabilityCalculator {
             : null
 
         // Calculate base availability using existing calculator
-        const baseSlots = await this.availabilityCalculator.getAvailableSlots({
+        const baseSlots = await AvailabilityCalculator.calculateAvailability({
             businessId: request.businessId,
             staffId: request.staffId,
             serviceId: request.serviceId,
@@ -332,7 +332,8 @@ export class TimeZoneAwareAvailabilityCalculator {
         const dateObj = DateTime.fromFormat(date, 'yyyy-MM-dd')
         const dayOfWeek = dateObj.weekday % 7 // Convert to 0-6 format
 
-        const businessHours = await this.businessHoursRepo.getBusinessHours(businessId, dayOfWeek)
+        const allBusinessHours = await this.businessHoursRepo.getBusinessHours({ businessId })
+        const businessHours = allBusinessHours.find(h => h.dayOfWeek === dayOfWeek)
 
         if (!businessHours || businessHours.isClosed) {
             return {
@@ -390,11 +391,7 @@ export class TimeZoneAwareAvailabilityCalculator {
         const dateObj = DateTime.fromFormat(date, 'yyyy-MM-dd')
         const dayOfWeek = dateObj.weekday % 7
 
-        const availability = await this.staffAvailabilityRepo.getStaffAvailability(
-            staffId,
-            dateObj.toJSDate(),
-            dateObj.plus({ days: 1 }).toJSDate()
-        )
+        const availability = await this.staffAvailabilityRepo.getStaffAvailability({ staffId })
 
         return availability
             .filter(slot => slot.dayOfWeek === dayOfWeek)

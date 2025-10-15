@@ -241,6 +241,46 @@ export class WebSocketService {
             typeof message.data.timestamp === 'string'
         );
     }
+
+    /**
+     * Broadcast message to a room (server-side functionality)
+     * Note: This is a client-side service. Room broadcasting should be handled server-side.
+     * This method is a placeholder for compatibility with existing code.
+     */
+    async broadcastToRoom(room: string, message: any): Promise<void> {
+        console.warn('broadcastToRoom called on client-side WebSocket service. This should be handled server-side.');
+        // Send message through normal channel - server will handle room broadcasting
+        this.send({
+            type: 'appointment_updated',
+            data: {
+                ...message,
+                room,
+                appointmentId: message.appointmentId || '',
+                businessId: this.config.businessId,
+                timestamp: new Date().toISOString()
+            }
+        });
+    }
+
+    /**
+     * Broadcast message to a specific user (server-side functionality)
+     * Note: This is a client-side service. User broadcasting should be handled server-side.
+     * This method is a placeholder for compatibility with existing code.
+     */
+    async broadcastToUser(userId: string, message: any): Promise<void> {
+        console.warn('broadcastToUser called on client-side WebSocket service. This should be handled server-side.');
+        // Send message through normal channel - server will handle user targeting
+        this.send({
+            type: 'appointment_updated',
+            data: {
+                ...message,
+                targetUserId: userId,
+                appointmentId: message.appointmentId || '',
+                businessId: this.config.businessId,
+                timestamp: new Date().toISOString()
+            }
+        });
+    }
 }
 
 /**

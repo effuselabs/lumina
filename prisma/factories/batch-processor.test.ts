@@ -42,7 +42,7 @@ describe('BatchProcessor Enhanced Features', () => {
         test('should process batches with performance monitoring', async () => {
             const testData = Array.from({ length: 25 }, (_, i) => ({ id: i, name: `Item ${i}` }));
             const mockProcessor = jest.fn().mockImplementation((batch) =>
-                Promise.resolve(batch.map(item => ({ id: item.id, created: true })))
+                Promise.resolve(batch.map((item: any) => ({ id: item.id, created: true })))
             );
 
             mockPrisma.$transaction = jest.fn().mockImplementation((callback) => callback(mockPrisma));
@@ -67,9 +67,9 @@ describe('BatchProcessor Enhanced Features', () => {
         test('should handle errors gracefully with rollback', async () => {
             const testData = Array.from({ length: 15 }, (_, i) => ({ id: i, name: `Item ${i}` }));
             const mockProcessor = jest.fn()
-                .mockImplementationOnce((batch) => Promise.resolve(batch.map(item => ({ id: item.id, created: true }))))
+                .mockImplementationOnce((batch) => Promise.resolve(batch.map((item: any) => ({ id: item.id, created: true }))))
                 .mockRejectedValueOnce(new Error('Batch processing failed'))
-                .mockImplementationOnce((batch) => Promise.resolve(batch.map(item => ({ id: item.id, created: true }))));
+                .mockImplementationOnce((batch) => Promise.resolve(batch.map((item: any) => ({ id: item.id, created: true }))));
 
             mockPrisma.$transaction = jest.fn().mockImplementation((callback) => callback(mockPrisma));
 
@@ -115,7 +115,7 @@ describe('BatchProcessor Enhanced Features', () => {
         test('should track progress accurately', async () => {
             const testData = Array.from({ length: 30 }, (_, i) => ({ id: i, name: `Item ${i}` }));
             const mockProcessor = jest.fn().mockImplementation((batch) =>
-                Promise.resolve(batch.map(item => ({ id: item.id, created: true })))
+                Promise.resolve(batch.map((item: any) => ({ id: item.id, created: true })))
             );
             const progressCallback = jest.fn();
 

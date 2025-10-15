@@ -121,7 +121,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
 
     const setupRealisticMocks = () => {
         // Repository operations with realistic delays
-        repositoryInstance.create.mockImplementation(async (data) => {
+        repositoryInstance.create.mockImplementation(async (data: any) => {
             await new Promise(resolve => setTimeout(resolve, 20 + Math.random() * 40)) // 20-60ms
             return {
                 id: `appointment-${Date.now()}-${Math.random()}`,
@@ -152,7 +152,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
         })
 
         // Service operations
-        serviceInstance.createAppointment.mockImplementation(async (data) => {
+        serviceInstance.createAppointment.mockImplementation(async (data: any) => {
             await new Promise(resolve => setTimeout(resolve, 30 + Math.random() * 70)) // 30-100ms
             return {
                 success: Math.random() < 0.95, // 95% success rate
@@ -265,7 +265,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
             let cacheInvalidations = 0
 
             // Mock cache statistics
-            cacheInstance.get.mockImplementation(async (key) => {
+            cacheInstance.get.mockImplementation(async (key: any) => {
                 await new Promise(resolve => setTimeout(resolve, 2 + Math.random() * 6))
                 if (Math.random() < 0.6) { // 60% hit rate during high load
                     cacheHits++

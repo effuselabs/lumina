@@ -1,9 +1,10 @@
 import { GET as getBusinessHours } from '@/app/api/availability/business-hours/route'
-import { GET as getStaffAvailability } from '@/app/api/availability/staff/route'
+// import { GET as getStaffAvailability } from '@/app/api/availability/staff/route' // GET not implemented yet
 import { GET as getTimeOffRequests } from '@/app/api/availability/time-off/route'
 import { prisma } from '@/lib/prisma'
 import { BusinessHours, Staff, StaffAvailability } from '@prisma/client'
 import { NextRequest } from 'next/server'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -102,7 +103,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
 
             // Database should only return Business A data due to WHERE clause
             const businessAHours = mixedBusinessHours.filter(h => h.businessId === businessA)
-            mockPrisma.businessHours.findMany.mockResolvedValue(businessAHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(businessAHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const response = await getBusinessHours(request)
@@ -140,7 +141,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(businessBHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(businessBHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const response = await getBusinessHours(request)
@@ -237,9 +238,9 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
             const businessAStaff = mixedStaff.filter(s => s.businessId === businessA)
             const businessAAvailability = mixedAvailability.filter(a => a.businessId === businessA)
 
-            mockPrisma.staff.findMany.mockResolvedValue(businessAStaff)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue(businessAAvailability)
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(businessAStaff)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(businessAAvailability)
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff')
             const response = await getStaffAvailability(request)
@@ -302,9 +303,9 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.staff.findMany.mockResolvedValue(businessBStaff)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue(businessBAvailability)
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(businessBStaff)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(businessBAvailability)
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff')
             const response = await getStaffAvailability(request)
@@ -379,7 +380,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
 
             // Database should only return Business A data
             const businessARequests = mixedTimeOffRequests.filter(r => r.businessId === businessA)
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue(businessARequests as any)
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(businessARequests as any)
 
             const request = new NextRequest('http://localhost:3000/api/availability/time-off')
             const response = await getTimeOffRequests(request)
@@ -419,7 +420,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue(filteredRequests as any)
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(filteredRequests as any)
 
             const request = new NextRequest('http://localhost:3000/api/availability/time-off?status=pending')
             const response = await getTimeOffRequests(request)
@@ -450,9 +451,9 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
             getServerSession.mockResolvedValue(sessionA)
 
             // Mock empty responses (as if Business A has no data)
-            mockPrisma.businessHours.findMany.mockResolvedValue([])
-            mockPrisma.staff.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue([])
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue([])
+            asMock(mockPrisma.staff.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
             // Test all endpoints
             const businessHoursRequest = new NextRequest('http://localhost:3000/api/availability/business-hours')
@@ -517,7 +518,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(businessAHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(businessAHours)
 
             const requestA = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const responseA = await getBusinessHours(requestA)
@@ -547,7 +548,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
                 },
             ]
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(businessBHours)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(businessBHours)
 
             const requestB = new NextRequest('http://localhost:3000/api/availability/business-hours')
             const responseB = await getBusinessHours(requestB)
@@ -629,11 +630,11 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
                 ],
             }
 
-            mockPrisma.businessHours.findMany.mockResolvedValue(businessAData.businessHours)
-            mockPrisma.staff.findMany.mockResolvedValue(businessAData.staff)
-            mockPrisma.staffAvailability.findMany.mockResolvedValue(businessAData.availability)
-            mockPrisma.staffAvailabilityOverride.findMany.mockResolvedValue([])
-            mockPrisma.timeOffRequest.findMany.mockResolvedValue(businessAData.timeOffRequests as any)
+            asMock(mockPrisma.businessHours.findMany).mockResolvedValue(businessAData.businessHours)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(businessAData.staff)
+            asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(businessAData.availability)
+            asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
+            asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(businessAData.timeOffRequests as any)
 
             // Test all endpoints
             const businessHoursRequest = new NextRequest('http://localhost:3000/api/availability/business-hours')

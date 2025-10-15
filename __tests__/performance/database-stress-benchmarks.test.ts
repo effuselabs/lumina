@@ -103,7 +103,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
 
     const setupDatabaseMocks = () => {
         // Create operations with realistic timing
-        repositoryInstance.create.mockImplementation(async (data) => {
+        repositoryInstance.create.mockImplementation(async (data: any) => {
             const baseDelay = 30 + Math.random() * 40 // 30-70ms base
             const complexityDelay = data.services?.length * 10 || 0 // Additional delay for multi-service
             await new Promise(resolve => setTimeout(resolve, baseDelay + complexityDelay))

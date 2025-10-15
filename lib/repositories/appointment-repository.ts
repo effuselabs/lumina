@@ -381,9 +381,8 @@ export class AppointmentRepository {
     }
 
     return this.update(id, businessId, {
-      status,
       ...statusTimestamps
-    })
+    } as any)
   }
 
   // ============================================================================
@@ -944,14 +943,14 @@ export class AppointmentRepository {
       })
 
       // Update appointment totals
-      const newTotalPrice = existingAppointment.totalPrice + validation.totalPrice
+      const newTotalPrice = Number(existingAppointment.totalPrice) + validation.totalPrice
       const newTotalDuration = (existingAppointment.totalDuration || 0) + validation.totalDuration
       const newEndTime = multiServiceAppointmentService.calculateAppointmentEndTime(
         existingAppointment.startTime,
         [...existingAppointment.services.map(s => ({
           serviceId: s.serviceId,
           serviceName: s.serviceName,
-          price: s.price,
+          price: Number(s.price),
           duration: s.duration,
           serviceOrder: s.serviceOrder
         })), ...serviceSelections]
@@ -1000,14 +999,14 @@ export class AppointmentRepository {
       })
 
       // Recalculate totals based on remaining services
-      const newTotalPrice = remainingServices.reduce((sum, s) => sum + s.price, 0)
+      const newTotalPrice = remainingServices.reduce((sum, s) => sum + Number(s.price), 0)
       const newTotalDuration = remainingServices.reduce((sum, s) => sum + s.duration, 0)
       const newEndTime = multiServiceAppointmentService.calculateAppointmentEndTime(
         existingAppointment.startTime,
         remainingServices.map(s => ({
           serviceId: s.serviceId,
           serviceName: s.serviceName,
-          price: s.price,
+          price: Number(s.price),
           duration: s.duration,
           serviceOrder: s.serviceOrder
         }))

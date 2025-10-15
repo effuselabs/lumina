@@ -265,7 +265,7 @@ export async function acceptStaffInvitation(
   }
 ) {
   const invitation = await verifyInviteToken(token);
-  const staffData = invitation.staffData as StaffInvitationData;
+  const staffData = invitation.staffData as unknown as StaffInvitationData;
 
   return await prisma.$transaction(async tx => {
     // Create or update user
@@ -304,10 +304,10 @@ export async function acceptStaffInvitation(
         userId: user.id,
         displayName: staffData.displayName,
         title: staffData.title,
-        employmentType: staffData.employmentType,
+        employmentType: staffData.employmentType as any,
         commissionRate: staffData.commissionRate,
         chairRentalAmount: staffData.chairRentalAmount,
-        chairRentalPeriod: staffData.chairRentalPeriod,
+        chairRentalPeriod: staffData.chairRentalPeriod as any,
         baseSalary: staffData.baseSalary,
       },
     });

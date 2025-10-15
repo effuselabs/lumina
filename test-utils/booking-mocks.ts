@@ -197,18 +197,18 @@ export const mockBookingErrors = {
 
 // Mock API response builders
 export const createMockApiResponse = {
-    businessInfo: (overrides = {}) => ({
+    businessInfo: (overrides: any = {}) => ({
         business: { ...mockBusiness, ...overrides.business },
         services: overrides.services || mockServices,
         businessHours: overrides.businessHours || mockBusiness.businessHours
     }),
 
-    availability: (overrides = {}) => ({
+    availability: (overrides: any = {}) => ({
         availableSlots: overrides.availableSlots || mockAvailableSlots,
         nextAvailableDate: overrides.nextAvailableDate || '2024-01-15'
     }),
 
-    booking: (overrides = {}) => ({
+    booking: (overrides: any = {}) => ({
         appointment: { ...mockAppointment, ...overrides.appointment },
         confirmationSent: overrides.confirmationSent !== false
     }),

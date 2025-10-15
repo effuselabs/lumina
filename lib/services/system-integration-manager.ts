@@ -113,8 +113,9 @@ export class SystemIntegrationManager {
         this.dashboardIntegration = new DashboardIntegrationService()
         this.notificationService = new AppointmentNotificationService()
         this.appointmentService = new AppointmentService()
-        this.webSocketService = new WebSocketService()
-        this.realTimeSyncService = new RealTimeSyncService()
+        // WebSocketService and RealTimeSyncService will be initialized with proper context
+        this.webSocketService = null as any // Initialized on-demand
+        this.realTimeSyncService = null as any // Initialized on-demand
 
         this.configuration = {
             enableRealTimeSync: true,

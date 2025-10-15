@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBulkOperations } from '@/hooks/use-bulk-operations';
-import { AppointmentStatus, DashboardAppointment } from '@/types/appointment-types';
+import { AppointmentStatus, DashboardAppointment } from '@/types/dashboard-appointments';
 import { addHours, format } from 'date-fns';
 import {
     Calendar,

@@ -300,10 +300,10 @@ export class EnhancedSeedOrchestrator {
             const businessOpsFactory = new BusinessOperationsFactory(this.prisma, businessId);
 
             const businessOpsData = await businessOpsFactory.generateWithProgress({
-                products: { generateProducts: true, generateSalesHistory: true },
+                products: { generateProducts: true, generateSalesHistory: true, salesHistoryMonths: 6 },
                 giftCards: { generateGiftCards: true, giftCardCount: 15 },
-                promotions: { generatePromotions: true, includeSeasonalPromotions: true },
-                marketing: { generateCampaigns: true, includeEmailCampaigns: true },
+                promotions: { generatePromotions: true, includeSeasonalPromotions: true, includeLoyaltyPromotions: true },
+                marketing: { generateCampaigns: true, includeEmailCampaigns: true, includeSMSCampaigns: true },
                 loyalty: { generateLoyaltyProgram: true, generateMemberships: true },
             });
 

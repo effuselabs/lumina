@@ -3,7 +3,7 @@
  * Provides real-time metrics, alerts, and system health status
  */
 
-import { availabilityLogger } from '@/lib/monitoring/availability-logger'
+import { availabilityLogger, LogLevel } from '@/lib/monitoring/availability-logger'
 import { AlertSeverity, AlertType, availabilityMonitoring } from '@/lib/monitoring/availability-monitoring'
 import { gracefulDegradation } from '@/lib/services/graceful-degradation'
 import { NextRequest, NextResponse } from 'next/server'
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
         })
 
     } catch (error) {
-        availabilityLogger.log('ERROR', 'Failed to fetch monitoring data', {
+        availabilityLogger.log(LogLevel.ERROR, 'Failed to fetch monitoring data', {
             operation: 'monitoring_api'
         }, { error: error instanceof Error ? error.message : String(error) })
 
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
             case 'update_thresholds':
                 availabilityMonitoring.updateThresholds(data.thresholds)
 
-                availabilityLogger.log('INFO', 'Monitoring thresholds updated via API', {
+                availabilityLogger.log(LogLevel.INFO, 'Monitoring thresholds updated via API', {
                     operation: 'threshold_update'
                 }, { thresholds: data.thresholds })
 
@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
         }
 
     } catch (error) {
-        availabilityLogger.log('ERROR', 'Failed to process monitoring action', {
+        availabilityLogger.log(LogLevel.ERROR, 'Failed to process monitoring action', {
             operation: 'monitoring_api_post'
         }, { error: error instanceof Error ? error.message : String(error) })
 

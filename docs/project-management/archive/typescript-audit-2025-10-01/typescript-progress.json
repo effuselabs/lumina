@@ -1,0 +1,662 @@
+[
+  {
+    "timestamp": "2025-10-01T20:35:38.515Z",
+    "totalErrors": 2155,
+    "totalFiles": 2148,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 778,
+      "services": 122,
+      "api": 68,
+      "components": 275,
+      "tests": 776,
+      "imports": 1,
+      "other": 135
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 0,
+      "filesFixed": 0,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-01T20:45:01.224Z",
+    "totalErrors": 2145,
+    "totalFiles": 2138,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 768,
+      "services": 122,
+      "api": 68,
+      "components": 275,
+      "tests": 776,
+      "imports": 1,
+      "other": 135
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 10,
+      "filesFixed": 10,
+      "completionPercentage": 0.46403712296983757
+    }
+  },
+  {
+    "timestamp": "2025-10-01T20:46:44.228Z",
+    "totalErrors": 2138,
+    "totalFiles": 2131,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 761,
+      "services": 122,
+      "api": 68,
+      "components": 275,
+      "tests": 776,
+      "imports": 1,
+      "other": 135
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 17,
+      "filesFixed": 17,
+      "completionPercentage": 0.7888631090487239
+    }
+  },
+  {
+    "timestamp": "2025-10-01T20:51:54.266Z",
+    "totalErrors": 2133,
+    "totalFiles": 2126,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 761,
+      "services": 122,
+      "api": 67,
+      "components": 275,
+      "tests": 772,
+      "imports": 1,
+      "other": 135
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 22,
+      "filesFixed": 22,
+      "completionPercentage": 1.0208816705336428
+    }
+  },
+  {
+    "timestamp": "2025-10-01T21:00:37.401Z",
+    "totalErrors": 2170,
+    "totalFiles": 2162,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 761,
+      "services": 129,
+      "api": 67,
+      "components": 274,
+      "tests": 792,
+      "imports": 7,
+      "other": 140
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -15,
+      "filesFixed": -14,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-01T21:30:43.103Z",
+    "totalErrors": 2170,
+    "totalFiles": 2162,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 761,
+      "services": 129,
+      "api": 67,
+      "components": 274,
+      "tests": 792,
+      "imports": 7,
+      "other": 140
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -15,
+      "filesFixed": -14,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-01T22:11:29.250Z",
+    "totalErrors": 2262,
+    "totalFiles": 2254,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 759,
+      "services": 128,
+      "api": 67,
+      "components": 344,
+      "tests": 812,
+      "imports": 6,
+      "other": 146
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -107,
+      "filesFixed": -106,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-01T22:18:19.334Z",
+    "totalErrors": 2256,
+    "totalFiles": 2248,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 759,
+      "services": 128,
+      "api": 67,
+      "components": 340,
+      "tests": 812,
+      "imports": 6,
+      "other": 144
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -101,
+      "filesFixed": -100,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T00:45:43.956Z",
+    "totalErrors": 2252,
+    "totalFiles": 2244,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 759,
+      "services": 128,
+      "api": 67,
+      "components": 336,
+      "tests": 812,
+      "imports": 6,
+      "other": 144
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -97,
+      "filesFixed": -96,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T01:15:44.504Z",
+    "totalErrors": 2252,
+    "totalFiles": 2244,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 759,
+      "services": 128,
+      "api": 67,
+      "components": 337,
+      "tests": 812,
+      "imports": 6,
+      "other": 143
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -97,
+      "filesFixed": -96,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T01:35:53.375Z",
+    "totalErrors": 2245,
+    "totalFiles": 2237,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 759,
+      "services": 128,
+      "api": 67,
+      "components": 337,
+      "tests": 805,
+      "imports": 6,
+      "other": 143
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -90,
+      "filesFixed": -89,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T01:42:08.246Z",
+    "totalErrors": 2234,
+    "totalFiles": 2227,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 759,
+      "services": 128,
+      "api": 67,
+      "components": 337,
+      "tests": 805,
+      "imports": 0,
+      "other": 138
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -79,
+      "filesFixed": -79,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T01:50:07.545Z",
+    "totalErrors": 2184,
+    "totalFiles": 2177,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 729,
+      "services": 128,
+      "api": 67,
+      "components": 337,
+      "tests": 805,
+      "imports": 0,
+      "other": 118
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -29,
+      "filesFixed": -29,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T01:51:53.314Z",
+    "totalErrors": 2183,
+    "totalFiles": 2176,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 729,
+      "services": 128,
+      "api": 67,
+      "components": 337,
+      "tests": 804,
+      "imports": 0,
+      "other": 118
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -28,
+      "filesFixed": -28,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T01:55:39.457Z",
+    "totalErrors": 2165,
+    "totalFiles": 2158,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 729,
+      "services": 128,
+      "api": 67,
+      "components": 337,
+      "tests": 786,
+      "imports": 0,
+      "other": 118
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -10,
+      "filesFixed": -10,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:01:07.566Z",
+    "totalErrors": 2160,
+    "totalFiles": 2153,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 727,
+      "services": 128,
+      "api": 64,
+      "components": 337,
+      "tests": 786,
+      "imports": 0,
+      "other": 118
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": -5,
+      "filesFixed": -5,
+      "completionPercentage": 0
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:03:14.893Z",
+    "totalErrors": 1,
+    "totalFiles": 1,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 0,
+      "services": 0,
+      "api": 1,
+      "components": 0,
+      "tests": 0,
+      "imports": 0,
+      "other": 0
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 2154,
+      "filesFixed": 2147,
+      "completionPercentage": 99.95359628770302
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:04:02.823Z",
+    "totalErrors": 2152,
+    "totalFiles": 2145,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 726,
+      "services": 128,
+      "api": 57,
+      "components": 337,
+      "tests": 786,
+      "imports": 0,
+      "other": 118
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 3,
+      "filesFixed": 3,
+      "completionPercentage": 0.13921113689095127
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:44:37.114Z",
+    "totalErrors": 2081,
+    "totalFiles": 2074,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 723,
+      "services": 128,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 74,
+      "filesFixed": 74,
+      "completionPercentage": 3.433874709976798
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:47:57.644Z",
+    "totalErrors": 2073,
+    "totalFiles": 2066,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 723,
+      "services": 120,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 82,
+      "filesFixed": 82,
+      "completionPercentage": 3.8051044083526686
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:49:36.906Z",
+    "totalErrors": 2065,
+    "totalFiles": 2058,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 723,
+      "services": 112,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 90,
+      "filesFixed": 90,
+      "completionPercentage": 4.176334106728538
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:51:30.153Z",
+    "totalErrors": 2060,
+    "totalFiles": 2053,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 723,
+      "services": 107,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 95,
+      "filesFixed": 95,
+      "completionPercentage": 4.408352668213457
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:53:03.228Z",
+    "totalErrors": 2057,
+    "totalFiles": 2050,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 723,
+      "services": 104,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 98,
+      "filesFixed": 98,
+      "completionPercentage": 4.547563805104408
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:55:27.219Z",
+    "totalErrors": 2042,
+    "totalFiles": 2035,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 723,
+      "services": 89,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 113,
+      "filesFixed": 113,
+      "completionPercentage": 5.243619489559165
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:56:42.486Z",
+    "totalErrors": 2039,
+    "totalFiles": 2032,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 722,
+      "services": 87,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 116,
+      "filesFixed": 116,
+      "completionPercentage": 5.382830626450116
+    }
+  },
+  {
+    "timestamp": "2025-10-02T02:58:33.000Z",
+    "totalErrors": 2032,
+    "totalFiles": 2025,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 715,
+      "services": 87,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 123,
+      "filesFixed": 123,
+      "completionPercentage": 5.707656612529003
+    }
+  },
+  {
+    "timestamp": "2025-10-02T03:00:42.760Z",
+    "totalErrors": 2028,
+    "totalFiles": 2021,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 711,
+      "services": 87,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 127,
+      "filesFixed": 127,
+      "completionPercentage": 5.893271461716938
+    }
+  },
+  {
+    "timestamp": "2025-10-02T03:04:26.714Z",
+    "totalErrors": 2028,
+    "totalFiles": 2025,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 711,
+      "services": 87,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 113
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 127,
+      "filesFixed": 123,
+      "completionPercentage": 5.893271461716938
+    }
+  },
+  {
+    "timestamp": "2025-10-02T03:06:25.934Z",
+    "totalErrors": 2021,
+    "totalFiles": 2018,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 711,
+      "services": 87,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 106
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 134,
+      "filesFixed": 130,
+      "completionPercentage": 6.218097447795824
+    }
+  },
+  {
+    "timestamp": "2025-10-02T03:07:33.563Z",
+    "totalErrors": 2014,
+    "totalFiles": 2011,
+    "buildSuccess": false,
+    "typeCheckSuccess": false,
+    "errorsByCategory": {
+      "prisma": 711,
+      "services": 87,
+      "api": 0,
+      "components": 331,
+      "tests": 786,
+      "imports": 0,
+      "other": 99
+    },
+    "criticalFiles": [],
+    "progressMetrics": {
+      "errorReduction": 141,
+      "filesFixed": 137,
+      "completionPercentage": 6.54292343387471
+    }
+  }
+]
