@@ -23,9 +23,6 @@ export type {
   ConflictInfo
 } from './dashboard-appointments';
 
-// Re-export AppointmentStatus for convenience
-export { AppointmentStatus } from './dashboard-appointments';
-
 // Booking types
 export type {
   BusinessInfo,
@@ -45,13 +42,13 @@ export type {
 
 export { DayOfWeek } from './booking';
 
-// Employment types
-export type {
-  CommissionStructure,
-  ChairRentalStructure,
-  HybridStructure,
-  EmploymentDetails
-} from './employment';
+// Employment types - Comment out non-existent exports
+// export type {
+//   CommissionStructure,
+//   ChairRentalStructure,
+//   HybridStructure,
+//   EmploymentDetails
+// } from './employment';
 
 // Booking component types
 export type { BookingStep } from '../components/booking/booking-progress';
