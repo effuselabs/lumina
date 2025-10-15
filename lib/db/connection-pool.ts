@@ -169,7 +169,7 @@ class ConnectionPoolManager {
      * Set up query monitoring and performance tracking
      */
     private setupQueryMonitoring(client: PrismaClient): void {
-        client.$on('query', (event) => {
+        (client as any).$on('query', (event: any) => {
             this.connectionMetrics.totalQueries++
 
             const queryTime = event.duration
@@ -188,14 +188,14 @@ class ConnectionPoolManager {
                     })
                 }
             }
-        })
+        });
 
-        client.$on('error', (event) => {
+        (client as any).$on('error', (event: any) => {
             this.connectionMetrics.errors++
             console.error('Database error:', event)
-        })
+        });
 
-        client.$on('warn', (event) => {
+        (client as any).$on('warn', (event: any) => {
             console.warn('Database warning:', event)
         })
     }
@@ -251,7 +251,7 @@ class ConnectionPoolManager {
      */
     getMetrics(): {
         config: ConnectionPoolConfig
-        metrics: typeof this.connectionMetrics
+        metrics: any
         performance: {
             queriesPerSecond: number
             errorRate: number
