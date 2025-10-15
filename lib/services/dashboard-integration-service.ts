@@ -152,7 +152,7 @@ export class DashboardIntegrationService {
                 onMessage: (data: any) => this.handleWebSocketMessage(data)
             }
             
-            this.webSocketService = new WebSocketService(wsConfig, wsCallbacks)
+            this.webSocketService = new WebSocketService(wsConfig as any, wsCallbacks as any)
         }
 
         if (!this.realTimeSyncService) {
@@ -162,7 +162,7 @@ export class DashboardIntegrationService {
                 onError: (error: Error) => console.error('Sync error:', error)
             }
             
-            this.realTimeSyncService = new RealTimeSyncService(businessId, userId, syncCallbacks)
+            this.realTimeSyncService = new RealTimeSyncService(businessId, userId, syncCallbacks as any)
             
             if (this.webSocketService) {
                 this.realTimeSyncService.initialize(this.webSocketService)
@@ -266,7 +266,7 @@ export class DashboardIntegrationService {
                 }
             }
 
-            return result
+            return result as any
 
         } catch (error) {
             return {
@@ -325,7 +325,7 @@ export class DashboardIntegrationService {
                 }
             }
 
-            return result
+            return result as any
 
         } catch (error) {
             return {
@@ -417,7 +417,7 @@ export class DashboardIntegrationService {
                 const appointments = await this.appointmentService.getAppointmentsByStaff(
                     staffId,
                     businessId,
-                    dateRange
+                    dateRange as any
                 )
 
                 availability[staffId] = {
@@ -896,7 +896,7 @@ export class DashboardIntegrationService {
                 canReschedule,
                 lastUpdated: appointment.updatedAt,
                 updatedBy: undefined // Would track who made the last update
-            }
+            } as DashboardAppointmentData
 
         } catch (error) {
             throw new Error(`Failed to enhance appointment: ${error instanceof Error ? error.message : 'Unknown error'}`)
