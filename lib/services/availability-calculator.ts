@@ -86,13 +86,13 @@ export class AvailabilityCalculator {
 
             // Check cache first
             const cacheKey = this.generateCacheKey(query)
-            const cachedResult = await AvailabilityCache.get(cacheKey)
+            const cachedResult = await AvailabilityCache.get(cacheKey as any)
 
             if (cachedResult) {
                 return {
-                    slots: cachedResult.slots,
+                    slots: (cachedResult as any).slots,
                     metadata: {
-                        ...cachedResult.metadata,
+                        ...(cachedResult as any).metadata,
                         cacheHit: true,
                         calculationTime: Date.now() - startTime
                     }
@@ -158,7 +158,7 @@ export class AvailabilityCalculator {
             }
 
             // Cache the result
-            await AvailabilityCache.set(cacheKey, result) // Cache for 5 minutes
+            await AvailabilityCache.set(cacheKey as any, result) // Cache for 5 minutes
 
             return result
         } catch (error) {
@@ -307,7 +307,7 @@ export class AvailabilityCalculator {
                     date: true,
                     name: true
                 }
-            })
+            }) as { date: Date; name: string }[]
 
             return {
                 businessHours,
@@ -406,8 +406,8 @@ export class AvailabilityCalculator {
         // Use conflict detection engine for advanced validation
         try {
             const conflictResult = await ConflictDetectionEngine.validateAppointmentSlot(
-                slot.startTime.toISOString(),
-                slot.endTime.toISOString(),
+                slot.startTime as any,
+                slot.endTime as any,
                 staffId,
                 businessId
             )
