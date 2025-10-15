@@ -186,16 +186,16 @@ class AppointmentErrorHandler {
         if (field?.includes('clientId')) {
             return new ClientNotFoundError(
                 context.clientId || 'unknown',
-                context.appointmentId,
-                context
+                context.appointmentId as string,
+                [] as any
             )
         }
 
         if (field?.includes('staffId')) {
             return new StaffNotFoundError(
                 context.staffId || 'unknown',
-                context.appointmentId,
-                context
+                context.appointmentId as string,
+                [] as any
             )
         }
 
@@ -450,11 +450,12 @@ class AppointmentErrorHandler {
 
     // Trigger monitoring alerts
     private triggerAlert(alertType: string, data: Record<string, any>): void {
-        availabilityLogger.log(LogLevel.ERROR, `ALERT: ${alertType}`, data, {
+        availabilityLogger.log(LogLevel.ERROR, `ALERT: ${alertType}`, { operation: 'alert', ...data } as any, {
+            operation: 'alert',
             alertType,
             timestamp: new Date().toISOString(),
             severity: 'CRITICAL'
-        })
+        } as any)
 
         // In a real implementation, this would integrate with monitoring systems
         // like Sentry, DataDog, or custom alerting infrastructure
@@ -467,7 +468,7 @@ class AppointmentErrorHandler {
                 'context_validation',
                 'business_context_missing',
                 { field: 'businessId' },
-                context
+                [] as any
             )
         }
 
@@ -476,7 +477,7 @@ class AppointmentErrorHandler {
                 'context_validation',
                 'operation_context_missing',
                 { field: 'operation' },
-                context
+                [] as any
             )
         }
     }
@@ -566,7 +567,7 @@ export async function withAppointmentErrorHandling<T>(
                 originalError: error instanceof Error ? error.message : String(error),
                 stack: error instanceof Error ? error.stack : undefined
             },
-            context
+            [] as any
         )
 
         throw appointmentError
