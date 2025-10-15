@@ -241,11 +241,7 @@ export class CacheWarmingManager {
       };
 
       // Warm business-wide upcoming appointments
-      const businessKey = `business-${businessId}` as any; // CacheKeyGenerator.appointmentsByBusiness(businessId, {
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-        status: [AppointmentStatus.SCHEDULED, AppointmentStatus.CONFIRMED],
-      });
+      const businessKey = `business-${businessId}` as any;
 
       const businessAppointments =
         await this.repository.findByBusinessOptimized(businessId, {
@@ -263,11 +259,7 @@ export class CacheWarmingManager {
 
       // Warm individual staff schedules
       for (const staffId of staffIds) {
-        const staffKey = `staff-${staffId}` as any; // CacheKeyGenerator.appointmentsByStaff(
-          staffId,
-          businessId,
-          dateRange
-        );
+        const staffKey = `staff-${staffId}` as any;
 
         const staffAppointments = await this.repository.findByStaffOptimized(
           staffId,
@@ -320,11 +312,7 @@ export class CacheWarmingManager {
 
       for (const staffId of staffIds) {
         for (const dateRange of dateRanges) {
-          const cacheKey = `staff-${staffId}` as any; // CacheKeyGenerator.appointmentsByStaff(
-            staffId,
-            businessId,
-            dateRange
-          );
+          const cacheKey = `staff-${staffId}` as any;
 
           const appointments = await this.repository.findByStaffOptimized(
             staffId,
@@ -435,9 +423,7 @@ export class CacheWarmingManager {
           });
 
         // Cache key would be generated based on client filter
-        const cacheKey = `business-${businessId}` as any; // CacheKeyGenerator.appointmentsByBusiness(businessId, {
-          clientId: client.id,
-        });
+        const cacheKey = `business-${businessId}` as any;
 
         await this.cacheManager.setAppointmentList(
           cacheKey,
