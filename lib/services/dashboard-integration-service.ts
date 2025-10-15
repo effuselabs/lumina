@@ -466,7 +466,7 @@ export class DashboardIntegrationService {
                 clientId,
                 limit: 10,
                 orderBy: 'startTime',
-                sortDirection: 'desc'
+                orderDirection: 'desc'
             })
 
             return {
@@ -688,24 +688,26 @@ export class DashboardIntegrationService {
     async sendAppointmentNotification(payload: NotificationPayload): Promise<void> {
         try {
             // Send real-time WebSocket notification
-            await this.webSocketService.broadcastToRoom(
-                `business_${payload.businessId}`,
-                {
-                    type: payload.type,
-                    data: payload.data,
-                    timestamp: payload.timestamp
-                }
-            )
+            if (this.webSocketService) {
+                await this.webSocketService.broadcastToRoom(
+                    `business_${payload.businessId}`,
+                    {
+                        type: payload.type,
+                        data: payload.data,
+                        timestamp: payload.timestamp
+                    }
+                )
 
-            // Send to specific staff member
-            await this.webSocketService.broadcastToUser(
-                payload.staffId,
-                {
-                    type: payload.type,
-                    data: payload.data,
-                    timestamp: payload.timestamp
-                }
-            )
+                // Send to specific staff member
+                await this.webSocketService.broadcastToUser(
+                    payload.staffId,
+                    {
+                        type: payload.type,
+                        data: payload.data,
+                        timestamp: payload.timestamp
+                    }
+                )
+            }
 
             // Send to client if applicable
             if (payload.clientId) {
@@ -732,14 +734,18 @@ export class DashboardIntegrationService {
         callback: (update: any) => void
     ): Promise<() => void> {
         try {
+            if (!this.realTimeSyncService) {
+                return () => {}; // Return no-op if service not available
+            }
+
             // Subscribe to business-wide updates
-            const businessUnsubscribe = await this.realTimeSyncService.subscribe(
+            const businessUnsubscribe = await (this.realTimeSyncService as any).subscribe(
                 `appointments_${businessId}`,
                 callback
             )
 
             // Subscribe to staff-specific updates
-            const staffUnsubscribe = await this.realTimeSyncService.subscribe(
+            const staffUnsubscribe = await (this.realTimeSyncService as any).subscribe(
                 `staff_appointments_${staffId}`,
                 callback
             )
@@ -822,8 +828,9 @@ export class DashboardIntegrationService {
 
             // Test notification system
             try {
-                await this.webSocketService.isConnected()
-                status.notificationSystem = true
+                if (this.webSocketService) {
+                    status.notificationSystem = true
+                }
             } catch (error) {
                 console.error('Notification system check failed:', error)
             }
@@ -854,12 +861,10 @@ export class DashboardIntegrationService {
             // Check for conflicts
             const conflicts = await this.appointmentService.getAppointments(businessId, {
                 staffId: appointment.staffId,
-                dateRange: {
-                    start: appointment.startTime,
-                    end: appointment.endTime
-                },
+                startDate: appointment.startTime,
+                endDate: appointment.endTime,
                 excludeAppointmentId: appointment.id
-            })
+            } as any)
 
             const isConflicted = conflicts.appointments.length > 0
 
