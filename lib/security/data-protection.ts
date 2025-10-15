@@ -108,8 +108,8 @@ export class DataProtectionService {
             const iv = Buffer.from(encryptedData.iv, 'hex')
             const tag = Buffer.from(encryptedData.tag || '', 'hex')
 
-            const decipher = createDecipheriv(this.encryptionConfig.algorithm, this.encryptionKey, iv)
-            (decipher as any).setAuthTag(tag)
+            const decipher: any = createDecipheriv(this.encryptionConfig.algorithm, this.encryptionKey, iv)
+            decipher.setAuthTag(tag)
 
             let decrypted = decipher.update(encryptedData.encryptedValue, 'hex', 'utf8')
             decrypted += decipher.final('utf8')
@@ -627,7 +627,7 @@ export class DataProtectionService {
                             anonymizedRecords,
                             deletedRecords,
                             processDate: now
-                        }
+                        } as any
                     }
                 })
             })
