@@ -121,7 +121,7 @@ class EnhancedErrorHandler {
                 openTime: businessHours.openTime,
                 closeTime: businessHours.closeTime
             } : undefined,
-            suggestions.filter(s => s.type === 'time_slot').map(s => s.data?.timeSlot).filter(Boolean)
+            suggestions.filter(s => s.type === 'time_slot').map(s => s.data?.timeSlot).filter((slot): slot is TimeSlot => slot !== undefined)
         )
     }
 
@@ -217,7 +217,7 @@ class EnhancedErrorHandler {
             serviceDuration.requiredDuration,
             serviceDuration.availableDuration,
             serviceDuration.serviceNames,
-            suggestions.filter(s => s.type === 'time_slot').map(s => s.data?.timeSlot).filter(Boolean)
+            suggestions.filter(s => s.type === 'time_slot').map(s => s.data?.timeSlot).filter((slot): slot is TimeSlot => slot !== undefined)
         )
     }
 
