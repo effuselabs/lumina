@@ -475,7 +475,7 @@ export class RealTimeSyncService {
         userFields.forEach(field => {
             if (local[field] !== server[field]) {
                 // Prefer local changes (optimistic updates)
-                merged[field] = local[field];
+                merged[field] = local[field] as any;
             }
         });
 
