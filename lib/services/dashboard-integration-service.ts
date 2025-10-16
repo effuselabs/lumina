@@ -896,7 +896,7 @@ export class DashboardIntegrationService {
                 canReschedule,
                 lastUpdated: appointment.updatedAt,
                 updatedBy: undefined // Would track who made the last update
-            } as DashboardAppointmentData
+            } as unknown as DashboardAppointmentData
 
         } catch (error) {
             throw new Error(`Failed to enhance appointment: ${error instanceof Error ? error.message : 'Unknown error'}`)

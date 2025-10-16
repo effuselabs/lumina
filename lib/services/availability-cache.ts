@@ -80,7 +80,7 @@ export class AvailabilityCache {
             }
 
             this.metrics.totalHits++
-            return cacheEntry.availableSlots as AvailabilitySlot[]
+            return cacheEntry.availableSlots as unknown as AvailabilitySlot[]
         } catch (error) {
             console.error('Error getting from availability cache:', error)
             this.metrics.totalMisses++
