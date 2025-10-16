@@ -157,8 +157,8 @@ export class AvailabilityCalculator {
                 }
             }
 
-            // Cache the result
-            await AvailabilityCache.set(cacheKey as any, result) // Cache for 5 minutes
+            // Cache the result (cache the slots array, not the full result)
+            await AvailabilityCache.set(cacheKey as any, result.slots as any) // Cache for 5 minutes
 
             return result
         } catch (error) {
@@ -408,7 +408,7 @@ export class AvailabilityCalculator {
             const conflictResult = await ConflictDetectionEngine.validateAppointmentSlot(
                 slot.startTime as any,
                 slot.endTime as any,
-                staffId,
+                staffId as any, // Type conversion for staffId
                 businessId
             )
 
