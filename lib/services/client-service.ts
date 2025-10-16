@@ -70,7 +70,7 @@ export class ClientService {
                     lastName: true,
                     email: true,
                     phone: true,
-                    marketingOptIn: true,
+                    // marketingOptIn: true, // Property doesn't exist in schema
                 },
             });
 
@@ -80,8 +80,8 @@ export class ClientService {
                     clientData: {
                         firstName: existingClient.firstName,
                         lastName: existingClient.lastName,
-                        email: existingClient.email,
-                        phone: existingClient.phone,
+                        email: existingClient.email ?? '',
+                        phone: existingClient.phone ?? '',
                         marketingOptIn: existingClient.emailMarketing || false,
                     },
                 };
@@ -117,7 +117,7 @@ export class ClientService {
                         { email: normalizedData.email },
                         { phone: normalizedData.phone },
                     ],
-                    isActive: true,
+                    // isActive: true, // Property doesn't exist in Client model
                 },
             });
 
