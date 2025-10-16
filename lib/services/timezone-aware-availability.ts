@@ -99,18 +99,18 @@ export class TimeZoneAwareAvailabilityCalculator {
             : null
 
         // Calculate base availability using existing calculator
-        const baseSlots = await AvailabilityCalculator.calculateAvailability({
+        const baseResult = await AvailabilityCalculator.calculateAvailability({
             businessId: request.businessId,
             staffId: request.staffId,
             serviceId: request.serviceId,
-            date: request.date,
+            date: request.date as any, // Type assertion for date parameter
             duration: 60 // Default duration, will be adjusted based on service
         })
 
         // Convert to timezone-aware slots
         const timeZoneAwareSlots: TimeZoneAwareTimeSlot[] = []
 
-        for (const slot of baseSlots) {
+        for (const slot of baseResult.slots) {
             try {
                 // Convert slot times to proper DateTime objects
                 const utcStart = this.parseSlotTime(slot.startTime, request.date, businessTimezone)
