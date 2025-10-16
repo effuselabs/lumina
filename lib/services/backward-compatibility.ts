@@ -5,7 +5,7 @@
  * automatic migration triggers, and gradual migration strategy with dual-read capability.
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 // Types for business hours
@@ -276,14 +276,14 @@ export class BackwardCompatibilityService {
         const [businesses, staff] = await Promise.all([
             this.prisma.business.findMany({
                 where: {
-                    operatingHours: { not: null },
+                    operatingHours: { not: Prisma.DbNull },
                     businessHours: { none: {} },
                 },
                 select: { id: true, name: true },
             }),
             this.prisma.staff.findMany({
                 where: {
-                    workingHours: { not: null },
+                    workingHours: { not: Prisma.DbNull },
                     staffAvailability: { none: {} },
                 },
                 select: { id: true, displayName: true, businessId: true },
@@ -458,10 +458,10 @@ export class BackwardCompatibilityService {
             staffWithStructured,
         ] = await Promise.all([
             this.prisma.business.count({
-                where: { operatingHours: { not: null } },
+                where: { operatingHours: { not: Prisma.DbNull } },
             }),
             this.prisma.staff.count({
-                where: { workingHours: { not: null } },
+                where: { workingHours: { not: Prisma.DbNull } },
             }),
             this.prisma.business.count(),
             this.prisma.staff.count(),
