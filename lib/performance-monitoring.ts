@@ -162,7 +162,7 @@ class BookingPerformanceMonitor {
 
                 this.recordMetric(`api-${this.getApiName(url)}-error`, duration, {
                     url,
-                    error: error.message,
+                    error: (error as Error).message,
                 });
 
                 throw error;
@@ -360,7 +360,7 @@ class BookingPerformanceMonitor {
             const endTime = performance.now();
             this.recordMetric(name, endTime - startTime, {
                 success: false,
-                error: error.message
+                error: (error as Error).message
             });
             throw error;
         }

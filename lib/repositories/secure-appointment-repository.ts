@@ -26,7 +26,7 @@ export class SecureAppointmentRepository extends AppointmentRepository {
     /**
      * Create appointment with comprehensive security validation
      */
-    async create(
+    override async create(
         request: CreateAppointmentRequest,
         userId?: string,
         metadata?: Record<string, any>
@@ -120,7 +120,7 @@ export class SecureAppointmentRepository extends AppointmentRepository {
     /**
      * Find appointment by ID with security validation
      */
-    async findById(
+    override async findById(
         id: string,
         businessId: string,
         userId?: string,
@@ -182,7 +182,7 @@ export class SecureAppointmentRepository extends AppointmentRepository {
     /**
      * Update appointment with security validation and audit logging
      */
-    async update(
+    override async update(
         id: string,
         businessId: string,
         updates: UpdateAppointmentRequest,
@@ -285,7 +285,7 @@ export class SecureAppointmentRepository extends AppointmentRepository {
     /**
      * Delete appointment with security validation
      */
-    async delete(
+    override async delete(
         id: string,
         businessId: string,
         userId?: string,
@@ -376,7 +376,7 @@ export class SecureAppointmentRepository extends AppointmentRepository {
     /**
      * Update appointment status with security validation
      */
-    async updateStatus(
+    override async updateStatus(
         id: string,
         businessId: string,
         status: AppointmentStatus,

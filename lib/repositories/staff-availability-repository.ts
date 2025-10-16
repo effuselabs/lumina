@@ -92,13 +92,19 @@ export class StaffAvailabilityRepository {
             where: {
                 staffId,
                 isRecurring: true,
-                OR: [
-                    { effectiveDate: null },
-                    { effectiveDate: { lte: dateRange.endDate } }
-                ],
-                OR: [
-                    { expiryDate: null },
-                    { expiryDate: { gte: dateRange.startDate } }
+                AND: [
+                    {
+                        OR: [
+                            { effectiveDate: null },
+                            { effectiveDate: { lte: dateRange.endDate } }
+                        ]
+                    },
+                    {
+                        OR: [
+                            { expiryDate: null },
+                            { expiryDate: { gte: dateRange.startDate } }
+                        ]
+                    }
                 ]
             },
             orderBy: [{ dayOfWeek: 'asc' }, { startTime: 'asc' }]
@@ -318,13 +324,19 @@ export class StaffAvailabilityRepository {
                 staffId,
                 dayOfWeek,
                 isRecurring: true,
-                OR: [
-                    { effectiveDate: null },
-                    { effectiveDate: { lte: date } }
-                ],
-                OR: [
-                    { expiryDate: null },
-                    { expiryDate: { gte: date } }
+                AND: [
+                    {
+                        OR: [
+                            { effectiveDate: null },
+                            { effectiveDate: { lte: date } }
+                        ]
+                    },
+                    {
+                        OR: [
+                            { expiryDate: null },
+                            { expiryDate: { gte: date } }
+                        ]
+                    }
                 ]
             }
         })
