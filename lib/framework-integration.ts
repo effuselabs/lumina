@@ -215,7 +215,7 @@ export const typeScriptIntegration = {
     createForwardRefComponent<T, P = {}>(
         render: (props: P, ref: React.Ref<T>) => ReactNode
     ) {
-        return forwardRef<T, P>(render);
+        return forwardRef<T, P>(render as any);
     },
 
     /**
@@ -323,7 +323,7 @@ export const performanceIntegration = {
 
         // Apply React.memo if requested
         if (options?.memo) {
-            OptimizedComponent = React.memo(OptimizedComponent) as React.ComponentType<T>;
+            OptimizedComponent = React.memo(OptimizedComponent) as unknown as React.ComponentType<T>;
         }
 
         // Apply lazy loading if requested
@@ -336,7 +336,7 @@ export const performanceIntegration = {
                 React.createElement(
                     React.Suspense,
                     { fallback: React.createElement('div', null, 'Loading...') },
-                    React.createElement(LazyComponent, props)
+                    React.createElement(LazyComponent, props as any)
                 );
         }
 
@@ -364,6 +364,7 @@ export const performanceIntegration = {
                         );
                     };
                 }
+                return undefined;
             }, []);
 
             return React.createElement(Component, props);
@@ -395,7 +396,8 @@ export const compatibilityChecks = {
     checkReactCompatibility(): boolean {
         try {
             return typeof React !== 'undefined' &&
-                React.version &&
+                !!React.version &&
+                typeof React.version === 'string' &&
                 parseInt(React.version.split('.')[0]) >= 18;
         } catch {
             return false;
