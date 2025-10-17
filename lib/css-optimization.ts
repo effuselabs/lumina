@@ -362,10 +362,11 @@ export function monitorCSSPerformance(): void {
     // Monitor layout shifts caused by CSS
     const layoutObserver = new PerformanceObserver((list) => {
         list.getEntries().forEach((entry) => {
-            if (entry.entryType === 'layout-shift' && !entry.hadRecentInput) {
-                console.log(`Layout shift detected: ${entry.value}`);
+            const layoutEntry = entry as any;
+            if (entry.entryType === 'layout-shift' && !layoutEntry.hadRecentInput) {
+                console.log(`Layout shift detected: ${layoutEntry.value}`);
 
-                if (entry.value > 0.1) {
+                if (layoutEntry.value > 0.1) {
                     console.warn('Significant layout shift detected, check CSS loading order');
                 }
             }
