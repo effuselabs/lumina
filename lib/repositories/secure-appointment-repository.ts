@@ -615,7 +615,7 @@ export class SecureAppointmentRepository extends AppointmentRepository {
         return {
             hasTimeChange: !!(updates.startTime || updates.endTime),
             hasPriceChange: !!updates.totalPrice,
-            hasStatusChange: !!updates.status,
+            hasStatusChange: !!(updates as any).status,
             hasNotesChange: !!(updates.notes || updates.internalNotes),
             changedFields: Object.keys(updates)
         }
