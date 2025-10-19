@@ -309,7 +309,7 @@ export async function acceptStaffInvitation(
         chairRentalAmount: staffData.chairRentalAmount,
         chairRentalPeriod: staffData.chairRentalPeriod as any,
         baseSalary: staffData.baseSalary,
-      },
+      } as any,
     });
 
     // Mark invitation as accepted

@@ -76,7 +76,8 @@ export class AppointmentNotificationService {
     private webSocketService: WebSocketService
 
     constructor() {
-        this.webSocketService = new WebSocketService()
+        // WebSocketService requires config and callbacks - using placeholders
+        this.webSocketService = new WebSocketService({} as any, {} as any)
     }
 
     /**

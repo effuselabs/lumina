@@ -640,7 +640,7 @@ export class MultiServiceCoordinator {
         // Check if promotion applies to selected services
         if (promotion.applicableServices.length > 0) {
           const hasApplicableService = services.some(service => 
-            promotion.applicableServices.includes(service.id)
+            promotion.applicableServices.includes(service.serviceId)
           );
           if (!hasApplicableService) {
             return false;

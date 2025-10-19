@@ -1083,7 +1083,7 @@ export class AppointmentRepository {
           price: s.price,
           duration: s.duration,
           serviceOrder: s.serviceOrder
-        }))
+        })) as any
       )
 
       return await this.update(appointmentId, businessId, {

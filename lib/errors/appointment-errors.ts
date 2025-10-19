@@ -27,7 +27,7 @@ export abstract class AppointmentError extends AvailabilityError {
         this.staffId = staffId
     }
 
-    toJSON() {
+    override toJSON() {
         return {
             ...super.toJSON(),
             appointmentId: this.appointmentId,

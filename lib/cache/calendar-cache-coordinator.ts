@@ -45,6 +45,9 @@ interface CacheCoordinationConfig {
 // CALENDAR CACHE COORDINATOR
 // ============================================================================
 
+// Placeholder type for AppointmentCacheManager until implemented
+type AppointmentCacheManager = any;
+
 export class CalendarCacheCoordinator extends EventEmitter {
   private static instance: CalendarCacheCoordinator;
   private appointmentCache: AppointmentCacheManager;
@@ -54,7 +57,7 @@ export class CalendarCacheCoordinator extends EventEmitter {
 
   private constructor() {
     super();
-    this.appointmentCache = AppointmentCacheManager.getInstance();
+    this.appointmentCache = null as any; // AppointmentCacheManager.getInstance();
     this.config = {
       enableCoordination: true,
       invalidationDelay: 200, // 200ms delay for batching

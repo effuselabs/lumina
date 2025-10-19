@@ -401,7 +401,7 @@ export class PublicBookingSanitizer {
             ALLOWED_TAGS: this.config.allowedTags,
             ALLOWED_ATTR: this.config.allowedAttributes,
             KEEP_CONTENT: true,
-        });
+        } as any) as unknown as string;
     }
 
     /**

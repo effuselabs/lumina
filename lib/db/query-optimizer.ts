@@ -432,9 +432,9 @@ export class QueryOptimizer {
     /**
      * Export query analysis data for external analysis
      */
-    exportAnalysisData(): {
+    exportAnalysisData(this: QueryOptimizer): {
         queries: QueryAnalysis[]
-        summary: ReturnType<typeof this.getPerformanceStats>
+        summary: ReturnType<QueryOptimizer['getPerformanceStats']>
         exportDate: Date
     } {
         return {

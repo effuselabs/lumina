@@ -65,9 +65,9 @@ export class BookingErrorTracker {
             });
 
             for (const rule of alertRules) {
-                const shouldTrigger = await this.evaluateAlertRule(rule, error);
+                const shouldTrigger = await this.evaluateAlertRule(rule as any, error);
                 if (shouldTrigger) {
-                    await this.triggerAlert(rule, error);
+                    await this.triggerAlert(rule as any, error);
                 }
             }
         } catch (err) {

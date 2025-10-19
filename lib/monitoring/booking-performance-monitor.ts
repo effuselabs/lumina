@@ -188,7 +188,7 @@ export class BookingPerformanceMonitor {
         // Find slowest endpoints
         const endpointTimes = new Map<string, number[]>();
         apiEvents.forEach(event => {
-            const endpoint = event.metadata?.endpoint as string;
+            const endpoint = (event.metadata as any)?.endpoint as string;
             if (endpoint && event.duration) {
                 if (!endpointTimes.has(endpoint)) {
                     endpointTimes.set(endpoint, []);

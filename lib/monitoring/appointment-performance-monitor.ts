@@ -70,7 +70,7 @@ class AppointmentPerformanceMonitor {
                 const entries = list.getEntries();
                 entries.forEach((entry) => {
                     if (entry.entryType === 'navigation') {
-                        const navEntry = entry as PerformanceNavigationTiming;
+                        const navEntry = entry as any; // PerformanceNavigationTiming
                         this.recordMetric('page-load-time', navEntry.loadEventEnd - navEntry.navigationStart);
                     }
                 });
