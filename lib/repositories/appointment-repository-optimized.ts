@@ -428,10 +428,10 @@ export class OptimizedAppointmentRepository {
                         include: OptimizedQueryBuilder.buildAppointmentInclude()
                     })
 
-                    return appointment
+                    return appointment as unknown as AppointmentWithRelations
                 })
             }
-        )
+        ) as Promise<AppointmentWithRelations>
     }
 
     /**
@@ -456,9 +456,9 @@ export class OptimizedAppointmentRepository {
                 return await prisma.appointment.findFirst({
                     where: { id, businessId }, // Utilize composite index
                     include: OptimizedQueryBuilder.buildAppointmentInclude(options)
-                })
+                }) as AppointmentWithRelations | null
             }
-        )
+        ) as Promise<AppointmentWithRelations | null>
     }
 
     /**
@@ -521,12 +521,16 @@ export class OptimizedAppointmentRepository {
                 const nextCursor = hasMore ? resultAppointments[resultAppointments.length - 1].id : undefined
 
                 return {
-                    appointments: resultAppointments,
+                    appointments: resultAppointments as unknown as AppointmentWithRelations[],
                     hasMore,
                     nextCursor
                 }
             }
-        )
+        ) as Promise<{
+            appointments: AppointmentWithRelations[]
+            hasMore: boolean
+            nextCursor?: string
+        }>
     }
 
     /**
@@ -597,12 +601,16 @@ export class OptimizedAppointmentRepository {
                 const nextCursor = hasMore ? resultAppointments[resultAppointments.length - 1].id : undefined
 
                 return {
-                    appointments: resultAppointments,
+                    appointments: resultAppointments as unknown as AppointmentWithRelations[],
                     hasMore,
                     nextCursor
                 }
             }
-        )
+        ) as Promise<{
+            appointments: AppointmentWithRelations[]
+            hasMore: boolean
+            nextCursor?: string
+        }>
     }
 
     /**
