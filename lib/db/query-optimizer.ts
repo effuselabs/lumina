@@ -434,7 +434,7 @@ export class QueryOptimizer {
      */
     exportAnalysisData(this: QueryOptimizer): {
         queries: QueryAnalysis[]
-        summary: ReturnType<typeof this.getPerformanceStats>
+        summary: ReturnType<QueryOptimizer['getPerformanceStats']>
         exportDate: Date
     } {
         return {

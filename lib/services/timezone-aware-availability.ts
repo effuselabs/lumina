@@ -113,7 +113,7 @@ export class TimeZoneAwareAvailabilityCalculator {
         for (const slot of baseResult.slots) {
             try {
                 // Convert slot times to proper DateTime objects
-                const dateStr = typeof request.date === 'string' ? request.date : request.date.toISOString().split('T')[0]
+                const dateStr: string = typeof request.date === 'string' ? request.date : (request.date as any).toISOString().split('T')[0]
                 const utcStart = this.parseSlotTime(slot.startTime, dateStr, businessTimezone)
                 const utcEnd = this.parseSlotTime(slot.endTime, dateStr, businessTimezone)
 
