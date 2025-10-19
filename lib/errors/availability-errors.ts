@@ -325,7 +325,7 @@ export class AvailabilityErrorFactory {
         const suggestedAlternatives: SuggestedAlternative[] = alternativeSlots.map(slot => ({
             type: 'time_slot',
             title: `Available at ${slot.startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`,
-            description: `${slot.duration} minutes available`,
+            description: `${(slot as any).duration} minutes available`,
             data: { timeSlot: slot }
         }))
 
@@ -362,7 +362,7 @@ export class AvailabilityErrorFactory {
     ): InsufficientDurationError {
         const suggestedAlternatives: SuggestedAlternative[] = longerSlots.map(slot => ({
             type: 'time_slot',
-            title: `${slot.duration} minutes available`,
+            title: `${(slot as any).duration} minutes available`,
             description: `${slot.startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${slot.endTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`,
             data: { timeSlot: slot }
         }))

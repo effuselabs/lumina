@@ -74,7 +74,7 @@ export class BookingAnalyticsService {
             if (!sessionMap.has(event.sessionId)) {
                 sessionMap.set(event.sessionId, []);
             }
-            sessionMap.get(event.sessionId)!.push(event);
+            sessionMap.get(event.sessionId)!.push(event as BookingAnalyticsEvent);
         });
 
         const totalSessions = sessionMap.size;
@@ -150,7 +150,7 @@ export class BookingAnalyticsService {
             .map(e => e.duration || 0);
 
         const errorEvents = performanceEvents.filter(e => e.eventType === 'error');
-        const mobileEvents = performanceEvents.filter(e => e.metadata?.isMobile === true);
+        const mobileEvents = performanceEvents.filter(e => (e.metadata as any)?.isMobile === true);
 
         // Calculate peak booking hours
         const bookingEvents = await prisma.bookingAnalyticsEvent.findMany({

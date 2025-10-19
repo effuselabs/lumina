@@ -82,7 +82,7 @@ export class ClientService {
                         lastName: existingClient.lastName,
                         email: existingClient.email ?? '',
                         phone: existingClient.phone ?? '',
-                        marketingOptIn: existingClient.emailMarketing || false,
+                        marketingOptIn: (existingClient as any).emailMarketing || false,
                     },
                 };
             }
