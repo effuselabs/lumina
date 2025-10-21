@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -176,7 +176,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -243,7 +243,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -258,12 +258,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1032x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1032x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1032x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -278,14 +278,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 &nbsp;
-const inputVariants = <span class="cstat-no" title="statement not covered" >cva(</span>
+const inputVariants = cva(
   [
     'flex w-full rounded-md border transition-all duration-200',
     'text-sm font-normal',
@@ -352,10 +352,10 @@ export interface InputProps
   'aria-invalid'?: boolean;
 }
 &nbsp;
-const Input = <span class="cstat-no" title="statement not covered" >React.forwardRef&lt;HTMLInputElement, InputProps&gt;(</span>
-<span class="fstat-no" title="function not covered" >  ({</span>
+const Input = React.forwardRef&lt;HTMLInputElement, InputProps&gt;(
+  ({
     className,
-    type = <span class="branch-0 cbranch-no" title="branch not covered" >'text',</span>
+    type = 'text',
     variant,
     size,
     error,
@@ -367,12 +367,12 @@ const Input = <span class="cstat-no" title="statement not covered" >React.forwar
     ...props
   }, ref) =&gt; {
     // Determine variant based on state
-    const computedVariant = <span class="cstat-no" title="statement not covered" >error ? 'error' : success ? 'success' : variant;</span>
+    const computedVariant = error ? 'error' : success ? 'success' : variant;
 &nbsp;
     // Generate accessible label if needed
-    const accessibleLabel = <span class="cstat-no" title="statement not covered" >ariaLabel || props.placeholder;</span>
+    const accessibleLabel = ariaLabel || props.placeholder;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return (</span>
+    return (
       &lt;input
         type={type}
         className={cn(inputVariants({ variant: computedVariant, size, className }))}
@@ -387,7 +387,7 @@ const Input = <span class="cstat-no" title="statement not covered" >React.forwar
     );
   }
 );
-<span class="cstat-no" title="statement not covered" >Input.displayName = 'Input';</span>
+Input.displayName = 'Input';
 &nbsp;
 export { Input, inputVariants };
 &nbsp;</pre></td></tr></table></pre>
@@ -397,7 +397,7 @@ export { Input, inputVariants };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-30T13:23:28.477Z
+                at 2025-10-21T19:23:43.859Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

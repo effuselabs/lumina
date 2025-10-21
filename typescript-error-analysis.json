@@ -1,5 +1,5 @@
 {
-  "totalErrors": 1223,
+  "totalErrors": 818,
   "errorsByFile": {
     "__tests__/accessibility/appointment-accessibility.test.tsx": 34,
     "__tests__/accessibility/keyboard-navigation.test.tsx": 4,
@@ -13,12 +13,11 @@
     "__tests__/components/appointments/appointment-dashboard.test.tsx": 3,
     "__tests__/components/appointments/appointment-modal.test.tsx": 28,
     "__tests__/components/appointments/bulk-operations.test.tsx": 3,
-    "__tests__/components/appointments/calendar-foundation.test.tsx": 2,
+    "__tests__/components/appointments/calendar-foundation.test.tsx": 1,
     "__tests__/components/appointments/calendar-view.test.tsx": 31,
-    "__tests__/components/appointments/day-view.test.tsx": 7,
     "__tests__/components/appointments/drag-drop-functionality.test.tsx": 1,
-    "__tests__/components/appointments/month-view.test.tsx": 42,
-    "__tests__/components/appointments/week-view.test.tsx": 38,
+    "__tests__/components/appointments/month-view.test.tsx": 1,
+    "__tests__/components/appointments/week-view.test.tsx": 1,
     "__tests__/components/booking/mobile-optimization.test.tsx": 1,
     "__tests__/components/booking/service-selection.test.tsx": 9,
     "__tests__/components/theme-provider.test.tsx": 1,
@@ -67,66 +66,19 @@
     "__tests__/performance/appointment-performance.test.ts": 1,
     "__tests__/performance/availability-performance.test.ts": 18,
     "__tests__/performance/benchmark-suite.test.ts": 16,
-    "__tests__/performance/cache-performance.test.ts": 15,
-    "__tests__/performance/concurrent-appointment-operations.test.ts": 37,
-    "__tests__/performance/concurrent-booking.test.ts": 15,
-    "__tests__/performance/database-stress-benchmarks.test.ts": 37,
-    "__tests__/performance/load-testing.test.ts": 23,
+    "__tests__/performance/cache-performance.test.ts": 12,
+    "__tests__/performance/concurrent-appointment-operations.test.ts": 31,
+    "__tests__/performance/concurrent-booking.test.ts": 9,
+    "__tests__/performance/database-stress-benchmarks.test.ts": 32,
+    "__tests__/performance/load-testing.test.ts": 13,
     "__tests__/performance/monitoring-alerting-performance.test.ts": 12,
-    "__tests__/performance/peak-booking-load-testing.test.ts": 19,
-    "__tests__/performance/stress-testing.test.ts": 26,
+    "__tests__/performance/peak-booking-load-testing.test.ts": 16,
+    "__tests__/performance/stress-testing.test.ts": 11,
     "__tests__/security/business-context-security.test.ts": 1,
     "__tests__/security/data-protection.test.ts": 11,
     "__tests__/security/secure-appointment-repository.test.ts": 4,
     "__tests__/types/auth.test.ts": 2,
     "__tests__/utils/prisma-mock-helpers.ts": 1,
-    "components/appointments/appointment-modal.tsx": 3,
-    "components/appointments/appointment-move-confirmation.tsx": 2,
-    "components/appointments/appointment-status-manager.tsx": 2,
-    "components/appointments/bulk-conflict-resolution.tsx": 1,
-    "components/appointments/bulk-operation-confirmation-dialog.tsx": 2,
-    "components/appointments/bulk-operations-demo.tsx": 5,
-    "components/appointments/bulk-operations-toolbar.tsx": 1,
-    "components/appointments/bulk-reschedule-dialog.tsx": 1,
-    "components/appointments/date-range-picker.tsx": 2,
-    "components/appointments/day-view.tsx": 11,
-    "components/appointments/drag-drop-manager.tsx": 2,
-    "components/appointments/drop-zone.tsx": 2,
-    "components/appointments/mobile-appointment-dashboard.tsx": 2,
-    "components/appointments/mobile-calendar-header.tsx": 2,
-    "components/appointments/mobile-calendar-view.tsx": 4,
-    "components/appointments/mobile-search-filters.tsx": 5,
-    "components/appointments/month-view.tsx": 6,
-    "components/appointments/multi-select-filter.tsx": 2,
-    "components/appointments/search-filters.tsx": 3,
-    "components/appointments/time-slot.tsx": 1,
-    "components/appointments/undo-notification.tsx": 1,
-    "components/appointments/week-view.tsx": 9,
-    "components/booking/analytics-provider.tsx": 4,
-    "components/booking/booking-confirmation.tsx": 1,
-    "components/booking/booking-container.tsx": 1,
-    "components/booking/booking-error-boundary.tsx": 2,
-    "components/booking/booking-error-handler.tsx": 1,
-    "components/booking/booking-interface.tsx": 2,
-    "components/booking/customer-form.tsx": 2,
-    "components/booking/optimized-booking-interface.tsx": 7,
-    "components/booking/progressive-loading.tsx": 1,
-    "components/booking/public-booking-interface.tsx": 7,
-    "components/booking/service-selection.tsx": 10,
-    "components/booking/staff-time-selection.tsx": 13,
-    "components/clients/client-list.tsx": 2,
-    "components/clients/clients-page-content.tsx": 2,
-    "components/ui/button.tsx": 1,
-    "components/ui/data-table.tsx": 5,
-    "components/ui/drawer.tsx": 1,
-    "components/ui/filter-bar.tsx": 4,
-    "components/ui/index.ts": 4,
-    "components/ui/lumina-button.tsx": 1,
-    "components/ui/radio-group.tsx": 1,
-    "components/ui/scroll-area.tsx": 1,
-    "components/ui/stat-card.tsx": 1,
-    "components/ui/testimonial-card.tsx": 1,
-    "components/ui/tooltip.tsx": 1,
     "e2e/accessibility/accessibility-regression.spec.ts": 3,
     "e2e/accessibility/keyboard-navigation.spec.ts": 2,
     "e2e/appointment-management.spec.ts": 6,
@@ -137,94 +89,46 @@
     "hooks/use-booking-performance.ts": 1,
     "hooks/use-network-resilience.ts": 3,
     "jest.setup.ts": 1,
-    "lib/analytics/booking-analytics.ts": 2,
-    "lib/auth.ts": 3,
-    "lib/cache/cache-warming.ts": 6,
-    "lib/cache/calendar-cache-coordinator.ts": 2,
-    "lib/css-optimization.ts": 3,
-    "lib/db/connection-pool.ts": 8,
-    "lib/db/query-optimizer.ts": 1,
-    "lib/errors/appointment-errors.ts": 1,
-    "lib/errors/availability-errors.ts": 2,
-    "lib/framework-integration.ts": 5,
-    "lib/jobs/data-retention-cleanup.ts": 6,
-    "lib/monitoring/appointment-performance-monitor.ts": 1,
-    "lib/monitoring/booking-error-tracker.ts": 2,
-    "lib/monitoring/booking-performance-monitor.ts": 1,
-    "lib/performance-monitoring.ts": 3,
-    "lib/repositories/appointment-repository-optimized.ts": 4,
-    "lib/repositories/appointment-repository.ts": 6,
-    "lib/repositories/secure-appointment-repository.ts": 6,
-    "lib/repositories/staff-availability-repository.ts": 2,
-    "lib/security/data-protection.ts": 8,
-    "lib/security/public-booking-sanitizer.ts": 1,
-    "lib/services/appointment-error-handler.ts": 6,
-    "lib/services/appointment-notification-service.ts": 1,
-    "lib/services/availability-cache.ts": 1,
-    "lib/services/availability-calculator.ts": 6,
-    "lib/services/backward-compatibility.ts": 4,
-    "lib/services/client-service.ts": 4,
-    "lib/services/dashboard-integration-service.ts": 16,
-    "lib/services/enhanced-error-handler.ts": 2,
-    "lib/services/multi-service-coordinator.ts": 1,
-    "lib/services/real-time-sync-service.ts": 1,
-    "lib/services/system-integration-manager.ts": 3,
-    "lib/services/timezone-aware-availability.ts": 2,
     "prisma/factories/client-communication-factory.ts": 1,
     "prisma/factories/client-factory.ts": 1,
     "prisma/factories/comprehensive-communication-factory.ts": 1,
     "prisma/factories/data-reset-manager.ts": 3,
-    "prisma/factories/staff-factory.ts": 1,
-    "types/index.ts": 6
+    "prisma/factories/staff-factory.ts": 1
   },
   "errorsByCode": {
-    "TS2307": 23,
+    "TS2307": 15,
     "TS2740": 11,
-    "TS2322": 246,
-    "TS2304": 143,
+    "TS2322": 100,
+    "TS2552": 11,
+    "TS2304": 106,
     "TS2451": 4,
     "TS2739": 1,
-    "TS2554": 30,
-    "TS2345": 141,
-    "TS2741": 45,
-    "TS2353": 72,
+    "TS2554": 29,
+    "TS2345": 107,
+    "TS2741": 37,
+    "TS2353": 60,
     "TS2820": 5,
-    "TS2367": 1,
+    "TS2305": 4,
     "TS2721": 1,
-    "TS2349": 9,
-    "TS2540": 17,
-    "TS2551": 28,
-    "TS2352": 27,
-    "TS2339": 197,
-    "TS7006": 106,
+    "TS2349": 1,
+    "TS2540": 14,
+    "TS2551": 22,
+    "TS2352": 22,
+    "TS2339": 167,
+    "TS7006": 51,
     "TS7053": 5,
     "TS2532": 1,
-    "TS2305": 5,
     "TS2559": 1,
-    "TS2724": 8,
+    "TS2724": 5,
     "TS2351": 1,
     "TS2576": 19,
-    "TS18046": 13,
     "TS2571": 2,
+    "TS18046": 5,
     "TS2344": 1,
-    "TS7030": 11,
+    "TS7030": 1,
     "TS2459": 2,
-    "TS2722": 7,
-    "TS18048": 7,
-    "TS2869": 1,
-    "TS4114": 8,
-    "TS2448": 1,
-    "TS2454": 1,
-    "TS2614": 1,
-    "TS2719": 2,
-    "TS2769": 4,
-    "TS2683": 2,
-    "TS2365": 2,
-    "TS1117": 2,
-    "TS2561": 1,
-    "TS2531": 5,
-    "TS2488": 1,
-    "TS2300": 2
+    "TS2769": 1,
+    "TS18048": 6
   },
   "topFiles": [
     {
@@ -232,153 +136,29 @@
       "errorCount": 44,
       "errors": [
         {
-          "line": 173,
+          "line": 174,
           "code": "TS2345",
           "message": "Argument of type '{ user: { id: string; email: string; }; }' is not assignable to parameter of type "
         },
         {
-          "line": 220,
+          "line": 234,
           "code": "TS2339",
           "message": "Property 'checkAvailability' does not exist on type 'MockedObject<CalendarIntegration>'."
         },
         {
-          "line": 226,
+          "line": 240,
           "code": "TS2339",
           "message": "Property 'detectConflicts' does not exist on type 'MockedObject<CalendarIntegration>'."
         },
         {
-          "line": 234,
+          "line": 248,
           "code": "TS2322",
-          "message": "Type '{ status: \"SCHEDULED\"; totalDuration: number; totalPrice: number; services: { serviceId: strin"
+          "message": "Type '{ id: string; businessId: string; clientId: string; staffId: string; startTime: Date; endTime:"
         },
         {
-          "line": 258,
+          "line": 272,
           "code": "TS2345",
-          "message": "Argument of type '{ status: \"SCHEDULED\"; totalDuration: number; totalPrice: number; services: { serv"
-        }
-      ]
-    },
-    {
-      "file": "__tests__/components/appointments/month-view.test.tsx",
-      "errorCount": 42,
-      "errors": [
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'number' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        },
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'null' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        },
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'null' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        },
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'boolean' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'"
-        },
-        {
-          "line": 29,
-          "code": "TS2322",
-          "message": "Type 'number' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        }
-      ]
-    },
-    {
-      "file": "__tests__/components/appointments/week-view.test.tsx",
-      "errorCount": 38,
-      "errors": [
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'number' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        },
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'string' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        },
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'string' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        },
-        {
-          "line": 28,
-          "code": "TS2322",
-          "message": "Type 'boolean' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'"
-        },
-        {
-          "line": 29,
-          "code": "TS2322",
-          "message": "Type 'number' is not assignable to type '{ isOpen: boolean; openTime: string; closeTime: string; }'."
-        }
-      ]
-    },
-    {
-      "file": "__tests__/performance/concurrent-appointment-operations.test.ts",
-      "errorCount": 37,
-      "errors": [
-        {
-          "line": 14,
-          "code": "TS2724",
-          "message": "'\"@/lib/cache/appointment-cache\"' has no exported member named 'AppointmentCache'. Did you mean 'app"
-        },
-        {
-          "line": 145,
-          "code": "TS2339",
-          "message": "Property 'update' does not exist on type 'Mocked<OptimizedAppointmentRepository>'."
-        },
-        {
-          "line": 145,
-          "code": "TS7006",
-          "message": "Parameter 'id' implicitly has an 'any' type."
-        },
-        {
-          "line": 145,
-          "code": "TS7006",
-          "message": "Parameter 'businessId' implicitly has an 'any' type."
-        },
-        {
-          "line": 145,
-          "code": "TS7006",
-          "message": "Parameter 'updates' implicitly has an 'any' type."
-        }
-      ]
-    },
-    {
-      "file": "__tests__/performance/database-stress-benchmarks.test.ts",
-      "errorCount": 37,
-      "errors": [
-        {
-          "line": 121,
-          "code": "TS2345",
-          "message": "Argument of type '(id: string, businessId: string) => Promise<{ id: string; businessId: string; stat"
-        },
-        {
-          "line": 132,
-          "code": "TS2345",
-          "message": "Argument of type '(businessId: string, options: { status?: AppointmentStatus | AppointmentStatus[] |"
-        },
-        {
-          "line": 134,
-          "code": "TS2339",
-          "message": "Property 'offset' does not exist on type '{ status?: AppointmentStatus | AppointmentStatus[] | undef"
-        },
-        {
-          "line": 144,
-          "code": "TS2339",
-          "message": "Property 'offset' does not exist on type '{ status?: AppointmentStatus | AppointmentStatus[] | undef"
-        },
-        {
-          "line": 149,
-          "code": "TS2345",
-          "message": "Argument of type '(staffId: string, businessId: string, dateRange: { startDate: Date; endDate: Date;"
+          "message": "Argument of type '{ id: string; businessId: string; clientId: string; staffId: string; startTime: Da"
         }
       ]
     },
@@ -389,7 +169,7 @@
         {
           "line": 144,
           "code": "TS2353",
-          "message": "Object literal may only specify known properties, and 'name' does not exist in type 'Partial<{ id: s"
+          "message": "Object literal may only specify known properties, and 'name' does not exist in type 'Partial<{ title"
         },
         {
           "line": 169,
@@ -445,6 +225,37 @@
       ]
     },
     {
+      "file": "__tests__/performance/database-stress-benchmarks.test.ts",
+      "errorCount": 32,
+      "errors": [
+        {
+          "line": 121,
+          "code": "TS2345",
+          "message": "Argument of type '(id: string, businessId: string) => Promise<{ id: string; businessId: string; stat"
+        },
+        {
+          "line": 132,
+          "code": "TS2345",
+          "message": "Argument of type '(businessId: string, options: { status?: AppointmentStatus | AppointmentStatus[] |"
+        },
+        {
+          "line": 134,
+          "code": "TS2339",
+          "message": "Property 'offset' does not exist on type '{ status?: AppointmentStatus | AppointmentStatus[] | undef"
+        },
+        {
+          "line": 144,
+          "code": "TS2339",
+          "message": "Property 'offset' does not exist on type '{ status?: AppointmentStatus | AppointmentStatus[] | undef"
+        },
+        {
+          "line": 149,
+          "code": "TS2345",
+          "message": "Argument of type '(staffId: string, businessId: string, dateRange: { startDate: Date; endDate: Date;"
+        }
+      ]
+    },
+    {
       "file": "__tests__/components/appointments/calendar-view.test.tsx",
       "errorCount": 31,
       "errors": [
@@ -472,6 +283,37 @@
           "line": 27,
           "code": "TS2741",
           "message": "Property 'businessHours' is missing in type '{ view: \"day\"; currentDate: Date; appointments: any[]; "
+        }
+      ]
+    },
+    {
+      "file": "__tests__/performance/concurrent-appointment-operations.test.ts",
+      "errorCount": 31,
+      "errors": [
+        {
+          "line": 14,
+          "code": "TS2724",
+          "message": "'\"@/lib/cache/appointment-cache\"' has no exported member named 'AppointmentCache'. Did you mean 'app"
+        },
+        {
+          "line": 145,
+          "code": "TS2339",
+          "message": "Property 'update' does not exist on type 'Mocked<OptimizedAppointmentRepository>'."
+        },
+        {
+          "line": 145,
+          "code": "TS7006",
+          "message": "Parameter 'id' implicitly has an 'any' type."
+        },
+        {
+          "line": 145,
+          "code": "TS7006",
+          "message": "Parameter 'businessId' implicitly has an 'any' type."
+        },
+        {
+          "line": 145,
+          "code": "TS7006",
+          "message": "Parameter 'updates' implicitly has an 'any' type."
         }
       ]
     },
@@ -507,37 +349,6 @@
       ]
     },
     {
-      "file": "__tests__/performance/stress-testing.test.ts",
-      "errorCount": 26,
-      "errors": [
-        {
-          "line": 186,
-          "code": "TS2339",
-          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
-        },
-        {
-          "line": 186,
-          "code": "TS7006",
-          "message": "Parameter 'error' implicitly has an 'any' type."
-        },
-        {
-          "line": 199,
-          "code": "TS7006",
-          "message": "Parameter 'result' implicitly has an 'any' type."
-        },
-        {
-          "line": 200,
-          "code": "TS7006",
-          "message": "Parameter 'result' implicitly has an 'any' type."
-        },
-        {
-          "line": 236,
-          "code": "TS2576",
-          "message": "Property 'detectConflicts' does not exist on type 'ConflictDetectionEngine'. Did you mean to access "
-        }
-      ]
-    },
-    {
       "file": "__tests__/cache/appointment-cache.test.ts",
       "errorCount": 23,
       "errors": [
@@ -553,8 +364,8 @@
         },
         {
           "line": 109,
-          "code": "TS2304",
-          "message": "Cannot find name 'AppointmentCacheManager'."
+          "code": "TS2552",
+          "message": "Cannot find name 'AppointmentCacheManager'. Did you mean 'appointmentCache'?"
         },
         {
           "line": 128,
@@ -569,44 +380,13 @@
       ]
     },
     {
-      "file": "__tests__/performance/load-testing.test.ts",
-      "errorCount": 23,
-      "errors": [
-        {
-          "line": 162,
-          "code": "TS2339",
-          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
-        },
-        {
-          "line": 162,
-          "code": "TS7006",
-          "message": "Parameter 'error' implicitly has an 'any' type."
-        },
-        {
-          "line": 176,
-          "code": "TS7006",
-          "message": "Parameter 'result' implicitly has an 'any' type."
-        },
-        {
-          "line": 177,
-          "code": "TS7006",
-          "message": "Parameter 'result' implicitly has an 'any' type."
-        },
-        {
-          "line": 208,
-          "code": "TS2576",
-          "message": "Property 'detectConflicts' does not exist on type 'ConflictDetectionEngine'. Did you mean to access "
-        }
-      ]
-    },
-    {
       "file": "__tests__/integration/api/availability-staff.test.ts",
       "errorCount": 20,
       "errors": [
         {
           "line": 56,
           "code": "TS2353",
-          "message": "Object literal may only specify known properties, and 'name' does not exist in type '{ id: string; c"
+          "message": "Object literal may only specify known properties, and 'name' does not exist in type '{ title: string"
         },
         {
           "line": 87,
@@ -616,7 +396,7 @@
         {
           "line": 111,
           "code": "TS2353",
-          "message": "Object literal may only specify known properties, and 'name' does not exist in type '{ id: string; c"
+          "message": "Object literal may only specify known properties, and 'name' does not exist in type '{ title: string"
         },
         {
           "line": 124,
@@ -755,37 +535,6 @@
       ]
     },
     {
-      "file": "__tests__/performance/peak-booking-load-testing.test.ts",
-      "errorCount": 19,
-      "errors": [
-        {
-          "line": 13,
-          "code": "TS2724",
-          "message": "'\"@/lib/cache/appointment-cache\"' has no exported member named 'AppointmentCache'. Did you mean 'app"
-        },
-        {
-          "line": 33,
-          "code": "TS2344",
-          "message": "Type 'typeof CalendarCacheCoordinator' does not satisfy the constraint 'Constructable'."
-        },
-        {
-          "line": 135,
-          "code": "TS2345",
-          "message": "Argument of type '(businessId: string, options: { status?: AppointmentStatus | AppointmentStatus[] |"
-        },
-        {
-          "line": 149,
-          "code": "TS2345",
-          "message": "Argument of type '() => Promise<{ id: string; }[]>' is not assignable to parameter of type '(staffId"
-        },
-        {
-          "line": 170,
-          "code": "TS2339",
-          "message": "Property 'checkAvailability' does not exist on type 'Mocked<CalendarIntegration>'."
-        }
-      ]
-    },
-    {
       "file": "__tests__/performance/availability-performance.test.ts",
       "errorCount": 18,
       "errors": [
@@ -844,6 +593,161 @@
           "line": 177,
           "code": "TS2345",
           "message": "Argument of type 'null' is not assignable to parameter of type 'never'."
+        }
+      ]
+    },
+    {
+      "file": "__tests__/lib/services/availability-calculator.test.ts",
+      "errorCount": 17,
+      "errors": [
+        {
+          "line": 112,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'typeof AvailabilityCalculator'."
+        },
+        {
+          "line": 138,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'typeof AvailabilityCalculator'."
+        },
+        {
+          "line": 156,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'typeof AvailabilityCalculator'."
+        },
+        {
+          "line": 209,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'typeof AvailabilityCalculator'."
+        },
+        {
+          "line": 265,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'typeof AvailabilityCalculator'."
+        }
+      ]
+    },
+    {
+      "file": "__tests__/accessibility/public-booking-a11y.test.tsx",
+      "errorCount": 16,
+      "errors": [
+        {
+          "line": 13,
+          "code": "TS2307",
+          "message": "Cannot find module 'jest-axe' or its corresponding type declarations."
+        },
+        {
+          "line": 64,
+          "code": "TS2322",
+          "message": "Type '{ services: { id: string; name: string; description: string; duration: number; price: number; "
+        },
+        {
+          "line": 77,
+          "code": "TS2322",
+          "message": "Type '{ services: { id: string; name: string; description: string; duration: number; price: number; "
+        },
+        {
+          "line": 109,
+          "code": "TS2322",
+          "message": "Type '{ services: { id: string; name: string; description: string; duration: number; price: number; "
+        },
+        {
+          "line": 142,
+          "code": "TS2739",
+          "message": "Type '{ id: string; name: string; description: string; duration: number; price: number; category: st"
+        }
+      ]
+    },
+    {
+      "file": "__tests__/analytics/booking-analytics.test.ts",
+      "errorCount": 16,
+      "errors": [
+        {
+          "line": 70,
+          "code": "TS2554",
+          "message": "Expected 1 arguments, but got 0."
+        },
+        {
+          "line": 72,
+          "code": "TS2345",
+          "message": "Argument of type 'Error' is not assignable to parameter of type 'never'."
+        },
+        {
+          "line": 126,
+          "code": "TS2345",
+          "message": "Argument of type '{ sessionId: string; eventType: string; timestamp: Date; }[]' is not assignable to"
+        },
+        {
+          "line": 148,
+          "code": "TS2345",
+          "message": "Argument of type 'never[]' is not assignable to parameter of type 'never'."
+        },
+        {
+          "line": 212,
+          "code": "TS2345",
+          "message": "Argument of type '({ eventType: string; duration: number; metadata: { isMobile?: undefined; }; } | {"
+        }
+      ]
+    },
+    {
+      "file": "__tests__/performance/benchmark-suite.test.ts",
+      "errorCount": 16,
+      "errors": [
+        {
+          "line": 136,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
+        },
+        {
+          "line": 166,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
+        },
+        {
+          "line": 192,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
+        },
+        {
+          "line": 217,
+          "code": "TS2576",
+          "message": "Property 'detectConflicts' does not exist on type 'ConflictDetectionEngine'. Did you mean to access "
+        },
+        {
+          "line": 242,
+          "code": "TS2576",
+          "message": "Property 'validateAppointmentSlot' does not exist on type 'ConflictDetectionEngine'. Did you mean to"
+        }
+      ]
+    },
+    {
+      "file": "__tests__/performance/peak-booking-load-testing.test.ts",
+      "errorCount": 16,
+      "errors": [
+        {
+          "line": 13,
+          "code": "TS2724",
+          "message": "'\"@/lib/cache/appointment-cache\"' has no exported member named 'AppointmentCache'. Did you mean 'app"
+        },
+        {
+          "line": 33,
+          "code": "TS2344",
+          "message": "Type 'typeof CalendarCacheCoordinator' does not satisfy the constraint 'Constructable'."
+        },
+        {
+          "line": 135,
+          "code": "TS2345",
+          "message": "Argument of type '(businessId: string, options: { status?: AppointmentStatus | AppointmentStatus[] |"
+        },
+        {
+          "line": 149,
+          "code": "TS2345",
+          "message": "Argument of type '() => Promise<{ id: string; }[]>' is not assignable to parameter of type '(staffId"
+        },
+        {
+          "line": 170,
+          "code": "TS2339",
+          "message": "Property 'checkAvailability' does not exist on type 'Mocked<CalendarIntegration>'."
         }
       ]
     }

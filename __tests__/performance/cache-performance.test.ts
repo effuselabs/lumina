@@ -590,7 +590,7 @@ describe('Cache Performance and Invalidation Tests', () => {
 
             const results = await Promise.all(
                 concurrentOperations.map(operation =>
-                    operation.catch(error => ({ error: error.message }))
+                    operation.catch((error: any) => ({ error: error.message }))
                 )
             )
 
@@ -600,8 +600,8 @@ describe('Cache Performance and Invalidation Tests', () => {
             // Should handle concurrent operations efficiently
             expect(totalExecutionTime).toBeLessThan(1000)
 
-            const successfulOperations = results.filter(result => !('error' in result))
-            const failedOperations = results.filter(result => 'error' in result)
+            const successfulOperations = results.filter((result: any) => !('error' in result))
+            const failedOperations = results.filter((result: any) => 'error' in result)
 
             // Should maintain high success rate
             expect(successfulOperations.length).toBeGreaterThan(12) // 80% success rate

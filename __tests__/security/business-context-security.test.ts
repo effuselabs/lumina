@@ -549,7 +549,7 @@ describe('BusinessContextSecurityService', () => {
 
             const results = await Promise.all(promises)
 
-            results.forEach(result => {
+            results.forEach((result: any) => {
                 expect(result.isValid).toBe(true)
             })
         })

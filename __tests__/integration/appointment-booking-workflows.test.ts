@@ -28,6 +28,7 @@ import { AppointmentStatus } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { performance } from 'perf_hooks'
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
+import { createTestAppointment } from '@/__tests__/utils/test-data-factories'
 
 // Mock dependencies
 jest.mock('@/auth')
@@ -203,18 +204,31 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 }]
             }
 
-            const mockCreatedAppointment = {
+            const mockCreatedAppointment = createTestAppointment({
                 id: 'appointment-123',
-                ...appointmentData,
+                businessId: appointmentData.businessId,
+                staffId: appointmentData.staffId,
+                clientId: appointmentData.clientId,
+                startTime: new Date(appointmentData.startTime),
+                endTime: new Date(appointmentData.endTime),
                 status: AppointmentStatus.SCHEDULED,
                 totalDuration: 60,
                 totalPrice: 50,
-                services: appointmentData.services,
+                services: appointmentData.services.map(s => ({
+                    id: `service-${s.serviceId}`,
+                    appointmentId: 'appointment-123',
+                    serviceId: s.serviceId,
+                    serviceName: s.serviceName,
+                    price: s.price,
+                    duration: s.duration,
+                    serviceOrder: s.serviceOrder,
+                    startOffset: s.startOffset,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                })),
                 client: testData.client,
-                staff: testData.staff[0],
-                createdAt: new Date(),
-                updatedAt: new Date()
-            }
+                staff: testData.staff[0]
+            })
 
             // Mock calendar integration for creation
             calendarIntegrationInstance.checkAvailability.mockResolvedValue({

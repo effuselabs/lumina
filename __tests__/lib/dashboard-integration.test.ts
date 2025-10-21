@@ -614,7 +614,7 @@ describe('Integration Performance Tests', () => {
         expect(results).toHaveLength(concurrentOperations)
 
         // All operations should complete (either fulfilled or rejected)
-        results.forEach(result => {
+        results.forEach((result: any) => {
             expect(['fulfilled', 'rejected'].includes(result.status)).toBe(true)
         })
     })

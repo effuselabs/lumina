@@ -414,14 +414,14 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(operations.map(op => op().catch(error => ({ error: error.message }))))
+            const results = await Promise.all(operations.map(op => op().catch((error: any) => ({ error: error.message }))))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(STRESS_THRESHOLDS.HIGH_CONCURRENCY)
 
-            const successfulOperations = results.filter(result => !('error' in result))
-            const failedOperations = results.filter(result => 'error' in result)
+            const successfulOperations = results.filter((result: any) => !('error' in result))
+            const failedOperations = results.filter((result: any) => 'error' in result)
 
             expect(successfulOperations.length).toBeGreaterThan(concurrentOperations * 0.95) // 95% success rate
             expect(failedOperations.length).toBeLessThan(concurrentOperations * 0.05)
@@ -491,11 +491,11 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(writeOperations.map(op => op().catch(error => ({ error: error.message }))))
+            const results = await Promise.all(writeOperations.map(op => op().catch((error: any) => ({ error: error.message }))))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
-            const successfulWrites = results.filter(result => !('error' in result))
+            const successfulWrites = results.filter((result: any) => !('error' in result))
             const averageTime = totalTime / concurrentWrites
 
             expect(averageTime).toBeLessThan(PERFORMANCE_BENCHMARKS.CONCURRENT_WRITES)
@@ -603,7 +603,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
 
             expect(totalTime).toBeLessThan(STRESS_THRESHOLDS.CONNECTION_EXHAUSTION)
 
-            const successfulOperations = results.filter(result => !('error' in result))
+            const successfulOperations = results.filter((result: any) => !('error' in result))
             const recoveryRate = successfulOperations.length / timeoutRecoveryOperations
 
             expect(recoveryRate).toBeGreaterThan(0.8) // 80% recovery rate
