@@ -51,9 +51,8 @@ export function MobileCalendarView({
 
     // Attach gestures to calendar container
     const calendarRefCallback = (element: HTMLDivElement | null) => {
-        calendarRef.current = element;
         if (element && isTouchDevice && onNavigate) {
-            return attachToElement(element);
+            attachToElement(element);
         }
     };
 
@@ -82,7 +81,9 @@ export function MobileCalendarView({
         if (isMobile && 'vibrate' in navigator) {
             navigator.vibrate(50);
         }
-        onAppointmentClick(appointment);
+        if (onAppointmentClick) {
+            onAppointmentClick(appointment);
+        }
     };
 
     // Enhanced time slot click handler for mobile
@@ -91,7 +92,9 @@ export function MobileCalendarView({
         if (isMobile && 'vibrate' in navigator) {
             navigator.vibrate(30);
         }
-        onTimeSlotClick(slot);
+        if (onTimeSlotClick) {
+            onTimeSlotClick(slot);
+        }
     };
 
     const renderView = () => {

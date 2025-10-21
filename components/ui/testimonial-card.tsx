@@ -91,6 +91,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
                 }, 800);
                 return () => clearTimeout(timer);
             }
+            return undefined;
         }, [isIntersecting, animated]);
 
         // Combine refs

@@ -41,7 +41,7 @@ export function TimeSlot({
     };
 
     const handleClick = () => {
-        onClick(slot);
+        onClick?.(slot);
     };
 
     const hasConflicts = slot.conflicts.length > 0;

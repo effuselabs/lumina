@@ -27,12 +27,13 @@ interface LuminaButtonProps
  */
 const LuminaButton = forwardRef<HTMLButtonElement, LuminaButtonProps>(
   (
-    { variant = 'primary', size = 'md', children, className, ...props },
+    { variant = 'primary', size = 'md', children, className, asChild, ...props },
     ref
   ) => {
     return (
       <Button
         ref={ref}
+        asChild={asChild}
         className={cn(
           // Base styles
           'font-semibold transition-all duration-200 ease-in-out',
@@ -55,7 +56,7 @@ const LuminaButton = forwardRef<HTMLButtonElement, LuminaButtonProps>(
           },
           className
         )}
-        {...props}
+        {...(props as any)}
       >
         {children}
       </Button>

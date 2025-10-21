@@ -117,7 +117,7 @@ export function MobileAppointmentDashboard({
         setIsModalOpen(true);
     }, []);
 
-    const handleAppointmentDrop = useCallback((appointmentId: string, newSlot: any) => {
+    const handleAppointmentDrop = useCallback(async (appointmentId: string, newSlot: unknown) => {
         console.log('Appointment dropped:', appointmentId, newSlot);
         // Handle appointment rescheduling
     }, []);
@@ -184,7 +184,7 @@ export function MobileAppointmentDashboard({
                     currentDate={currentDate}
                     appointments={appointments}
                     staffMembers={staffMembers}
-                    businessHours={businessHours}
+                    businessHours={businessHours as any}
                     onAppointmentClick={handleAppointmentClick}
                     onAppointmentDrop={handleAppointmentDrop}
                     onTimeSlotClick={handleTimeSlotClick}

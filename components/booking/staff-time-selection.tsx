@@ -10,6 +10,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useNetworkResilience } from '@/hooks/use-network-resilience';
+import { PublicBookingError } from '@/lib/errors/public-booking-error';
+import { AlternativeSlotsService } from '@/lib/services/alternative-slots-service';
 import { Service } from '@/types/service-selection';
 import {
   Calendar,
@@ -22,6 +25,8 @@ import {
   Users
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { BookingErrorHandler } from './booking-error-handler';
+import { BookingLoadingState, NetworkStatusIndicator } from './booking-loading-states';
 
 export interface TimeSlot {
   startTime: Date;
@@ -154,7 +159,7 @@ export function StaffTimeSelection({
         `/api/public/booking/${businessId}/staff?serviceIds=${serviceIds.join(',')}`,
         {},
         `staff-${businessId}-${serviceIds.join('-')}`
-      );
+      ) as { staff: StaffMember[] };
 
       setQualifiedStaff(data.staff || []);
     } catch (_err) {
@@ -208,7 +213,7 @@ export function StaffTimeSelection({
             staffId: selectedStaffId !== 'any' ? selectedStaffId : undefined,
             maxAlternatives: 6,
           });
-          setAlternativeSlots(alternatives.alternatives);
+          setAlternativeSlots(alternatives.alternatives as TimeSlot[]);
         } catch (altError) {
           console.error('Failed to fetch alternative slots:', altError);
         }
@@ -411,7 +416,7 @@ export function StaffTimeSelection({
                 <div key={index} className="aspect-square">
                   {date && (
                     <Button
-                      variant={isDateSelected(date) ? 'default' : 'ghost'}
+                      variant={isDateSelected(date) ? 'primary' : 'ghost'}
                       size="sm"
                       className={`h-full w-full p-0 text-sm ${!isDateSelectable(date)
                         ? 'cursor-not-allowed opacity-50'
@@ -471,7 +476,7 @@ export function StaffTimeSelection({
                 <label className="text-sm font-medium">Staff Preference</label>
                 <div className="flex flex-wrap gap-2">
                   <Button
-                    variant={selectedStaffId === 'any' ? 'default' : 'outline'}
+                    variant={selectedStaffId === 'any' ? 'primary' : 'outline'}
                     size="sm"
                     onClick={() => setSelectedStaffId('any')}
                   >
@@ -481,7 +486,7 @@ export function StaffTimeSelection({
                     <Button
                       key={staff.id}
                       variant={
-                        selectedStaffId === staff.id ? 'default' : 'outline'
+                        selectedStaffId === staff.id ? 'primary' : 'outline'
                       }
                       size="sm"
                       onClick={() => setSelectedStaffId(staff.id)}
@@ -517,7 +522,7 @@ export function StaffTimeSelection({
                   onAlternativeSlotSelect={(slot) => {
                     setSelectedDate(slot.startTime);
                     setSelectedStaffId(slot.staffId);
-                    handleSlotSelect(slot);
+                    handleSlotSelect(slot as unknown as TimeSlot);
                   }}
                   showAlternatives={true}
                 />
@@ -572,7 +577,7 @@ export function StaffTimeSelection({
                                   selectedSlot.startTime.getTime() ===
                                   slot.startTime.getTime() &&
                                   selectedSlot.staffId === slot.staffId
-                                  ? 'default'
+                                  ? 'primary'
                                   : 'outline'
                               }
                               size="sm"

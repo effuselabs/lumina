@@ -34,7 +34,7 @@ export function DayView({
     // Generate hourly time slots for the day
     const generateTimeSlots = () => {
         const dayOfWeek = currentDate.getDay();
-        const todayHours = businessHours.find(h => h.dayOfWeek === dayOfWeek);
+        const todayHours = businessHours.find((h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek);
 
         if (!todayHours || todayHours.isClosed || !todayHours.openTime || !todayHours.closeTime) {
             return [];
@@ -59,6 +59,7 @@ export function DayView({
             slotEnd.setMinutes(current.getMinutes() + 30);
 
             slots.push({
+                id: `slot-${current.getTime()}`,
                 startTime: new Date(current),
                 endTime: new Date(slotEnd),
                 staffId: '', // Will be set per staff column
@@ -126,7 +127,7 @@ export function DayView({
     // Check if time slot is within business hours
     const isWithinBusinessHours = (slot: CalendarSlot): boolean => {
         const dayOfWeek = currentDate.getDay();
-        const todayHours = businessHours.find(h => h.dayOfWeek === dayOfWeek);
+        const todayHours = businessHours.find((h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek);
 
         if (!todayHours || todayHours.isClosed) return false;
 
@@ -144,17 +145,15 @@ export function DayView({
 
     // Handle time slot click
     const handleTimeSlotClick = (slot: CalendarSlot, staffId: string) => {
-        const staffSlot = {
-            ...slot,
-            staffId,
-        };
-        onTimeSlotClick(staffSlot);
+        if (onTimeSlotClick) {
+            onTimeSlotClick(slot.startTime, staffId);
+        }
     };
 
     // Handle appointment drag and drop
-    const handleAppointmentDrop = (appointmentId: string, newSlot: CalendarSlot) => {
+    const handleAppointmentDrop = async (appointmentId: string, newSlot: CalendarSlot) => {
         if (onAppointmentDrop) {
-            onAppointmentDrop(appointmentId, newSlot);
+            await onAppointmentDrop(appointmentId, newSlot);
         }
     };
 
@@ -259,6 +258,7 @@ export function DayView({
 
                                 const staffSlot: CalendarSlot = {
                                     ...slot,
+                                    id: `${staff.id}-${slot.startTime.getTime()}`,
                                     staffId: staff.id,
                                     appointments: staffAppointments,
                                     conflicts,
@@ -350,7 +350,7 @@ export function DayView({
                 if (!isToday) return null;
 
                 const dayOfWeek = now.getDay();
-                const todayHours = businessHours.find(h => h.dayOfWeek === dayOfWeek);
+                const todayHours = businessHours.find((h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek);
 
                 if (!todayHours || todayHours.isClosed) return null;
 

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ReactNode, useEffect, useState } from 'react';
+import { NetworkStatusIndicator } from './booking-loading-states';
 import { BookingProgress, BookingStep } from './booking-progress';
 
 interface BookingContainerProps {

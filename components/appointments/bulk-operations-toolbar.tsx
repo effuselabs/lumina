@@ -55,7 +55,7 @@ export function BulkOperationsToolbar({
     const [showCancelDialog, setShowCancelDialog] = useState(false);
     const [showStatusDialog, setShowStatusDialog] = useState(false);
     const [showRescheduleDialog, setShowRescheduleDialog] = useState(false);
-    const [selectedStatus, setSelectedStatus] = useState<AppointmentStatus>('confirmed');
+    const [selectedStatus, setSelectedStatus] = useState<AppointmentStatus>(AppointmentStatus.CONFIRMED);
 
     const selectedCount = selectedAppointments.size;
     const allSelected = selectedCount === appointments.length && appointments.length > 0;

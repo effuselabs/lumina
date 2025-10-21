@@ -77,8 +77,8 @@ export function DataTable<T extends Record<string, unknown>>({
   // Sort data
   const sortedData = sortConfig
     ? [...filteredData].sort((a, b) => {
-        const aValue = a[sortConfig.key];
-        const bValue = b[sortConfig.key];
+        const aValue = a[sortConfig.key] as string | number;
+        const bValue = b[sortConfig.key] as string | number;
 
         if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
@@ -104,7 +104,7 @@ export function DataTable<T extends Record<string, unknown>>({
 
   const getValue = (row: T, key: string) => {
     return key.includes('.')
-      ? key.split('.').reduce((obj, k) => obj?.[k], row)
+      ? key.split('.').reduce((obj: any, k: string) => obj?.[k], row as any)
       : row[key];
   };
 

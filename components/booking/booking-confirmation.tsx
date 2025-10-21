@@ -69,7 +69,7 @@ export function BookingConfirmation({ booking, onNewBooking }: BookingConfirmati
 
     return (
         <div className="max-w-2xl mx-auto space-y-8">
-            <BookingProgress currentStep={4} steps={defaultBookingSteps} />
+            <BookingProgress currentStep="details" steps={defaultBookingSteps} completedSteps={['service', 'staff', 'datetime']} />
             {/* Success Header */}
             <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100/50 shadow-sm">
                 <CardContent className="pt-6">

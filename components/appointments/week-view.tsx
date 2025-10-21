@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarSlot, CalendarViewProps, DashboardAppointment } from '@/types/dashboard-appointments';
+import { BusinessHoursEntry, CalendarSlot, CalendarViewProps, DashboardAppointment } from '@/types/dashboard-appointments';
 import { cn } from '../../lib/utils';
 import { AppointmentBlock } from './appointment-block';
 import { useDragDropState } from './drag-drop-context';
@@ -44,7 +44,7 @@ export function WeekView({
     // Generate time slots for a specific day
     const generateDaySlots = (date: Date) => {
         const dayOfWeek = date.getDay();
-        const dayHours = businessHours.find(h => h.dayOfWeek === dayOfWeek);
+        const dayHours = businessHours.find((h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek);
 
         if (!dayHours || dayHours.isClosed || !dayHours.openTime || !dayHours.closeTime) {
             return [];
@@ -73,6 +73,7 @@ export function WeekView({
             });
 
             slots.push({
+                id: `slot-${date.toISOString()}-${current.getTime()}`,
                 startTime: new Date(current),
                 endTime: new Date(slotEnd),
                 staffId: '', // Multi-staff view
@@ -95,7 +96,7 @@ export function WeekView({
         let earliestHour = 24;
         let latestHour = 0;
 
-        businessHours.forEach(hours => {
+        businessHours.forEach((hours: BusinessHoursEntry) => {
             if (!hours.isClosed && hours.openTime && hours.closeTime) {
                 const openHour = parseInt(hours.openTime.split(':')[0]);
                 const closeHour = parseInt(hours.closeTime.split(':')[0]);
@@ -250,7 +251,7 @@ export function WeekView({
                                             'bg-lumina-radiant/5': hasAppointments,
                                         }
                                     )}
-                                    onClick={() => onTimeSlotClick(enhancedSlot)}
+                                    onClick={() => onTimeSlotClick?.(enhancedSlot.startTime, enhancedSlot.staffId)}
                                     onDrop={(e) => {
                                         e.preventDefault();
                                         const appointmentId = e.dataTransfer.getData('text/plain');
@@ -307,7 +308,7 @@ export function WeekView({
                 if (todayIndex === -1) return null;
 
                 const dayOfWeek = now.getDay();
-                const todayHours = businessHours.find(h => h.dayOfWeek === dayOfWeek);
+                const todayHours = businessHours.find((h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek);
 
                 if (!todayHours || todayHours.isClosed) return null;
 

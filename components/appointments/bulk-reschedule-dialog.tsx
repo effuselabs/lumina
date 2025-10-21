@@ -242,7 +242,7 @@ export function BulkRescheduleDialog({
                                                     Staff: {appointment.staff.displayName}
                                                 </div>
                                                 <div>
-                                                    Services: {appointment.services.map(s => s.service.name).join(', ')}
+                                                    Services: {appointment.services.map(s => s.name).join(', ')}
                                                 </div>
                                             </div>
                                         </div>

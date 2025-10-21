@@ -83,7 +83,6 @@ export function SearchFilters({
         { value: AppointmentStatus.COMPLETED, label: 'Completed' },
         { value: AppointmentStatus.CANCELLED, label: 'Cancelled' },
         { value: AppointmentStatus.NO_SHOW, label: 'No Show' },
-        { value: AppointmentStatus.RESCHEDULED, label: 'Rescheduled' },
     ], []);
 
     // Staff options
@@ -220,7 +219,7 @@ export function SearchFilters({
                                 <MultiSelectFilter
                                     options={statusOptions}
                                     value={filters.status || []}
-                                    onChange={(status) => updateFilters({ status })}
+                                    onChange={(status) => updateFilters({ status: status as AppointmentStatus[] })}
                                     placeholder="Select status..."
                                 />
                             </div>

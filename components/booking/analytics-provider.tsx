@@ -10,7 +10,7 @@ interface AnalyticsContextType {
     trackFormSubmitted: (formData: Record<string, any>) => Promise<void>;
     trackBookingCompleted: (appointmentId: string, totalPrice: number) => Promise<void>;
     trackBookingAbandoned: (lastStep: string, reason?: string) => Promise<void>;
-    trackError: (error: Error, errorType?: string, severity?: string, context?: Record<string, any>) => Promise<void>;
+    trackError: (error: Error, errorType?: any, severity?: any, context?: Record<string, any>) => Promise<void>;
     trackPageLoad: (loadTime: number) => Promise<void>;
     trackAPICall: (endpoint: string, method: string, duration: number, statusCode: number) => Promise<void>;
     sessionId: string;
@@ -51,11 +51,13 @@ export function AnalyticsProvider({
 
             if (document.readyState === 'complete') {
                 handleLoad();
+                return undefined;
             } else {
                 window.addEventListener('load', handleLoad);
                 return () => window.removeEventListener('load', handleLoad);
             }
         }
+        return undefined;
     }, [analytics]);
 
     // Track page visibility changes (for abandonment tracking)
@@ -74,6 +76,7 @@ export function AnalyticsProvider({
             document.addEventListener('visibilitychange', handleVisibilityChange);
             return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
         }
+        return undefined;
     }, [analytics]);
 
     // Track unload events (for abandonment tracking)
@@ -95,6 +98,7 @@ export function AnalyticsProvider({
             window.addEventListener('beforeunload', handleBeforeUnload);
             return () => window.removeEventListener('beforeunload', handleBeforeUnload);
         }
+        return undefined;
     }, [businessId, analytics.sessionId]);
 
     const contextValue: AnalyticsContextType = {
@@ -104,7 +108,7 @@ export function AnalyticsProvider({
         trackFormSubmitted: analytics.trackFormSubmitted,
         trackBookingCompleted: analytics.trackBookingCompleted,
         trackBookingAbandoned: analytics.trackBookingAbandoned,
-        trackError: analytics.trackSystemError,
+        trackError: analytics.trackError,
         trackPageLoad: analytics.trackPageLoad,
         trackAPICall: analytics.trackAPICall,
         sessionId: analytics.sessionId,

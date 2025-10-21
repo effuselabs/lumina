@@ -115,7 +115,7 @@ export function DropZone({
     const feedbackStyles = showFeedback ? getDragFeedbackStyles(
         validation?.isValid ?? false,
         isDragOver,
-        validation?.conflicts.length > 0 ?? false
+        (validation?.conflicts?.length ?? 0) > 0
     ) : { className: '', style: {} };
 
     return (

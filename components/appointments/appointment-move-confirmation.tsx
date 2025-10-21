@@ -171,7 +171,7 @@ export function AppointmentMoveConfirmation({
                                 <span>Conflicts Detected</span>
                             </h3>
                             {validation.conflicts.map((conflict, index) => (
-                                <Alert key={index} variant={getConflictColor(conflict.severity)}>
+                                <Alert key={index} variant={getConflictColor(conflict.severity) as "default" | "destructive"}>
                                     <div className="flex items-start space-x-2">
                                         {getConflictIcon(conflict)}
                                         <AlertDescription>{conflict.message}</AlertDescription>
@@ -189,7 +189,7 @@ export function AppointmentMoveConfirmation({
                                 <span>Important Notes</span>
                             </h3>
                             {validation.warnings.map((warning, index) => (
-                                <Alert key={index} variant="warning">
+                                <Alert key={index} variant="default">
                                     <Info className="h-4 w-4" />
                                     <AlertDescription>{warning}</AlertDescription>
                                 </Alert>

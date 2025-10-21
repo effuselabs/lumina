@@ -30,7 +30,7 @@ interface StatusTransition {
     to: AppointmentStatus;
     label: string;
     icon: React.ReactNode;
-    variant: 'default' | 'destructive' | 'outline' | 'secondary';
+    variant: 'destructive' | 'outline' | 'secondary' | 'link' | 'primary' | 'ghost' | 'premium-glass' | 'premium-glow' | 'premium-floating';
     requiresReason?: boolean;
     confirmationMessage?: string;
 }
@@ -60,7 +60,7 @@ export function AppointmentStatusManager({
             to: AppointmentStatus.CONFIRMED,
             label: 'Confirm Appointment',
             icon: <CheckCircle className="h-4 w-4" />,
-            variant: 'default',
+            variant: 'primary',
         },
         {
             from: AppointmentStatus.SCHEDULED,
@@ -78,7 +78,7 @@ export function AppointmentStatusManager({
             to: AppointmentStatus.IN_PROGRESS,
             label: 'Start Appointment',
             icon: <Play className="h-4 w-4" />,
-            variant: 'default',
+            variant: 'primary',
         },
         {
             from: AppointmentStatus.CONFIRMED,
@@ -104,7 +104,7 @@ export function AppointmentStatusManager({
             to: AppointmentStatus.COMPLETED,
             label: 'Complete Appointment',
             icon: <CheckCircle className="h-4 w-4" />,
-            variant: 'default',
+            variant: 'primary',
         },
 
         // From COMPLETED (limited transitions)

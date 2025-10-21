@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
+import type { DateRange as CalendarDateRange } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 import { addDays, endOfDay, endOfMonth, endOfWeek, format, startOfDay, startOfMonth, startOfWeek, subDays } from 'date-fns';
 import { Calendar, X } from 'lucide-react';
@@ -124,13 +125,17 @@ export function DateRangePicker({ value, onChange, className }: DateRangePickerP
     };
 
     // Handle calendar selection
-    const handleCalendarSelect = (range: { from?: Date; to?: Date } | undefined) => {
+    const handleCalendarSelect = (range: CalendarDateRange | undefined) => {
         if (!range) {
             setTempRange({ from: undefined, to: undefined });
             return;
         }
 
-        setTempRange(range);
+        const newTempRange: { from?: Date; to?: Date } = {
+            from: range.from,
+            to: range.to
+        };
+        setTempRange(newTempRange);
 
         // Auto-apply if both dates are selected
         if (range.from && range.to) {
@@ -221,7 +226,7 @@ export function DateRangePicker({ value, onChange, className }: DateRangePickerP
                     <div className="p-3">
                         <CalendarComponent
                             mode="range"
-                            selected={tempRange}
+                            selected={tempRange as CalendarDateRange}
                             onSelect={handleCalendarSelect}
                             numberOfMonths={2}
                             className="rounded-md border-0"

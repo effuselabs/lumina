@@ -29,18 +29,17 @@ export interface CalendarViewProps {
   currentDate: Date;
   appointments: DashboardAppointment[];
   staffMembers: StaffMember[];
-  businessHours: BusinessHours;
+  businessHours: BusinessHoursEntry[];
   onAppointmentClick?: (appointment: DashboardAppointment) => void;
   onAppointmentDrop?: (appointmentId: string, newSlot: unknown) => Promise<void>;
   onTimeSlotClick?: (date: Date, staffId?: string) => void;
 }
 
-export interface BusinessHours {
-  [key: string]: {
-    isOpen: boolean;
-    openTime: string;
-    closeTime: string;
-  };
+export interface BusinessHoursEntry {
+  dayOfWeek: number;
+  openTime: string | null;
+  closeTime: string | null;
+  isClosed: boolean;
 }
 
 // StaffMember imported from booking types to avoid duplication

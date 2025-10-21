@@ -233,7 +233,7 @@ export function AppointmentModal({
                                 <TabsContent value="client" className="space-y-6 p-1">
                                     <ClientInfo
                                         client={appointment!.client}
-                                        onUpdate={(clientData) => {
+                                        onUpdate={async (clientData) => {
                                             // Handle client info updates
                                             console.log('Client update:', clientData);
                                         }}
@@ -243,7 +243,7 @@ export function AppointmentModal({
                                 <TabsContent value="status" className="space-y-6 p-1">
                                     <AppointmentStatusManager
                                         appointment={appointment!}
-                                        onStatusChange={(status) => {
+                                        onStatusChange={async (status) => {
                                             handleSave({ status });
                                         }}
                                     />
@@ -252,7 +252,7 @@ export function AppointmentModal({
                                 <TabsContent value="notes" className="space-y-6 p-1">
                                     <AppointmentNotes
                                         appointment={appointment!}
-                                        onNotesUpdate={(notes) => {
+                                        onNotesUpdate={async (notes) => {
                                             handleSave({ notes });
                                         }}
                                     />

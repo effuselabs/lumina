@@ -132,7 +132,7 @@ export function ClientsPageContent({
 
           {/* Client Edit Dialog */}
           <ClientEditDialog
-            client={selectedClient}
+            client={selectedClient as any}
             businessId={business.id}
             open={editDialogOpen}
             onOpenChange={handleEditDialogClose}
@@ -141,7 +141,7 @@ export function ClientsPageContent({
 
           {/* Client Details Dialog */}
           <ClientDetailsDialog
-            client={selectedClient}
+            client={selectedClient as any}
             businessId={business.id}
             open={detailsDialogOpen}
             onOpenChange={handleDetailsDialogClose}

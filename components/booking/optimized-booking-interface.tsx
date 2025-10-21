@@ -54,7 +54,7 @@ export function OptimizedBookingInterface({
     business
 }: OptimizedBookingInterfaceProps) {
     const { trackPropsChange } = usePerformanceMonitor('OptimizedBookingInterface');
-    const { recordMetric, measureAsync } = useBookingPerformance(businessId);
+    const { startMeasurement, measureAsync } = useBookingPerformance(businessId);
     const { networkState: _networkState, resilientFetch } = useNetworkResilience();
 
     const [bookingState, setBookingState] = useState<BookingState>({
@@ -100,9 +100,25 @@ export function OptimizedBookingInterface({
         }
     }, [bookingState.currentStep]);
 
+    // Validate current step data
+    const validateCurrentStep = useCallback(async (): Promise<boolean> => {
+        const currentStepId = BOOKING_STEPS[bookingState.currentStep].id;
+
+        switch (currentStepId) {
+            case 'services':
+                return bookingState.selectedServices.length > 0;
+            case 'datetime':
+                return bookingState.selectedDateTime !== null && bookingState.selectedStaff !== null;
+            case 'client':
+                return bookingState.clientInfo !== null;
+            default:
+                return true;
+        }
+    }, [bookingState.currentStep, bookingState.selectedServices, bookingState.selectedDateTime, bookingState.selectedStaff, bookingState.clientInfo]);
+
     // Handle step navigation
     const handleNext = useCallback(async () => {
-        const endMeasurement = recordMetric ? recordMetric(`step-${bookingState.currentStep}-completion`, 0) : () => { };
+        const endMeasurement = startMeasurement ? startMeasurement(`step-${bookingState.currentStep}-completion`) : undefined;
 
         try {
             setBookingState(prev => ({ ...prev, isLoading: true, error: null }));
@@ -121,7 +137,7 @@ export function OptimizedBookingInterface({
                 isLoading: false,
             }));
 
-            endMeasurement();
+            endMeasurement?.();
         } catch (_error) {
             setBookingState(prev => ({
                 ...prev,
@@ -129,7 +145,7 @@ export function OptimizedBookingInterface({
                 isLoading: false,
             }));
         }
-    }, [bookingState.currentStep, recordMetric, validateCurrentStep]);
+    }, [bookingState.currentStep, startMeasurement, validateCurrentStep]);
 
     const handleBack = useCallback(() => {
         setBookingState(prev => ({
@@ -138,22 +154,6 @@ export function OptimizedBookingInterface({
             error: null,
         }));
     }, []);
-
-    // Validate current step data
-    const validateCurrentStep = useCallback(async (): Promise<boolean> => {
-        const currentStepId = BOOKING_STEPS[bookingState.currentStep].id;
-
-        switch (currentStepId) {
-            case 'services':
-                return bookingState.selectedServices.length > 0;
-            case 'datetime':
-                return bookingState.selectedDateTime !== null && bookingState.selectedStaff !== null;
-            case 'client':
-                return bookingState.clientInfo !== null;
-            default:
-                return true;
-        }
-    }, [bookingState.currentStep, bookingState.selectedServices, bookingState.selectedDateTime, bookingState.selectedStaff, bookingState.clientInfo]);
 
     // Handle service selection
     const handleServiceSelection = useCallback((services: any[]) => {
@@ -216,7 +216,6 @@ export function OptimizedBookingInterface({
     // Get current step component
     const getCurrentStepComponent = () => {
         const currentStepData = BOOKING_STEPS[bookingState.currentStep];
-        const Component = currentStepData.component;
 
         const commonProps = {
             businessId,
@@ -228,41 +227,56 @@ export function OptimizedBookingInterface({
         switch (currentStepData.id) {
             case 'services':
                 return (
-                    <Component
+                    <ServiceSelection
                         {...commonProps}
                         selectedServices={bookingState.selectedServices}
-                        onServiceSelection={handleServiceSelection}
+                        onServicesSelect={handleServiceSelection}
                     />
                 );
             case 'datetime':
                 return (
-                    <Component
+                    <StaffTimeSelection
                         {...commonProps}
                         selectedServices={bookingState.selectedServices}
-                        selectedStaff={bookingState.selectedStaff}
-                        selectedDateTime={bookingState.selectedDateTime}
-                        onSelection={handleDateTimeSelection}
+                        onSlotSelect={(slot) => {
+                            handleDateTimeSelection(slot.startTime, { id: slot.staffId, name: slot.staffName });
+                        }}
                     />
                 );
             case 'client':
                 return (
-                    <Component
+                    <ClientInformation
                         {...commonProps}
-                        clientInfo={bookingState.clientInfo}
-                        onClientInfo={handleClientInformation}
+                        onSubmit={handleClientInformation}
+                        onBack={handleBack}
                     />
                 );
             case 'confirmation':
                 return (
-                    <Component
-                        {...commonProps}
-                        bookingData={{
-                            services: bookingState.selectedServices,
-                            staff: bookingState.selectedStaff,
-                            dateTime: bookingState.selectedDateTime,
-                            client: bookingState.clientInfo,
+                    <BookingConfirmation
+                        booking={{
+                            id: '',
+                            startTime: bookingState.selectedDateTime?.toISOString() || new Date().toISOString(),
+                            endTime: new Date(bookingState.selectedDateTime?.getTime() || Date.now() + 3600000).toISOString(),
+                            status: 'SCHEDULED',
+                            client: {
+                                firstName: bookingState.clientInfo?.firstName || '',
+                                lastName: bookingState.clientInfo?.lastName || '',
+                                email: bookingState.clientInfo?.email || '',
+                            },
+                            staff: {
+                                name: bookingState.selectedStaff?.name || '',
+                            },
+                            service: {
+                                name: bookingState.selectedServices[0]?.name || '',
+                                price: bookingState.selectedServices[0]?.price || 0,
+                                duration: bookingState.selectedServices[0]?.duration || 0,
+                            },
+                            business: {
+                                name: business.name,
+                            },
                         }}
-                        onConfirm={handleBookingConfirmation}
+                        onNewBooking={() => {}}
                     />
                 );
             default:

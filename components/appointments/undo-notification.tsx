@@ -60,6 +60,7 @@ export function UndoNotification({
             };
         } else {
             setIsVisible(false);
+            return undefined;
         }
     }, [operation, autoHideDelay]);
 
@@ -96,6 +97,10 @@ export function UndoNotification({
             hour12: true,
         });
     };
+
+    if (!operation || !isVisible) {
+        return null;
+    }
 
     return (
         <div

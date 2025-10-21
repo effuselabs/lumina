@@ -3,8 +3,8 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PublicBookingError, PublicBookingErrorType } from '@/lib/errors/public-booking-error';
-import { TimeSlot } from '@/types/booking';
+import { PublicBookingError } from '@/lib/errors/public-booking-error';
+import { PublicBookingErrorType, TimeSlot } from '@/types/booking';
 import {
     AlertCircle,
     Calendar,

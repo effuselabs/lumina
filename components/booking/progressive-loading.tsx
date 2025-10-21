@@ -107,13 +107,14 @@ function DelayedContent({ children, delay, isVisible }: DelayedContentProps) {
     const [shouldRender, setShouldRender] = useState(delay === 0);
 
     useEffect(() => {
-        if (!isVisible) return;
+        if (!isVisible) return undefined;
 
         if (delay > 0) {
             const timer = setTimeout(() => setShouldRender(true), delay);
             return () => clearTimeout(timer);
         } else {
             setShouldRender(true);
+            return undefined;
         }
     }, [delay, isVisible]);
 

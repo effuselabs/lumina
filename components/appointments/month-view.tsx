@@ -55,8 +55,8 @@ export function MonthView({
 
             // Check if business is open on this day
             const dayOfWeek = date.getDay();
-            const businessHour = businessHours.find(h => h.dayOfWeek === dayOfWeek);
-            const isBusinessOpen = businessHour && !businessHour.isClosed || false;
+            const businessHour = businessHours.find((h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek);
+            const isBusinessOpen = (businessHour && !businessHour.isClosed) || false;
 
             days.push({
                 date: new Date(date),
@@ -139,6 +139,7 @@ export function MonthView({
 
                             // Create a time slot for the entire day
                             const daySlot: CalendarSlot = {
+                                id: `day-${day.date.getTime()}`,
                                 startTime: new Date(day.date.getFullYear(), day.date.getMonth(), day.date.getDate(), 0, 0),
                                 endTime: new Date(day.date.getFullYear(), day.date.getMonth(), day.date.getDate(), 23, 59),
                                 staffId: '', // All staff
@@ -158,7 +159,7 @@ export function MonthView({
                                             'bg-lumina-radiant/10 border-lumina-coral': day.isToday,
                                         }
                                     )}
-                                    onClick={() => onTimeSlotClick(daySlot)}
+                                    onClick={() => onTimeSlotClick?.(daySlot.startTime, daySlot.staffId)}
                                     onDrop={(e) => {
                                         e.preventDefault();
                                         const appointmentId = e.dataTransfer.getData('text/plain');
@@ -234,7 +235,7 @@ export function MonthView({
                                                     }}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        onAppointmentClick(appointment);
+                                                        onAppointmentClick?.(appointment);
                                                     }}
                                                 >
                                                     <div className="truncate">

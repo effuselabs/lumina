@@ -110,17 +110,17 @@ export function getComponentLoadingRecommendations(usedComponents: string[]): {
   critical: string[];
 } {
   const critical = usedComponents.filter(comp =>
-    LOADING_PRIORITIES.critical.includes(comp)
+    (LOADING_PRIORITIES.critical as readonly string[]).includes(comp)
   );
 
   const preload = usedComponents.filter(comp =>
-    LOADING_PRIORITIES.high.includes(comp)
+    (LOADING_PRIORITIES.high as readonly string[]).includes(comp)
   );
 
   const lazy = usedComponents.filter(
     comp =>
-      LOADING_PRIORITIES.low.includes(comp) ||
-      LOADING_PRIORITIES.lazy.includes(comp)
+      (LOADING_PRIORITIES.low as readonly string[]).includes(comp) ||
+      (LOADING_PRIORITIES.lazy as readonly string[]).includes(comp)
   );
 
   return { preload, lazy, critical };

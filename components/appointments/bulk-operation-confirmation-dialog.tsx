@@ -55,7 +55,7 @@ export function BulkOperationConfirmationDialog({
                     description: `Update ${appointmentCount} appointment${appointmentCount > 1 ? 's' : ''} to "${newStatus}"?`,
                     icon: <Clock className="h-5 w-5 text-blue-500" />,
                     confirmText: 'Update Status',
-                    confirmVariant: 'default' as const,
+                    confirmVariant: 'primary' as const,
                 };
             case 'reschedule':
                 return {
@@ -63,7 +63,7 @@ export function BulkOperationConfirmationDialog({
                     description: `Reschedule ${appointmentCount} appointment${appointmentCount > 1 ? 's' : ''} to ${newDateTime ? format(newDateTime, 'PPP p') : 'new time'}?`,
                     icon: <Calendar className="h-5 w-5 text-green-500" />,
                     confirmText: 'Reschedule',
-                    confirmVariant: 'default' as const,
+                    confirmVariant: 'primary' as const,
                 };
             default:
                 return {
@@ -71,7 +71,7 @@ export function BulkOperationConfirmationDialog({
                     description: `Perform operation on ${appointmentCount} appointment${appointmentCount > 1 ? 's' : ''}?`,
                     icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
                     confirmText: 'Confirm',
-                    confirmVariant: 'default' as const,
+                    confirmVariant: 'primary' as const,
                 };
         }
     };
@@ -130,7 +130,7 @@ export function BulkOperationConfirmationDialog({
                                                 {format(appointment.startTime, 'PPP p')} • {appointment.staff.displayName}
                                             </div>
                                             <div className="text-sm text-gray-500">
-                                                {appointment.services.map(s => s.service.name).join(', ')}
+                                                {appointment.services.map(s => s.name).join(', ')}
                                             </div>
                                         </div>
                                         <Badge variant="outline" className="ml-2">
@@ -168,7 +168,7 @@ export function BulkOperationConfirmationDialog({
                         Cancel
                     </Button>
                     <Button
-                        variant={operationDetails.confirmVariant}
+                        variant={operationDetails.confirmVariant as "destructive" | "outline" | "secondary" | "ghost" | "link" | "primary" | "premium-glass" | "premium-glow" | "premium-floating"}
                         onClick={handleConfirm}
                         disabled={isLoading}
                     >

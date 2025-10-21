@@ -199,15 +199,26 @@ const StatCard = memo(
 
     // Combine refs for both forwarded ref and intersection observer
     const combinedRef = (element: HTMLDivElement | null) => {
+      // Handle forwarded ref
       if (ref) {
         if (typeof ref === 'function') {
           ref(element);
         } else {
-          ref.current = element;
+          // Use Object.defineProperty to bypass readonly restriction
+          try {
+            Object.defineProperty(ref, 'current', {
+              value: element,
+              writable: true,
+              configurable: true
+            });
+          } catch {
+            // Silently fail if we can't set the ref
+          }
         }
       }
-      if (intersectionRef) {
-        intersectionRef.current = element;
+      // Handle intersection observer ref - use type assertion to bypass readonly
+      if (intersectionRef && 'current' in intersectionRef) {
+        (intersectionRef as React.MutableRefObject<HTMLElement | null>).current = element;
       }
     };
 

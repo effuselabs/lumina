@@ -4,6 +4,7 @@ import { Service } from '@/types/service-selection';
 import { useState } from 'react';
 import { BookingConfirmationStep } from './booking-confirmation-step';
 import { BookingContainer } from './booking-container';
+import { BookingErrorBoundary } from './booking-error-boundary';
 import { BookingStep } from './booking-progress';
 import ClientInformationForm, { type ClientFormData } from './client-information-form';
 import { ServiceSelection } from './service-selection';

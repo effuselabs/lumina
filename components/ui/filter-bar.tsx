@@ -74,7 +74,7 @@ export function FilterBar({
               placeholder={
                 filter.placeholder || `Search ${filter.label.toLowerCase()}...`
               }
-              value={value || ''}
+              value={(value as string) || ''}
               onChange={e => onChange(filter.key, e.target.value)}
               className="lumina-form-input pl-10"
             />
@@ -85,7 +85,7 @@ export function FilterBar({
         return (
           <div key={filter.key} className="min-w-[150px]">
             <Select
-              value={value || ''}
+              value={(value as string) || ''}
               onValueChange={newValue => onChange(filter.key, newValue)}
             >
               <SelectTrigger className="lumina-form-input">
@@ -111,7 +111,7 @@ export function FilterBar({
           <div key={filter.key} className="min-w-[150px]">
             <Input
               type="date"
-              value={value || ''}
+              value={(value as string) || ''}
               onChange={e => onChange(filter.key, e.target.value)}
               placeholder={filter.placeholder}
               className="lumina-form-input"
@@ -214,7 +214,7 @@ export function FilterChips({
             className="text-lumina-primary inline-flex items-center gap-1 rounded-md border bg-lumina-gold/10 px-2 py-1 text-sm"
           >
             <span className="font-medium">{filter.label}:</span>
-            <span>{displayValue}</span>
+            <span>{displayValue as ReactNode}</span>
             <button
               onClick={() => onChange(filter.key, '')}
               className="ml-1 rounded p-0.5 transition-colors hover:bg-lumina-gold/20"

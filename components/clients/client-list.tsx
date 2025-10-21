@@ -41,7 +41,6 @@ import {
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Card } from '../ui/card';
-import { FormField } from '../ui/form';
 
 interface Staff {
   id: string;
@@ -250,9 +249,10 @@ export function ClientList({
           </div>
 
           <div className="flex gap-2">
-            <FormField
-              label="Filter by staff"
-            >
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Filter by staff
+              </label>
               <Select value={selectedStaff} onValueChange={setSelectedStaff}>
                 <SelectTrigger className="w-48">
                   <Filter className="mr-2 h-4 w-4" />
@@ -267,11 +267,12 @@ export function ClientList({
                   ))}
                 </SelectContent>
               </Select>
-            </FormField>
+            </div>
 
-            <FormField
-              label="Sort by"
-            >
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sort by
+              </label>
               <Select
                 value={`${sortBy}-${sortOrder}`}
                 onValueChange={value => {
@@ -292,7 +293,7 @@ export function ClientList({
                   <SelectItem value="createdAt-asc">Oldest First</SelectItem>
                 </SelectContent>
               </Select>
-            </FormField>
+            </div>
           </div>
         </div>
       </Card>

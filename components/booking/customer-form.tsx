@@ -14,12 +14,7 @@ import { Clock, DollarSign, User } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const defaultBookingSteps = [
-    { id: 1, name: 'Select Service' },
-    { id: 2, name: 'Choose Time' },
-    { id: 3, name: 'Customer Details' },
-    { id: 4, name: 'Confirmation' }
-]
+import { defaultBookingSteps } from './booking-progress';
 
 const customerFormSchema = z.object({
     firstName: z.string().min(1, 'First name is required'),
@@ -99,7 +94,7 @@ export function CustomerForm({ businessId, bookingDetails, onSubmit, loading = f
 
     return (
         <div className="space-y-8">
-            <BookingProgress currentStep={3} steps={defaultBookingSteps} />
+            <BookingProgress currentStep="details" steps={defaultBookingSteps} completedSteps={['service', 'staff', 'datetime']} />
             {/* Booking Summary */}
             <Card className="shadow-sm border-neutral-200">
                 <CardHeader>

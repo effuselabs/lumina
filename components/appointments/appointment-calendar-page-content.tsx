@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import { DashboardAppointment } from '../../types/dashboard-appointments';
+import { BusinessHoursEntry, DashboardAppointment } from '../../types/dashboard-appointments';
 import { CalendarHeader } from './calendar-header';
 import { CalendarView } from './calendar-view';
 
@@ -85,15 +85,15 @@ export function AppointmentCalendarPageContent({
 
     // Mock data - will be replaced with real data from API
     const mockAppointments: DashboardAppointment[] = [];
-    const mockBusinessHours = {
-        monday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
-        tuesday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
-        wednesday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
-        thursday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
-        friday: { isOpen: true, openTime: '09:00', closeTime: '17:00' },
-        saturday: { isOpen: true, openTime: '10:00', closeTime: '16:00' },
-        sunday: { isOpen: false, openTime: '09:00', closeTime: '17:00' },
-    };
+    const mockBusinessHours: BusinessHoursEntry[] = [
+        { dayOfWeek: 1, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Monday
+        { dayOfWeek: 2, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Tuesday
+        { dayOfWeek: 3, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Wednesday
+        { dayOfWeek: 4, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Thursday
+        { dayOfWeek: 5, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Friday
+        { dayOfWeek: 6, openTime: '10:00', closeTime: '16:00', isClosed: false }, // Saturday
+        { dayOfWeek: 0, openTime: '09:00', closeTime: '17:00', isClosed: true },  // Sunday
+    ];
 
     const mockStaffMembers = business.staff.map(staff => ({
         id: staff.id,

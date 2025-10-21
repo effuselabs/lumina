@@ -3,6 +3,7 @@
 import {
     createUndoOperation,
     findAlternativeSlots,
+    UndoOperation,
     validateAppointmentDrop
 } from '@/lib/drag-drop-utils';
 import { CalendarSlot, DashboardAppointment } from '@/types/dashboard-appointments';
@@ -66,6 +67,7 @@ function DragDropManagerInner({
 
         // Find the original slot
         const originalSlot: CalendarSlot = {
+            id: `${appointment.staffId}-${appointment.startTime.getTime()}`,
             startTime: appointment.startTime,
             endTime: appointment.endTime,
             staffId: appointment.staffId,
@@ -210,8 +212,12 @@ function DragDropManagerInner({
 }
 
 export function DragDropManager(props: DragDropManagerProps) {
+    const handleUndoOperation = async (operation: UndoOperation) => {
+        await props.onAppointmentMove(operation.appointmentId, operation.originalSlot);
+    };
+
     return (
-        <DragDropProvider onAppointmentMove={props.onAppointmentMove}>
+        <DragDropProvider onAppointmentMove={handleUndoOperation}>
             <DragDropManagerInner {...props} />
         </DragDropProvider>
     );

@@ -354,6 +354,7 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
           }
         };
       }
+      return undefined;
     }, []);
 
     return (
@@ -418,7 +419,7 @@ ButtonComponent.displayName = 'ButtonComponent';
 
 // Memoized version with custom comparison
 const MemoizedButton = React.memo(ButtonComponent, (prevProps, nextProps) => {
-  return shallowEqual(
+  const result = shallowEqual(
     {
       variant: prevProps.variant,
       size: prevProps.size,
@@ -436,6 +437,7 @@ const MemoizedButton = React.memo(ButtonComponent, (prevProps, nextProps) => {
       children: nextProps.children,
     }
   );
+  return result;
 });
 
 MemoizedButton.displayName = 'MemoizedButton';

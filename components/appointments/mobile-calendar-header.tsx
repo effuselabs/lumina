@@ -37,9 +37,8 @@ export function MobileCalendarHeader({
 
     // Attach gestures to header
     const headerRefCallback = (element: HTMLDivElement | null) => {
-        headerRef.current = element;
         if (element && (isMobile || isTablet)) {
-            return attachToElement(element);
+            attachToElement(element);
         }
     };
 

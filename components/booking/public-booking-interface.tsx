@@ -8,8 +8,8 @@
 import { useEffect, useState } from 'react'
 import { BookingConfirmation } from './booking-confirmation'
 import { BookingErrorHandler } from './booking-error-handler'
-import { BookingLoadingStates } from './booking-loading-states'
-import { ClientInformationForm } from './client-information-form'
+import { BookingLoadingState } from './booking-loading-states'
+import ClientInformationForm from './client-information-form'
 import { ServiceSelection } from './service-selection'
 import { StaffTimeSelection } from './staff-time-selection'
 
@@ -17,7 +17,7 @@ interface PublicBookingInterfaceProps {
     businessId: string
 }
 
-type BookingStep = 'services' | 'time' | 'client' | 'confirmation'
+type BookingStep = 'services' | 'staff' | 'availability' | 'booking' | 'general' | 'time' | 'client' | 'confirmation'
 
 interface BookingState {
     selectedServices: any[]
@@ -105,7 +105,7 @@ export function PublicBookingInterface({ businessId }: PublicBookingInterfacePro
     }
 
     if (isLoading && !businessData) {
-        return <BookingLoadingStates type="initial" />
+        return <BookingLoadingState type="services" />
     }
 
     if (error && !businessData) {
@@ -113,7 +113,6 @@ export function PublicBookingInterface({ businessId }: PublicBookingInterfacePro
             <BookingErrorHandler
                 error={error}
                 onRetry={loadBusinessData}
-                businessId={businessId}
             />
         )
     }
@@ -155,21 +154,21 @@ export function PublicBookingInterface({ businessId }: PublicBookingInterfacePro
             <main id="main-content" role="main" className="max-w-4xl mx-auto px-4 py-8">
                 {currentStep === 'services' && (
                     <ServiceSelection
-                        services={businessData?.services || []}
-                        onServiceSelect={handleServiceSelect}
+                        businessId={businessId}
+                        onServicesSelect={handleServiceSelect}
                         selectedServices={bookingState.selectedServices}
-                        onContinue={() => setCurrentStep('time')}
+                        onNext={() => setCurrentStep('time')}
                     />
                 )}
 
                 {currentStep === 'time' && (
                     <StaffTimeSelection
+                        businessId={businessId}
                         selectedServices={bookingState.selectedServices}
                         onSlotSelect={handleTimeSlotSelect}
-                        businessId={businessId}
-                        onBack={() => setCurrentStep('services')}
-                        onContinue={() => setCurrentStep('client')}
                         selectedSlot={bookingState.selectedTimeSlot}
+                        onNext={() => setCurrentStep('client')}
+                        onBack={() => setCurrentStep('services')}
                     />
                 )}
 
@@ -184,8 +183,7 @@ export function PublicBookingInterface({ businessId }: PublicBookingInterfacePro
 
                 {currentStep === 'confirmation' && bookingState.appointment && (
                     <BookingConfirmation
-                        appointment={bookingState.appointment}
-                        business={businessData?.business}
+                        booking={bookingState.appointment}
                         onNewBooking={handleNewBooking}
                     />
                 )}
@@ -195,13 +193,12 @@ export function PublicBookingInterface({ businessId }: PublicBookingInterfacePro
                     <BookingErrorHandler
                         error={error}
                         onRetry={() => setError(null)}
-                        businessId={businessId}
                     />
                 )}
 
                 {/* Loading states */}
                 {isLoading && (
-                    <BookingLoadingStates type="booking" />
+                    <BookingLoadingState type="booking" />
                 )}
             </main>
 

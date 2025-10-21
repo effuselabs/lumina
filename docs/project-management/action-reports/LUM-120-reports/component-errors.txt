@@ -1,0 +1,147 @@
+
+components/appointments/appointment-modal.tsx(236,41): error TS2322: Type '(clientData: Partial<ClientData>) => void' is not assignable to type '(clientData: Partial<ClientData>) => Promise<void>'.
+components/appointments/appointment-modal.tsx(246,41): error TS2322: Type '(status: AppointmentStatus) => void' is not assignable to type '(status: AppointmentStatus, reason?: string | undefined) => Promise<void>'.
+components/appointments/appointment-modal.tsx(255,41): error TS2322: Type '(notes: string) => void' is not assignable to type '(notes: string) => Promise<void>'.
+components/appointments/appointment-move-confirmation.tsx(174,52): error TS2322: Type '"warning" | "destructive"' is not assignable to type '"default" | "destructive" | null | undefined'.
+components/appointments/appointment-move-confirmation.tsx(192,52): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+components/appointments/appointment-status-manager.tsx(263,37): error TS2322: Type '"default" | "secondary" | "destructive" | "outline"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/appointments/appointment-status-manager.tsx(319,33): error TS2322: Type '"default" | "secondary" | "destructive" | "outline"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/appointments/bulk-conflict-resolution.tsx(297,25): error TS2322: Type '"default" | "destructive"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/appointments/bulk-operation-confirmation-dialog.tsx(133,82): error TS2339: Property 'service' does not exist on type '{ id: string; name: string; duration: number; price: number; }'.
+components/appointments/bulk-operation-confirmation-dialog.tsx(171,25): error TS2322: Type '"default" | "destructive"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/appointments/bulk-operations-demo.tsx(33,13): error TS2353: Object literal may only specify known properties, and 'service' does not exist in type '{ id: string; name: string; duration: number; price: number; }'.
+components/appointments/bulk-operations-demo.tsx(69,13): error TS2353: Object literal may only specify known properties, and 'service' does not exist in type '{ id: string; name: string; duration: number; price: number; }'.
+components/appointments/bulk-operations-demo.tsx(105,13): error TS2353: Object literal may only specify known properties, and 'service' does not exist in type '{ id: string; name: string; duration: number; price: number; }'.
+components/appointments/bulk-operations-demo.tsx(326,37): error TS2353: Object literal may only specify known properties, and 'clientName' does not exist in type 'DashboardAppointment'.
+components/appointments/bulk-operations-demo.tsx(327,82): error TS2339: Property 'service' does not exist on type '{ id: string; name: string; duration: number; price: number; }'.
+components/appointments/bulk-operations-toolbar.tsx(58,77): error TS2345: Argument of type '"confirmed"' is not assignable to parameter of type 'AppointmentStatus | (() => AppointmentStatus)'.
+components/appointments/bulk-reschedule-dialog.tsx(245,96): error TS2339: Property 'service' does not exist on type '{ id: string; name: string; duration: number; price: number; }'.
+components/appointments/date-range-picker.tsx(5,57): error TS2307: Cannot find module '@/components/ui/popover' or its corresponding type declarations.
+components/appointments/date-range-picker.tsx(224,29): error TS2322: Type '{ from?: Date | undefined; to?: Date | undefined; }' is not assignable to type 'DateRange'.
+components/appointments/day-view.tsx(37,42): error TS2349: This expression is not callable.
+components/appointments/day-view.tsx(37,47): error TS7006: Parameter 'h' implicitly has an 'any' type.
+components/appointments/day-view.tsx(129,42): error TS2349: This expression is not callable.
+components/appointments/day-view.tsx(129,47): error TS7006: Parameter 'h' implicitly has an 'any' type.
+components/appointments/day-view.tsx(151,9): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+components/appointments/day-view.tsx(151,25): error TS2345: Argument of type '{ staffId: string; id: string; startTime: Date; endTime: Date; isAvailable: boolean; appointment?: DashboardAppointment; appointments: DashboardAppointment[]; conflicts: ConflictInfo[]; }' is not assignable to parameter of type 'Date'.
+components/appointments/day-view.tsx(216,67): error TS2345: Argument of type '{ startTime: Date; endTime: Date; staffId: string; isAvailable: boolean; appointments: never[]; conflicts: never[]; }' is not assignable to parameter of type 'CalendarSlot'.
+components/appointments/day-view.tsx(255,87): error TS2345: Argument of type '{ startTime: Date; endTime: Date; staffId: string; isAvailable: boolean; appointments: never[]; conflicts: never[]; }' is not assignable to parameter of type 'CalendarSlot'.
+components/appointments/day-view.tsx(260,39): error TS2741: Property 'id' is missing in type '{ staffId: string; appointments: DashboardAppointment[]; conflicts: { type: "overlap"; severity: "error"; message: string; affectedAppointments: string[]; }[]; isAvailable: boolean; startTime: Date; endTime: Date; }' but required in type 'CalendarSlot'.
+components/appointments/day-view.tsx(353,50): error TS2349: This expression is not callable.
+components/appointments/day-view.tsx(353,55): error TS7006: Parameter 'h' implicitly has an 'any' type.
+components/appointments/drag-drop-manager.tsx(68,15): error TS2741: Property 'id' is missing in type '{ startTime: Date; endTime: Date; staffId: string; isAvailable: true; appointments: DashboardAppointment[]; conflicts: never[]; }' but required in type 'CalendarSlot'.
+components/appointments/drag-drop-manager.tsx(214,27): error TS2322: Type '(appointmentId: string, newSlot: CalendarSlot) => Promise<void>' is not assignable to type '(operation: UndoOperation) => Promise<void>'.
+components/appointments/drop-zone.tsx(118,9): error TS18048: 'validation.conflicts.length' is possibly 'undefined'.
+components/appointments/drop-zone.tsx(118,9): error TS2869: Right operand of ?? is unreachable because the left operand is never nullish.
+components/appointments/mobile-appointment-dashboard.tsx(187,21): error TS2322: Type '{ dayOfWeek: number; openTime: string | null; closeTime: string | null; isClosed: boolean; }[]' is not assignable to type 'BusinessHours'.
+components/appointments/mobile-appointment-dashboard.tsx(189,21): error TS2322: Type '(appointmentId: string, newSlot: any) => void' is not assignable to type '(appointmentId: string, newSlot: unknown) => Promise<void>'.
+components/appointments/mobile-calendar-header.tsx(39,31): error TS7030: Not all code paths return a value.
+components/appointments/mobile-calendar-header.tsx(40,19): error TS2540: Cannot assign to 'current' because it is a read-only property.
+components/appointments/mobile-calendar-view.tsx(53,33): error TS7030: Not all code paths return a value.
+components/appointments/mobile-calendar-view.tsx(54,21): error TS2540: Cannot assign to 'current' because it is a read-only property.
+components/appointments/mobile-calendar-view.tsx(85,9): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+components/appointments/mobile-calendar-view.tsx(94,9): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+components/appointments/mobile-search-filters.tsx(94,36): error TS2551: Property 'RESCHEDULED' does not exist on type '{ SCHEDULED: "SCHEDULED"; CONFIRMED: "CONFIRMED"; IN_PROGRESS: "IN_PROGRESS"; COMPLETED: "COMPLETED"; CANCELLED: "CANCELLED"; NO_SHOW: "NO_SHOW"; }'. Did you mean 'SCHEDULED'?
+components/appointments/mobile-search-filters.tsx(121,9): error TS2741: Property 'id' is missing in type '{ name: string; filters: { dateRange: { start: Date; end: Date; }; }; }' but required in type 'FilterPreset'.
+components/appointments/mobile-search-filters.tsx(130,9): error TS2741: Property 'id' is missing in type '{ name: string; filters: { dateRange: { start: Date; end: Date; }; }; }' but required in type 'FilterPreset'.
+components/appointments/mobile-search-filters.tsx(139,9): error TS2741: Property 'id' is missing in type '{ name: string; filters: { status: "CONFIRMED"[]; }; }' but required in type 'FilterPreset'.
+components/appointments/mobile-search-filters.tsx(145,9): error TS2741: Property 'id' is missing in type '{ name: string; filters: { status: "IN_PROGRESS"[]; }; }' but required in type 'FilterPreset'.
+components/appointments/month-view.tsx(58,48): error TS2349: This expression is not callable.
+components/appointments/month-view.tsx(58,53): error TS7006: Parameter 'h' implicitly has an 'any' type.
+components/appointments/month-view.tsx(141,35): error TS2741: Property 'id' is missing in type '{ startTime: Date; endTime: Date; staffId: string; isAvailable: any; appointments: DashboardAppointment[]; conflicts: never[]; }' but required in type 'CalendarSlot'.
+components/appointments/month-view.tsx(161,52): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+components/appointments/month-view.tsx(161,68): error TS2345: Argument of type 'CalendarSlot' is not assignable to parameter of type 'Date'.
+components/appointments/month-view.tsx(237,57): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+components/appointments/multi-select-filter.tsx(5,93): error TS2307: Cannot find module '@/components/ui/command' or its corresponding type declarations.
+components/appointments/multi-select-filter.tsx(6,57): error TS2307: Cannot find module '@/components/ui/popover' or its corresponding type declarations.
+components/appointments/search-filters.tsx(7,57): error TS2307: Cannot find module '@/components/ui/popover' or its corresponding type declarations.
+components/appointments/search-filters.tsx(86,36): error TS2551: Property 'RESCHEDULED' does not exist on type '{ SCHEDULED: "SCHEDULED"; CONFIRMED: "CONFIRMED"; IN_PROGRESS: "IN_PROGRESS"; COMPLETED: "COMPLETED"; CANCELLED: "CANCELLED"; NO_SHOW: "NO_SHOW"; }'. Did you mean 'SCHEDULED'?
+components/appointments/search-filters.tsx(223,75): error TS2322: Type 'string[]' is not assignable to type 'AppointmentStatus[]'.
+components/appointments/time-slot.tsx(44,9): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+components/appointments/undo-notification.tsx(38,15): error TS7030: Not all code paths return a value.
+components/appointments/week-view.tsx(47,40): error TS2349: This expression is not callable.
+components/appointments/week-view.tsx(47,45): error TS7006: Parameter 'h' implicitly has an 'any' type.
+components/appointments/week-view.tsx(98,23): error TS2349: This expression is not callable.
+components/appointments/week-view.tsx(98,31): error TS7006: Parameter 'hours' implicitly has an 'any' type.
+components/appointments/week-view.tsx(238,35): error TS2741: Property 'id' is missing in type '{ appointments: DashboardAppointment[]; startTime: Date; endTime: Date; staffId: string; isAvailable: boolean; conflicts: never[]; }' but required in type 'CalendarSlot'.
+components/appointments/week-view.tsx(253,52): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+components/appointments/week-view.tsx(253,68): error TS2345: Argument of type 'CalendarSlot' is not assignable to parameter of type 'Date'.
+components/appointments/week-view.tsx(310,50): error TS2349: This expression is not callable.
+components/appointments/week-view.tsx(310,55): error TS7006: Parameter 'h' implicitly has an 'any' type.
+components/booking/analytics-provider.tsx(41,15): error TS7030: Not all code paths return a value.
+components/booking/analytics-provider.tsx(62,15): error TS7030: Not all code paths return a value.
+components/booking/analytics-provider.tsx(80,15): error TS7030: Not all code paths return a value.
+components/booking/analytics-provider.tsx(107,9): error TS2322: Type '(error: Error, context?: Record<string, any>) => Promise<void>' is not assignable to type '(error: Error, errorType?: string | undefined, severity?: string | undefined, context?: Record<string, any> | undefined) => Promise<void>'.
+components/booking/booking-confirmation.tsx(72,30): error TS2322: Type 'number' is not assignable to type 'string'.
+components/booking/booking-container.tsx(63,8): error TS2304: Cannot find name 'NetworkStatusIndicator'.
+components/booking/booking-error-boundary.tsx(38,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<BookingErrorBoundaryProps, BookingErrorBoundaryState, any>'.
+components/booking/booking-error-boundary.tsx(47,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<BookingErrorBoundaryProps, BookingErrorBoundaryState, any>'.
+components/booking/booking-error-handler.tsx(6,30): error TS2724: '"@/lib/errors/public-booking-error"' has no exported member named 'PublicBookingErrorType'. Did you mean 'PublicBookingError'?
+components/booking/booking-interface.tsx(146,6): error TS2304: Cannot find name 'BookingErrorBoundary'.
+components/booking/booking-interface.tsx(156,7): error TS2304: Cannot find name 'BookingErrorBoundary'.
+components/booking/customer-form.tsx(102,30): error TS2322: Type 'number' is not assignable to type 'string'.
+components/booking/customer-form.tsx(102,46): error TS2322: Type '{ id: number; name: string; }[]' is not assignable to type 'BookingStep[]'.
+components/booking/optimized-booking-interface.tsx(124,13): error TS2349: This expression is not callable.
+components/booking/optimized-booking-interface.tsx(132,49): error TS2448: Block-scoped variable 'validateCurrentStep' used before its declaration.
+components/booking/optimized-booking-interface.tsx(132,49): error TS2454: Variable 'validateCurrentStep' is used before being assigned.
+components/booking/optimized-booking-interface.tsx(234,25): error TS2322: Type '{ selectedServices: any[]; onServiceSelection: (services: any[]) => void; businessId: string; business: BusinessInfo; isLoading: boolean; error: string | null; }' is not assignable to type 'IntrinsicAttributes & ServiceSelectionProps & StaffTimeSelectionProps & ClientInformationFormProps & BookingConfirmationProps'.
+components/booking/optimized-booking-interface.tsx(242,25): error TS2322: Type '{ selectedServices: any[]; selectedStaff: any; selectedDateTime: Date | null; onSelection: (dateTime: Date, staff: any) => void; businessId: string; business: BusinessInfo; isLoading: boolean; error: string | null; }' is not assignable to type 'IntrinsicAttributes & ServiceSelectionProps & StaffTimeSelectionProps & ClientInformationFormProps & BookingConfirmationProps'.
+components/booking/optimized-booking-interface.tsx(251,25): error TS2322: Type '{ clientInfo: any; onClientInfo: (clientInfo: any) => void; businessId: string; business: BusinessInfo; isLoading: boolean; error: string | null; }' is not assignable to type 'IntrinsicAttributes & ServiceSelectionProps & StaffTimeSelectionProps & ClientInformationFormProps & BookingConfirmationProps'.
+components/booking/optimized-booking-interface.tsx(259,25): error TS2322: Type '{ bookingData: { services: any[]; staff: any; dateTime: Date | null; client: any; }; onConfirm: () => Promise<void>; businessId: string; business: BusinessInfo; isLoading: boolean; error: string | null; }' is not assignable to type 'IntrinsicAttributes & ServiceSelectionProps & StaffTimeSelectionProps & ClientInformationFormProps & BookingConfirmationProps'.
+components/booking/progressive-loading.tsx(109,15): error TS7030: Not all code paths return a value.
+components/booking/public-booking-interface.tsx(11,10): error TS2724: '"./booking-loading-states"' has no exported member named 'BookingLoadingStates'. Did you mean 'BookingLoadingState'?
+components/booking/public-booking-interface.tsx(12,10): error TS2614: Module '"./client-information-form"' has no exported member 'ClientInformationForm'. Did you mean to use 'import ClientInformationForm from "./client-information-form"' instead?
+components/booking/public-booking-interface.tsx(116,17): error TS2322: Type '{ error: any; onRetry: () => Promise<void>; businessId: string; }' is not assignable to type 'IntrinsicAttributes & BookingErrorHandlerProps'.
+components/booking/public-booking-interface.tsx(158,25): error TS2322: Type '{ services: any; onServiceSelect: (services: any[]) => void; selectedServices: any[]; onContinue: () => void; }' is not assignable to type 'IntrinsicAttributes & ServiceSelectionProps'.
+components/booking/public-booking-interface.tsx(171,25): error TS2322: Type '{ selectedServices: any[]; onSlotSelect: (timeSlot: any) => void; businessId: string; onBack: () => void; onContinue: () => void; selectedSlot: any; }' is not assignable to type 'IntrinsicAttributes & StaffTimeSelectionProps'.
+components/booking/public-booking-interface.tsx(187,25): error TS2322: Type '{ appointment: any; business: any; onNewBooking: () => void; }' is not assignable to type 'IntrinsicAttributes & BookingConfirmationProps'.
+components/booking/public-booking-interface.tsx(198,25): error TS2322: Type '{ error: any; onRetry: () => void; businessId: string; }' is not assignable to type 'IntrinsicAttributes & BookingErrorHandlerProps'.
+components/booking/service-selection.tsx(55,38): error TS2304: Cannot find name 'PublicBookingError'.
+components/booking/service-selection.tsx(58,68): error TS2304: Cannot find name 'useNetworkResilience'.
+components/booking/service-selection.tsx(59,26): error TS7006: Parameter 'isOnline' implicitly has an 'any' type.
+components/booking/service-selection.tsx(92,26): error TS2304: Cannot find name 'PublicBookingError'.
+components/booking/service-selection.tsx(213,10): error TS2304: Cannot find name 'NetworkStatusIndicator'.
+components/booking/service-selection.tsx(214,10): error TS2304: Cannot find name 'BookingLoadingState'.
+components/booking/service-selection.tsx(226,10): error TS2304: Cannot find name 'NetworkStatusIndicator'.
+components/booking/service-selection.tsx(227,10): error TS2304: Cannot find name 'BookingErrorHandler'.
+components/booking/service-selection.tsx(243,8): error TS2304: Cannot find name 'NetworkStatusIndicator'.
+components/booking/service-selection.tsx(521,25): error TS2322: Type 'boolean | null' is not assignable to type 'boolean | undefined'.
+components/booking/staff-time-selection.tsx(89,38): error TS2304: Cannot find name 'PublicBookingError'.
+components/booking/staff-time-selection.tsx(96,68): error TS2304: Cannot find name 'useNetworkResilience'.
+components/booking/staff-time-selection.tsx(97,26): error TS7006: Parameter 'isOnline' implicitly has an 'any' type.
+components/booking/staff-time-selection.tsx(204,38): error TS2304: Cannot find name 'AlternativeSlotsService'.
+components/booking/staff-time-selection.tsx(217,26): error TS2304: Cannot find name 'PublicBookingError'.
+components/booking/staff-time-selection.tsx(338,8): error TS2304: Cannot find name 'NetworkStatusIndicator'.
+components/booking/staff-time-selection.tsx(414,23): error TS2322: Type '"default" | "ghost"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/booking/staff-time-selection.tsx(474,21): error TS2322: Type '"default" | "outline"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/booking/staff-time-selection.tsx(483,23): error TS2322: Type '"default" | "outline"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/booking/staff-time-selection.tsx(501,18): error TS2304: Cannot find name 'BookingLoadingState'.
+components/booking/staff-time-selection.tsx(512,18): error TS2304: Cannot find name 'BookingErrorHandler'.
+components/booking/staff-time-selection.tsx(517,45): error TS7006: Parameter 'slot' implicitly has an 'any' type.
+components/booking/staff-time-selection.tsx(570,31): error TS2322: Type '"default" | "outline"' is not assignable to type '"link" | "primary" | "secondary" | "destructive" | "outline" | "ghost" | "premium-glass" | "premium-glow" | "premium-floating" | null | undefined'.
+components/clients/client-list.tsx(253,14): error TS2322: Type '{ children: Element; label: string; }' is not assignable to type 'IntrinsicAttributes & { render: ({ field, fieldState, formState, }: { field: ControllerRenderProps<FieldValues, string>; fieldState: ControllerFieldState; formState: UseFormStateReturn<...>; }) => ReactElement<...>; } & UseControllerProps<...>'.
+components/clients/client-list.tsx(272,14): error TS2322: Type '{ children: Element; label: string; }' is not assignable to type 'IntrinsicAttributes & { render: ({ field, fieldState, formState, }: { field: ControllerRenderProps<FieldValues, string>; fieldState: ControllerFieldState; formState: UseFormStateReturn<...>; }) => ReactElement<...>; } & UseControllerProps<...>'.
+components/clients/clients-page-content.tsx(135,13): error TS2719: Type 'Client | null' is not assignable to type 'Client | null'. Two different types with this name exist, but they are unrelated.
+components/clients/clients-page-content.tsx(144,13): error TS2719: Type 'Client | null' is not assignable to type 'Client | null'. Two different types with this name exist, but they are unrelated.
+components/ui/button.tsx(344,21): error TS7030: Not all code paths return a value.
+components/ui/data-table.tsx(83,13): error TS18046: 'aValue' is of type 'unknown'.
+components/ui/data-table.tsx(83,22): error TS18046: 'bValue' is of type 'unknown'.
+components/ui/data-table.tsx(86,13): error TS18046: 'aValue' is of type 'unknown'.
+components/ui/data-table.tsx(86,22): error TS18046: 'bValue' is of type 'unknown'.
+components/ui/data-table.tsx(107,43): error TS2769: No overload matches this call.
+components/ui/drawer.tsx(5,43): error TS2307: Cannot find module 'vaul' or its corresponding type declarations.
+components/ui/filter-bar.tsx(77,15): error TS2322: Type '{}' is not assignable to type 'string | number | readonly string[] | undefined'.
+components/ui/filter-bar.tsx(88,15): error TS2322: Type '{}' is not assignable to type 'string'.
+components/ui/filter-bar.tsx(114,15): error TS2322: Type '{}' is not assignable to type 'string | number | readonly string[] | undefined'.
+components/ui/filter-bar.tsx(217,19): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+components/ui/index.ts(113,42): error TS2345: Argument of type 'string' is not assignable to parameter of type '"Spinner" | "Button" | "StatCard"'.
+components/ui/index.ts(117,38): error TS2345: Argument of type 'string' is not assignable to parameter of type '"Card" | "Input" | "FormField" | "PageHeader"'.
+components/ui/index.ts(122,39): error TS2345: Argument of type 'string' is not assignable to parameter of type '"Table" | "NavigationMenu" | "Dialog" | "Toast" | "Progress"'.
+components/ui/index.ts(123,40): error TS2345: Argument of type 'string' is not assignable to parameter of type '"Tooltip"'.
+components/ui/lumina-button.tsx(34,8): error TS2322: Type '{ children: ReactNode; asChild?: boolean | undefined; disabled?: boolean | undefined; form?: string | undefined; formAction?: string | ((formData: FormData) => void | Promise<...>) | undefined; ... 283 more ...; className: string; }' is not assignable to type 'Omit<ButtonProps & RefAttributes<HTMLButtonElement>, "ref">'.
+components/ui/radio-group.tsx(3,38): error TS2307: Cannot find module '@radix-ui/react-radio-group' or its corresponding type declarations.
+components/ui/scroll-area.tsx(3,38): error TS2307: Cannot find module '@radix-ui/react-scroll-area' or its corresponding type declarations.
+components/ui/stat-card.tsx(210,25): error TS2540: Cannot assign to 'current' because it is a read-only property.
+components/ui/testimonial-card.tsx(86,25): error TS7030: Not all code paths return a value.
+components/ui/tooltip.tsx(10,35): error TS2307: Cannot find module '@radix-ui/react-tooltip' or its corresponding type declarations.
+

@@ -35,7 +35,7 @@ export class BookingErrorBoundary extends Component<
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: any) {
+  override componentDidCatch(error: Error, errorInfo: any) {
     console.error('Booking error boundary caught an error:', error, errorInfo);
   }
 
@@ -44,7 +44,7 @@ export class BookingErrorBoundary extends Component<
     window.location.reload();
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <BookingErrorDisplay

@@ -91,7 +91,7 @@ export function MobileSearchFilters({
         { value: AppointmentStatus.COMPLETED, label: 'Completed' },
         { value: AppointmentStatus.CANCELLED, label: 'Cancelled' },
         { value: AppointmentStatus.NO_SHOW, label: 'No Show' },
-        { value: AppointmentStatus.RESCHEDULED, label: 'Rescheduled' },
+
     ], []);
 
     // Staff options
@@ -119,6 +119,7 @@ export function MobileSearchFilters({
     // Quick filter presets for mobile
     const quickPresets: FilterPreset[] = [
         {
+            id: 'today',
             name: 'Today',
             filters: {
                 dateRange: {
@@ -128,6 +129,7 @@ export function MobileSearchFilters({
             }
         },
         {
+            id: 'this-week',
             name: 'This Week',
             filters: {
                 dateRange: {
@@ -137,12 +139,14 @@ export function MobileSearchFilters({
             }
         },
         {
+            id: 'confirmed',
             name: 'Confirmed',
             filters: {
                 status: [AppointmentStatus.CONFIRMED]
             }
         },
         {
+            id: 'in-progress',
             name: 'In Progress',
             filters: {
                 status: [AppointmentStatus.IN_PROGRESS]

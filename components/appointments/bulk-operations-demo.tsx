@@ -30,7 +30,7 @@ const mockAppointments: DashboardAppointment[] = [
         status: 'confirmed' as AppointmentStatus,
         services: [{
             id: 'service-1',
-            service: { id: 'service-1', name: 'Haircut', duration: 60, price: 50 },
+            name: 'Haircut',
             duration: 60,
             price: 50
         }],
@@ -66,7 +66,7 @@ const mockAppointments: DashboardAppointment[] = [
         status: 'pending' as AppointmentStatus,
         services: [{
             id: 'service-2',
-            service: { id: 'service-2', name: 'Hair Color', duration: 120, price: 80 },
+            name: 'Hair Color',
             duration: 120,
             price: 80
         }],
@@ -102,7 +102,7 @@ const mockAppointments: DashboardAppointment[] = [
         status: 'confirmed' as AppointmentStatus,
         services: [{
             id: 'service-3',
-            service: { id: 'service-3', name: 'Manicure', duration: 45, price: 35 },
+            name: 'Manicure',
             duration: 45,
             price: 35
         }],
@@ -321,16 +321,7 @@ function BulkOperationsDemoContent() {
                         {mockAppointments.map((appointment) => (
                             <AppointmentBlock
                                 key={appointment.id}
-                                appointment={{
-                                    id: appointment.id,
-                                    clientName: `${appointment.client.firstName} ${appointment.client.lastName}`,
-                                    serviceName: appointment.services.map(s => s.service.name).join(', '),
-                                    startTime: appointment.startTime,
-                                    endTime: appointment.endTime,
-                                    status: appointment.status,
-                                    staffName: appointment.staff.displayName,
-                                    price: appointment.totalPrice,
-                                }}
+                                appointment={appointment}
                                 onClick={() => {
                                     if (!isSelectionMode) {
                                         console.log('Open appointment details:', appointment.id);

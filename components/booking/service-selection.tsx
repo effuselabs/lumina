@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { useNetworkResilience } from '@/hooks/use-network-resilience';
+import { PublicBookingError } from '@/lib/errors/public-booking-error';
 import {
   BookingConfig,
   BusinessInfo,
@@ -38,6 +40,8 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { BookingErrorHandler } from './booking-error-handler';
+import { BookingLoadingState, NetworkStatusIndicator } from './booking-loading-states';
 
 export function ServiceSelection({
   businessId,
@@ -82,7 +86,12 @@ export function ServiceSelection({
         `/api/public/booking/${businessId}`,
         {},
         `services-${businessId}`
-      );
+      ) as {
+        servicesByCategory: ServicesByCategory;
+        services: Service[];
+        business: BusinessInfo;
+        bookingConfig: BookingConfig;
+      };
 
       setServices(data.servicesByCategory);
       setAllServices(data.services);
@@ -518,7 +527,7 @@ export function ServiceSelection({
                         variant={isSelected ? 'secondary' : 'outline'}
                         size="sm"
                         onClick={() => handleServiceToggle(service)}
-                        disabled={isAtMaxLimit}
+                        disabled={isAtMaxLimit || false}
                         className="w-full"
                       >
                         {isSelected ? (

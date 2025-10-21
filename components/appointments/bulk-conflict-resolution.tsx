@@ -294,7 +294,7 @@ export function BulkConflictResolution({
                     <Button
                         onClick={selectedResolution === 'cancel' ? onClose : handleResolve}
                         disabled={!selectedResolution || isLoading}
-                        variant={selectedResolution === 'force' ? 'destructive' : 'default'}
+                        variant={(selectedResolution === 'force' ? 'destructive' : 'primary') as "destructive" | "outline" | "secondary" | "ghost" | "link" | "primary" | "premium-glass" | "premium-glow" | "premium-floating"}
                     >
                         {isLoading
                             ? 'Processing...'
