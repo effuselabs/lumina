@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import { Business, Service, Staff } from '@prisma/client'
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
+import { createTestBusiness, createTestStaff, createTestService } from '@/__tests__/utils/test-data-factories'
+import { NextRequest } from 'next/server'
+import { GET } from '@/app/api/availability/slots/route'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -138,11 +141,11 @@ describe('/api/availability/slots Integration Tests', () => {
         })
 
         it('should filter slots by staff member', async () => {
-            const mockStaff: Partial<Staff> = {
+            const mockStaff = createTestStaff({
                 id: staffId,
                 businessId,
-                name: 'John Doe',
-            }
+                displayName: 'John Doe',
+            })
 
             const mockBusiness: Partial<Business> = {
                 id: businessId,
@@ -178,12 +181,12 @@ describe('/api/availability/slots Integration Tests', () => {
         })
 
         it('should filter slots by service', async () => {
-            const mockService: Partial<Service> = {
+            const mockService = createTestService({
                 id: serviceId,
                 businessId,
                 name: 'Haircut',
                 duration: 60,
-            }
+            })
 
             const mockBusiness: Partial<Business> = {
                 id: businessId,

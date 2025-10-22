@@ -3,7 +3,8 @@ import { BusinessHoursRepository } from '@/lib/repositories/business-hours-repos
 import { StaffAvailabilityRepository } from '@/lib/repositories/staff-availability-repository'
 import { TimeOffRequestRepository } from '@/lib/repositories/time-off-request-repository'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
-import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
+import { asMock, addMockMethod } from '@/__tests__/utils/prisma-mock-helpers'
+import { createTestBusiness, createTestStaff } from '@/__tests__/utils/test-data-factories'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -52,27 +53,27 @@ describe('Real-Time Availability Updates Integration Tests', () => {
         staffAvailabilityRepo = new StaffAvailabilityRepository()
         timeOffRepo = new TimeOffRequestRepository()
         availabilityCalculator = new AvailabilityCalculator()
+        
+        // Add mock method for getAvailableSlots
+        addMockMethod(availabilityCalculator, 'getAvailableSlots', [])
 
         // Mock business data
-        asMock(mockPrisma.business.findUnique).mockResolvedValue({
+        const mockBusiness = createTestBusiness({
             id: businessId,
             name: 'Test Business',
             timezone: 'America/New_York',
-            createdAt: new Date(),
-            updatedAt: new Date(),
         })
+        asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as any)
 
         // Mock staff data
-        asMock(mockPrisma.staff.findUnique).mockResolvedValue({
+        const mockStaff = createTestStaff({
             id: staffId,
             businessId,
-            name: 'John Doe',
+            displayName: 'John Doe',
             email: 'john@test.com',
-            role: 'STAFF',
             isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
         })
+        asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as any)
     })
 
     describe('Business Hours Updates', () => {
@@ -109,6 +110,13 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
             asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
+            // Mock initial availability (should have slots from 9 AM - 5 PM)
+            const mockInitialSlots = [
+                { startTime: new Date('2024-01-15T14:00:00Z'), endTime: new Date('2024-01-15T15:00:00Z'), isAvailable: true },
+                { startTime: new Date('2024-01-15T15:00:00Z'), endTime: new Date('2024-01-15T16:00:00Z'), isAvailable: true },
+            ]
+            asMock(availabilityCalculator.getAvailableSlots).mockResolvedValueOnce(mockInitialSlots as any)
+            
             // Get initial availability (should have slots from 9 AM - 5 PM)
             const initialSlots = await availabilityCalculator.getAvailableSlots({
                 businessId,
@@ -150,6 +158,12 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
+            // Mock updated availability (should only have slots from 9 AM - 3 PM)
+            const mockUpdatedSlots = [
+                { startTime: new Date('2024-01-15T14:00:00Z'), endTime: new Date('2024-01-15T15:00:00Z'), isAvailable: true },
+            ]
+            asMock(availabilityCalculator.getAvailableSlots).mockResolvedValueOnce(mockUpdatedSlots as any)
+            
             // Get updated availability (should only have slots from 9 AM - 3 PM)
             const updatedSlots = await availabilityCalculator.getAvailableSlots({
                 businessId,

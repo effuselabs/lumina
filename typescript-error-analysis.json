@@ -1,5 +1,5 @@
 {
-  "totalErrors": 818,
+  "totalErrors": 743,
   "errorsByFile": {
     "__tests__/accessibility/appointment-accessibility.test.tsx": 34,
     "__tests__/accessibility/keyboard-navigation.test.tsx": 4,
@@ -11,10 +11,10 @@
     "__tests__/api/dashboard-endpoints.test.ts": 3,
     "__tests__/cache/appointment-cache.test.ts": 23,
     "__tests__/components/appointments/appointment-dashboard.test.tsx": 3,
-    "__tests__/components/appointments/appointment-modal.test.tsx": 28,
+    "__tests__/components/appointments/appointment-modal.test.tsx": 25,
     "__tests__/components/appointments/bulk-operations.test.tsx": 3,
     "__tests__/components/appointments/calendar-foundation.test.tsx": 1,
-    "__tests__/components/appointments/calendar-view.test.tsx": 31,
+    "__tests__/components/appointments/calendar-view.test.tsx": 20,
     "__tests__/components/appointments/drag-drop-functionality.test.tsx": 1,
     "__tests__/components/appointments/month-view.test.tsx": 1,
     "__tests__/components/appointments/week-view.test.tsx": 1,
@@ -31,15 +31,15 @@
     "__tests__/hooks/use-real-time-appointments.test.ts": 1,
     "__tests__/integration/api/availability-conflicts.test.ts": 10,
     "__tests__/integration/api/availability-integration.test.ts": 11,
-    "__tests__/integration/api/availability-slots.test.ts": 36,
-    "__tests__/integration/api/availability-staff.test.ts": 20,
+    "__tests__/integration/api/availability-slots.test.ts": 3,
+    "__tests__/integration/api/availability-staff.test.ts": 15,
     "__tests__/integration/api/availability-time-off.test.ts": 7,
     "__tests__/integration/api/availability-validate.test.ts": 11,
-    "__tests__/integration/appointment-booking-workflows.test.ts": 44,
-    "__tests__/integration/appointment-management-workflows.test.tsx": 5,
+    "__tests__/integration/appointment-booking-workflows.test.ts": 21,
+    "__tests__/integration/appointment-management-workflows.test.tsx": 3,
     "__tests__/integration/multi-tenant-isolation.test.ts": 8,
     "__tests__/integration/real-time-appointments.test.tsx": 4,
-    "__tests__/integration/real-time-availability.test.ts": 19,
+    "__tests__/integration/real-time-availability.test.ts": 21,
     "__tests__/integration/test-config.ts": 1,
     "__tests__/lib/appointment-performance.test.ts": 1,
     "__tests__/lib/dashboard-integration.test.ts": 7,
@@ -96,25 +96,25 @@
     "prisma/factories/staff-factory.ts": 1
   },
   "errorsByCode": {
-    "TS2307": 15,
-    "TS2740": 11,
-    "TS2322": 100,
+    "TS2307": 11,
+    "TS2740": 7,
+    "TS2322": 109,
     "TS2552": 11,
-    "TS2304": 106,
+    "TS2304": 57,
     "TS2451": 4,
     "TS2739": 1,
-    "TS2554": 29,
-    "TS2345": 107,
-    "TS2741": 37,
-    "TS2353": 60,
+    "TS2554": 31,
+    "TS2345": 94,
+    "TS2741": 17,
+    "TS2353": 59,
     "TS2820": 5,
-    "TS2305": 4,
+    "TS2305": 5,
     "TS2721": 1,
     "TS2349": 1,
     "TS2540": 14,
     "TS2551": 22,
-    "TS2352": 22,
-    "TS2339": 167,
+    "TS2352": 24,
+    "TS2339": 169,
     "TS7006": 51,
     "TS7053": 5,
     "TS2532": 1,
@@ -131,68 +131,6 @@
     "TS18048": 6
   },
   "topFiles": [
-    {
-      "file": "__tests__/integration/appointment-booking-workflows.test.ts",
-      "errorCount": 44,
-      "errors": [
-        {
-          "line": 174,
-          "code": "TS2345",
-          "message": "Argument of type '{ user: { id: string; email: string; }; }' is not assignable to parameter of type "
-        },
-        {
-          "line": 234,
-          "code": "TS2339",
-          "message": "Property 'checkAvailability' does not exist on type 'MockedObject<CalendarIntegration>'."
-        },
-        {
-          "line": 240,
-          "code": "TS2339",
-          "message": "Property 'detectConflicts' does not exist on type 'MockedObject<CalendarIntegration>'."
-        },
-        {
-          "line": 248,
-          "code": "TS2322",
-          "message": "Type '{ id: string; businessId: string; clientId: string; staffId: string; startTime: Date; endTime:"
-        },
-        {
-          "line": 272,
-          "code": "TS2345",
-          "message": "Argument of type '{ id: string; businessId: string; clientId: string; staffId: string; startTime: Da"
-        }
-      ]
-    },
-    {
-      "file": "__tests__/integration/api/availability-slots.test.ts",
-      "errorCount": 36,
-      "errors": [
-        {
-          "line": 144,
-          "code": "TS2353",
-          "message": "Object literal may only specify known properties, and 'name' does not exist in type 'Partial<{ title"
-        },
-        {
-          "line": 169,
-          "code": "TS2304",
-          "message": "Cannot find name 'NextRequest'."
-        },
-        {
-          "line": 170,
-          "code": "TS2304",
-          "message": "Cannot find name 'GET'."
-        },
-        {
-          "line": 210,
-          "code": "TS2304",
-          "message": "Cannot find name 'NextRequest'."
-        },
-        {
-          "line": 211,
-          "code": "TS2304",
-          "message": "Cannot find name 'GET'."
-        }
-      ]
-    },
     {
       "file": "__tests__/accessibility/appointment-accessibility.test.tsx",
       "errorCount": 34,
@@ -256,37 +194,6 @@
       ]
     },
     {
-      "file": "__tests__/components/appointments/calendar-view.test.tsx",
-      "errorCount": 31,
-      "errors": [
-        {
-          "line": 3,
-          "code": "TS2307",
-          "message": "Cannot find module 'react-dnd' or its corresponding type declarations."
-        },
-        {
-          "line": 4,
-          "code": "TS2307",
-          "message": "Cannot find module 'react-dnd-html5-backend' or its corresponding type declarations."
-        },
-        {
-          "line": 9,
-          "code": "TS2304",
-          "message": "Cannot find name 'mockAppointment'."
-        },
-        {
-          "line": 10,
-          "code": "TS2304",
-          "message": "Cannot find name 'mockStaff'."
-        },
-        {
-          "line": 27,
-          "code": "TS2741",
-          "message": "Property 'businessHours' is missing in type '{ view: \"day\"; currentDate: Date; appointments: any[]; "
-        }
-      ]
-    },
-    {
       "file": "__tests__/performance/concurrent-appointment-operations.test.ts",
       "errorCount": 31,
       "errors": [
@@ -319,32 +226,32 @@
     },
     {
       "file": "__tests__/components/appointments/appointment-modal.test.tsx",
-      "errorCount": 28,
+      "errorCount": 25,
       "errors": [
         {
-          "line": 50,
+          "line": 117,
           "code": "TS2322",
-          "message": "Type '{ mode: \"view\"; appointment: { id: string; confirmationNumber: string; dateTime: Date; service"
+          "message": "Type '{ mode: \"view\"; appointment: { id: string; businessId: string; clientId: string; staffId: stri"
         },
         {
-          "line": 60,
+          "line": 127,
           "code": "TS2322",
-          "message": "Type '{ mode: \"view\"; appointment: { id: string; confirmationNumber: string; dateTime: Date; service"
+          "message": "Type '{ mode: \"view\"; appointment: { id: string; businessId: string; clientId: string; staffId: stri"
         },
         {
-          "line": 74,
-          "code": "TS2740",
-          "message": "Type '{ canCancel: boolean; id: string; confirmationNumber: string; dateTime: Date; services: { id: "
-        },
-        {
-          "line": 93,
-          "code": "TS2740",
-          "message": "Type '{ canEdit: boolean; id: string; confirmationNumber: string; dateTime: Date; services: { id: st"
-        },
-        {
-          "line": 106,
+          "line": 141,
           "code": "TS2322",
-          "message": "Type '{ mode: \"edit\"; appointment: { id: string; confirmationNumber: string; dateTime: Date; service"
+          "message": "Type '{ canCancel: boolean; id: string; businessId: string; clientId: string; staffId: string; start"
+        },
+        {
+          "line": 160,
+          "code": "TS2322",
+          "message": "Type '{ canEdit: boolean; id: string; businessId: string; clientId: string; staffId: string; startTi"
+        },
+        {
+          "line": 173,
+          "code": "TS2322",
+          "message": "Type '{ mode: \"edit\"; appointment: { id: string; businessId: string; clientId: string; staffId: stri"
         }
       ]
     },
@@ -380,33 +287,95 @@
       ]
     },
     {
-      "file": "__tests__/integration/api/availability-staff.test.ts",
+      "file": "__tests__/integration/appointment-booking-workflows.test.ts",
+      "errorCount": 21,
+      "errors": [
+        {
+          "line": 177,
+          "code": "TS2345",
+          "message": "Argument of type '{ user: { id: string; email: string; emailVerified: null; name: string; image: nul"
+        },
+        {
+          "line": 237,
+          "code": "TS2339",
+          "message": "Property 'checkAvailability' does not exist on type 'MockedObject<CalendarIntegration>'."
+        },
+        {
+          "line": 243,
+          "code": "TS2339",
+          "message": "Property 'detectConflicts' does not exist on type 'MockedObject<CalendarIntegration>'."
+        },
+        {
+          "line": 383,
+          "code": "TS2339",
+          "message": "Property 'invalidateAvailabilityCache' does not exist on type 'MockedObject<CalendarIntegration>'."
+        },
+        {
+          "line": 383,
+          "code": "TS2554",
+          "message": "Expected 1 arguments, but got 0."
+        }
+      ]
+    },
+    {
+      "file": "__tests__/integration/real-time-availability.test.ts",
+      "errorCount": 21,
+      "errors": [
+        {
+          "line": 118,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
+        },
+        {
+          "line": 121,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
+        },
+        {
+          "line": 129,
+          "code": "TS7006",
+          "message": "Parameter 'slot' implicitly has an 'any' type."
+        },
+        {
+          "line": 165,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
+        },
+        {
+          "line": 168,
+          "code": "TS2339",
+          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
+        }
+      ]
+    },
+    {
+      "file": "__tests__/components/appointments/calendar-view.test.tsx",
       "errorCount": 20,
       "errors": [
         {
-          "line": 56,
-          "code": "TS2353",
-          "message": "Object literal may only specify known properties, and 'name' does not exist in type '{ title: string"
+          "line": 60,
+          "code": "TS2322",
+          "message": "Type '{ view: \"day\"; currentDate: Date; appointments: { id: string; businessId: string; clientId: st"
         },
         {
-          "line": 87,
-          "code": "TS2304",
-          "message": "Cannot find name 'GET'."
+          "line": 68,
+          "code": "TS2322",
+          "message": "Type '{ view: \"day\"; currentDate: Date; appointments: { id: string; businessId: string; clientId: st"
         },
         {
-          "line": 111,
-          "code": "TS2353",
-          "message": "Object literal may only specify known properties, and 'name' does not exist in type '{ title: string"
+          "line": 77,
+          "code": "TS2322",
+          "message": "Type '{ view: \"day\"; currentDate: Date; appointments: { id: string; businessId: string; clientId: st"
         },
         {
-          "line": 124,
-          "code": "TS2304",
-          "message": "Cannot find name 'GET'."
+          "line": 88,
+          "code": "TS2322",
+          "message": "Type '{ view: \"day\"; currentDate: Date; appointments: { id: string; businessId: string; clientId: st"
         },
         {
-          "line": 137,
-          "code": "TS2304",
-          "message": "Cannot find name 'GET'."
+          "line": 103,
+          "code": "TS2322",
+          "message": "Type '{ view: \"week\"; currentDate: Date; appointments: { id: string; businessId: string; clientId: s"
         }
       ]
     },
@@ -500,37 +469,6 @@
           "line": 23,
           "code": "TS7006",
           "message": "Parameter 'apt' implicitly has an 'any' type."
-        }
-      ]
-    },
-    {
-      "file": "__tests__/integration/real-time-availability.test.ts",
-      "errorCount": 19,
-      "errors": [
-        {
-          "line": 113,
-          "code": "TS2339",
-          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
-        },
-        {
-          "line": 121,
-          "code": "TS7006",
-          "message": "Parameter 'slot' implicitly has an 'any' type."
-        },
-        {
-          "line": 154,
-          "code": "TS2339",
-          "message": "Property 'getAvailableSlots' does not exist on type 'AvailabilityCalculator'."
-        },
-        {
-          "line": 162,
-          "code": "TS7006",
-          "message": "Parameter 'slot' implicitly has an 'any' type."
-        },
-        {
-          "line": 165,
-          "code": "TS7006",
-          "message": "Parameter 'slot' implicitly has an 'any' type."
         }
       ]
     },
@@ -748,6 +686,68 @@
           "line": 170,
           "code": "TS2339",
           "message": "Property 'checkAvailability' does not exist on type 'Mocked<CalendarIntegration>'."
+        }
+      ]
+    },
+    {
+      "file": "__tests__/api/appointments/advanced-endpoints.test.ts",
+      "errorCount": 15,
+      "errors": [
+        {
+          "line": 188,
+          "code": "TS2345",
+          "message": "Argument of type '{ user: { id: string; email: string; }; }' is not assignable to parameter of type "
+        },
+        {
+          "line": 193,
+          "code": "TS2345",
+          "message": "Argument of type '{ id: string; businessId: string; clientId: string; staffId: string; startTime: Da"
+        },
+        {
+          "line": 224,
+          "code": "TS2345",
+          "message": "Argument of type '{ success: boolean; appointment: { services: ({ id: string; serviceId: string; ser"
+        },
+        {
+          "line": 241,
+          "code": "TS2345",
+          "message": "Argument of type 'null' is not assignable to parameter of type 'never'."
+        },
+        {
+          "line": 293,
+          "code": "TS2345",
+          "message": "Argument of type '{ services: { id: string; serviceId: string; serviceName: string; price: { toNumbe"
+        }
+      ]
+    },
+    {
+      "file": "__tests__/api/appointments/appointment-management.test.ts",
+      "errorCount": 15,
+      "errors": [
+        {
+          "line": 88,
+          "code": "TS2345",
+          "message": "Argument of type '{ user: { id: string; email: string; }; }' is not assignable to parameter of type "
+        },
+        {
+          "line": 90,
+          "code": "TS2345",
+          "message": "Argument of type '{ id: string; businessId: string; clientId: string; staffId: string; startTime: Da"
+        },
+        {
+          "line": 112,
+          "code": "TS2345",
+          "message": "Argument of type '{ success: boolean; appointment: { notes: string; id: string; businessId: string; "
+        },
+        {
+          "line": 134,
+          "code": "TS2345",
+          "message": "Argument of type 'null' is not assignable to parameter of type 'never'."
+        },
+        {
+          "line": 184,
+          "code": "TS2345",
+          "message": "Argument of type '{ success: boolean; errors: string[]; warnings: string[]; }' is not assignable to "
         }
       ]
     }

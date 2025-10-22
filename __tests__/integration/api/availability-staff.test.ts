@@ -1,9 +1,9 @@
-import { POST } from '@/app/api/availability/staff/route'
-// Note: GET function not implemented yet
+import { POST, GET } from '@/app/api/availability/staff/route'
 import { prisma } from '@/lib/prisma'
 import { Staff, StaffAvailability } from '@prisma/client'
 import { NextRequest } from 'next/server'
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
+import { createTestStaff } from '@/__tests__/utils/test-data-factories'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({

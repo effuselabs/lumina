@@ -2,12 +2,45 @@ import { CalendarView } from '@/components/appointments/calendar-view';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import {
+  createTestDashboardAppointment,
+  createTestStaffMembersList,
+  createTestBusinessHoursWeek,
+} from '@/__tests__/utils/test-data-factories';
+
+const mockAppointment = createTestDashboardAppointment({
+  id: 'appointment-1',
+  startTime: new Date('2024-01-15T09:00:00'),
+  endTime: new Date('2024-01-15T10:00:00'),
+  client: {
+    id: 'client-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    phone: '+1234567890',
+  },
+  services: [
+    {
+      id: 'service-1',
+      name: 'Haircut',
+      duration: 60,
+      price: 50.0,
+    },
+  ],
+});
+
+const mockStaff = createTestStaffMembersList(2);
+mockStaff[0].displayName = 'Alice Johnson';
+mockStaff[1].displayName = 'Bob Smith';
+
+const mockBusinessHours = createTestBusinessHoursWeek();
 
 const mockProps = {
   view: 'day' as const,
   currentDate: new Date('2024-01-15'),
   appointments: [mockAppointment],
   staffMembers: mockStaff,
+  businessHours: mockBusinessHours,
   onAppointmentClick: jest.fn(),
   onAppointmentDrop: jest.fn(),
   onTimeSlotClick: jest.fn(),
@@ -47,7 +80,7 @@ describe('CalendarView', () => {
       fireEvent.click(appointment);
 
       expect(mockProps.onAppointmentClick).toHaveBeenCalledWith(
-        mockAppointments[0]
+        mockAppointment
       );
     });
 
@@ -82,13 +115,17 @@ describe('CalendarView', () => {
 
     it('should display appointments across multiple days', () => {
       const weekAppointments = [
-        ...mockAppointments,
-        {
-          ...mockAppointments[0],
-          id: 'appointment-3',
+        mockAppointment,
+        createTestDashboardAppointment({
+          id: 'appointment-2',
           startTime: new Date('2024-01-16T10:00:00'),
           endTime: new Date('2024-01-16T11:00:00'),
-        },
+        }),
+        createTestDashboardAppointment({
+          id: 'appointment-3',
+          startTime: new Date('2024-01-17T10:00:00'),
+          endTime: new Date('2024-01-17T11:00:00'),
+        }),
       ];
 
       renderWithDnd(
@@ -195,14 +232,13 @@ describe('CalendarView', () => {
   describe('Conflict Visualization', () => {
     it('should highlight conflicting appointments', () => {
       const conflictingAppointments = [
-        ...mockAppointments,
-        {
-          ...mockAppointments[0],
+        mockAppointment,
+        createTestDashboardAppointment({
           id: 'appointment-conflict',
           startTime: new Date('2024-01-15T09:30:00'),
           endTime: new Date('2024-01-15T10:30:00'),
           isConflicted: true,
-        },
+        }),
       ];
 
       renderWithDnd(
@@ -217,13 +253,10 @@ describe('CalendarView', () => {
 
     it('should show conflict tooltip', async () => {
       const conflictingAppointments = [
-        {
-          ...mockAppointments[0],
+        createTestDashboardAppointment({
+          id: 'appointment-1',
           isConflicted: true,
-          conflicts: [
-            { type: 'overlap', message: 'Overlaps with another appointment' },
-          ],
-        },
+        }),
       ];
 
       renderWithDnd(
@@ -270,11 +303,13 @@ describe('CalendarView', () => {
 
   describe('Performance', () => {
     it('should virtualize large appointment lists', () => {
-      const manyAppointments = Array.from({ length: 100 }, (_, i) => ({
-        ...mockAppointments[0],
-        id: `appointment-${i}`,
-        startTime: new Date(`2024-01-15T${9 + (i % 8)}:00:00`),
-      }));
+      const manyAppointments = Array.from({ length: 100 }, (_, i) =>
+        createTestDashboardAppointment({
+          id: `appointment-${i}`,
+          startTime: new Date(`2024-01-15T${9 + (i % 8)}:00:00`),
+          endTime: new Date(`2024-01-15T${10 + (i % 8)}:00:00`),
+        })
+      );
 
       renderWithDnd(
         <CalendarView {...mockProps} appointments={manyAppointments} />
