@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { Business, Service, Staff } from '@prisma/client'
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
-import { createTestBusiness, createTestStaff, createTestService } from '@/__tests__/utils/test-data-factories'
+import { createTestStaff, createTestService } from '@/__tests__/utils/test-data-factories'
 import { NextRequest } from 'next/server'
 import { GET } from '@/app/api/availability/slots/route'
 
@@ -41,8 +41,11 @@ jest.mock('@/lib/services/timezone-handler', () => ({
 }))
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { auth } = require('@/lib/auth')
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { AvailabilityCalculator } = require('@/lib/services/availability-calculator')
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { TimeZoneHandler } = require('@/lib/services/timezone-handler')
 
 describe('/api/availability/slots Integration Tests', () => {
@@ -166,7 +169,7 @@ describe('/api/availability/slots Integration Tests', () => {
             ]
 
             asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             AvailabilityCalculator.getAvailableSlots.mockResolvedValue(mockSlots)
 
             const request = new NextRequest(`http://localhost:3000/api/availability/slots?date=2024-01-15&staffId=${staffId}`)
@@ -184,7 +187,7 @@ describe('/api/availability/slots Integration Tests', () => {
             const mockService = createTestService({
                 id: serviceId,
                 businessId,
-                name: 'Haircut',
+                displayName: 'Haircut',
                 duration: 60,
             })
 
@@ -401,17 +404,9 @@ describe('/api/availability/slots Integration Tests', () => {
 
     describe('Multi-tenant data isolation', () => {
         it('should only access staff from authenticated business', async () => {
-            const otherBusinessId = 'other-business-456'
             const mockBusiness: Partial<Business> = {
                 id: businessId,
                 timezone: 'America/New_York',
-            }
-
-            // Mock staff from different business
-            const otherBusinessStaff: Partial<Staff> = {
-                id: 'other-staff-123',
-                businessId: otherBusinessId,
-                name: 'Other Staff',
             }
 
             asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as Business)
@@ -427,7 +422,6 @@ describe('/api/availability/slots Integration Tests', () => {
         })
 
         it('should only access services from authenticated business', async () => {
-            const otherBusinessId = 'other-business-456'
             const mockBusiness: Partial<Business> = {
                 id: businessId,
                 timezone: 'America/New_York',

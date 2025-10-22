@@ -66,8 +66,8 @@ describe('/api/availability/time-off Integration Tests', () => {
                     updatedAt: new Date(),
                     staff: {
                         id: staffId,
-                        name: 'John Doe',
-                        email: 'john@example.com',
+                        displayName: 'John Doe',
+                        
                     },
                     approver: null,
                 },
@@ -122,13 +122,13 @@ describe('/api/availability/time-off Integration Tests', () => {
                     updatedAt: new Date(),
                     staff: {
                         id: staffId,
-                        name: 'John Doe',
-                        email: 'john@example.com',
+                        displayName: 'John Doe',
+                        
                     },
                     approver: {
                         id: approverId,
-                        name: 'Manager',
-                        email: 'manager@example.com',
+                        displayName: 'Manager',
+                        
                     },
                 },
             ]
@@ -168,8 +168,8 @@ describe('/api/availability/time-off Integration Tests', () => {
                     updatedAt: new Date(),
                     staff: {
                         id: staffId,
-                        name: 'John Doe',
-                        email: 'john@example.com',
+                        displayName: 'John Doe',
+                        
                     },
                     approver: null,
                 },
@@ -248,7 +248,7 @@ describe('/api/availability/time-off Integration Tests', () => {
             const mockStaff = {
                 id: staffId,
                 businessId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockCreatedRequest: TimeOffRequest = {
@@ -266,7 +266,7 @@ describe('/api/availability/time-off Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.appointment.findMany).mockResolvedValue([]) // No conflicts
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([]) // No conflicts
             asMock(mockPrisma.timeOffRequest.create).mockResolvedValue(mockCreatedRequest)
@@ -314,10 +314,10 @@ describe('/api/availability/time-off Integration Tests', () => {
             const mockStaff = {
                 id: staffId,
                 businessId: otherBusinessId, // Different business
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
-            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as unknown as Staff)
 
             const request = new NextRequest('http://localhost:3000/api/availability/time-off', {
                 method: 'POST',
@@ -346,7 +346,7 @@ describe('/api/availability/time-off Integration Tests', () => {
             const mockStaff = {
                 id: staffId,
                 businessId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockConflictingAppointments = [
@@ -360,7 +360,7 @@ describe('/api/availability/time-off Integration Tests', () => {
                 },
             ]
 
-            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.appointment.findMany).mockResolvedValue(mockConflictingAppointments)
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
 
@@ -471,7 +471,7 @@ describe('/api/availability/time-off Integration Tests', () => {
                     endDate: new Date('2024-01-17'),
                     reason: 'Vacation',
                     status: TimeOffStatus.PENDING,
-                    staff: { id: staffId, name: 'John Doe', email: 'john@example.com' },
+                    staff: { id: staffId, displayName: 'John Doe', email: 'john@example.com' },
                 },
                 {
                     id: 'request-2',
@@ -481,7 +481,7 @@ describe('/api/availability/time-off Integration Tests', () => {
                     endDate: new Date('2024-01-22'),
                     reason: 'Personal',
                     status: TimeOffStatus.APPROVED,
-                    staff: { id: 'other-staff-456', name: 'Jane Doe', email: 'jane@example.com' },
+                    staff: { id: 'other-staff-456', displayName: 'Jane Doe', email: 'jane@example.com' },
                 },
             ]
 
@@ -510,10 +510,10 @@ describe('/api/availability/time-off Integration Tests', () => {
             const mockStaff = {
                 id: otherBusinessStaffId,
                 businessId: 'other-business-456', // Different business
-                name: 'Jane Doe',
+                displayName: 'Jane Doe',
             }
 
-            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as unknown as Staff)
 
             const request = new NextRequest('http://localhost:3000/api/availability/time-off', {
                 method: 'POST',
@@ -544,7 +544,7 @@ describe('/api/availability/time-off Integration Tests', () => {
             const mockStaff = {
                 id: staffId,
                 businessId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockCreatedRequest: TimeOffRequest = {
@@ -562,7 +562,7 @@ describe('/api/availability/time-off Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
             asMock(mockPrisma.timeOffRequest.create).mockResolvedValue(mockCreatedRequest)
@@ -582,7 +582,7 @@ describe('/api/availability/time-off Integration Tests', () => {
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([
                 {
                     ...mockCreatedRequest,
-                    staff: { id: staffId, name: 'John Doe', email: 'john@example.com' },
+                    staff: { id: staffId, displayName: 'John Doe', email: 'john@example.com' },
                     approver: null,
                 },
             ] as any)
@@ -610,10 +610,10 @@ describe('/api/availability/time-off Integration Tests', () => {
             const mockStaff = {
                 id: staffId,
                 businessId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
-            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
             asMock(mockPrisma.timeOffRequest.create).mockRejectedValue(new Error('Transaction failed'))
@@ -662,7 +662,7 @@ describe('/api/availability/time-off Integration Tests', () => {
             const mockStaff = {
                 id: staffId,
                 businessId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockCreatedRequest: TimeOffRequest = {
@@ -680,7 +680,7 @@ describe('/api/availability/time-off Integration Tests', () => {
                 updatedAt: new Date(),
             }
 
-            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
             asMock(mockPrisma.timeOffRequest.create).mockResolvedValue(mockCreatedRequest)
