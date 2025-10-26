@@ -40,7 +40,7 @@ describe('/api/availability/validate Integration Tests', () => {
         user: {
             id: 'user-123',
             businessId,
-            role: 'OWNER',
+            
         },
     }
 

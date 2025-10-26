@@ -31,7 +31,7 @@ describe('/api/availability/business-hours Integration Tests', () => {
         user: {
             id: 'user-123',
             businessId,
-            role: 'OWNER',
+            
         },
     }
 

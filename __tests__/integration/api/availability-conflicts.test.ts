@@ -40,7 +40,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
         user: {
             id: 'user-123',
             businessId,
-            role: 'OWNER',
+            
         },
     }
 
@@ -177,7 +177,7 @@ describe('/api/availability/conflicts Integration Tests', () => {
                 {
                     id: serviceId2,
                     businessId,
-                    displayName: 'Shampoo',
+                    name: 'Shampoo',
                     duration: 30,
                 },
             ]

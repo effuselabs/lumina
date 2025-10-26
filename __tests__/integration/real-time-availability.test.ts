@@ -115,7 +115,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 { startTime: new Date('2024-01-15T14:00:00Z'), endTime: new Date('2024-01-15T15:00:00Z'), isAvailable: true },
                 { startTime: new Date('2024-01-15T15:00:00Z'), endTime: new Date('2024-01-15T16:00:00Z'), isAvailable: true },
             ]
-            asMock(availabilityCalculator.getAvailableSlots).mockResolvedValueOnce(mockInitialSlots as any)
+            availabilityCalculator.getAvailableSlots.mockResolvedValueOnce(mockInitialSlots as any)
             
             // Get initial availability (should have slots from 9 AM - 5 PM)
             const initialSlots = await availabilityCalculator.getAvailableSlots({
@@ -162,7 +162,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             const mockUpdatedSlots = [
                 { startTime: new Date('2024-01-15T14:00:00Z'), endTime: new Date('2024-01-15T15:00:00Z'), isAvailable: true },
             ]
-            asMock(availabilityCalculator.getAvailableSlots).mockResolvedValueOnce(mockUpdatedSlots as any)
+            availabilityCalculator.getAvailableSlots.mockResolvedValueOnce(mockUpdatedSlots as any)
             
             // Get updated availability (should only have slots from 9 AM - 3 PM)
             const updatedSlots = await availabilityCalculator.getAvailableSlots({

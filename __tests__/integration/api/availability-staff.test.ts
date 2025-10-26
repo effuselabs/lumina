@@ -38,7 +38,7 @@ describe('/api/availability/staff Integration Tests', () => {
         user: {
             id: 'user-123',
             businessId,
-            role: 'OWNER',
+            
         },
     }
 
@@ -55,7 +55,7 @@ describe('/api/availability/staff Integration Tests', () => {
                     businessId,
                     displayName: 'John Doe',
                     
-                    role: 'STAFF',
+                    
                     isActive: true,
                     workingHours: null,
                     createdAt: new Date(),
@@ -79,7 +79,7 @@ describe('/api/availability/staff Integration Tests', () => {
                 },
             ]
 
-            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff as unknown as Staff[])
             asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(mockAvailability)
             asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
@@ -110,7 +110,7 @@ describe('/api/availability/staff Integration Tests', () => {
                     businessId: otherBusinessId, // Different business
                     displayName: 'Jane Doe',
                     
-                    role: 'STAFF',
+                    
                     isActive: true,
                     workingHours: null,
                     createdAt: new Date(),
@@ -118,7 +118,7 @@ describe('/api/availability/staff Integration Tests', () => {
                 },
             ]
 
-            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff as unknown as Staff[])
 
             const request = new NextRequest('http://localhost:3000/api/availability/staff')
             await GET(request)
@@ -152,7 +152,7 @@ describe('/api/availability/staff Integration Tests', () => {
                     businessId,
                     displayName: 'John Doe',
                     
-                    role: 'STAFF',
+                    
                     isActive: true,
                     workingHours: null,
                     createdAt: new Date(),
@@ -160,7 +160,7 @@ describe('/api/availability/staff Integration Tests', () => {
                 },
             ]
 
-            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff)
+            asMock(mockPrisma.staff.findMany).mockResolvedValue(mockStaff as unknown as Staff[])
             asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue([])
             asMock(mockPrisma.staffAvailabilityOverride.findMany).mockResolvedValue([])
 
@@ -440,7 +440,7 @@ describe('/api/availability/staff Integration Tests', () => {
                     businessId, // User's business
                     displayName: 'John Doe',
                     
-                    role: 'STAFF',
+                    
                     isActive: true,
                     workingHours: null,
                     createdAt: new Date(),
@@ -451,7 +451,7 @@ describe('/api/availability/staff Integration Tests', () => {
                     businessId: otherBusinessId, // Other business - should not be returned
                     displayName: 'Jane Doe',
                     
-                    role: 'STAFF',
+                    
                     isActive: true,
                     workingHours: null,
                     createdAt: new Date(),

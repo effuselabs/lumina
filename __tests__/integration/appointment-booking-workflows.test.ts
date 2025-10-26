@@ -174,7 +174,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
         mockAppointmentStatusManager.mockImplementation(() => statusManagerInstance)
 
         // Setup default mocks
-        mockAuth.mockResolvedValue(testData.session)
+        mockAuth.mockResolvedValue(testData.session as any)
         asMock(mockPrisma.businessUser.findFirst).mockResolvedValue(testData.businessUser)
         asMock(mockPrisma.staff.findFirst).mockResolvedValue(testData.staff[0])
         asMock(mockPrisma.staff.findMany).mockResolvedValue(testData.staff)
@@ -234,19 +234,19 @@ describe('End-to-End Appointment Booking Workflows', () => {
             })
 
             // Mock calendar integration for creation
-            asMock(calendarIntegrationInstance.checkAvailability).mockResolvedValue({
+            (calendarIntegrationInstance as any).checkAvailability.mockResolvedValue({
                 isAvailable: true,
                 reason: 'Time slot available',
                 alternatives: []
             })
 
-            asMock(calendarIntegrationInstance.detectConflicts).mockResolvedValue({
+            (calendarIntegrationInstance as any).detectConflicts.mockResolvedValue({
                 hasConflicts: false,
                 conflicts: [],
                 warnings: []
             })
 
-            asMock(appointmentServiceInstance.createAppointment).mockResolvedValue({
+            (appointmentServiceInstance as any).createAppointment.mockResolvedValue({
                 success: true,
                 appointment: mockCreatedAppointment,
                 errors: [],
@@ -266,12 +266,12 @@ describe('End-to-End Appointment Booking Workflows', () => {
             expect(createData.appointment.status).toBe(AppointmentStatus.SCHEDULED)
 
             // Step 2: Confirm appointment
-            asMock(statusManagerInstance.updateStatus).mockResolvedValue({
+            statusManagerInstance.updateStatus.mockResolvedValue({
                 success: true,
                 validTransitions: [AppointmentStatus.IN_PROGRESS, AppointmentStatus.CANCELLED]
             })
 
-            asMock(appointmentServiceInstance.getAppointmentById)
+            appointmentServiceInstance.getAppointmentById
                 .mockResolvedValueOnce(mockCreatedAppointment)
                 .mockResolvedValueOnce({
                     ...mockCreatedAppointment,
@@ -294,12 +294,12 @@ describe('End-to-End Appointment Booking Workflows', () => {
             expect(confirmData.newStatus).toBe(AppointmentStatus.CONFIRMED)
 
             // Step 3: Start appointment (IN_PROGRESS)
-            asMock(statusManagerInstance.updateStatus).mockResolvedValue({
+            statusManagerInstance.updateStatus.mockResolvedValue({
                 success: true,
                 validTransitions: [AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED]
             })
 
-            asMock(appointmentServiceInstance.getAppointmentById)
+            appointmentServiceInstance.getAppointmentById
                 .mockResolvedValueOnce({ ...mockCreatedAppointment, status: AppointmentStatus.CONFIRMED })
                 .mockResolvedValueOnce({
                     ...mockCreatedAppointment,
@@ -323,12 +323,12 @@ describe('End-to-End Appointment Booking Workflows', () => {
             expect(startData.newStatus).toBe(AppointmentStatus.IN_PROGRESS)
 
             // Step 4: Complete appointment
-            asMock(statusManagerInstance.updateStatus).mockResolvedValue({
+            statusManagerInstance.updateStatus.mockResolvedValue({
                 success: true,
                 validTransitions: []
             })
 
-            asMock(appointmentServiceInstance.getAppointmentById)
+            appointmentServiceInstance.getAppointmentById
                 .mockResolvedValueOnce({
                     ...mockCreatedAppointment,
                     status: AppointmentStatus.IN_PROGRESS,
@@ -372,15 +372,15 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 status: AppointmentStatus.CONFIRMED
             })
 
-            asMock(appointmentServiceInstance.getAppointmentById).mockResolvedValue(mockAppointment)
-            asMock(appointmentServiceInstance.cancelAppointment).mockResolvedValue({
+            appointmentServiceInstance.getAppointmentById.mockResolvedValue(mockAppointment)
+            appointmentServiceInstance.cancelAppointment.mockResolvedValue({
                 success: true,
                 appointment: { ...mockAppointment, status: AppointmentStatus.CANCELLED },
                 errors: [],
                 warnings: []
             })
 
-            asMock(calendarIntegrationInstance.invalidateAvailabilityCache).mockResolvedValue()
+            (calendarIntegrationInstance as any).invalidateAvailabilityCache.mockResolvedValue()
 
             const cancelRequest = new NextRequest('http://localhost/api/appointments/appointment-456?businessId=business-123', {
                 method: 'DELETE',
@@ -449,7 +449,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
             }
 
             // Mock multi-service validation
-            asMock(multiServiceCoordinatorInstance.validateMultiServiceBooking).mockResolvedValue({
+            (multiServiceCoordinatorInstance as any).validateMultiServiceBooking.mockResolvedValue({
                 isValid: true,
                 errors: [],
                 warnings: ['Long appointment duration'],
@@ -457,17 +457,17 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 totalDuration: 210
             })
 
-            asMock(multiServiceCoordinatorInstance.calculateTotalDuration).mockResolvedValue(210)
-            asMock(multiServiceCoordinatorInstance.calculateTotalPrice).mockResolvedValue(200)
+            (multiServiceCoordinatorInstance as any).calculateTotalDuration.mockResolvedValue(210)
+            (multiServiceCoordinatorInstance as any).calculateTotalPrice.mockResolvedValue(200)
 
             // Mock calendar integration
-            asMock(calendarIntegrationInstance.checkAvailability).mockResolvedValue({
+            (calendarIntegrationInstance as any).checkAvailability.mockResolvedValue({
                 isAvailable: true,
                 reason: 'All staff available for required duration',
                 alternatives: []
             })
 
-            asMock(calendarIntegrationInstance.detectConflicts).mockResolvedValue({
+            (calendarIntegrationInstance as any).detectConflicts.mockResolvedValue({
                 hasConflicts: false,
                 conflicts: [],
                 warnings: []
@@ -483,7 +483,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 updatedAt: new Date()
             }
 
-            asMock(appointmentServiceInstance.createAppointment).mockResolvedValue({
+            appointmentServiceInstance.createAppointment.mockResolvedValue({
                 success: true,
                 appointment: mockMultiServiceAppointment,
                 errors: [],
@@ -539,8 +539,8 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 }]
             }
 
-            asMock(appointmentServiceInstance.getAppointmentById).mockResolvedValue(existingAppointment)
-            asMock(appointmentServiceInstance.updateAppointment).mockResolvedValue({
+            appointmentServiceInstance.getAppointmentById.mockResolvedValue(existingAppointment)
+            appointmentServiceInstance.updateAppointment.mockResolvedValue({
                 success: true,
                 appointment: {
                     ...existingAppointment,
@@ -578,24 +578,24 @@ describe('End-to-End Appointment Booking Workflows', () => {
             }
 
             // Step 1: Validate appointment before creation
-            asMock(calendarIntegrationInstance.checkAvailability).mockResolvedValue({
+            (calendarIntegrationInstance as any).checkAvailability.mockResolvedValue({
                 isAvailable: true,
                 reason: 'Staff available during requested time',
                 alternatives: []
             })
 
-            asMock(calendarIntegrationInstance.detectConflicts).mockResolvedValue({
+            (calendarIntegrationInstance as any).detectConflicts.mockResolvedValue({
                 hasConflicts: false,
                 conflicts: [],
                 warnings: []
             })
 
-            asMock(calendarIntegrationInstance.validateServiceDuration).mockResolvedValue({
+            (calendarIntegrationInstance as any).validateServiceDuration.mockResolvedValue({
                 isValid: true,
                 reason: 'Service duration matches time slot'
             })
 
-            asMock(multiServiceCoordinatorInstance.validateMultiServiceBooking).mockResolvedValue({
+            (multiServiceCoordinatorInstance as any).validateMultiServiceBooking.mockResolvedValue({
                 isValid: true,
                 errors: [],
                 warnings: [],
@@ -618,7 +618,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
             expect(validateData.validations.durationValidation.passed).toBe(true)
 
             // Step 2: Create appointment with LUM-96 integration
-            asMock(appointmentServiceInstance.createAppointment).mockResolvedValue({
+            appointmentServiceInstance.createAppointment.mockResolvedValue({
                 success: true,
                 appointment: {
                     id: 'appointment-lum96-123',
@@ -657,7 +657,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
             }
 
             // Mock conflict detection
-            asMock(calendarIntegrationInstance.detectConflicts).mockResolvedValue({
+            (calendarIntegrationInstance as any).detectConflicts.mockResolvedValue({
                 hasConflicts: true,
                 conflicts: [{
                     type: 'SCHEDULING_CONFLICT',
@@ -675,7 +675,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 warnings: []
             })
 
-            asMock(calendarIntegrationInstance.checkAvailability).mockResolvedValue({
+            (calendarIntegrationInstance as any).checkAvailability.mockResolvedValue({
                 isAvailable: false,
                 reason: 'Time slot conflicts with existing appointment',
                 alternatives: [
@@ -726,15 +726,15 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 endTime: new Date('2024-12-01T15:00:00Z')
             }
 
-            asMock(appointmentServiceInstance.getAppointmentById).mockResolvedValue(existingAppointment)
-            asMock(appointmentServiceInstance.updateAppointment).mockResolvedValue({
+            appointmentServiceInstance.getAppointmentById.mockResolvedValue(existingAppointment)
+            appointmentServiceInstance.updateAppointment.mockResolvedValue({
                 success: true,
                 appointment: { ...existingAppointment, ...updateData },
                 errors: [],
                 warnings: []
             })
 
-            asMock(calendarIntegrationInstance.invalidateAvailabilityCache).mockResolvedValue()
+            (calendarIntegrationInstance as any).invalidateAvailabilityCache.mockResolvedValue()
 
             const updateRequest = new NextRequest(`http://localhost/api/appointments/${appointmentId}`, {
                 method: 'PUT',
@@ -779,20 +779,20 @@ describe('End-to-End Appointment Booking Workflows', () => {
             })
 
             // Mock successful creation for all requests
-            asMock(calendarIntegrationInstance.checkAvailability).mockResolvedValue({
+            (calendarIntegrationInstance as any).checkAvailability.mockResolvedValue({
                 isAvailable: true,
                 reason: 'Time slots available',
                 alternatives: []
             })
 
-            asMock(calendarIntegrationInstance.detectConflicts).mockResolvedValue({
+            (calendarIntegrationInstance as any).detectConflicts.mockResolvedValue({
                 hasConflicts: false,
                 conflicts: [],
                 warnings: []
             })
 
             appointmentRequests.forEach((_, i) => {
-                asMock(appointmentServiceInstance.createAppointment).mockResolvedValueOnce({
+                appointmentServiceInstance.createAppointment.mockResolvedValueOnce({
                     success: true,
                     appointment: {
                         id: `concurrent-appointment-${i}`,
@@ -844,11 +844,11 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 status: AppointmentStatus.SCHEDULED
             }
 
-            asMock(appointmentServiceInstance.getAppointmentById).mockResolvedValue(existingAppointment)
+            appointmentServiceInstance.getAppointmentById.mockResolvedValue(existingAppointment)
 
             // Mock status manager to handle concurrent updates
             let updateCount = 0
-            asMock(statusManagerInstance.updateStatus).mockImplementation(async () => {
+            statusManagerInstance.updateStatus.mockImplementation(async () => {
                 updateCount++
                 if (updateCount === 1) {
                     return { success: true, validTransitions: [] }
@@ -893,7 +893,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                     name: 'Create Appointment',
                     threshold: 500,
                     operation: async () => {
-                        asMock(appointmentServiceInstance.createAppointment).mockResolvedValue({
+                        appointmentServiceInstance.createAppointment.mockResolvedValue({
                             success: true,
                             appointment: { id: 'perf-test-123' },
                             errors: [],
@@ -919,7 +919,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                     name: 'Get Appointments',
                     threshold: 300,
                     operation: async () => {
-                        asMock(appointmentServiceInstance.getAppointments).mockResolvedValue({
+                        appointmentServiceInstance.getAppointments.mockResolvedValue({
                             appointments: [],
                             total: 0,
                             hasMore: false
@@ -933,7 +933,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                     name: 'Get Appointment by ID',
                     threshold: 200,
                     operation: async () => {
-                        asMock(appointmentServiceInstance.getAppointmentById).mockResolvedValue({
+                        appointmentServiceInstance.getAppointmentById.mockResolvedValue({
                             id: 'perf-test-123',
                             businessId: 'business-123'
                         })
@@ -962,13 +962,13 @@ describe('End-to-End Appointment Booking Workflows', () => {
             const maxConcurrentRequests = 10
 
             // Setup mocks for load testing
-            asMock(calendarIntegrationInstance.checkAvailability).mockResolvedValue({
+            (calendarIntegrationInstance as any).checkAvailability.mockResolvedValue({
                 isAvailable: true,
                 reason: 'Available',
                 alternatives: []
             })
 
-            asMock(appointmentServiceInstance.getAppointments).mockResolvedValue({
+            appointmentServiceInstance.getAppointments.mockResolvedValue({
                 appointments: Array.from({ length: 20 }, (_, i) => ({
                     id: `load-test-${i}`,
                     businessId: 'business-123'

@@ -1,5 +1,5 @@
 {
-  "totalErrors": 743,
+  "totalErrors": 720,
   "errorsByFile": {
     "__tests__/accessibility/appointment-accessibility.test.tsx": 34,
     "__tests__/accessibility/keyboard-navigation.test.tsx": 4,
@@ -29,13 +29,11 @@
     "__tests__/database/schema-validation.test.ts": 3,
     "__tests__/factories/data-reset-manager.test.ts": 9,
     "__tests__/hooks/use-real-time-appointments.test.ts": 1,
-    "__tests__/integration/api/availability-conflicts.test.ts": 10,
-    "__tests__/integration/api/availability-integration.test.ts": 11,
-    "__tests__/integration/api/availability-slots.test.ts": 3,
-    "__tests__/integration/api/availability-staff.test.ts": 15,
-    "__tests__/integration/api/availability-time-off.test.ts": 7,
-    "__tests__/integration/api/availability-validate.test.ts": 11,
-    "__tests__/integration/appointment-booking-workflows.test.ts": 21,
+    "__tests__/integration/api/availability-integration.test.ts": 4,
+    "__tests__/integration/api/availability-slots.test.ts": 1,
+    "__tests__/integration/api/availability-staff.test.ts": 12,
+    "__tests__/integration/api/availability-validate.test.ts": 1,
+    "__tests__/integration/appointment-booking-workflows.test.ts": 37,
     "__tests__/integration/appointment-management-workflows.test.tsx": 3,
     "__tests__/integration/multi-tenant-isolation.test.ts": 8,
     "__tests__/integration/real-time-appointments.test.tsx": 4,
@@ -97,25 +95,27 @@
   },
   "errorsByCode": {
     "TS2307": 11,
-    "TS2740": 7,
-    "TS2322": 109,
+    "TS2740": 12,
+    "TS2322": 116,
     "TS2552": 11,
-    "TS2304": 57,
+    "TS2304": 63,
     "TS2451": 4,
     "TS2739": 1,
     "TS2554": 31,
-    "TS2345": 94,
+    "TS2345": 99,
     "TS2741": 17,
-    "TS2353": 59,
+    "TS2353": 26,
     "TS2820": 5,
-    "TS2305": 5,
+    "TS2305": 4,
     "TS2721": 1,
-    "TS2349": 1,
+    "TS2349": 7,
     "TS2540": 14,
     "TS2551": 22,
-    "TS2352": 24,
-    "TS2339": 169,
-    "TS7006": 51,
+    "TS2352": 8,
+    "TS2339": 157,
+    "TS7022": 3,
+    "TS2448": 3,
+    "TS7006": 55,
     "TS7053": 5,
     "TS2532": 1,
     "TS2559": 1,
@@ -131,6 +131,37 @@
     "TS18048": 6
   },
   "topFiles": [
+    {
+      "file": "__tests__/integration/appointment-booking-workflows.test.ts",
+      "errorCount": 37,
+      "errors": [
+        {
+          "line": 177,
+          "code": "TS2345",
+          "message": "Argument of type 'any' is not assignable to parameter of type 'never'."
+        },
+        {
+          "line": 210,
+          "code": "TS7022",
+          "message": "'mockCreatedAppointment' implicitly has type 'any' because it does not have a type annotation and is"
+        },
+        {
+          "line": 210,
+          "code": "TS2349",
+          "message": "This expression is not callable."
+        },
+        {
+          "line": 251,
+          "code": "TS2448",
+          "message": "Block-scoped variable 'mockCreatedAppointment' used before its declaration."
+        },
+        {
+          "line": 375,
+          "code": "TS2345",
+          "message": "Argument of type '{ id: string; businessId: string; clientId: string; staffId: string; startTime: Da"
+        }
+      ]
+    },
     {
       "file": "__tests__/accessibility/appointment-accessibility.test.tsx",
       "errorCount": 34,
@@ -283,37 +314,6 @@
           "line": 149,
           "code": "TS2304",
           "message": "Cannot find name 'CacheKeyGenerator'."
-        }
-      ]
-    },
-    {
-      "file": "__tests__/integration/appointment-booking-workflows.test.ts",
-      "errorCount": 21,
-      "errors": [
-        {
-          "line": 177,
-          "code": "TS2345",
-          "message": "Argument of type '{ user: { id: string; email: string; emailVerified: null; name: string; image: nul"
-        },
-        {
-          "line": 237,
-          "code": "TS2339",
-          "message": "Property 'checkAvailability' does not exist on type 'MockedObject<CalendarIntegration>'."
-        },
-        {
-          "line": 243,
-          "code": "TS2339",
-          "message": "Property 'detectConflicts' does not exist on type 'MockedObject<CalendarIntegration>'."
-        },
-        {
-          "line": 383,
-          "code": "TS2339",
-          "message": "Property 'invalidateAvailabilityCache' does not exist on type 'MockedObject<CalendarIntegration>'."
-        },
-        {
-          "line": 383,
-          "code": "TS2554",
-          "message": "Expected 1 arguments, but got 0."
         }
       ]
     },
