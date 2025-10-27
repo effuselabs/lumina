@@ -484,7 +484,7 @@ describe('Appointment Performance Tests', () => {
                 durations.push(duration)
             }
 
-            const averageDuration = durations.reduce((sum, d) => sum + d, 0) / durations.length
+            const averageDuration = durations.reduce((sum: any, d: any) => sum + d, 0) / durations.length
             const maxDuration = Math.max(...durations)
             const minDuration = Math.min(...durations)
             const variance = maxDuration - minDuration

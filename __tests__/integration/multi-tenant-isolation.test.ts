@@ -102,7 +102,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
             ]
 
             // Database should only return Business A data due to WHERE clause
-            const businessAHours = mixedBusinessHours.filter(h => h.businessId === businessA)
+            const businessAHours = mixedBusinessHours.filter((h: any) => h.businessId === businessA)
             asMock(mockPrisma.businessHours.findMany).mockResolvedValue(businessAHours)
 
             const request = new NextRequest('http://localhost:3000/api/availability/business-hours')
@@ -235,8 +235,8 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
             ]
 
             // Database should only return Business A data
-            const businessAStaff = mixedStaff.filter(s => s.businessId === businessA)
-            const businessAAvailability = mixedAvailability.filter(a => a.businessId === businessA)
+            const businessAStaff = mixedStaff.filter((s: any) => s.businessId === businessA)
+            const businessAAvailability = mixedAvailability.filter((a: any) => a.businessId === businessA)
 
             asMock(mockPrisma.staff.findMany).mockResolvedValue(businessAStaff)
             asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(businessAAvailability)
@@ -379,7 +379,7 @@ describe('Multi-Tenant Data Isolation Integration Tests', () => {
             ]
 
             // Database should only return Business A data
-            const businessARequests = mixedTimeOffRequests.filter(r => r.businessId === businessA)
+            const businessARequests = mixedTimeOffRequests.filter((r: any) => r.businessId === businessA)
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue(businessARequests as any)
 
             const request = new NextRequest('http://localhost:3000/api/availability/time-off')

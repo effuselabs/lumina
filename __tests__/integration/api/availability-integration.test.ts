@@ -665,9 +665,9 @@ describe('Availability API Integration Tests', () => {
             })
 
             // Verify all data belongs to user's business
-            expect(staff.every(s => s.businessId === userBusinessId)).toBe(true)
-            expect(timeOffRequests.every(r => r.businessId === userBusinessId)).toBe(true)
-            expect(businessHours.every(h => h.businessId === userBusinessId)).toBe(true)
+            expect(staff.every((s: any) => s.businessId === userBusinessId)).toBe(true)
+            expect(timeOffRequests.every((r: any) => r.businessId === userBusinessId)).toBe(true)
+            expect(businessHours.every((h: any) => h.businessId === userBusinessId)).toBe(true)
 
             // Verify queries were scoped correctly
             expect(mockPrisma.staff.findMany).toHaveBeenCalledWith({

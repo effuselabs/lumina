@@ -686,8 +686,8 @@ describe('SecureAppointmentRepository', () => {
             )
 
             expect(result.appointments).toHaveLength(2)
-            expect(result.appointments.map(a => a.id)).toContain(appointment1Id)
-            expect(result.appointments.map(a => a.id)).toContain(appointment2Id)
+            expect(result.appointments.map((a: any) => a.id)).toContain(appointment1Id)
+            expect(result.appointments.map((a: any) => a.id)).toContain(appointment2Id)
 
             // Verify audit log was created
             const auditLogs = await prisma.auditLog.findMany({

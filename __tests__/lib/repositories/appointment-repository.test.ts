@@ -106,7 +106,7 @@ describe('AppointmentRepository', () => {
                     depositAmount: undefined,
                     depositPaid: false,
                     services: {
-                        create: mockAppointmentData.services.map(service => ({
+                        create: mockAppointmentData.services.map((service: any) => ({
                             serviceId: service.serviceId,
                             serviceName: service.serviceName,
                             price: service.price,

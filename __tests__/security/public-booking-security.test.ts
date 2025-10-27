@@ -128,7 +128,7 @@ describe('Public Booking Security', () => {
             };
 
             const result = publicBookingSanitizer.sanitizeBookingData(bookingData);
-            expect(result.violations.some(v => v.includes('invalid format'))).toBe(true);
+            expect(result.violations.some((v: any) => v.includes('invalid format'))).toBe(true);
         });
 
         it('should limit number of services', () => {

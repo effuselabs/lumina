@@ -243,7 +243,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
 
             const successfulBookings = results.filter((result: any) => result.success)
             const failedBookings = results.filter((result: any) => !result.success)
-            const warningsCount = results.reduce((sum, result) => sum + result.warnings.length, 0)
+            const warningsCount = results.reduce((sum: any, result: any) => sum + result.warnings.length, 0)
 
             expect(successfulBookings.length).toBeGreaterThan(mondayRushLoad * 0.9) // 90% success rate
             expect(failedBookings.length).toBeLessThan(mondayRushLoad * 0.1)
@@ -348,7 +348,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
                 }
             }
 
-            const totalTime = burstTimes.reduce((sum, time) => sum + time, 0)
+            const totalTime = burstTimes.reduce((sum: any, time: any) => sum + time, 0)
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.HOLIDAY_BOOKING_SURGE)
 
             const successfulBookings = allResults.filter((result: any) => result.success)
@@ -456,7 +456,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
 
             const successfulBookings = results.filter((result: any) => result.success)
             const failedBookings = results.filter((result: any) => !result.success)
-            const warningsCount = results.reduce((sum, result) => sum + result.warnings.length, 0)
+            const warningsCount = results.reduce((sum: any, result: any) => sum + result.warnings.length, 0)
 
             expect(successfulBookings.length).toBeGreaterThan(campaignLoad * 0.88) // 88% success rate
 
@@ -574,12 +574,12 @@ describe('Peak Booking Scenarios Load Testing', () => {
                 }
             }
 
-            const totalTime = batchMetrics.reduce((sum, batch) => sum + batch.time, 0)
+            const totalTime = batchMetrics.reduce((sum: any, batch: any) => sum + batch.time, 0)
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.SUSTAINED_HIGH_LOAD)
 
             // Analyze performance consistency
             const batchTimes = batchMetrics.map((batch: any) => batch.time)
-            const averageBatchTime = batchTimes.reduce((sum, time) => sum + time, 0) / batchTimes.length
+            const averageBatchTime = batchTimes.reduce((sum: any, time: any) => sum + time, 0) / batchTimes.length
             const maxBatchTime = Math.max(...batchTimes)
             const minBatchTime = Math.min(...batchTimes)
             const timeVariance = maxBatchTime - minBatchTime
@@ -722,7 +722,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
                 }
             }
 
-            const averageTime = operationTimes.reduce((sum, time) => sum + time, 0) / operationTimes.length
+            const averageTime = operationTimes.reduce((sum: any, time: any) => sum + time, 0) / operationTimes.length
             const slowOperationRate = slowOperations / monitoringOperations
 
             // Performance should be within acceptable limits

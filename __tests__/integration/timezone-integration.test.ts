@@ -109,24 +109,24 @@ describe('Timezone Integration Tests', () => {
             expect(normalized).toHaveLength(3)
 
             // All should be different UTC times despite same local times
-            const utcStartTimes = normalized.map(slot => slot.utcStart.hour)
+            const utcStartTimes = normalized.map((slot: any) => slot.utcStart.hour)
             expect(new Set(utcStartTimes).size).toBe(3) // All different
 
             // NYC: 09:00 EDT = 13:00 UTC
-            expect(normalized.find(n => n.locationId === 'nyc')?.utcStart.hour).toBe(13)
+            expect(normalized.find((n: any) => n.locationId === 'nyc')?.utcStart.hour).toBe(13)
 
             // LA: 09:00 PDT = 16:00 UTC  
-            expect(normalized.find(n => n.locationId === 'la')?.utcStart.hour).toBe(16)
+            expect(normalized.find((n: any) => n.locationId === 'la')?.utcStart.hour).toBe(16)
 
             // London: 09:00 BST = 08:00 UTC
-            expect(normalized.find(n => n.locationId === 'london')?.utcStart.hour).toBe(8)
+            expect(normalized.find((n: any) => n.locationId === 'london')?.utcStart.hour).toBe(8)
         })
 
         it('should handle location-specific business hours', async () => {
             const businessHours = multiLocationManager.getBusinessHoursAllLocations('2024-07-15')
 
             expect(businessHours).toHaveLength(3)
-            expect(businessHours.map(bh => bh.timezone)).toEqual([
+            expect(businessHours.map((bh: any) => bh.timezone)).toEqual([
                 'America/New_York',
                 'America/Los_Angeles',
                 'Europe/London'
@@ -249,7 +249,7 @@ describe('Timezone Integration Tests', () => {
 
             const startTime = Date.now()
 
-            const results = conversions.map(conv => {
+            const results = conversions.map((conv: any) => {
                 try {
                     const utc = TimeZoneHandler.localToUTC(conv.time, conv.date, conv.fromTimezone)
                     const local = TimeZoneHandler.utcToLocal(utc, conv.toTimezone)
@@ -266,7 +266,7 @@ describe('Timezone Integration Tests', () => {
             expect(duration).toBeLessThan(1000)
 
             // All conversions should succeed
-            const successful = results.filter(r => r.success).length
+            const successful = results.filter((r: any) => r.success).length
             expect(successful).toBe(100)
         })
 

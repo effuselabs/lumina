@@ -217,7 +217,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 status: AppointmentStatus.SCHEDULED,
                 totalDuration: 60,
                 totalPrice: 50,
-                services: appointmentData.services.map(s => ({
+                services: appointmentData.services.map((s: any) => ({
                     id: `service-${s.serviceId}`,
                     appointmentId: 'appointment-123',
                     serviceId: s.serviceId,
@@ -868,7 +868,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
             }))
 
             const responses = await Promise.all(
-                statusUpdateRequests.map(updateData => {
+                statusUpdateRequests.map((updateData: any) => {
                     const request = new NextRequest(`http://localhost/api/appointments/${appointmentId}/status?businessId=business-123`, {
                         method: 'PUT',
                         body: JSON.stringify(updateData)
@@ -878,8 +878,8 @@ describe('End-to-End Appointment Booking Workflows', () => {
             )
 
             // Only one update should succeed, others should fail gracefully
-            const successfulUpdates = responses.filter(response => response.status === 200)
-            const failedUpdates = responses.filter(response => response.status !== 200)
+            const successfulUpdates = responses.filter((response: any) => response.status === 200)
+            const failedUpdates = responses.filter((response: any) => response.status !== 200)
 
             expect(successfulUpdates).toHaveLength(1)
             expect(failedUpdates).toHaveLength(concurrentStatusUpdates - 1)
@@ -998,7 +998,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 })
 
                 const batchResponses = await Promise.all(batchPromises)
-                const successfulInBatch = batchResponses.filter(response => response.status === 200).length
+                const successfulInBatch = batchResponses.filter((response: any) => response.status === 200).length
                 totalSuccessful += successfulInBatch
             }
 

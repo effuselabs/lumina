@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react';
 
 // Mock touch events
 const createTouchEvent = (type: string, touches: Array<{ clientX: number; clientY: number }>) => {
-    const touchList = touches.map(touch => ({
+    const touchList = touches.map((touch: any) => ({
         clientX: touch.clientX,
         clientY: touch.clientY,
         identifier: Math.random(),

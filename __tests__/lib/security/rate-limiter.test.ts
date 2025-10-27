@@ -204,7 +204,7 @@ describe('AbuseDetector', () => {
                 'user..test@example.com'
             ]
 
-            suspiciousEmails.forEach(email => {
+            suspiciousEmails.forEach((email: any) => {
                 const appointmentData = {
                     startTime: new Date(Date.now() + 24 * 60 * 60 * 1000),
                     clientEmail: email

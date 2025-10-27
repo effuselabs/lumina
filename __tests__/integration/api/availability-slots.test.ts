@@ -131,8 +131,8 @@ describe('/api/availability/slots Integration Tests', () => {
                 businessId,
                 businessTimezone: mockBusiness.timezone,
                 totalSlots: mockSlots.length,
-                availableSlots: mockSlots.filter(s => s.isAvailable).length,
-                unavailableSlots: mockSlots.filter(s => !s.isAvailable).length,
+                availableSlots: mockSlots.filter((s: any) => s.isAvailable).length,
+                unavailableSlots: mockSlots.filter((s: any) => !s.isAvailable).length,
                 slots: mockSlots,
             }
 

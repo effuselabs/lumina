@@ -132,8 +132,8 @@ describe('Calendar Infrastructure Performance Benchmarks', () => {
             const totalTime = endTime - startTime
 
             // Analyze results
-            const successful = results.filter(r => r.status === 'fulfilled')
-            const failed = results.filter(r => r.status === 'rejected')
+            const successful = results.filter((r: any) => r.status === 'fulfilled')
+            const failed = results.filter((r: any) => r.status === 'rejected')
             const successRate = successful.length / concurrentUsers
 
             // Performance requirements
@@ -177,7 +177,7 @@ describe('Calendar Infrastructure Performance Benchmarks', () => {
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
-            const successful = results.filter(r => r.status === 'fulfilled')
+            const successful = results.filter((r: any) => r.status === 'fulfilled')
             const successRate = successful.length / concurrentRequests
 
             // Performance requirements for conflict detection
@@ -240,7 +240,7 @@ describe('Calendar Infrastructure Performance Benchmarks', () => {
             }
 
             // Calculate overall performance
-            const totalTime = results.reduce((sum, r) => sum + r.executionTime, 0)
+            const totalTime = results.reduce((sum: any, r: any) => sum + r.executionTime, 0)
             const averageTime = totalTime / results.length
 
             expect(averageTime).toBeLessThan(80) // Average under 80ms
@@ -400,7 +400,7 @@ describe('Calendar Infrastructure Performance Benchmarks', () => {
             expect(totalTime).toBeLessThan(1000) // Under 1 second for 25 concurrent invalidations
             expect(results).toHaveLength(concurrentInvalidations)
 
-            const totalKeysInvalidated = results.reduce((sum, r) => sum + r.keysInvalidated, 0)
+            const totalKeysInvalidated = results.reduce((sum: any, r: any) => sum + r.keysInvalidated, 0)
             const averageTime = totalTime / concurrentInvalidations
 
             console.log(`Concurrent Cache Invalidation Results:`)
@@ -487,8 +487,8 @@ describe('Calendar Infrastructure Performance Benchmarks', () => {
             const firstHalf = results.slice(0, rounds / 2)
             const secondHalf = results.slice(rounds / 2)
 
-            const firstHalfAvg = firstHalf.reduce((sum, r) => sum + r.executionTime, 0) / firstHalf.length
-            const secondHalfAvg = secondHalf.reduce((sum, r) => sum + r.executionTime, 0) / secondHalf.length
+            const firstHalfAvg = firstHalf.reduce((sum: any, r: any) => sum + r.executionTime, 0) / firstHalf.length
+            const secondHalfAvg = secondHalf.reduce((sum: any, r: any) => sum + r.executionTime, 0) / secondHalf.length
 
             const degradation = (secondHalfAvg - firstHalfAvg) / firstHalfAvg
 

@@ -337,9 +337,9 @@ describe('Concurrent Booking Performance Tests', () => {
             }
 
             // Calculate averages
-            const avgBusinessInfo = performanceMetrics.businessInfoLoad.reduce((a, b) => a + b) / testRuns
-            const avgAvailability = performanceMetrics.availabilityCheck.reduce((a, b) => a + b) / testRuns
-            const avgBooking = performanceMetrics.bookingCreation.reduce((a, b) => a + b) / testRuns
+            const avgBusinessInfo = performanceMetrics.businessInfoLoad.reduce((a: any, b: any) => a + b) / testRuns
+            const avgAvailability = performanceMetrics.availabilityCheck.reduce((a: any, b: any) => a + b) / testRuns
+            const avgBooking = performanceMetrics.bookingCreation.reduce((a: any, b: any) => a + b) / testRuns
 
             // Performance SLA assertions (based on requirements)
             expect(avgBusinessInfo).toBeLessThan(200) // Business info < 200ms

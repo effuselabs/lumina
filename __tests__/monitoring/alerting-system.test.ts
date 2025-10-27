@@ -217,7 +217,7 @@ describe('AlertingSystem', () => {
 
         it('should update existing alert rule', () => {
             const rules = alertingSystem.getAlertRules();
-            const existingRule = rules.find(rule => rule.id === 'slow-response-time');
+            const existingRule = rules.find((rule: any) => rule.id === 'slow-response-time');
 
             expect(existingRule).toBeDefined();
 
@@ -227,7 +227,7 @@ describe('AlertingSystem', () => {
             });
 
             const updatedRules = alertingSystem.getAlertRules();
-            const updatedRule = updatedRules.find(rule => rule.id === 'slow-response-time');
+            const updatedRule = updatedRules.find((rule: any) => rule.id === 'slow-response-time');
 
             expect(updatedRule?.condition.threshold).toBe(1000);
             expect(updatedRule?.enabled).toBe(false);
@@ -237,7 +237,7 @@ describe('AlertingSystem', () => {
             const rules = alertingSystem.getAlertRules();
 
             expect(rules).toHaveLength(4); // Default rules
-            expect(rules.map(rule => rule.id)).toEqual([
+            expect(rules.map((rule: any) => rule.id)).toEqual([
                 'slow-response-time',
                 'high-error-rate',
                 'database-connection-failure',

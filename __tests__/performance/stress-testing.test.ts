@@ -434,10 +434,10 @@ describe('Availability System Stress Testing', () => {
 
             // Analyze performance degradation over time
             const firstHalfAvg = performanceMetrics.slice(0, churnCycles / 2)
-                .reduce((sum, time) => sum + time, 0) / (churnCycles / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (churnCycles / 2)
 
             const secondHalfAvg = performanceMetrics.slice(churnCycles / 2)
-                .reduce((sum, time) => sum + time, 0) / (churnCycles / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (churnCycles / 2)
 
             const performanceDegradation = (secondHalfAvg - firstHalfAvg) / firstHalfAvg
 

@@ -63,7 +63,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 expect(revenueData.length).toBeGreaterThan(0);
 
                 // Validate data structure
-                revenueData.forEach(day => {
+                revenueData.forEach((day: any) => {
                     expect(day).toHaveProperty('date');
                     expect(day).toHaveProperty('revenue');
                     expect(day).toHaveProperty('appointments');
@@ -84,8 +84,8 @@ describe('Analytics and Reporting Data Quality Validation', () => {
             });
 
             test('should have realistic revenue patterns and distributions', () => {
-                const totalRevenue = revenueData.reduce((sum, day) => sum + day.revenue, 0);
-                const totalAppointments = revenueData.reduce((sum, day) => sum + day.appointments, 0);
+                const totalRevenue = revenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
+                const totalAppointments = revenueData.reduce((sum: any, day: any) => sum + day.appointments, 0);
                 const averageTicket = totalAppointments > 0 ? totalRevenue / totalAppointments : 0;
 
                 // Validate realistic ranges for salon business
@@ -95,7 +95,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 expect(averageTicket).toBeLessThan(500); // Not unrealistically high
 
                 // Check for data distribution (not all zeros)
-                const daysWithRevenue = revenueData.filter(day => day.revenue > 0).length;
+                const daysWithRevenue = revenueData.filter((day: any) => day.revenue > 0).length;
                 expect(daysWithRevenue).toBeGreaterThan(revenueData.length * 0.3); // At least 30% of days should have revenue
             });
 
@@ -107,7 +107,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 expect(revenueMetrics).toHaveProperty('appointmentCount');
 
                 // Validate metrics consistency
-                const calculatedTotal = revenueData.reduce((sum, day) => sum + day.revenue, 0);
+                const calculatedTotal = revenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
                 expect(Math.abs(revenueMetrics.totalRevenue - calculatedTotal)).toBeLessThan(1); // Allow for rounding
 
                 expect(revenueMetrics.totalRevenue).toBeGreaterThan(0);
@@ -116,7 +116,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
             });
 
             test('should properly calculate employment type revenue splits', () => {
-                revenueData.forEach(day => {
+                revenueData.forEach((day: any) => {
                     if (day.revenue > 0) {
                         // Commission + chair rental + business retention should be reasonable
                         const totalSplit = day.commissionEarnings + day.chairRentalRevenue + day.businessRetention;
@@ -172,7 +172,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 expect(clientMetrics.topClients.length).toBeGreaterThan(0);
                 expect(clientMetrics.topClients.length).toBeLessThanOrEqual(10);
 
-                clientMetrics.topClients.forEach(client => {
+                clientMetrics.topClients.forEach((client: any) => {
                     expect(client).toHaveProperty('id');
                     expect(client).toHaveProperty('name');
                     expect(client).toHaveProperty('email');
@@ -207,7 +207,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 expect(Array.isArray(staffPerformance)).toBe(true);
                 expect(staffPerformance.length).toBeGreaterThan(0);
 
-                staffPerformance.forEach(staff => {
+                staffPerformance.forEach((staff: any) => {
                     expect(staff).toHaveProperty('staffId');
                     expect(staff).toHaveProperty('name');
                     expect(staff).toHaveProperty('employmentType');
@@ -235,11 +235,11 @@ describe('Analytics and Reporting Data Quality Validation', () => {
 
             test('should have realistic performance distributions', () => {
                 // Should have staff with different employment types
-                const employmentTypes = [...new Set(staffPerformance.map(s => s.employmentType))];
+                const employmentTypes = [...new Set(staffPerformance.map((s: any) => s.employmentType))];
                 expect(employmentTypes.length).toBeGreaterThan(1); // Should have variety
 
                 // Performance should vary between staff members
-                const revenues = staffPerformance.map(s => s.totalRevenue);
+                const revenues = staffPerformance.map((s: any) => s.totalRevenue);
                 const maxRevenue = Math.max(...revenues);
                 const minRevenue = Math.min(...revenues);
 
@@ -248,7 +248,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 }
 
                 // Average tickets should be reasonable
-                staffPerformance.forEach(staff => {
+                staffPerformance.forEach((staff: any) => {
                     if (staff.appointmentCount > 0) {
                         expect(staff.averageTicket).toBeGreaterThan(20); // Reasonable minimum
                         expect(staff.averageTicket).toBeLessThan(300); // Reasonable maximum
@@ -257,7 +257,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
             });
 
             test('should calculate employment-specific earnings correctly', () => {
-                staffPerformance.forEach(staff => {
+                staffPerformance.forEach((staff: any) => {
                     if (staff.employmentType === 'COMMISSION') {
                         expect(staff.commissionEarnings).toBeGreaterThan(0);
                         expect(staff.chairRentalPaid).toBe(0);
@@ -284,7 +284,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 expect(Array.isArray(serviceAnalytics)).toBe(true);
                 expect(serviceAnalytics.length).toBeGreaterThan(0);
 
-                serviceAnalytics.forEach(service => {
+                serviceAnalytics.forEach((service: any) => {
                     expect(service).toHaveProperty('serviceId');
                     expect(service).toHaveProperty('name');
                     expect(service).toHaveProperty('bookingCount');
@@ -306,7 +306,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
 
             test('should have proper popularity ranking', () => {
                 // Popularity ranks should be sequential starting from 1
-                const ranks = serviceAnalytics.map(s => s.popularityRank).sort((a, b) => a - b);
+                const ranks = serviceAnalytics.map((s: any) => s.popularityRank).sort((a, b) => a - b);
 
                 for (let i = 0; i < ranks.length; i++) {
                     expect(ranks[i]).toBe(i + 1);
@@ -321,7 +321,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
             });
 
             test('should have realistic service pricing and revenue', () => {
-                serviceAnalytics.forEach(service => {
+                serviceAnalytics.forEach((service: any) => {
                     // Average price should be reasonable for salon services
                     expect(service.averagePrice).toBeGreaterThan(10);
                     expect(service.averagePrice).toBeLessThan(500);
@@ -352,7 +352,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
                 expect(recentAppointments.length).toBeGreaterThan(0);
                 expect(recentAppointments.length).toBeLessThanOrEqual(20);
 
-                recentAppointments.forEach(appointment => {
+                recentAppointments.forEach((appointment: any) => {
                     expect(appointment).toHaveProperty('id');
                     expect(appointment).toHaveProperty('clientName');
                     expect(appointment).toHaveProperty('serviceName');
@@ -383,7 +383,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
             });
 
             test('should have realistic appointment data', () => {
-                recentAppointments.forEach(appointment => {
+                recentAppointments.forEach((appointment: any) => {
                     // Start time should be before end time
                     expect(appointment.startTime.getTime()).toBeLessThan(appointment.endTime.getTime());
 
@@ -409,9 +409,9 @@ describe('Analytics and Reporting Data Quality Validation', () => {
             ]);
 
             // Total revenue should be consistent
-            const revenueFromRevenueWidget = revenueData.reduce((sum, day) => sum + day.revenue, 0);
-            const revenueFromStaffWidget = staffPerformance.reduce((sum, staff) => sum + staff.totalRevenue, 0);
-            const revenueFromServiceWidget = serviceAnalytics.reduce((sum, service) => sum + service.revenue, 0);
+            const revenueFromRevenueWidget = revenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
+            const revenueFromStaffWidget = staffPerformance.reduce((sum: any, staff: any) => sum + staff.totalRevenue, 0);
+            const revenueFromServiceWidget = serviceAnalytics.reduce((sum: any, service: any) => sum + service.revenue, 0);
 
             // Allow for some variance due to different calculation methods and date ranges
             const maxRevenue = Math.max(revenueFromRevenueWidget, revenueFromStaffWidget, revenueFromServiceWidget);
@@ -448,7 +448,7 @@ describe('Analytics and Reporting Data Quality Validation', () => {
             expect(smallRangeData.length).toBeLessThanOrEqual(fullRangeData.length);
 
             // All dates in small range should be within the specified range
-            smallRangeData.forEach(day => {
+            smallRangeData.forEach((day: any) => {
                 const dayDate = new Date(day.date);
                 expect(dayDate.getTime()).toBeGreaterThanOrEqual(startOfDay(smallDateRange.from).getTime());
                 expect(dayDate.getTime()).toBeLessThanOrEqual(endOfDay(smallDateRange.to).getTime());

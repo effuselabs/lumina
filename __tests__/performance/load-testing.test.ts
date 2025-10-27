@@ -330,9 +330,9 @@ describe('Availability System Load Testing', () => {
             expect(failedRequests.length).toBeLessThan(8)
 
             // Verify all operation types were successful
-            const availabilityResults = results.filter(r => r.type === 'availability' && !('error' in r))
-            const conflictResults = results.filter(r => r.type === 'conflict' && !('error' in r))
-            const validationResults = results.filter(r => r.type === 'validation' && !('error' in r))
+            const availabilityResults = results.filter((r: any) => r.type === 'availability' && !('error' in r))
+            const conflictResults = results.filter((r: any) => r.type === 'conflict' && !('error' in r))
+            const validationResults = results.filter((r: any) => r.type === 'validation' && !('error' in r))
 
             expect(availabilityResults.length).toBeGreaterThan(45)
             expect(conflictResults.length).toBeGreaterThan(45)
@@ -506,17 +506,17 @@ describe('Availability System Load Testing', () => {
             expect(failedRequests.length).toBeLessThan(20)
 
             // Verify performance by operation type
-            const availabilityOps = results.filter(r => r.type === 'availability')
-            const conflictOps = results.filter(r => r.type === 'conflict')
-            const validationOps = results.filter(r => r.type === 'validation')
+            const availabilityOps = results.filter((r: any) => r.type === 'availability')
+            const conflictOps = results.filter((r: any) => r.type === 'conflict')
+            const validationOps = results.filter((r: any) => r.type === 'validation')
 
             console.log(`Peak Load Test Results:`)
             console.log(`- Total requests: ${peakRequests.length}`)
             console.log(`- Successful: ${successfulRequests.length}`)
             console.log(`- Failed: ${failedRequests.length}`)
-            console.log(`- Availability ops: ${availabilityOps.filter(op => op.success).length}/${availabilityOps.length}`)
-            console.log(`- Conflict ops: ${conflictOps.filter(op => op.success).length}/${conflictOps.length}`)
-            console.log(`- Validation ops: ${validationOps.filter(op => op.success).length}/${validationOps.length}`)
+            console.log(`- Availability ops: ${availabilityOps.filter((op: any) => op.success).length}/${availabilityOps.length}`)
+            console.log(`- Conflict ops: ${conflictOps.filter((op: any) => op.success).length}/${conflictOps.length}`)
+            console.log(`- Validation ops: ${validationOps.filter((op: any) => op.success).length}/${validationOps.length}`)
             console.log(`- Total time: ${totalExecutionTime.toFixed(2)}ms`)
             console.log(`- Average time per request: ${(totalExecutionTime / peakRequests.length).toFixed(2)}ms`)
         })
@@ -593,8 +593,8 @@ describe('Availability System Load Testing', () => {
                 return {
                     batchIndex,
                     executionTime: endTime - startTime,
-                    successCount: results.filter(r => !('error' in r)).length,
-                    failureCount: results.filter(r => 'error' in r).length,
+                    successCount: results.filter((r: any) => !('error' in r)).length,
+                    failureCount: results.filter((r: any) => 'error' in r).length,
                 }
             })
 

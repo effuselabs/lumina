@@ -308,7 +308,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_CREATION * 1.5) // Allow 50% more time for calendar integration
-            expect(results.filter(r => r.success)).toHaveLength(concurrentRequests)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentRequests)
 
             console.log(`Calendar Integration Concurrent Creation:`)
             console.log(`- Requests: ${concurrentRequests}`)
@@ -326,7 +326,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
                     errors: [],
                     warnings: [],
                     optimizedServices: services,
-                    totalDuration: services.reduce((sum, s) => sum + s.duration, 0)
+                    totalDuration: services.reduce((sum: any, s: any) => sum + s.duration, 0)
                 }
             })
 
@@ -368,7 +368,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_CREATION * 2) // Allow more time for multi-service
-            expect(results.filter(r => r.success)).toHaveLength(concurrentMultiService)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentMultiService)
 
             console.log(`Multi-Service Concurrent Creation:`)
             console.log(`- Requests: ${concurrentMultiService}`)
@@ -398,7 +398,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_UPDATES)
-            expect(results.filter(r => r.success)).toHaveLength(concurrentUpdates)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentUpdates)
 
             console.log(`Concurrent Updates Performance:`)
             console.log(`- Updates: ${concurrentUpdates}`)
@@ -444,7 +444,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_UPDATES * 1.5) // Allow extra time for cache operations
-            expect(results.filter(r => r.success)).toHaveLength(concurrentUpdates)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentUpdates)
             expect(cacheInvalidationCount).toBe(concurrentUpdates)
 
             console.log(`Cache Coordination Performance:`)
@@ -494,7 +494,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_STATUS_CHANGES)
-            expect(results.filter(r => r.success)).toHaveLength(concurrentStatusChanges)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentStatusChanges)
 
             console.log(`Concurrent Status Changes Performance:`)
             console.log(`- Status changes: ${concurrentStatusChanges}`)
@@ -695,7 +695,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
 
             // Analyze by operation type
             const operationStats = operationTypes.map((type: any) => {
-                const typeOperations = mixedOperations.filter(op => op.type === type)
+                const typeOperations = mixedOperations.filter((op: any) => op.type === type)
                 const typeResults = results.slice(
                     mixedOperations.findIndex(op => op.type === type),
                     mixedOperations.findIndex(op => op.type === type) + typeOperations.length
@@ -914,10 +914,10 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
 
             // Analyze performance degradation
             const firstHalfAvg = performanceMetrics.slice(0, sustainedRounds / 2)
-                .reduce((sum, time) => sum + time, 0) / (sustainedRounds / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (sustainedRounds / 2)
 
             const secondHalfAvg = performanceMetrics.slice(sustainedRounds / 2)
-                .reduce((sum, time) => sum + time, 0) / (sustainedRounds / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (sustainedRounds / 2)
 
             const performanceDegradation = (secondHalfAvg - firstHalfAvg) / firstHalfAvg
 

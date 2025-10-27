@@ -84,10 +84,10 @@ describe('AppointmentAnalyticsService', () => {
 
             (prisma.appointment.findMany as jest.Mock)
                 .mockResolvedValueOnce(mockAppointments) // For volume metrics
-                .mockResolvedValueOnce(mockAppointments.filter(a => a.status === AppointmentStatus.COMPLETED)) // For revenue metrics
+                .mockResolvedValueOnce(mockAppointments.filter((a: any) => a.status === AppointmentStatus.COMPLETED)) // For revenue metrics
                 .mockResolvedValueOnce(mockAppointments) // For staff utilization
-                .mockResolvedValueOnce(mockAppointments.filter(a => a.status === AppointmentStatus.COMPLETED)) // For peak hours
-                .mockResolvedValueOnce(mockAppointments.filter(a => a.clientId)) // For client retention
+                .mockResolvedValueOnce(mockAppointments.filter((a: any) => a.status === AppointmentStatus.COMPLETED)) // For peak hours
+                .mockResolvedValueOnce(mockAppointments.filter((a: any) => a.clientId)) // For client retention
                 .mockResolvedValueOnce(mockAppointments); // For trends
 
             (prisma.appointment.count as jest.Mock).mockResolvedValue(1); // Previous period count
@@ -278,7 +278,7 @@ describe('AppointmentAnalyticsService', () => {
             );
 
             expect(report).toHaveLength(2);
-            expect(report.map(r => r.staffName)).toEqual(['John Doe', 'Jane Smith']);
+            expect(report.map((r: any) => r.staffName)).toEqual(['John Doe', 'Jane Smith']);
         });
     });
 

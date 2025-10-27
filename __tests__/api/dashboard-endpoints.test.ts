@@ -301,7 +301,7 @@ describe('Dashboard API Endpoints Data Quality', () => {
                 expect(report.employmentBreakdown).toHaveProperty('chairRental');
                 expect(report.employmentBreakdown).toHaveProperty('hybrid');
 
-                ['commission', 'chairRental', 'hybrid'].forEach(type => {
+                ['commission', 'chairRental', 'hybrid'].forEach((type: any) => {
                     const breakdown = report.employmentBreakdown[type];
                     expect(breakdown).toHaveProperty('staffCount');
                     expect(breakdown).toHaveProperty('totalRevenue');

@@ -179,7 +179,7 @@ describe('TimeSlotAnalysisEngine', () => {
             const slots = await TimeSlotAnalysisEngine.findSuitableSlots(options)
 
             // Should have slots but not during the appointment time
-            const conflictingSlots = slots.filter(slot =>
+            const conflictingSlots = slots.filter((slot: any) =>
                 slot.startTime.getTime() === new Date('2024-01-15T10:00:00Z').getTime()
             )
 

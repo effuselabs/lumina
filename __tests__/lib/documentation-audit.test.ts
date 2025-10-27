@@ -73,11 +73,11 @@ describe('DocumentationAuditor', () => {
             const files = await auditor.discoverAllDocumentation();
 
             expect(files).toHaveLength(5);
-            expect(files.map(f => f.relativePath)).toContain('README.md');
-            expect(files.map(f => f.relativePath)).toContain('docs/api.md');
-            expect(files.map(f => f.relativePath)).toContain('docs/guide.txt');
-            expect(files.map(f => f.relativePath)).toContain('package.json');
-            expect(files.map(f => f.relativePath)).toContain('src/utils.ts');
+            expect(files.map((f: any) => f.relativePath)).toContain('README.md');
+            expect(files.map((f: any) => f.relativePath)).toContain('docs/api.md');
+            expect(files.map((f: any) => f.relativePath)).toContain('docs/guide.txt');
+            expect(files.map((f: any) => f.relativePath)).toContain('package.json');
+            expect(files.map((f: any) => f.relativePath)).toContain('src/utils.ts');
         });
 
         it('should categorize files correctly', async () => {
@@ -94,7 +94,7 @@ describe('DocumentationAuditor', () => {
             mockExecSync.mockReturnValue('abc123|John Doe|2025-01-01|Initial commit');
 
             const files = await auditor.discoverAllDocumentation();
-            const readmeFile = files.find(f => f.relativePath === 'README.md');
+            const readmeFile = files.find((f: any) => f.relativePath === 'README.md');
 
             expect(readmeFile?.type).toBe('readme');
             expect(readmeFile?.category).toBe('authentication');
@@ -124,10 +124,10 @@ TODO: Add monitoring for service health.`;
 
             expect(archFile.extractedKnowledge.length).toBeGreaterThan(0);
 
-            const decisions = archFile.extractedKnowledge.filter(k => k.type === 'architectural-decision');
+            const decisions = archFile.extractedKnowledge.filter((k: any) => k.type === 'architectural-decision');
             expect(decisions.length).toBeGreaterThan(0);
 
-            const workarounds = archFile.extractedKnowledge.filter(k => k.type === 'workaround');
+            const workarounds = archFile.extractedKnowledge.filter((k: any) => k.type === 'workaround');
             expect(workarounds.length).toBeGreaterThan(0);
         });
     });
@@ -242,10 +242,10 @@ ghi789|Bob Wilson|2025-01-03T12:00:00Z|optimize: improve database query performa
 
             expect(archaeologyKnowledge.length).toBeGreaterThan(0);
 
-            const architecturalDecisions = archaeologyKnowledge.filter(k => k.type === 'architectural-decision');
+            const architecturalDecisions = archaeologyKnowledge.filter((k: any) => k.type === 'architectural-decision');
             expect(architecturalDecisions.length).toBeGreaterThan(0);
 
-            const performanceKnowledge = archaeologyKnowledge.filter(k => k.type === 'performance');
+            const performanceKnowledge = archaeologyKnowledge.filter((k: any) => k.type === 'performance');
             expect(performanceKnowledge.length).toBeGreaterThan(0);
         });
 
@@ -286,12 +286,12 @@ ghi789|Bob Wilson|2025-01-03T12:00:00Z|optimize: improve database query performa
 
             expect(archaeologyKnowledge.length).toBeGreaterThan(0);
 
-            const jsdocKnowledge = archaeologyKnowledge.filter(k =>
+            const jsdocKnowledge = archaeologyKnowledge.filter((k: any) =>
                 k.source === 'code-comment' && k.type === 'architectural-decision'
             );
             expect(jsdocKnowledge.length).toBeGreaterThan(0);
 
-            const todoKnowledge = archaeologyKnowledge.filter(k =>
+            const todoKnowledge = archaeologyKnowledge.filter((k: any) =>
                 k.source === 'code-comment' && k.type === 'workaround'
             );
             expect(todoKnowledge.length).toBeGreaterThan(0);
@@ -384,7 +384,7 @@ ghi789|Bob Wilson|2025-01-03T12:00:00Z|optimize: improve database query performa
             ];
 
             const migrationPlan = await auditor.createMigrationPlan(duplicateFiles, []);
-            const consolidationPhase = migrationPlan.phases.find(p => p.name === 'Consolidation');
+            const consolidationPhase = migrationPlan.phases.find((p: any) => p.name === 'Consolidation');
 
             expect(consolidationPhase?.actions.length).toBeGreaterThan(0);
             expect(consolidationPhase?.actions[0].type).toBe('consolidate');

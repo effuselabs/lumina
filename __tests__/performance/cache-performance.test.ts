@@ -305,7 +305,7 @@ describe('Cache Performance and Invalidation Tests', () => {
 
             // Should warm cache for 70 requests (7 days × 10 staff) in reasonable time
             expect(totalExecutionTime).toBeLessThan(3000)
-            expect(results.filter(r => r !== null)).toHaveLength(warmingRequests.length)
+            expect(results.filter((r: any) => r !== null)).toHaveLength(warmingRequests.length)
 
             // Verify cache was populated
             expect(mockRedis.set).toHaveBeenCalledTimes(warmingRequests.length)
