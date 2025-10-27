@@ -244,7 +244,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_CREATION)
 
             // Verify all creations succeeded
-            const successfulCreations = results.filter(result => result.success)
+            const successfulCreations = results.filter((result: any) => result.success)
             expect(successfulCreations).toHaveLength(concurrentCreations)
 
             // Calculate performance metrics
@@ -308,7 +308,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_CREATION * 1.5) // Allow 50% more time for calendar integration
-            expect(results.filter(r => r.success)).toHaveLength(concurrentRequests)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentRequests)
 
             console.log(`Calendar Integration Concurrent Creation:`)
             console.log(`- Requests: ${concurrentRequests}`)
@@ -326,7 +326,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
                     errors: [],
                     warnings: [],
                     optimizedServices: services,
-                    totalDuration: services.reduce((sum, s) => sum + s.duration, 0)
+                    totalDuration: services.reduce((sum: any, s: any) => sum + s.duration, 0)
                 }
             })
 
@@ -368,7 +368,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_CREATION * 2) // Allow more time for multi-service
-            expect(results.filter(r => r.success)).toHaveLength(concurrentMultiService)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentMultiService)
 
             console.log(`Multi-Service Concurrent Creation:`)
             console.log(`- Requests: ${concurrentMultiService}`)
@@ -398,7 +398,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_UPDATES)
-            expect(results.filter(r => r.success)).toHaveLength(concurrentUpdates)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentUpdates)
 
             console.log(`Concurrent Updates Performance:`)
             console.log(`- Updates: ${concurrentUpdates}`)
@@ -444,7 +444,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_UPDATES * 1.5) // Allow extra time for cache operations
-            expect(results.filter(r => r.success)).toHaveLength(concurrentUpdates)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentUpdates)
             expect(cacheInvalidationCount).toBe(concurrentUpdates)
 
             console.log(`Cache Coordination Performance:`)
@@ -494,7 +494,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_STATUS_CHANGES)
-            expect(results.filter(r => r.success)).toHaveLength(concurrentStatusChanges)
+            expect(results.filter((r: any) => r.success)).toHaveLength(concurrentStatusChanges)
 
             console.log(`Concurrent Status Changes Performance:`)
             console.log(`- Status changes: ${concurrentStatusChanges}`)
@@ -566,7 +566,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONCURRENT_QUERIES)
             expect(results).toHaveLength(concurrentQueries)
-            results.forEach(result => {
+            results.forEach((result: any) => {
                 expect(result.appointments).toBeDefined()
                 expect(result.total).toBe(100)
             })
@@ -679,7 +679,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             const startTime = performance.now()
             const results = await Promise.all(
                 mixedOperations.map(({ operation }) =>
-                    operation().catch(error => ({ error: error.message }))
+                    operation().catch((error: any) => ({ error: error.message }))
                 )
             )
             const endTime = performance.now()
@@ -687,20 +687,20 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
 
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.MIXED_OPERATIONS)
 
-            const successfulOperations = results.filter(result => !('error' in result))
-            const failedOperations = results.filter(result => 'error' in result)
+            const successfulOperations = results.filter((result: any) => !('error' in result))
+            const failedOperations = results.filter((result: any) => 'error' in result)
 
             expect(successfulOperations.length).toBeGreaterThan(totalOperations * 0.95) // 95% success rate
             expect(failedOperations.length).toBeLessThan(totalOperations * 0.05)
 
             // Analyze by operation type
-            const operationStats = operationTypes.map(type => {
-                const typeOperations = mixedOperations.filter(op => op.type === type)
+            const operationStats = operationTypes.map((type: any) => {
+                const typeOperations = mixedOperations.filter((op: any) => op.type === type)
                 const typeResults = results.slice(
                     mixedOperations.findIndex(op => op.type === type),
                     mixedOperations.findIndex(op => op.type === type) + typeOperations.length
                 )
-                const typeSuccessful = typeResults.filter(result => !('error' in result))
+                const typeSuccessful = typeResults.filter((result: any) => !('error' in result))
 
                 return {
                     type,
@@ -716,7 +716,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             console.log(`- Average time: ${(totalTime / totalOperations).toFixed(2)}ms`)
             console.log(`- Overall success rate: ${((successfulOperations.length / totalOperations) * 100).toFixed(1)}%`)
 
-            operationStats.forEach(stat => {
+            operationStats.forEach((stat: any) => {
                 console.log(`- ${stat.type}: ${stat.successful}/${stat.total} (${stat.successRate.toFixed(1)}%)`)
             })
         })
@@ -768,8 +768,8 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONFLICT_RESOLUTION)
             expect(results).toHaveLength(concurrentConflictChecks)
 
-            const conflictsFound = results.filter(result => result.hasConflicts).length
-            const noConflicts = results.filter(result => !result.hasConflicts).length
+            const conflictsFound = results.filter((result: any) => result.hasConflicts).length
+            const noConflicts = results.filter((result: any) => !result.hasConflicts).length
 
             console.log(`Concurrent Conflict Detection Performance:`)
             console.log(`- Conflict checks: ${concurrentConflictChecks}`)
@@ -821,9 +821,9 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             expect(totalTime).toBeLessThan(PERFORMANCE_THRESHOLDS.CONFLICT_RESOLUTION * 1.5) // Allow more time for alternatives
             expect(results).toHaveLength(concurrentResolutions)
 
-            const availableSlots = results.filter(result => result.isAvailable).length
-            const unavailableSlots = results.filter(result => !result.isAvailable).length
-            const alternativesProvided = results.filter(result => result.alternatives.length > 0).length
+            const availableSlots = results.filter((result: any) => result.isAvailable).length
+            const unavailableSlots = results.filter((result: any) => !result.isAvailable).length
+            const alternativesProvided = results.filter((result: any) => result.alternatives.length > 0).length
 
             console.log(`Concurrent Conflict Resolution Performance:`)
             console.log(`- Resolution requests: ${concurrentResolutions}`)
@@ -914,10 +914,10 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
 
             // Analyze performance degradation
             const firstHalfAvg = performanceMetrics.slice(0, sustainedRounds / 2)
-                .reduce((sum, time) => sum + time, 0) / (sustainedRounds / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (sustainedRounds / 2)
 
             const secondHalfAvg = performanceMetrics.slice(sustainedRounds / 2)
-                .reduce((sum, time) => sum + time, 0) / (sustainedRounds / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (sustainedRounds / 2)
 
             const performanceDegradation = (secondHalfAvg - firstHalfAvg) / firstHalfAvg
 

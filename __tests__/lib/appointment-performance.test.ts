@@ -96,11 +96,11 @@ class MockAppointmentSearchIndex {
     }
 
     addAppointments(appointments: DashboardAppointment[]) {
-        appointments.forEach(apt => this.addAppointment(apt));
+        appointments.forEach((apt: any) => this.addAppointment(apt));
     }
 
     search(businessId: string, filters: any, appointments: DashboardAppointment[]) {
-        const results = appointments.filter(apt => {
+        const results = appointments.filter((apt: any) => {
             if (filters.query) {
                 const searchText = `${apt.client.firstName} ${apt.client.lastName}`.toLowerCase();
                 if (!searchText.includes(filters.query.toLowerCase())) {
@@ -111,13 +111,13 @@ class MockAppointmentSearchIndex {
                 return false;
             }
             if (filters.serviceIds) {
-                const hasService = apt.services.some(s => filters.serviceIds.includes(s.id));
+                const hasService = apt.services.some((s: any) => filters.serviceIds.includes(s.id));
                 if (!hasService) return false;
             }
             return true;
         });
 
-        return results.map(appointment => ({
+        return results.map((appointment: any) => ({
             appointment,
             score: 80,
             matches: ['text']
@@ -166,15 +166,15 @@ class MockPerformanceMonitor {
     }
 
     getAverageMetric(metricName: string) {
-        const filtered = this.metrics.filter(m => m.name === metricName);
+        const filtered = this.metrics.filter((m: any) => m.name === metricName);
         if (filtered.length === 0) return 0;
-        return filtered.reduce((sum, m) => sum + m.value, 0) / filtered.length;
+        return filtered.reduce((sum: any, m: any) => sum + m.value, 0) / filtered.length;
     }
 
     getPercentiles(metricName: string) {
         const values = this.metrics
-            .filter(m => m.name === metricName)
-            .map(m => m.value)
+            .filter((m: any) => m.name === metricName)
+            .map((m: any) => m.value)
             .sort((a, b) => a - b);
 
         if (values.length === 0) {
@@ -417,7 +417,7 @@ describe('Performance Monitor', () => {
         expect(result).toBe(499500); // Sum of 0 to 999
 
         const metrics = appointmentPerformanceMonitor.getMetrics();
-        expect(metrics.some(m => m.name === 'test-function')).toBe(true);
+        expect(metrics.some((m: any) => m.name === 'test-function')).toBe(true);
     });
 
     test('should measure async function execution time', async () => {
@@ -430,7 +430,7 @@ describe('Performance Monitor', () => {
         expect(result).toBe('completed');
 
         const metrics = appointmentPerformanceMonitor.getMetrics();
-        expect(metrics.some(m => m.name === 'test-async')).toBe(true);
+        expect(metrics.some((m: any) => m.name === 'test-async')).toBe(true);
     });
 
     test('should generate performance report', () => {
@@ -447,7 +447,7 @@ describe('Performance Monitor', () => {
 
     test('should calculate percentiles', () => {
         const values = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-        values.forEach(value => {
+        values.forEach((value: any) => {
             appointmentPerformanceMonitor.recordMetric('test-percentiles', value);
         });
 

@@ -81,7 +81,7 @@ describe('Availability System Stress Testing', () => {
 
         // Mock large staff dataset
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -182,8 +182,8 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
-                    calculator.getAvailableSlots(request).catch(error => ({
+                requests.map((request: any) =>
+                    calculator.getAvailableSlots(request).catch((error: any) => ({
                         error: error.message,
                         request,
                     }))
@@ -196,8 +196,8 @@ describe('Availability System Stress Testing', () => {
             // Should handle extreme load in reasonable time (under 10 seconds)
             expect(totalExecutionTime).toBeLessThan(10000)
 
-            const successfulRequests = results.filter(result => !('error' in result))
-            const failedRequests = results.filter(result => 'error' in result)
+            const successfulRequests = results.filter((result: any) => !('error' in result))
+            const failedRequests = results.filter((result: any) => 'error' in result)
 
             // Should maintain >85% success rate even under extreme load
             expect(successfulRequests.length).toBeGreaterThan(425)
@@ -232,8 +232,8 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
-                    conflictEngine.detectConflicts(request).catch(error => ({
+                requests.map((request: any) =>
+                    conflictEngine.detectConflicts(request).catch((error: any) => ({
                         error: error.message,
                         request,
                     }))
@@ -246,8 +246,8 @@ describe('Availability System Stress Testing', () => {
             // Should handle extreme conflict detection load
             expect(totalExecutionTime).toBeLessThan(8000)
 
-            const successfulRequests = results.filter(result => !('error' in result))
-            const failedRequests = results.filter(result => 'error' in result)
+            const successfulRequests = results.filter((result: any) => !('error' in result))
+            const failedRequests = results.filter((result: any) => 'error' in result)
 
             expect(successfulRequests.length).toBeGreaterThan(850) // 85% success rate
             expect(failedRequests.length).toBeLessThan(150)
@@ -279,7 +279,7 @@ describe('Availability System Stress Testing', () => {
                 }))
 
                 await Promise.all(
-                    requests.map(request =>
+                    requests.map((request: any) =>
                         calculator.getAvailableSlots(request).catch(() => null)
                     )
                 )
@@ -361,8 +361,8 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                invalidationOperations.map(operation =>
-                    operation.catch(error => ({ error: error.message }))
+                invalidationOperations.map((operation: any) =>
+                    operation.catch((error: any) => ({ error: error.message }))
                 )
             )
 
@@ -372,8 +372,8 @@ describe('Availability System Stress Testing', () => {
             // Should handle invalidation storm efficiently
             expect(totalExecutionTime).toBeLessThan(3000)
 
-            const successfulOperations = results.filter(result => !('error' in result))
-            const failedOperations = results.filter(result => 'error' in result)
+            const successfulOperations = results.filter((result: any) => !('error' in result))
+            const failedOperations = results.filter((result: any) => 'error' in result)
 
             // Should maintain high success rate during invalidation storm
             expect(successfulOperations.length).toBeGreaterThan(72) // 90% success rate
@@ -421,7 +421,7 @@ describe('Availability System Stress Testing', () => {
                 }))
 
                 await Promise.all(
-                    queries.map(query =>
+                    queries.map((query: any) =>
                         calculator.getAvailableSlots(query).catch(() => null)
                     )
                 )
@@ -434,10 +434,10 @@ describe('Availability System Stress Testing', () => {
 
             // Analyze performance degradation over time
             const firstHalfAvg = performanceMetrics.slice(0, churnCycles / 2)
-                .reduce((sum, time) => sum + time, 0) / (churnCycles / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (churnCycles / 2)
 
             const secondHalfAvg = performanceMetrics.slice(churnCycles / 2)
-                .reduce((sum, time) => sum + time, 0) / (churnCycles / 2)
+                .reduce((sum: any, time: any) => sum + time, 0) / (churnCycles / 2)
 
             const performanceDegradation = (secondHalfAvg - firstHalfAvg) / firstHalfAvg
 
@@ -496,8 +496,8 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                connectionStressOperations.map(operation =>
-                    operation.catch(error => ({ error: error.message }))
+                connectionStressOperations.map((operation: any) =>
+                    operation.catch((error: any) => ({ error: error.message }))
                 )
             )
 
@@ -507,8 +507,8 @@ describe('Availability System Stress Testing', () => {
             // Should handle connection stress without complete failure
             expect(totalExecutionTime).toBeLessThan(15000) // Allow more time for connection management
 
-            const successfulOperations = results.filter(result => !('error' in result))
-            const failedOperations = results.filter(result => 'error' in result)
+            const successfulOperations = results.filter((result: any) => !('error' in result))
+            const failedOperations = results.filter((result: any) => 'error' in result)
 
             // Should maintain reasonable success rate even under connection stress
             expect(successfulOperations.length).toBeGreaterThan(160) // 80% success rate
@@ -551,8 +551,8 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                recoveryTestRequests.map(request =>
-                    calculator.getAvailableSlots(request).catch(error => ({
+                recoveryTestRequests.map((request: any) =>
+                    calculator.getAvailableSlots(request).catch((error: any) => ({
                         error: error.message,
                     }))
                 )
@@ -561,8 +561,8 @@ describe('Availability System Stress Testing', () => {
             const endTime = performance.now()
             const totalExecutionTime = endTime - startTime
 
-            const successfulRequests = results.filter(result => !('error' in result))
-            const failedRequests = results.filter(result => 'error' in result)
+            const successfulRequests = results.filter((result: any) => !('error' in result))
+            const failedRequests = results.filter((result: any) => 'error' in result)
 
             // Should recover and process most requests successfully
             expect(successfulRequests.length).toBeGreaterThan(75) // 75% success rate after recovery

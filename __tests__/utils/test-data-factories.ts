@@ -304,3 +304,115 @@ export function createTestServices(count: number, overrides: Partial<any> = {}) 
     createTestService({ id: `test-service-${i}`, ...overrides })
   );
 }
+
+/**
+ * Create a test dashboard appointment object with all required properties
+ */
+export function createTestDashboardAppointment(overrides: Partial<any> = {}) {
+  const baseAppointment = createTestAppointment();
+  
+  return {
+    id: baseAppointment.id,
+    businessId: baseAppointment.businessId,
+    clientId: baseAppointment.clientId,
+    staffId: baseAppointment.staffId,
+    startTime: baseAppointment.startTime,
+    endTime: baseAppointment.endTime,
+    status: baseAppointment.status,
+    services: [
+      {
+        id: 'test-service-id',
+        name: 'Test Service',
+        duration: 60,
+        price: 50.0,
+      },
+    ],
+    totalPrice: 50.0,
+    totalDuration: 60,
+    notes: null,
+    client: {
+      id: baseAppointment.client.id,
+      firstName: baseAppointment.client.firstName,
+      lastName: baseAppointment.client.lastName,
+      email: baseAppointment.client.email,
+      phone: baseAppointment.client.phone,
+      avatar: undefined,
+    },
+    staff: {
+      id: baseAppointment.staff.id,
+      firstName: baseAppointment.staff.displayName.split(' ')[0] || 'Test',
+      lastName: baseAppointment.staff.displayName.split(' ')[1] || 'Staff',
+      displayName: baseAppointment.staff.displayName,
+      color: '#3B82F6',
+    },
+    isConflicted: false,
+    canEdit: true,
+    canCancel: true,
+    canReschedule: true,
+    lastUpdated: new Date(),
+    updatedBy: undefined,
+    ...overrides,
+  };
+}
+
+/**
+ * Create a test staff member object for dashboard
+ */
+export function createTestStaffMember(overrides: Partial<any> = {}) {
+  return {
+    id: 'test-staff-member-id',
+    firstName: 'Test',
+    lastName: 'Staff',
+    displayName: 'Test Staff',
+    avatar: undefined,
+    specialties: ['Haircut', 'Styling'],
+    color: '#3B82F6',
+    isActive: true,
+    role: 'Stylist',
+    ...overrides,
+  };
+}
+
+/**
+ * Create multiple test dashboard appointments
+ */
+export function createTestDashboardAppointments(count: number, overrides: Partial<any> = {}) {
+  return Array.from({ length: count }, (_, i) =>
+    createTestDashboardAppointment({ id: `test-appointment-${i}`, ...overrides })
+  );
+}
+
+/**
+ * Create multiple test staff members
+ */
+export function createTestStaffMembersList(count: number, overrides: Partial<any> = {}) {
+  return Array.from({ length: count }, (_, i) =>
+    createTestStaffMember({ 
+      id: `test-staff-member-${i}`,
+      displayName: `Staff Member ${i}`,
+      ...overrides 
+    })
+  );
+}
+
+/**
+ * Create a test business hours entry for calendar
+ */
+export function createTestBusinessHoursEntry(overrides: Partial<any> = {}) {
+  return {
+    dayOfWeek: 1,
+    openTime: '09:00',
+    closeTime: '17:00',
+    isClosed: false,
+    ...overrides,
+  };
+}
+
+/**
+ * Create multiple test business hours entries (for a week)
+ */
+export function createTestBusinessHoursWeek() {
+  return Array.from({ length: 7 }, (_, i) =>
+    createTestBusinessHoursEntry({ dayOfWeek: i })
+  );
+}

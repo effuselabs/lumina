@@ -378,7 +378,18 @@
 <a name='L313'></a><a href='#L313'>313</a>
 <a name='L314'></a><a href='#L314'>314</a>
 <a name='L315'></a><a href='#L315'>315</a>
-<a name='L316'></a><a href='#L316'>316</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L316'></a><a href='#L316'>316</a>
+<a name='L317'></a><a href='#L317'>317</a>
+<a name='L318'></a><a href='#L318'>318</a>
+<a name='L319'></a><a href='#L319'>319</a>
+<a name='L320'></a><a href='#L320'>320</a>
+<a name='L321'></a><a href='#L321'>321</a>
+<a name='L322'></a><a href='#L322'>322</a>
+<a name='L323'></a><a href='#L323'>323</a>
+<a name='L324'></a><a href='#L324'>324</a>
+<a name='L325'></a><a href='#L325'>325</a>
+<a name='L326'></a><a href='#L326'>326</a>
+<a name='L327'></a><a href='#L327'>327</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -634,6 +645,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -692,6 +713,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { auth } from '@/auth';
 import type { UserWithRelations } from '@/types/database';
@@ -942,6 +964,16 @@ export async function <span class="fstat-no" title="function not covered" >verif
 }
 &nbsp;
 // Accept staff invitation and create user/staff profile
+interface StaffInvitationData {
+  displayName: string;
+  title: string;
+  employmentType: string;
+  commissionRate: number;
+  chairRentalAmount?: number;
+  chairRentalPeriod?: string;
+  baseSalary?: number;
+}
+&nbsp;
 export async function <span class="fstat-no" title="function not covered" >acceptStaffInvitation(</span>
   token: string,
   userData: {
@@ -950,9 +982,9 @@ export async function <span class="fstat-no" title="function not covered" >accep
   }
 ) {
   const invitation = <span class="cstat-no" title="statement not covered" >await verifyInviteToken(token);</span>
-  const staffData = <span class="cstat-no" title="statement not covered" >invitation.staffData as any;</span>
+  const staffData = <span class="cstat-no" title="statement not covered" >invitation.staffData as unknown as StaffInvitationData;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return await prisma.$transaction(<span class="fstat-no" title="function not covered" >as</span>ync (tx) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  return await prisma.$transaction(<span class="fstat-no" title="function not covered" >as</span>ync tx =&gt; {</span>
     // Create or update user
     let user = <span class="cstat-no" title="statement not covered" >await tx.user.findUnique({</span>
       where: { email: invitation.email },
@@ -989,12 +1021,12 @@ export async function <span class="fstat-no" title="function not covered" >accep
         userId: user.id,
         displayName: staffData.displayName,
         title: staffData.title,
-        employmentType: staffData.employmentType,
+        employmentType: staffData.employmentType as any,
         commissionRate: staffData.commissionRate,
         chairRentalAmount: staffData.chairRentalAmount,
-        chairRentalPeriod: staffData.chairRentalPeriod,
+        chairRentalPeriod: staffData.chairRentalPeriod as any,
         baseSalary: staffData.baseSalary,
-      },
+      } as any,
     });
 &nbsp;
     // Mark invitation as accepted
@@ -1008,14 +1040,15 @@ export async function <span class="fstat-no" title="function not covered" >accep
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return { user, staff, business: invitation.business };</span>
   });
-}</pre></td></tr></table></pre>
+}
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-30T13:23:27.735Z
+                at 2025-10-21T20:32:32.780Z
             </div>
         <script src="../prettify.js"></script>
         <script>

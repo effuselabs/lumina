@@ -241,9 +241,9 @@ describe('Peak Booking Scenarios Load Testing', () => {
 
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.MONDAY_MORNING_RUSH)
 
-            const successfulBookings = results.filter(result => result.success)
-            const failedBookings = results.filter(result => !result.success)
-            const warningsCount = results.reduce((sum, result) => sum + result.warnings.length, 0)
+            const successfulBookings = results.filter((result: any) => result.success)
+            const failedBookings = results.filter((result: any) => !result.success)
+            const warningsCount = results.reduce((sum: any, result: any) => sum + result.warnings.length, 0)
 
             expect(successfulBookings.length).toBeGreaterThan(mondayRushLoad * 0.9) // 90% success rate
             expect(failedBookings.length).toBeLessThan(mondayRushLoad * 0.1)
@@ -348,11 +348,11 @@ describe('Peak Booking Scenarios Load Testing', () => {
                 }
             }
 
-            const totalTime = burstTimes.reduce((sum, time) => sum + time, 0)
+            const totalTime = burstTimes.reduce((sum: any, time: any) => sum + time, 0)
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.HOLIDAY_BOOKING_SURGE)
 
-            const successfulBookings = allResults.filter(result => result.success)
-            const failedBookings = allResults.filter(result => !result.success)
+            const successfulBookings = allResults.filter((result: any) => result.success)
+            const failedBookings = allResults.filter((result: any) => !result.success)
 
             expect(successfulBookings.length).toBeGreaterThan(holidaySurgeLoad * 0.85) // 85% success rate
 
@@ -402,9 +402,9 @@ describe('Peak Booking Scenarios Load Testing', () => {
 
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.HOLIDAY_BOOKING_SURGE * 0.8) // Calendar ops should be faster
 
-            const availableSlots = results.filter(result => result.isAvailable).length
-            const unavailableSlots = results.filter(result => !result.isAvailable).length
-            const alternativesProvided = results.filter(result => result.alternatives.length > 0).length
+            const availableSlots = results.filter((result: any) => result.isAvailable).length
+            const unavailableSlots = results.filter((result: any) => !result.isAvailable).length
+            const alternativesProvided = results.filter((result: any) => result.alternatives.length > 0).length
 
             console.log(`Calendar Integration Holiday Load:`)
             console.log(`- Calendar operations: ${calendarOperations}`)
@@ -454,9 +454,9 @@ describe('Peak Booking Scenarios Load Testing', () => {
 
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.PROMOTIONAL_CAMPAIGN)
 
-            const successfulBookings = results.filter(result => result.success)
-            const failedBookings = results.filter(result => !result.success)
-            const warningsCount = results.reduce((sum, result) => sum + result.warnings.length, 0)
+            const successfulBookings = results.filter((result: any) => result.success)
+            const failedBookings = results.filter((result: any) => !result.success)
+            const warningsCount = results.reduce((sum: any, result: any) => sum + result.warnings.length, 0)
 
             expect(successfulBookings.length).toBeGreaterThan(campaignLoad * 0.88) // 88% success rate
 
@@ -574,12 +574,12 @@ describe('Peak Booking Scenarios Load Testing', () => {
                 }
             }
 
-            const totalTime = batchMetrics.reduce((sum, batch) => sum + batch.time, 0)
+            const totalTime = batchMetrics.reduce((sum: any, batch: any) => sum + batch.time, 0)
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.SUSTAINED_HIGH_LOAD)
 
             // Analyze performance consistency
-            const batchTimes = batchMetrics.map(batch => batch.time)
-            const averageBatchTime = batchTimes.reduce((sum, time) => sum + time, 0) / batchTimes.length
+            const batchTimes = batchMetrics.map((batch: any) => batch.time)
+            const averageBatchTime = batchTimes.reduce((sum: any, time: any) => sum + time, 0) / batchTimes.length
             const maxBatchTime = Math.max(...batchTimes)
             const minBatchTime = Math.min(...batchTimes)
             const timeVariance = maxBatchTime - minBatchTime
@@ -648,7 +648,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
             // Simulate database connection pool stress
             const connectionBatches = []
             for (let i = 0; i < dbStressOperations; i += maxConcurrentConnections) {
-                const batch = Array.from({ length: Math.min(maxConcurrentConnections, dbStressOperations - i) }, (_, j) => {
+                const batch = Array.from({ length: Math.min(maxConcurrentConnections, dbStressOperations - i) }, (_: any, j: any) => {
                     const index = i + j
                     const operationType = index % 4
 
@@ -722,7 +722,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
                 }
             }
 
-            const averageTime = operationTimes.reduce((sum, time) => sum + time, 0) / operationTimes.length
+            const averageTime = operationTimes.reduce((sum: any, time: any) => sum + time, 0) / operationTimes.length
             const slowOperationRate = slowOperations / monitoringOperations
 
             // Performance should be within acceptable limits

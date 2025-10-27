@@ -189,7 +189,7 @@ describe('ConflictDetectionEngine', () => {
 
             const conflicts = await ConflictDetectionEngine.detectConflicts(baseRequest)
 
-            const staffUnavailableConflicts = conflicts.filter(c => c.type === ConflictType.STAFF_UNAVAILABLE)
+            const staffUnavailableConflicts = conflicts.filter((c: any) => c.type === ConflictType.STAFF_UNAVAILABLE)
             expect(staffUnavailableConflicts).toHaveLength(1)
             expect(staffUnavailableConflicts[0].severity).toBe(ConflictSeverity.ERROR)
         })
@@ -264,7 +264,7 @@ describe('ConflictDetectionEngine', () => {
             const conflicts = await ConflictDetectionEngine.detectConflicts(baseRequest)
 
             // Should have only the duration conflict since staff is available at the requested time
-            const durationConflicts = conflicts.filter(c => c.type === ConflictType.INSUFFICIENT_DURATION)
+            const durationConflicts = conflicts.filter((c: any) => c.type === ConflictType.INSUFFICIENT_DURATION)
             expect(durationConflicts).toHaveLength(1)
             expect(durationConflicts[0].severity).toBe(ConflictSeverity.ERROR)
             expect(durationConflicts[0].message).toContain('120 minutes')
@@ -335,7 +335,7 @@ describe('ConflictDetectionEngine', () => {
 
             expect(result.isValid).toBe(false)
             expect(result.conflicts.length).toBeGreaterThan(0)
-            expect(result.conflicts.some(c => c.type === ConflictType.BUSINESS_HOURS_VIOLATION)).toBe(true)
+            expect(result.conflicts.some((c: any) => c.type === ConflictType.BUSINESS_HOURS_VIOLATION)).toBe(true)
         })
     })
 
@@ -525,7 +525,7 @@ describe('ConflictDetectionEngine', () => {
 
             expect(result.isValid).toBe(true) // No errors, just warnings
             expect(result.warnings.length).toBeGreaterThan(0)
-            expect(result.warnings.some(w => w.message.includes('Back-to-back'))).toBe(true)
+            expect(result.warnings.some((w: any) => w.message.includes('Back-to-back'))).toBe(true)
         })
     })
 

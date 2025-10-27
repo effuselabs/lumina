@@ -341,7 +341,7 @@ describe('MultiServiceCoordinator', () => {
       ];
 
       (prisma.service.findMany as jest.Mock).mockResolvedValue(
-        manyServices.map(s => ({
+        manyServices.map((s: any) => ({
           id: s.serviceId,
           name: s.serviceName,
           duration: s.duration,
@@ -349,7 +349,7 @@ describe('MultiServiceCoordinator', () => {
         }))
       );
       (prisma.staffService.findMany as jest.Mock).mockResolvedValue(
-        manyServices.map(s => ({
+        manyServices.map((s: any) => ({
           staffId: mockStaffId,
           serviceId: s.serviceId,
         }))
@@ -828,7 +828,7 @@ describe('MultiServiceCoordinator', () => {
             name: 'Multi-Service Discount',
             type: 'PERCENTAGE',
             value: 10,
-            applicableServices: mockServices.map(s => s.serviceId),
+            applicableServices: mockServices.map((s: any) => s.serviceId),
             minimumServices: 3,
             conditions: { multiService: true },
           },
@@ -871,7 +871,7 @@ describe('MultiServiceCoordinator', () => {
             name: 'High Value Discount',
             type: 'FIXED_AMOUNT',
             value: 20,
-            applicableServices: highValueServices.map(s => s.serviceId),
+            applicableServices: highValueServices.map((s: any) => s.serviceId),
             minimumServices: 1,
             conditions: { minimumSpend: 100 },
           },

@@ -20,6 +20,13 @@ function fixImplicitAnyTypes(content: string): { content: string; changes: numbe
     changes++;
     return `(callback: any)${arrow}`;
   });
+  
+  // Fix: callback => ... to (callback: any) => ... (without parens)
+  const callbackNoParensPattern = /(?<![a-zA-Z0-9_])callback(\s*=>)/g;
+  fixed = fixed.replace(callbackNoParensPattern, (match, arrow) => {
+    changes++;
+    return `(callback: any)${arrow}`;
+  });
 
   // Fix: (error) => ... to (error: any) => ... (in catch blocks and callbacks)
   const errorPattern = /\(error\)(\s*=>)/g;
@@ -27,10 +34,24 @@ function fixImplicitAnyTypes(content: string): { content: string; changes: numbe
     changes++;
     return `(error: any)${arrow}`;
   });
+  
+  // Fix: error => ... to (error: any) => ... (without parens)
+  const errorNoParensPattern = /(?<![a-zA-Z0-9_])error(\s*=>)/g;
+  fixed = fixed.replace(errorNoParensPattern, (match, arrow) => {
+    changes++;
+    return `(error: any)${arrow}`;
+  });
 
-  // Fix: (result) => ... to (result: any) => ...
+  // Fix: (result) => ... to (result: any) => ... (with or without parens)
   const resultPattern = /\(result\)(\s*=>)/g;
   fixed = fixed.replace(resultPattern, (match, arrow) => {
+    changes++;
+    return `(result: any)${arrow}`;
+  });
+  
+  // Fix: result => ... to (result: any) => ... (without parens)
+  const resultNoParensPattern = /(?<![a-zA-Z0-9_])result(\s*=>)/g;
+  fixed = fixed.replace(resultNoParensPattern, (match, arrow) => {
     changes++;
     return `(result: any)${arrow}`;
   });
@@ -96,6 +117,41 @@ function fixImplicitAnyTypes(content: string): { content: string; changes: numbe
   fixed = fixed.replace(reqResCtxPattern, (match, arrow) => {
     changes++;
     return `(req: any, res: any, ctx: any)${arrow}`;
+  });
+
+  // Fix: (monitor) => ... to (monitor: any) => ...
+  const monitorPattern = /\(monitor\)(\s*=>)/g;
+  fixed = fixed.replace(monitorPattern, (match, arrow) => {
+    changes++;
+    return `(monitor: any)${arrow}`;
+  });
+  
+  // Fix: monitor => ... to (monitor: any) => ... (without parens)
+  const monitorNoParensPattern = /(?<![a-zA-Z0-9_])monitor(\s*=>)/g;
+  fixed = fixed.replace(monitorNoParensPattern, (match, arrow) => {
+    changes++;
+    return `(monitor: any)${arrow}`;
+  });
+
+  // Fix: (warning) => ... to (warning: any) => ...
+  const warningPattern = /\(warning\)(\s*=>)/g;
+  fixed = fixed.replace(warningPattern, (match, arrow) => {
+    changes++;
+    return `(warning: any)${arrow}`;
+  });
+  
+  // Fix: warning => ... to (warning: any) => ... (without parens)
+  const warningNoParensPattern = /(?<![a-zA-Z0-9_])warning(\s*=>)/g;
+  fixed = fixed.replace(warningNoParensPattern, (match, arrow) => {
+    changes++;
+    return `(warning: any)${arrow}`;
+  });
+
+  // Fix: (_, j) => ... to (_: any, j: any) => ...
+  const underscoreJPattern = /\(_,\s*j\)(\s*=>)/g;
+  fixed = fixed.replace(underscoreJPattern, (match, arrow) => {
+    changes++;
+    return `(_: any, j: any)${arrow}`;
   });
 
   return { content: fixed, changes };

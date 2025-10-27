@@ -79,7 +79,7 @@ describe('DataResetManager', () => {
             const scenarios = resetManager.getPredefinedScenarios();
 
             expect(scenarios).toHaveLength(5);
-            expect(scenarios.map(s => s.name)).toEqual([
+            expect(scenarios.map((s: any) => s.name)).toEqual([
                 'demo',
                 'development',
                 'testing',
@@ -91,7 +91,7 @@ describe('DataResetManager', () => {
         it('should have valid scenario configurations', () => {
             const scenarios = resetManager.getPredefinedScenarios();
 
-            scenarios.forEach(scenario => {
+            scenarios.forEach((scenario: any) => {
                 expect(scenario.name).toBeTruthy();
                 expect(scenario.description).toBeTruthy();
                 expect(scenario.config).toBeTruthy();
@@ -281,7 +281,7 @@ describe('DataResetManager', () => {
 
             expect(result.isValid).toBe(false);
             expect(result.summary.highErrors).toBeGreaterThan(0);
-            expect(result.errors.some(e => e.message.includes('appointments without services'))).toBe(true);
+            expect(result.errors.some((e: any) => e.message.includes('appointments without services'))).toBe(true);
         });
 
         it('should detect staff without services as warning', async () => {
@@ -294,7 +294,7 @@ describe('DataResetManager', () => {
 
             const result = await resetManager.validateDataIntegrity(mockBusinessId);
 
-            expect(result.warnings.some(w => w.message.includes('staff members without assigned services'))).toBe(true);
+            expect(result.warnings.some((w: any) => w.message.includes('staff members without assigned services'))).toBe(true);
         });
     });
 
@@ -321,7 +321,7 @@ describe('DataResetManager', () => {
             const result = resetManager.validateConfiguration(config);
 
             expect(result.isValid).toBe(false);
-            expect(result.errors.some(e => e.message.includes('Age range distribution'))).toBe(true);
+            expect(result.errors.some((e: any) => e.message.includes('Age range distribution'))).toBe(true);
         });
 
         it('should detect performance warnings for large datasets', () => {
@@ -331,8 +331,8 @@ describe('DataResetManager', () => {
 
             const result = resetManager.validateConfiguration(config);
 
-            expect(result.warnings.some(w => w.message.includes('Large client count'))).toBe(true);
-            expect(result.warnings.some(w => w.message.includes('Long historical period'))).toBe(true);
+            expect(result.warnings.some((w: any) => w.message.includes('Large client count'))).toBe(true);
+            expect(result.warnings.some((w: any) => w.message.includes('Long historical period'))).toBe(true);
         });
     });
 

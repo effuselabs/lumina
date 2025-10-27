@@ -38,7 +38,7 @@ describe('StaffAvailabilityRepository', () => {
         jest.clearAllMocks()
     })
 
-    describe('getStaffAvailability', () => {
+    describe('getAvailability', () => {
         it('should return staff availability for date range', async () => {
             const startDate = new Date('2024-01-15')
             const endDate = new Date('2024-01-21')
@@ -61,7 +61,7 @@ describe('StaffAvailabilityRepository', () => {
 
             asMock(mockPrisma.staffAvailability.findMany).mockResolvedValue(mockAvailability)
 
-            const result = await repository.getStaffAvailability(staffId, startDate, endDate)
+            const result = await repository.getAvailability(staffId, { start: startDate, end: endDate })
 
             expect(mockPrisma.staffAvailability.findMany).toHaveBeenCalledWith({
                 where: {

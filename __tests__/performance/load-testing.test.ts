@@ -61,7 +61,7 @@ describe('Availability System Load Testing', () => {
 
         // Mock staff data (20 staff members for load testing)
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -158,8 +158,8 @@ describe('Availability System Load Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
-                    calculator.getAvailableSlots(request).catch(error => ({
+                requests.map((request: any) =>
+                    calculator.getAvailableSlots(request).catch((error: any) => ({
                         error: error.message,
                         request,
                     }))
@@ -173,8 +173,8 @@ describe('Availability System Load Testing', () => {
             expect(totalExecutionTime).toBeLessThan(5000)
 
             // Count successful vs failed requests
-            const successfulRequests = results.filter(result => !('error' in result))
-            const failedRequests = results.filter(result => 'error' in result)
+            const successfulRequests = results.filter((result: any) => !('error' in result))
+            const failedRequests = results.filter((result: any) => 'error' in result)
 
             // Should have high success rate (>95%)
             expect(successfulRequests.length).toBeGreaterThan(95)
@@ -204,8 +204,8 @@ describe('Availability System Load Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
-                    conflictEngine.detectConflicts(request).catch(error => ({
+                requests.map((request: any) =>
+                    conflictEngine.detectConflicts(request).catch((error: any) => ({
                         error: error.message,
                         request,
                     }))
@@ -218,8 +218,8 @@ describe('Availability System Load Testing', () => {
             // Should complete 150 concurrent conflict checks in under 3 seconds
             expect(totalExecutionTime).toBeLessThan(3000)
 
-            const successfulRequests = results.filter(result => !('error' in result))
-            const failedRequests = results.filter(result => 'error' in result)
+            const successfulRequests = results.filter((result: any) => !('error' in result))
+            const failedRequests = results.filter((result: any) => 'error' in result)
 
             // Should have high success rate (>95%)
             expect(successfulRequests.length).toBeGreaterThan(142) // 95% of 150
@@ -323,16 +323,16 @@ describe('Availability System Load Testing', () => {
             // Should complete 150 mixed operations in under 4 seconds
             expect(totalExecutionTime).toBeLessThan(4000)
 
-            const successfulRequests = results.filter(result => !('error' in result))
-            const failedRequests = results.filter(result => 'error' in result)
+            const successfulRequests = results.filter((result: any) => !('error' in result))
+            const failedRequests = results.filter((result: any) => 'error' in result)
 
             expect(successfulRequests.length).toBeGreaterThan(142) // 95% success rate
             expect(failedRequests.length).toBeLessThan(8)
 
             // Verify all operation types were successful
-            const availabilityResults = results.filter(r => r.type === 'availability' && !('error' in r))
-            const conflictResults = results.filter(r => r.type === 'conflict' && !('error' in r))
-            const validationResults = results.filter(r => r.type === 'validation' && !('error' in r))
+            const availabilityResults = results.filter((r: any) => r.type === 'availability' && !('error' in r))
+            const conflictResults = results.filter((r: any) => r.type === 'conflict' && !('error' in r))
+            const validationResults = results.filter((r: any) => r.type === 'validation' && !('error' in r))
 
             expect(availabilityResults.length).toBeGreaterThan(45)
             expect(conflictResults.length).toBeGreaterThan(45)
@@ -375,8 +375,8 @@ describe('Availability System Load Testing', () => {
                 const batchStartTime = performance.now()
 
                 const results = await Promise.all(
-                    requests.map(request =>
-                        calculator.getAvailableSlots(request).catch(error => ({
+                    requests.map((request: any) =>
+                        calculator.getAvailableSlots(request).catch((error: any) => ({
                             error: error.message,
                         }))
                     )
@@ -385,8 +385,8 @@ describe('Availability System Load Testing', () => {
                 const batchEndTime = performance.now()
                 const batchExecutionTime = batchEndTime - batchStartTime
 
-                const successCount = results.filter(result => !('error' in result)).length
-                const failureCount = results.filter(result => 'error' in result).length
+                const successCount = results.filter((result: any) => !('error' in result)).length
+                const failureCount = results.filter((result: any) => 'error' in result).length
 
                 batchResults.push({
                     batchNumber: batch + 1,
@@ -410,7 +410,7 @@ describe('Availability System Load Testing', () => {
             expect(performanceDegradation).toBeLessThan(0.5)
 
             // All batches should maintain good success rates
-            batchResults.forEach(batch => {
+            batchResults.forEach((batch: any) => {
                 expect(batch.successCount).toBeGreaterThan(18) // 90% success rate
                 expect(batch.failureCount).toBeLessThan(2)
             })
@@ -498,25 +498,25 @@ describe('Availability System Load Testing', () => {
             // Should handle peak load in under 8 seconds
             expect(totalExecutionTime).toBeLessThan(8000)
 
-            const successfulRequests = results.filter(result => result.success)
-            const failedRequests = results.filter(result => !result.success)
+            const successfulRequests = results.filter((result: any) => result.success)
+            const failedRequests = results.filter((result: any) => !result.success)
 
             // Should maintain >90% success rate even under peak load
             expect(successfulRequests.length).toBeGreaterThan(180)
             expect(failedRequests.length).toBeLessThan(20)
 
             // Verify performance by operation type
-            const availabilityOps = results.filter(r => r.type === 'availability')
-            const conflictOps = results.filter(r => r.type === 'conflict')
-            const validationOps = results.filter(r => r.type === 'validation')
+            const availabilityOps = results.filter((r: any) => r.type === 'availability')
+            const conflictOps = results.filter((r: any) => r.type === 'conflict')
+            const validationOps = results.filter((r: any) => r.type === 'validation')
 
             console.log(`Peak Load Test Results:`)
             console.log(`- Total requests: ${peakRequests.length}`)
             console.log(`- Successful: ${successfulRequests.length}`)
             console.log(`- Failed: ${failedRequests.length}`)
-            console.log(`- Availability ops: ${availabilityOps.filter(op => op.success).length}/${availabilityOps.length}`)
-            console.log(`- Conflict ops: ${conflictOps.filter(op => op.success).length}/${conflictOps.length}`)
-            console.log(`- Validation ops: ${validationOps.filter(op => op.success).length}/${validationOps.length}`)
+            console.log(`- Availability ops: ${availabilityOps.filter((op: any) => op.success).length}/${availabilityOps.length}`)
+            console.log(`- Conflict ops: ${conflictOps.filter((op: any) => op.success).length}/${conflictOps.length}`)
+            console.log(`- Validation ops: ${validationOps.filter((op: any) => op.success).length}/${validationOps.length}`)
             console.log(`- Total time: ${totalExecutionTime.toFixed(2)}ms`)
             console.log(`- Average time per request: ${(totalExecutionTime / peakRequests.length).toFixed(2)}ms`)
         })
@@ -529,7 +529,7 @@ describe('Availability System Load Testing', () => {
 
             // Perform sustained operations
             for (let i = 0; i < 10; i++) {
-                const batchRequests = Array.from({ length: 50 }, (_, j) => ({
+                const batchRequests = Array.from({ length: 50 }, (_: any, j: any) => ({
                     businessId,
                     date: new Date('2024-01-15'),
                     staffId: staffIds[(i * 50 + j) % staffIds.length],
@@ -538,7 +538,7 @@ describe('Availability System Load Testing', () => {
                 }))
 
                 await Promise.all(
-                    batchRequests.map(request =>
+                    batchRequests.map((request: any) =>
                         calculator.getAvailableSlots(request).catch(() => null)
                     )
                 )
@@ -581,8 +581,8 @@ describe('Availability System Load Testing', () => {
                 const startTime = performance.now()
 
                 const results = await Promise.all(
-                    requests.map(request =>
-                        calculator.getAvailableSlots(request).catch(error => ({
+                    requests.map((request: any) =>
+                        calculator.getAvailableSlots(request).catch((error: any) => ({
                             error: error.message,
                         }))
                     )
@@ -593,8 +593,8 @@ describe('Availability System Load Testing', () => {
                 return {
                     batchIndex,
                     executionTime: endTime - startTime,
-                    successCount: results.filter(r => !('error' in r)).length,
-                    failureCount: results.filter(r => 'error' in r).length,
+                    successCount: results.filter((r: any) => !('error' in r)).length,
+                    failureCount: results.filter((r: any) => 'error' in r).length,
                 }
             })
 
@@ -605,7 +605,7 @@ describe('Availability System Load Testing', () => {
             const totalExecutionTime = endTime - startTime
 
             // All batches should complete successfully
-            batchResults.forEach(batch => {
+            batchResults.forEach((batch: any) => {
                 expect(batch.successCount).toBeGreaterThan(35) // 87.5% success rate
                 expect(batch.failureCount).toBeLessThan(5)
             })
@@ -618,7 +618,7 @@ describe('Availability System Load Testing', () => {
             console.log(`- Requests per batch: ${requestsPerBatch}`)
             console.log(`- Total requests: ${concurrentBatches * requestsPerBatch}`)
             console.log(`- Total execution time: ${totalExecutionTime.toFixed(2)}ms`)
-            batchResults.forEach(batch => {
+            batchResults.forEach((batch: any) => {
                 console.log(`  Batch ${batch.batchIndex + 1}: ${batch.executionTime.toFixed(2)}ms, ${batch.successCount}/${requestsPerBatch} successful`)
             })
         })

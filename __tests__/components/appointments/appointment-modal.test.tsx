@@ -2,10 +2,64 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { AppointmentModal } from '../../../components/appointments/appointment-modal';
 import {
-  mockAppointment,
-  mockServices,
-  mockStaff,
-} from '../../../test-utils/booking-mocks';
+  createTestDashboardAppointment,
+  createTestStaffMembersList,
+} from '../../utils/test-data-factories';
+
+const mockAppointment = createTestDashboardAppointment({
+  id: 'apt-123',
+  client: {
+    id: 'client-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    phone: '555-0123',
+    avatar: undefined,
+  },
+  staff: {
+    id: 'staff-1',
+    firstName: 'Alice',
+    lastName: 'Johnson',
+    displayName: 'Alice Johnson',
+    color: '#3B82F6',
+  },
+  services: [
+    {
+      id: 'service-1',
+      name: 'Haircut',
+      duration: 60,
+      price: 5000, // in cents
+    },
+  ],
+  totalPrice: 5000,
+  totalDuration: 60,
+  canEdit: true,
+  canCancel: true,
+  canReschedule: true,
+});
+
+const mockStaffMembers = createTestStaffMembersList(2);
+mockStaffMembers[0].displayName = 'Alice Johnson';
+mockStaffMembers[0].firstName = 'Alice';
+mockStaffMembers[0].lastName = 'Johnson';
+mockStaffMembers[1].displayName = 'Bob Smith';
+mockStaffMembers[1].firstName = 'Bob';
+mockStaffMembers[1].lastName = 'Smith';
+
+const mockServices = [
+  {
+    id: 'service-1',
+    name: 'Haircut',
+    duration: 60,
+    price: 5000,
+  },
+  {
+    id: 'service-2',
+    name: 'Hair Styling',
+    duration: 90,
+    price: 7500,
+  },
+];
 
 const mockProps = {
   appointment: mockAppointment,
@@ -14,7 +68,7 @@ const mockProps = {
   onSave: jest.fn(),
   onDelete: jest.fn(),
   mode: 'view' as const,
-  staffMembers: mockStaff,
+  staffMembers: mockStaffMembers,
   services: mockServices,
 };
 
@@ -31,10 +85,23 @@ const renderWithProviders = (component: React.ReactElement) => {
   );
 };
 
-// Mock the services
+// Mock the services hook
 jest.mock('../../../hooks/useServices', () => ({
   useServices: () => ({
-    services: mockServices,
+    services: [
+      {
+        id: 'service-1',
+        name: 'Haircut',
+        duration: 60,
+        price: 5000,
+      },
+      {
+        id: 'service-2',
+        name: 'Hair Styling',
+        duration: 90,
+        price: 7500,
+      },
+    ],
     isLoading: false,
     error: null,
   }),

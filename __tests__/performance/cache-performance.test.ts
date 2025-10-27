@@ -82,7 +82,7 @@ describe('Cache Performance and Invalidation Tests', () => {
 
         // Mock staff data
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -248,7 +248,7 @@ describe('Cache Performance and Invalidation Tests', () => {
             const startTime = performance.now()
 
             await Promise.all(
-                requests.map(request =>
+                requests.map((request: any) =>
                     calculator.getAvailableSlots(request).catch(() => null)
                 )
             )
@@ -283,7 +283,7 @@ describe('Cache Performance and Invalidation Tests', () => {
             })
 
             const warmingRequests = dates.flatMap(date =>
-                staffIds.map(staffId => ({
+                staffIds.map((staffId: any) => ({
                     businessId,
                     date,
                     staffId,
@@ -295,7 +295,7 @@ describe('Cache Performance and Invalidation Tests', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                warmingRequests.map(request =>
+                warmingRequests.map((request: any) =>
                     calculator.getAvailableSlots(request).catch(() => null)
                 )
             )
@@ -305,7 +305,7 @@ describe('Cache Performance and Invalidation Tests', () => {
 
             // Should warm cache for 70 requests (7 days × 10 staff) in reasonable time
             expect(totalExecutionTime).toBeLessThan(3000)
-            expect(results.filter(r => r !== null)).toHaveLength(warmingRequests.length)
+            expect(results.filter((r: any) => r !== null)).toHaveLength(warmingRequests.length)
 
             // Verify cache was populated
             expect(mockRedis.set).toHaveBeenCalledTimes(warmingRequests.length)
@@ -589,8 +589,8 @@ describe('Cache Performance and Invalidation Tests', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                concurrentOperations.map(operation =>
-                    operation.catch(error => ({ error: error.message }))
+                concurrentOperations.map((operation: any) =>
+                    operation.catch((error: any) => ({ error: error.message }))
                 )
             )
 
@@ -600,8 +600,8 @@ describe('Cache Performance and Invalidation Tests', () => {
             // Should handle concurrent operations efficiently
             expect(totalExecutionTime).toBeLessThan(1000)
 
-            const successfulOperations = results.filter(result => !('error' in result))
-            const failedOperations = results.filter(result => 'error' in result)
+            const successfulOperations = results.filter((result: any) => !('error' in result))
+            const failedOperations = results.filter((result: any) => 'error' in result)
 
             // Should maintain high success rate
             expect(successfulOperations.length).toBeGreaterThan(12) // 80% success rate

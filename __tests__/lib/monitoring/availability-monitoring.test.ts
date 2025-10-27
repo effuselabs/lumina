@@ -52,7 +52,7 @@ describe('AvailabilityMonitoring', () => {
 
             // Check that an alert was generated
             const alerts = availabilityMonitoring.getRecentAlerts(10)
-            const performanceAlert = alerts.find(alert => alert.type === AlertType.PERFORMANCE_DEGRADATION)
+            const performanceAlert = alerts.find((alert: any) => alert.type === AlertType.PERFORMANCE_DEGRADATION)
 
             expect(performanceAlert).toBeDefined()
             expect(performanceAlert?.severity).toBe(AlertSeverity.WARNING)
@@ -66,7 +66,7 @@ describe('AvailabilityMonitoring', () => {
             recordAvailabilityQuery(businessId, verySlowDuration, true)
 
             const alerts = availabilityMonitoring.getRecentAlerts(10)
-            const performanceAlert = alerts.find(alert => alert.type === AlertType.PERFORMANCE_DEGRADATION)
+            const performanceAlert = alerts.find((alert: any) => alert.type === AlertType.PERFORMANCE_DEGRADATION)
 
             expect(performanceAlert?.severity).toBe(AlertSeverity.CRITICAL)
         })
@@ -78,7 +78,7 @@ describe('AvailabilityMonitoring', () => {
             recordConflictDetection(businessId, slowDuration, 2)
 
             const alerts = availabilityMonitoring.getRecentAlerts(10)
-            const conflictAlert = alerts.find(alert => alert.type === AlertType.CONFLICT_DETECTION_SLOW)
+            const conflictAlert = alerts.find((alert: any) => alert.type === AlertType.CONFLICT_DETECTION_SLOW)
 
             expect(conflictAlert).toBeDefined()
             expect(conflictAlert?.severity).toBe(AlertSeverity.WARNING)
@@ -111,7 +111,7 @@ describe('AvailabilityMonitoring', () => {
             }
 
             const alerts = availabilityMonitoring.getRecentAlerts(10)
-            const cacheAlert = alerts.find(alert => alert.type === AlertType.CACHE_HIT_RATIO_LOW)
+            const cacheAlert = alerts.find((alert: any) => alert.type === AlertType.CACHE_HIT_RATIO_LOW)
 
             expect(cacheAlert).toBeDefined()
             expect(cacheAlert?.severity).toBe(AlertSeverity.CRITICAL) // Below 50% of 70% threshold
@@ -144,7 +144,7 @@ describe('AvailabilityMonitoring', () => {
             })
 
             const alerts = availabilityMonitoring.getRecentAlerts(10)
-            const anomalyAlert = alerts.find(alert => alert.type === AlertType.BUSINESS_ANOMALY)
+            const anomalyAlert = alerts.find((alert: any) => alert.type === AlertType.BUSINESS_ANOMALY)
 
             expect(anomalyAlert).toBeDefined()
             expect(anomalyAlert?.title).toContain('High Conflict Detection Rate')
@@ -161,7 +161,7 @@ describe('AvailabilityMonitoring', () => {
 
             const performanceAlerts = availabilityMonitoring.getAlertsByType(AlertType.PERFORMANCE_DEGRADATION)
             expect(performanceAlerts.length).toBeGreaterThan(0)
-            expect(performanceAlerts.every(alert => alert.type === AlertType.PERFORMANCE_DEGRADATION)).toBe(true)
+            expect(performanceAlerts.every((alert: any) => alert.type === AlertType.PERFORMANCE_DEGRADATION)).toBe(true)
         })
 
         it('should filter alerts by business', () => {
@@ -174,8 +174,8 @@ describe('AvailabilityMonitoring', () => {
             const business1Alerts = availabilityMonitoring.getAlertsByBusiness(businessId1)
             const business2Alerts = availabilityMonitoring.getAlertsByBusiness(businessId2)
 
-            expect(business1Alerts.every(alert => alert.businessId === businessId1)).toBe(true)
-            expect(business2Alerts.every(alert => alert.businessId === businessId2)).toBe(true)
+            expect(business1Alerts.every((alert: any) => alert.businessId === businessId1)).toBe(true)
+            expect(business2Alerts.every((alert: any) => alert.businessId === businessId2)).toBe(true)
         })
 
         it('should limit recent alerts', () => {
@@ -205,7 +205,7 @@ describe('AvailabilityMonitoring', () => {
             recordAvailabilityQuery(businessId, 160, true) // Above new 150ms threshold
 
             const alerts = availabilityMonitoring.getRecentAlerts(10)
-            const performanceAlert = alerts.find(alert => alert.type === AlertType.PERFORMANCE_DEGRADATION)
+            const performanceAlert = alerts.find((alert: any) => alert.type === AlertType.PERFORMANCE_DEGRADATION)
 
             expect(performanceAlert).toBeDefined()
             expect(performanceAlert?.threshold).toBe(150)
@@ -246,7 +246,7 @@ describe('AvailabilityMonitoring', () => {
             // Wait for periodic check to run
             setTimeout(() => {
                 const alerts = availabilityMonitoring.getRecentAlerts(10)
-                const errorRateAlert = alerts.find(alert => alert.type === AlertType.HIGH_ERROR_RATE)
+                const errorRateAlert = alerts.find((alert: any) => alert.type === AlertType.HIGH_ERROR_RATE)
 
                 expect(errorRateAlert).toBeDefined()
                 expect(errorRateAlert?.severity).toBe(AlertSeverity.CRITICAL)
@@ -267,7 +267,7 @@ describe('AvailabilityMonitoring', () => {
             // Wait for periodic check
             setTimeout(() => {
                 const alerts = availabilityMonitoring.getRecentAlerts(10)
-                const overloadAlert = alerts.find(alert => alert.type === AlertType.SYSTEM_OVERLOAD)
+                const overloadAlert = alerts.find((alert: any) => alert.type === AlertType.SYSTEM_OVERLOAD)
 
                 expect(overloadAlert).toBeDefined()
                 expect(overloadAlert?.severity).toBe(AlertSeverity.CRITICAL)

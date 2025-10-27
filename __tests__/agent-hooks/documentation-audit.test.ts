@@ -367,7 +367,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            const criticalGaps = result.gaps.filter(gap => gap.priority === 'critical')
+            const criticalGaps = result.gaps.filter((gap: any) => gap.priority === 'critical')
             expect(criticalGaps.length).toBeGreaterThan(0)
             expect(criticalGaps[0].type).toBe('missing-api-docs')
         })
@@ -381,7 +381,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            const highPriorityGaps = result.gaps.filter(gap => gap.priority === 'high')
+            const highPriorityGaps = result.gaps.filter((gap: any) => gap.priority === 'high')
             expect(highPriorityGaps.length).toBeGreaterThan(0)
             expect(highPriorityGaps[0].type).toBe('missing-component-docs')
         })
@@ -395,7 +395,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            const outdatedDocs = result.gaps.filter(gap => gap.type === 'outdated-docs')
+            const outdatedDocs = result.gaps.filter((gap: any) => gap.type === 'outdated-docs')
             expect(outdatedDocs.length).toBeGreaterThan(0)
             expect(outdatedDocs[0].reason).toContain('last updated')
         })
@@ -409,7 +409,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            result.gaps.forEach(gap => {
+            result.gaps.forEach((gap: any) => {
                 expect(gap.reason).toBeTruthy()
                 expect(typeof gap.reason).toBe('string')
                 expect(gap.reason.length).toBeGreaterThan(0)
@@ -441,7 +441,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            const severities = result.complianceIssues.map(issue => issue.severity)
+            const severities = result.complianceIssues.map((issue: any) => issue.severity)
             expect(severities).toContain('high')
             expect(severities).toContain('medium')
         })
@@ -455,8 +455,8 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            result.complianceIssues.forEach(complianceIssue => {
-                complianceIssue.issues.forEach(issue => {
+            result.complianceIssues.forEach((complianceIssue: any) => {
+                complianceIssue.issues.forEach((issue: any) => {
                     expect(typeof issue).toBe('string')
                     expect(issue.length).toBeGreaterThan(0)
                 })
@@ -474,7 +474,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            const criticalTasks = result.maintenanceTasks.filter(task => task.priority === 'critical')
+            const criticalTasks = result.maintenanceTasks.filter((task: any) => task.priority === 'critical')
             expect(criticalTasks.length).toBeGreaterThan(0)
             expect(criticalTasks[0].title).toContain('API documentation')
         })
@@ -488,7 +488,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            const highPriorityTasks = result.maintenanceTasks.filter(task => task.priority === 'high')
+            const highPriorityTasks = result.maintenanceTasks.filter((task: any) => task.priority === 'high')
             expect(highPriorityTasks.length).toBeGreaterThan(0)
             expect(highPriorityTasks[0].title).toContain('authentication documentation')
         })
@@ -502,7 +502,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            result.maintenanceTasks.forEach(task => {
+            result.maintenanceTasks.forEach((task: any) => {
                 expect(task.description).toBeTruthy()
                 expect(typeof task.description).toBe('string')
                 expect(task.description.length).toBeGreaterThan(50) // Detailed description
@@ -518,7 +518,7 @@ describe('Documentation Audit Agent Hook', () => {
 
             const result = await executeDocumentationAuditHook(context)
 
-            result.maintenanceTasks.forEach(task => {
+            result.maintenanceTasks.forEach((task: any) => {
                 expect(task.labels).toContain('documentation')
                 expect(task.labels.length).toBeGreaterThan(1)
             })

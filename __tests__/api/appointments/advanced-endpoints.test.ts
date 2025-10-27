@@ -296,7 +296,7 @@ describe('Advanced Appointment API Endpoints', () => {
                 success: true,
                 appointment: {
                     ...appointmentWithMultipleServices,
-                    services: appointmentWithMultipleServices.services.filter(s => s.serviceId !== 'service-123')
+                    services: appointmentWithMultipleServices.services.filter((s: any) => s.serviceId !== 'service-123')
                 },
                 errors: [],
                 warnings: []

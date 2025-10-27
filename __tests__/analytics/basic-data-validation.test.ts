@@ -109,7 +109,7 @@ describe('Basic Analytics Data Quality Validation', () => {
 
     describe('Revenue Data Validation', () => {
         test('should have proper revenue data structure', () => {
-            mockRevenueData.forEach(day => {
+            mockRevenueData.forEach((day: any) => {
                 expect(day).toHaveProperty('date');
                 expect(day).toHaveProperty('revenue');
                 expect(day).toHaveProperty('appointments');
@@ -132,8 +132,8 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should have realistic revenue patterns', () => {
-            const totalRevenue = mockRevenueData.reduce((sum, day) => sum + day.revenue, 0);
-            const totalAppointments = mockRevenueData.reduce((sum, day) => sum + day.appointments, 0);
+            const totalRevenue = mockRevenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
+            const totalAppointments = mockRevenueData.reduce((sum: any, day: any) => sum + day.appointments, 0);
             const averageTicket = totalAppointments > 0 ? totalRevenue / totalAppointments : 0;
 
             expect(totalRevenue).toBeGreaterThan(1000);
@@ -143,7 +143,7 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should calculate average ticket correctly', () => {
-            mockRevenueData.forEach(day => {
+            mockRevenueData.forEach((day: any) => {
                 if (day.appointments > 0) {
                     const expectedAverage = day.revenue / day.appointments;
                     expect(Math.abs(day.averageTicket - expectedAverage)).toBeLessThan(0.01);
@@ -152,7 +152,7 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should have reasonable employment type revenue splits', () => {
-            mockRevenueData.forEach(day => {
+            mockRevenueData.forEach((day: any) => {
                 if (day.revenue > 0) {
                     expect(day.commissionEarnings).toBeGreaterThanOrEqual(0);
                     expect(day.chairRentalRevenue).toBeGreaterThanOrEqual(0);
@@ -193,7 +193,7 @@ describe('Basic Analytics Data Quality Validation', () => {
             expect(Array.isArray(mockClientMetrics.topClients)).toBe(true);
             expect(mockClientMetrics.topClients.length).toBeGreaterThan(0);
 
-            mockClientMetrics.topClients.forEach(client => {
+            mockClientMetrics.topClients.forEach((client: any) => {
                 expect(client).toHaveProperty('id');
                 expect(client).toHaveProperty('name');
                 expect(client).toHaveProperty('email');
@@ -222,7 +222,7 @@ describe('Basic Analytics Data Quality Validation', () => {
             expect(Array.isArray(mockStaffPerformance)).toBe(true);
             expect(mockStaffPerformance.length).toBeGreaterThan(0);
 
-            mockStaffPerformance.forEach(staff => {
+            mockStaffPerformance.forEach((staff: any) => {
                 expect(staff).toHaveProperty('staffId');
                 expect(staff).toHaveProperty('name');
                 expect(staff).toHaveProperty('employmentType');
@@ -247,7 +247,7 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should calculate employment-specific earnings correctly', () => {
-            mockStaffPerformance.forEach(staff => {
+            mockStaffPerformance.forEach((staff: any) => {
                 if (staff.employmentType === 'COMMISSION') {
                     expect(staff.commissionEarnings).toBeGreaterThan(0);
                     expect(staff.chairRentalPaid).toBe(0);
@@ -262,10 +262,10 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should have realistic performance distributions', () => {
-            const employmentTypes = [...new Set(mockStaffPerformance.map(s => s.employmentType))];
+            const employmentTypes = [...new Set(mockStaffPerformance.map((s: any) => s.employmentType))];
             expect(employmentTypes.length).toBeGreaterThan(0);
 
-            mockStaffPerformance.forEach(staff => {
+            mockStaffPerformance.forEach((staff: any) => {
                 if (staff.appointmentCount > 0) {
                     expect(staff.averageTicket).toBeGreaterThan(20);
                     expect(staff.averageTicket).toBeLessThan(300);
@@ -283,7 +283,7 @@ describe('Basic Analytics Data Quality Validation', () => {
             expect(Array.isArray(mockServiceAnalytics)).toBe(true);
             expect(mockServiceAnalytics.length).toBeGreaterThan(0);
 
-            mockServiceAnalytics.forEach(service => {
+            mockServiceAnalytics.forEach((service: any) => {
                 expect(service).toHaveProperty('serviceId');
                 expect(service).toHaveProperty('name');
                 expect(service).toHaveProperty('bookingCount');
@@ -304,7 +304,7 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should have proper popularity ranking', () => {
-            const ranks = mockServiceAnalytics.map(s => s.popularityRank).sort((a, b) => a - b);
+            const ranks = mockServiceAnalytics.map((s: any) => s.popularityRank).sort((a, b) => a - b);
 
             for (let i = 0; i < ranks.length; i++) {
                 expect(ranks[i]).toBe(i + 1);
@@ -319,7 +319,7 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should have realistic service pricing and revenue', () => {
-            mockServiceAnalytics.forEach(service => {
+            mockServiceAnalytics.forEach((service: any) => {
                 expect(service.averagePrice).toBeGreaterThan(10);
                 expect(service.averagePrice).toBeLessThan(500);
 
@@ -339,9 +339,9 @@ describe('Basic Analytics Data Quality Validation', () => {
 
     describe('Data Consistency Validation', () => {
         test('should have consistent revenue calculations', () => {
-            const totalRevenueFromRevenue = mockRevenueData.reduce((sum, day) => sum + day.revenue, 0);
-            const totalRevenueFromStaff = mockStaffPerformance.reduce((sum, staff) => sum + staff.totalRevenue, 0);
-            const totalRevenueFromServices = mockServiceAnalytics.reduce((sum, service) => sum + service.revenue, 0);
+            const totalRevenueFromRevenue = mockRevenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
+            const totalRevenueFromStaff = mockStaffPerformance.reduce((sum: any, staff: any) => sum + staff.totalRevenue, 0);
+            const totalRevenueFromServices = mockServiceAnalytics.reduce((sum: any, service: any) => sum + service.revenue, 0);
 
             // All should be positive
             expect(totalRevenueFromRevenue).toBeGreaterThan(0);
@@ -360,8 +360,8 @@ describe('Basic Analytics Data Quality Validation', () => {
         });
 
         test('should have consistent appointment counts', () => {
-            const appointmentsFromRevenue = mockRevenueData.reduce((sum, day) => sum + day.appointments, 0);
-            const appointmentsFromStaff = mockStaffPerformance.reduce((sum, staff) => sum + staff.appointmentCount, 0);
+            const appointmentsFromRevenue = mockRevenueData.reduce((sum: any, day: any) => sum + day.appointments, 0);
+            const appointmentsFromStaff = mockStaffPerformance.reduce((sum: any, staff: any) => sum + staff.appointmentCount, 0);
 
             expect(appointmentsFromRevenue).toBeGreaterThan(0);
             expect(appointmentsFromStaff).toBeGreaterThan(0);
@@ -396,7 +396,7 @@ describe('Basic Analytics Data Quality Validation', () => {
 
         test('should have realistic business metrics', () => {
             // Average ticket should be reasonable for salon business
-            mockRevenueData.forEach(day => {
+            mockRevenueData.forEach((day: any) => {
                 if (day.appointments > 0) {
                     expect(day.averageTicket).toBeGreaterThan(30);
                     expect(day.averageTicket).toBeLessThan(500);
@@ -408,7 +408,7 @@ describe('Basic Analytics Data Quality Validation', () => {
             expect(mockClientMetrics.clientRetentionRate).toBeLessThan(95);
 
             // Staff utilization should be realistic
-            mockStaffPerformance.forEach(staff => {
+            mockStaffPerformance.forEach((staff: any) => {
                 expect(staff.utilizationRate).toBeGreaterThan(50);
                 expect(staff.utilizationRate).toBeLessThan(100);
             });
@@ -416,19 +416,19 @@ describe('Basic Analytics Data Quality Validation', () => {
 
         test('should have proper data types and formats', () => {
             // Date formats
-            mockRevenueData.forEach(day => {
+            mockRevenueData.forEach((day: any) => {
                 expect(day.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
             });
 
             // Numeric precision
-            mockStaffPerformance.forEach(staff => {
+            mockStaffPerformance.forEach((staff: any) => {
                 expect(Number.isFinite(staff.totalRevenue)).toBe(true);
                 expect(Number.isFinite(staff.averageTicket)).toBe(true);
                 expect(Number.isFinite(staff.commissionEarnings)).toBe(true);
             });
 
             // Client satisfaction ratings
-            mockStaffPerformance.forEach(staff => {
+            mockStaffPerformance.forEach((staff: any) => {
                 expect(staff.clientSatisfaction).toBeGreaterThanOrEqual(1);
                 expect(staff.clientSatisfaction).toBeLessThanOrEqual(5);
             });

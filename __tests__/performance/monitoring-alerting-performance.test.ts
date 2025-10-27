@@ -252,15 +252,15 @@ describe('Monitoring and Alerting Performance Tests', () => {
                 metrics: {
                     totalQueries: performanceMetrics.length,
                     averageQueryTime: calculateAverageResponseTime(),
-                    slowQueries: performanceMetrics.filter(m => m.duration > ALERT_THRESHOLDS.averageResponseTime).length,
-                    errors: performanceMetrics.filter(m => !m.success).length,
+                    slowQueries: performanceMetrics.filter((m: any) => m.duration > ALERT_THRESHOLDS.averageResponseTime).length,
+                    errors: performanceMetrics.filter((m: any) => !m.success).length,
                     connectionPoolSize: 20,
                     activeConnections: Math.floor(20 * utilizationFactor),
                     idleConnections: Math.floor(20 * (1 - utilizationFactor))
                 },
                 performance: {
-                    errorRate: performanceMetrics.filter(m => !m.success).length / Math.max(performanceMetrics.length, 1),
-                    slowQueryRate: performanceMetrics.filter(m => m.duration > ALERT_THRESHOLDS.averageResponseTime).length / Math.max(performanceMetrics.length, 1),
+                    errorRate: performanceMetrics.filter((m: any) => !m.success).length / Math.max(performanceMetrics.length, 1),
+                    slowQueryRate: performanceMetrics.filter((m: any) => m.duration > ALERT_THRESHOLDS.averageResponseTime).length / Math.max(performanceMetrics.length, 1),
                     averageResponseTime: calculateAverageResponseTime(),
                     connectionUtilization: utilizationFactor
                 }
@@ -290,12 +290,12 @@ describe('Monitoring and Alerting Performance Tests', () => {
 
     const calculateAverageResponseTime = (): number => {
         if (performanceMetrics.length === 0) return 0
-        return performanceMetrics.reduce((sum, metric) => sum + metric.duration, 0) / performanceMetrics.length
+        return performanceMetrics.reduce((sum: any, metric: any) => sum + metric.duration, 0) / performanceMetrics.length
     }
 
     const calculateP95ResponseTime = (): number => {
         if (performanceMetrics.length === 0) return 0
-        const sortedDurations = performanceMetrics.map(m => m.duration).sort((a, b) => a - b)
+        const sortedDurations = performanceMetrics.map((m: any) => m.duration).sort((a, b) => a - b)
         const p95Index = Math.floor(sortedDurations.length * 0.95)
         return sortedDurations[p95Index] || 0
     }
@@ -324,7 +324,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
         }
 
         // Check error rate
-        const errorRate = recentMetrics.filter(m => !m.success).length / recentMetrics.length
+        const errorRate = recentMetrics.filter((m: any) => !m.success).length / recentMetrics.length
         if (errorRate > ALERT_THRESHOLDS.errorRate) {
             triggerAlert('ERROR_RATE', 'HIGH',
                 `Error rate exceeded threshold`,
@@ -405,8 +405,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
             // Analyze monitoring results
             const avgResponseTime = calculateAverageResponseTime()
             const p95ResponseTime = calculateP95ResponseTime()
-            const errorRate = performanceMetrics.filter(m => !m.success).length / performanceMetrics.length
-            const slowQueryRate = performanceMetrics.filter(m => m.duration > ALERT_THRESHOLDS.averageResponseTime).length / performanceMetrics.length
+            const errorRate = performanceMetrics.filter((m: any) => !m.success).length / performanceMetrics.length
+            const slowQueryRate = performanceMetrics.filter((m: any) => m.duration > ALERT_THRESHOLDS.averageResponseTime).length / performanceMetrics.length
 
             expect(performanceMetrics).toHaveLength(monitoringOperations)
             expect(avgResponseTime).toBeLessThan(ALERT_THRESHOLDS.averageResponseTime * 1.5) // Allow some tolerance
@@ -446,8 +446,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
                 // Calculate period metrics
                 const periodEndMetrics = performanceMetrics.length
                 const periodOperations = performanceMetrics.slice(periodStartMetrics, periodEndMetrics)
-                const avgTime = periodOperations.reduce((sum, m) => sum + m.duration, 0) / periodOperations.length
-                const errorRate = periodOperations.filter(m => !m.success).length / periodOperations.length
+                const avgTime = periodOperations.reduce((sum: any, m: any) => sum + m.duration, 0) / periodOperations.length
+                const errorRate = periodOperations.filter((m: any) => !m.success).length / periodOperations.length
 
                 periodMetrics.push({ period: period + 1, avgTime, errorRate })
 
@@ -459,8 +459,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
             const firstHalf = periodMetrics.slice(0, degradationTestPeriods / 2)
             const secondHalf = periodMetrics.slice(degradationTestPeriods / 2)
 
-            const firstHalfAvg = firstHalf.reduce((sum, p) => sum + p.avgTime, 0) / firstHalf.length
-            const secondHalfAvg = secondHalf.reduce((sum, p) => sum + p.avgTime, 0) / secondHalf.length
+            const firstHalfAvg = firstHalf.reduce((sum: any, p: any) => sum + p.avgTime, 0) / firstHalf.length
+            const secondHalfAvg = secondHalf.reduce((sum: any, p: any) => sum + p.avgTime, 0) / secondHalf.length
 
             const degradationPercentage = ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100
 
@@ -501,12 +501,12 @@ describe('Monitoring and Alerting Performance Tests', () => {
             // Verify alerts were triggered
             expect(alertEvents.length).toBeGreaterThan(0)
 
-            const alertsByType = alertEvents.reduce((acc, alert) => {
+            const alertsByType = alertEvents.reduce((acc: any, alert: any) => {
                 acc[alert.alertType] = (acc[alert.alertType] || 0) + 1
                 return acc
             }, {} as Record<string, number>)
 
-            const alertsBySeverity = alertEvents.reduce((acc, alert) => {
+            const alertsBySeverity = alertEvents.reduce((acc: any, alert: any) => {
                 acc[alert.severity] = (acc[alert.severity] || 0) + 1
                 return acc
             }, {} as Record<string, number>)
@@ -517,7 +517,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
             console.log(`- Alerts by severity:`, alertsBySeverity)
 
             // Verify alert details
-            alertEvents.forEach(alert => {
+            alertEvents.forEach((alert: any) => {
                 expect(alert.timestamp).toBeDefined()
                 expect(alert.alertType).toBeDefined()
                 expect(alert.severity).toMatch(/^(LOW|MEDIUM|HIGH|CRITICAL)$/)
@@ -547,8 +547,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
             }
 
             // Count alerts by severity
-            criticalAlerts = alertEvents.filter(a => a.severity === 'CRITICAL').length
-            highAlerts = alertEvents.filter(a => a.severity === 'HIGH').length
+            criticalAlerts = alertEvents.filter((a: any) => a.severity === 'CRITICAL').length
+            highAlerts = alertEvents.filter((a: any) => a.severity === 'HIGH').length
 
             console.log(`Alert Escalation Results:`)
             console.log(`- Critical alerts: ${criticalAlerts}`)
@@ -559,9 +559,9 @@ describe('Monitoring and Alerting Performance Tests', () => {
             expect(alertEvents.length).toBeGreaterThan(0)
 
             // Check that high-severity alerts were triggered for high error rates
-            const errorRateAlerts = alertEvents.filter(a => a.alertType === 'ERROR_RATE')
+            const errorRateAlerts = alertEvents.filter((a: any) => a.alertType === 'ERROR_RATE')
             if (errorRateAlerts.length > 0) {
-                expect(errorRateAlerts.some(a => a.severity === 'HIGH')).toBe(true)
+                expect(errorRateAlerts.some((a: any) => a.severity === 'HIGH')).toBe(true)
             }
         })
 
@@ -610,7 +610,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
             // Verify alert information quality
             const recentAlerts = alertEvents.slice(-10) // Last 10 alerts
 
-            recentAlerts.forEach(alert => {
+            recentAlerts.forEach((alert: any) => {
                 expect(alert.message).toBeDefined()
                 expect(alert.message.length).toBeGreaterThan(10) // Meaningful message
                 expect(alert.metrics).toBeDefined()
@@ -654,9 +654,9 @@ describe('Monitoring and Alerting Performance Tests', () => {
             }
 
             // Analyze connection utilization patterns
-            const avgUtilization = connectionMetricsHistory.reduce((sum, m) => sum + m.utilization, 0) / connectionMetricsHistory.length
-            const maxUtilization = Math.max(...connectionMetricsHistory.map(m => m.utilization))
-            const utilizationSpikes = connectionMetricsHistory.filter(m => m.utilization > ALERT_THRESHOLDS.connectionUtilization).length
+            const avgUtilization = connectionMetricsHistory.reduce((sum: any, m: any) => sum + m.utilization, 0) / connectionMetricsHistory.length
+            const maxUtilization = Math.max(...connectionMetricsHistory.map((m: any) => m.utilization))
+            const utilizationSpikes = connectionMetricsHistory.filter((m: any) => m.utilization > ALERT_THRESHOLDS.connectionUtilization).length
 
             expect(avgUtilization).toBeLessThan(ALERT_THRESHOLDS.connectionUtilization)
             expect(maxUtilization).toBeLessThan(1.0) // Should never exceed 100%
@@ -694,8 +694,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
             }
 
             // Analyze cache performance
-            const overallHitRate = cacheMetricsHistory.reduce((sum, m) => sum + m.hitRate, 0) / cacheMetricsHistory.length
-            const avgResponseTime = cacheMetricsHistory.reduce((sum, m) => sum + m.responseTime, 0) / cacheMetricsHistory.length
+            const overallHitRate = cacheMetricsHistory.reduce((sum: any, m: any) => sum + m.hitRate, 0) / cacheMetricsHistory.length
+            const avgResponseTime = cacheMetricsHistory.reduce((sum: any, m: any) => sum + m.responseTime, 0) / cacheMetricsHistory.length
             const cacheStats = cacheInstance.getStats()
 
             expect(overallHitRate).toBeGreaterThan(0.5) // At least 50% hit rate
@@ -803,8 +803,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
                 const windowDuration = windowEndTime - windowStartTime
                 const windowMetrics = performanceMetrics.slice(windowStartMetrics)
 
-                const avgResponseTime = windowMetrics.reduce((sum, m) => sum + m.duration, 0) / windowMetrics.length
-                const errorRate = windowMetrics.filter(m => !m.success).length / windowMetrics.length
+                const avgResponseTime = windowMetrics.reduce((sum: any, m: any) => sum + m.duration, 0) / windowMetrics.length
+                const errorRate = windowMetrics.filter((m: any) => !m.success).length / windowMetrics.length
                 const throughput = trendWindow / (windowDuration / 1000) // Operations per second
 
                 trendData.push({
@@ -816,8 +816,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
             }
 
             // Analyze trends
-            const responseTimes = trendData.map(d => d.avgResponseTime)
-            const throughputs = trendData.map(d => d.throughput)
+            const responseTimes = trendData.map((d: any) => d.avgResponseTime)
+            const throughputs = trendData.map((d: any) => d.throughput)
 
             // Calculate trend slopes (simple linear regression)
             const responseTimeTrend = calculateTrendSlope(responseTimes)
@@ -847,7 +847,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
         const calculateTrendSlope = (values: number[]): number => {
             const n = values.length
             const xSum = (n * (n - 1)) / 2 // Sum of indices 0, 1, 2, ..., n-1
-            const ySum = values.reduce((sum, val) => sum + val, 0)
+            const ySum = values.reduce((sum: any, val: any) => sum + val, 0)
             const xySum = values.reduce((sum, val, index) => sum + (index * val), 0)
             const x2Sum = values.reduce((sum, _, index) => sum + (index * index), 0)
 

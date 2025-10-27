@@ -272,7 +272,7 @@ describe('AvailabilityCalculator', () => {
             expect(result).toBeDefined()
 
             // Check that no slots overlap with the appointment
-            const overlappingSlots = result.filter(slot =>
+            const overlappingSlots = result.filter((slot: any) =>
                 slot.startTime < appointmentEnd && slot.endTime > appointmentStart
             )
             expect(overlappingSlots).toHaveLength(0)
@@ -353,7 +353,7 @@ describe('AvailabilityCalculator', () => {
             expect(result).toBeDefined()
 
             // All slots should be within override hours (10:00-14:00)
-            result.forEach(slot => {
+            result.forEach((slot: any) => {
                 const slotHour = slot.startTime.getHours()
                 expect(slotHour).toBeGreaterThanOrEqual(10)
                 expect(slotHour).toBeLessThan(14)
@@ -442,7 +442,7 @@ describe('AvailabilityCalculator', () => {
             expect(result.length).toBeGreaterThan(0)
 
             // Should have slots for multiple days
-            const uniqueDates = new Set(result.map(slot => slot.startTime.toDateString()))
+            const uniqueDates = new Set(result.map((slot: any) => slot.startTime.toDateString()))
             expect(uniqueDates.size).toBeGreaterThan(1)
         })
 

@@ -40,7 +40,7 @@ describe('/api/availability/validate Integration Tests', () => {
         user: {
             id: 'user-123',
             businessId,
-            role: 'OWNER',
+            
         },
     }
 
@@ -60,7 +60,7 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockValidationResult = {
@@ -69,7 +69,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -102,7 +102,7 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockValidationResult = {
@@ -139,7 +139,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -171,7 +171,7 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockServices: Partial<Service>[] = [
@@ -189,7 +189,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
@@ -225,7 +225,7 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockServices: Partial<Service>[] = [
@@ -238,7 +238,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 {
                     id: serviceId2,
                     businessId,
-                    name: 'Color',
+                    displayName: 'Color',
                     duration: 90,
                 },
             ]
@@ -249,7 +249,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
@@ -280,7 +280,7 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockValidationResult = {
@@ -299,7 +299,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 ],
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -333,7 +333,7 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockValidationResult = {
@@ -342,7 +342,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 warnings: [],
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -449,10 +449,10 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.service.findMany).mockResolvedValue([]) // No services found
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -509,10 +509,10 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.service.findMany).mockResolvedValue([]) // Not found in user's business
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -545,10 +545,10 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             ConflictDetectionEngine.validateAppointmentSlot.mockRejectedValue(new Error('Validation engine failed'))
 
             const request = new NextRequest('http://localhost:3000/api/availability/validate', {
@@ -593,7 +593,7 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
             const mockServices: Partial<Service>[] = [
@@ -618,7 +618,7 @@ describe('/api/availability/validate Integration Tests', () => {
                 ],
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
             asMock(mockPrisma.service.findMany).mockResolvedValue(mockServices as Service[])
             ConflictDetectionEngine.validateAppointmentSlot.mockResolvedValue(mockValidationResult)
 
@@ -655,7 +655,7 @@ describe('/api/availability/validate Integration Tests', () => {
                     services: [
                         {
                             id: serviceId,
-                            name: 'Haircut',
+                            displayName: 'Haircut',
                             duration: 60,
                         },
                     ],
@@ -683,10 +683,10 @@ describe('/api/availability/validate Integration Tests', () => {
 
             const mockStaff: Partial<Staff> = {
                 id: staffId,
-                name: 'John Doe',
+                displayName: 'John Doe',
             }
 
-            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as Staff)
+            asMock(mockPrisma.staff.findFirst).mockResolvedValue(mockStaff as unknown as Staff)
 
             // First validation: slot is available
             const initialValidationResult = {

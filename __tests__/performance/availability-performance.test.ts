@@ -63,7 +63,7 @@ describe('Availability System Performance Tests', () => {
 
         // Mock staff data (10 staff members)
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -214,7 +214,7 @@ describe('Availability System Performance Tests', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                dates.map(date =>
+                dates.map((date: any) =>
                     calculator.getAvailableSlots({
                         businessId,
                         date,
@@ -230,7 +230,7 @@ describe('Availability System Performance Tests', () => {
             // Should complete all 3 queries in under 400ms (allowing for parallel execution)
             expect(executionTime).toBeLessThan(400)
             expect(results).toHaveLength(3)
-            results.forEach(slots => {
+            results.forEach((slots: any) => {
                 expect(Array.isArray(slots)).toBe(true)
             })
         })
@@ -308,7 +308,7 @@ describe('Availability System Performance Tests', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                appointmentRequests.map(request =>
+                appointmentRequests.map((request: any) =>
                     conflictEngine.detectConflicts(request)
                 )
             )
@@ -319,7 +319,7 @@ describe('Availability System Performance Tests', () => {
             // Should complete 10 conflict checks in under 500ms
             expect(executionTime).toBeLessThan(500)
             expect(results).toHaveLength(10)
-            results.forEach(conflicts => {
+            results.forEach((conflicts: any) => {
                 expect(Array.isArray(conflicts)).toBe(true)
             })
         })
@@ -362,7 +362,7 @@ describe('Availability System Performance Tests', () => {
 
         it('should handle bulk staff availability updates efficiently', async () => {
             const repository = new StaffAvailabilityRepository()
-            const availabilityUpdates = staffIds.map(staffId => ({
+            const availabilityUpdates = staffIds.map((staffId: any) => ({
                 staffId,
                 businessId,
                 availability: {
@@ -376,7 +376,7 @@ describe('Availability System Performance Tests', () => {
             const startTime = performance.now()
 
             await Promise.all(
-                availabilityUpdates.map(update =>
+                availabilityUpdates.map((update: any) =>
                     repository.setAvailability(
                         update.staffId,
                         update.businessId,
@@ -426,7 +426,7 @@ describe('Availability System Performance Tests', () => {
             const largeServiceIds = Array.from({ length: 100 }, (_, i) => `service-${i + 1}`)
 
             asMock(mockPrisma.staff.findMany).mockResolvedValue(
-                largeStaffIds.map(id => ({
+                largeStaffIds.map((id: any) => ({
                     id,
                     businessId,
                     name: `Staff ${id}`,

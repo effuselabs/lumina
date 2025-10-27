@@ -63,7 +63,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
 
         // Mock staff data
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -401,7 +401,7 @@ describe('Calendar Infrastructure Performance Benchmark Suite', () => {
 
                 // Update mock to return limited staff
                 asMock(mockPrisma.staff.findMany).mockResolvedValue(
-                    limitedStaffIds.map(id => ({
+                    limitedStaffIds.map((id: any) => ({
                         id,
                         businessId,
                         name: `Staff ${id}`,

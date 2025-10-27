@@ -123,7 +123,7 @@ describe('filterAppointments', () => {
         const result = filterAppointments(mockAppointments, filters);
 
         expect(result).toHaveLength(2); // John Doe and Alice Johnson
-        expect(result.map(a => a.id)).toEqual(['1', '3']);
+        expect(result.map((a: any) => a.id)).toEqual(['1', '3']);
     });
 
     it('filters by staff IDs', () => {
@@ -131,7 +131,7 @@ describe('filterAppointments', () => {
         const result = filterAppointments(mockAppointments, filters);
 
         expect(result).toHaveLength(2); // Appointments with staff-1
-        expect(result.map(a => a.id)).toEqual(['1', '3']);
+        expect(result.map((a: any) => a.id)).toEqual(['1', '3']);
     });
 
     it('filters by service IDs', () => {
@@ -149,7 +149,7 @@ describe('filterAppointments', () => {
         const result = filterAppointments(mockAppointments, filters);
 
         expect(result).toHaveLength(2);
-        expect(result.map(a => a.id)).toEqual(['1', '2']);
+        expect(result.map((a: any) => a.id)).toEqual(['1', '2']);
     });
 
     it('filters by date range', () => {
@@ -260,7 +260,7 @@ describe('sortByRelevance', () => {
     it('sorts by date when no search terms', () => {
         const result = sortByRelevance(mockAppointments, []);
 
-        expect(result.map(a => a.id)).toEqual(['1', '2', '3']); // Chronological order
+        expect(result.map((a: any) => a.id)).toEqual(['1', '2', '3']); // Chronological order
     });
 
     it('sorts by relevance score', () => {
@@ -276,7 +276,7 @@ describe('sortByRelevance', () => {
         const result = sortByRelevance(mockAppointments, ['client']);
 
         // All have equal relevance (notes mention "client"), so should be in date order
-        expect(result.map(a => a.id)).toEqual(['1', '2', '3']);
+        expect(result.map((a: any) => a.id)).toEqual(['1', '2', '3']);
     });
 });
 

@@ -233,7 +233,7 @@ describe('AppointmentErrorHandler', () => {
 
             const result = appointmentErrorHandler.generateDetailedErrorMessage(error, createContext)
 
-            expect(result.suggestedActions.some(s => s.title.includes('available times'))).toBe(true)
+            expect(result.suggestedActions.some((s: any) => s.title.includes('available times'))).toBe(true)
         })
 
         it('should limit suggestions to 5 items', () => {

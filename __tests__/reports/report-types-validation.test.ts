@@ -92,7 +92,7 @@ describe('Report Types Data Quality Validation', () => {
             ]);
 
             // All employment types should have valid data structure
-            [commissionRevenue, chairRentalRevenue, hybridRevenue].forEach(revenue => {
+            [commissionRevenue, chairRentalRevenue, hybridRevenue].forEach((revenue: any) => {
                 expect(revenue).toHaveProperty('totalRevenue');
                 expect(revenue).toHaveProperty('netRevenue');
                 expect(revenue.totalRevenue).toBeGreaterThanOrEqual(0);
@@ -125,11 +125,11 @@ describe('Report Types Data Quality Validation', () => {
             );
 
             // Calculate expected business retention
-            const totalCommissionsPaid = staffPerformance.reduce((sum, staff) => {
+            const totalCommissionsPaid = staffPerformance.reduce((sum: any, staff: any) => {
                 return sum + staff.commissionEarnings;
             }, 0);
 
-            const totalChairRentalReceived = staffPerformance.reduce((sum, staff) => {
+            const totalChairRentalReceived = staffPerformance.reduce((sum: any, staff: any) => {
                 return sum + staff.chairRentalPaid;
             }, 0);
 
@@ -189,12 +189,12 @@ describe('Report Types Data Quality Validation', () => {
             const staffPerformance = await dataService.getStaffPerformance(testDateRange);
 
             // Group by employment type
-            const commissionStaff = staffPerformance.filter(s => s.employmentType === 'COMMISSION');
-            const chairRentalStaff = staffPerformance.filter(s => s.employmentType === 'CHAIR_RENTAL');
-            const hybridStaff = staffPerformance.filter(s => s.employmentType === 'HYBRID');
+            const commissionStaff = staffPerformance.filter((s: any) => s.employmentType === 'COMMISSION');
+            const chairRentalStaff = staffPerformance.filter((s: any) => s.employmentType === 'CHAIR_RENTAL');
+            const hybridStaff = staffPerformance.filter((s: any) => s.employmentType === 'HYBRID');
 
             // Commission staff should have commission earnings but no chair rental
-            commissionStaff.forEach(staff => {
+            commissionStaff.forEach((staff: any) => {
                 if (staff.totalRevenue > 0) {
                     expect(staff.commissionEarnings).toBeGreaterThan(0);
                     expect(staff.chairRentalPaid).toBe(0);
@@ -202,7 +202,7 @@ describe('Report Types Data Quality Validation', () => {
             });
 
             // Chair rental staff should have chair rental but no commissions
-            chairRentalStaff.forEach(staff => {
+            chairRentalStaff.forEach((staff: any) => {
                 if (staff.appointmentCount > 0) {
                     expect(staff.chairRentalPaid).toBeGreaterThan(0);
                     expect(staff.commissionEarnings).toBe(0);
@@ -210,7 +210,7 @@ describe('Report Types Data Quality Validation', () => {
             });
 
             // Hybrid staff should have both components
-            hybridStaff.forEach(staff => {
+            hybridStaff.forEach((staff: any) => {
                 if (staff.totalRevenue > 0 || staff.appointmentCount > 0) {
                     expect(staff.commissionEarnings).toBeGreaterThanOrEqual(0);
                     expect(staff.chairRentalPaid).toBeGreaterThanOrEqual(0);
@@ -270,7 +270,7 @@ describe('Report Types Data Quality Validation', () => {
             expect(Array.isArray(clientMetrics.topClients)).toBe(true);
             expect(clientMetrics.topClients.length).toBeGreaterThan(0);
 
-            clientMetrics.topClients.forEach(client => {
+            clientMetrics.topClients.forEach((client: any) => {
                 expect(client.totalSpent).toBeGreaterThan(0);
                 expect(client.appointmentCount).toBeGreaterThan(0);
                 expect(client.name.length).toBeGreaterThan(0);
@@ -327,12 +327,12 @@ describe('Report Types Data Quality Validation', () => {
             expect(clients.length).toBeGreaterThan(0);
 
             // Validate client visit patterns
-            clients.forEach(client => {
+            clients.forEach((client: any) => {
                 const appointments = client.appointments;
 
                 if (appointments.length > 0) {
                     // Calculate total spent
-                    const totalSpent = appointments.reduce((sum, appointment) => {
+                    const totalSpent = appointments.reduce((sum: any, appointment: any) => {
                         return sum + appointment.services.reduce(
                             (serviceSum, service) => serviceSum + Number(service.price),
                             0
@@ -363,7 +363,7 @@ describe('Report Types Data Quality Validation', () => {
             expect(Array.isArray(serviceAnalytics)).toBe(true);
             expect(serviceAnalytics.length).toBeGreaterThan(0);
 
-            serviceAnalytics.forEach(service => {
+            serviceAnalytics.forEach((service: any) => {
                 expect(service.name.length).toBeGreaterThan(0);
                 expect(service.bookingCount).toBeGreaterThanOrEqual(0);
                 expect(service.revenue).toBeGreaterThanOrEqual(0);
@@ -380,7 +380,7 @@ describe('Report Types Data Quality Validation', () => {
             });
 
             // Validate popularity ranking
-            const ranks = serviceAnalytics.map(s => s.popularityRank).sort((a, b) => a - b);
+            const ranks = serviceAnalytics.map((s: any) => s.popularityRank).sort((a, b) => a - b);
             for (let i = 0; i < ranks.length; i++) {
                 expect(ranks[i]).toBe(i + 1);
             }
@@ -396,7 +396,7 @@ describe('Report Types Data Quality Validation', () => {
         test('should calculate service profitability accurately', async () => {
             const serviceAnalytics = await dataService.getServiceAnalytics(testDateRange);
 
-            serviceAnalytics.forEach(service => {
+            serviceAnalytics.forEach((service: any) => {
                 // Profit margin should be reasonable for salon services
                 expect(service.profitMargin).toBeGreaterThan(0);
                 expect(service.profitMargin).toBeLessThan(100);
@@ -428,10 +428,10 @@ describe('Report Types Data Quality Validation', () => {
 
             // Create a map for easy comparison
             const previousServiceMap = new Map(
-                previousServices.map(s => [s.serviceId, s])
+                previousServices.map((s: any) => [s.serviceId, s])
             );
 
-            currentServices.forEach(currentService => {
+            currentServices.forEach((currentService: any) => {
                 const previousService = previousServiceMap.get(currentService.serviceId);
 
                 if (previousService) {
@@ -462,10 +462,10 @@ describe('Report Types Data Quality Validation', () => {
             ]);
 
             // Calculate total revenue from different sources
-            const revenueFromDashboard = revenueData.reduce((sum, day) => sum + day.revenue, 0);
+            const revenueFromDashboard = revenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
             const revenueFromFinancial = businessRevenue.totalRevenue;
-            const revenueFromStaff = staffPerformance.reduce((sum, staff) => sum + staff.totalRevenue, 0);
-            const revenueFromServices = serviceAnalytics.reduce((sum, service) => sum + service.revenue, 0);
+            const revenueFromStaff = staffPerformance.reduce((sum: any, staff: any) => sum + staff.totalRevenue, 0);
+            const revenueFromServices = serviceAnalytics.reduce((sum: any, service: any) => sum + service.revenue, 0);
 
             const revenues = [revenueFromDashboard, revenueFromFinancial, revenueFromStaff, revenueFromServices];
             const maxRevenue = Math.max(...revenues);
@@ -478,7 +478,7 @@ describe('Report Types Data Quality Validation', () => {
             }
 
             // All revenue figures should be positive
-            revenues.forEach(revenue => {
+            revenues.forEach((revenue: any) => {
                 expect(revenue).toBeGreaterThanOrEqual(0);
             });
         });
@@ -489,8 +489,8 @@ describe('Report Types Data Quality Validation', () => {
                 dataService.getStaffPerformance(testDateRange),
             ]);
 
-            const appointmentsFromRevenue = revenueData.reduce((sum, day) => sum + day.appointments, 0);
-            const appointmentsFromStaff = staffPerformance.reduce((sum, staff) => sum + staff.appointmentCount, 0);
+            const appointmentsFromRevenue = revenueData.reduce((sum: any, day: any) => sum + day.appointments, 0);
+            const appointmentsFromStaff = staffPerformance.reduce((sum: any, staff: any) => sum + staff.appointmentCount, 0);
 
             // Appointment counts should be consistent
             expect(Math.abs(appointmentsFromRevenue - appointmentsFromStaff)).toBeLessThan(

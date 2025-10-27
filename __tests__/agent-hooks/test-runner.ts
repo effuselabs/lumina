@@ -283,7 +283,7 @@ if (require.main === module) {
                 process.exit(0)
             }
         })
-        .catch(error => {
+        .catch((error: any) => {
             console.error('❌ Test runner failed:', error)
             process.exit(1)
         })

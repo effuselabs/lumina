@@ -544,7 +544,7 @@ describe('Migration and Compatibility Integration Tests', () => {
                 const result = await dataMigrationService.migrateAllData()
 
                 expect(result.success).toBe(false)
-                expect(result.errors.some(e => e.error.includes('validation failed'))).toBe(true)
+                expect(result.errors.some((e: any) => e.error.includes('validation failed'))).toBe(true)
             })
         })
 
@@ -613,7 +613,7 @@ describe('Migration and Compatibility Integration Tests', () => {
 
                 expect(result.isValid).toBe(false)
                 expect(result.errors.length).toBeGreaterThan(0)
-                expect(result.errors.some(e => e.field === 'businessHours')).toBe(true)
+                expect(result.errors.some((e: any) => e.field === 'businessHours')).toBe(true)
             })
         })
 

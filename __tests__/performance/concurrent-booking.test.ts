@@ -81,7 +81,7 @@ describe('Concurrent Booking Performance Tests', () => {
 
             // Verify all requests completed successfully
             expect(results).toHaveLength(concurrentRequests)
-            results.forEach(result => {
+            results.forEach((result: any) => {
                 expect(result.availableSlots).toBeDefined()
                 expect(result.availableSlots.length).toBeGreaterThan(0)
             })
@@ -178,20 +178,20 @@ describe('Concurrent Booking Performance Tests', () => {
                         email: `client${index}@example.com`,
                         phone: `555-000${index}`
                     }
-                }).catch(error => error) // Catch errors to analyze them
+                }).catch((error: any) => error) // Catch errors to analyze them
             )
 
             const results = await Promise.all(bookingRequests)
 
             // Verify conflict handling
-            const successful = results.filter(result => result.appointment)
-            const conflicts = results.filter(result => result.type === 'BOOKING_CONFLICT')
+            const successful = results.filter((result: any) => result.appointment)
+            const conflicts = results.filter((result: any) => result.type === 'BOOKING_CONFLICT')
 
             expect(successful).toHaveLength(1) // Only one booking should succeed
             expect(conflicts).toHaveLength(concurrentBookings - 1) // Others should get conflicts
 
             // Verify alternative slots are provided for conflicts
-            conflicts.forEach(conflict => {
+            conflicts.forEach((conflict: any) => {
                 expect(conflict.alternativeSlots).toBeDefined()
                 expect(conflict.alternativeSlots.length).toBeGreaterThan(0)
             })
@@ -220,7 +220,7 @@ describe('Concurrent Booking Performance Tests', () => {
                             email: `user${i}@example.com`,
                             phone: `555-${String(i).padStart(4, '0')}`
                         }
-                    }).catch(error => ({ error, userId: i }))
+                    }).catch((error: any) => ({ error, userId: i }))
                 )
             }
 
@@ -337,9 +337,9 @@ describe('Concurrent Booking Performance Tests', () => {
             }
 
             // Calculate averages
-            const avgBusinessInfo = performanceMetrics.businessInfoLoad.reduce((a, b) => a + b) / testRuns
-            const avgAvailability = performanceMetrics.availabilityCheck.reduce((a, b) => a + b) / testRuns
-            const avgBooking = performanceMetrics.bookingCreation.reduce((a, b) => a + b) / testRuns
+            const avgBusinessInfo = performanceMetrics.businessInfoLoad.reduce((a: any, b: any) => a + b) / testRuns
+            const avgAvailability = performanceMetrics.availabilityCheck.reduce((a: any, b: any) => a + b) / testRuns
+            const avgBooking = performanceMetrics.bookingCreation.reduce((a: any, b: any) => a + b) / testRuns
 
             // Performance SLA assertions (based on requirements)
             expect(avgBusinessInfo).toBeLessThan(200) // Business info < 200ms

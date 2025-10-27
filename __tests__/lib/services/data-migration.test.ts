@@ -367,9 +367,9 @@ describe('DataMigrationService', () => {
 
             // Verify day mapping: Sunday=0, Monday=1, Saturday=6
             expect(createdBusinessHours).toHaveLength(3);
-            expect(createdBusinessHours.find(bh => bh.dayOfWeek === 0)).toBeDefined(); // Sunday
-            expect(createdBusinessHours.find(bh => bh.dayOfWeek === 1)).toBeDefined(); // Monday
-            expect(createdBusinessHours.find(bh => bh.dayOfWeek === 6)).toBeDefined(); // Saturday
+            expect(createdBusinessHours.find((bh: any) => bh.dayOfWeek === 0)).toBeDefined(); // Sunday
+            expect(createdBusinessHours.find((bh: any) => bh.dayOfWeek === 1)).toBeDefined(); // Monday
+            expect(createdBusinessHours.find((bh: any) => bh.dayOfWeek === 6)).toBeDefined(); // Saturday
         });
     });
 });

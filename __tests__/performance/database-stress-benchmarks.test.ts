@@ -201,7 +201,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
                     [AppointmentStatus.COMPLETED]: 250,
                     [AppointmentStatus.CANCELLED]: 50
                 },
-                byStaff: testStaffIds.reduce((acc, staffId) => {
+                byStaff: testStaffIds.reduce((acc: any, staffId: any) => {
                     acc[staffId] = Math.floor(Math.random() * 50)
                     return acc
                 }, {} as Record<string, number>),
@@ -285,7 +285,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
                 creationTimes.push(duration)
             }
 
-            const averageTime = creationTimes.reduce((sum, time) => sum + time, 0) / creationTimes.length
+            const averageTime = creationTimes.reduce((sum: any, time: any) => sum + time, 0) / creationTimes.length
             const p95Time = creationTimes.sort((a, b) => a - b)[Math.floor(benchmarkIterations * 0.95)]
             const maxTime = Math.max(...creationTimes)
 
@@ -316,7 +316,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
                 retrievalTimes.push(duration)
             }
 
-            const averageTime = retrievalTimes.reduce((sum, time) => sum + time, 0) / retrievalTimes.length
+            const averageTime = retrievalTimes.reduce((sum: any, time: any) => sum + time, 0) / retrievalTimes.length
             const p95Time = retrievalTimes.sort((a, b) => a - b)[Math.floor(benchmarkIterations * 0.95)]
 
             expect(averageTime).toBeLessThan(PERFORMANCE_BENCHMARKS.FIND_BY_ID * 0.7) // 70% of benchmark
@@ -348,7 +348,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
                 queryTimes.push(duration)
             }
 
-            const averageTime = queryTimes.reduce((sum, time) => sum + time, 0) / queryTimes.length
+            const averageTime = queryTimes.reduce((sum: any, time: any) => sum + time, 0) / queryTimes.length
             const p95Time = queryTimes.sort((a, b) => a - b)[Math.floor(benchmarkIterations * 0.95)]
 
             expect(averageTime).toBeLessThan(PERFORMANCE_BENCHMARKS.FIND_BY_BUSINESS * 0.8)
@@ -379,7 +379,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
                 statsTimes.push(duration)
             }
 
-            const averageTime = statsTimes.reduce((sum, time) => sum + time, 0) / statsTimes.length
+            const averageTime = statsTimes.reduce((sum: any, time: any) => sum + time, 0) / statsTimes.length
             const p95Time = statsTimes.sort((a, b) => a - b)[Math.floor(benchmarkIterations * 0.95)]
 
             expect(averageTime).toBeLessThan(PERFORMANCE_BENCHMARKS.STATISTICS_QUERIES)
@@ -414,14 +414,14 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(operations.map(op => op().catch(error => ({ error: error.message }))))
+            const results = await Promise.all(operations.map((op: any) => op().catch((error: any) => ({ error: error.message }))))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
             expect(totalTime).toBeLessThan(STRESS_THRESHOLDS.HIGH_CONCURRENCY)
 
-            const successfulOperations = results.filter(result => !('error' in result))
-            const failedOperations = results.filter(result => 'error' in result)
+            const successfulOperations = results.filter((result: any) => !('error' in result))
+            const failedOperations = results.filter((result: any) => 'error' in result)
 
             expect(successfulOperations.length).toBeGreaterThan(concurrentOperations * 0.95) // 95% success rate
             expect(failedOperations.length).toBeLessThan(concurrentOperations * 0.05)
@@ -458,7 +458,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(readOperations.map(op => op()))
+            const results = await Promise.all(readOperations.map((op: any) => op()))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
@@ -491,11 +491,11 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(writeOperations.map(op => op().catch(error => ({ error: error.message }))))
+            const results = await Promise.all(writeOperations.map((op: any) => op().catch((error: any) => ({ error: error.message }))))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
-            const successfulWrites = results.filter(result => !('error' in result))
+            const successfulWrites = results.filter((result: any) => !('error' in result))
             const averageTime = totalTime / concurrentWrites
 
             expect(averageTime).toBeLessThan(PERFORMANCE_BENCHMARKS.CONCURRENT_WRITES)
@@ -603,7 +603,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
 
             expect(totalTime).toBeLessThan(STRESS_THRESHOLDS.CONNECTION_EXHAUSTION)
 
-            const successfulOperations = results.filter(result => !('error' in result))
+            const successfulOperations = results.filter((result: any) => !('error' in result))
             const recoveryRate = successfulOperations.length / timeoutRecoveryOperations
 
             expect(recoveryRate).toBeGreaterThan(0.8) // 80% recovery rate
@@ -704,8 +704,8 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
 
                 expect(analysisTime).toBeLessThan(PERFORMANCE_BENCHMARKS.INDEX_OPTIMIZATION)
                 expect(analysis.optimizationScore).toBeGreaterThan(0.7) // 70% optimization score
-                expect(analysis.indexesUsed.some(index =>
-                    test.expectedIndexes.some(expected => index.includes(expected.split('_')[1]))
+                expect(analysis.indexesUsed.some((index: any) =>
+                    test.expectedIndexes.some((expected: any) => index.includes(expected.split('_')[1]))
                 )).toBe(true)
 
                 console.log(`Query Optimization - ${test.name}:`)
@@ -757,8 +757,8 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
                 })
 
                 const operationTimes = await Promise.all(periodOperations)
-                const averageTime = operationTimes.reduce((sum, time) => sum + time, 0) / operationTimes.length
-                const slowQueries = operationTimes.filter(time => time > PERFORMANCE_BENCHMARKS.FIND_BY_BUSINESS).length
+                const averageTime = operationTimes.reduce((sum: any, time: any) => sum + time, 0) / operationTimes.length
+                const slowQueries = operationTimes.filter((time: any) => time > PERFORMANCE_BENCHMARKS.FIND_BY_BUSINESS).length
 
                 performanceMetrics.push({ period: period + 1, averageTime, slowQueries })
 
@@ -768,17 +768,17 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
 
             // Analyze performance trends
             const firstHalfAvg = performanceMetrics.slice(0, monitoringPeriods / 2)
-                .reduce((sum, metric) => sum + metric.averageTime, 0) / (monitoringPeriods / 2)
+                .reduce((sum: any, metric: any) => sum + metric.averageTime, 0) / (monitoringPeriods / 2)
 
             const secondHalfAvg = performanceMetrics.slice(monitoringPeriods / 2)
-                .reduce((sum, metric) => sum + metric.averageTime, 0) / (monitoringPeriods / 2)
+                .reduce((sum: any, metric: any) => sum + metric.averageTime, 0) / (monitoringPeriods / 2)
 
             const performanceDegradation = (secondHalfAvg - firstHalfAvg) / firstHalfAvg
 
             // Performance should not degrade significantly
             expect(performanceDegradation).toBeLessThan(0.3) // Less than 30% degradation
 
-            const totalSlowQueries = performanceMetrics.reduce((sum, metric) => sum + metric.slowQueries, 0)
+            const totalSlowQueries = performanceMetrics.reduce((sum: any, metric: any) => sum + metric.slowQueries, 0)
             const slowQueryRate = totalSlowQueries / (monitoringPeriods * operationsPerPeriod)
 
             expect(slowQueryRate).toBeLessThan(0.1) // Less than 10% slow queries
@@ -822,8 +822,8 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
                 }
             }
 
-            const averageTime = operationTimes.reduce((sum, time) => sum + time, 0) / operationTimes.length
-            const slowOperations = operationTimes.filter(time => time > alertThresholds.averageResponseTime).length
+            const averageTime = operationTimes.reduce((sum: any, time: any) => sum + time, 0) / operationTimes.length
+            const slowOperations = operationTimes.filter((time: any) => time > alertThresholds.averageResponseTime).length
             const slowOperationRate = slowOperations / monitoringOperations
 
             const connectionMetrics = getConnectionMetrics()

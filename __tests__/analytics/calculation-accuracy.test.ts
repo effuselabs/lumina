@@ -63,7 +63,7 @@ describe('Analytics Calculation Accuracy', () => {
                 });
 
                 // Calculate expected values
-                const expectedRevenue = appointments.reduce((sum, appointment) => {
+                const expectedRevenue = appointments.reduce((sum: any, appointment: any) => {
                     return sum + appointment.services.reduce(
                         (serviceSum, service) => serviceSum + Number(service.price),
                         0
@@ -83,7 +83,7 @@ describe('Analytics Calculation Accuracy', () => {
                 let expectedChairRentalRevenue = 0;
                 let expectedBusinessRetention = 0;
 
-                appointments.forEach(appointment => {
+                appointments.forEach((appointment: any) => {
                     const appointmentRevenue = appointment.services.reduce(
                         (sum, service) => sum + Number(service.price),
                         0
@@ -116,8 +116,8 @@ describe('Analytics Calculation Accuracy', () => {
             const revenueData = await dataService.getRevenueData(testDateRange);
 
             // Calculate expected metrics from revenue data
-            const expectedTotalRevenue = revenueData.reduce((sum, day) => sum + day.revenue, 0);
-            const expectedAppointmentCount = revenueData.reduce((sum, day) => sum + day.appointments, 0);
+            const expectedTotalRevenue = revenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
+            const expectedAppointmentCount = revenueData.reduce((sum: any, day: any) => sum + day.appointments, 0);
             const expectedAverageTicket = expectedAppointmentCount > 0 ? expectedTotalRevenue / expectedAppointmentCount : 0;
 
             // Validate metrics
@@ -135,8 +135,8 @@ describe('Analytics Calculation Accuracy', () => {
                 to: previousPeriodEnd,
             });
 
-            const previousTotalRevenue = previousRevenueData.reduce((sum, day) => sum + day.revenue, 0);
-            const previousAppointmentCount = previousRevenueData.reduce((sum, day) => sum + day.appointments, 0);
+            const previousTotalRevenue = previousRevenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
+            const previousAppointmentCount = previousRevenueData.reduce((sum: any, day: any) => sum + day.appointments, 0);
 
             if (previousTotalRevenue > 0) {
                 const expectedRevenueGrowth = ((expectedTotalRevenue - previousTotalRevenue) / previousTotalRevenue) * 100;
@@ -256,8 +256,8 @@ describe('Analytics Calculation Accuracy', () => {
                 },
             });
 
-            const clientsWithTotalSpent = clientsWithSpending.map(client => {
-                const totalSpent = client.appointments.reduce((sum, appointment) => {
+            const clientsWithTotalSpent = clientsWithSpending.map((client: any) => {
+                const totalSpent = client.appointments.reduce((sum: any, appointment: any) => {
                     return sum + appointment.services.reduce(
                         (serviceSum, service) => serviceSum + Number(service.price),
                         0
@@ -317,8 +317,8 @@ describe('Analytics Calculation Accuracy', () => {
                 },
             });
 
-            const totalSpentByAllClients = clients.reduce((sum, client) => {
-                const clientSpent = client.appointments.reduce((appointmentSum, appointment) => {
+            const totalSpentByAllClients = clients.reduce((sum: any, client: any) => {
+                const clientSpent = client.appointments.reduce((appointmentSum: any, appointment: any) => {
                     return appointmentSum + appointment.services.reduce(
                         (serviceSum, service) => serviceSum + Number(service.price),
                         0
@@ -356,7 +356,7 @@ describe('Analytics Calculation Accuracy', () => {
                 });
 
                 // Calculate expected values
-                const expectedTotalRevenue = appointments.reduce((sum, appointment) => {
+                const expectedTotalRevenue = appointments.reduce((sum: any, appointment: any) => {
                     return sum + appointment.services.reduce(
                         (serviceSum, service) => serviceSum + Number(service.price),
                         0
@@ -466,9 +466,9 @@ describe('Analytics Calculation Accuracy', () => {
             ]);
 
             // Calculate totals from different sources
-            const totalFromRevenue = revenueData.reduce((sum, day) => sum + day.revenue, 0);
-            const totalFromStaff = staffPerformance.reduce((sum, staff) => sum + staff.totalRevenue, 0);
-            const totalFromServices = serviceAnalytics.reduce((sum, service) => sum + service.revenue, 0);
+            const totalFromRevenue = revenueData.reduce((sum: any, day: any) => sum + day.revenue, 0);
+            const totalFromStaff = staffPerformance.reduce((sum: any, staff: any) => sum + staff.totalRevenue, 0);
+            const totalFromServices = serviceAnalytics.reduce((sum: any, service: any) => sum + service.revenue, 0);
 
             // Direct database calculation
             const appointments = await prisma.appointment.findMany({
@@ -485,7 +485,7 @@ describe('Analytics Calculation Accuracy', () => {
                 },
             });
 
-            const directTotal = appointments.reduce((sum, appointment) => {
+            const directTotal = appointments.reduce((sum: any, appointment: any) => {
                 return sum + appointment.services.reduce(
                     (serviceSum, service) => serviceSum + Number(service.price),
                     0
@@ -504,8 +504,8 @@ describe('Analytics Calculation Accuracy', () => {
                 dataService.getStaffPerformance(testDateRange),
             ]);
 
-            const appointmentsFromRevenue = revenueData.reduce((sum, day) => sum + day.appointments, 0);
-            const appointmentsFromStaff = staffPerformance.reduce((sum, staff) => sum + staff.appointmentCount, 0);
+            const appointmentsFromRevenue = revenueData.reduce((sum: any, day: any) => sum + day.appointments, 0);
+            const appointmentsFromStaff = staffPerformance.reduce((sum: any, staff: any) => sum + staff.appointmentCount, 0);
 
             // Direct count
             const directCount = await prisma.appointment.count({
@@ -536,7 +536,7 @@ describe('Analytics Calculation Accuracy', () => {
             const revenueData = await dataService.getRevenueData(futureDateRange);
 
             // Should return empty array or all zeros
-            revenueData.forEach(day => {
+            revenueData.forEach((day: any) => {
                 expect(day.revenue).toBe(0);
                 expect(day.appointments).toBe(0);
                 expect(day.averageTicket).toBe(0);
@@ -565,7 +565,7 @@ describe('Analytics Calculation Accuracy', () => {
         test('should maintain precision in financial calculations', async () => {
             const staffPerformance = await dataService.getStaffPerformance(testDateRange);
 
-            staffPerformance.forEach(staff => {
+            staffPerformance.forEach((staff: any) => {
                 // Commission calculations should be precise
                 if (staff.totalRevenue > 0 && staff.employmentType === 'COMMISSION') {
                     const expectedCommission = staff.totalRevenue * 0.3;

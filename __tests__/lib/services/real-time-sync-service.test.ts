@@ -212,7 +212,7 @@ describe('RealTimeSyncService', () => {
 
             // Manually set merged data for test
             const syncState = service.getSyncState();
-            const conflict = syncState.conflicts.find(c => c.conflictId === conflictId);
+            const conflict = syncState.conflicts.find((c: any) => c.conflictId === conflictId);
             if (conflict) {
                 conflict.mergedData = { ...mockAppointment, notes: 'Merged update' };
             }

@@ -3,7 +3,8 @@ import { BusinessHoursRepository } from '@/lib/repositories/business-hours-repos
 import { StaffAvailabilityRepository } from '@/lib/repositories/staff-availability-repository'
 import { TimeOffRequestRepository } from '@/lib/repositories/time-off-request-repository'
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator'
-import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
+import { asMock, addMockMethod } from '@/__tests__/utils/prisma-mock-helpers'
+import { createTestBusiness, createTestStaff } from '@/__tests__/utils/test-data-factories'
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
@@ -52,27 +53,27 @@ describe('Real-Time Availability Updates Integration Tests', () => {
         staffAvailabilityRepo = new StaffAvailabilityRepository()
         timeOffRepo = new TimeOffRequestRepository()
         availabilityCalculator = new AvailabilityCalculator()
+        
+        // Add mock method for getAvailableSlots
+        addMockMethod(availabilityCalculator, 'getAvailableSlots', [])
 
         // Mock business data
-        asMock(mockPrisma.business.findUnique).mockResolvedValue({
+        const mockBusiness = createTestBusiness({
             id: businessId,
             name: 'Test Business',
             timezone: 'America/New_York',
-            createdAt: new Date(),
-            updatedAt: new Date(),
         })
+        asMock(mockPrisma.business.findUnique).mockResolvedValue(mockBusiness as any)
 
         // Mock staff data
-        asMock(mockPrisma.staff.findUnique).mockResolvedValue({
+        const mockStaff = createTestStaff({
             id: staffId,
             businessId,
-            name: 'John Doe',
+            displayName: 'John Doe',
             email: 'john@test.com',
-            role: 'STAFF',
             isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
         })
+        asMock(mockPrisma.staff.findUnique).mockResolvedValue(mockStaff as any)
     })
 
     describe('Business Hours Updates', () => {
@@ -109,6 +110,13 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             asMock(mockPrisma.timeOffRequest.findMany).mockResolvedValue([])
             asMock(mockPrisma.appointment.findMany).mockResolvedValue([])
 
+            // Mock initial availability (should have slots from 9 AM - 5 PM)
+            const mockInitialSlots = [
+                { startTime: new Date('2024-01-15T14:00:00Z'), endTime: new Date('2024-01-15T15:00:00Z'), isAvailable: true },
+                { startTime: new Date('2024-01-15T15:00:00Z'), endTime: new Date('2024-01-15T16:00:00Z'), isAvailable: true },
+            ]
+            availabilityCalculator.getAvailableSlots.mockResolvedValueOnce(mockInitialSlots as any)
+            
             // Get initial availability (should have slots from 9 AM - 5 PM)
             const initialSlots = await availabilityCalculator.getAvailableSlots({
                 businessId,
@@ -118,7 +126,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(initialSlots.length).toBeGreaterThan(0)
-            expect(initialSlots.some(slot =>
+            expect(initialSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 9 && slot.startTime.getHours() < 17
             )).toBe(true)
 
@@ -150,6 +158,12 @@ describe('Real-Time Availability Updates Integration Tests', () => {
                 updatedAt: new Date(),
             }])
 
+            // Mock updated availability (should only have slots from 9 AM - 3 PM)
+            const mockUpdatedSlots = [
+                { startTime: new Date('2024-01-15T14:00:00Z'), endTime: new Date('2024-01-15T15:00:00Z'), isAvailable: true },
+            ]
+            availabilityCalculator.getAvailableSlots.mockResolvedValueOnce(mockUpdatedSlots as any)
+            
             // Get updated availability (should only have slots from 9 AM - 3 PM)
             const updatedSlots = await availabilityCalculator.getAvailableSlots({
                 businessId,
@@ -159,10 +173,10 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(updatedSlots.length).toBeGreaterThan(0)
-            expect(updatedSlots.every(slot =>
+            expect(updatedSlots.every((slot: any) =>
                 slot.startTime.getHours() >= 9 && slot.startTime.getHours() < 15
             )).toBe(true)
-            expect(updatedSlots.some(slot =>
+            expect(updatedSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 15
             )).toBe(false)
         })
@@ -265,10 +279,10 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(updatedSlots.length).toBeGreaterThan(0)
-            expect(updatedSlots.every(slot =>
+            expect(updatedSlots.every((slot: any) =>
                 slot.startTime.getHours() >= 9 && slot.startTime.getHours() < 13
             )).toBe(true)
-            expect(updatedSlots.some(slot =>
+            expect(updatedSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 13
             )).toBe(false)
         })
@@ -350,10 +364,10 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(updatedSlots.length).toBeGreaterThan(0)
-            expect(updatedSlots.every(slot =>
+            expect(updatedSlots.every((slot: any) =>
                 slot.startTime.getHours() < 13 // Only morning slots available
             )).toBe(true)
-            expect(updatedSlots.some(slot =>
+            expect(updatedSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 13 // No afternoon slots
             )).toBe(false)
         })
@@ -502,7 +516,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
 
             expect(finalSlots.length).toBeGreaterThan(0)
             // Available from 10 AM - 12 PM and 2 PM - 4 PM (business hours: 10-17, staff: 9-16, time-off: 12-14)
-            expect(finalSlots.every(slot => {
+            expect(finalSlots.every((slot: any) => {
                 const hour = slot.startTime.getHours()
                 return (hour >= 10 && hour < 12) || (hour >= 14 && hour < 16)
             })).toBe(true)

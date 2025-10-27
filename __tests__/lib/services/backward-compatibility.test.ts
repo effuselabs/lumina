@@ -90,7 +90,7 @@ describe('BackwardCompatibilityService', () => {
             expect(result.deprecationWarning).toContain('deprecated JSON format');
 
             // Verify day mapping
-            const mondayHours = result.hours.find(h => h.dayOfWeek === 1);
+            const mondayHours = result.hours.find((h: any) => h.dayOfWeek === 1);
             expect(mondayHours).toEqual({
                 dayOfWeek: 1,
                 openTime: '09:00',
@@ -98,7 +98,7 @@ describe('BackwardCompatibilityService', () => {
                 isClosed: false,
             });
 
-            const sundayHours = result.hours.find(h => h.dayOfWeek === 0);
+            const sundayHours = result.hours.find((h: any) => h.dayOfWeek === 0);
             expect(sundayHours).toEqual({
                 dayOfWeek: 0,
                 openTime: null,
@@ -121,12 +121,12 @@ describe('BackwardCompatibilityService', () => {
             expect(result.deprecationWarning).toBeUndefined();
 
             // Verify default hours structure
-            const mondayHours = result.hours.find(h => h.dayOfWeek === 1);
+            const mondayHours = result.hours.find((h: any) => h.dayOfWeek === 1);
             expect(mondayHours?.isClosed).toBe(false);
             expect(mondayHours?.openTime).toBe('09:00');
             expect(mondayHours?.closeTime).toBe('17:00');
 
-            const sundayHours = result.hours.find(h => h.dayOfWeek === 0);
+            const sundayHours = result.hours.find((h: any) => h.dayOfWeek === 0);
             expect(sundayHours?.isClosed).toBe(true);
         });
 
@@ -201,7 +201,7 @@ describe('BackwardCompatibilityService', () => {
             expect(result.deprecationWarning).toContain('deprecated JSON format');
 
             // Verify only available days are included
-            const availableDays = result.availability.map(a => a.dayOfWeek).sort();
+            const availableDays = result.availability.map((a: any) => a.dayOfWeek).sort();
             expect(availableDays).toEqual([1, 2, 4, 5, 6]); // Monday, Tuesday, Thursday, Friday, Saturday
         });
 

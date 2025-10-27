@@ -208,7 +208,7 @@ describe('Appointment Performance Tests', () => {
             const totalDuration = performance.now() - startTime
             const averageDuration = totalDuration / concurrentCreations
 
-            results.forEach(result => createdAppointmentIds.push(result.id))
+            results.forEach((result: any) => createdAppointmentIds.push(result.id))
 
             console.log(`Concurrent Creation: ${totalDuration.toFixed(2)}ms total, ${averageDuration.toFixed(2)}ms average`)
 
@@ -292,7 +292,7 @@ describe('Appointment Performance Tests', () => {
             })
 
             const results = await Promise.all(appointmentPromises)
-            results.forEach(result => createdAppointmentIds.push(result.id))
+            results.forEach((result: any) => createdAppointmentIds.push(result.id))
         })
 
         it('should handle cursor-based pagination within 350ms threshold', async () => {
@@ -368,7 +368,7 @@ describe('Appointment Performance Tests', () => {
             })
 
             const results = await Promise.all(appointmentPromises)
-            batchTestAppointmentIds = results.map(r => r.id)
+            batchTestAppointmentIds = results.map((r: any) => r.id)
             createdAppointmentIds.push(...batchTestAppointmentIds)
         })
 
@@ -464,7 +464,7 @@ describe('Appointment Performance Tests', () => {
 
             expect(averageDuration).toBeLessThanOrEqual(PERFORMANCE_THRESHOLDS.FIND_BY_BUSINESS)
             expect(results).toHaveLength(concurrentOperations)
-            results.forEach(result => expect(result).toBeDefined())
+            results.forEach((result: any) => expect(result).toBeDefined())
         })
     })
 
@@ -484,7 +484,7 @@ describe('Appointment Performance Tests', () => {
                 durations.push(duration)
             }
 
-            const averageDuration = durations.reduce((sum, d) => sum + d, 0) / durations.length
+            const averageDuration = durations.reduce((sum: any, d: any) => sum + d, 0) / durations.length
             const maxDuration = Math.max(...durations)
             const minDuration = Math.min(...durations)
             const variance = maxDuration - minDuration
