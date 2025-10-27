@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { BusinessHoursRepository } from '@/lib/repositories/business-hours-repository'
-import { BusinessHours } from '@prisma/client'
+import { BusinessHours, DayOfWeek } from '@prisma/client'
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
-// Note: DayOfWeek enum may need Prisma client regeneration
 
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
