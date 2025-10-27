@@ -272,7 +272,7 @@ describe('AvailabilityCalculator', () => {
             expect(result).toBeDefined()
 
             // Check that no slots overlap with the appointment
-            const overlappingSlots = result.filter(slot =>
+            const overlappingSlots = result.filter((slot: any) =>
                 slot.startTime < appointmentEnd && slot.endTime > appointmentStart
             )
             expect(overlappingSlots).toHaveLength(0)

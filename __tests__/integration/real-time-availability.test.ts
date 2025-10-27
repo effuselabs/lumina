@@ -126,7 +126,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(initialSlots.length).toBeGreaterThan(0)
-            expect(initialSlots.some(slot =>
+            expect(initialSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 9 && slot.startTime.getHours() < 17
             )).toBe(true)
 
@@ -173,10 +173,10 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(updatedSlots.length).toBeGreaterThan(0)
-            expect(updatedSlots.every(slot =>
+            expect(updatedSlots.every((slot: any) =>
                 slot.startTime.getHours() >= 9 && slot.startTime.getHours() < 15
             )).toBe(true)
-            expect(updatedSlots.some(slot =>
+            expect(updatedSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 15
             )).toBe(false)
         })
@@ -279,10 +279,10 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(updatedSlots.length).toBeGreaterThan(0)
-            expect(updatedSlots.every(slot =>
+            expect(updatedSlots.every((slot: any) =>
                 slot.startTime.getHours() >= 9 && slot.startTime.getHours() < 13
             )).toBe(true)
-            expect(updatedSlots.some(slot =>
+            expect(updatedSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 13
             )).toBe(false)
         })
@@ -364,10 +364,10 @@ describe('Real-Time Availability Updates Integration Tests', () => {
             })
 
             expect(updatedSlots.length).toBeGreaterThan(0)
-            expect(updatedSlots.every(slot =>
+            expect(updatedSlots.every((slot: any) =>
                 slot.startTime.getHours() < 13 // Only morning slots available
             )).toBe(true)
-            expect(updatedSlots.some(slot =>
+            expect(updatedSlots.some((slot: any) =>
                 slot.startTime.getHours() >= 13 // No afternoon slots
             )).toBe(false)
         })
@@ -516,7 +516,7 @@ describe('Real-Time Availability Updates Integration Tests', () => {
 
             expect(finalSlots.length).toBeGreaterThan(0)
             // Available from 10 AM - 12 PM and 2 PM - 4 PM (business hours: 10-17, staff: 9-16, time-off: 12-14)
-            expect(finalSlots.every(slot => {
+            expect(finalSlots.every((slot: any) => {
                 const hour = slot.startTime.getHours()
                 return (hour >= 10 && hour < 12) || (hour >= 14 && hour < 16)
             })).toBe(true)

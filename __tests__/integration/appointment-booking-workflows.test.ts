@@ -791,7 +791,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
                 warnings: []
             })
 
-            appointmentRequests.forEach((_, i) => {
+            appointmentRequests.forEach((_: any, i: number) => {
                 appointmentServiceInstance.createAppointment.mockResolvedValueOnce({
                     success: true,
                     appointment: {
@@ -811,7 +811,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
             const startTime = performance.now()
 
             const responses = await Promise.all(
-                appointmentRequests.map(appointmentData => {
+                appointmentRequests.map((appointmentData: any) => {
                     const request = new NextRequest('http://localhost/api/appointments', {
                         method: 'POST',
                         body: JSON.stringify(appointmentData)
@@ -824,7 +824,7 @@ describe('End-to-End Appointment Booking Workflows', () => {
             const totalTime = endTime - startTime
 
             // All requests should succeed
-            responses.forEach(response => {
+            responses.forEach((response: any) => {
                 expect(response.status).toBe(201)
             })
 
