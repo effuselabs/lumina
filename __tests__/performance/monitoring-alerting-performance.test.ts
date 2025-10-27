@@ -295,7 +295,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
 
     const calculateP95ResponseTime = (): number => {
         if (performanceMetrics.length === 0) return 0
-        const sortedDurations = performanceMetrics.map(m => m.duration).sort((a, b) => a - b)
+        const sortedDurations = performanceMetrics.map((m: any) => m.duration).sort((a, b) => a - b)
         const p95Index = Math.floor(sortedDurations.length * 0.95)
         return sortedDurations[p95Index] || 0
     }
@@ -517,7 +517,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
             console.log(`- Alerts by severity:`, alertsBySeverity)
 
             // Verify alert details
-            alertEvents.forEach(alert => {
+            alertEvents.forEach((alert: any) => {
                 expect(alert.timestamp).toBeDefined()
                 expect(alert.alertType).toBeDefined()
                 expect(alert.severity).toMatch(/^(LOW|MEDIUM|HIGH|CRITICAL)$/)
@@ -610,7 +610,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
             // Verify alert information quality
             const recentAlerts = alertEvents.slice(-10) // Last 10 alerts
 
-            recentAlerts.forEach(alert => {
+            recentAlerts.forEach((alert: any) => {
                 expect(alert.message).toBeDefined()
                 expect(alert.message.length).toBeGreaterThan(10) // Meaningful message
                 expect(alert.metrics).toBeDefined()
@@ -655,7 +655,7 @@ describe('Monitoring and Alerting Performance Tests', () => {
 
             // Analyze connection utilization patterns
             const avgUtilization = connectionMetricsHistory.reduce((sum, m) => sum + m.utilization, 0) / connectionMetricsHistory.length
-            const maxUtilization = Math.max(...connectionMetricsHistory.map(m => m.utilization))
+            const maxUtilization = Math.max(...connectionMetricsHistory.map((m: any) => m.utilization))
             const utilizationSpikes = connectionMetricsHistory.filter(m => m.utilization > ALERT_THRESHOLDS.connectionUtilization).length
 
             expect(avgUtilization).toBeLessThan(ALERT_THRESHOLDS.connectionUtilization)
@@ -816,8 +816,8 @@ describe('Monitoring and Alerting Performance Tests', () => {
             }
 
             // Analyze trends
-            const responseTimes = trendData.map(d => d.avgResponseTime)
-            const throughputs = trendData.map(d => d.throughput)
+            const responseTimes = trendData.map((d: any) => d.avgResponseTime)
+            const throughputs = trendData.map((d: any) => d.throughput)
 
             // Calculate trend slopes (simple linear regression)
             const responseTimeTrend = calculateTrendSlope(responseTimes)

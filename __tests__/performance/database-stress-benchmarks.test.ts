@@ -414,7 +414,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(operations.map(op => op().catch((error: any) => ({ error: error.message }))))
+            const results = await Promise.all(operations.map((op: any) => op().catch((error: any) => ({ error: error.message }))))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
@@ -458,7 +458,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(readOperations.map(op => op()))
+            const results = await Promise.all(readOperations.map((op: any) => op()))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 
@@ -491,7 +491,7 @@ describe('Database Stress Testing and Performance Benchmarks', () => {
             })
 
             const startTime = performance.now()
-            const results = await Promise.all(writeOperations.map(op => op().catch((error: any) => ({ error: error.message }))))
+            const results = await Promise.all(writeOperations.map((op: any) => op().catch((error: any) => ({ error: error.message }))))
             const endTime = performance.now()
             const totalTime = endTime - startTime
 

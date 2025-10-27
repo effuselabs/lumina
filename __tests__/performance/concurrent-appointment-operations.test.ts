@@ -694,7 +694,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             expect(failedOperations.length).toBeLessThan(totalOperations * 0.05)
 
             // Analyze by operation type
-            const operationStats = operationTypes.map(type => {
+            const operationStats = operationTypes.map((type: any) => {
                 const typeOperations = mixedOperations.filter(op => op.type === type)
                 const typeResults = results.slice(
                     mixedOperations.findIndex(op => op.type === type),
@@ -716,7 +716,7 @@ describe('Concurrent Appointment Operations Performance Tests', () => {
             console.log(`- Average time: ${(totalTime / totalOperations).toFixed(2)}ms`)
             console.log(`- Overall success rate: ${((successfulOperations.length / totalOperations) * 100).toFixed(1)}%`)
 
-            operationStats.forEach(stat => {
+            operationStats.forEach((stat: any) => {
                 console.log(`- ${stat.type}: ${stat.successful}/${stat.total} (${stat.successRate.toFixed(1)}%)`)
             })
         })

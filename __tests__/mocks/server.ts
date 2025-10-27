@@ -14,13 +14,13 @@ export const handlers = [
         const startDate = url.searchParams.get('startDate')
         const endDate = url.searchParams.get('endDate')
 
-        let filteredAppointments = mockAppointments.filter(apt =>
+        let filteredAppointments = mockAppointments.filter((apt: any) =>
             apt.businessId === businessId
         )
 
         // Apply search filter
         if (searchTerm) {
-            filteredAppointments = filteredAppointments.filter(apt =>
+            filteredAppointments = filteredAppointments.filter((apt: any) =>
                 apt.client.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 apt.client.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 apt.services.some(service =>
@@ -31,14 +31,14 @@ export const handlers = [
 
         // Apply staff filter
         if (staffIds.length > 0) {
-            filteredAppointments = filteredAppointments.filter(apt =>
+            filteredAppointments = filteredAppointments.filter((apt: any) =>
                 staffIds.includes(apt.staffId)
             )
         }
 
         // Apply service filter
         if (serviceIds.length > 0) {
-            filteredAppointments = filteredAppointments.filter(apt =>
+            filteredAppointments = filteredAppointments.filter((apt: any) =>
                 apt.services.some(service => serviceIds.includes(service.id))
             )
         }
@@ -47,7 +47,7 @@ export const handlers = [
         if (startDate && endDate) {
             const start = new Date(startDate)
             const end = new Date(endDate)
-            filteredAppointments = filteredAppointments.filter(apt =>
+            filteredAppointments = filteredAppointments.filter((apt: any) =>
                 apt.startTime >= start && apt.startTime <= end
             )
         }
@@ -64,7 +64,7 @@ export const handlers = [
     // Get single appointment
     rest.get('/api/appointments/:id', (req: any, res: any, ctx: any) => {
         const { id } = req.params
-        const appointment = mockAppointments.find(apt => apt.id === id)
+        const appointment = mockAppointments.find((apt: any) => apt.id === id)
 
         if (!appointment) {
             return res(

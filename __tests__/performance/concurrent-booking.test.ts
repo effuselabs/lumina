@@ -191,7 +191,7 @@ describe('Concurrent Booking Performance Tests', () => {
             expect(conflicts).toHaveLength(concurrentBookings - 1) // Others should get conflicts
 
             // Verify alternative slots are provided for conflicts
-            conflicts.forEach(conflict => {
+            conflicts.forEach((conflict: any) => {
                 expect(conflict.alternativeSlots).toBeDefined()
                 expect(conflict.alternativeSlots.length).toBeGreaterThan(0)
             })

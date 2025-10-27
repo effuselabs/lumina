@@ -61,7 +61,7 @@ describe('Availability System Load Testing', () => {
 
         // Mock staff data (20 staff members for load testing)
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -158,7 +158,7 @@ describe('Availability System Load Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
+                requests.map((request: any) =>
                     calculator.getAvailableSlots(request).catch((error: any) => ({
                         error: error.message,
                         request,
@@ -204,7 +204,7 @@ describe('Availability System Load Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
+                requests.map((request: any) =>
                     conflictEngine.detectConflicts(request).catch((error: any) => ({
                         error: error.message,
                         request,
@@ -375,7 +375,7 @@ describe('Availability System Load Testing', () => {
                 const batchStartTime = performance.now()
 
                 const results = await Promise.all(
-                    requests.map(request =>
+                    requests.map((request: any) =>
                         calculator.getAvailableSlots(request).catch((error: any) => ({
                             error: error.message,
                         }))
@@ -410,7 +410,7 @@ describe('Availability System Load Testing', () => {
             expect(performanceDegradation).toBeLessThan(0.5)
 
             // All batches should maintain good success rates
-            batchResults.forEach(batch => {
+            batchResults.forEach((batch: any) => {
                 expect(batch.successCount).toBeGreaterThan(18) // 90% success rate
                 expect(batch.failureCount).toBeLessThan(2)
             })
@@ -538,7 +538,7 @@ describe('Availability System Load Testing', () => {
                 }))
 
                 await Promise.all(
-                    batchRequests.map(request =>
+                    batchRequests.map((request: any) =>
                         calculator.getAvailableSlots(request).catch(() => null)
                     )
                 )
@@ -581,7 +581,7 @@ describe('Availability System Load Testing', () => {
                 const startTime = performance.now()
 
                 const results = await Promise.all(
-                    requests.map(request =>
+                    requests.map((request: any) =>
                         calculator.getAvailableSlots(request).catch((error: any) => ({
                             error: error.message,
                         }))
@@ -605,7 +605,7 @@ describe('Availability System Load Testing', () => {
             const totalExecutionTime = endTime - startTime
 
             // All batches should complete successfully
-            batchResults.forEach(batch => {
+            batchResults.forEach((batch: any) => {
                 expect(batch.successCount).toBeGreaterThan(35) // 87.5% success rate
                 expect(batch.failureCount).toBeLessThan(5)
             })
@@ -618,7 +618,7 @@ describe('Availability System Load Testing', () => {
             console.log(`- Requests per batch: ${requestsPerBatch}`)
             console.log(`- Total requests: ${concurrentBatches * requestsPerBatch}`)
             console.log(`- Total execution time: ${totalExecutionTime.toFixed(2)}ms`)
-            batchResults.forEach(batch => {
+            batchResults.forEach((batch: any) => {
                 console.log(`  Batch ${batch.batchIndex + 1}: ${batch.executionTime.toFixed(2)}ms, ${batch.successCount}/${requestsPerBatch} successful`)
             })
         })

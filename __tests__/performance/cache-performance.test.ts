@@ -82,7 +82,7 @@ describe('Cache Performance and Invalidation Tests', () => {
 
         // Mock staff data
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -248,7 +248,7 @@ describe('Cache Performance and Invalidation Tests', () => {
             const startTime = performance.now()
 
             await Promise.all(
-                requests.map(request =>
+                requests.map((request: any) =>
                     calculator.getAvailableSlots(request).catch(() => null)
                 )
             )
@@ -283,7 +283,7 @@ describe('Cache Performance and Invalidation Tests', () => {
             })
 
             const warmingRequests = dates.flatMap(date =>
-                staffIds.map(staffId => ({
+                staffIds.map((staffId: any) => ({
                     businessId,
                     date,
                     staffId,
@@ -295,7 +295,7 @@ describe('Cache Performance and Invalidation Tests', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                warmingRequests.map(request =>
+                warmingRequests.map((request: any) =>
                     calculator.getAvailableSlots(request).catch(() => null)
                 )
             )
@@ -589,7 +589,7 @@ describe('Cache Performance and Invalidation Tests', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                concurrentOperations.map(operation =>
+                concurrentOperations.map((operation: any) =>
                     operation.catch((error: any) => ({ error: error.message }))
                 )
             )

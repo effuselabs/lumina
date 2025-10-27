@@ -578,7 +578,7 @@ describe('Peak Booking Scenarios Load Testing', () => {
             expect(totalTime).toBeLessThan(LOAD_THRESHOLDS.SUSTAINED_HIGH_LOAD)
 
             // Analyze performance consistency
-            const batchTimes = batchMetrics.map(batch => batch.time)
+            const batchTimes = batchMetrics.map((batch: any) => batch.time)
             const averageBatchTime = batchTimes.reduce((sum, time) => sum + time, 0) / batchTimes.length
             const maxBatchTime = Math.max(...batchTimes)
             const minBatchTime = Math.min(...batchTimes)

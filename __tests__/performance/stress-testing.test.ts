@@ -81,7 +81,7 @@ describe('Availability System Stress Testing', () => {
 
         // Mock large staff dataset
         asMock(mockPrisma.staff.findMany).mockResolvedValue(
-            staffIds.map(id => ({
+            staffIds.map((id: any) => ({
                 id,
                 businessId,
                 name: `Staff ${id}`,
@@ -182,7 +182,7 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
+                requests.map((request: any) =>
                     calculator.getAvailableSlots(request).catch((error: any) => ({
                         error: error.message,
                         request,
@@ -232,7 +232,7 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                requests.map(request =>
+                requests.map((request: any) =>
                     conflictEngine.detectConflicts(request).catch((error: any) => ({
                         error: error.message,
                         request,
@@ -279,7 +279,7 @@ describe('Availability System Stress Testing', () => {
                 }))
 
                 await Promise.all(
-                    requests.map(request =>
+                    requests.map((request: any) =>
                         calculator.getAvailableSlots(request).catch(() => null)
                     )
                 )
@@ -361,7 +361,7 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                invalidationOperations.map(operation =>
+                invalidationOperations.map((operation: any) =>
                     operation.catch((error: any) => ({ error: error.message }))
                 )
             )
@@ -421,7 +421,7 @@ describe('Availability System Stress Testing', () => {
                 }))
 
                 await Promise.all(
-                    queries.map(query =>
+                    queries.map((query: any) =>
                         calculator.getAvailableSlots(query).catch(() => null)
                     )
                 )
@@ -496,7 +496,7 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                connectionStressOperations.map(operation =>
+                connectionStressOperations.map((operation: any) =>
                     operation.catch((error: any) => ({ error: error.message }))
                 )
             )
@@ -551,7 +551,7 @@ describe('Availability System Stress Testing', () => {
             const startTime = performance.now()
 
             const results = await Promise.all(
-                recoveryTestRequests.map(request =>
+                recoveryTestRequests.map((request: any) =>
                     calculator.getAvailableSlots(request).catch((error: any) => ({
                         error: error.message,
                     }))

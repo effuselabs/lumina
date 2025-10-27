@@ -368,7 +368,7 @@ describe('Appointment Performance Tests', () => {
             })
 
             const results = await Promise.all(appointmentPromises)
-            batchTestAppointmentIds = results.map(r => r.id)
+            batchTestAppointmentIds = results.map((r: any) => r.id)
             createdAppointmentIds.push(...batchTestAppointmentIds)
         })
 
