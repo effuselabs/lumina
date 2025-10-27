@@ -334,6 +334,7 @@ describe('BookingPerformanceMonitor', () => {
 
 describe('BookingErrorTracker', () => {
     let errorTracker: BookingErrorTracker;
+    const mockBusinessId = 'test-business-id';
 
     beforeEach(() => {
         errorTracker = new BookingErrorTracker();
