@@ -1,5 +1,5 @@
 {
-  "totalErrors": 720,
+  "totalErrors": 718,
   "errorsByFile": {
     "__tests__/accessibility/appointment-accessibility.test.tsx": 34,
     "__tests__/accessibility/keyboard-navigation.test.tsx": 4,
@@ -57,7 +57,7 @@
     "__tests__/lib/services/real-time-sync-service.test.ts": 1,
     "__tests__/lib/services/service-duration-validator.test.ts": 3,
     "__tests__/lib/services/timezone-aware-availability.test.ts": 5,
-    "__tests__/mocks/server.ts": 20,
+    "__tests__/mocks/server.ts": 19,
     "__tests__/monitoring/alerting-system.test.ts": 1,
     "__tests__/monitoring/appointment-performance-monitor.test.ts": 1,
     "__tests__/monitoring/monitoring-analytics-integration.test.ts": 8,
@@ -76,7 +76,6 @@
     "__tests__/security/data-protection.test.ts": 11,
     "__tests__/security/secure-appointment-repository.test.ts": 4,
     "__tests__/types/auth.test.ts": 2,
-    "__tests__/utils/prisma-mock-helpers.ts": 1,
     "e2e/accessibility/accessibility-regression.spec.ts": 3,
     "e2e/accessibility/keyboard-navigation.spec.ts": 2,
     "e2e/appointment-management.spec.ts": 6,
@@ -94,19 +93,20 @@
     "prisma/factories/staff-factory.ts": 1
   },
   "errorsByCode": {
-    "TS2307": 11,
+    "TS7016": 2,
     "TS2740": 12,
     "TS2322": 116,
-    "TS2552": 11,
-    "TS2304": 63,
+    "TS2304": 72,
     "TS2451": 4,
     "TS2739": 1,
     "TS2554": 31,
-    "TS2345": 99,
+    "TS2345": 100,
+    "TS2552": 2,
+    "TS2307": 5,
     "TS2741": 17,
     "TS2353": 26,
     "TS2820": 5,
-    "TS2305": 4,
+    "TS2305": 5,
     "TS2721": 1,
     "TS2349": 7,
     "TS2540": 14,
@@ -168,8 +168,8 @@
       "errors": [
         {
           "line": 11,
-          "code": "TS2307",
-          "message": "Cannot find module 'jest-axe' or its corresponding type declarations."
+          "code": "TS7016",
+          "message": "Could not find a declaration file for module 'jest-axe'. 'C:/dev/lumina/node_modules/jest-axe/index."
         },
         {
           "line": 46,
@@ -291,11 +291,6 @@
       "errorCount": 23,
       "errors": [
         {
-          "line": 17,
-          "code": "TS2307",
-          "message": "Cannot find module 'ioredis' or its corresponding type declarations."
-        },
-        {
           "line": 87,
           "code": "TS2304",
           "message": "Cannot find name 'AppointmentCacheManager'."
@@ -312,6 +307,11 @@
         },
         {
           "line": 149,
+          "code": "TS2304",
+          "message": "Cannot find name 'CacheKeyGenerator'."
+        },
+        {
+          "line": 228,
           "code": "TS2304",
           "message": "Cannot find name 'CacheKeyGenerator'."
         }
@@ -443,7 +443,7 @@
     },
     {
       "file": "__tests__/mocks/server.ts",
-      "errorCount": 20,
+      "errorCount": 19,
       "errors": [
         {
           "line": 1,
@@ -452,13 +452,8 @@
         },
         {
           "line": 2,
-          "code": "TS2307",
-          "message": "Cannot find module 'msw' or its corresponding type declarations."
-        },
-        {
-          "line": 3,
-          "code": "TS2307",
-          "message": "Cannot find module 'msw/node' or its corresponding type declarations."
+          "code": "TS2305",
+          "message": "Module '\"msw\"' has no exported member 'rest'."
         },
         {
           "line": 17,
@@ -469,6 +464,11 @@
           "line": 23,
           "code": "TS7006",
           "message": "Parameter 'apt' implicitly has an 'any' type."
+        },
+        {
+          "line": 26,
+          "code": "TS7006",
+          "message": "Parameter 'service' implicitly has an 'any' type."
         }
       ]
     },
@@ -571,8 +571,8 @@
       "errors": [
         {
           "line": 13,
-          "code": "TS2307",
-          "message": "Cannot find module 'jest-axe' or its corresponding type declarations."
+          "code": "TS7016",
+          "message": "Could not find a declaration file for module 'jest-axe'. 'C:/dev/lumina/node_modules/jest-axe/index."
         },
         {
           "line": 64,
