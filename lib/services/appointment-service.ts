@@ -15,6 +15,7 @@ import { AppointmentFilters, AppointmentRepository, CreateAppointmentRequest, Da
 import { AppointmentStatusManager } from '@/lib/services/appointment-status-manager'
 import { AvailabilityCheckRequest, CacheInvalidationRequest, CalendarIntegration, ConflictCheckRequest, DurationValidationRequest } from '@/lib/services/calendar-integration'
 import { MultiServiceCoordinator, ServiceBookingRequest } from '@/lib/services/multi-service-coordinator'
+import { notificationService } from '@/lib/email'
 import { AppointmentWithRelations } from '@/types/database'
 import { AppointmentStatus } from '@prisma/client'
 
@@ -230,6 +231,23 @@ export class AppointmentService {
                 endDate: appointment.endTime
             })
 
+            // 8. Send notification emails (non-blocking)
+            // Send booking confirmation to client
+            if (appointment.clientEmail) {
+                notificationService.sendBookingConfirmation(appointment.id, appointment.businessId)
+                    .catch(error => {
+                        console.error('Failed to send booking confirmation:', error)
+                        // Don't fail the appointment creation if notification fails
+                    })
+            }
+
+            // Send staff booking alert
+            notificationService.sendStaffBookingAlert(appointment.id, appointment.staffId, appointment.businessId)
+                .catch(error => {
+                    console.error('Failed to send staff booking alert:', error)
+                    // Don't fail the appointment creation if notification fails
+                })
+
             result.success = true
             result.appointment = appointment
             result.warnings.push(...serviceValidation.warnings)
@@ -356,6 +374,31 @@ export class AppointmentService {
                 startDate: updatedAppointment.startTime,
                 endDate: updatedAppointment.endTime
             })
+
+            // 6. Send modification notification if significant changes occurred (non-blocking)
+            const hasSignificantChanges = 
+                updates.startTime || 
+                updates.endTime || 
+                updates.services || 
+                updates.status;
+
+            if (hasSignificantChanges && updatedAppointment.clientEmail) {
+                // Build changes object for notification
+                const changes: Record<string, any> = {}
+                if (updates.startTime) changes.startTime = { old: existingAppointment.startTime, new: updates.startTime }
+                if (updates.endTime) changes.endTime = { old: existingAppointment.endTime, new: updates.endTime }
+                if (updates.services) changes.services = 'updated'
+                if (updates.status) changes.status = { old: existingAppointment.status, new: updates.status }
+
+                notificationService.sendModificationNotification(
+                    updatedAppointment.id, 
+                    businessId, 
+                    changes
+                ).catch(error => {
+                    console.error('Failed to send modification notification:', error)
+                    // Don't fail the appointment update if notification fails
+                })
+            }
 
             result.success = true
             result.appointment = updatedAppointment
@@ -551,6 +594,29 @@ export class AppointmentService {
                 // Note: In a full implementation, this would integrate with payment processing
                 result.warnings.push(`Refund of $${options.refundAmount} needs to be processed manually`)
             }
+
+            // 7. Send cancellation notifications (non-blocking)
+            // Send cancellation notification to client
+            if (cancelledAppointment.clientEmail) {
+                notificationService.sendCancellationNotification(
+                    cancelledAppointment.id,
+                    businessId,
+                    options.reason
+                ).catch(error => {
+                    console.error('Failed to send cancellation notification:', error)
+                    // Don't fail the cancellation if notification fails
+                })
+            }
+
+            // Send staff cancellation alert
+            notificationService.sendStaffCancellationAlert(
+                cancelledAppointment.id,
+                cancelledAppointment.staffId,
+                businessId
+            ).catch(error => {
+                console.error('Failed to send staff cancellation alert:', error)
+                // Don't fail the cancellation if notification fails
+            })
 
             result.success = true
             result.appointment = cancelledAppointment
