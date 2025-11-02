@@ -163,6 +163,10 @@ model Business {
   BusinessMetric             BusinessMetric[]
   StaffNotification          StaffNotification[]
   PublicBookingAuditLog      PublicBookingAuditLog[]
+  EmailTemplate              EmailTemplate[]
+  EmailPreference            EmailPreference[]
+  EmailQueue                 EmailQueue[]
+  ReminderConfig             ReminderConfig?
 
   @@map("businesses")
 }
@@ -347,6 +351,7 @@ model Client {
   reviews                ClientReview[]
   communicationHistory   CommunicationHistory[]
   PublicBookingAuditLog  PublicBookingAuditLog[]
+  EmailPreference        EmailPreference[]
 
   @@unique([businessId, email])
   @@unique([businessId, phone])
@@ -410,6 +415,7 @@ model Appointment {
   communicationHistory  CommunicationHistory[]
   statusHistory         AppointmentStatusHistory[]
   PublicBookingAuditLog PublicBookingAuditLog[]
+  EmailQueue            EmailQueue[]
 
   @@index([businessId, startTime])
   @@index([staffId, startTime])
@@ -1031,6 +1037,118 @@ model CommunicationHistory {
   @@index([businessId, type, createdAt])
   @@index([clientId, createdAt])
   @@map("communication_history")
+}
+
+// ============================================================================
+// EMAIL NOTIFICATION SYSTEM
+// ============================================================================
+
+model EmailTemplate {
+  id           String  @id @default(cuid())
+  businessId   String?
+  type         String
+  name         String
+  subject      String
+  htmlTemplate String  @db.Text
+  textTemplate String  @db.Text
+  variables    Json    @default("[]")
+  isDefault    Boolean @default(false)
+  isActive     Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business? @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, type])
+  @@index([type])
+  @@index([businessId, isActive])
+  @@map("email_templates")
+}
+
+model EmailPreference {
+  id                    String    @id @default(cuid())
+  businessId            String
+  clientId              String?
+  email                 String
+  receiveConfirmations  Boolean   @default(true)
+  receiveReminders      Boolean   @default(true)
+  receiveCancellations  Boolean   @default(true)
+  receiveMarketing      Boolean   @default(false)
+  unsubscribedAt        DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  client   Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, email])
+  @@index([email])
+  @@index([businessId, clientId])
+  @@map("email_preferences")
+}
+
+model EmailQueue {
+  id             String  @id @default(cuid())
+  businessId     String
+  appointmentId  String?
+  recipientEmail String
+  recipientName  String?
+  templateType   String
+  subject        String
+  htmlContent    String  @db.Text
+  textContent    String  @db.Text
+  priority       String  @default("normal") // high, normal, low
+  status         String  @default("pending") // pending, processing, sent, failed
+  attemptCount   Int     @default(0)
+  maxAttempts    Int     @default(3)
+  scheduledAt    DateTime @default(now())
+  lastAttemptAt  DateTime?
+  sentAt         DateTime?
+  failureReason  String?
+  messageId      String? // External provider message ID
+  metadata       Json    @default("{}")
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business    Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, status])
+  @@index([scheduledAt, status])
+  @@index([priority, status])
+  @@index([appointmentId])
+  @@index([businessId, createdAt])
+  @@map("email_queue")
+}
+
+model ReminderConfig {
+  id                  String  @id @default(cuid())
+  businessId          String  @unique
+  enable24hReminders  Boolean @default(true)
+  enable2hReminders   Boolean @default(false)
+  quietHoursStart     String? // HH:MM format (e.g., "22:00")
+  quietHoursEnd       String? // HH:MM format (e.g., "08:00")
+  timezone            String  @default("America/New_York")
+  customReminderTimes Json?   // Future: custom reminder timing
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@map("reminder_configs")
 }
 
 // ============================================================================
