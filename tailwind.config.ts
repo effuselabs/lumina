@@ -1,5 +1,11 @@
 import type { Config } from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
+// Single source of truth for design values. New tokens are added there and
+// consumed here — never restated. The remainder of this file still carries
+// legacy values inherited from four competing sources; they migrate onto
+// `tokens` in the design-system phase, once an end-to-end test exists to
+// catch regressions.
+import { accent, brand, radii, shadows, status } from './lib/design/tokens';
 
 const config: Config = {
   content: [
@@ -212,6 +218,23 @@ const config: Config = {
     extend: {
       // Lumina Brand Colors using CSS Custom Properties
       colors: {
+        // Canonical brand values, imported from lib/design/tokens.ts.
+        // Use these (`bg-brand-gold`, `text-brand-deepTeal`) in new work.
+        brand: {
+          gold: brand.gold,
+          coral: brand.coral,
+          peach: brand.peach,
+          deepTeal: brand.deepTeal,
+          cream: brand.cream,
+          clarityBlue: accent.clarityBlue,
+          sageGreen: accent.sageGreen,
+          lavenderMist: accent.lavenderMist,
+          warmGray: accent.warmGray,
+          success: status.success,
+          warning: status.warning,
+          error: status.error,
+          info: status.info,
+        },
         // Primary Lumina Colors - Using CSS Variables
         lumina: {
           gold: 'var(--lumina-gold)',
@@ -421,10 +444,48 @@ const config: Config = {
       },
       // Typography - Inter Font System with CSS Variables
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        mono: ['SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', 'Consolas', 'Courier New', 'monospace'],
-        display: ['var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        inter: ['var(--font-inter)', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: [
+          'var(--font-inter)',
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        mono: [
+          'SF Mono',
+          'Monaco',
+          'Cascadia Code',
+          'Roboto Mono',
+          'Consolas',
+          'Courier New',
+          'monospace',
+        ],
+        display: [
+          'var(--font-inter)',
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        inter: [
+          'var(--font-inter)',
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
       },
       // Typography Scale (per Lumina Design System v2.0)
       fontSize: {
@@ -447,8 +508,14 @@ const config: Config = {
         'lumina-h2': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }], // 24px, SemiBold, 32px line height
         'lumina-h3': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }], // 20px, SemiBold, 28px line height
         'lumina-body-lg': ['1rem', { lineHeight: '1.5rem', fontWeight: '400' }], // 16px, Regular, 24px line height
-        'lumina-body-sm': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '400' }], // 14px, Regular, 20px line height
-        'lumina-caption': ['0.75rem', { lineHeight: '1rem', fontWeight: '500' }], // 12px, Medium, 16px line height
+        'lumina-body-sm': [
+          '0.875rem',
+          { lineHeight: '1.25rem', fontWeight: '400' },
+        ], // 14px, Regular, 20px line height
+        'lumina-caption': [
+          '0.75rem',
+          { lineHeight: '1rem', fontWeight: '500' },
+        ], // 12px, Medium, 16px line height
       },
       // Font Weights
       fontWeight: {
