@@ -198,6 +198,36 @@ async function main() {
 
   console.log('✅ Created business hours (Mon-Fri 9-6, Sat 10-4, closed Sun)');
 
+  /*
+   * Public booking configuration.
+   *
+   * `/book/[businessId]` calls getBusinessForPublicBooking, which throws
+   * PublicBookingError("Public booking not enabled") unless a
+   * PublicBookingConfig row exists with isEnabled true. There was no row, and
+   * `isEnabled` defaults to FALSE, so the public booking page threw before
+   * rendering anything — even though the API returned the business and its
+   * services perfectly well. The page and the API disagreed about whether the
+   * salon was bookable.
+   */
+  await prisma.publicBookingConfig.upsert({
+    where: { businessId: demoBusiness.id },
+    update: { isEnabled: true },
+    create: {
+      businessId: demoBusiness.id,
+      isEnabled: true,
+      advanceBookingDays: 60,
+      // Low enough that a slot later today is still bookable, so the flow can
+      // be exercised without waiting for tomorrow.
+      minimumNoticeHours: 1,
+      maxServicesPerBooking: 3,
+      requirePhone: true,
+      requireEmail: true,
+      allowNotes: true,
+    },
+  });
+
+  console.log('✅ Enabled public booking for the demo salon');
+
   // Generate comprehensive staff data using StaffFactory
   console.log('👥 Generating comprehensive staff profiles...');
 
