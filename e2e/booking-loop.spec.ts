@@ -134,13 +134,22 @@ test.describe('booking loop', () => {
       `availability returned ${response.status()} for ${dateString}`
     ).toBe(true);
 
+    // Contract confirmed against the running route: the key is
+    // `availableSlots`, not `slots`.
     const body = await response.json();
-    const slots = body.slots ?? body.data?.slots ?? [];
+    const slots = body.availableSlots ?? [];
     expect(
       Array.isArray(slots) && slots.length,
       `bookable slots on ${dateString} — zero usually means business hours ` +
         'or staff availability are not seeded'
     ).toBeTruthy();
+
+    // Slots must be usable by the booking UI, which reads these fields.
+    expect(slots[0]).toMatchObject({
+      startTime: expect.any(String),
+      endTime: expect.any(String),
+      staffId: expect.any(String),
+    });
   });
 
   test('a client can book an appointment end to end', async ({ page }) => {
