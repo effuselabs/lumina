@@ -81,6 +81,12 @@ run the app with data, so nothing was ever verified.
 
 ## Conventions
 
+- **One branch per pull request**, named for the change — `fix/availability-
+recursion`, `docs/add-plan`, `test/tenant-isolation`. Branch from the current
+  `main`, merge, delete. Never a long-lived branch, and never one per phase: a
+  phase is weeks of work, and a weeks-long branch means a huge PR, conflicts
+  against a moving `main`, and no feedback until the end — which is how this
+  project stalled the first time. Small batches beat big ones.
 - Conventional commits. Never commit to `main` directly; CI gates it.
 - Prisma: camelCase fields, snake_case tables via `@@map`. Index foreign keys
   and common composite query paths.
