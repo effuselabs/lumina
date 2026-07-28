@@ -8,7 +8,6 @@ export { Button, buttonVariants } from './button';
 export type { ButtonProps } from './button';
 
 // Performance monitoring variant (client-side only)
-export { ButtonWithMonitoring } from './button-with-monitoring';
 
 export { Spinner, spinnerVariants } from './spinner';
 export type { SpinnerProps } from './spinner';
