@@ -1,6 +1,73 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+/**
+ * The host:port DATABASE_URL points at, with credentials stripped.
+ *
+ * Enough to tell a Railway-internal host (`postgres.railway.internal`) from a
+ * public proxy host (`*.proxy.rlwy.net`) or a stale localhost, which is the
+ * usual cause of a database that is reachable at deploy time but not at
+ * runtime. Never returns the password.
+ */
+function describeDatabaseHost(): string {
+  const raw = process.env.DATABASE_URL;
+  if (!raw) return 'DATABASE_URL is not set';
+
+  try {
+    const url = new URL(raw);
+    return `${url.hostname}:${url.port || '5432'}${url.pathname}`;
+  } catch {
+    return 'DATABASE_URL is set but is not a valid URL';
+  }
+}
+
+/**
+ * Prisma's error code, if one is available.
+ *
+ * Prisma exposes this inconsistently: PrismaClientKnownRequestError carries
+ * `.code`, PrismaClientInitializationError declares `.errorCode` but leaves it
+ * undefined for runtime connection failures, and the P-code sometimes appears
+ * only in the message text. This checks all three and falls back to the error
+ * class name, which is itself informative.
+ */
+function describePrismaErrorCode(error: unknown): string {
+  if (!error || typeof error !== 'object') return 'unknown';
+
+  const e = error as { code?: unknown; errorCode?: unknown; message?: unknown };
+
+  if (typeof e.code === 'string' && e.code) return e.code;
+  if (typeof e.errorCode === 'string' && e.errorCode) return e.errorCode;
+
+  const fromMessage = String(e.message ?? '').match(/\bP\d{4}\b/);
+  if (fromMessage) return fromMessage[0];
+
+  return error.constructor?.name ?? 'unknown';
+}
+
+/**
+ * A single readable line explaining the failure.
+ *
+ * Prisma prefixes messages with an "Invalid `prisma.x()` invocation" preamble
+ * and blank lines; the useful sentence is further down. Credentials are
+ * stripped defensively — Prisma does not normally include them, but this
+ * response is publicly reachable.
+ */
+function describePrismaReason(error: unknown): string {
+  const raw =
+    error && typeof error === 'object' && 'message' in error
+      ? String((error as { message: unknown }).message)
+      : String(error);
+
+  const line = raw
+    .split('\n')
+    .map(l => l.trim())
+    .find(l => l && !l.startsWith('Invalid `prisma.'));
+
+  return (line ?? 'Unknown database error')
+    .replace(/\/\/[^@\s]*@/g, '//***@')
+    .slice(0, 200);
+}
+
 export async function GET() {
   const startTime = Date.now();
 
@@ -11,7 +78,17 @@ export async function GET() {
     // running?" and "is this the code I just pushed?" are answerable from the
     // deployed URL, without digging through build logs. Railway exposes the
     // deployed commit as RAILWAY_GIT_COMMIT_SHA.
-    const health = {
+    const health: {
+      status: string;
+      timestamp: string;
+      environment: string;
+      version: string;
+      runtime: string;
+      commit: string;
+      uptime: number;
+      checks: { database: string; memory: string };
+      databaseError?: { code: string; reason: string; host: string };
+    } = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
@@ -25,7 +102,16 @@ export async function GET() {
       },
     };
 
-    // Database connectivity check
+    // Database connectivity check.
+    //
+    // On failure this reports Prisma's error code and the host it tried to
+    // reach, because "unhealthy" alone sends you digging through deploy logs.
+    // The codes point in materially different directions:
+    //   P1001 - cannot reach the server (wrong host/port, or not running)
+    //   P1000 - authentication failed (wrong credentials)
+    //   P1003 - the named database does not exist
+    // Only the host is exposed, never the full DATABASE_URL, which carries
+    // credentials.
     try {
       await prisma.$queryRaw`SELECT 1`;
       health.checks.database = 'healthy';
@@ -34,6 +120,12 @@ export async function GET() {
       console.error('Database health check failed:', error);
       health.checks.database = 'unhealthy';
       health.status = 'degraded';
+
+      health.databaseError = {
+        code: describePrismaErrorCode(error),
+        reason: describePrismaReason(error),
+        host: describeDatabaseHost(),
+      };
     }
 
     // Memory usage check
