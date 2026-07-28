@@ -1,14 +1,23 @@
-name: Deploy to Railway
+name: Deploy
+
+# Staging deploys automatically when CI passes on main.
+# Production is a MANUAL promotion — you always choose when customers see a
+# change. There is deliberately no automatic path to production.
+#
+# Production does not exist yet; it is stood up in Phase 6. Until then the
+# production job refuses to run rather than half-deploying somewhere.
 
 on:
-  push:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
     branches: [main]
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
+        description: 'Environment to deploy'
         required: true
-        default: 'production'
+        default: staging
         type: choice
         options:
           - staging
@@ -18,202 +27,115 @@ env:
   NODE_VERSION: '22'
 
 jobs:
-  # Determine deployment environment
-  setup:
-    name: Setup Deployment
+  staging:
+    name: Deploy to staging
     runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.env.outputs.environment }}
-      railway_service: ${{ steps.env.outputs.railway_service }}
-      
-    steps:
-      - name: Determine environment
-        id: env
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "environment=production" >> $GITHUB_OUTPUT
-          else
-            echo "environment=staging" >> $GITHUB_OUTPUT
-          fi
-          
-          # Set Railway service based on environment
-          if [[ "${{ steps.env.outputs.environment || 'production' }}" == "production" ]]; then
-            echo "railway_service=lumina-prod" >> $GITHUB_OUTPUT
-          else
-            echo "railway_service=lumina-staging" >> $GITHUB_OUTPUT
-          fi
+    # Only after a green CI run, or an explicit manual staging deploy.
+    if: >-
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'workflow_dispatch' &&
+       inputs.environment == 'staging')
+    environment:
+      name: staging
+      url: https://staging.uselumina.app
 
-  # Pre-deployment checks
-  pre-deploy:
-    name: Pre-deployment Checks
-    runs-on: ubuntu-latest
-    needs: [setup]
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run type check
-        run: npm run type-check
-
-      - name: Run linting
-        run: npm run lint
-
-      - name: Build application
-        run: npm run build
-        env:
-          DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy
-          NEXTAUTH_SECRET: dummy-secret-for-build
-          NEXTAUTH_URL: http://localhost:3000
-
-      - name: Generate Prisma client
-        run: npm run db:generate
-
-  # Deploy to Railway
-  deploy:
-    name: Deploy to ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-    needs: [setup, pre-deploy]
-    environment: ${{ needs.setup.outputs.environment }}
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Install Railway CLI
-        run: |
-          curl -fsSL https://railway.app/install.sh | sh
-          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+        run: npm i -g @railway/cli
 
-      - name: Deploy to Railway
-        run: |
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
-          railway service connect ${{ needs.setup.outputs.railway_service }}
-          railway up --detach
+      - name: Apply database migrations
+        # Before the deploy, so new code never meets an old schema.
+        # `migrate deploy` only applies committed migrations — it never
+        # generates or resets anything.
+        run: railway run --service "$RAILWAY_SERVICE" npx prisma migrate deploy
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_STAGING_SERVICE }}
 
-      - name: Wait for deployment
-        run: |
-          echo "Waiting for deployment to complete..."
-          sleep 30
-
-      - name: Run database migrations
-        run: |
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
-          railway service connect ${{ needs.setup.outputs.railway_service }}
-          railway run npm run db:migrate:prod
+      - name: Deploy
+        run: railway up --service "$RAILWAY_SERVICE" --detach
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_STAGING_SERVICE }}
 
-  # Post-deployment verification
-  verify-deployment:
-    name: Verify Deployment
-    runs-on: ubuntu-latest
-    needs: [setup, deploy]
-    
-    steps:
-      - name: Health check
+      - name: Wait for health check
+        # A deploy is not done until the app answers. /api/health also verifies
+        # database connectivity, so this catches a bad DATABASE_URL.
         run: |
-          if [[ "${{ needs.setup.outputs.environment }}" == "production" ]]; then
-            HEALTH_URL="${{ secrets.PROD_HEALTH_URL }}"
-          else
-            HEALTH_URL="${{ secrets.STAGING_HEALTH_URL }}"
-          fi
-          
-          echo "Checking health at: $HEALTH_URL"
-          
-          # Wait for deployment to be ready
-          for i in {1..30}; do
-            if curl -f "$HEALTH_URL/api/health" > /dev/null 2>&1; then
-              echo "✅ Health check passed!"
-              break
-            else
-              echo "⏳ Waiting for deployment... (attempt $i/30)"
-              sleep 10
+          for attempt in $(seq 1 30); do
+            if curl -fsS --max-time 10 https://staging.uselumina.app/api/health > /tmp/health.json; then
+              echo "Responded on attempt ${attempt}:"
+              cat /tmp/health.json
+              if grep -q '"status":"healthy"' /tmp/health.json; then
+                exit 0
+              fi
+              echo "::warning::Up but not healthy — see payload above."
             fi
-            
-            if [[ $i -eq 30 ]]; then
-              echo "❌ Health check failed after 5 minutes"
-              exit 1
-            fi
+            sleep 10
           done
+          echo "::error::staging did not become healthy within 5 minutes."
+          exit 1
 
-      - name: Smoke tests
-        run: |
-          if [[ "${{ needs.setup.outputs.environment }}" == "production" ]]; then
-            BASE_URL="${{ secrets.PROD_BASE_URL }}"
-          else
-            BASE_URL="${{ secrets.STAGING_BASE_URL }}"
-          fi
-          
-          echo "Running smoke tests against: $BASE_URL"
-          
-          # Test main pages
-          curl -f "$BASE_URL" > /dev/null
-          curl -f "$BASE_URL/api/health" > /dev/null
-          
-          echo "✅ Smoke tests passed!"
-
-  # Rollback capability
-  rollback:
-    name: Rollback Deployment
+  production:
+    name: Deploy to production
     runs-on: ubuntu-latest
-    needs: [setup, deploy, verify-deployment]
-    if: failure() && needs.deploy.result == 'success'
-    
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.environment == 'production'
+    # Point this GitHub environment at a required reviewer so a production
+    # deploy cannot proceed without a human approving it.
+    environment:
+      name: production
+      url: https://uselumina.app
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Confirm production is provisioned
+        run: |
+          if [ -z "${{ secrets.RAILWAY_PRODUCTION_TOKEN }}" ]; then
+            echo "::error::Production is not provisioned yet (Phase 6)."
+            echo "Set RAILWAY_PRODUCTION_TOKEN and RAILWAY_PRODUCTION_SERVICE first."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
       - name: Install Railway CLI
-        run: |
-          curl -fsSL https://railway.app/install.sh | sh
-          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+        run: npm i -g @railway/cli
 
-      - name: Rollback deployment
-        run: |
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
-          railway service connect ${{ needs.setup.outputs.railway_service }}
-          railway rollback
+      - name: Apply database migrations
+        run: railway run --service "$RAILWAY_SERVICE" npx prisma migrate deploy
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_PRODUCTION_SERVICE }}
 
-      - name: Notify rollback
-        run: |
-          echo "🔄 Deployment rolled back due to verification failure"
+      - name: Deploy
+        run: railway up --service "$RAILWAY_SERVICE" --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_PRODUCTION_SERVICE }}
 
-  # Notification
-  notify:
-    name: Deployment Notification
-    runs-on: ubuntu-latest
-    needs: [setup, deploy, verify-deployment]
-    if: always()
-    
-    steps:
-      - name: Deployment success notification
-        if: needs.verify-deployment.result == 'success'
+      - name: Wait for health check
         run: |
-          echo "🚀 Successfully deployed to ${{ needs.setup.outputs.environment }}"
-          echo "Environment: ${{ needs.setup.outputs.environment }}"
-          echo "Service: ${{ needs.setup.outputs.railway_service }}"
-          echo "Commit: ${{ github.sha }}"
-
-      - name: Deployment failure notification
-        if: needs.verify-deployment.result == 'failure' || needs.deploy.result == 'failure'
-        run: |
-          echo "❌ Deployment to ${{ needs.setup.outputs.environment }} failed"
-          echo "Environment: ${{ needs.setup.outputs.environment }}"
-          echo "Service: ${{ needs.setup.outputs.railway_service }}"
-          echo "Commit: ${{ github.sha }}"
+          for attempt in $(seq 1 30); do
+            if curl -fsS --max-time 10 https://uselumina.app/api/health > /tmp/health.json; then
+              echo "Responded on attempt ${attempt}:"
+              cat /tmp/health.json
+              grep -q '"status":"healthy"' /tmp/health.json && exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::production did not become healthy within 5 minutes."
+          exit 1

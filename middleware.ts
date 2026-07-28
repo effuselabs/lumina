@@ -23,11 +23,19 @@ const PUBLIC_EXACT_ROUTES = ['/', '/api/health'];
  * '/book/' must not match a future '/bookkeeping').
  */
 const PUBLIC_ROUTE_PREFIXES = [
-  '/auth/', // sign-in, sign-up, error, verify-request
+  '/auth/', // sign-in, sign-up, error, verify-request, staff-invite
   '/api/auth/', // NextAuth handlers
   '/api/public/', // unauthenticated public booking API
   '/book/', // public booking page for a business
   '/booking/', // booking confirmation / management by reference
+
+  // The routes below are "public" only in the sense that they carry NO SESSION.
+  // Each authenticates by its own means, and each MUST keep doing so — adding a
+  // route here without its own check makes it genuinely unauthenticated.
+  '/api/cron/', // Bearer CRON_SECRET, checked in the handler
+  '/api/payments/webhook', // Stripe signature verification
+  '/api/staff/invite/verify', // single-use invitation token
+  '/api/staff/invite/accept', // single-use invitation token
 ];
 
 export default auth(req => {
