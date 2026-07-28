@@ -39,6 +39,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-non-null-assertion": "warn",
     // React specific rules
+    // (overrides below add rules scoped to particular directories)
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
@@ -69,5 +70,41 @@
     "browser": true,
     "es2022": true,
     "node": true
-  }
+  },
+  "overrides": [
+    {
+      "files": ["app/api/**/*.ts"],
+      "rules": {
+        // Data access belongs in lib/repositories, not inline in a route
+        // handler. 56 of 80 routes import prisma directly while 15 use the
+        // repository layer, so neither pattern is currently trustworthy.
+        // "warn" while booking-loop routes migrate; raise to "error" at zero.
+        "no-restricted-imports": [
+          "warn",
+          {
+            "paths": [
+              {
+                "name": "@/lib/prisma",
+                "message": "Use a repository in lib/repositories/ rather than querying Prisma directly from a route handler. See CLAUDE.md."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.tsx"],
+      "rules": {
+        // Colours come from lib/design/tokens.ts. Raw hex in components is
+        // exactly what let four competing sources of design truth drift apart.
+        "no-restricted-syntax": [
+          "warn",
+          {
+            "selector": "Literal[value=/^#(?:[0-9a-fA-F]{3}){1,2}$/]",
+            "message": "No raw hex colours in components. Import from lib/design/tokens.ts or use a Tailwind class."
+          }
+        ]
+      }
+    }
+  ]
 }

@@ -5,7 +5,7 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 // legacy values inherited from four competing sources; they migrate onto
 // `tokens` in the design-system phase, once an end-to-end test exists to
 // catch regressions.
-import { accent, brand, radii, shadows, status } from './lib/design/tokens';
+import { accent, brand, status } from './lib/design/tokens';
 
 const config: Config = {
   content: [
