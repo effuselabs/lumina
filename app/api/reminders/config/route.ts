@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get reminder configuration
-    let config = await prisma.reminderConfig.findUnique({
+    const config = await prisma.reminderConfig.findUnique({
       where: { businessId },
     });
 

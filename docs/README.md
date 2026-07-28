@@ -1,134 +1,37 @@
-# Lumina Documentation
+# Lumina documentation
 
-> **Comprehensive documentation for the Lumina V-SaaS platform**
+Everything here describes the system as it actually is. If a document and the
+code disagree, the code wins and the document is a bug.
 
-## 📚 **Documentation Structure**
+## Getting started
 
-### **🚀 Getting Started**
+- [Development setup](development-setup.md) — local environment
+- [Project overview](project-overview.md) — what Lumina is and who it serves
+- [Contributing](../CONTRIBUTING.md) — workflow and standards
 
-- [Project Overview](project-overview.md) - Current project status and overview
-- [Development Setup](development-setup.md) - How to set up the development environment
-- [Contributing Guidelines](../CONTRIBUTING.md) - How to contribute to the project
+## Reference
 
-### **🏗️ Architecture & Features**
+- [API reference](api/README.md) — REST endpoints and schemas
 
-- [API Documentation](api/README.md) - REST API endpoints and schemas
-- [Feature Documentation](features/README.md) - Individual feature guides
-- [Authentication System](features/authentication/README.md) - How authentication works
+## Not here yet
 
-### **🎨 Design & Brand**
+These are produced by later phases of the rebuild, and deliberately do not
+exist yet rather than existing and being wrong:
 
-- [Design System](design-system/README.md) - Complete design system documentation
-- [Lumina Style Guide](design-system/lumina-product-design-styleguide-v2.md) - Brand guidelines and visual identity
-- [UI Components](design-system/README.md#component-library) - Component library and usage
+- **Architecture** (`architecture.md`) — request flow, auth enforcement,
+  data-access boundaries
+- **Environments** (`environments.md`) — local, staging and production on
+  Railway, plus the deploy pipeline
+- **Design system** (`design-system/`) and **brand guide** (`brand/README.md`)
+  — generated from the design token source of truth, so they cannot drift from
+  the application. The previous 29 hand-written design-system documents are
+  what made drift possible; they were removed rather than updated.
+- **Testing** — written once the rebuilt suite is green, so that it describes
+  real tests rather than intended ones
 
-### **🔧 Development & Project Management**
+## A note on history
 
-- [Development Plan](project-management/development-plan.md) - Current development roadmap
-- [Decision Log](project-management/decision-log.md) - Architectural decisions and rationale
-- [Linear Integration Guide](project-management/linear-integration-guide.md) - Project management workflow
-- [Quality Automation](project-management/quality-automation.md) - Documentation quality system
-- [Daily Status](project-management/daily-status/) - Daily development status updates
-- [Context Reports](project-management/context-reports/) - AI context initialization reports
-- [Action Reports](project-management/action-reports/) - Implementation summaries and completed work reports
-- [Templates](project-management/templates/README.md) - Issue and documentation templates
-- [Documentation Management](documentation-management/README.md) - Meta-documentation and maintenance
-- [Documentation Action Reports](documentation-management/action-reports/) - Documentation cleanup and audit reports
-
-### **⚠️ Important Notices**
-
-- **Script Safety**: Documentation audit scripts in `/scripts/` have critical issues - **DO NOT USE**
-- **Linear Issue**: [LUM-78](https://linear.app/scootr-ca/issue/LUM-78) tracks required fixes
-- **Details**: See [Documentation Audit Fixes](documentation-management/action-reports/DOCUMENTATION_AUDIT_FIXES.md)
-
-### **🚀 Deployment & Operations**
-
-- [Deployment Guide](deployment/deployment.md) - How to deploy the application
-- [Rollback Procedures](deployment/rollback-procedures.md) - Emergency rollback steps
-
-### **🧪 Testing**
-
-- [Testing Documentation](testing/README.md) - Testing overview and quick start guide
-- [Testing Strategy](testing/testing-strategy.md) - Comprehensive testing approach and execution plan
-
-### **📁 Archive & Migration**
-
-- [Migration Documentation](migration/README.md) - Documentation migration process and results
-- [Archived Documents](archive/README.md) - Outdated documentation for reference
-
-## 🎯 **Documentation Philosophy**
-
-This documentation follows a **solo developer workflow** optimized for:
-
-- **Minimal overhead** - Quick to update, easy to maintain
-- **AI-friendly** - Structured for AI context loading
-- **Decision preservation** - Architectural choices and rationale documented
-- **Quality automation** - Automated quality checks and Linear integration
-
-## 🤖 **Kiro IDE Integration**
-
-### **Steering System**
-
-Lumina uses Kiro's intelligent steering system for automated development guidance:
-
-- **Automatic Application**: Coding standards applied based on files you're working on
-- **Context-Aware**: Security guidelines for API routes, UI standards for components
-- **Comprehensive Coverage**: All development aspects covered with consistent patterns
-- **Location**: `.kiro/steering/` - [Steering System Overview](.kiro/steering/README.md)
-
-### **Agent Hooks**
-
-Automated workflows triggered by development events:
-
-- **Documentation Hooks**: Auto-update docs when features are completed
-- **Quality Hooks**: Run quality checks on file saves
-- **Linear Integration**: Auto-create issues for documentation problems
-- **Access**: Use Kiro command palette → "Open Kiro Hook UI" to manage hooks
-
-## 🔍 **Finding Information**
-
-### **By Role**
-
-- **New Developer**: Start with [Project Overview](../README.md) → [Development Setup](development-setup.md)
-- **Feature Developer**: Check [Feature Documentation](features/README.md) → [API Documentation](api/README.md)
-- **DevOps/Deployment**: See [Deployment Guide](deployment/deployment.md)
-
-### **By Task**
-
-- **Understanding a feature**: Check `docs/features/[feature-name]/`
-- **API integration**: See `docs/api/`
-- **Deployment issues**: Check `docs/deployment/`
-- **Project decisions**: Review `docs/project-management/decision-log.md`
-
-## 🔧 **Maintaining Documentation**
-
-### **Quality Automation**
-
-```bash
-# Check documentation quality
-npm run quality-audit
-
-# Auto-create Linear issues for problems
-npm run quality-audit:create-issues
-```
-
-### **Adding New Documentation**
-
-1. **Features**: Add to `docs/features/[feature-name]/`
-2. **API Changes**: Update `docs/api/`
-3. **Decisions**: Log in `docs/project-management/decision-log.md`
-4. **Templates**: Use templates from `docs/project-management/templates/`
-
-### **Documentation Standards**
-
-- Use clear, descriptive filenames (no timestamps!)
-- Include README.md in each major directory
-- Link related documentation
-- Update the decision log for architectural changes
-- Run quality checks before committing
-
----
-
-**Last Updated**: September 2025  
-**Maintained By**: Solo Developer Workflow  
-**Quality System**: Automated with Linear integration
+This directory previously held 335 markdown files, 38% of whose internal links
+were broken, describing features that did not work and processes nobody
+followed. It was reduced to the set above. Documentation is added back only
+when it describes something verified.

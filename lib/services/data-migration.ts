@@ -5,7 +5,7 @@
  * to structured database tables with validation and rollback capabilities.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 
 // Validation schemas for existing JSON data

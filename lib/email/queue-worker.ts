@@ -8,7 +8,7 @@
 import { emailQueueManager } from './queue-manager';
 import { emailRateLimiter } from './rate-limiter';
 import { ResendEmailProvider } from './resend-provider';
-import type { EmailProvider, EmailMessage } from './types';
+import type { EmailMessage, EmailProvider } from './types';
 
 /**
  * Queue Worker Configuration
@@ -36,7 +36,8 @@ export interface QueueWorkerStatus {
  * Processes queued emails in the background with priority support
  */
 export class EmailQueueWorker {
-  private emailProvider: EmailProvider;
+  private injectedProvider?: EmailProvider;
+  private lazyProvider?: EmailProvider;
   private processingInterval: number;
   private concurrentProcessing: number;
   private isRunning: boolean = false;
@@ -49,12 +50,8 @@ export class EmailQueueWorker {
   private activeProcessing: Set<string> = new Set();
 
   constructor(config?: QueueWorkerConfig) {
-    // Initialize email provider
-    this.emailProvider = config?.emailProvider || new ResendEmailProvider({
-      apiKey: process.env.RESEND_API_KEY || '',
-      fromEmail: process.env.EMAIL_FROM,
-      fromName: process.env.EMAIL_FROM_NAME || 'Lumina',
-    });
+    // Provider resolved lazily — see the `emailProvider` getter below.
+    this.injectedProvider = config?.emailProvider;
 
     this.processingInterval = config?.processingInterval || 5000; // 5 seconds default
     this.concurrentProcessing = config?.concurrentProcessing || 5; // Process 5 emails concurrently
@@ -63,6 +60,28 @@ export class EmailQueueWorker {
     if (config?.enableAutoStart) {
       this.start();
     }
+  }
+
+  /**
+   * Resolve the email provider on first use. ResendEmailProvider throws when
+   * RESEND_API_KEY is absent, and this module is reachable from API routes,
+   * so eager construction would break `next build` wherever email secrets
+   * are not present (CI, preview builds).
+   */
+  private get emailProvider(): EmailProvider {
+    if (this.injectedProvider) {
+      return this.injectedProvider;
+    }
+
+    if (!this.lazyProvider) {
+      this.lazyProvider = new ResendEmailProvider({
+        apiKey: process.env.RESEND_API_KEY || '',
+        fromEmail: process.env.EMAIL_FROM,
+        fromName: process.env.EMAIL_FROM_NAME || 'Lumina',
+      });
+    }
+
+    return this.lazyProvider;
   }
 
   /**

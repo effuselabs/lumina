@@ -70,8 +70,10 @@ class AppointmentPerformanceMonitor {
                 const entries = list.getEntries();
                 entries.forEach((entry) => {
                     if (entry.entryType === 'navigation') {
-                        const navEntry = entry as any; // PerformanceNavigationTiming
-                        this.recordMetric('page-load-time', navEntry.loadEventEnd - navEntry.navigationStart);
+                        const navEntry = entry as PerformanceNavigationTiming;
+                        // Navigation Timing L2: times are relative to startTime,
+                        // not the removed navigationStart of PerformanceTiming.
+                        this.recordMetric('page-load-time', navEntry.loadEventEnd - navEntry.startTime);
                     }
                 });
             });

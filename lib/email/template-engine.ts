@@ -4,30 +4,30 @@
  */
 
 import {
+  type BookingConfirmationData,
   bookingConfirmationHtml,
   bookingConfirmationText,
-  type BookingConfirmationData,
 } from './templates/booking-confirmation';
 import {
+  type AppointmentReminderData,
   appointmentReminderHtml,
   appointmentReminderText,
-  type AppointmentReminderData,
 } from './templates/appointment-reminder';
 import {
+  type CancellationNotificationData,
   cancellationNotificationHtml,
   cancellationNotificationText,
-  type CancellationNotificationData,
 } from './templates/cancellation-notification';
 import {
+  type DailyBookingSummaryData,
+  type StaffBookingAlertData,
+  type StaffCancellationAlertData,
+  dailyBookingSummaryHtml,
+  dailyBookingSummaryText,
   staffBookingAlertHtml,
   staffBookingAlertText,
   staffCancellationAlertHtml,
   staffCancellationAlertText,
-  dailyBookingSummaryHtml,
-  dailyBookingSummaryText,
-  type StaffBookingAlertData,
-  type StaffCancellationAlertData,
-  type DailyBookingSummaryData,
 } from './templates/staff-notifications';
 import type { EmailTemplateType, TemplateData } from './templates';
 

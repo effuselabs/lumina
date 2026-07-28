@@ -8,12 +8,12 @@
 import { Resend } from 'resend';
 import { BaseEmailProvider } from './base-email-provider';
 import {
-  EmailMessage,
-  SendResult,
   DeliveryStatus,
-  ProviderLimits,
+  EmailMessage,
   EmailProviderError,
   EmailProviderErrorCode,
+  ProviderLimits,
+  SendResult,
 } from './types';
 
 /**

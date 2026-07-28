@@ -1,7 +1,7 @@
 /**
  * Notification Service
  * Core business logic for email notification management
- * 
+ *
  * Handles all notification types including:
  * - Booking confirmations
  * - Appointment reminders (24h and 2h)
@@ -15,12 +15,12 @@ import { templateEngine } from './template-engine';
 import { ResendEmailProvider } from './resend-provider';
 import type { EmailProvider, EmailTemplateType } from './types';
 import type {
-  BookingConfirmationData,
   AppointmentReminderData,
+  BookingConfirmationData,
   CancellationNotificationData,
+  DailyBookingSummaryData,
   StaffBookingAlertData,
   StaffCancellationAlertData,
-  DailyBookingSummaryData,
 } from './templates';
 
 /**
@@ -127,22 +127,48 @@ function nullToUndefined<T>(value: T | null): T | undefined {
  * Orchestrates email notification creation and delivery
  */
 export class NotificationService {
-  private emailProvider: EmailProvider;
+  private injectedProvider?: EmailProvider;
+  private lazyProvider?: EmailProvider;
+  private config?: NotificationServiceConfig;
   private fromEmail: string;
   private fromName: string;
   private enableQueue: boolean;
 
   constructor(config?: NotificationServiceConfig) {
-    // Initialize email provider (default to Resend)
-    this.emailProvider = config?.emailProvider || new ResendEmailProvider({
-      apiKey: process.env.RESEND_API_KEY || '',
-      fromEmail: config?.fromEmail || process.env.EMAIL_FROM,
-      fromName: config?.fromName || process.env.EMAIL_FROM_NAME || 'Lumina',
-    });
+    // The provider is constructed lazily: ResendEmailProvider throws when
+    // RESEND_API_KEY is absent, and this module is imported by API routes.
+    // Constructing it here would make `next build` fail in any environment
+    // without email secrets (CI, preview builds).
+    this.config = config;
+    this.injectedProvider = config?.emailProvider;
 
-    this.fromEmail = config?.fromEmail || process.env.EMAIL_FROM || 'noreply@uselumina.app';
+    this.fromEmail =
+      config?.fromEmail ||
+      process.env.EMAIL_FROM ||
+      'noreply@mail.uselumina.app';
     this.fromName = config?.fromName || process.env.EMAIL_FROM_NAME || 'Lumina';
     this.enableQueue = config?.enableQueue !== false; // Default to true
+  }
+
+  /**
+   * Resolve the email provider on first use, so that importing this module
+   * never requires email credentials to be present.
+   */
+  private get emailProvider(): EmailProvider {
+    if (this.injectedProvider) {
+      return this.injectedProvider;
+    }
+
+    if (!this.lazyProvider) {
+      this.lazyProvider = new ResendEmailProvider({
+        apiKey: process.env.RESEND_API_KEY || '',
+        fromEmail: this.config?.fromEmail || process.env.EMAIL_FROM,
+        fromName:
+          this.config?.fromName || process.env.EMAIL_FROM_NAME || 'Lumina',
+      });
+    }
+
+    return this.lazyProvider;
   }
 
   /**
@@ -339,7 +365,11 @@ export class NotificationService {
    */
   private mapTemplateTypeToAutomationType(
     templateType: EmailTemplateType
-  ): 'APPOINTMENT_CONFIRMATION' | 'APPOINTMENT_REMINDER' | 'CANCELLATION_NOTICE' | 'PROMOTIONAL' {
+  ):
+    | 'APPOINTMENT_CONFIRMATION'
+    | 'APPOINTMENT_REMINDER'
+    | 'CANCELLATION_NOTICE'
+    | 'PROMOTIONAL' {
     switch (templateType) {
       case 'booking_confirmation':
         return 'APPOINTMENT_CONFIRMATION';
@@ -425,12 +455,17 @@ export class NotificationService {
         throw new NotificationError(
           'Appointment does not belong to this business',
           NotificationErrorCode.INVALID_BUSINESS_CONTEXT,
-          { appointmentId, businessId, actualBusinessId: appointment.businessId }
+          {
+            appointmentId,
+            businessId,
+            actualBusinessId: appointment.businessId,
+          }
         );
       }
 
       // Determine recipient email
-      const recipientEmail = appointment.client?.email || appointment.clientEmail || undefined;
+      const recipientEmail =
+        appointment.client?.email || appointment.clientEmail || undefined;
       const recipientName = appointment.client
         ? `${appointment.client.firstName} ${appointment.client.lastName}`
         : appointment.clientName || undefined;
@@ -451,10 +486,13 @@ export class NotificationService {
       );
 
       if (!canSend) {
-        console.log('[NotificationService] Client has opted out of confirmations', {
-          appointmentId,
-          recipientEmail,
-        });
+        console.log(
+          '[NotificationService] Client has opted out of confirmations',
+          {
+            appointmentId,
+            recipientEmail,
+          }
+        );
         return {
           success: false,
           error: 'Client has opted out of confirmation emails',
@@ -473,7 +511,7 @@ export class NotificationService {
         .join(', ');
 
       // Build services list
-      const services = appointment.services.map((as) => ({
+      const services = appointment.services.map(as => ({
         name: as.serviceName,
         price: as.price.toNumber(),
         duration: as.duration,
@@ -501,7 +539,7 @@ export class NotificationService {
           minute: '2-digit',
           hour12: true,
         }),
-        serviceName: services.map((s) => s.name).join(', '),
+        serviceName: services.map(s => s.name).join(', '),
         servicePrice: `$${appointment.totalPrice.toNumber().toFixed(2)}`,
         staffName: appointment.staff.displayName,
         cancellationLink,
@@ -554,11 +592,14 @@ export class NotificationService {
         deliveryStatus: 'queued',
       };
     } catch (error) {
-      console.error('[NotificationService] Failed to send booking confirmation', {
-        appointmentId,
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationService] Failed to send booking confirmation',
+        {
+          appointmentId,
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationError) {
         return {
@@ -649,16 +690,26 @@ export class NotificationService {
         throw new NotificationError(
           'Appointment does not belong to this business',
           NotificationErrorCode.INVALID_BUSINESS_CONTEXT,
-          { appointmentId, businessId, actualBusinessId: appointment.businessId }
+          {
+            appointmentId,
+            businessId,
+            actualBusinessId: appointment.businessId,
+          }
         );
       }
 
       // Check if appointment is still active (not cancelled or completed)
-      if (appointment.status === 'CANCELLED' || appointment.status === 'COMPLETED') {
-        console.log('[NotificationService] Skipping reminder for inactive appointment', {
-          appointmentId,
-          status: appointment.status,
-        });
+      if (
+        appointment.status === 'CANCELLED' ||
+        appointment.status === 'COMPLETED'
+      ) {
+        console.log(
+          '[NotificationService] Skipping reminder for inactive appointment',
+          {
+            appointmentId,
+            status: appointment.status,
+          }
+        );
         return {
           success: false,
           error: `Appointment is ${appointment.status.toLowerCase()}`,
@@ -668,10 +719,13 @@ export class NotificationService {
 
       // Check if appointment is in the past
       if (appointment.startTime < new Date()) {
-        console.log('[NotificationService] Skipping reminder for past appointment', {
-          appointmentId,
-          startTime: appointment.startTime,
-        });
+        console.log(
+          '[NotificationService] Skipping reminder for past appointment',
+          {
+            appointmentId,
+            startTime: appointment.startTime,
+          }
+        );
         return {
           success: false,
           error: 'Appointment is in the past',
@@ -680,7 +734,8 @@ export class NotificationService {
       }
 
       // Determine recipient email
-      const recipientEmail = appointment.client?.email || appointment.clientEmail || undefined;
+      const recipientEmail =
+        appointment.client?.email || appointment.clientEmail || undefined;
       const recipientName = appointment.client
         ? `${appointment.client.firstName} ${appointment.client.lastName}`
         : appointment.clientName || undefined;
@@ -694,7 +749,10 @@ export class NotificationService {
       }
 
       // Check email preferences
-      const templateType = reminderType === '24h' ? 'appointment_reminder_24h' : 'appointment_reminder_2h';
+      const templateType =
+        reminderType === '24h'
+          ? 'appointment_reminder_24h'
+          : 'appointment_reminder_2h';
       const canSend = await this.checkEmailPreferences(
         businessId,
         recipientEmail,
@@ -725,7 +783,7 @@ export class NotificationService {
         .join(', ');
 
       // Build services list
-      const services = appointment.services.map((as) => ({
+      const services = appointment.services.map(as => ({
         name: as.serviceName,
         price: as.price.toNumber(),
         duration: as.duration,
@@ -754,7 +812,7 @@ export class NotificationService {
           minute: '2-digit',
           hour12: true,
         }),
-        serviceName: services.map((s) => s.name).join(', '),
+        serviceName: services.map(s => s.name).join(', '),
         staffName: appointment.staff.displayName,
         reminderType,
         rescheduleLink,
@@ -762,16 +820,12 @@ export class NotificationService {
       };
 
       // Render email template
-      const rendered = await templateEngine.render(
-        templateType,
-        templateData,
-        {
-          businessId: appointment.business.id,
-          businessName: appointment.business.name,
-          logoUrl: nullToUndefined(appointment.business.logo),
-          primaryColor: nullToUndefined(appointment.business.primaryColor),
-        }
-      );
+      const rendered = await templateEngine.render(templateType, templateData, {
+        businessId: appointment.business.id,
+        businessName: appointment.business.name,
+        logoUrl: nullToUndefined(appointment.business.logo),
+        primaryColor: nullToUndefined(appointment.business.primaryColor),
+      });
 
       // Queue email for delivery
       const queueId = await this.queueEmail(
@@ -809,12 +863,15 @@ export class NotificationService {
         deliveryStatus: 'queued',
       };
     } catch (error) {
-      console.error('[NotificationService] Failed to send appointment reminder', {
-        appointmentId,
-        businessId,
-        reminderType,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationService] Failed to send appointment reminder',
+        {
+          appointmentId,
+          businessId,
+          reminderType,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationError) {
         return {
@@ -910,12 +967,17 @@ export class NotificationService {
         throw new NotificationError(
           'Appointment does not belong to this business',
           NotificationErrorCode.INVALID_BUSINESS_CONTEXT,
-          { appointmentId, businessId, actualBusinessId: appointment.businessId }
+          {
+            appointmentId,
+            businessId,
+            actualBusinessId: appointment.businessId,
+          }
         );
       }
 
       // Determine recipient email (client)
-      const recipientEmail = appointment.client?.email || appointment.clientEmail || undefined;
+      const recipientEmail =
+        appointment.client?.email || appointment.clientEmail || undefined;
       const recipientName = appointment.client
         ? `${appointment.client.firstName} ${appointment.client.lastName}`
         : appointment.clientName || undefined;
@@ -936,10 +998,13 @@ export class NotificationService {
       );
 
       if (!canSend) {
-        console.log('[NotificationService] Client has opted out of cancellation notifications', {
-          appointmentId,
-          recipientEmail,
-        });
+        console.log(
+          '[NotificationService] Client has opted out of cancellation notifications',
+          {
+            appointmentId,
+            recipientEmail,
+          }
+        );
         return {
           success: false,
           error: 'Client has opted out of cancellation emails',
@@ -958,7 +1023,7 @@ export class NotificationService {
         .join(', ');
 
       // Build services list
-      const services = appointment.services.map((as) => ({
+      const services = appointment.services.map(as => ({
         name: as.serviceName,
         price: as.price.toNumber(),
         duration: as.duration,
@@ -986,9 +1051,10 @@ export class NotificationService {
           minute: '2-digit',
           hour12: true,
         }),
-        serviceName: services.map((s) => s.name).join(', '),
+        serviceName: services.map(s => s.name).join(', '),
         staffName: appointment.staff.displayName,
-        cancellationReason: reason || appointment.cancellationReason || undefined,
+        cancellationReason:
+          reason || appointment.cancellationReason || undefined,
         rebookLink,
       };
 
@@ -1044,11 +1110,14 @@ export class NotificationService {
           );
         } catch (error) {
           // Log error but don't fail the client notification
-          console.error('[NotificationService] Failed to send staff cancellation alert', {
-            appointmentId,
-            staffId: appointment.staffId,
-            error: error instanceof Error ? error.message : String(error),
-          });
+          console.error(
+            '[NotificationService] Failed to send staff cancellation alert',
+            {
+              appointmentId,
+              staffId: appointment.staffId,
+              error: error instanceof Error ? error.message : String(error),
+            }
+          );
         }
       }
 
@@ -1058,11 +1127,14 @@ export class NotificationService {
         deliveryStatus: 'queued',
       };
     } catch (error) {
-      console.error('[NotificationService] Failed to send cancellation notification', {
-        appointmentId,
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationService] Failed to send cancellation notification',
+        {
+          appointmentId,
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationError) {
         return {
@@ -1179,7 +1251,7 @@ export class NotificationService {
         : appointment.clientName || 'Walk-in Client';
 
       // Build services list
-      const services = appointment.services.map((as) => ({
+      const services = appointment.services.map(as => ({
         name: as.serviceName,
         price: as.price.toNumber(),
         duration: as.duration,
@@ -1195,8 +1267,10 @@ export class NotificationService {
         primaryColor: appointment.business.primaryColor || '#FFD25A',
         staffName: staff.displayName,
         clientName,
-        clientPhone: appointment.client?.phone || appointment.clientPhone || undefined,
-        clientEmail: appointment.client?.email || appointment.clientEmail || undefined,
+        clientPhone:
+          appointment.client?.phone || appointment.clientPhone || undefined,
+        clientEmail:
+          appointment.client?.email || appointment.clientEmail || undefined,
         appointmentDate: appointment.startTime.toLocaleDateString('en-US', {
           weekday: 'long',
           year: 'numeric',
@@ -1208,7 +1282,7 @@ export class NotificationService {
           minute: '2-digit',
           hour12: true,
         }),
-        serviceName: services.map((s) => s.name).join(', '),
+        serviceName: services.map(s => s.name).join(', '),
         servicePrice: `$${appointment.totalPrice.toNumber().toFixed(2)}`,
         specialRequests: appointment.notes || undefined,
         viewAppointmentLink,
@@ -1250,12 +1324,15 @@ export class NotificationService {
         deliveryStatus: 'queued',
       };
     } catch (error) {
-      console.error('[NotificationService] Failed to send staff booking alert', {
-        appointmentId,
-        staffId,
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationService] Failed to send staff booking alert',
+        {
+          appointmentId,
+          staffId,
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationError) {
         return {
@@ -1358,7 +1435,7 @@ export class NotificationService {
         : appointment.clientName || 'Walk-in Client';
 
       // Build services list
-      const services = appointment.services.map((as) => ({
+      const services = appointment.services.map(as => ({
         name: as.serviceName,
         duration: as.duration,
       }));
@@ -1384,7 +1461,7 @@ export class NotificationService {
           minute: '2-digit',
           hour12: true,
         }),
-        serviceName: services.map((s) => s.name).join(', '),
+        serviceName: services.map(s => s.name).join(', '),
         cancellationReason: appointment.cancellationReason || undefined,
         viewScheduleLink,
       };
@@ -1425,12 +1502,15 @@ export class NotificationService {
         deliveryStatus: 'queued',
       };
     } catch (error) {
-      console.error('[NotificationService] Failed to send staff cancellation alert', {
-        appointmentId,
-        staffId,
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationService] Failed to send staff cancellation alert',
+        {
+          appointmentId,
+          staffId,
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationError) {
         return {
@@ -1488,7 +1568,7 @@ export class NotificationService {
       }
 
       // Get business owner email
-      const owner = business.users.find((bu) => bu.role === 'OWNER');
+      const owner = business.users.find(bu => bu.role === 'OWNER');
       if (!owner?.user?.email) {
         throw new NotificationError(
           'No owner email found for business',
@@ -1549,7 +1629,7 @@ export class NotificationService {
       );
 
       // Build appointments list
-      const appointmentsList = appointments.map((apt) => ({
+      const appointmentsList = appointments.map(apt => ({
         time: apt.startTime.toLocaleTimeString('en-US', {
           hour: 'numeric',
           minute: '2-digit',
@@ -1558,7 +1638,7 @@ export class NotificationService {
         clientName: apt.client
           ? `${apt.client.firstName} ${apt.client.lastName}`
           : apt.clientName || 'Walk-in',
-        serviceName: apt.services.map((s) => s.serviceName).join(', '),
+        serviceName: apt.services.map(s => s.serviceName).join(', '),
         staffName: apt.staff.displayName,
         price: `$${apt.totalPrice.toNumber().toFixed(2)}`,
       }));
@@ -1620,11 +1700,14 @@ export class NotificationService {
         deliveryStatus: 'queued',
       };
     } catch (error) {
-      console.error('[NotificationService] Failed to send daily booking summary', {
-        businessId,
-        date,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationService] Failed to send daily booking summary',
+        {
+          businessId,
+          date,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationError) {
         return {
@@ -1735,7 +1818,8 @@ export class NotificationService {
             appointmentTime: '10:00 AM',
             serviceName: 'Test Service',
             staffName: 'Test Staff Member',
-            reminderType: templateType === 'appointment_reminder_24h' ? '24h' : '2h',
+            reminderType:
+              templateType === 'appointment_reminder_24h' ? '24h' : '2h',
             rescheduleLink: `${process.env.NEXT_PUBLIC_APP_URL}/booking/reschedule/test`,
             cancellationLink: `${process.env.NEXT_PUBLIC_APP_URL}/booking/cancel/test`,
           };
@@ -1856,16 +1940,12 @@ export class NotificationService {
       }
 
       // Render email template
-      const rendered = await templateEngine.render(
-        templateType,
-        templateData,
-        {
-          businessId: business.id,
-          businessName: business.name,
-          logoUrl: nullToUndefined(business.logo),
-          primaryColor: nullToUndefined(business.primaryColor),
-        }
-      );
+      const rendered = await templateEngine.render(templateType, templateData, {
+        businessId: business.id,
+        businessName: business.name,
+        logoUrl: nullToUndefined(business.logo),
+        primaryColor: nullToUndefined(business.primaryColor),
+      });
 
       // Queue email for delivery
       const queueId = await this.queueEmail(
@@ -1934,7 +2014,9 @@ export class NotificationService {
   /**
    * Retry failed notification
    */
-  async retryFailedNotification(notificationId: string): Promise<NotificationResult> {
+  async retryFailedNotification(
+    notificationId: string
+  ): Promise<NotificationResult> {
     try {
       // Fetch notification from queue
       const notification = await prisma.emailQueue.findUnique({
@@ -1953,7 +2035,10 @@ export class NotificationService {
       await this.validateBusinessContext(notification.businessId);
 
       // Check if notification can be retried
-      if (notification.status === 'sent' || notification.status === 'delivered') {
+      if (
+        notification.status === 'sent' ||
+        notification.status === 'delivered'
+      ) {
         throw new NotificationError(
           'Cannot retry a successfully delivered notification',
           NotificationErrorCode.QUEUE_ERROR,
@@ -1965,7 +2050,11 @@ export class NotificationService {
         throw new NotificationError(
           'Maximum retry attempts reached',
           NotificationErrorCode.QUEUE_ERROR,
-          { notificationId, attemptCount: notification.attemptCount, maxAttempts: notification.maxAttempts }
+          {
+            notificationId,
+            attemptCount: notification.attemptCount,
+            maxAttempts: notification.maxAttempts,
+          }
         );
       }
 

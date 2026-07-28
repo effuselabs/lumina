@@ -551,6 +551,11 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
             return sum + (service?.duration || 60);
         }, 0);
 
+        const totalPrice = profile.serviceIds.reduce((sum, serviceId) => {
+            const service = this.services.find(s => s.id === serviceId);
+            return sum + Number(service?.price ?? 0);
+        }, 0);
+
         const endTime = new Date(profile.startTime);
         endTime.setMinutes(endTime.getMinutes() + totalDuration);
 
@@ -561,6 +566,8 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
             startTime: profile.startTime,
             endTime: endTime,
             status: profile.status,
+            totalDuration,
+            totalPrice,
             clientName: profile.clientName,
             clientEmail: profile.clientEmail,
             clientPhone: profile.clientPhone,

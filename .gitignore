@@ -198,3 +198,10 @@ pnpm-lock.yaml
 /build/
 /dist/
 *.tsbuildinfo
+
+# Generated test/coverage artifacts - never commit these
+coverage/
+test-results/
+playwright-report/
+type-errors*.txt
+typescript-error-analysis.json

@@ -220,6 +220,6 @@ Lumina consolidates booking, client management, and financials into a single, el
 
 **For current project status and development progress, see:**
 
-- **[Development Plan](docs/project-management/development-plan.md)** - Current sprint and task status
+- **Development Plan** - Current sprint and task status
 - **[Daily Status Reports](docs/project-management/daily-status/)** - Detailed development progress
 - **[CHANGELOG.md](../CHANGELOG.md)** - Version history and completed features

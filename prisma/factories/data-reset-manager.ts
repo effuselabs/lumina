@@ -561,7 +561,7 @@ export class DataResetManager {
                 validationResult.errors.forEach(error => {
                     errors.push({
                         type: 'referential_integrity',
-                        entity: error.entity,
+                        entity: error.entity ?? 'unknown',
                         field: error.field,
                         message: error.message,
                         severity: error.severity as 'critical' | 'high' | 'medium' | 'low',
@@ -571,7 +571,7 @@ export class DataResetManager {
                 validationResult.warnings.forEach(warning => {
                     warnings.push({
                         type: 'data_quality',
-                        entity: warning.entity,
+                        entity: warning.entity ?? 'unknown',
                         field: warning.field,
                         message: warning.message,
                     });

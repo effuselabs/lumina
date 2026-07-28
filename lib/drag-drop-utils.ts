@@ -197,7 +197,7 @@ export function getDragFeedbackStyles(
     style: React.CSSProperties;
 } {
     let className = 'transition-all duration-200';
-    let style: React.CSSProperties = {};
+    const style: React.CSSProperties = {};
 
     if (isDragOver) {
         if (isValidDrop && !hasConflicts) {

@@ -5,7 +5,7 @@
  * automatic migration triggers, and gradual migration strategy with dual-read capability.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 
 // Types for business hours

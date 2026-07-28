@@ -1,7 +1,7 @@
 'use client';
 
 import { useBookingAnalytics } from '@/hooks/use-booking-analytics';
-import { createContext, ReactNode, useContext, useEffect } from 'react';
+import { ReactNode, createContext, useContext, useEffect } from 'react';
 
 interface AnalyticsContextType {
     trackBookingStarted: (metadata?: Record<string, any>) => Promise<void>;

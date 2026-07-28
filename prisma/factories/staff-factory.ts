@@ -158,6 +158,8 @@ export class StaffFactory extends BaseFactory<Staff> {
         const trainingHistory = this.generateTrainingHistory(specialty, experience);
 
         return {
+            firstName,
+            lastName,
             displayName,
             title: this.generateJobTitle(specialty, experienceLevel),
             bio: this.generateStaffBio(specialty, experience),

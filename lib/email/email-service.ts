@@ -1,6 +1,6 @@
 import { render } from '@react-email/render'
 import nodemailer from 'nodemailer'
-import BookingConfirmationEmail from './templates/booking-confirmation'
+import BookingConfirmationEmail from './templates/booking-confirmation-email'
 
 interface EmailConfig {
     host: string

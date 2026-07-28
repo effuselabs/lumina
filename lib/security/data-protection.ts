@@ -57,20 +57,35 @@ export class DataProtectionService {
         ivLength: 16
     }
 
-    private readonly encryptionKey: Buffer
+    private cachedEncryptionKey?: Buffer
 
-    constructor() {
-        // Get encryption key from environment or generate one
+    /**
+     * Resolve and validate the encryption key on first use.
+     *
+     * The validation below is unchanged and still mandatory — it simply runs
+     * when the key is actually needed rather than at module import. This
+     * module is reachable from API routes, so validating in the constructor
+     * made `next build` fail in any environment without the secret (CI,
+     * preview builds). Encryption still cannot proceed without a valid key.
+     */
+    private get encryptionKey(): Buffer {
+        if (this.cachedEncryptionKey) {
+            return this.cachedEncryptionKey
+        }
+
         const keyString = process.env.DATA_ENCRYPTION_KEY
         if (!keyString) {
             throw new Error('DATA_ENCRYPTION_KEY environment variable is required')
         }
 
-        this.encryptionKey = Buffer.from(keyString, 'hex')
+        const key = Buffer.from(keyString, 'hex')
 
-        if (this.encryptionKey.length !== this.encryptionConfig.keyLength) {
+        if (key.length !== this.encryptionConfig.keyLength) {
             throw new Error(`Encryption key must be ${this.encryptionConfig.keyLength} bytes`)
         }
+
+        this.cachedEncryptionKey = key
+        return key
     }
 
     // ============================================================================

@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@/lib/auth'
-import { businessContextSecurity, SecurityViolationType } from '@/lib/security/business-context-security'
+import { SecurityViolationType, businessContextSecurity } from '@/lib/security/business-context-security'
 import { dataProtection } from '@/lib/security/data-protection'
 import { createSecurityMetadata, extractServerSecurityContext } from '@/lib/security/security-middleware'
 import { NextRequest, NextResponse } from 'next/server'

@@ -3,17 +3,26 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable ESLint during build (temporary)
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // ESLint runs as part of `next build`. It previously did not:
+  // ignoreDuringBuilds was set to true, which meant lint failures could never
+  // block anything. See the RATCHET note in .eslintrc.json for why several
+  // rules are currently "warn" rather than "error".
 
   // Experimental features
   experimental: {
     // Optimize package imports
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    // External packages for server components
-    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
+    // External packages for server components.
+    // isomorphic-dompurify pulls in jsdom, which reads asset files (e.g.
+    // browser/default-stylesheet.css) relative to its own package at import
+    // time. Bundling it rewrites those paths and the read fails during
+    // `next build`, so it must stay external.
+    serverComponentsExternalPackages: [
+      '@prisma/client',
+      'bcryptjs',
+      'isomorphic-dompurify',
+      'jsdom',
+    ],
   },
 
   // Performance optimizations

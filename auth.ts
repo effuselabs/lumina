@@ -1,3 +1,4 @@
+import { authConfig } from '@/auth.config';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import NextAuth from 'next-auth';
@@ -10,65 +11,11 @@ const credentialsSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
+// Session strategy, pages and callbacks live in auth.config.ts so that
+// middleware.ts can consume them without pulling bcryptjs/Prisma into the
+// Edge bundle. Only the Node-only Credentials provider is added here.
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  // Use JWT strategy for stateless sessions
-  session: {
-    strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // 24 hours
-  },
-
-  // Custom pages
-  pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error',
-  },
-
-  // Callbacks for session and JWT management
-  callbacks: {
-    async jwt({ token, user }) {
-      // Add user data to JWT token on sign in
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.email = user.email;
-        token.name = user.name;
-        token.businessId = user.businessId;
-      }
-      return token;
-    },
-
-    async session({ session, token }) {
-      // Add token data to session
-      if (token) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-        session.user.email = token.email as string;
-        session.user.name = token.name as string;
-        session.user.businessId = token.businessId as string | undefined;
-      }
-      return session;
-    },
-
-    async redirect({ url, baseUrl }) {
-      // Always redirect to dashboard after sign-in
-      if (url.includes('/auth/signin') || url === baseUrl) {
-        return `${baseUrl}/dashboard`;
-      }
-
-      // Handle relative URLs
-      if (url.startsWith('/')) {
-        return `${baseUrl}${url}`;
-      }
-
-      // Handle same-origin URLs
-      if (new URL(url).origin === baseUrl) {
-        return url;
-      }
-
-      // Default to base URL for external URLs
-      return baseUrl;
-    },
-  },
+  ...authConfig,
 
   // Authentication providers
   providers: [

@@ -6,8 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
-    auditPublicBooking,
-    PublicBookingAuditEvent
+    PublicBookingAuditEvent,
+    auditPublicBooking
 } from './public-booking-audit';
 import { addCSRFTokenToResponse, validatePublicBookingCSRF } from './public-booking-csrf';
 import {
