@@ -48,18 +48,14 @@ const visualTestConfig: PlaywrightTestConfig = {
 
         /* Record video on failure */
         video: 'retain-on-failure',
+    },
 
-        /* Visual comparison settings */
-        expect: {
-            // Threshold for pixel differences (0-1, where 0.2 = 20% difference allowed)
+    /* Visual comparison settings — top-level, not under `use` */
+    expect: {
+        toHaveScreenshot: {
             threshold: 0.1,
-
-            // Animation handling
-            toHaveScreenshot: {
-                threshold: 0.1,
-                maxDiffPixels: 1000,
-                animations: 'disabled'
-            }
+            maxDiffPixels: 1000,
+            animations: 'disabled'
         }
     },
 

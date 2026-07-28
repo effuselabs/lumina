@@ -44,5 +44,21 @@
     ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", ".next", "dist", "build"]
+  // Test and E2E sources are type-checked separately via tsconfig.test.json.
+  // Keeping them out of the app project stops a Playwright/Jest config error
+  // from blocking `next build`.
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "build",
+    "e2e",
+    "__tests__",
+    "__mocks__",
+    "test-utils",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }
