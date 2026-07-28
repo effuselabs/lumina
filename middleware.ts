@@ -7,27 +7,36 @@ import { NextResponse } from 'next/server';
 // the Edge Runtime, which cannot run them.
 const { auth } = NextAuth(authConfig);
 
+/**
+ * Routes matched in full. Only these exact paths are public.
+ *
+ * These MUST be compared with `===`. A previous version tested every entry
+ * with `pathname.startsWith(route)` while '/' was in the list — and because
+ * every path starts with '/', that made `isPublicRoute` unconditionally true
+ * and the middleware a no-op for every request.
+ */
+const PUBLIC_EXACT_ROUTES = ['/', '/api/health'];
+
+/**
+ * Route trees that are public in their entirety. Each entry must end in '/'
+ * so that a prefix test cannot match a sibling route by accident (e.g.
+ * '/book/' must not match a future '/bookkeeping').
+ */
+const PUBLIC_ROUTE_PREFIXES = [
+  '/auth/', // sign-in, sign-up, error, verify-request
+  '/api/auth/', // NextAuth handlers
+  '/api/public/', // unauthenticated public booking API
+  '/book/', // public booking page for a business
+  '/booking/', // booking confirmation / management by reference
+];
+
 export default auth(req => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
-  // Public routes that don't require authentication
-  const publicRoutes = [
-    '/',
-    '/auth/signin',
-    '/auth/signup',
-    '/auth/error',
-    '/auth/verify-request',
-    '/api/health',
-  ];
-
-  // Check if the route is public or an auth API route
   const isPublicRoute =
-    publicRoutes.some(
-      route => pathname === route || pathname.startsWith(route)
-    ) ||
-    pathname.startsWith('/api/auth/') ||
-    pathname.startsWith('/api/public/');
+    PUBLIC_EXACT_ROUTES.includes(pathname) ||
+    PUBLIC_ROUTE_PREFIXES.some(prefix => pathname.startsWith(prefix));
 
   // Allow public routes
   if (isPublicRoute) {
