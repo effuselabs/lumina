@@ -11,7 +11,7 @@ import { prisma } from '@/lib/prisma';
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator';
 import { CalendarIntegration } from '@/lib/services/calendar-integration';
 import { RealTimeAvailabilityService } from '@/lib/services/real-time-availability-service';
-import { asMock } from '@/__tests__/utils/prisma-mock-helpers'
+import { asMock } from '@/__tests__/utils/prisma-mock-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/prisma', () => ({
@@ -337,7 +337,11 @@ describe('RealTimeAvailabilityService', () => {
         warnings: ['Close to business closing time'],
       });
 
-      expect(result.validationTime).toBeGreaterThan(0);
+      // >= 0, not > 0. validationTime is `Date.now() - startTime`, and a fast
+      // path legitimately completes inside the same millisecond. Asserting
+      // strictly positive made this depend on the machine being slow — it
+      // began failing the moment the service got faster, with nothing broken.
+      expect(result.validationTime).toBeGreaterThanOrEqual(0);
 
       expect(mockCalendarIntegration.checkAvailability).toHaveBeenCalledWith({
         businessId,
@@ -370,7 +374,11 @@ describe('RealTimeAvailabilityService', () => {
         warnings: [],
       });
 
-      expect(result.validationTime).toBeGreaterThan(0);
+      // >= 0, not > 0. validationTime is `Date.now() - startTime`, and a fast
+      // path legitimately completes inside the same millisecond. Asserting
+      // strictly positive made this depend on the machine being slow — it
+      // began failing the moment the service got faster, with nothing broken.
+      expect(result.validationTime).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -450,6 +458,143 @@ describe('RealTimeAvailabilityService', () => {
 
       expect(result).toEqual(mockMetrics);
       expect(mockCalendarIntegration.getCacheMetrics).toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * Regression: the next-available-date lookahead used to recurse without
+   * bound.
+   *
+   * getAvailableSlots calls findNextAvailableDate when a day has no slots.
+   * findNextAvailableDate then calls getAvailableSlots for each of the next 14
+   * days — and those calls looked ahead too. With no availability anywhere the
+   * work grew as 14^depth, so GET /api/public/booking/[id]/availability never
+   * returned. Observed: no response after ten minutes against seeded data,
+   * which meant the public booking page could not offer a single time slot.
+   *
+   * It only manifests when a day has ZERO availability, which is why clicking
+   * through a working salon never surfaced it.
+   */
+  describe('next-available-date lookahead', () => {
+    /** Counts day-level calculations, so runaway recursion is measurable. */
+    function countDayCalculations() {
+      let calls = 0;
+
+      asMock(mockPrisma.business.findUnique).mockResolvedValue({
+        id: businessId,
+        bookingEnabled: true,
+        onlineBooking: true,
+      } as never);
+
+      asMock(mockPrisma.service.findMany).mockImplementation((async () => {
+        calls += 1;
+        return [
+          { id: 'service-1', duration: 30, price: 25, isActive: true },
+          { id: 'service-2', duration: 30, price: 25, isActive: true },
+        ];
+      }) as never);
+
+      // Staff MUST exist. Zero qualified staff returns early, before the
+      // lookahead is even reached — so the runaway recursion only happens
+      // when a salon has staff who simply have no free time that day. That
+      // is the realistic case, and the one that hung in production.
+      asMock(mockPrisma.staff.findMany).mockResolvedValue([
+        {
+          id: 'staff-1',
+          firstName: 'Ada',
+          lastName: 'Stylist',
+          displayName: 'Ada',
+          isActive: true,
+          services: serviceIds.map(serviceId => ({ serviceId })),
+        },
+      ] as never);
+
+      // Staff are available, but the calculator offers no bookable slots.
+      mockAvailabilityCalculator.calculateAvailability.mockResolvedValue({
+        availableSlots: [],
+        totalSlots: 0,
+        businessHours: null,
+        staffAvailability: [],
+        conflicts: [],
+      } as never);
+
+      return () => calls;
+    }
+
+    const MAX_LOOKAHEAD_DAYS = 14;
+
+    it('does not recurse exponentially when no day has availability', async () => {
+      // Measure one day's cost first, then the cost with lookahead enabled,
+      // and compare. Asserting a ratio rather than a raw number keeps this
+      // meaningful if the per-day query count ever changes — what matters is
+      // "bounded by the number of days searched", not any specific total.
+      const singleDay = countDayCalculations();
+      await RealTimeAvailabilityService.getAvailableSlots({
+        businessId,
+        serviceIds,
+        date: new Date('2026-08-01T00:00:00.000Z'),
+        duration: 60,
+        includeNextAvailableDate: false,
+      });
+      const perDayCost = singleDay();
+      expect(perDayCost).toBeGreaterThan(0);
+
+      const withLookahead = countDayCalculations();
+      const result = await RealTimeAvailabilityService.getAvailableSlots({
+        businessId,
+        serviceIds,
+        date: new Date('2026-08-01T00:00:00.000Z'),
+        duration: 60,
+      });
+
+      expect(result.slots).toEqual([]);
+
+      // The requested day plus at most 14 lookahead days. Before the fix each
+      // searched day searched 14 more, so this grew as 14^depth and the
+      // request never returned.
+      expect(withLookahead()).toBeLessThanOrEqual(
+        perDayCost * (MAX_LOOKAHEAD_DAYS + 1)
+      );
+    });
+
+    it('performs no lookahead when the caller opts out', async () => {
+      const withLookahead = countDayCalculations();
+      await RealTimeAvailabilityService.getAvailableSlots({
+        businessId,
+        serviceIds,
+        date: new Date('2026-08-01T00:00:00.000Z'),
+        duration: 60,
+      });
+      const lookaheadCost = withLookahead();
+
+      const optedOut = countDayCalculations();
+      await RealTimeAvailabilityService.getAvailableSlots({
+        businessId,
+        serviceIds,
+        date: new Date('2026-08-01T00:00:00.000Z'),
+        duration: 60,
+        includeNextAvailableDate: false,
+      });
+
+      // Opting out must cost strictly less — this is the flag the lookahead
+      // sets on its own calls, and it is what breaks the recursion.
+      expect(optedOut()).toBeLessThan(lookaheadCost);
+    });
+
+    it('returns promptly rather than hanging', async () => {
+      countDayCalculations();
+      const started = Date.now();
+
+      await RealTimeAvailabilityService.getAvailableSlots({
+        businessId,
+        serviceIds,
+        date: new Date('2026-08-01T00:00:00.000Z'),
+        duration: 60,
+      });
+
+      // Generous, since this is wall-clock in CI. The point is the difference
+      // between "a moment" and "never".
+      expect(Date.now() - started).toBeLessThan(5_000);
     });
   });
 });

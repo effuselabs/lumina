@@ -24,6 +24,19 @@ export interface PublicAvailabilityRequest {
   date: Date;
   staffId?: string;
   duration?: number;
+  /**
+   * When the requested day has no slots, also search forward for the next day
+   * that does. Defaults to true for callers; set false internally to stop the
+   * lookahead recursing.
+   *
+   * This exists because the lookahead used to be unconditional: a day with no
+   * slots called findNextAvailableDate, which called getAvailableSlots for each
+   * of the next 14 days, each of which — finding no slots — searched 14 more.
+   * With no availability anywhere the call count grows as 14^depth, so the
+   * endpoint never returned. See the regression test in
+   * __tests__/lib/services/real-time-availability-service.test.ts.
+   */
+  includeNextAvailableDate?: boolean;
 }
 
 export interface PublicTimeSlot {
@@ -212,10 +225,13 @@ export class RealTimeAvailabilityService {
       // Sort slots by start time
       allSlots.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
-      // Limit slots and find next available date if needed
+      // Limit slots and find next available date if needed.
+      // The lookahead is skipped when this call IS the lookahead — otherwise
+      // each searched day searches 14 more and the work grows as 14^depth.
       const limitedSlots = allSlots.slice(0, this.MAX_SLOTS_PER_DAY);
+      const shouldLookAhead = request.includeNextAvailableDate !== false;
       const nextAvailableDate =
-        limitedSlots.length === 0
+        limitedSlots.length === 0 && shouldLookAhead
           ? await this.findNextAvailableDate(request)
           : undefined;
 
@@ -459,6 +475,9 @@ export class RealTimeAvailabilityService {
         const nextDayRequest: PublicAvailabilityRequest = {
           ...request,
           date: nextDate,
+          // Critical: without this the searched day searches its own next 14
+          // days, and so on. This is what made the endpoint hang.
+          includeNextAvailableDate: false,
         };
 
         const result = await this.getAvailableSlots(nextDayRequest);
