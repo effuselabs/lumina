@@ -119,7 +119,12 @@ export async function GET() {
       // eslint-disable-next-line no-console
       console.error('Database health check failed:', error);
       health.checks.database = 'unhealthy';
-      health.status = 'degraded';
+
+      // Not "degraded" — without a database this instance cannot serve a
+      // booking page, authenticate anyone, or read a calendar. It is
+      // unhealthy, and the status code below reflects that so the platform
+      // refuses to route to it.
+      health.status = 'unhealthy';
 
       health.databaseError = {
         code: describePrismaErrorCode(error),
@@ -146,16 +151,18 @@ export async function GET() {
         (health as any).memory = memoryUsageMB;
       }
 
-      // Check if memory usage is too high (over 512MB heap)
+      // Check if memory usage is too high (over 512MB heap).
+      // Only ever downgrade from 'healthy': memory pressure must not mask an
+      // already-failed database, which is the more serious condition.
       if (memoryUsageMB.heapUsed > 512) {
         health.checks.memory = 'warning';
-        health.status = 'degraded';
+        if (health.status === 'healthy') health.status = 'degraded';
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Memory health check failed:', error);
       health.checks.memory = 'unhealthy';
-      health.status = 'degraded';
+      if (health.status === 'healthy') health.status = 'degraded';
     }
 
     // Response time
@@ -163,13 +170,18 @@ export async function GET() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (health as any).responseTime = `${responseTime}ms`;
 
-    // Determine HTTP status code
-    const statusCode =
-      health.status === 'healthy'
-        ? 200
-        : health.status === 'degraded'
-          ? 200
-          : 503;
+    // Determine HTTP status code.
+    //
+    // 'unhealthy' (currently: the database is unreachable) returns 503 so that
+    // Railway's healthcheck REFUSES TO PROMOTE the release and staging stays on
+    // the last good one. This previously returned 200 for both 'healthy' and
+    // 'degraded', which is how a deploy that could not reach its database was
+    // promoted anyway — the gate existed but could never fire.
+    //
+    // 'degraded' (memory pressure) stays 200 on purpose: the app still serves
+    // requests correctly, so taking it out of rotation would cause an outage
+    // rather than prevent one.
+    const statusCode = health.status === 'unhealthy' ? 503 : 200;
 
     return NextResponse.json(health, {
       status: statusCode,

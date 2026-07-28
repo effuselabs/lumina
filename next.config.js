@@ -36,8 +36,19 @@ const nextConfig = {
     styledComponents: false, // We're not using styled-components
   },
 
-  // Enable standalone output for Docker
-  output: 'standalone',
+  // NOTE: `output: 'standalone'` was removed deliberately.
+  //
+  // It exists to produce a self-contained bundle for a Docker image, and this
+  // project no longer has a Dockerfile — Railway builds with Nixpacks and
+  // starts the app with `npm start`. Standalone output is incompatible with
+  // `next start`; Next.js says so at boot:
+  //
+  //   ⚠ "next start" does not work with "output: standalone" configuration.
+  //     Use "node .next/standalone/server.js" instead.
+  //
+  // Keeping both meant every deploy ran a server Next.js had explicitly
+  // warned was misconfigured. Restore this only alongside a start command
+  // that runs the standalone server.
 
   // Image optimization configuration
   images: {
