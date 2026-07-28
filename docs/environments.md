@@ -93,7 +93,9 @@ same list with production values.
 2. Add a **Postgres** database to it.
 3. Add a service from this GitHub repo. Set **Root Directory** to `/` and let
    Nixpacks build — `railway.json` supplies the build and start commands and
-   points the healthcheck at `/api/health`.
+   points the healthcheck at `/api/health`. Note that Railway prefers a
+   root-level `Dockerfile` over `railway.json`'s declared builder if one
+   exists; this repo deliberately has none.
 4. Note the **service** name (the repo service, e.g. `lumina`) — it is not the
    project name, and the manual deploy workflow refers to the service.
 5. Under **Settings → Networking**, add the custom domain
