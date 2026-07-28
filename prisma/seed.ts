@@ -455,92 +455,10 @@ async function main() {
 
   console.log(`✅ Generated ${financialTransactions.length} comprehensive financial transactions`);
 
-  // Generate comprehensive business operations data (products, gift cards, promotions, marketing, loyalty)
-  console.log('🏪 Generating comprehensive business operations data...');
-
-  const { BusinessOperationsFactory } = await import('./factories/business-operations-factory');
-  const businessOperationsFactory = new BusinessOperationsFactory(prisma, demoBusiness.id);
-
-  const businessOperationsData = await businessOperationsFactory.generateWithProgress(
-    {
-      products: {
-        generateProducts: true,
-        generateSalesHistory: true,
-        salesHistoryMonths: config.appointments.historicalMonths
-      },
-      giftCards: {
-        generateGiftCards: true,
-        giftCardCount: 15
-      },
-      promotions: {
-        generatePromotions: true,
-        includeSeasonalPromotions: true,
-        includeLoyaltyPromotions: true
-      },
-      marketing: {
-        generateCampaigns: true,
-        includeEmailCampaigns: true,
-        includeSMSCampaigns: true
-      },
-      loyalty: {
-        generateLoyaltyProgram: true,
-        generateMemberships: true
-      }
-    },
-    (step, progress, total) => {
-      console.log(`  ${step} (${progress}/${total})`);
-    }
-  );
-
-  console.log(`✅ Generated comprehensive business operations data:`);
-  console.log(`  📦 Products: ${businessOperationsData.products.length}`);
-  console.log(`  💰 Product Sales: ${businessOperationsData.productSales.length}`);
-  console.log(`  🎁 Gift Cards: ${businessOperationsData.giftCards.length}`);
-  console.log(`  🎫 Gift Card Redemptions: ${businessOperationsData.giftCardRedemptions.length}`);
-  console.log(`  🎯 Promotions: ${businessOperationsData.promotions.length}`);
-  console.log(`  📈 Promotion Usage: ${businessOperationsData.promotionUsage.length}`);
-  console.log(`  📧 Marketing Campaigns: ${businessOperationsData.marketingCampaigns.length}`);
-  console.log(`  👥 Campaign Recipients: ${businessOperationsData.campaignRecipients.length}`);
-  console.log(`  ⭐ Loyalty Program: ${businessOperationsData.loyaltyProgram ? 'Generated' : 'Not Generated'}`);
-  console.log(`  🏆 Loyalty Memberships: ${businessOperationsData.loyaltyMemberships.length}`);
-  console.log(`  💎 Loyalty Transactions: ${businessOperationsData.loyaltyTransactions.length}`);
-
-  // Generate comprehensive client communication and loyalty systems
-  console.log('\n💬 Generating client communication and loyalty systems...');
-
-  const { ComprehensiveCommunicationFactory } = await import('./factories/comprehensive-communication-factory');
-  const communicationFactory = new ComprehensiveCommunicationFactory(prisma, demoBusiness.id);
-
-  const communicationSystem = await communicationFactory.generateCompleteSystem();
-
-  console.log('📊 Communication System Results:');
-  console.log(`  ⭐ Client Reviews: ${communicationSystem.reviews.length}`);
-  console.log(`  💬 Communications: ${communicationSystem.communications.length}`);
-  console.log(`  📧 Marketing Campaigns: ${communicationSystem.marketingCampaigns.length}`);
-  console.log(`  👥 Campaign Recipients: ${communicationSystem.campaignRecipients.length}`);
-  console.log(`  🏆 Loyalty Memberships: ${communicationSystem.loyaltyMemberships.length}`);
-  console.log(`  💎 Loyalty Transactions: ${communicationSystem.loyaltyTransactions.length}`);
-
-  console.log('\n📈 System Metrics:');
-  console.log(`  Average Rating: ${communicationSystem.metrics.averageRating}/5.0`);
-  console.log(`  Email Engagement: ${(communicationSystem.metrics.emailEngagementRate * 100).toFixed(1)}%`);
-  console.log(`  SMS Engagement: ${(communicationSystem.metrics.smsEngagementRate * 100).toFixed(1)}%`);
-  console.log(`  Loyalty Participation: ${(communicationSystem.metrics.loyaltyParticipationRate * 100).toFixed(1)}%`);
-  console.log(`  Client Retention: ${(communicationSystem.metrics.clientRetentionRate * 100).toFixed(1)}%`);
-  console.log(`  Avg Lifetime Value: $${communicationSystem.metrics.averageLifetimeValue.toFixed(2)}`);
-
-  // Validate business operations data integrity
-  console.log('🔍 Validating business operations data integrity...');
-  const businessOperationsValidation = await businessOperationsFactory.validateBusinessOperationsData();
-
-  if (businessOperationsValidation.isValid) {
-    console.log('✅ Business operations data validation passed');
-  } else {
-    console.log(`⚠️  Business operations data validation found ${businessOperationsValidation.errors.length} errors`);
-    businessOperationsValidation.errors.forEach(error => {
-      console.log(`  - ${error.field}: ${error.message}`);
-    });
-  }
+  // Parked feature surface (products, gift cards, promotions, marketing
+  // campaigns, loyalty, communications) is intentionally not seeded. Those
+  // features have no working UI and their factories were removed; the models
+  // remain in schema.prisma under the PARKED section.
 
   // Verify data integrity
   const integrityCheck = await verifyDataIntegrity(prisma, demoBusiness.id);

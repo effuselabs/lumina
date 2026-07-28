@@ -294,46 +294,8 @@ export class EnhancedSeedOrchestrator {
 
             if (verbose) console.log(`  Generated ${transactions.length} transactions`);
 
-            // Generate business operations data
-            console.log('🏪 Generating business operations data...');
-            const { BusinessOperationsFactory } = await import('./business-operations-factory');
-            const businessOpsFactory = new BusinessOperationsFactory(this.prisma, businessId);
-
-            const businessOpsData = await businessOpsFactory.generateWithProgress({
-                products: { generateProducts: true, generateSalesHistory: true, salesHistoryMonths: 6 },
-                giftCards: { generateGiftCards: true, giftCardCount: 15 },
-                promotions: { generatePromotions: true, includeSeasonalPromotions: true, includeLoyaltyPromotions: true },
-                marketing: { generateCampaigns: true, includeEmailCampaigns: true, includeSMSCampaigns: true },
-                loyalty: { generateLoyaltyProgram: true, generateMemberships: true },
-            });
-
-            entitiesCreated.products = businessOpsData.products.length;
-            entitiesCreated.giftCards = businessOpsData.giftCards.length;
-            entitiesCreated.promotions = businessOpsData.promotions.length;
-            entitiesCreated.marketingCampaigns = businessOpsData.marketingCampaigns.length;
-
-            if (verbose) {
-                console.log(`  Generated ${businessOpsData.products.length} products`);
-                console.log(`  Generated ${businessOpsData.giftCards.length} gift cards`);
-                console.log(`  Generated ${businessOpsData.promotions.length} promotions`);
-                console.log(`  Generated ${businessOpsData.marketingCampaigns.length} marketing campaigns`);
-            }
-
-            // Generate communication and loyalty systems
-            console.log('💬 Generating communication systems...');
-            const { ComprehensiveCommunicationFactory } = await import('./comprehensive-communication-factory');
-            const commFactory = new ComprehensiveCommunicationFactory(this.prisma, businessId);
-
-            const commSystem = await commFactory.generateCompleteSystem();
-            entitiesCreated.reviews = commSystem.reviews.length;
-            entitiesCreated.communications = commSystem.communications.length;
-            entitiesCreated.loyaltyMemberships = commSystem.loyaltyMemberships.length;
-
-            if (verbose) {
-                console.log(`  Generated ${commSystem.reviews.length} client reviews`);
-                console.log(`  Generated ${commSystem.communications.length} communications`);
-                console.log(`  Generated ${commSystem.loyaltyMemberships.length} loyalty memberships`);
-            }
+            // Business operations and communication data are not generated:
+            // those features are parked and their factories were removed.
 
             return {
                 entitiesCreated,

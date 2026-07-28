@@ -41,17 +41,10 @@ export { ServiceFactory } from './service-factory';
 export { StaffFactory } from './staff-factory';
 export { TransactionFactory } from './transaction-factory';
 
-// Business Operations Factories
-export { BusinessOperationsFactory } from './business-operations-factory';
-export { GiftCardFactory } from './gift-card-factory';
-export { LoyaltyProgramFactory } from './loyalty-program-factory';
-export { MarketingCampaignFactory } from './marketing-campaign-factory';
-export { ProductFactory } from './product-factory';
-export { PromotionFactory } from './promotion-factory';
-
-// Communication and Loyalty Factories
-export { ClientCommunicationFactory } from './client-communication-factory';
-export { ComprehensiveCommunicationFactory } from './comprehensive-communication-factory';
+// Business operations and communication factories (products, gift cards,
+// promotions, marketing campaigns, loyalty, reviews) were removed along with
+// the parked feature surface they generated data for. Their models remain in
+// schema.prisma under the PARKED section.
 
 import { PrismaClient } from '@prisma/client';
 import { BatchProcessor } from './batch-processor';
