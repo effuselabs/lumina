@@ -39,20 +39,30 @@ Purpose: the last place a change is checked before customers can see it. It runs
 the same code, same migrations and same build as production, with seeded demo
 data rather than real client records.
 
-Deploys automatically when CI passes on `main`, then polls `/api/health` until
-it reports healthy. A deploy that never becomes healthy fails the workflow
-rather than silently "succeeding".
+**Railway deploys staging itself.** The service has GitHub auto-deploy enabled
+with **Wait for CI**, so a push to `main` deploys only once the CI check is
+green. Nothing in GitHub Actions drives it.
 
-Migrations run through `deploy.preDeployCommand` in `railway.json`, inside
-Railway, where `DATABASE_URL` resolves to the Postgres plugin. Railway aborts
-the release if that command fails, so new code can never go live against an
-un-migrated schema.
+`railway.json` supplies the safety rails:
 
-> **Turn Railway's own auto-deploy OFF** for the service (Settings → Source →
-> disable automatic deploys). Railway's GitHub integration and the `Deploy`
-> workflow will otherwise both fire on every push to `main`, deploying twice
-> and racing each other. GitHub Actions is the single driver, so that deploys
-> only happen after CI is green.
+- `deploy.preDeployCommand` runs `prisma migrate deploy` inside Railway, where
+  `DATABASE_URL` resolves to the Postgres plugin. Railway aborts the release if
+  it fails, so new code never meets an un-migrated schema.
+- `deploy.healthcheckPath` points at `/api/health`. Railway will not promote a
+  release that fails to answer, so a broken deploy does not take staging down.
+
+This is deliberately simpler than driving deploys from a workflow: no token to
+manage or rotate, no coupling to the service name, and no chance of two systems
+deploying at once. `.github/workflows/deploy.yml` is manual-only, for
+re-deploying by hand and for promoting production.
+
+Confirm what is actually running at any time:
+
+```bash
+curl -s https://staging.uselumina.app/api/health | jq
+# → "runtime": "v22.x.x"   the Node version actually in use
+#   "commit":  "abc1234"   the deployed commit
+```
 
 ## Production
 
@@ -84,11 +94,17 @@ same list with production values.
 3. Add a service from this GitHub repo. Set **Root Directory** to `/` and let
    Nixpacks build — `railway.json` supplies the build and start commands and
    points the healthcheck at `/api/health`.
-4. Name the service something stable, e.g. `lumina-staging`. The workflow refers
-   to it by name.
+4. Note the **service** name (the repo service, e.g. `lumina`) — it is not the
+   project name, and the manual deploy workflow refers to the service.
 5. Under **Settings → Networking**, add the custom domain
    `staging.uselumina.app`. Railway shows a CNAME target.
-6. In **Variables**, set:
+6. In **Settings → Source**, enable GitHub auto-deploy from `main` **with
+   "Wait for CI" turned on**, so Railway deploys only after the CI check passes.
+7. In **Variables**, set the following. For `DATABASE_URL`, use Railway's
+   **"Add a Variable Reference"** button and pick the Postgres service's
+   `DATABASE_URL` — do not paste a connection string, or it will break the next
+   time credentials rotate. Typing `${{Postgres.DATABASE_URL}}` by hand does the
+   same thing, where `Postgres` is the exact name of the database service.
 
    | Variable              | Value                                                     |
    | --------------------- | --------------------------------------------------------- |
@@ -103,7 +119,8 @@ same list with production values.
    | `SENTRY_DSN`          | from Sentry                                               |
    | `NODE_ENV`            | `production` (staging runs a production build)            |
 
-7. Create a **project token** (Settings → Tokens) for CI.
+8. Create a **project token** (Settings → Tokens). Only the manual deploy
+   workflow needs it; routine deploys do not.
 
 ### 2. DNS on `uselumina.app`
 
@@ -147,17 +164,30 @@ Repository **Settings → Secrets and variables → Actions**:
 | Secret   | `RAILWAY_STAGING_TOKEN`   | Railway project token                   |
 | Variable | `RAILWAY_STAGING_SERVICE` | the service name, e.g. `lumina-staging` |
 
-Repository **Settings → Environments**: create `staging`, and create
-`production` with a required reviewer.
+Repository **Settings → Environments**: create `staging` and `production`.
 
-Repository **Settings → Branches**: protect `main` — require the `CI` status
-check, and disallow direct pushes.
+**Branch protection is intentionally not enforced.** Rulesets on a private repo
+require a paid GitHub plan, and with a two-person project the cost is not yet
+worth it. The convention instead: work on a branch, open a PR, let CI run, merge
+when green. Railway's "Wait for CI" enforces the part that actually matters —
+a red commit cannot reach staging even if it lands on `main`.
+
+Revisit when a third person joins, or when a bad merge costs more than a few
+dollars a month.
 
 ### 6. Verify
 
-Merge any small PR to `main`. CI runs, `Deploy` triggers on success, migrations
-apply, and the workflow polls until
-`https://staging.uselumina.app/api/health` reports `"status":"healthy"`.
+Push to `main`. CI runs; when it goes green Railway deploys, applies migrations
+via `preDeployCommand`, and refuses to promote the release unless
+`/api/health` answers. Then:
+
+```bash
+curl -s https://staging.uselumina.app/api/health | jq
+```
+
+Expect `"status": "healthy"`, `"runtime": "v22.x.x"`, and a `"commit"` matching
+what you pushed. A `"degraded"` status means the app is up but a dependency is
+not — the `checks` object says which.
 
 ## Environment variables
 

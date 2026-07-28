@@ -1,17 +1,24 @@
 name: Deploy
 
-# Staging deploys automatically when CI passes on main.
-# Production is a MANUAL promotion — you always choose when customers see a
-# change. There is deliberately no automatic path to production.
+# MANUAL DEPLOYS ONLY. Nothing here fires automatically.
+#
+# Routine staging deploys are handled by Railway itself: the service has GitHub
+# auto-deploy enabled with "Wait for CI", so it deploys on a push to main only
+# once the CI check is green. railway.json supplies the rest — migrations via
+# preDeployCommand, and healthcheckPath so Railway will not promote a release
+# that fails to answer /api/health.
+#
+# That native path is strictly simpler than driving deploys from here: no token
+# to manage or rotate, no service-name coupling, and no chance of this workflow
+# racing Railway's own deploy. This file therefore exists for two cases only:
+#
+#   1. Re-deploying staging by hand (rollback, or a stuck deploy).
+#   2. Promoting to production, which must never be automatic.
 #
 # Production does not exist yet; it is stood up in Phase 6. Until then the
 # production job refuses to run rather than half-deploying somewhere.
 
 on:
-  workflow_run:
-    workflows: ['CI']
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
     inputs:
       environment:
@@ -30,12 +37,7 @@ jobs:
   staging:
     name: Deploy to staging
     runs-on: ubuntu-latest
-    # Only after a green CI run, or an explicit manual staging deploy.
-    if: >-
-      (github.event_name == 'workflow_run' &&
-       github.event.workflow_run.conclusion == 'success') ||
-      (github.event_name == 'workflow_dispatch' &&
-       inputs.environment == 'staging')
+    if: inputs.environment == 'staging'
     environment:
       name: staging
       url: https://staging.uselumina.app
@@ -83,9 +85,7 @@ jobs:
   production:
     name: Deploy to production
     runs-on: ubuntu-latest
-    if: >-
-      github.event_name == 'workflow_dispatch' &&
-      inputs.environment == 'production'
+    if: inputs.environment == 'production'
     # Point this GitHub environment at a required reviewer so a production
     # deploy cannot proceed without a human approving it.
     environment:

@@ -5,12 +5,19 @@ export async function GET() {
   const startTime = Date.now();
 
   try {
-    // Basic health check response
+    // Basic health check response.
+    //
+    // `runtime` and `commit` are reported so that "which Node is this actually
+    // running?" and "is this the code I just pushed?" are answerable from the
+    // deployed URL, without digging through build logs. Railway exposes the
+    // deployed commit as RAILWAY_GIT_COMMIT_SHA.
     const health = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
       version: process.env.npm_package_version || '0.1.0',
+      runtime: process.version,
+      commit: (process.env.RAILWAY_GIT_COMMIT_SHA || 'unknown').slice(0, 7),
       uptime: process.uptime(),
       checks: {
         database: 'unknown',
