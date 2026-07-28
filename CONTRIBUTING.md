@@ -171,15 +171,15 @@ All development must follow multi-tenant patterns:
 - **Performance**: Consider performance implications of all changes
 - **Accessibility**: Ensure all UI changes meet WCAG 2.1 AA standards
 
-### Automated Guidance
+### Project conventions
 
-Lumina includes a comprehensive **Steering System** that provides context-aware development guidance:
+Coding, API, database, UI and security conventions live in `CLAUDE.md` at the
+repository root — a single file, read by both people and AI assistants at the
+start of every session.
 
-- **[💻 Coding Standards](.kiro/steering/coding-approach-and-standards.md)** - TypeScript, React, and architecture patterns
-- **[🔌 API Standards](.kiro/steering/api-standards.md)** - RESTful API design and implementation
-- **[🗄️ Database Standards](.kiro/steering/database-standards.md)** - Multi-tenant data patterns and Prisma conventions
-- **[🎨 UI Standards](.kiro/steering/ui-standards.md)** - Component design and accessibility guidelines
-- **[🔒 Security Standards](.kiro/steering/security.md)** - Authentication, authorization, and data protection
+Conventions that can be enforced mechanically are enforced by ESLint rules and
+tests rather than described in prose, so that a violation fails CI instead of
+becoming a document nobody reads.
 
 ## 🧪 Testing
 
