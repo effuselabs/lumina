@@ -62,6 +62,80 @@ Before the first production deploy:
 - [ ] Publish a privacy policy and terms — the product stores client PII
       (names, emails, phone numbers) and neither document exists yet
 
+## Provisioning a deployed environment
+
+Run once per environment. Written for staging; production in Phase 6 is the
+same list with production values.
+
+### 1. Railway
+
+1. Create a project, e.g. `lumina`.
+2. Add a **Postgres** database to it.
+3. Add a service from this GitHub repo. Set **Root Directory** to `/` and let
+   Nixpacks build — `railway.json` supplies the build and start commands and
+   points the healthcheck at `/api/health`.
+4. Name the service something stable, e.g. `lumina-staging`. The workflow refers
+   to it by name.
+5. Under **Settings → Networking**, add the custom domain
+   `staging.uselumina.app`. Railway shows a CNAME target.
+6. In **Variables**, set:
+
+   | Variable              | Value                                                     |
+   | --------------------- | --------------------------------------------------------- |
+   | `DATABASE_URL`        | `${{Postgres.DATABASE_URL}}` — reference, never a literal |
+   | `NEXTAUTH_SECRET`     | `openssl rand -base64 32`, unique to this environment     |
+   | `NEXTAUTH_URL`        | `https://staging.uselumina.app`                           |
+   | `NEXT_PUBLIC_APP_URL` | `https://staging.uselumina.app`                           |
+   | `RESEND_API_KEY`      | from Resend                                               |
+   | `EMAIL_FROM`          | `noreply@uselumina.app`                                   |
+   | `EMAIL_FROM_NAME`     | `Lumina`                                                  |
+   | `CRON_SECRET`         | `openssl rand -hex 32`                                    |
+   | `SENTRY_DSN`          | from Sentry                                               |
+   | `NODE_ENV`            | `production` (staging runs a production build)            |
+
+7. Create a **project token** (Settings → Tokens) for CI.
+
+### 2. DNS on `uselumina.app`
+
+| Record      | Name      | Value                       |
+| ----------- | --------- | --------------------------- |
+| CNAME       | `staging` | the target Railway shows    |
+| TXT / CNAME | as issued | Resend's SPF + DKIM records |
+
+Production later adds an apex record and `www` for `uselumina.app`.
+
+### 3. Resend
+
+1. Add `uselumina.app` as a domain and publish the DNS records it issues.
+2. Wait for verification — sending fails until it verifies.
+3. Create an API key.
+
+### 4. Sentry
+
+Create a project (platform: Next.js) and copy its DSN. Only staging and
+production set `SENTRY_DSN`; local leaves it blank, which disables Sentry.
+
+### 5. GitHub
+
+Repository **Settings → Secrets and variables → Actions**:
+
+| Kind     | Name                      | Value                                   |
+| -------- | ------------------------- | --------------------------------------- |
+| Secret   | `RAILWAY_STAGING_TOKEN`   | Railway project token                   |
+| Variable | `RAILWAY_STAGING_SERVICE` | the service name, e.g. `lumina-staging` |
+
+Repository **Settings → Environments**: create `staging`, and create
+`production` with a required reviewer.
+
+Repository **Settings → Branches**: protect `main` — require the `CI` status
+check, and disallow direct pushes.
+
+### 6. Verify
+
+Merge any small PR to `main`. CI runs, `Deploy` triggers on success, migrations
+apply, and the workflow polls until
+`https://staging.uselumina.app/api/health` reports `"status":"healthy"`.
+
 ## Environment variables
 
 `.env.example` is the reference and explains each variable. Deployed
