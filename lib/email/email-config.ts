@@ -1,6 +1,6 @@
 /**
  * Email Provider Configuration
- * 
+ *
  * Manages email provider configuration from environment variables.
  */
 
@@ -46,8 +46,9 @@ export interface EmailConfig {
  * Get email configuration from environment variables
  */
 export function getEmailConfig(): EmailConfig {
-  const provider = (process.env.EMAIL_PROVIDER || 'resend') as EmailProviderType;
-  
+  const provider = (process.env.EMAIL_PROVIDER ||
+    'resend') as EmailProviderType;
+
   // Get API key based on provider
   let apiKey = '';
   switch (provider) {
@@ -65,26 +66,39 @@ export function getEmailConfig(): EmailConfig {
   return {
     provider,
     apiKey,
-    fromEmail: process.env.EMAIL_FROM || 'noreply@uselumina.app',
+    fromEmail: process.env.EMAIL_FROM || 'noreply@mail.uselumina.app',
     fromName: process.env.EMAIL_FROM_NAME || 'Lumina',
     replyToEmail: process.env.EMAIL_REPLY_TO,
 
     // Queue configuration
     queueEnabled: process.env.EMAIL_QUEUE_ENABLED !== 'false',
     queueMaxDepth: parseInt(process.env.EMAIL_QUEUE_MAX_DEPTH || '10000', 10),
-    queueProcessInterval: parseInt(process.env.EMAIL_QUEUE_PROCESS_INTERVAL || '5000', 10),
+    queueProcessInterval: parseInt(
+      process.env.EMAIL_QUEUE_PROCESS_INTERVAL || '5000',
+      10
+    ),
 
     // Retry configuration
     maxRetryAttempts: parseInt(process.env.EMAIL_MAX_RETRY_ATTEMPTS || '3', 10),
-    retryBackoffMultiplier: parseInt(process.env.EMAIL_RETRY_BACKOFF_MULTIPLIER || '2', 10),
+    retryBackoffMultiplier: parseInt(
+      process.env.EMAIL_RETRY_BACKOFF_MULTIPLIER || '2',
+      10
+    ),
 
     // Rate limiting
-    maxEmailsPerBusinessPerHour: parseInt(process.env.EMAIL_MAX_PER_BUSINESS_HOUR || '100', 10),
-    maxEmailsPerBusinessPerDay: parseInt(process.env.EMAIL_MAX_PER_BUSINESS_DAY || '1000', 10),
+    maxEmailsPerBusinessPerHour: parseInt(
+      process.env.EMAIL_MAX_PER_BUSINESS_HOUR || '100',
+      10
+    ),
+    maxEmailsPerBusinessPerDay: parseInt(
+      process.env.EMAIL_MAX_PER_BUSINESS_DAY || '1000',
+      10
+    ),
 
     // Feature flags
     enableReminders: process.env.EMAIL_ENABLE_REMINDERS !== 'false',
-    enableStaffNotifications: process.env.EMAIL_ENABLE_STAFF_NOTIFICATIONS !== 'false',
+    enableStaffNotifications:
+      process.env.EMAIL_ENABLE_STAFF_NOTIFICATIONS !== 'false',
     enableDailySummaries: process.env.EMAIL_ENABLE_DAILY_SUMMARIES !== 'false',
 
     // Testing
@@ -98,7 +112,9 @@ export function getEmailConfig(): EmailConfig {
  */
 export function validateEmailConfig(config: EmailConfig): void {
   if (!config.apiKey) {
-    throw new Error(`Email provider API key is required for ${config.provider}`);
+    throw new Error(
+      `Email provider API key is required for ${config.provider}`
+    );
   }
 
   if (!config.fromEmail) {

@@ -39,10 +39,20 @@ Purpose: the last place a change is checked before customers can see it. It runs
 the same code, same migrations and same build as production, with seeded demo
 data rather than real client records.
 
-Deploys automatically when CI passes on `main`. The workflow applies migrations
-_before_ deploying, so new code never meets an old schema, then polls
-`/api/health` until it reports healthy. A deploy that never becomes healthy
-fails the workflow rather than silently "succeeding".
+Deploys automatically when CI passes on `main`, then polls `/api/health` until
+it reports healthy. A deploy that never becomes healthy fails the workflow
+rather than silently "succeeding".
+
+Migrations run through `deploy.preDeployCommand` in `railway.json`, inside
+Railway, where `DATABASE_URL` resolves to the Postgres plugin. Railway aborts
+the release if that command fails, so new code can never go live against an
+un-migrated schema.
+
+> **Turn Railway's own auto-deploy OFF** for the service (Settings → Source →
+> disable automatic deploys). Railway's GitHub integration and the `Deploy`
+> workflow will otherwise both fire on every push to `main`, deploying twice
+> and racing each other. GitHub Actions is the single driver, so that deploys
+> only happen after CI is green.
 
 ## Production
 
@@ -87,7 +97,7 @@ same list with production values.
    | `NEXTAUTH_URL`        | `https://staging.uselumina.app`                           |
    | `NEXT_PUBLIC_APP_URL` | `https://staging.uselumina.app`                           |
    | `RESEND_API_KEY`      | from Resend                                               |
-   | `EMAIL_FROM`          | `noreply@uselumina.app`                                   |
+   | `EMAIL_FROM`          | `noreply@mail.uselumina.app`                              |
    | `EMAIL_FROM_NAME`     | `Lumina`                                                  |
    | `CRON_SECRET`         | `openssl rand -hex 32`                                    |
    | `SENTRY_DSN`          | from Sentry                                               |
@@ -106,9 +116,22 @@ Production later adds an apex record and `www` for `uselumina.app`.
 
 ### 3. Resend
 
-1. Add `uselumina.app` as a domain and publish the DNS records it issues.
-2. Wait for verification — sending fails until it verifies.
-3. Create an API key.
+Sending is from the **`mail.uselumina.app` subdomain**, not the apex. The apex
+is hosted at DreamHost, whose MX handling makes it impractical to add Resend's
+records there without disturbing existing mail. A dedicated sending subdomain is
+the normal pattern anyway: it isolates sending reputation from the root domain,
+so a deliverability problem never affects mail to `@uselumina.app`.
+
+1. Add `mail.uselumina.app` as a domain in Resend.
+2. Publish the records it issues on `uselumina.app`:
+   - **TXT** — SPF, on `mail`
+   - **TXT** — DKIM, on the selector host Resend names (e.g. `resend._domainkey.mail`)
+   - **MX** — on `mail`, for bounce and complaint handling
+3. Wait for Resend to report the domain verified. Sending fails until it does.
+4. Create an API key.
+
+`EMAIL_FROM` is therefore `noreply@mail.uselumina.app`. Replies still work if
+you set a `Reply-To` of `@uselumina.app` later.
 
 ### 4. Sentry
 

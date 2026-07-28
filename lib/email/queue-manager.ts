@@ -1,6 +1,6 @@
 /**
  * Email Queue Manager
- * 
+ *
  * Manages email queuing, dequeuing, and processing with priority support.
  * Provides database-backed queue operations for reliable email delivery.
  */
@@ -70,7 +70,7 @@ export class EmailQueueManager {
 
   /**
    * Enqueue an email for delivery
-   * 
+   *
    * @param email - Email message to queue
    * @param priority - Priority level (high, normal, low)
    * @returns Queue entry ID
@@ -83,10 +83,13 @@ export class EmailQueueManager {
       // Check rate limit for business
       const canSend = await emailRateLimiter.checkRateLimit(email.businessId);
       if (!canSend) {
-        console.warn('[EmailQueueManager] Rate limit exceeded, queuing for later', {
-          businessId: email.businessId,
-          recipientEmail: email.to,
-        });
+        console.warn(
+          '[EmailQueueManager] Rate limit exceeded, queuing for later',
+          {
+            businessId: email.businessId,
+            recipientEmail: email.to,
+          }
+        );
         // Still queue the email, but it will be processed when rate limit allows
         // The worker will check rate limits before sending
       }
@@ -161,7 +164,7 @@ export class EmailQueueManager {
   /**
    * Dequeue the next email for processing
    * Retrieves emails in priority order (high > normal > low)
-   * 
+   *
    * @returns Email message or null if queue is empty
    */
   async dequeue(): Promise<EmailMessage | null> {
@@ -204,7 +207,7 @@ export class EmailQueueManager {
         id: queueEntry.id,
         businessId: queueEntry.businessId,
         to: queueEntry.recipientEmail,
-        from: process.env.EMAIL_FROM || 'noreply@uselumina.app',
+        from: process.env.EMAIL_FROM || 'noreply@mail.uselumina.app',
         subject: queueEntry.subject,
         html: queueEntry.htmlContent,
         text: queueEntry.textContent,
@@ -241,7 +244,7 @@ export class EmailQueueManager {
 
   /**
    * Get current queue depth (number of pending emails)
-   * 
+   *
    * @returns Number of pending emails in queue
    */
   async getQueueDepth(): Promise<number> {
@@ -269,7 +272,7 @@ export class EmailQueueManager {
   /**
    * Schedule a retry for a failed email
    * Uses exponential backoff: 1min, 5min, 30min
-   * 
+   *
    * @param messageId - Queue entry ID
    * @param attemptNumber - Current attempt number
    */
@@ -349,7 +352,7 @@ export class EmailQueueManager {
   /**
    * Get retry delay in milliseconds based on attempt number
    * Uses exponential backoff: 1min, 5min, 30min
-   * 
+   *
    * @param attemptNumber - Current attempt number (1-based)
    * @returns Delay in milliseconds
    */
@@ -365,11 +368,14 @@ export class EmailQueueManager {
 
   /**
    * Mark an email as successfully sent
-   * 
+   *
    * @param messageId - Queue entry ID
    * @param providerMessageId - External provider message ID
    */
-  async markAsSent(messageId: string, providerMessageId?: string): Promise<void> {
+  async markAsSent(
+    messageId: string,
+    providerMessageId?: string
+  ): Promise<void> {
     try {
       await prisma.emailQueue.update({
         where: { id: messageId },
@@ -400,7 +406,7 @@ export class EmailQueueManager {
 
   /**
    * Mark an email as failed
-   * 
+   *
    * @param messageId - Queue entry ID
    * @param reason - Failure reason
    */
@@ -434,7 +440,7 @@ export class EmailQueueManager {
 
   /**
    * Get queue metrics for monitoring
-   * 
+   *
    * @returns Queue metrics
    */
   async getQueueMetrics(): Promise<QueueMetrics> {
@@ -528,7 +534,7 @@ export class EmailQueueManager {
 
   /**
    * Check if a business can send emails (rate limit check)
-   * 
+   *
    * @param businessId - Business ID to check
    * @returns True if business can send, false otherwise
    */
@@ -539,7 +545,7 @@ export class EmailQueueManager {
   /**
    * Increment rate limit counter for a business
    * Called after successfully sending an email
-   * 
+   *
    * @param businessId - Business ID to increment
    */
   async incrementRateLimit(businessId: string): Promise<void> {
@@ -548,7 +554,7 @@ export class EmailQueueManager {
 
   /**
    * Get failed messages for a specific business or all businesses
-   * 
+   *
    * @param businessId - Optional business ID to filter by
    * @returns Array of failed email messages
    */
@@ -565,11 +571,11 @@ export class EmailQueueManager {
         take: 100, // Limit to last 100 failed messages
       });
 
-      return failedEntries.map((entry) => ({
+      return failedEntries.map(entry => ({
         id: entry.id,
         businessId: entry.businessId,
         to: entry.recipientEmail,
-        from: process.env.EMAIL_FROM || 'noreply@uselumina.app',
+        from: process.env.EMAIL_FROM || 'noreply@mail.uselumina.app',
         subject: entry.subject,
         html: entry.htmlContent,
         text: entry.textContent,

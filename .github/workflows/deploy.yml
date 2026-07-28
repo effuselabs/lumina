@@ -51,16 +51,12 @@ jobs:
       - name: Install Railway CLI
         run: npm i -g @railway/cli
 
-      - name: Apply database migrations
-        # Before the deploy, so new code never meets an old schema.
-        # `migrate deploy` only applies committed migrations — it never
-        # generates or resets anything.
-        run: railway run --service "$RAILWAY_SERVICE" npx prisma migrate deploy
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
-          RAILWAY_SERVICE: ${{ vars.RAILWAY_STAGING_SERVICE }}
-
       - name: Deploy
+        # Migrations run via `deploy.preDeployCommand` in railway.json, inside
+        # Railway, where DATABASE_URL resolves to the Postgres plugin. That is
+        # more reliable than running them from CI, and Railway aborts the
+        # release if the pre-deploy command fails, so new code can never go
+        # live against an un-migrated schema.
         run: railway up --service "$RAILWAY_SERVICE" --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
@@ -115,13 +111,8 @@ jobs:
       - name: Install Railway CLI
         run: npm i -g @railway/cli
 
-      - name: Apply database migrations
-        run: railway run --service "$RAILWAY_SERVICE" npx prisma migrate deploy
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
-          RAILWAY_SERVICE: ${{ vars.RAILWAY_PRODUCTION_SERVICE }}
-
       - name: Deploy
+        # Migrations run via railway.json's preDeployCommand — see staging.
         run: railway up --service "$RAILWAY_SERVICE" --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
