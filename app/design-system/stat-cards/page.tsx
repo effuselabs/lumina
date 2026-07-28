@@ -1,3 +1,8 @@
+// Client component: this page passes lucide icon *components* (functions) as
+// the `icon` prop, which a Server Component cannot serialize across the
+// boundary. Every other page under app/design-system does the same.
+'use client';
+
 import { StatCard } from '@/components/ui/stat-card';
 import {
     Calendar,

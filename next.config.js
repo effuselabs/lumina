@@ -12,8 +12,17 @@ const nextConfig = {
   experimental: {
     // Optimize package imports
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    // External packages for server components
-    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
+    // External packages for server components.
+    // isomorphic-dompurify pulls in jsdom, which reads asset files (e.g.
+    // browser/default-stylesheet.css) relative to its own package at import
+    // time. Bundling it rewrites those paths and the read fails during
+    // `next build`, so it must stay external.
+    serverComponentsExternalPackages: [
+      '@prisma/client',
+      'bcryptjs',
+      'isomorphic-dompurify',
+      'jsdom',
+    ],
   },
 
   // Performance optimizations

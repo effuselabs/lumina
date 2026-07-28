@@ -63,7 +63,7 @@ export interface ReviewTemplate {
 export class ClientCommunicationFactory extends BaseFactory<any> {
     async generate(options?: any): Promise<any> {
         // Implementation for generating client communication data
-        return this.generateClientReview(options);
+        return this.generateClientReviews(options);
     }
 
     private readonly reviewTemplates: ReviewTemplate[] = [

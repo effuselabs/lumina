@@ -387,7 +387,7 @@ export class ClientFactory extends BaseFactory<Client> {
     private generateVisitFrequency(): 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'occasional' {
         const frequencies = ['weekly', 'biweekly', 'monthly', 'quarterly', 'occasional'] as const;
         const weights = [0.05, 0.15, 0.45, 0.25, 0.1]; // Most clients visit monthly
-        return this.weightedRandom(frequencies, weights);
+        return this.weightedRandom([...frequencies], weights);
     }
 
     /**

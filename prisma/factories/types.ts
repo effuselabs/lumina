@@ -185,12 +185,17 @@ export interface ValidationError {
     field: string;
     message: string;
     code: string;
+    /** Model/table the error relates to, when the validator can attribute it. */
+    entity?: string;
+    severity?: 'critical' | 'high' | 'medium' | 'low';
 }
 
 export interface ValidationWarning {
     field: string;
     message: string;
     code: string;
+    /** Model/table the warning relates to, when the validator can attribute it. */
+    entity?: string;
 }
 
 export interface TimeSlot {

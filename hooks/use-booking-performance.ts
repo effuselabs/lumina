@@ -59,7 +59,10 @@ export function useBookingPerformance() {
                         const navEntry = entry as PerformanceNavigationTiming;
                         setMetrics(prev => ({
                             ...prev,
-                            pageLoadTime: navEntry.loadEventEnd - navEntry.navigationStart,
+                            // Navigation Timing L2: entry times are relative to
+                            // startTime (0 for navigation entries), not the removed
+                            // navigationStart of the legacy PerformanceTiming API.
+                            pageLoadTime: navEntry.loadEventEnd - navEntry.startTime,
                         }));
                     }
 

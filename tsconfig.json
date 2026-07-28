@@ -56,6 +56,8 @@
     "__tests__",
     "__mocks__",
     "test-utils",
+    "jest.setup.ts",
+    "jest.setup-dom.ts",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",

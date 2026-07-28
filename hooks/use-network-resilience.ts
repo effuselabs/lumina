@@ -150,11 +150,12 @@ export function useNetworkResilience(options: UseNetworkResilienceOptions = {}) 
 
                     return data;
                 } catch (error) {
+                    const err = error instanceof Error ? error : new Error(String(error));
                     const isNetworkError =
-                        error instanceof TypeError ||
-                        error.name === 'AbortError' ||
-                        error.message.includes('Failed to fetch') ||
-                        error.message.includes('No internet connection');
+                        err instanceof TypeError ||
+                        err.name === 'AbortError' ||
+                        err.message.includes('Failed to fetch') ||
+                        err.message.includes('No internet connection');
 
                     // Only retry on network errors, not on HTTP errors like 400, 404, etc.
                     if (isNetworkError && attempt < config.maxRetries) {

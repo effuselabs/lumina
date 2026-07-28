@@ -127,22 +127,44 @@ function nullToUndefined<T>(value: T | null): T | undefined {
  * Orchestrates email notification creation and delivery
  */
 export class NotificationService {
-  private emailProvider: EmailProvider;
+  private injectedProvider?: EmailProvider;
+  private lazyProvider?: EmailProvider;
+  private config?: NotificationServiceConfig;
   private fromEmail: string;
   private fromName: string;
   private enableQueue: boolean;
 
   constructor(config?: NotificationServiceConfig) {
-    // Initialize email provider (default to Resend)
-    this.emailProvider = config?.emailProvider || new ResendEmailProvider({
-      apiKey: process.env.RESEND_API_KEY || '',
-      fromEmail: config?.fromEmail || process.env.EMAIL_FROM,
-      fromName: config?.fromName || process.env.EMAIL_FROM_NAME || 'Lumina',
-    });
+    // The provider is constructed lazily: ResendEmailProvider throws when
+    // RESEND_API_KEY is absent, and this module is imported by API routes.
+    // Constructing it here would make `next build` fail in any environment
+    // without email secrets (CI, preview builds).
+    this.config = config;
+    this.injectedProvider = config?.emailProvider;
 
     this.fromEmail = config?.fromEmail || process.env.EMAIL_FROM || 'noreply@uselumina.app';
     this.fromName = config?.fromName || process.env.EMAIL_FROM_NAME || 'Lumina';
     this.enableQueue = config?.enableQueue !== false; // Default to true
+  }
+
+  /**
+   * Resolve the email provider on first use, so that importing this module
+   * never requires email credentials to be present.
+   */
+  private get emailProvider(): EmailProvider {
+    if (this.injectedProvider) {
+      return this.injectedProvider;
+    }
+
+    if (!this.lazyProvider) {
+      this.lazyProvider = new ResendEmailProvider({
+        apiKey: process.env.RESEND_API_KEY || '',
+        fromEmail: this.config?.fromEmail || process.env.EMAIL_FROM,
+        fromName: this.config?.fromName || process.env.EMAIL_FROM_NAME || 'Lumina',
+      });
+    }
+
+    return this.lazyProvider;
   }
 
   /**
