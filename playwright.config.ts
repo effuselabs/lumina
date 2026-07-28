@@ -40,41 +40,27 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
-  /* Configure projects for major browsers */
+  /*
+   * Two projects, not seven.
+   *
+   * This previously ran every spec against Chromium, Firefox, WebKit, Mobile
+   * Chrome, Mobile Safari, Edge and Chrome — seven multiples of a suite that
+   * has never once completed. Edge and Chrome are also branded channels that
+   * must be installed separately, so they fail outright on a clean CI runner.
+   *
+   * Chromium is the workhorse. Mobile Safari is kept because clients book on
+   * phones and iOS Safari is where layout and date-input behaviour actually
+   * diverges. The rest come back one at a time, once the suite is green and
+   * fast — see docs/environments.md.
+   */
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-    /* Test against mobile viewports. */
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
-    },
-
-    /* Test against branded browsers. */
-    {
-      name: 'Microsoft Edge',
-      use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    },
-    {
-      name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
   ],
 
