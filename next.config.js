@@ -3,10 +3,10 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable ESLint during build (temporary)
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // ESLint runs as part of `next build`. It previously did not:
+  // ignoreDuringBuilds was set to true, which meant lint failures could never
+  // block anything. See the RATCHET note in .eslintrc.json for why several
+  // rules are currently "warn" rather than "error".
 
   // Experimental features
   experimental: {

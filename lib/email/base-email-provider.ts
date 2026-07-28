@@ -6,14 +6,14 @@
  */
 
 import {
-  EmailProvider,
-  EmailMessage,
-  SendResult,
   BatchSendResult,
   DeliveryStatus,
-  ProviderLimits,
+  EmailMessage,
+  EmailProvider,
   EmailProviderError,
   EmailProviderErrorCode,
+  ProviderLimits,
+  SendResult,
 } from './types';
 
 /**

@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get or create email preferences
-    let preferences = await prisma.emailPreference.findUnique({
+    const preferences = await prisma.emailPreference.findUnique({
       where: {
         businessId_email: {
           businessId: validatedParams.businessId,

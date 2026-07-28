@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { ConflictDetectionEngine, ConflictType, ConflictSeverity } from '@/lib/services/conflict-detection-engine'
+import { ConflictDetectionEngine, ConflictSeverity, ConflictType } from '@/lib/services/conflict-detection-engine'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 

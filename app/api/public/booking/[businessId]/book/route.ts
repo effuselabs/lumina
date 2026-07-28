@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { InputSanitizer } from '@/lib/security/rate-limiter';
 import { PublicBookingAuditEvent, auditPublicBooking } from '@/lib/security/public-booking-audit';
-import { securePublicBookingPOST, createSecurePublicBookingResponse } from '@/lib/security/public-booking-security-middleware';
+import { createSecurePublicBookingResponse, securePublicBookingPOST } from '@/lib/security/public-booking-security-middleware';
 import { format } from 'date-fns';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';

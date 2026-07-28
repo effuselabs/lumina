@@ -3,7 +3,7 @@
  * Provides real-time metrics, alerts, and system health status
  */
 
-import { availabilityLogger, LogLevel } from '@/lib/monitoring/availability-logger'
+import { LogLevel, availabilityLogger } from '@/lib/monitoring/availability-logger'
 import { AlertSeverity, AlertType, availabilityMonitoring } from '@/lib/monitoring/availability-monitoring'
 import { gracefulDegradation } from '@/lib/services/graceful-degradation'
 import { NextRequest, NextResponse } from 'next/server'

@@ -16,7 +16,7 @@ import {
     SuggestedAlternative,
     TimeOffConflictError
 } from '@/lib/errors/availability-errors'
-import { availabilityLogger, withPerformanceLogging, LogLevel } from '@/lib/monitoring/availability-logger'
+import { LogLevel, availabilityLogger, withPerformanceLogging } from '@/lib/monitoring/availability-logger'
 import { gracefulDegradation } from '@/lib/services/graceful-degradation'
 import { Conflict, ConflictType } from './conflict-detection-engine'
 import { TimeSlot } from './service-duration-validator'

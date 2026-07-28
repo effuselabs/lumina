@@ -8,7 +8,7 @@
 import { emailQueueManager } from './queue-manager';
 import { emailRateLimiter } from './rate-limiter';
 import { ResendEmailProvider } from './resend-provider';
-import type { EmailProvider, EmailMessage } from './types';
+import type { EmailMessage, EmailProvider } from './types';
 
 /**
  * Queue Worker Configuration

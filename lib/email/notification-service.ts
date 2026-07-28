@@ -15,12 +15,12 @@ import { templateEngine } from './template-engine';
 import { ResendEmailProvider } from './resend-provider';
 import type { EmailProvider, EmailTemplateType } from './types';
 import type {
-  BookingConfirmationData,
   AppointmentReminderData,
+  BookingConfirmationData,
   CancellationNotificationData,
+  DailyBookingSummaryData,
   StaffBookingAlertData,
   StaffCancellationAlertData,
-  DailyBookingSummaryData,
 } from './templates';
 
 /**

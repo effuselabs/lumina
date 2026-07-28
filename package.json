@@ -61,7 +61,7 @@
     "seed:manage": "tsx scripts/manage-seed-data.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky",
+    "prepare": "husky install",
     "docker:dev": "docker-compose up --build",
     "docker:dev:detached": "docker-compose up --build -d",
     "docker:down": "docker-compose down",
@@ -200,5 +200,8 @@
     "*.{json,md,css}": [
       "prettier --write"
     ]
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
