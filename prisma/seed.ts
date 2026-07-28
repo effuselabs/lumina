@@ -157,6 +157,47 @@ async function main() {
 
   console.log('✅ Created business-user relationships');
 
+  // Create business opening hours.
+  // Availability calculation reads these rows; without them every public
+  // booking availability query returns no slots, so the booking flow cannot
+  // be exercised at all. Mon-Fri 9-6, Sat 10-4, closed Sunday.
+  const weeklyHours: Array<{
+    dayOfWeek: number;
+    openTime: string | null;
+    closeTime: string | null;
+    isClosed: boolean;
+  }> = [
+    { dayOfWeek: 0, openTime: null, closeTime: null, isClosed: true },
+    { dayOfWeek: 1, openTime: '09:00', closeTime: '18:00', isClosed: false },
+    { dayOfWeek: 2, openTime: '09:00', closeTime: '18:00', isClosed: false },
+    { dayOfWeek: 3, openTime: '09:00', closeTime: '18:00', isClosed: false },
+    { dayOfWeek: 4, openTime: '09:00', closeTime: '18:00', isClosed: false },
+    { dayOfWeek: 5, openTime: '09:00', closeTime: '18:00', isClosed: false },
+    { dayOfWeek: 6, openTime: '10:00', closeTime: '16:00', isClosed: false },
+  ];
+
+  for (const hours of weeklyHours) {
+    await prisma.businessHours.upsert({
+      where: {
+        businessId_dayOfWeek: {
+          businessId: demoBusiness.id,
+          dayOfWeek: hours.dayOfWeek,
+        },
+      },
+      update: {
+        openTime: hours.openTime,
+        closeTime: hours.closeTime,
+        isClosed: hours.isClosed,
+      },
+      create: {
+        businessId: demoBusiness.id,
+        ...hours,
+      },
+    });
+  }
+
+  console.log('✅ Created business hours (Mon-Fri 9-6, Sat 10-4, closed Sun)');
+
   // Generate comprehensive staff data using StaffFactory
   console.log('👥 Generating comprehensive staff profiles...');
 
