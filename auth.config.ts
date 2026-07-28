@@ -16,6 +16,21 @@ import type { NextAuthConfig } from 'next-auth';
  * See https://authjs.dev/guides/edge-compatibility
  */
 export const authConfig = {
+  /**
+   * Trust the Host header supplied by the platform's proxy.
+   *
+   * Auth.js v5 rejects requests whose Host it cannot verify, to prevent host
+   * header injection. Behind Railway (and any similar proxy) the app sees the
+   * forwarded host rather than its own, so without this every auth request
+   * fails with `UntrustedHost` — observed on staging for BOTH
+   * `healthcheck.railway.app` and `staging.uselumina.app`, which would have
+   * broken sign-in entirely.
+   *
+   * Safe here because the platform terminates TLS and sets the host; the app
+   * is never addressed directly. See https://authjs.dev/reference/core#trusthost
+   */
+  trustHost: true,
+
   // Use JWT strategy for stateless sessions
   session: {
     strategy: 'jwt',
