@@ -56,6 +56,30 @@ manage or rotate, no coupling to the service name, and no chance of two systems
 deploying at once. `.github/workflows/deploy.yml` is manual-only, for
 re-deploying by hand and for promoting production.
 
+### Health contract
+
+`/api/health` is what Railway polls before promoting a release.
+
+| Condition                | `status`    | HTTP    | Effect                                                   |
+| ------------------------ | ----------- | ------- | -------------------------------------------------------- |
+| All checks pass          | `healthy`   | 200     | Release promoted                                         |
+| Memory pressure only     | `degraded`  | 200     | Promoted — the app still serves correctly                |
+| **Database unreachable** | `unhealthy` | **503** | **Release rejected; staging stays on the last good one** |
+
+The database case is deliberately fatal. Without a database the instance
+cannot serve a booking page, authenticate anyone, or read a calendar, so
+promoting it would publish a broken release. This previously returned 200 for
+every state, which is exactly how a deploy that could not reach its database
+was promoted anyway — the gate existed but could never fire.
+
+Memory pressure stays 200 on purpose: taking a working instance out of rotation
+would cause an outage rather than prevent one.
+
+On failure the response includes `databaseError` with Prisma's code, a one-line
+reason, and the **host** it tried to reach — enough to tell Railway's internal
+networking host from a public proxy host or a stale localhost without opening
+deploy logs. Credentials are never included.
+
 Confirm what is actually running at any time:
 
 ```bash
@@ -120,6 +144,13 @@ same list with production values.
    | `CRON_SECRET`         | `openssl rand -hex 32`                                    |
    | `SENTRY_DSN`          | from Sentry                                               |
    | `NODE_ENV`            | `production` (staging runs a production build)            |
+   | `NODE_OPTIONS`        | `--dns-result-order=ipv6first` — see note below           |
+
+   `NODE_OPTIONS` is needed because Railway's private networking host
+   (`postgres.railway.internal`) resolves **IPv6-only**. Without it Node may try
+   an IPv4 address that does not exist and the database is unreachable at
+   runtime, even though `DATABASE_URL` is correct and migrations succeed during
+   pre-deploy.
 
 8. Create a **project token** (Settings → Tokens). Only the manual deploy
    workflow needs it; routine deploys do not.
