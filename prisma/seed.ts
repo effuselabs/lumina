@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 import {
   initializeSeedSystem,
   loadSeedConfig,
-  verifyDataIntegrity
+  verifyDataIntegrity,
 } from './factories/index';
 
 const prisma = new PrismaClient();
@@ -202,7 +202,11 @@ async function main() {
   console.log('👥 Generating comprehensive staff profiles...');
 
   const { StaffFactory } = await import('./factories/staff-factory');
-  const staffFactory = new StaffFactory(prisma, demoBusiness.id, config.staff.specialties);
+  const staffFactory = new StaffFactory(
+    prisma,
+    demoBusiness.id,
+    config.staff.specialties
+  );
 
   // Generate staff members with progress tracking
   const createdStaff = await staffFactory.generateBatch(
@@ -217,11 +221,82 @@ async function main() {
     }
   );
 
-  console.log(`✅ Generated ${createdStaff.length} comprehensive staff profiles`);
+  console.log(
+    `✅ Generated ${createdStaff.length} comprehensive staff profiles`
+  );
+
+  /*
+   * Weekly working schedules for each staff member.
+   *
+   * Without these the salon is unbookable. Business hours say when the SHOP is
+   * open; StaffAvailability says when a given stylist is working, and the
+   * availability calculator intersects the two. With zero rows here the
+   * intersection is empty, so /api/public/booking/[id]/availability returns
+   * 200 with an empty slot list and the booking page offers nothing to click —
+   * which is exactly the state this seed left the app in.
+   *
+   * Schedules are staggered rather than uniform so the data exercises real
+   * behaviour: part-timers, staggered starts, and a second weekday off. A
+   * salon where everyone works identical hours hides bugs that a real one
+   * would surface.
+   */
+  const staffSchedules = createdStaff.map((member, index) => {
+    // Everyone works the weekdays the shop is open (Mon–Fri), plus Saturday
+    // for roughly half the team. Sunday is closed, so nobody is scheduled.
+    const worksSaturday = index % 2 === 0;
+    // Stagger one weekday off per person across Tue–Fri, so no day loses
+    // everyone and no day has the full roster.
+    const dayOff = 2 + (index % 4);
+    // Two of the team start late and finish late.
+    const late = index % 3 === 0;
+
+    const days: { dayOfWeek: number; startTime: string; endTime: string }[] =
+      [];
+
+    for (let dayOfWeek = 1; dayOfWeek <= 5; dayOfWeek++) {
+      if (dayOfWeek === dayOff) continue;
+      days.push({
+        dayOfWeek,
+        // Inside business hours (09:00–18:00) on both ends.
+        startTime: late ? '11:00' : '09:00',
+        endTime: late ? '18:00' : '16:00',
+      });
+    }
+
+    if (worksSaturday) {
+      // Saturday the shop runs 10:00–16:00.
+      days.push({ dayOfWeek: 6, startTime: '10:00', endTime: '16:00' });
+    }
+
+    return { staffId: member.id, days };
+  });
+
+  let availabilityRows = 0;
+  for (const schedule of staffSchedules) {
+    for (const day of schedule.days) {
+      await prisma.staffAvailability.create({
+        data: {
+          staffId: schedule.staffId,
+          businessId: demoBusiness.id,
+          dayOfWeek: day.dayOfWeek,
+          startTime: day.startTime,
+          endTime: day.endTime,
+          isRecurring: true,
+        },
+      });
+      availabilityRows += 1;
+    }
+  }
+
+  console.log(
+    `✅ Created ${availabilityRows} staff availability rows across ${createdStaff.length} staff`
+  );
 
   // Keep the original staff for backward compatibility with existing appointments
-  const staff1 = createdStaff.find(s => s.displayName.includes('Mike')) || createdStaff[0];
-  const staff2 = createdStaff.find(s => s.displayName.includes('Emma')) || createdStaff[1];
+  const staff1 =
+    createdStaff.find(s => s.displayName.includes('Mike')) || createdStaff[0];
+  const staff2 =
+    createdStaff.find(s => s.displayName.includes('Emma')) || createdStaff[1];
 
   // Generate comprehensive service menu using ServiceFactory
   console.log('🎨 Generating comprehensive service menu...');
@@ -239,7 +314,9 @@ async function main() {
   // Generate service packages
   const servicePackages = await serviceFactory.generateServicePackages();
 
-  console.log(`✅ Generated ${createdServices.length} services across ${serviceFactory.getAllCategories().length} categories`);
+  console.log(
+    `✅ Generated ${createdServices.length} services across ${serviceFactory.getAllCategories().length} categories`
+  );
   console.log(`✅ Generated ${servicePackages.length} service packages`);
 
   // Assign services to staff based on their specialties
@@ -251,34 +328,39 @@ async function main() {
     let assignedServices: typeof createdServices = [];
 
     if (staffTitle.includes('hair') || staffTitle.includes('stylist')) {
-      assignedServices = createdServices.filter(s =>
-        s.category === 'Hair' || s.category === 'Brows'
+      assignedServices = createdServices.filter(
+        s => s.category === 'Hair' || s.category === 'Brows'
       );
     } else if (staffTitle.includes('nail')) {
-      assignedServices = createdServices.filter(s =>
-        s.category === 'Nails'
-      );
+      assignedServices = createdServices.filter(s => s.category === 'Nails');
     } else if (staffTitle.includes('colorist')) {
-      assignedServices = createdServices.filter(s =>
-        s.name.includes('Color') || s.name.includes('Highlights') || s.name.includes('Balayage')
+      assignedServices = createdServices.filter(
+        s =>
+          s.name.includes('Color') ||
+          s.name.includes('Highlights') ||
+          s.name.includes('Balayage')
       );
     } else if (staffTitle.includes('esthetician')) {
-      assignedServices = createdServices.filter(s =>
-        s.category === 'Skincare' || s.category === 'Brows'
+      assignedServices = createdServices.filter(
+        s => s.category === 'Skincare' || s.category === 'Brows'
       );
     } else if (staffTitle.includes('massage')) {
-      assignedServices = createdServices.filter(s =>
-        s.category === 'Massage'
-      );
+      assignedServices = createdServices.filter(s => s.category === 'Massage');
     } else if (staffTitle.includes('lash')) {
-      assignedServices = createdServices.filter(s =>
-        s.category === 'Lashes' || s.category === 'Brows'
+      assignedServices = createdServices.filter(
+        s => s.category === 'Lashes' || s.category === 'Brows'
       );
     } else {
       // Default assignment for other specialties - assign a few services from different categories
-      const hairServices = createdServices.filter(s => s.category === 'Hair').slice(0, 2);
-      const nailServices = createdServices.filter(s => s.category === 'Nails').slice(0, 1);
-      const browServices = createdServices.filter(s => s.category === 'Brows').slice(0, 1);
+      const hairServices = createdServices
+        .filter(s => s.category === 'Hair')
+        .slice(0, 2);
+      const nailServices = createdServices
+        .filter(s => s.category === 'Nails')
+        .slice(0, 1);
+      const browServices = createdServices
+        .filter(s => s.category === 'Brows')
+        .slice(0, 1);
       assignedServices = [...hairServices, ...nailServices, ...browServices];
     }
 
@@ -299,7 +381,9 @@ async function main() {
       });
     }
 
-    console.log(`  Assigned ${assignedServices.length} services to ${staff.displayName} (${staff.title})`);
+    console.log(
+      `  Assigned ${assignedServices.length} services to ${staff.displayName} (${staff.title})`
+    );
   }
 
   console.log('✅ Assigned services to staff based on specialties');
@@ -321,7 +405,7 @@ async function main() {
     config.clients.count,
     {
       historicalMonths: config.appointments.historicalMonths,
-      averageVisitsPerClient: 8
+      averageVisitsPerClient: 8,
     },
     (processed, total) => {
       if (processed % 10 === 0 || processed === total) {
@@ -330,12 +414,15 @@ async function main() {
     }
   );
 
-  console.log(`✅ Generated ${createdClients.length} comprehensive client profiles`);
+  console.log(
+    `✅ Generated ${createdClients.length} comprehensive client profiles`
+  );
 
   // Generate 6+ months of historical appointment data using AppointmentFactory
   console.log('📅 Generating 6+ months of historical appointment data...');
 
-  const { AppointmentFactory } = await import('./factories/appointment-factory');
+  const { AppointmentFactory } =
+    await import('./factories/appointment-factory');
   const appointmentFactory = new AppointmentFactory(
     prisma,
     demoBusiness.id,
@@ -347,23 +434,30 @@ async function main() {
   // Calculate date range for historical appointments
   const now = new Date();
   const startDate = new Date(now);
-  startDate.setMonth(startDate.getMonth() - config.appointments.historicalMonths);
+  startDate.setMonth(
+    startDate.getMonth() - config.appointments.historicalMonths
+  );
 
   // Target 500+ appointments distributed across the historical period
   const targetAppointmentCount = 500;
 
-  const historicalAppointments = await appointmentFactory.generateHistoricalAppointments(
-    startDate,
-    now,
-    targetAppointmentCount,
-    (processed, total) => {
-      if (processed % 25 === 0 || processed === total) {
-        console.log(`  Generated ${processed}/${total} historical appointments`);
+  const historicalAppointments =
+    await appointmentFactory.generateHistoricalAppointments(
+      startDate,
+      now,
+      targetAppointmentCount,
+      (processed, total) => {
+        if (processed % 25 === 0 || processed === total) {
+          console.log(
+            `  Generated ${processed}/${total} historical appointments`
+          );
+        }
       }
-    }
-  );
+    );
 
-  console.log(`✅ Generated ${historicalAppointments.length} historical appointments`);
+  console.log(
+    `✅ Generated ${historicalAppointments.length} historical appointments`
+  );
 
   // Create a few future appointments for demo purposes
   console.log('📅 Creating future appointments for demo...');
@@ -381,7 +475,7 @@ async function main() {
       startTime: new Date(tomorrow.setHours(10, 0, 0, 0)),
       endTime: new Date(tomorrow.setHours(11, 0, 0, 0)),
       totalDuration: 60,
-      totalPrice: 85.00,
+      totalPrice: 85.0,
       status: 'SCHEDULED' as const,
       serviceIds: [createdServices.find(s => s.name === 'Haircut & Style')!.id],
     },
@@ -391,7 +485,7 @@ async function main() {
       startTime: new Date(nextWeek.setHours(14, 0, 0, 0)),
       endTime: new Date(nextWeek.setHours(15, 0, 0, 0)),
       totalDuration: 60,
-      totalPrice: 45.00,
+      totalPrice: 45.0,
       status: 'SCHEDULED' as const,
       serviceIds: [createdServices.find(s => s.name === 'Gel Manicure')!.id],
     },
@@ -427,7 +521,8 @@ async function main() {
   // Generate comprehensive financial transaction system using TransactionFactory
   console.log('💰 Generating comprehensive financial transaction system...');
 
-  const { TransactionFactory } = await import('./factories/transaction-factory');
+  const { TransactionFactory } =
+    await import('./factories/transaction-factory');
   const transactionFactory = new TransactionFactory(
     prisma,
     demoBusiness.id,
@@ -440,20 +535,25 @@ async function main() {
   // Target 400+ financial transactions with varied payment methods
   const targetTransactionCount = 400;
 
-  const financialTransactions = await transactionFactory.generateComprehensiveTransactions(
-    targetTransactionCount,
-    {
-      startDate,
-      endDate: now
-    },
-    (processed, total) => {
-      if (processed % 25 === 0 || processed === total) {
-        console.log(`  Generated ${processed}/${total} financial transactions`);
+  const financialTransactions =
+    await transactionFactory.generateComprehensiveTransactions(
+      targetTransactionCount,
+      {
+        startDate,
+        endDate: now,
+      },
+      (processed, total) => {
+        if (processed % 25 === 0 || processed === total) {
+          console.log(
+            `  Generated ${processed}/${total} financial transactions`
+          );
+        }
       }
-    }
-  );
+    );
 
-  console.log(`✅ Generated ${financialTransactions.length} comprehensive financial transactions`);
+  console.log(
+    `✅ Generated ${financialTransactions.length} comprehensive financial transactions`
+  );
 
   // Parked feature surface (products, gift cards, promotions, marketing
   // campaigns, loyalty, communications) is intentionally not seeded. Those
@@ -468,10 +568,13 @@ async function main() {
   const totalAppointments = historicalAppointments.length;
   const totalTransactions = financialTransactions.length;
 
-  seedSystem.performanceMonitor.updateProgress('comprehensive-seed',
-    totalClients + totalAppointments + totalTransactions);
+  seedSystem.performanceMonitor.updateProgress(
+    'comprehensive-seed',
+    totalClients + totalAppointments + totalTransactions
+  );
 
-  const seedMetrics = seedSystem.performanceMonitor.endOperation('comprehensive-seed');
+  const seedMetrics =
+    seedSystem.performanceMonitor.endOperation('comprehensive-seed');
 
   // Generate and display performance report
   console.log('\n' + seedSystem.performanceMonitor.generateReport());
@@ -480,14 +583,20 @@ async function main() {
   await seedSystem.batchProcessor.cleanup();
 
   const duration = Date.now() - startTime;
-  console.log(`\n🎉 Enhanced database seed completed successfully in ${duration}ms!`);
+  console.log(
+    `\n🎉 Enhanced database seed completed successfully in ${duration}ms!`
+  );
   console.log('\n📋 Demo Accounts:');
   console.log('Owner: owner@lumina-demo.com / demo123');
   console.log('Staff 1: mike@lumina-demo.com / demo123');
   console.log('Staff 2: emma@lumina-demo.com / demo123');
 
-  console.log('\n🏗️  Enhanced seed infrastructure ready for comprehensive data generation');
-  console.log('Next steps: Implement individual factory classes for clients, staff, services, appointments, and transactions');
+  console.log(
+    '\n🏗️  Enhanced seed infrastructure ready for comprehensive data generation'
+  );
+  console.log(
+    'Next steps: Implement individual factory classes for clients, staff, services, appointments, and transactions'
+  );
 }
 
 main()
