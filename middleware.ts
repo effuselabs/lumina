@@ -1,5 +1,11 @@
-import { auth } from '@/auth';
+import authConfig from '@/auth.config';
+import NextAuth from 'next-auth';
 import { NextResponse } from 'next/server';
+
+// Build an Edge-safe NextAuth instance from the provider-free config.
+// Importing `auth` from '@/auth' here would pull bcryptjs and Prisma into
+// the Edge Runtime, which cannot run them.
+const { auth } = NextAuth(authConfig);
 
 export default auth(req => {
   const { pathname } = req.nextUrl;
