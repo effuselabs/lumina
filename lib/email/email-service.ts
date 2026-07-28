@@ -1,95 +1,122 @@
-import { render } from '@react-email/render'
-import nodemailer from 'nodemailer'
-import BookingConfirmationEmail from './templates/booking-confirmation-email'
+import { randomUUID } from 'crypto';
+import { render } from '@react-email/render';
+import { ResendEmailProvider } from './resend-provider';
+import BookingConfirmationEmail from './templates/booking-confirmation-email';
+import type { EmailMessage, EmailProvider } from './types';
 
-interface EmailConfig {
-    host: string
-    port: number
-    secure: boolean
-    auth: {
-        user: string
-        pass: string
-    }
-}
+/**
+ * Booking confirmation email.
+ *
+ * This used to be a second, independent email stack built on nodemailer/SMTP,
+ * running alongside the Resend one in notification-service.ts. It now delegates
+ * to the same ResendEmailProvider, so there is a single delivery path.
+ *
+ * nodemailer was dropped entirely: it carried a HIGH advisory whose fix
+ * (9.0.3) falls outside next-auth's optional peer range (^7 || ^8), so the
+ * dependency could neither be kept nor upgraded — and the project had already
+ * standardised on Resend.
+ *
+ * The public shape of `emailService` is unchanged so callers did not need
+ * touching. `previewUrl` is retained in the return type and is always
+ * undefined: it existed only for nodemailer's Ethereal test inbox.
+ */
 
 interface BookingEmailData {
-    customerName: string
-    customerEmail: string
-    businessName: string
-    serviceName: string
-    staffName: string
-    appointmentDate: string
-    appointmentTime: string
-    duration: number
-    price: number
-    businessAddress?: string
-    businessPhone?: string
-    businessEmail?: string
-    appointmentId: string
-    notes?: string
+  customerName: string;
+  customerEmail: string;
+  businessName: string;
+  serviceName: string;
+  staffName: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  duration: number;
+  price: number;
+  businessAddress?: string;
+  businessPhone?: string;
+  businessEmail?: string;
+  appointmentId: string;
+  notes?: string;
+  /** Optional, for provider-side attribution. */
+  businessId?: string;
+}
+
+interface SendBookingConfirmationResult {
+  success: boolean;
+  messageId?: string;
+  /** Always undefined. Kept so existing callers still type-check. */
+  previewUrl?: string;
+  error?: string;
 }
 
 class EmailService {
-    private transporter: nodemailer.Transporter | null = null
+  private lazyProvider?: EmailProvider;
 
-    constructor() {
-        this.initializeTransporter()
+  /**
+   * Resolved on first send. ResendEmailProvider reads RESEND_API_KEY, and
+   * this module is imported by API routes — constructing it at module scope
+   * would break `next build` anywhere email secrets are absent, including
+   * CI. The previous implementation built its transport in the constructor
+   * of a module-scope singleton, which is exactly that failure.
+   */
+  private get provider(): EmailProvider {
+    if (!this.lazyProvider) {
+      this.lazyProvider = new ResendEmailProvider({
+        apiKey: process.env.RESEND_API_KEY || '',
+        fromEmail: process.env.EMAIL_FROM,
+        fromName: process.env.EMAIL_FROM_NAME || 'Lumina',
+      });
     }
+    return this.lazyProvider;
+  }
 
-    private initializeTransporter() {
-        // In development, use Ethereal Email for testing
-        // In production, use your actual email service (SendGrid, AWS SES, etc.)
-        const isDevelopment = process.env.NODE_ENV === 'development'
+  async sendBookingConfirmation(
+    data: BookingEmailData
+  ): Promise<SendBookingConfirmationResult> {
+    try {
+      const html = await render(BookingConfirmationEmail(data));
+      const text = this.renderPlainText(data);
 
-        if (isDevelopment) {
-            // For development, we'll create a test account
-            this.createTestAccount()
-        } else {
-            // Production email configuration
-            const emailConfig: EmailConfig = {
-                host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-                port: parseInt(process.env.EMAIL_PORT || '587'),
-                secure: process.env.EMAIL_SECURE === 'true',
-                auth: {
-                    user: process.env.EMAIL_USER || '',
-                    pass: process.env.EMAIL_PASS || '',
-                },
-            }
+      const message: EmailMessage = {
+        id: randomUUID(),
+        businessId: data.businessId ?? '',
+        to: data.customerEmail,
+        from: process.env.EMAIL_FROM || 'noreply@mail.uselumina.app',
+        subject: `Appointment Confirmed - ${data.businessName}`,
+        html,
+        text,
+        templateType: 'booking_confirmation',
+        metadata: {
+          appointmentId: data.appointmentId,
+          businessName: data.businessName,
+        },
+        priority: 'high',
+        attemptCount: 0,
+        maxAttempts: 3,
+        scheduledAt: new Date(),
+        createdAt: new Date(),
+      };
 
-            this.transporter = nodemailer.createTransport(emailConfig)
-        }
+      const result = await this.provider.send(message);
+
+      if (!result.success) {
+        return {
+          success: false,
+          error: result.error ?? 'Email provider reported failure',
+        };
+      }
+
+      return { success: true, messageId: result.messageId };
+    } catch (error) {
+      console.error('Failed to send booking confirmation email:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
     }
+  }
 
-    private async createTestAccount() {
-        try {
-            // Create a test account for development
-            const testAccount = await nodemailer.createTestAccount()
-
-            this.transporter = nodemailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
-                secure: false,
-                auth: {
-                    user: testAccount.user,
-                    pass: testAccount.pass,
-                },
-            })
-
-            console.log('Test email account created:', testAccount.user)
-        } catch (error) {
-            console.error('Failed to create test email account:', error)
-        }
-    }
-
-    async sendBookingConfirmation(data: BookingEmailData): Promise<{ success: boolean; messageId?: string; previewUrl?: string; error?: string }> {
-        if (!this.transporter) {
-            return { success: false, error: 'Email service not initialized' }
-        }
-
-        try {
-            // Render the email template
-            const emailHtml = await render(BookingConfirmationEmail(data))
-            const emailText = `
+  private renderPlainText(data: BookingEmailData): string {
+    return `
 Appointment Confirmed!
 
 Your booking at ${data.businessName} has been successfully scheduled.
@@ -116,75 +143,40 @@ Important Information:
 • Bring a valid ID and any relevant medical information if applicable
 
 Thank you for choosing ${data.businessName}! We look forward to seeing you.
-      `.trim()
+      `.trim();
+  }
 
-            // Send the email
-            const info = await this.transporter.sendMail({
-                from: `"${data.businessName}" <${process.env.EMAIL_FROM || 'noreply@lumina.app'}>`,
-                to: data.customerEmail,
-                subject: `Appointment Confirmed - ${data.businessName}`,
-                text: emailText,
-                html: emailHtml,
-            })
+  private formatPrice(price: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  }
 
-            // Get preview URL for development
-            const previewUrl = process.env.NODE_ENV === 'development'
-                ? nodemailer.getTestMessageUrl(info) || undefined
-                : undefined
+  private formatDuration(minutes: number): string {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
 
-            if (previewUrl) {
-                console.log('Preview URL:', previewUrl)
-            }
-
-            return {
-                success: true,
-                messageId: info.messageId,
-                previewUrl,
-            }
-        } catch (error) {
-            console.error('Failed to send booking confirmation email:', error)
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : 'Unknown error',
-            }
-        }
+    if (hours > 0 && mins > 0) {
+      return `${hours}h ${mins}m`;
+    } else if (hours > 0) {
+      return `${hours}h`;
+    } else {
+      return `${mins}m`;
     }
+  }
 
-    private formatPrice(price: number): string {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(price)
+  async verifyConnection(): Promise<boolean> {
+    try {
+      return await this.provider.healthCheck();
+    } catch (error) {
+      console.error('Email service verification failed:', error);
+      return false;
     }
-
-    private formatDuration(minutes: number): string {
-        const hours = Math.floor(minutes / 60)
-        const mins = minutes % 60
-
-        if (hours > 0 && mins > 0) {
-            return `${hours}h ${mins}m`
-        } else if (hours > 0) {
-            return `${hours}h`
-        } else {
-            return `${mins}m`
-        }
-    }
-
-    async verifyConnection(): Promise<boolean> {
-        if (!this.transporter) {
-            return false
-        }
-
-        try {
-            await this.transporter.verify()
-            return true
-        } catch (error) {
-            console.error('Email service verification failed:', error)
-            return false
-        }
-    }
+  }
 }
 
-// Export a singleton instance
-export const emailService = new EmailService()
-export default EmailService
+// Export a singleton instance. Constructing it is now free — the provider,
+// and therefore the API key, is resolved on first send.
+export const emailService = new EmailService();
+export default EmailService;
