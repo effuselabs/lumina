@@ -108,6 +108,12 @@ time, after the booking loop works.
 
 ## Known, unaddressed
 
+- The public booking page now hides services no active staff can perform. A
+  salon whose only nail technician leaves will see nail services disappear from
+  their booking page with no notice. Better than the dead end it replaces — the
+  service was listed, selectable, and unbookable — but the owner should be told.
+  Belongs with staff management, when that is unparked.
+
 - `app/api/booking/*` duplicates the public booking API. `/api/booking/[id]` is
   **live** (it serves the booking confirmation page); the rest is dead, and
   `components/booking/offline-support.tsx` fetches an endpoint that does not

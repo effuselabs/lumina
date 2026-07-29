@@ -178,12 +178,30 @@ export async function GET(
     // Validate business context
     const business = await validateBusinessContext(params.businessId);
 
-    // Get active services for this business
+    /*
+     * Services a client can actually book.
+     *
+     * The `staff` selection below is filtered to bookable staff, but the
+     * service list itself was not — so a service nobody can perform still
+     * appeared in the picker with an empty `availableStaff`. Choosing one took
+     * the client to step 2, showed no times, and offered no explanation; no
+     * other date would have helped. The seed produces these whenever a
+     * specialty has no matching staff, and a real salon does too when the only
+     * person who offered something leaves.
+     */
     const services = await prisma.service.findMany({
       where: {
         businessId: params.businessId,
         isActive: true,
         isOnline: true, // Only services available for online booking
+        staff: {
+          some: {
+            staff: {
+              isActive: true,
+              acceptsOnlineBookings: true,
+            },
+          },
+        },
       },
       select: {
         id: true,

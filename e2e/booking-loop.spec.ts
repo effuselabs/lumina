@@ -166,11 +166,31 @@ test.describe('booking loop', () => {
   }) => {
     const business = await seededBusiness();
 
+    /*
+     * A service a client could actually book — one somebody can perform.
+     *
+     * This used to take the first active service in the table. The seed
+     * assigns services to staff by specialty, so a run can leave a service
+     * with nobody able to perform it; picking one of those and then asserting
+     * on slots made the test fail for a correct empty result. Roughly one
+     * service in six on a seeded salon, and which one `findFirst` returns is
+     * arbitrary — so this failed at random rather than when something broke.
+     */
     const service = await prisma.service.findFirst({
-      where: { businessId: business.id, isActive: true },
+      where: {
+        businessId: business.id,
+        isActive: true,
+        isOnline: true,
+        staff: {
+          some: { staff: { isActive: true, acceptsOnlineBookings: true } },
+        },
+      },
       select: { id: true, duration: true },
     });
-    expect(service, 'an active service to check availability for').toBeTruthy();
+    expect(
+      service,
+      'a bookable service — active, online, and with staff who can perform it'
+    ).toBeTruthy();
 
     // A week out, to sit clear of same-day lead-time rules.
     const date = new Date();
@@ -182,8 +202,6 @@ test.describe('booking loop', () => {
     const response = await request.get(
       `/api/public/booking/${business.id}/availability` +
         `?date=${dateString}&serviceIds=${service!.id}&duration=${service!.duration}`,
-      // This route currently hangs rather than responding. The timeout keeps
-      // the failure fast and legible instead of stalling the whole suite.
       { timeout: 30_000 }
     );
 
