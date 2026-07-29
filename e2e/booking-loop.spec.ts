@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { type Page, expect, test } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
 
 /**
@@ -44,6 +44,73 @@ async function seededBusiness() {
 
   return business;
 }
+
+/**
+ * Record what the browser saw, and attach it to the report if the test fails.
+ *
+ * Without this a CI-only failure gives you a timed-out locator and nothing
+ * else — no console error, no failed request, no clue whether the booking POST
+ * was even attempted. Diagnosing one cost several round trips through CI
+ * guessing at browser differences. The listeners are cheap and the attachments
+ * only appear on failure, so this stays on permanently.
+ */
+let reportBrowserActivity: (() => Promise<void>) | null = null;
+
+function recordBrowserActivity(page: Page) {
+  const consoleErrors: string[] = [];
+  const failedResponses: string[] = [];
+
+  page.on('console', message => {
+    if (message.type() === 'error') consoleErrors.push(message.text());
+  });
+  page.on('pageerror', error => {
+    consoleErrors.push(`[uncaught] ${error.message}`);
+  });
+  page.on('requestfailed', request => {
+    failedResponses.push(
+      `${request.method()} ${request.url()} — ${request.failure()?.errorText}`
+    );
+  });
+  page.on('response', async response => {
+    if (response.status() < 400) return;
+    let body = '';
+    try {
+      body = (await response.text()).slice(0, 300);
+    } catch {
+      body = '<unreadable>';
+    }
+    failedResponses.push(
+      `${response.status()} ${response.request().method()} ${response.url()} :: ${body}`
+    );
+  });
+
+  reportBrowserActivity = async () => {
+    if (test.info().status === test.info().expectedStatus) return;
+
+    await test.info().attach('console-errors', {
+      body: consoleErrors.join('\n') || '(none)',
+      contentType: 'text/plain',
+    });
+    await test.info().attach('failed-requests', {
+      body: failedResponses.join('\n') || '(none)',
+      contentType: 'text/plain',
+    });
+
+    // Also to stdout: the CI log is what you read first, and artifacts need
+    // downloading.
+    console.log(
+      '=== console errors ===\n' + (consoleErrors.join('\n') || '(none)')
+    );
+    console.log(
+      '=== failed requests ===\n' + (failedResponses.join('\n') || '(none)')
+    );
+  };
+}
+
+test.afterEach(async () => {
+  await reportBrowserActivity?.();
+  reportBrowserActivity = null;
+});
 
 test.afterAll(async () => {
   await prisma.$disconnect();
@@ -148,6 +215,7 @@ test.describe('booking loop', () => {
     // booking write. It runs in roughly 20s locally, which leaves no headroom
     // under the 30s default on a cold CI runner.
     test.setTimeout(120_000);
+    recordBrowserActivity(page);
 
     const business = await seededBusiness();
 

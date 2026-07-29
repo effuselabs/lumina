@@ -190,47 +190,58 @@ export function MobileOptimizedBooking({
         </div>
       </main>
 
-      {/* Mobile-Friendly Bottom Actions */}
-      <footer className="safe-area-pb sticky bottom-0 border-t bg-white p-4">
-        <div className="flex gap-3">
-          {onBack && (
-            <Button
-              variant="outline"
-              onClick={onBack}
-              disabled={isLoading}
-              className="h-12 flex-1 text-base font-medium"
-            >
-              Back
-            </Button>
-          )}
-          {onNext && (
-            <Button
-              onClick={onNext}
-              disabled={isNextDisabled || isLoading}
-              className="h-12 flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-base font-medium hover:from-blue-600 hover:to-blue-700"
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  <span>Processing...</span>
-                </div>
-              ) : (
-                // Always "Continue": the final step owns its own
-                // Confirm button, so the shell is passed no
-                // `onNext` there and this never renders on it.
-                <span>Continue</span>
-              )}
-            </Button>
-          )}
-        </div>
-
-        {/* Swipe Hint for First-Time Users */}
-        {currentStepNumber === 1 && (
-          <div className="mt-2 text-center text-xs text-gray-500">
-            Swipe up to continue or use the buttons above
+      {/*
+       * Mobile-Friendly Bottom Actions.
+       *
+       * Rendered only when there is something to render. Steps that own their
+       * own navigation are passed neither handler, and this used to leave an
+       * empty sticky bar — a bordered, padded strip pinned over the bottom of
+       * the content for no reason. On a short viewport (iPhone 12 is 664px
+       * tall against the Pixel 5's 851) it sat on top of the step's own
+       * Confirm button, so the tap landed on the bar instead.
+       */}
+      {(onBack || onNext) && (
+        <footer className="safe-area-pb sticky bottom-0 border-t bg-white p-4">
+          <div className="flex gap-3">
+            {onBack && (
+              <Button
+                variant="outline"
+                onClick={onBack}
+                disabled={isLoading}
+                className="h-12 flex-1 text-base font-medium"
+              >
+                Back
+              </Button>
+            )}
+            {onNext && (
+              <Button
+                onClick={onNext}
+                disabled={isNextDisabled || isLoading}
+                className="h-12 flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-base font-medium hover:from-blue-600 hover:to-blue-700"
+              >
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    <span>Processing...</span>
+                  </div>
+                ) : (
+                  // Always "Continue": the final step owns its own
+                  // Confirm button, so the shell is passed no
+                  // `onNext` there and this never renders on it.
+                  <span>Continue</span>
+                )}
+              </Button>
+            )}
           </div>
-        )}
-      </footer>
+
+          {/* Swipe Hint for First-Time Users */}
+          {currentStepNumber === 1 && (
+            <div className="mt-2 text-center text-xs text-gray-500">
+              Swipe up to continue or use the buttons above
+            </div>
+          )}
+        </footer>
+      )}
     </div>
   );
 }
