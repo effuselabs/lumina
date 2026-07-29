@@ -22,18 +22,9 @@ import { PrismaClient } from '@prisma/client';
  *     reasons unrelated to the product. Covered separately once the queue
  *     records are wired up.
  *
- * KNOWN FAILURES as of writing — these are the work, not bugs in the spec:
- *
- *   1. GET /api/public/booking/[id]/availability HANGS. With a valid date,
- *      serviceIds and duration it never responds (observed: no reply after
- *      10 minutes against seeded data). Everything upstream of it works —
- *      the business/services endpoint returns in milliseconds — so the fault
- *      is inside availability computation, most likely an unbounded loop in
- *      lib/services/availability-calculator.ts or conflict-detection-engine.ts.
- *      This blocks the whole loop: no slots means nothing to book.
- *
- *   2. The end-to-end UI test cannot pass until (1) is fixed, since step 2 of
- *      the booking flow waits for a time slot that never arrives.
+ * All four tests pass. The KNOWN FAILURES list that stood here — availability
+ * hanging, and the UI test blocked behind it — is resolved; see the commits
+ * on `fix/availability-recursion` and `fix/booking-client-and-confirm`.
  */
 
 const prisma = new PrismaClient();
@@ -153,16 +144,27 @@ test.describe('booking loop', () => {
   });
 
   test('a client can book an appointment end to end', async ({ page }) => {
+    // Four steps, four page transitions, an availability computation and a
+    // booking write. It runs in roughly 20s locally, which leaves no headroom
+    // under the 30s default on a cold CI runner.
+    test.setTimeout(120_000);
+
     const business = await seededBusiness();
 
     // A unique client per run, so repeated runs never collide and the
     // assertion below cannot match an appointment from an earlier run.
+    //
+    // The name is letters-only and the phone is unique per run, both on
+    // purpose. Names are validated against /^[a-zA-Z\s'-]+$/, so a timestamp in
+    // the surname fails the form; and `Client` is unique on (businessId,
+    // phone), so a shared number would resolve to a previous run's client.
     const stamp = Date.now();
+    const uniqueSuffix = String(stamp).slice(-7);
     const client = {
       firstName: 'Booking',
-      lastName: `Loop${stamp}`,
+      lastName: 'Loop',
       email: `booking-loop-${stamp}@example.test`,
-      phone: '5551234567',
+      phone: `555${uniqueSuffix}`,
     };
 
     await page.goto(`/book/${business.id}`);
@@ -192,24 +194,42 @@ test.describe('booking loop', () => {
     await page.getByRole('button', { name: /continue|next/i }).click();
 
     // Step 3 — Your Information
+    // Matched by role, not getByLabel: the marketing opt-in is labelled
+    // "...reminders and special offers via email", so getByLabel(/email/i)
+    // resolves to both the text box and that checkbox.
     await expect(page.getByText(/your information/i)).toBeVisible();
-    await page.getByLabel(/first name/i).fill(client.firstName);
-    await page.getByLabel(/last name/i).fill(client.lastName);
-    await page.getByLabel(/email/i).fill(client.email);
-    await page.getByLabel(/phone/i).fill(client.phone);
-    await page.getByRole('button', { name: /continue|next|review/i }).click();
-
-    // Step 4 — Confirm Booking
-    await expect(page.getByText(/confirm/i).first()).toBeVisible();
     await page
-      .getByRole('button', { name: /confirm booking|book appointment/i })
+      .getByRole('textbox', { name: /first name/i })
+      .fill(client.firstName);
+    await page
+      .getByRole('textbox', { name: /last name/i })
+      .fill(client.lastName);
+    await page.getByRole('textbox', { name: /email/i }).fill(client.email);
+    await page.getByRole('textbox', { name: /phone/i }).fill(client.phone);
+    await page
+      .getByRole('button', { name: /continue to confirmation/i })
       .click();
 
-    // Confirmed to the client
+    // Step 4 — Review, then confirm. The button here is what actually creates
+    // the appointment; reaching this screen is not the same as booking.
+    await expect(page.getByText(/review your booking/i)).toBeVisible();
+    await page.getByRole('button', { name: /confirm booking/i }).click();
+
+    // Confirmed to the client.
+    //
+    // Matched on the success heading specifically. A looser
+    // /confirmed|thank you|your appointment/ also matches the in-flight
+    // "Creating Your Appointment..." progress panel, so the spec sailed past
+    // this line while the POST was still running and then failed on the
+    // database check below — reporting a booking bug where there was none.
     await expect(
-      page.getByText(/confirmed|thank you|your appointment/i).first(),
+      page.getByRole('heading', { name: /booking confirmed/i }),
       'the client is shown a confirmation'
-    ).toBeVisible({ timeout: 20_000 });
+    ).toBeVisible({ timeout: 30_000 });
+    await expect(
+      page.getByText(/confirmation number/i),
+      'the confirmation carries the number the server generated'
+    ).toBeVisible();
 
     // Persisted, scoped to the right tenant, and linked to the right client.
     // The UI saying "confirmed" is not the same as the booking existing.

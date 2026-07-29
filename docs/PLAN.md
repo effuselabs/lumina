@@ -26,6 +26,7 @@ start:
 | `npm run lint`          | 180 errors, not run at build           | 0 errors, gates the build |
 | Jest                    | 101 of 114 suites failing, 0% coverage | 56 tests green in CI      |
 | Deployment              | never happened                         | auto-deploys on green CI  |
+| Booking loop            | never completed once                   | green in CI, end to end   |
 | Prod high/critical CVEs | 16 (6 direct)                          | 2 (1 direct)              |
 
 The mechanical root cause was a seed factory that computed required fields and
@@ -56,9 +57,9 @@ books — and the appointment lands in the database against the right business,
 staff member and client.
 
 - [x] **4a** Write the failing spec; trim Playwright from 7 browser projects to 2
-- [ ] **4b** Availability returns real slots
-      — the lookahead recursion is fixed; next is whether slots are actually computed
-- [ ] **4c** Walk the remaining layers until the spec passes
+- [x] **4b** Availability returns real slots — 43 slots in 1.24s cold, 0.61s warm
+- [x] **4c** Walk the remaining layers until the spec passes — **all four tests
+      green**, and the E2E job now gates `main`
 - [ ] **4d** Delete the legacy `__tests__` suite and rebuild ~30 real tests
 
 ---
@@ -110,7 +111,18 @@ time, after the booking loop works.
 - `app/api/booking/*` duplicates the public booking API. `/api/booking/[id]` is
   **live** (it serves the booking confirmation page); the rest is dead, and
   `components/booking/offline-support.tsx` fetches an endpoint that does not
-  exist. Clean up in Phase 4c.
+  exist. Clean up with the Phase 4d rebuild.
+- `components/booking/booking-confirmation.tsx`, `public-booking-interface.tsx`
+  and `simple-booking-layout.tsx` are now unreferenced by the live flow — step 4
+  uses `booking-confirmation-step.tsx`. Delete them in 4d, after confirming no
+  importers remain.
+- The client form's `<Input>` sets `aria-label` from its placeholder, which
+  overrides the visible `<Label>`. Screen-reader users hear "Enter your email
+  address" where the label says "Email Address". Fix with the Phase 5 primitive
+  rebuild.
+- "Confirm Booking" renders white text on the coral/gold gradient — 2.57:1,
+  already listed in `prohibitedPairs` in `lib/design/tokens.ts`. The contrast
+  test covers tokens, not rendered components; Phase 5.
 - `optimized-booking-interface.tsx` is the **live** booking UI.
   `public-booking-interface.tsx` and `simple-booking-layout.tsx` have zero
   importers. An earlier demolition list had this backwards — do not delete the
