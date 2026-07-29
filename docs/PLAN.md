@@ -74,6 +74,24 @@ staff member and client.
 
 ---
 
+## Tooling: when to add plugins
+
+Three plugins are available and none are enabled. Deliberately — capability
+arriving ahead of the work it serves is how this project accumulated 335
+documents.
+
+| Plugin        | When                        | Why                                                                                                                                                                                                                                                 |
+| ------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `design`      | **Phase 5**                 | `/design:ux-copy` for empty states, errors and confirmation copy; `/design:critique` on the booking flow once it works. Skip `/design:handoff` (needs Figma files we don't have) and `/design:research-synthesis` (needs research we haven't done). |
+| `brand-voice` | **Phase 6**, if needed      | Only for the voice-and-tone section of the brand guide — the one part not generated from `lib/design/tokens.ts`.                                                                                                                                    |
+| `marketing`   | **After production launch** | SEO, campaigns and competitor analysis all presume customers and content. Neither exists yet.                                                                                                                                                       |
+
+**The rule that makes these safe:** any audit output must become a test or a
+lint rule, never a document. `/design:accessibility` produces a _report_; our
+contrast check produces a _gate_ that fails CI. Reports were what the 29
+archived design-system documents each were, at the time. Run an audit once for
+discovery, then encode every finding — or it will rot the same way.
+
 ## Parked, not forgotten
 
 Deferred deliberately. Each returns with its own end-to-end spec, one at a
