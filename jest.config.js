@@ -13,7 +13,10 @@ const customJestConfig = {
 
   // Transform configuration - use our Jest-specific Babel config
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+    '^.+\\.(js|jsx|ts|tsx)$': [
+      'babel-jest',
+      { configFile: './jest.babel.config.js' },
+    ],
   },
 
   // Setup files
@@ -51,7 +54,10 @@ const customJestConfig = {
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
       transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+        '^.+\\.(js|jsx|ts|tsx)$': [
+          'babel-jest',
+          { configFile: './jest.babel.config.js' },
+        ],
       },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
@@ -67,6 +73,11 @@ const customJestConfig = {
         '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
           'jest-transform-stub',
       },
+      // `@faker-js/faker` ships ESM only, and node_modules is not transformed
+      // by default — importing it from a test fails with "Cannot use import
+      // statement outside a module". The seed factories depend on it, and the
+      // seed is the thing this project most needs tests around.
+      transformIgnorePatterns: ['/node_modules/(?!@faker-js/faker)'],
       testMatch: ['<rootDir>/**/__tests__/**/*.test.{js,jsx,ts,tsx}'],
       testPathIgnorePatterns: [
         '<rootDir>/__tests__/integration/',
@@ -80,7 +91,10 @@ const customJestConfig = {
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
       transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+        '^.+\\.(js|jsx|ts|tsx)$': [
+          'babel-jest',
+          { configFile: './jest.babel.config.js' },
+        ],
       },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
@@ -105,7 +119,10 @@ const customJestConfig = {
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
       transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+        '^.+\\.(js|jsx|ts|tsx)$': [
+          'babel-jest',
+          { configFile: './jest.babel.config.js' },
+        ],
       },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
@@ -130,7 +147,10 @@ const customJestConfig = {
       setupFiles: ['<rootDir>/jest.setup.ts'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup-dom.ts'],
       transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.js' }],
+        '^.+\\.(js|jsx|ts|tsx)$': [
+          'babel-jest',
+          { configFile: './jest.babel.config.js' },
+        ],
       },
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',

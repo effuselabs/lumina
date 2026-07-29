@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { InputSanitizer } from '@/lib/security/rate-limiter';
 import { ClientService } from '@/lib/services/client-service';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -52,14 +51,27 @@ class ClientLookupError extends Error {
   }
 }
 
-interface ClientData {
-  firstName: string;
-  lastName: string;
-  email?: string;
-  phone?: string;
-  preferredStaff?: string;
-  notes?: string;
-  isNewClient: boolean;
+const CLIENT_LOOKUP_ERROR_STATUS: Record<ClientLookupErrorType, number> = {
+  [ClientLookupErrorType.BUSINESS_NOT_FOUND]: 404,
+  [ClientLookupErrorType.BUSINESS_INACTIVE]: 403,
+  [ClientLookupErrorType.VALIDATION_ERROR]: 400,
+  // A server-side failure is not the caller's fault. Reporting it as 400 sent
+  // the booking form down its "you typed something wrong" path for a bug that
+  // no amount of retyping could fix.
+  [ClientLookupErrorType.SYSTEM_ERROR]: 500,
+};
+
+/*
+ * Serialize explicitly rather than passing the Error to NextResponse.json.
+ * `message` and `name` are non-enumerable on Error, so they vanish silently in
+ * JSON — and `message` is the internal detail we do not want to leak anyway.
+ */
+function serializeClientLookupError(error: ClientLookupError) {
+  return {
+    type: error.type,
+    userMessage: error.userMessage,
+    suggestions: error.suggestions,
+  };
 }
 
 // Business context validation
@@ -107,37 +119,25 @@ async function validateBusinessForClientLookup(businessId: string) {
   }
 }
 
-// Look up existing client using ClientService
+/*
+ * Look up an existing client.
+ *
+ * Returns whether a client matched and nothing else. This route is
+ * unauthenticated by necessity — it serves the public booking page — so it must
+ * not hand back the matched client's name, email or phone, which is what it did
+ * before: anyone could type a phone number and be shown whose it was.
+ */
 async function lookupClient(
   businessId: string,
   email?: string,
   phone?: string
-): Promise<{ clientExists: boolean; clientData?: Partial<ClientData> }> {
+): Promise<{ clientExists: boolean }> {
   try {
-    const result = await ClientService.lookupClient({
+    return await ClientService.lookupClient({
       businessId,
       email,
       phone,
     });
-
-    if (!result.clientExists || !result.clientData) {
-      return {
-        clientExists: false,
-      };
-    }
-
-    // Return sanitized client data for prefilling
-    return {
-      clientExists: true,
-      clientData: {
-        firstName: InputSanitizer.sanitizeString(result.clientData.firstName),
-        lastName: InputSanitizer.sanitizeString(result.clientData.lastName),
-        email: result.clientData.email,
-        phone: result.clientData.phone,
-        notes: undefined, // Notes not included in lookup for privacy
-        isNewClient: false,
-      },
-    };
   } catch (error) {
     console.error('Error during client lookup:', error);
     throw new ClientLookupError(
@@ -221,10 +221,9 @@ export async function POST(
 
     if (error instanceof ClientLookupError) {
       return NextResponse.json(
-        { error },
+        { error: serializeClientLookupError(error) },
         {
-          status:
-            error.type === ClientLookupErrorType.BUSINESS_NOT_FOUND ? 404 : 400,
+          status: CLIENT_LOOKUP_ERROR_STATUS[error.type],
           headers: publicBookingSecurityHeaders,
         }
       );

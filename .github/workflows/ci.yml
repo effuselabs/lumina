@@ -9,8 +9,6 @@ name: CI
 # everyone ignores is worse than a small green one.
 #
 # Not yet included, and why:
-#   - E2E: e2e/booking-loop.spec.ts does not exist yet. Added in Phase 4,
-#     where it becomes the definition of done.
 #   - Full unit suite: the legacy suite has 101 failing files and is being
 #     replaced rather than repaired. Only known-passing suites run (test:ci).
 #   - Coverage thresholds: measured coverage is ~0%. Enforced once the rebuilt
@@ -125,3 +123,68 @@ jobs:
         # with data and nothing was ever verified. It stays in CI so it cannot
         # silently break again.
         run: npm run db:seed
+
+  e2e:
+    name: Booking loop (end to end)
+    runs-on: ubuntu-latest
+
+    # The definition of done for the current milestone: a stranger opens the
+    # public booking page, picks a service and a slot, enters their details, and
+    # the appointment lands in the database against the right business, staff
+    # member and client. Everything else in this pipeline can pass while the
+    # product does nothing; this is the check that says it works.
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: lumina
+          POSTGRES_PASSWORD: lumina_ci
+          POSTGRES_DB: lumina_ci
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    env:
+      DATABASE_URL: postgresql://lumina:lumina_ci@localhost:5432/lumina_ci
+      NEXTAUTH_SECRET: e2e-placeholder-not-a-real-secret
+      NEXTAUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Prepare the database
+        run: npx prisma migrate deploy && npm run db:seed
+
+      - name: Install Playwright browsers
+        # Only the two projects the config declares. --with-deps pulls the
+        # system libraries WebKit needs on a bare runner.
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Booking loop
+        run: npm run test:e2e -- booking-loop.spec.ts
+
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

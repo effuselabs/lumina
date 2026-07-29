@@ -132,19 +132,20 @@ same list with production values.
    time credentials rotate. Typing `${{Postgres.DATABASE_URL}}` by hand does the
    same thing, where `Postgres` is the exact name of the database service.
 
-   | Variable              | Value                                                     |
-   | --------------------- | --------------------------------------------------------- |
-   | `DATABASE_URL`        | `${{Postgres.DATABASE_URL}}` — reference, never a literal |
-   | `NEXTAUTH_SECRET`     | `openssl rand -base64 32`, unique to this environment     |
-   | `NEXTAUTH_URL`        | `https://staging.uselumina.app`                           |
-   | `NEXT_PUBLIC_APP_URL` | `https://staging.uselumina.app`                           |
-   | `RESEND_API_KEY`      | from Resend                                               |
-   | `EMAIL_FROM`          | `noreply@mail.uselumina.app`                              |
-   | `EMAIL_FROM_NAME`     | `Lumina`                                                  |
-   | `CRON_SECRET`         | `openssl rand -hex 32`                                    |
-   | `SENTRY_DSN`          | from Sentry                                               |
-   | `NODE_ENV`            | `production` (staging runs a production build)            |
-   | `NODE_OPTIONS`        | `--dns-result-order=ipv6first` — see note below           |
+   | Variable                     | Value                                                     |
+   | ---------------------------- | --------------------------------------------------------- |
+   | `DATABASE_URL`               | `${{Postgres.DATABASE_URL}}` — reference, never a literal |
+   | `NEXTAUTH_SECRET`            | `openssl rand -base64 32`, unique to this environment     |
+   | `NEXTAUTH_URL`               | `https://staging.uselumina.app`                           |
+   | `NEXT_PUBLIC_APP_URL`        | `https://staging.uselumina.app`                           |
+   | `RESEND_API_KEY`             | from Resend                                               |
+   | `EMAIL_FROM`                 | `noreply@mail.uselumina.app`                              |
+   | `EMAIL_FROM_NAME`            | `Lumina`                                                  |
+   | `CRON_SECRET`                | `openssl rand -hex 32`                                    |
+   | `PUBLIC_BOOKING_CSRF_SECRET` | `openssl rand -hex 32`, unique to this environment        |
+   | `SENTRY_DSN`                 | from Sentry                                               |
+   | `NODE_ENV`                   | `production` (staging runs a production build)            |
+   | `NODE_OPTIONS`               | `--dns-result-order=ipv6first` — see note below           |
 
    `NODE_OPTIONS` is needed because Railway's private networking host
    (`postgres.railway.internal`) resolves **IPv6-only**. Without it Node may try
@@ -264,6 +265,13 @@ carries its own check and must keep it:
 | `/api/payments/webhook`    | Stripe signature            |
 | `/api/staff/invite/verify` | single-use invitation token |
 | `/api/staff/invite/accept` | single-use invitation token |
+| `.../booking/[id]/book`    | CSRF token + rate limit     |
+
+`POST /api/public/booking/[businessId]/book` cannot require a session — the
+person booking is a stranger. It is guarded by a double-submit CSRF token
+issued by `GET .../csrf-token`, signed with `PUBLIC_BOOKING_CSRF_SECRET`, plus
+per-IP rate limiting. Public booking routes return no client PII: a lookup
+answers "is this a returning client" with a boolean and nothing more.
 
 The staff-invite routes must be reachable without a session: a new staff member
 has no account until they accept, so requiring one would deadlock the flow.
