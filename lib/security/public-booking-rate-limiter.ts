@@ -4,6 +4,7 @@
  */
 
 import { NextRequest } from 'next/server';
+import { isSuspiciousEmailAddress } from './public-booking-sanitizer';
 
 // Rate limiting configuration for public booking
 interface PublicRateLimitConfig {
@@ -205,8 +206,28 @@ export class PublicBookingAbuseDetector {
       count: number;
       lastSeen: number;
       patterns: string[];
+      /** Timestamps inside the burst window, for Pattern 3. */
+      recent: number[];
     }
   >();
+
+  /*
+   * Thresholds are set so that no plausible human trips them.
+   *
+   * A single client completing one booking makes roughly ten requests through
+   * here — the page, the services list, availability for each date they look
+   * at, a CSRF token, and the booking itself. Someone comparing a few dates
+   * makes more. The identifier is IP-based, so the ceiling is also shared by
+   * everyone behind one address: a salon's own wifi, an office, a mobile
+   * carrier's CGNAT.
+   *
+   * The previous ceiling was 20 per hour, which one careful client could reach
+   * alone. Volume is the rate limiter's job; this exists to catch scripted
+   * abuse, so the numbers are set where only a script reaches them.
+   */
+  private static readonly HOURLY_REQUEST_CEILING = 300;
+  private static readonly BURST_WINDOW_MS = 10 * 1000;
+  private static readonly BURST_CEILING = 40;
 
   // Detect suspicious booking patterns for public endpoints
   detectSuspiciousActivity(req: NextRequest, data?: any): boolean {
@@ -216,7 +237,7 @@ export class PublicBookingAbuseDetector {
     // Get or create pattern tracking
     let pattern = this.suspiciousPatterns.get(clientId);
     if (!pattern) {
-      pattern = { count: 0, lastSeen: now, patterns: [] };
+      pattern = { count: 0, lastSeen: now, patterns: [], recent: [] };
       this.suspiciousPatterns.set(clientId, pattern);
     }
 
@@ -224,14 +245,14 @@ export class PublicBookingAbuseDetector {
     if (now - pattern.lastSeen > 60 * 60 * 1000) {
       pattern.count = 0;
       pattern.patterns = [];
+      pattern.recent = [];
     }
 
     pattern.count++;
     pattern.lastSeen = now;
 
-    // Pattern 1: Too many requests in short time
-    if (pattern.count > 20) {
-      // More than 20 requests in 1 hour
+    // Pattern 1: sustained volume over the hour.
+    if (pattern.count > PublicBookingAbuseDetector.HOURLY_REQUEST_CEILING) {
       pattern.patterns.push('HIGH_FREQUENCY');
       return true;
     }
@@ -244,9 +265,29 @@ export class PublicBookingAbuseDetector {
       }
     }
 
-    // Pattern 3: Rapid sequential requests (less than 1 second apart)
-    const rapidRequestThreshold = 1000; // 1 second
-    if (pattern.count > 1 && now - pattern.lastSeen < rapidRequestThreshold) {
+    /*
+     * Pattern 3: a burst — many requests inside a short window.
+     *
+     * This used to read `now - pattern.lastSeen < 1000` immediately after
+     * assigning `pattern.lastSeen = now`, so the difference was always zero and
+     * the condition collapsed to "this is not your first request". Every
+     * returning visitor was flagged as an attacker and served a 403 telling
+     * them to phone the salon instead.
+     *
+     * It stayed hidden because the booking flow used to make exactly one
+     * abuse-checked request per client. Adding a second — the CSRF token
+     * fetch — surfaced it on the very next request.
+     *
+     * Counting timestamps in a window is what the rule was reaching for, and
+     * unlike a gap comparison it does not punish the parallel requests a
+     * browser legitimately makes while loading a page.
+     */
+    pattern.recent.push(now);
+    pattern.recent = pattern.recent.filter(
+      at => now - at <= PublicBookingAbuseDetector.BURST_WINDOW_MS
+    );
+
+    if (pattern.recent.length > PublicBookingAbuseDetector.BURST_CEILING) {
       pattern.patterns.push('RAPID_REQUESTS');
       return true;
     }
@@ -281,29 +322,48 @@ export class PublicBookingAbuseDetector {
     return false;
   }
 
+  /*
+   * Delegated, not reimplemented.
+   *
+   * This file used to carry its own copy of the email heuristics, still with
+   * the over-broad rules — so an address the sanitizer had already accepted
+   * could be rejected as abuse two checks later in the same request. One
+   * implementation now, in the sanitizer.
+   */
   private isSuspiciousEmail(email: string): boolean {
-    const suspiciousPatterns = [
-      /^[a-z]+\d+@/i, // Simple pattern like "user123@"
-      /test|spam|fake|temp|throwaway/i, // Common spam keywords
-      /\+.*\+/i, // Multiple plus signs
-      /\.{2,}/i, // Multiple consecutive dots
-      /^.{1,2}@/i, // Very short local part
-      /[0-9]{10,}@/i, // Long number sequences
-    ];
-
-    return suspiciousPatterns.some(pattern => pattern.test(email));
+    return isSuspiciousEmailAddress(email);
   }
 
   private isSuspiciousName(name: string): boolean {
-    const suspiciousPatterns = [
-      /^[a-z]+\d+$/i, // Name with numbers like "john123"
-      /test|fake|spam/i, // Common fake name keywords
-      /^.{1,2}$/i, // Very short names
-      /[^a-zA-Z\s\-']/i, // Contains non-name characters
-      /(.)\1{4,}/i, // Repeated characters (aaaaa)
-    ];
+    /*
+     * Only input that is not a name at all.
+     *
+     * The rules this replaces rejected any name of two characters or fewer —
+     * Jo, Al, Li, Bo, Ng, Xu are ordinary given names and surnames — any name
+     * containing "test", "fake" or "spam" anywhere, and any name with a
+     * character outside `[a-zA-Z\s\-']`, which excludes every accented and
+     * non-Latin name there is: José, Müller, Ana-Sofía, 李.
+     *
+     * Names are the worst possible thing to pattern-match. Almost every rule
+     * about what a name "looks like" is wrong for someone, and being told your
+     * own name is suspicious is a memorably bad way to lose a customer. What
+     * is left catches markup and control characters — injection attempts,
+     * not people.
+     */
+    if (/[<>{}[\]\\/|=;]/.test(name)) {
+      return true; // Markup or delimiter characters: not a name.
+    }
 
-    return suspiciousPatterns.some(pattern => pattern.test(name));
+    // eslint-disable-next-line no-control-regex
+    if (/[\u0000-\u001f\u007f]/.test(name)) {
+      return true; // Control characters.
+    }
+
+    if (name.trim().length === 0) {
+      return true;
+    }
+
+    return false;
   }
 
   private getClientIdentifier(req: NextRequest): string {

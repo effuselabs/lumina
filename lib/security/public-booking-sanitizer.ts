@@ -484,54 +484,63 @@ export class PublicBookingSanitizer {
    * Check for suspicious email patterns
    */
   private isSuspiciousEmail(email: string): boolean {
-    /*
-     * This check fires on the last step of the booking flow, so a false
-     * positive costs a real appointment: the client is told "Please check
-     * your input and try again" about an address that is entirely valid,
-     * and there is nothing they can change to get past it.
-     *
-     * The rules this replaces rejected, among others:
-     *   - `sarah1990@gmail.com`  — matched /^[a-z]+\d+@/, "letters then
-     *     digits", which describes an enormous share of personal addresses
-     *   - `stempel@gmail.com`, `contested@gmail.com`, `tempest@…`,
-     *     `testa.maria@…` — the words test/temp/fake/spam/throwaway were
-     *     matched anywhere in the string, including inside surnames
-     *   - `jo@example.org` — two-character local parts are legal and real
-     *
-     * What remains is narrow and defensible: known disposable-mailbox
-     * providers, matched on the DOMAIN (exact host or a subdomain of it, so
-     * `mailinator-reviews.example.com` is not caught), plus two structural
-     * signals that no deliverable address has.
-     */
-    const atIndex = email.lastIndexOf('@');
-    if (atIndex === -1) {
-      return false; // Format is reported separately by the regex check.
-    }
-
-    const localPart = email.slice(0, atIndex);
-    const domain = email.slice(atIndex + 1).toLowerCase();
-
-    const isDisposableDomain = DISPOSABLE_EMAIL_DOMAINS.some(
-      blocked => domain === blocked || domain.endsWith(`.${blocked}`)
-    );
-
-    if (isDisposableDomain) {
-      return true;
-    }
-
-    // Consecutive dots are invalid in an unquoted local part (RFC 5322).
-    if (/\.{2,}/.test(localPart)) {
-      return true;
-    }
-
-    // A run of 10+ digits as the whole local part is machine-generated, not
-    // a person. Scoped to the local part so long numeric domains are safe.
-    if (/^\d{10,}$/.test(localPart)) {
-      return true;
-    }
-
-    return false;
+    return isSuspiciousEmailAddress(email);
   }
+}
+
+/**
+ * The single implementation of "is this address disposable or machine-made".
+ *
+ * Exported because the abuse detector in `public-booking-rate-limiter.ts` had
+ * its own copy, still carrying the over-broad rules this replaced — so an
+ * address the sanitizer accepted could still be flagged as abuse two checks
+ * later. One booking request runs through both. There is one copy now.
+ *
+ * A false positive here costs a real appointment: the client is told to check
+ * input that is already correct, with nothing they can change to get past it.
+ * The rules this replaced rejected, among others:
+ *   - `sarah1990@gmail.com` — matched /^[a-z]+\d+@/, "letters then digits",
+ *     which describes an enormous share of personal addresses
+ *   - `stempel@gmail.com`, `contested@gmail.com`, `testa.maria@…` — the words
+ *     test/temp/fake/spam/throwaway were matched anywhere in the string,
+ *     including inside surnames
+ *   - `jo@example.org` — two-character local parts are legal and real
+ *
+ * What remains is narrow and defensible: known disposable-mailbox providers,
+ * matched on the DOMAIN (exact host or a subdomain of it, so
+ * `mailinator-reviews.example.com` is not caught), plus two structural signals
+ * that no deliverable address has.
+ */
+export function isSuspiciousEmailAddress(email: string): boolean {
+  const normalized = email.trim().toLowerCase();
+  const atIndex = normalized.lastIndexOf('@');
+  if (atIndex === -1) {
+    return false; // Format is reported separately by the regex check.
+  }
+
+  const localPart = normalized.slice(0, atIndex);
+  const domain = normalized.slice(atIndex + 1);
+
+  const isDisposableDomain = DISPOSABLE_EMAIL_DOMAINS.some(
+    blocked => domain === blocked || domain.endsWith(`.${blocked}`)
+  );
+
+  if (isDisposableDomain) {
+    return true;
+  }
+
+  // Consecutive dots are invalid in an unquoted local part (RFC 5322).
+  if (/\.{2,}/.test(localPart)) {
+    return true;
+  }
+
+  // A run of 10+ digits as the whole local part is machine-generated, not a
+  // person. Scoped to the local part so long numeric domains are safe.
+  if (/^\d{10,}$/.test(localPart)) {
+    return true;
+  }
+
+  return false;
 }
 
 // Global instance for public booking sanitization
