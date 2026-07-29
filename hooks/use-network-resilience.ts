@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface NetworkState {
   isOnline: boolean;
@@ -34,7 +34,29 @@ export function useNetworkResilience(
   options: UseNetworkResilienceOptions = {}
 ) {
   const { retryConfig = {}, onConnectionChange, onSlowConnection } = options;
-  const config = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
+
+  /*
+   * Memoised, because `config` feeds calculateRetryDelay's dependency array,
+   * which feeds resilientFetch, which callers put in their OWN useCallback and
+   * useEffect dependencies.
+   *
+   * As a bare object literal it was a new reference every render, so
+   * resilientFetch changed identity every render and any consumer depending on
+   * it re-ran forever — "Maximum update depth exceeded" in StaffTimeSelection,
+   * whose fetch callbacks list resilientFetch as a dependency.
+   *
+   * Keyed on the individual values rather than the retryConfig object, because
+   * callers pass that inline too.
+   */
+  const config = useMemo(
+    () => ({ ...DEFAULT_RETRY_CONFIG, ...retryConfig }),
+    [
+      retryConfig.maxRetries,
+      retryConfig.baseDelay,
+      retryConfig.maxDelay,
+      retryConfig.backoffFactor,
+    ]
+  );
 
   const [networkState, setNetworkState] = useState<NetworkState>({
     isOnline: typeof window !== 'undefined' ? navigator.onLine : true,
@@ -172,8 +194,19 @@ export function useNetworkResilience(
 
           const data = await response.json();
 
-          // Update retry count on success
-          setNetworkState(prev => ({ ...prev, retryCount: 0 }));
+          // Clear the retry counter, but ONLY if it is actually non-zero.
+          //
+          // This used to set state unconditionally, producing a new state
+          // object after every successful request even when nothing had
+          // changed. That re-rendered consumers, which changed the identity of
+          // resilientFetch and getNetworkErrorMessage, which are in callers'
+          // dependency arrays — so the fetch re-ran, and so on. A single visit
+          // to step 2 of the booking flow issued TWELVE availability requests
+          // instead of one, and three page loads were enough to trip the
+          // 30-per-minute rate limit with a 429.
+          setNetworkState(prev =>
+            prev.retryCount === 0 ? prev : { ...prev, retryCount: 0 }
+          );
 
           return data;
         } catch (error) {

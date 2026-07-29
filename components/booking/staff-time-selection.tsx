@@ -22,11 +22,14 @@ import {
   DollarSign,
   RefreshCw,
   User,
-  Users
+  Users,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { BookingErrorHandler } from './booking-error-handler';
-import { BookingLoadingState, NetworkStatusIndicator } from './booking-loading-states';
+import {
+  BookingLoadingState,
+  NetworkStatusIndicator,
+} from './booking-loading-states';
 
 export interface TimeSlot {
   startTime: Date;
@@ -98,13 +101,14 @@ export function StaffTimeSelection({
   const [alternativeSlots, setAlternativeSlots] = useState<TimeSlot[]>([]);
 
   // Network resilience hook
-  const { resilientFetch, networkState, getNetworkErrorMessage } = useNetworkResilience({
-    onConnectionChange: (isOnline) => {
-      if (isOnline && error) {
-        fetchAvailableSlots();
-      }
-    },
-  });
+  const { resilientFetch, networkState, getNetworkErrorMessage } =
+    useNetworkResilience({
+      onConnectionChange: isOnline => {
+        if (isOnline && error) {
+          fetchAvailableSlots();
+        }
+      },
+    });
 
   // Calendar navigation state
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
@@ -155,11 +159,11 @@ export function StaffTimeSelection({
 
     try {
       const serviceIds = selectedServices.map(s => s.id);
-      const data = await resilientFetch(
+      const data = (await resilientFetch(
         `/api/public/booking/${businessId}/staff?serviceIds=${serviceIds.join(',')}`,
         {},
         `staff-${businessId}-${serviceIds.join('-')}`
-      ) as { staff: StaffMember[] };
+      )) as { staff: StaffMember[] };
 
       setQualifiedStaff(data.staff || []);
     } catch (_err) {
@@ -199,20 +203,33 @@ export function StaffTimeSelection({
         `availability-${businessId}-${selectedDate.toDateString()}-${serviceIds.join('-')}`
       );
 
-      setAvailableSlots(data.availableSlots);
+      // The API is JSON, so startTime/endTime arrive as ISO STRINGS even
+      // though TimeSlot types them as Date. Passing a string to
+      // Intl.DateTimeFormat throws `RangeError: Invalid time value`, which
+      // crashed this component into the booking error boundary — step 2 of the
+      // flow was unreachable. Revive them at the boundary, once, so everything
+      // downstream can rely on the declared type.
+      setAvailableSlots(
+        (data.availableSlots ?? []).map(slot => ({
+          ...slot,
+          startTime: new Date(slot.startTime),
+          endTime: new Date(slot.endTime),
+        }))
+      );
       setNextAvailableDate(data.nextAvailableDate || null);
       setLastUpdateTime(new Date());
 
       // If no slots available, fetch alternatives
       if (data.availableSlots.length === 0) {
         try {
-          const alternatives = await AlternativeSlotsService.findAlternativeSlots({
-            businessId,
-            serviceIds,
-            originalStartTime: selectedDate,
-            staffId: selectedStaffId !== 'any' ? selectedStaffId : undefined,
-            maxAlternatives: 6,
-          });
+          const alternatives =
+            await AlternativeSlotsService.findAlternativeSlots({
+              businessId,
+              serviceIds,
+              originalStartTime: selectedDate,
+              staffId: selectedStaffId !== 'any' ? selectedStaffId : undefined,
+              maxAlternatives: 6,
+            });
           setAlternativeSlots(alternatives.alternatives as TimeSlot[]);
         } catch (altError) {
           console.error('Failed to fetch alternative slots:', altError);
@@ -228,7 +245,14 @@ export function StaffTimeSelection({
     } finally {
       setLoading(false);
     }
-  }, [businessId, selectedServices, selectedDate, selectedStaffId, resilientFetch, getNetworkErrorMessage]);
+  }, [
+    businessId,
+    selectedServices,
+    selectedDate,
+    selectedStaffId,
+    resilientFetch,
+    getNetworkErrorMessage,
+  ]);
 
   // Initial data fetch
   useEffect(() => {
@@ -418,10 +442,11 @@ export function StaffTimeSelection({
                     <Button
                       variant={isDateSelected(date) ? 'primary' : 'ghost'}
                       size="sm"
-                      className={`h-full w-full p-0 text-sm ${!isDateSelectable(date)
-                        ? 'cursor-not-allowed opacity-50'
-                        : ''
-                        }`}
+                      className={`h-full w-full p-0 text-sm ${
+                        !isDateSelectable(date)
+                          ? 'cursor-not-allowed opacity-50'
+                          : ''
+                      }`}
                       onClick={() => handleDateSelect(date)}
                       disabled={!isDateSelectable(date)}
                     >
@@ -505,7 +530,11 @@ export function StaffTimeSelection({
               <div className="py-4">
                 <BookingLoadingState
                   type="availability"
-                  message={networkState.isSlowConnection ? "Checking availability (slow connection)..." : "Finding available time slots..."}
+                  message={
+                    networkState.isSlowConnection
+                      ? 'Checking availability (slow connection)...'
+                      : 'Finding available time slots...'
+                  }
                   estimatedTime={networkState.isSlowConnection ? 8 : 3}
                 />
               </div>
@@ -519,7 +548,7 @@ export function StaffTimeSelection({
                   onRetry={handleRefresh}
                   onClearError={() => setError(null)}
                   alternativeSlots={alternativeSlots}
-                  onAlternativeSlotSelect={(slot) => {
+                  onAlternativeSlotSelect={slot => {
                     setSelectedDate(slot.startTime);
                     setSelectedStaffId(slot.staffId);
                     handleSlotSelect(slot as unknown as TimeSlot);
@@ -574,9 +603,9 @@ export function StaffTimeSelection({
                               key={index}
                               variant={
                                 selectedSlot &&
-                                  selectedSlot.startTime.getTime() ===
+                                selectedSlot.startTime.getTime() ===
                                   slot.startTime.getTime() &&
-                                  selectedSlot.staffId === slot.staffId
+                                selectedSlot.staffId === slot.staffId
                                   ? 'primary'
                                   : 'outline'
                               }
