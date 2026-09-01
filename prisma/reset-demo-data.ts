@@ -26,7 +26,20 @@
  *
  * Usage:
  *   npm run db:seed:refresh                      # reset, then seed
- *   DATABASE_URL="…" npm run db:seed:refresh     # against staging
+ *   DATABASE_URL="…" npm run db:seed:refresh     # against a deployed database
+ *
+ * On Windows PowerShell the second form is
+ *   $env:DATABASE_URL = "…"; npm run db:seed:refresh
+ * and the variable persists for the rest of that shell session — clear it with
+ * `Remove-Item Env:\DATABASE_URL` so later commands do not hit the wrong
+ * database.
+ *
+ * `db:seed:reset` runs this through `tsx --env-file-if-exists=.env`. `npm run
+ * db:seed` gets `.env` for free because the Prisma CLI loads it before running
+ * the seed; a plain tsx process does not, so without that flag this failed with
+ * "Environment variable not found: DATABASE_URL" against a local checkout. An
+ * explicit DATABASE_URL in the environment still wins over `.env`, which is
+ * what makes pointing this at staging safe.
  */
 
 import { PrismaClient } from '@prisma/client';

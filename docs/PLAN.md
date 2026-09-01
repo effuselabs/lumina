@@ -108,6 +108,12 @@ time, after the booking loop works.
 
 ## Known, unaddressed
 
+- `npm run test:e2e` needs `DATABASE_URL` exported; it does not read `.env`.
+  CI supplies it as a job variable so the gate is unaffected, but a fresh clone
+  with a working `.env` cannot run the spec without setting it by hand. Same
+  root cause as the seed-reset bug: a process that instantiates Prisma directly
+  gets no `.env`, because only the Prisma and Next CLIs load it.
+
 - The public booking page now hides services no active staff can perform. A
   salon whose only nail technician leaves will see nail services disappear from
   their booking page with no notice. Better than the dead end it replaces — the
