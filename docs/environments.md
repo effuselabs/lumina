@@ -56,6 +56,49 @@ manage or rotate, no coupling to the service name, and no chance of two systems
 deploying at once. `.github/workflows/deploy.yml` is manual-only, for
 re-deploying by hand and for promoting production.
 
+### Seeding and refreshing staging demo data
+
+`preDeployCommand` runs migrations only, so a fresh staging database has a
+schema and no data. Seed it once, by hand.
+
+`DATABASE_URL` on the service resolves to `postgres.railway.internal`, which
+only exists inside Railway's network — `railway run` from a laptop cannot reach
+it. Use the Postgres service's **public** URL, which Railway exposes through its
+TCP proxy:
+
+```bash
+railway login
+railway link                          # Lumina project → staging
+
+railway variables --service Postgres  # copy DATABASE_PUBLIC_URL
+                                      # postgresql://…@…proxy.rlwy.net:PORT/railway
+
+DATABASE_URL="<public URL>" npm run db:seed:refresh
+```
+
+If `DATABASE_PUBLIC_URL` is absent, the TCP proxy is disabled — enable it under
+the Postgres service's Settings → Networking, and disable it again afterwards.
+
+**Use `db:seed:refresh`, not `db:seed`.** The seed upserts its scaffolding but
+creates staff, services, clients, appointments and transactions fresh every
+run, so running it twice duplicates the catalogue — six runs against a local
+database produced 280 services where there should have been 40. `db:seed:refresh`
+removes the demo salon first, and is safe to run repeatedly.
+
+The reset deletes **one row**, matched by the slug `lumina-demo-salon`, and lets
+the schema's cascades take its data with it. A real business that signs up on
+staging is not touched, because its slug is different. `prisma/reset-demo-data.ts`
+carries the reasoning; `__tests__/factories/reset-demo-data.test.ts` pins the
+scoping so it cannot quietly broaden.
+
+Demo logins, all with password `demo123`:
+
+| Account                 | Role  |
+| ----------------------- | ----- |
+| `owner@lumina-demo.com` | Owner |
+| `mike@lumina-demo.com`  | Staff |
+| `emma@lumina-demo.com`  | Staff |
+
 ### Health contract
 
 `/api/health` is what Railway polls before promoting a release.
