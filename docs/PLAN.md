@@ -75,6 +75,26 @@ staff member and client.
 
 ---
 
+## Dependency policy
+
+Two triggers, and only two:
+
+1. **A CVE affecting production.** Pull it forward immediately, whatever phase
+   we are in. The number that matters is prod high/critical CVEs — 16 at the
+   start, 2 now (1 direct) — not whether a newer version exists.
+2. **Phase 7**, where a full review happens deliberately: majors surveyed,
+   upgraded in small reviewable PRs, each verified by the five gates.
+
+Everything else waits. A version bump has no observable outcome — the booking
+loop cannot tell you it worked — so it is precisely the kind of work that
+consumed this project the first time while nothing shipped. `next@16` is
+already parked on these grounds.
+
+**Do not upgrade to a release candidate.** The Prisma CLI currently advertises
+`8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
+three majors, and taking it mid-rebuild trades a working stack for an
+unsupported one. Revisit when 8.x is stable, in Phase 7.
+
 ## Tooling: when to add plugins
 
 Three plugins are available and none are enabled. Deliberately — capability
