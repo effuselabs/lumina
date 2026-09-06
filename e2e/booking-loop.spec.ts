@@ -223,14 +223,22 @@ test.describe('booking loop', () => {
       timeZone: 'UTC',
     });
 
-    // At most two hops: the search window for an open day is under a
-    // fortnight, so it can cross one month boundary but never two.
-    for (let hop = 0; hop < 2; hop += 1) {
-      const heading = page.getByRole('heading', { level: 3 });
-      if ((await heading.first().textContent())?.trim() === targetMonth) break;
-      await page.getByRole('button', { name: /next month/i }).click();
-    }
+    // Matched on its text rather than its level. `CardTitle` renders an <h3>,
+    // so "Select Date" and "Available Times" are level-3 headings too, and
+    // `{ level: 3 }` picks whichever comes first — not the month.
+    const monthHeading = page.getByRole('heading', {
+      name: /^[A-Z][a-z]+ \d{4}$/,
+    });
 
+    // The search window for an open day is under a fortnight, so the target
+    // can cross one month boundary but never two.
+    if ((await monthHeading.textContent())?.trim() !== targetMonth) {
+      await page.getByRole('button', { name: /^next month$/i }).click();
+    }
+    await expect(monthHeading).toHaveText(targetMonth);
+
+    // Day cells are buttons labelled with the number alone, so the match is
+    // exact — otherwise "1" also matches "13" and "21".
     await page
       .getByRole('button', { name: String(target.getUTCDate()), exact: true })
       .click();
@@ -339,7 +347,7 @@ test.describe('booking loop', () => {
       .getByRole('button', { name: /add|select/i })
       .first();
     await firstService.click();
-    await page.getByRole('button', { name: /continue|next/i }).click();
+    await page.getByRole('button', { name: /^continue/i }).click();
 
     // Step 2 — Choose Date & Time
     await expect(page.getByText(/date & time|choose a time/i)).toBeVisible();
@@ -358,7 +366,7 @@ test.describe('booking loop', () => {
       'at least one bookable time slot is offered'
     ).toBeVisible({ timeout: 15_000 });
     await firstSlot.click();
-    await page.getByRole('button', { name: /continue|next/i }).click();
+    await page.getByRole('button', { name: /^continue/i }).click();
 
     // Step 3 — Your Information
     // Matched by role, not getByLabel: the marketing opt-in is labelled

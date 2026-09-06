@@ -197,6 +197,15 @@ time, after the booking loop works.
   returns `nextAvailableDate` in the same response. Honour it — land on the
   next open day, and say so. Found because the e2e spec hit the same dead end.
 
+- **Prisma is bundled into the browser on the booking page.**
+  `components/booking/staff-time-selection.tsx` is a `'use client'` component
+  and imports `AlternativeSlotsService` (line 15), which imports
+  `@/lib/prisma` at module scope. Every run of the e2e suite logs
+  `PrismaClient is unable to run in this browser environment`, caught and
+  swallowed — so the "here are some other times" feature has never worked, and
+  the failure is invisible to anyone not reading the console. Ships the Prisma
+  client into the page bundle as well. Move the call behind an API route.
+
 - The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
   resolves a business by cuid, not by slug or any friendly name, so no static
   href can work. Either give `Business` a public booking slug and resolve on it,
