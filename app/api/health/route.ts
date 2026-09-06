@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { findMissingConfiguration } from '@/lib/health/required-configuration';
 import { prisma } from '@/lib/prisma';
 
 /**
@@ -86,8 +87,9 @@ export async function GET() {
       runtime: string;
       commit: string;
       uptime: number;
-      checks: { database: string; memory: string };
+      checks: { database: string; memory: string; configuration: string };
       databaseError?: { code: string; reason: string; host: string };
+      missingConfiguration?: string[];
     } = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
@@ -99,8 +101,41 @@ export async function GET() {
       checks: {
         database: 'unknown',
         memory: 'unknown',
+        configuration: 'unknown',
       },
     };
+
+    // Required configuration check.
+    //
+    // Staging was promoted healthy while missing NEXTAUTH_SECRET and
+    // NEXTAUTH_URL. The database was reachable, so this endpoint said
+    // "healthy" and Railway routed to it — but nobody could sign in
+    // (NextAuth returned error=Configuration and redirected to a bogus
+    // localhost host) and every booking died on a 500 from the CSRF token
+    // route, which refuses to fall back to a public constant in production.
+    // The variables were documented in docs/environments.md the whole time;
+    // documentation is not a gate, so this is.
+    //
+    // Names only, never values — this response is public.
+    if (process.env.NODE_ENV === 'production') {
+      const missing = findMissingConfiguration();
+
+      if (missing.length > 0) {
+        health.checks.configuration = 'unhealthy';
+
+        // Fatal for the same reason a missing database is fatal: an instance
+        // that cannot authenticate anyone or accept a booking is not serving
+        // this product, and promoting it publishes a broken release.
+        health.status = 'unhealthy';
+        health.missingConfiguration = [...missing];
+      } else {
+        health.checks.configuration = 'healthy';
+      }
+    } else {
+      // Outside production the CSRF layer falls back to a development secret
+      // and NextAuth tolerates a missing URL, so absence is not a fault here.
+      health.checks.configuration = 'skipped';
+    }
 
     // Database connectivity check.
     //
