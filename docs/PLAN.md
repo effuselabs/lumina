@@ -149,6 +149,20 @@ time, after the booking loop works.
   Sequenced as three PRs — the failing gate first, then the fix, then the
   deletion. See "Phase 4 — the current milestone".
 
+- **An appointment outside business hours is invisible on the calendar.**
+  `components/appointments/week-view.tsx:95-108` bounds the grid to the
+  earliest `openTime` and latest `closeTime` across the week, so anything
+  before opening or after closing has nowhere to render. Found on staging: a
+  booking taken at 8:30 for a salon opening at 09:00 confirmed successfully,
+  holds a real slot, and does not appear on the owner's calendar.
+
+  The timezone bug is what puts appointments there, so fixing that removes the
+  common cause — but not the class. A manually created appointment, a
+  rescheduled one, or an owner shortening their hours after a booking all
+  reproduce it, and in every case the salon silently loses sight of a client
+  who will still turn up. The grid should span business hours _union the
+  appointments actually present_, and say so when it extends.
+
 - The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
   resolves a business by cuid, not by slug or any friendly name, so no static
   href can work. Either give `Business` a public booking slug and resolve on it,
