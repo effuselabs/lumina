@@ -163,6 +163,14 @@ time, after the booking loop works.
   who will still turn up. The grid should span business hours _union the
   appointments actually present_, and say so when it extends.
 
+- The Clients page's staff filter matches `Client.preferredStaff`
+  (`app/api/clients/route.ts:108`), not the staff a client has actually
+  booked with. A client who books through the public page never has that
+  field set, so filtering by the staff member they just booked with is
+  guaranteed to hide them. Found on staging looking for a real booking.
+  Belongs with client CRM when that is unparked; the query wants to go
+  through `appointments.some({ staffId })`.
+
 - The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
   resolves a business by cuid, not by slug or any friendly name, so no static
   href can work. Either give `Business` a public booking slug and resolve on it,
