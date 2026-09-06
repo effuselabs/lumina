@@ -120,9 +120,34 @@ time, after the booking loop works.
   zone, so a 9-to-6 salon showed 4:00 AM slots to a UTC-3 visitor, and asking
   for Wednesday returned Tuesday's slots. `npx playwright test` passes in CI
   only because CI runs in UTC, where the bug is invisible; with
-  `TZ=America/Halifax` the availability spec fails with zero slots. Fix needs
-  `timezone-aware-availability.ts` to be the single path, plus a spec that
-  pins a non-UTC zone so CI can see it.
+  `TZ=America/Halifax` the availability spec fails with zero slots.
+
+  Reviewed by three agents; findings verified independently. The business
+  timezone is already fetched and then thrown away — `availability/route.ts:81`
+  selects it, `:156` discards the return value, and every mention of
+  `timezone` in `availability-calculator.ts` is a type, a pass-through, or
+  response metadata. Not one is a computation. The naive conversions are
+  `setHours`/`getDay` at `availability-calculator.ts:290, 305-308, 521-555,
+599, 607, 795` and `alternative-slots-service.ts:329-333`. Two render sites
+  finish the job: `staff-time-selection.tsx:139-145` formats with no
+  `timeZone`, and `book/route.ts:661-662` renders confirmation emails in the
+  server's zone, so emails are already wrong independently. The client also
+  shifts the day — `staff-time-selection.tsx:293` builds cells at browser-local
+  midnight and `:192` sends `toISOString()`, so a UTC+ viewer requests the
+  wrong date. No schema migration is needed; appointments are already stored
+  as instants and the write path works purely in instants.
+
+  **An earlier version of this entry said the fix needs
+  `timezone-aware-availability.ts` to become the single path. That was wrong.**
+  That file is dead (its only importer is its own test), it wraps the broken
+  calculator rather than replacing it, 13 of its 19 tests fail, and its
+  `getBusinessTimeZone` is a stub returning a hardcoded `'America/New_York'` —
+  adopting it would turn a 7-hour error into a 3-hour one. Delete it in 4d.
+  `lib/services/timezone-handler.ts` is the salvage: luxon-based, 39/40 tests
+  passing, with the `localToUTC` primitive the fix needs, and called by no UI.
+
+  Sequenced as three PRs — the failing gate first, then the fix, then the
+  deletion. See "Phase 4 — the current milestone".
 
 - The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
   resolves a business by cuid, not by slug or any friendly name, so no static
