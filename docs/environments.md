@@ -91,6 +91,13 @@ staging is not touched, because its slug is different. `prisma/reset-demo-data.t
 carries the reasoning; `__tests__/factories/reset-demo-data.test.ts` pins the
 scoping so it cannot quietly broaden.
 
+The seed prints the demo salon's **business ID** and its public booking URL when
+it finishes. That page is keyed by the id, not the slug, and nothing in the app
+links to it, so the printed id is the only way to reach it. The host in the
+printed URL comes from `NEXT_PUBLIC_APP_URL` in your local `.env` — when seeding
+staging from a laptop it will say `localhost`; keep the id and put it after
+`/book/` on `staging.uselumina.app`.
+
 Demo logins, all with password `demo123`:
 
 | Account                 | Role  |

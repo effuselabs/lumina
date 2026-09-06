@@ -408,8 +408,9 @@ export function StaffTimeSelection({
                 variant="outline"
                 size="sm"
                 onClick={() => navigateMonth('prev')}
+                aria-label="Previous month"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               </Button>
               <h3 className="text-lg font-semibold">
                 {currentMonth.toLocaleDateString('en-US', {
@@ -421,8 +422,9 @@ export function StaffTimeSelection({
                 variant="outline"
                 size="sm"
                 onClick={() => navigateMonth('next')}
+                aria-label="Next month"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
 

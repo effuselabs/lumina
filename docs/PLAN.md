@@ -75,6 +75,26 @@ staff member and client.
 
 ---
 
+## Dependency policy
+
+Two triggers, and only two:
+
+1. **A CVE affecting production.** Pull it forward immediately, whatever phase
+   we are in. The number that matters is prod high/critical CVEs — 16 at the
+   start, 2 now (1 direct) — not whether a newer version exists.
+2. **Phase 7**, where a full review happens deliberately: majors surveyed,
+   upgraded in small reviewable PRs, each verified by the five gates.
+
+Everything else waits. A version bump has no observable outcome — the booking
+loop cannot tell you it worked — so it is precisely the kind of work that
+consumed this project the first time while nothing shipped. `next@16` is
+already parked on these grounds.
+
+**Do not upgrade to a release candidate.** The Prisma CLI currently advertises
+`8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
+three majors, and taking it mid-rebuild trades a working stack for an
+unsupported one. Revisit when 8.x is stable, in Phase 7.
+
 ## Tooling: when to add plugins
 
 Three plugins are available and none are enabled. Deliberately — capability
@@ -107,6 +127,89 @@ time, after the booking loop works.
   **56** routes importing Prisma directly, **167** raw hex colours in `.tsx`
 
 ## Known, unaddressed
+
+- `npm run test:e2e` needs `DATABASE_URL` exported; it does not read `.env`.
+  CI supplies it as a job variable so the gate is unaffected, but a fresh clone
+  with a working `.env` cannot run the spec without setting it by hand. Same
+  root cause as the seed-reset bug: a process that instantiates Prisma directly
+  gets no `.env`, because only the Prisma and Next CLIs load it.
+
+- **Availability times are timezone-wrong.** The API emits naive local times
+  tagged as UTC — a salon open 09:00 Los Angeles time returns
+  `2026-09-14T09:00:00.000Z`. The browser then renders that in the viewer's
+  zone, so a 9-to-6 salon showed 4:00 AM slots to a UTC-3 visitor, and asking
+  for Wednesday returned Tuesday's slots. `npx playwright test` passes in CI
+  only because CI runs in UTC, where the bug is invisible; with
+  `TZ=America/Halifax` the availability spec fails with zero slots.
+
+  Reviewed by three agents; findings verified independently. The business
+  timezone is already fetched and then thrown away — `availability/route.ts:81`
+  selects it, `:156` discards the return value, and every mention of
+  `timezone` in `availability-calculator.ts` is a type, a pass-through, or
+  response metadata. Not one is a computation. The naive conversions are
+  `setHours`/`getDay` at `availability-calculator.ts:290, 305-308, 521-555,
+599, 607, 795` and `alternative-slots-service.ts:329-333`. Two render sites
+  finish the job: `staff-time-selection.tsx:139-145` formats with no
+  `timeZone`, and `book/route.ts:661-662` renders confirmation emails in the
+  server's zone, so emails are already wrong independently. The client also
+  shifts the day — `staff-time-selection.tsx:293` builds cells at browser-local
+  midnight and `:192` sends `toISOString()`, so a UTC+ viewer requests the
+  wrong date. No schema migration is needed; appointments are already stored
+  as instants and the write path works purely in instants.
+
+  **An earlier version of this entry said the fix needs
+  `timezone-aware-availability.ts` to become the single path. That was wrong.**
+  That file is dead (its only importer is its own test), it wraps the broken
+  calculator rather than replacing it, 13 of its 19 tests fail, and its
+  `getBusinessTimeZone` is a stub returning a hardcoded `'America/New_York'` —
+  adopting it would turn a 7-hour error into a 3-hour one. Delete it in 4d.
+  `lib/services/timezone-handler.ts` is the salvage: luxon-based, 39/40 tests
+  passing, with the `localToUTC` primitive the fix needs, and called by no UI.
+
+  Sequenced as three PRs — the failing gate first, then the fix, then the
+  deletion. See "Phase 4 — the current milestone".
+
+- **An appointment outside business hours is invisible on the calendar.**
+  `components/appointments/week-view.tsx:95-108` bounds the grid to the
+  earliest `openTime` and latest `closeTime` across the week, so anything
+  before opening or after closing has nowhere to render. Found on staging: a
+  booking taken at 8:30 for a salon opening at 09:00 confirmed successfully,
+  holds a real slot, and does not appear on the owner's calendar.
+
+  The timezone bug is what puts appointments there, so fixing that removes the
+  common cause — but not the class. A manually created appointment, a
+  rescheduled one, or an owner shortening their hours after a booking all
+  reproduce it, and in every case the salon silently loses sight of a client
+  who will still turn up. The grid should span business hours _union the
+  appointments actually present_, and say so when it extends.
+
+- The Clients page's staff filter matches `Client.preferredStaff`
+  (`app/api/clients/route.ts:108`), not the staff a client has actually
+  booked with. A client who books through the public page never has that
+  field set, so filtering by the staff member they just booked with is
+  guaranteed to hide them. Found on staging looking for a real booking.
+  Belongs with client CRM when that is unparked; the query wants to go
+  through `appointments.some({ staffId })`.
+
+- The booking page opens on today and offers no way forward when the salon is
+  closed that day. A visitor arriving on a Sunday sees an empty slot list and
+  must guess to advance the calendar, even though the availability API already
+  returns `nextAvailableDate` in the same response. Honour it — land on the
+  next open day, and say so. Found because the e2e spec hit the same dead end.
+
+- **Prisma is bundled into the browser on the booking page.**
+  `components/booking/staff-time-selection.tsx` is a `'use client'` component
+  and imports `AlternativeSlotsService` (line 15), which imports
+  `@/lib/prisma` at module scope. Every run of the e2e suite logs
+  `PrismaClient is unable to run in this browser environment`, caught and
+  swallowed — so the "here are some other times" feature has never worked, and
+  the failure is invisible to anyone not reading the console. Ships the Prisma
+  client into the page bundle as well. Move the call behind an API route.
+
+- The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
+  resolves a business by cuid, not by slug or any friendly name, so no static
+  href can work. Either give `Business` a public booking slug and resolve on it,
+  or drop the link. Phase 5, with the marketing page.
 
 - The public booking page now hides services no active staff can perform. A
   salon whose only nail technician leaves will see nail services disappear from

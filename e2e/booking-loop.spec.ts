@@ -161,6 +161,89 @@ test.describe('booking loop', () => {
     expect(body.bookingConfig, 'booking configuration').toBeTruthy();
   });
 
+  /**
+   * The first date at least a week out on which the business is open.
+   *
+   * This used to be a flat `date.getDate() + 7`, which always lands on the
+   * same weekday as today. The demo salon is closed on Sundays, so the whole
+   * suite failed every Sunday and passed the rest of the week — a scheduled
+   * flake that looks exactly like a real availability regression. It cost a
+   * red build on a PR that had nothing to do with it.
+   *
+   * Reading the seeded business hours instead means the spec keeps working if
+   * those hours change, and cannot be broken again by the day it runs on.
+   *
+   * The date string is still derived in UTC, matching what the availability
+   * API expects today. That is wrong for a business in another zone and is
+   * tracked separately in docs/PLAN.md; fixing it here would hide the bug the
+   * timezone gate is being written to catch.
+   */
+  async function nextOpenDate(businessId: string): Promise<string> {
+    const openDays = await prisma.businessHours.findMany({
+      where: { businessId, isClosed: false },
+      select: { dayOfWeek: true },
+    });
+
+    const openDayNumbers = new Set(openDays.map(hours => hours.dayOfWeek));
+    expect(
+      openDayNumbers.size,
+      'the seeded business is open on at least one day of the week'
+    ).toBeGreaterThan(0);
+
+    const candidate = new Date();
+    candidate.setDate(candidate.getDate() + 7);
+
+    // At most a full week of steps, so a business open on a single weekday
+    // still resolves rather than looping.
+    for (let attempt = 0; attempt < 7; attempt += 1) {
+      if (openDayNumbers.has(candidate.getUTCDay())) {
+        return candidate.toISOString().split('T')[0];
+      }
+      candidate.setDate(candidate.getDate() + 1);
+    }
+
+    throw new Error(
+      `No open day found within a week of ${candidate.toISOString()} — ` +
+        `business hours seeded as open on days [${[...openDayNumbers].join(', ')}]`
+    );
+  }
+
+  /**
+   * Click a specific date in the booking calendar, advancing the month first
+   * if the target falls outside the one on screen.
+   *
+   * Day cells are buttons labelled with the day number alone, so the match is
+   * exact — otherwise "1" also matches "13" and "21".
+   */
+  async function selectOpenDate(page: Page, isoDate: string): Promise<void> {
+    const target = new Date(`${isoDate}T00:00:00Z`);
+    const targetMonth = target.toLocaleDateString('en-US', {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
+
+    // Matched on its text rather than its level. `CardTitle` renders an <h3>,
+    // so "Select Date" and "Available Times" are level-3 headings too, and
+    // `{ level: 3 }` picks whichever comes first — not the month.
+    const monthHeading = page.getByRole('heading', {
+      name: /^[A-Z][a-z]+ \d{4}$/,
+    });
+
+    // The search window for an open day is under a fortnight, so the target
+    // can cross one month boundary but never two.
+    if ((await monthHeading.textContent())?.trim() !== targetMonth) {
+      await page.getByRole('button', { name: /^next month$/i }).click();
+    }
+    await expect(monthHeading).toHaveText(targetMonth);
+
+    // Day cells are buttons labelled with the number alone, so the match is
+    // exact — otherwise "1" also matches "13" and "21".
+    await page
+      .getByRole('button', { name: String(target.getUTCDate()), exact: true })
+      .click();
+  }
+
   test('availability returns bookable slots for a service', async ({
     request,
   }) => {
@@ -192,10 +275,9 @@ test.describe('booking loop', () => {
       'a bookable service — active, online, and with staff who can perform it'
     ).toBeTruthy();
 
-    // A week out, to sit clear of same-day lead-time rules.
-    const date = new Date();
-    date.setDate(date.getDate() + 7);
-    const dateString = date.toISOString().split('T')[0];
+    // A week out, to sit clear of same-day lead-time rules — then forward to
+    // the next day the salon is actually open.
+    const dateString = await nextOpenDate(business.id);
 
     // `duration` is required — omitting it returns a Zod VALIDATION_ERROR
     // ("Number must be greater than or equal to 1"), not an empty slot list.
@@ -265,10 +347,17 @@ test.describe('booking loop', () => {
       .getByRole('button', { name: /add|select/i })
       .first();
     await firstService.click();
-    await page.getByRole('button', { name: /continue|next/i }).click();
+    await page.getByRole('button', { name: /^continue/i }).click();
 
     // Step 2 — Choose Date & Time
     await expect(page.getByText(/date & time|choose a time/i)).toBeVisible();
+
+    // The calendar opens on today. When today is a day the salon is closed —
+    // Sunday, for the demo salon — there are no slots to click and this test
+    // fails for a reason that has nothing to do with the booking flow. Move to
+    // a day the business is actually open before looking for a time.
+    await selectOpenDate(page, await nextOpenDate(business.id));
+
     const firstSlot = page
       .getByRole('button', { name: /\d{1,2}:\d{2}\s*(am|pm)/i })
       .first();
@@ -277,7 +366,7 @@ test.describe('booking loop', () => {
       'at least one bookable time slot is offered'
     ).toBeVisible({ timeout: 15_000 });
     await firstSlot.click();
-    await page.getByRole('button', { name: /continue|next/i }).click();
+    await page.getByRole('button', { name: /^continue/i }).click();
 
     // Step 3 — Your Information
     // Matched by role, not getByLabel: the marketing opt-in is labelled
