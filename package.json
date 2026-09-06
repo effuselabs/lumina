@@ -60,6 +60,7 @@
     "db:seed": "prisma db seed",
     "db:seed:reset": "npx tsx --env-file-if-exists=.env prisma/reset-demo-data.ts",
     "db:seed:refresh": "npm run db:seed:reset && npm run db:seed",
+    "db:inspect": "npx tsx --env-file-if-exists=.env prisma/inspect-recent.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
     "seed:manage": "tsx scripts/manage-seed-data.ts",

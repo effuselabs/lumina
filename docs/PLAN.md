@@ -171,6 +171,12 @@ time, after the booking loop works.
   Belongs with client CRM when that is unparked; the query wants to go
   through `appointments.some({ staffId })`.
 
+- The booking page opens on today and offers no way forward when the salon is
+  closed that day. A visitor arriving on a Sunday sees an empty slot list and
+  must guess to advance the calendar, even though the availability API already
+  returns `nextAvailableDate` in the same response. Honour it — land on the
+  next open day, and say so. Found because the e2e spec hit the same dead end.
+
 - The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
   resolves a business by cuid, not by slug or any friendly name, so no static
   href can work. Either give `Business` a public booking slug and resolve on it,
