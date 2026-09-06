@@ -621,6 +621,21 @@ async function main() {
   console.log('Staff 1: mike@lumina-demo.com / demo123');
   console.log('Staff 2: emma@lumina-demo.com / demo123');
 
+  // The public booking page is keyed by the business's cuid, not its slug, and
+  // nothing in the app links to it — so without this the only way to find the
+  // URL after seeding a deployed database is to query for the id by hand.
+  console.log('\n🔗 Public booking page:');
+  console.log(`   Business ID: ${demoBusiness.id}`);
+
+  // Built from NEXT_PUBLIC_APP_URL, which comes from the local `.env` even when
+  // DATABASE_URL points somewhere else. Seeding staging from a laptop therefore
+  // prints a localhost host against a staging business id — the id above is the
+  // authoritative part; put it after /book/ on whichever host you seeded.
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, '');
+  console.log(
+    `   ${appUrl ? `${appUrl}/book/${demoBusiness.id}` : `<host>/book/${demoBusiness.id}`}`
+  );
+
   console.log(
     '\n🏗️  Enhanced seed infrastructure ready for comprehensive data generation'
   );

@@ -114,6 +114,11 @@ time, after the booking loop works.
   root cause as the seed-reset bug: a process that instantiates Prisma directly
   gets no `.env`, because only the Prisma and Next CLIs load it.
 
+- The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
+  resolves a business by cuid, not by slug or any friendly name, so no static
+  href can work. Either give `Business` a public booking slug and resolve on it,
+  or drop the link. Phase 5, with the marketing page.
+
 - The public booking page now hides services no active staff can perform. A
   salon whose only nail technician leaves will see nail services disappear from
   their booking page with no notice. Better than the dead end it replaces — the
