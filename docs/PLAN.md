@@ -114,6 +114,16 @@ time, after the booking loop works.
   root cause as the seed-reset bug: a process that instantiates Prisma directly
   gets no `.env`, because only the Prisma and Next CLIs load it.
 
+- **Availability times are timezone-wrong.** The API emits naive local times
+  tagged as UTC — a salon open 09:00 Los Angeles time returns
+  `2026-09-14T09:00:00.000Z`. The browser then renders that in the viewer's
+  zone, so a 9-to-6 salon showed 4:00 AM slots to a UTC-3 visitor, and asking
+  for Wednesday returned Tuesday's slots. `npx playwright test` passes in CI
+  only because CI runs in UTC, where the bug is invisible; with
+  `TZ=America/Halifax` the availability spec fails with zero slots. Fix needs
+  `timezone-aware-availability.ts` to be the single path, plus a spec that
+  pins a non-UTC zone so CI can see it.
+
 - The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
   resolves a business by cuid, not by slug or any friendly name, so no static
   href can work. Either give `Business` a public booking slug and resolve on it,

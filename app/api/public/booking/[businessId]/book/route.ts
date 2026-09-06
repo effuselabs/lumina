@@ -1,7 +1,13 @@
 import { prisma } from '@/lib/prisma';
 import { InputSanitizer } from '@/lib/security/rate-limiter';
-import { PublicBookingAuditEvent, auditPublicBooking } from '@/lib/security/public-booking-audit';
-import { createSecurePublicBookingResponse, securePublicBookingPOST } from '@/lib/security/public-booking-security-middleware';
+import {
+  PublicBookingAuditEvent,
+  auditPublicBooking,
+} from '@/lib/security/public-booking-audit';
+import {
+  createSecurePublicBookingResponse,
+  securePublicBookingPOST,
+} from '@/lib/security/public-booking-security-middleware';
 import { format } from 'date-fns';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
@@ -271,7 +277,7 @@ async function validateServicesAndCalculateTotals(
       duration: service.duration,
       price: Number(
         service.staff.find(s => s.staffId === staffId)?.customPrice ||
-        service.price
+          service.price
       ),
     })),
     staff: staffMember,
@@ -333,15 +339,18 @@ async function validateTimeSlotAvailability(
     // Find alternative slots when there's a conflict
     let alternativeSlots: any[] = [];
     try {
-      const { AlternativeSlotsService } = await import('../../../../../../lib/services/alternative-slots-service');
-      const alternatives = await AlternativeSlotsService.findNearbyAlternatives({
-        businessId,
-        serviceIds: serviceIds || [],
-        originalStartTime: startTime,
-        staffId,
-        maxAlternatives: 6,
-        timeWindowHours: 4,
-      });
+      const { AlternativeSlotsService } =
+        await import('../../../../../../lib/services/alternative-slots-service');
+      const alternatives = await AlternativeSlotsService.findNearbyAlternatives(
+        {
+          businessId,
+          serviceIds: serviceIds || [],
+          originalStartTime: startTime,
+          staffId,
+          maxAlternatives: 6,
+          timeWindowHours: 4,
+        }
+      );
       alternativeSlots = alternatives;
     } catch (altError) {
       console.error('Failed to fetch alternative slots:', altError);
@@ -507,7 +516,9 @@ async function sendStaffNotification({
     });
 
     // TODO: In future iterations, add real-time notifications via WebSocket or push notifications
-    console.log(`Staff notification sent to ${staffId} for appointment ${appointment.id}`);
+    console.log(
+      `Staff notification sent to ${staffId} for appointment ${appointment.id}`
+    );
   } catch (error) {
     console.error('Error creating staff notification:', error);
     throw error;
@@ -538,7 +549,9 @@ export async function POST(
     }
 
     // Use sanitized data from security middleware
-    validatedData = securityResult.sanitizedData || bookingRequestSchema.parse(await request.json());
+    validatedData =
+      securityResult.sanitizedData ||
+      bookingRequestSchema.parse(await request.json());
 
     // Validate business context (already done in security middleware, but get business data)
     const business = await validateBusinessForBooking(params.businessId);
@@ -679,21 +692,31 @@ export async function POST(
       // Don't fail the booking if notification fails
     }
 
-    // Log successful booking
+    // Log successful booking.
+    //
+    // Guarded, because by this point the appointment exists. Anything that
+    // throws between here and the 201 falls into the outer catch, which tells
+    // the client the booking failed — so a client who is in fact booked is
+    // invited to book again. Audit logging is not worth that; the email and
+    // staff-notification calls above are guarded for the same reason.
     const responseTime = Date.now() - requestStartTime;
-    await auditPublicBooking.bookingCompleted(
-      params.businessId,
-      request,
-      {
-        appointmentId: appointment.id,
-        clientId: client.id,
-        serviceIds: validatedData.services,
-        staffId: validatedData.timeSlot.staffId,
-        totalAmount: actualPrice,
-        isNewClient: validatedData.client.isNewClient,
-      },
-      responseTime
-    );
+    try {
+      await auditPublicBooking.bookingCompleted(
+        params.businessId,
+        request,
+        {
+          appointmentId: appointment.id,
+          clientId: client.id,
+          serviceIds: validatedData.services,
+          staffId: validatedData.timeSlot.staffId,
+          totalAmount: actualPrice,
+          isNewClient: validatedData.client.isNewClient,
+        },
+        responseTime
+      );
+    } catch (auditError) {
+      console.error('Failed to audit completed booking:', auditError);
+    }
 
     return createSecurePublicBookingResponse(
       {
@@ -726,13 +749,9 @@ export async function POST(
     );
 
     if (error instanceof BookingError) {
-      return createSecurePublicBookingResponse(
-        { error },
-        request,
-        {
-          status: error.type === BookingErrorType.BUSINESS_NOT_FOUND ? 404 : 400,
-        }
-      );
+      return createSecurePublicBookingResponse({ error }, request, {
+        status: error.type === BookingErrorType.BUSINESS_NOT_FOUND ? 404 : 400,
+      });
     }
 
     if (error instanceof z.ZodError) {
