@@ -32,7 +32,7 @@ conventions here look the way they do.
 Requires **Node 22** and **PostgreSQL 15+**.
 
 ```bash
-git clone https://github.com/jshields-ca/lumina.git
+git clone https://github.com/effuselabs/lumina.git
 cd lumina
 npm ci
 cp .env.example .env          # fill in DATABASE_URL and NEXTAUTH_SECRET

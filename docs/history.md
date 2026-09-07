@@ -67,6 +67,33 @@ measuring them. "The booking page feels slow" is not a diagnosis. "One
 availability request runs 1,318 database queries and reads the same opening
 hours 180 times" is, and it tells you what to do next.
 
+## The repository moved, and why the history is short
+
+Lumina lives at `effuselabs/lumina`. It was rebuilt there rather than
+transferred, and the git history was rewritten first.
+
+A secret scan over the original history found ten matches. Most were harmless —
+build manifests, a fake Stripe key in a test fixture, examples in documentation
+— but four were an API key for the issue tracker used during the first attempt,
+committed inside an IDE's configuration directory and left in history when that
+directory was deleted. The key belonged to an account that no longer exists on a
+service no longer in use, so nothing was at risk, but a credential in a public
+history is worth removing on principle rather than on impact.
+
+`git filter-repo` removed that directory, the committed `.next/` build output,
+and about 185 documentation files from a directory tree that had been deleted
+long ago. History went from 331 commits and 19 MiB to 304 and 6.6 MiB, with the
+current file tree unchanged.
+
+Force-pushing was not enough. GitHub keeps `refs/pull/N/head` pointing at the
+original commits of every pull request, and those survive any rewrite — the old
+commits were still fetchable by SHA afterwards. Recreating the repository is the
+only way to leave them behind, which is why the pull request history from the
+first attempt is not here. It is archived offline.
+
+The lesson worth keeping: a scan is cheap and a rewrite is only cheap before
+anyone has cloned you.
+
 ## A note on this file
 
 There is no `CHANGELOG.md` yet, on purpose. The previous one was maintained by
