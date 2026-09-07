@@ -1,166 +1,172 @@
 /**
  * Agent Hook Test Runner
- * 
+ *
  * This utility runs all Agent Hook tests and provides comprehensive
  * reporting on the test results and coverage.
  */
 
-import { execSync } from 'child_process'
-import { writeFileSync } from 'fs'
-import { join } from 'path'
+import { execSync } from 'child_process';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 
 interface TestResult {
-    suite: string
-    passed: number
-    failed: number
-    skipped: number
-    duration: number
-    coverage?: {
-        lines: number
-        functions: number
-        branches: number
-        statements: number
-    }
+  suite: string;
+  passed: number;
+  failed: number;
+  skipped: number;
+  duration: number;
+  coverage?: {
+    lines: number;
+    functions: number;
+    branches: number;
+    statements: number;
+  };
 }
 
 interface TestReport {
-    timestamp: string
-    totalTests: number
-    totalPassed: number
-    totalFailed: number
-    totalSkipped: number
-    totalDuration: number
-    suites: TestResult[]
-    overallCoverage?: {
-        lines: number
-        functions: number
-        branches: number
-        statements: number
-    }
+  timestamp: string;
+  totalTests: number;
+  totalPassed: number;
+  totalFailed: number;
+  totalSkipped: number;
+  totalDuration: number;
+  suites: TestResult[];
+  overallCoverage?: {
+    lines: number;
+    functions: number;
+    branches: number;
+    statements: number;
+  };
 }
 
 /**
  * Run all Agent Hook tests and generate a comprehensive report
  */
 export async function runAgentHookTests(): Promise<TestReport> {
-    console.log('🧪 Running Agent Hook Tests...\n')
+  console.log('🧪 Running Agent Hook Tests...\n');
 
-    const testSuites = [
-        'documentation-sync.test.ts',
-        'steering-compliance.test.ts',
-        'documentation-audit.test.ts',
-        'linear-synchronization.test.ts'
-    ]
+  const testSuites = [
+    'documentation-sync.test.ts',
+    'steering-compliance.test.ts',
+    'documentation-audit.test.ts',
+    'linear-synchronization.test.ts',
+  ];
 
-    const results: TestResult[] = []
-    let totalPassed = 0
-    let totalFailed = 0
-    let totalSkipped = 0
-    let totalDuration = 0
+  const results: TestResult[] = [];
+  let totalPassed = 0;
+  let totalFailed = 0;
+  let totalSkipped = 0;
+  let totalDuration = 0;
 
-    for (const suite of testSuites) {
-        console.log(`📋 Running ${suite}...`)
+  for (const suite of testSuites) {
+    console.log(`📋 Running ${suite}...`);
 
-        try {
-            const startTime = Date.now()
+    try {
+      const startTime = Date.now();
 
-            // Run the test suite
-            const output = execSync(
-                `npx jest __tests__/agent-hooks/${suite} --verbose --coverage --json`,
-                { encoding: 'utf-8', stdio: 'pipe' }
-            )
+      // Run the test suite
+      const output = execSync(
+        `npx jest __tests__/agent-hooks/${suite} --verbose --coverage --json`,
+        { encoding: 'utf-8', stdio: 'pipe' }
+      );
 
-            const endTime = Date.now()
-            const duration = endTime - startTime
+      const endTime = Date.now();
+      const duration = endTime - startTime;
 
-            // Parse Jest output
-            const testResult = parseJestOutput(output)
+      // Parse Jest output
+      const testResult = parseJestOutput(output);
 
-            const result: TestResult = {
-                suite: suite.replace('.test.ts', ''),
-                passed: testResult.numPassedTests,
-                failed: testResult.numFailedTests,
-                skipped: testResult.numPendingTests,
-                duration,
-                coverage: testResult.coverage
-            }
+      const result: TestResult = {
+        suite: suite.replace('.test.ts', ''),
+        passed: testResult.numPassedTests,
+        failed: testResult.numFailedTests,
+        skipped: testResult.numPendingTests,
+        duration,
+        coverage: testResult.coverage,
+      };
 
-            results.push(result)
-            totalPassed += result.passed
-            totalFailed += result.failed
-            totalSkipped += result.skipped
-            totalDuration += result.duration
+      results.push(result);
+      totalPassed += result.passed;
+      totalFailed += result.failed;
+      totalSkipped += result.skipped;
+      totalDuration += result.duration;
 
-            console.log(`✅ ${result.passed} passed, ❌ ${result.failed} failed, ⏭️ ${result.skipped} skipped (${duration}ms)\n`)
+      console.log(
+        `✅ ${result.passed} passed, ❌ ${result.failed} failed, ⏭️ ${result.skipped} skipped (${duration}ms)\n`
+      );
+    } catch (error) {
+      console.error(`❌ Error running ${suite}:`, error);
 
-        } catch (error) {
-            console.error(`❌ Error running ${suite}:`, error)
+      results.push({
+        suite: suite.replace('.test.ts', ''),
+        passed: 0,
+        failed: 1,
+        skipped: 0,
+        duration: 0,
+      });
 
-            results.push({
-                suite: suite.replace('.test.ts', ''),
-                passed: 0,
-                failed: 1,
-                skipped: 0,
-                duration: 0
-            })
-
-            totalFailed += 1
-        }
+      totalFailed += 1;
     }
+  }
 
-    const report: TestReport = {
-        timestamp: new Date().toISOString(),
-        totalTests: totalPassed + totalFailed + totalSkipped,
-        totalPassed,
-        totalFailed,
-        totalSkipped,
-        totalDuration,
-        suites: results
-    }
+  const report: TestReport = {
+    timestamp: new Date().toISOString(),
+    totalTests: totalPassed + totalFailed + totalSkipped,
+    totalPassed,
+    totalFailed,
+    totalSkipped,
+    totalDuration,
+    suites: results,
+  };
 
-    // Generate and save report
-    generateTestReport(report)
+  // Generate and save report
+  generateTestReport(report);
 
-    return report
+  return report;
 }
 
 /**
  * Parse Jest JSON output to extract test results
  */
 function parseJestOutput(output: string): any {
-    try {
-        const lines = output.split('\n')
-        const jsonLine = lines.find(line => line.startsWith('{') && line.includes('numTotalTests'))
+  try {
+    const lines = output.split('\n');
+    const jsonLine = lines.find(
+      line => line.startsWith('{') && line.includes('numTotalTests')
+    );
 
-        if (jsonLine) {
-            return JSON.parse(jsonLine)
-        }
-
-        // Fallback parsing if JSON format is different
-        return {
-            numPassedTests: 0,
-            numFailedTests: 0,
-            numPendingTests: 0,
-            coverage: null
-        }
-    } catch (error) {
-        console.warn('Failed to parse Jest output:', error)
-        return {
-            numPassedTests: 0,
-            numFailedTests: 0,
-            numPendingTests: 0,
-            coverage: null
-        }
+    if (jsonLine) {
+      return JSON.parse(jsonLine);
     }
+
+    // Fallback parsing if JSON format is different
+    return {
+      numPassedTests: 0,
+      numFailedTests: 0,
+      numPendingTests: 0,
+      coverage: null,
+    };
+  } catch (error) {
+    console.warn('Failed to parse Jest output:', error);
+    return {
+      numPassedTests: 0,
+      numFailedTests: 0,
+      numPendingTests: 0,
+      coverage: null,
+    };
+  }
 }
 
 /**
  * Generate a comprehensive test report
  */
 function generateTestReport(report: TestReport): void {
-    const reportPath = join(process.cwd(), '__tests__/agent-hooks/test-report.md')
+  const reportPath = join(
+    process.cwd(),
+    '__tests__/agent-hooks/test-report.md'
+  );
 
-    const markdown = `# Agent Hook Test Report
+  const markdown = `# Agent Hook Test Report
 
 **Generated:** ${new Date(report.timestamp).toLocaleString()}
 
@@ -175,21 +181,29 @@ function generateTestReport(report: TestReport): void {
 
 ## Test Suites
 
-${report.suites.map(suite => `
+${report.suites
+  .map(
+    suite => `
 ### ${suite.suite}
 
 - **Passed:** ${suite.passed}
 - **Failed:** ${suite.failed}
 - **Skipped:** ${suite.skipped}
 - **Duration:** ${suite.duration}ms
-${suite.coverage ? `
+${
+  suite.coverage
+    ? `
 - **Coverage:**
   - Lines: ${suite.coverage.lines}%
   - Functions: ${suite.coverage.functions}%
   - Branches: ${suite.coverage.branches}%
   - Statements: ${suite.coverage.statements}%
-` : ''}
-`).join('')}
+`
+    : ''
+}
+`
+  )
+  .join('')}
 
 ## Requirements Coverage
 
@@ -241,15 +255,23 @@ ${suite.coverage ? `
 
 ## Recommendations
 
-${report.totalFailed > 0 ? `
+${
+  report.totalFailed > 0
+    ? `
 ### ❌ Failed Tests
 Please review and fix the ${report.totalFailed} failed test(s) before proceeding to production deployment.
-` : ''}
+`
+    : ''
+}
 
-${report.totalSkipped > 0 ? `
+${
+  report.totalSkipped > 0
+    ? `
 ### ⏭️ Skipped Tests
 Consider implementing the ${report.totalSkipped} skipped test(s) for complete coverage.
-` : ''}
+`
+    : ''
+}
 
 ### Next Steps
 1. Review test results and fix any failures
@@ -260,31 +282,31 @@ Consider implementing the ${report.totalSkipped} skipped test(s) for complete co
 ---
 
 *This report was generated automatically by the Agent Hook test runner.*
-`
+`;
 
-    writeFileSync(reportPath, markdown)
-    console.log(`📊 Test report generated: ${reportPath}`)
+  writeFileSync(reportPath, markdown);
+  console.log(`📊 Test report generated: ${reportPath}`);
 }
 
 /**
  * Run tests and display results
  */
 if (require.main === module) {
-    runAgentHookTests()
-        .then(report => {
-            console.log('\n🎉 Agent Hook Tests Complete!')
-            console.log(`📊 ${report.totalPassed}/${report.totalTests} tests passed`)
+  runAgentHookTests()
+    .then(report => {
+      console.log('\n🎉 Agent Hook Tests Complete!');
+      console.log(`📊 ${report.totalPassed}/${report.totalTests} tests passed`);
 
-            if (report.totalFailed > 0) {
-                console.log(`❌ ${report.totalFailed} tests failed`)
-                process.exit(1)
-            } else {
-                console.log('✅ All tests passed!')
-                process.exit(0)
-            }
-        })
-        .catch((error: any) => {
-            console.error('❌ Test runner failed:', error)
-            process.exit(1)
-        })
+      if (report.totalFailed > 0) {
+        console.log(`❌ ${report.totalFailed} tests failed`);
+        process.exit(1);
+      } else {
+        console.log('✅ All tests passed!');
+        process.exit(0);
+      }
+    })
+    .catch((error: any) => {
+      console.error('❌ Test runner failed:', error);
+      process.exit(1);
+    });
 }

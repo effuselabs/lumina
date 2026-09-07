@@ -60,7 +60,7 @@ export function StaffPageContent({
             description="Manage your team members, employment configurations, and performance tracking."
             breadcrumbs={[
               { label: 'Dashboard', href: `/${businessSlug}` },
-              { label: 'Staff' }
+              { label: 'Staff' },
             ]}
           />
 

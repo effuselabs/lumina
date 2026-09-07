@@ -42,9 +42,7 @@ const customRender = (ui: ReactElement, options: CustomRenderOptions = {}) => {
 
   return render(ui, {
     wrapper: ({ children }: { children: ReactNode }) => (
-      <AllTheProviders queryClient={queryClient}>
-        {children}
-      </AllTheProviders>
+      <AllTheProviders queryClient={queryClient}>{children}</AllTheProviders>
     ),
     ...renderOptions,
   });

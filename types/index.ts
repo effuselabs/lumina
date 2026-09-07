@@ -1,26 +1,26 @@
 /**
  * Centralized Type Export Hub
- * 
+ *
  * This file serves as the single source of truth for type exports across the application.
  * Import types from here rather than directly from individual files to maintain consistency.
  */
 
 // Prisma-generated types - Core types that are commonly used
-export type { 
+export type {
   AppointmentStatus,
   BusinessRole,
   EmploymentType,
   RentalPeriod,
   CommunicationType,
   AutomationType,
-  CommunicationStatus
+  CommunicationStatus,
 } from '@prisma/client';
 
 // Dashboard and Appointment types - Only export types that actually exist
 export type {
   DashboardAppointment,
   CalendarSlot,
-  ConflictInfo
+  ConflictInfo,
 } from './dashboard-appointments';
 
 // Booking types
@@ -37,7 +37,7 @@ export type {
   ClientInfo,
   PublicBookingConfig,
   PublicBookingError,
-  PublicBookingErrorType
+  PublicBookingErrorType,
 } from './booking';
 
 export { DayOfWeek } from './booking';

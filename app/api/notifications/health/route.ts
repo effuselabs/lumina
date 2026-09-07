@@ -1,6 +1,6 @@
 /**
  * Notification System Health Check API Endpoint
- * 
+ *
  * GET /api/notifications/health
  * Returns health status of the notification system including:
  * - Queue health

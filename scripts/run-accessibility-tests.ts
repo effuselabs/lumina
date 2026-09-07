@@ -2,7 +2,7 @@
 
 /**
  * Accessibility Testing Runner
- * 
+ *
  * Runs comprehensive accessibility tests and generates detailed compliance reports
  * Tests WCAG AA compliance, keyboard navigation, and screen reader compatibility
  */
@@ -12,310 +12,312 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 interface AccessibilityTestConfig {
-    testFiles: string[];
-    outputDir: string;
-    wcagLevel: 'A' | 'AA' | 'AAA';
-    testRoutes: string[];
-    browsers: string[];
+  testFiles: string[];
+  outputDir: string;
+  wcagLevel: 'A' | 'AA' | 'AAA';
+  testRoutes: string[];
+  browsers: string[];
 }
 
 const config: AccessibilityTestConfig = {
-    testFiles: [
-        'e2e/accessibility-compliance.spec.ts'
-    ],
-    outputDir: 'test-results/accessibility',
-    wcagLevel: 'AA',
-    testRoutes: [
-        '/design-system',
-        '/dashboard',
-        '/auth/signin'
-    ],
-    browsers: ['chromium'] // Focus on Chromium for accessibility testing
+  testFiles: ['e2e/accessibility-compliance.spec.ts'],
+  outputDir: 'test-results/accessibility',
+  wcagLevel: 'AA',
+  testRoutes: ['/design-system', '/dashboard', '/auth/signin'],
+  browsers: ['chromium'], // Focus on Chromium for accessibility testing
 };
 
 interface AccessibilityViolation {
-    id: string;
-    impact: 'minor' | 'moderate' | 'serious' | 'critical';
-    description: string;
-    help: string;
-    helpUrl: string;
-    nodes: Array<{
-        target: string[];
-        html: string;
-        failureSummary: string;
-    }>;
+  id: string;
+  impact: 'minor' | 'moderate' | 'serious' | 'critical';
+  description: string;
+  help: string;
+  helpUrl: string;
+  nodes: Array<{
+    target: string[];
+    html: string;
+    failureSummary: string;
+  }>;
 }
 
 interface AccessibilityTestResult {
-    route: string;
-    theme: string;
-    violations: AccessibilityViolation[];
-    passes: number;
-    incomplete: number;
-    timestamp: string;
+  route: string;
+  theme: string;
+  violations: AccessibilityViolation[];
+  passes: number;
+  incomplete: number;
+  timestamp: string;
 }
 
 class AccessibilityTestRunner {
-    private results: AccessibilityTestResult[] = [];
+  private results: AccessibilityTestResult[] = [];
 
-    async runTests(): Promise<void> {
-        console.log('♿ Starting Accessibility Compliance Testing...\n');
+  async runTests(): Promise<void> {
+    console.log('♿ Starting Accessibility Compliance Testing...\n');
 
-        // Ensure output directory exists
-        if (!existsSync(config.outputDir)) {
-            mkdirSync(config.outputDir, { recursive: true });
+    // Ensure output directory exists
+    if (!existsSync(config.outputDir)) {
+      mkdirSync(config.outputDir, { recursive: true });
+    }
+
+    // Check if development server is running
+    await this.checkDevServer();
+
+    // Run accessibility tests
+    await this.runAccessibilityTests();
+
+    // Run manual accessibility checks
+    await this.runManualChecks();
+
+    // Generate comprehensive report
+    await this.generateReport();
+
+    console.log('\n✅ Accessibility testing complete!');
+    this.printSummary();
+  }
+
+  private async checkDevServer(): Promise<void> {
+    try {
+      execSync('curl -f http://localhost:3000/api/health', { stdio: 'ignore' });
+      console.log('✅ Development server is running');
+    } catch (error) {
+      console.error('❌ Development server is not running');
+      console.log('Please start the development server with: npm run dev');
+      process.exit(1);
+    }
+  }
+
+  private async runAccessibilityTests(): Promise<void> {
+    console.log('🔍 Running automated accessibility tests...');
+
+    try {
+      const command = `npx playwright test ${config.testFiles.join(' ')} --reporter=json`;
+      const output = execSync(command, {
+        encoding: 'utf8',
+        cwd: process.cwd(),
+      });
+
+      // Parse results if available
+      try {
+        const results = JSON.parse(output);
+        console.log('✅ Automated accessibility tests completed');
+
+        if (results.stats?.failed > 0) {
+          console.log(`⚠️  ${results.stats.failed} accessibility tests failed`);
         }
-
-        // Check if development server is running
-        await this.checkDevServer();
-
-        // Run accessibility tests
-        await this.runAccessibilityTests();
-
-        // Run manual accessibility checks
-        await this.runManualChecks();
-
-        // Generate comprehensive report
-        await this.generateReport();
-
-        console.log('\n✅ Accessibility testing complete!');
-        this.printSummary();
+      } catch (parseError) {
+        console.log('✅ Automated accessibility tests completed');
+      }
+    } catch (error) {
+      console.error('❌ Automated accessibility tests failed');
+      console.error(error instanceof Error ? error.message : String(error));
     }
+  }
 
-    private async checkDevServer(): Promise<void> {
-        try {
-            execSync('curl -f http://localhost:3000/api/health', { stdio: 'ignore' });
-            console.log('✅ Development server is running');
-        } catch (error) {
-            console.error('❌ Development server is not running');
-            console.log('Please start the development server with: npm run dev');
-            process.exit(1);
-        }
-    }
+  private async runManualChecks(): Promise<void> {
+    console.log('\n📋 Running manual accessibility checks...');
 
-    private async runAccessibilityTests(): Promise<void> {
-        console.log('🔍 Running automated accessibility tests...');
+    const manualChecks = [
+      {
+        name: 'Color Contrast',
+        description:
+          'Verify all text meets WCAG AA contrast ratios (4.5:1 for normal text, 3:1 for large text)',
+        automated: true,
+      },
+      {
+        name: 'Keyboard Navigation',
+        description: 'Ensure all interactive elements are keyboard accessible',
+        automated: true,
+      },
+      {
+        name: 'Focus Management',
+        description:
+          'Verify focus indicators are visible and focus moves logically',
+        automated: true,
+      },
+      {
+        name: 'Screen Reader Compatibility',
+        description: 'Test with screen readers (NVDA, JAWS, VoiceOver)',
+        automated: false,
+      },
+      {
+        name: 'Alternative Text',
+        description: 'Verify all images have appropriate alt text',
+        automated: true,
+      },
+      {
+        name: 'Form Labels',
+        description: 'Ensure all form elements have proper labels',
+        automated: true,
+      },
+      {
+        name: 'Heading Structure',
+        description: 'Verify proper heading hierarchy (h1-h6)',
+        automated: true,
+      },
+      {
+        name: 'ARIA Usage',
+        description: 'Check proper use of ARIA attributes and roles',
+        automated: true,
+      },
+      {
+        name: 'Error Handling',
+        description: 'Verify error messages are accessible and helpful',
+        automated: false,
+      },
+      {
+        name: 'Motion and Animation',
+        description: 'Respect prefers-reduced-motion settings',
+        automated: false,
+      },
+    ];
 
-        try {
-            const command = `npx playwright test ${config.testFiles.join(' ')} --reporter=json`;
-            const output = execSync(command, {
-                encoding: 'utf8',
-                cwd: process.cwd()
-            });
+    console.log('\nManual accessibility checklist:');
+    manualChecks.forEach((check, index) => {
+      const status = check.automated ? '🤖 Automated' : '👤 Manual';
+      console.log(`${index + 1}. ${check.name} - ${status}`);
+      console.log(`   ${check.description}`);
+    });
 
-            // Parse results if available
-            try {
-                const results = JSON.parse(output);
-                console.log('✅ Automated accessibility tests completed');
+    console.log(
+      '\n📝 Manual checks should be performed by QA team or accessibility specialist'
+    );
+  }
 
-                if (results.stats?.failed > 0) {
-                    console.log(`⚠️  ${results.stats.failed} accessibility tests failed`);
-                }
-            } catch (parseError) {
-                console.log('✅ Automated accessibility tests completed');
-            }
+  private async generateReport(): Promise<void> {
+    const reportContent = this.buildReportContent();
+    const reportPath = join(
+      config.outputDir,
+      'accessibility-compliance-report.md'
+    );
 
-        } catch (error) {
-            console.error('❌ Automated accessibility tests failed');
-            console.error(error instanceof Error ? error.message : String(error));
-        }
-    }
+    writeFileSync(reportPath, reportContent);
+    console.log(`\n📋 Accessibility report saved to: ${reportPath}`);
 
-    private async runManualChecks(): Promise<void> {
-        console.log('\n📋 Running manual accessibility checks...');
+    // Generate WCAG checklist
+    await this.generateWCAGChecklist();
 
-        const manualChecks = [
-            {
-                name: 'Color Contrast',
-                description: 'Verify all text meets WCAG AA contrast ratios (4.5:1 for normal text, 3:1 for large text)',
-                automated: true
-            },
-            {
-                name: 'Keyboard Navigation',
-                description: 'Ensure all interactive elements are keyboard accessible',
-                automated: true
-            },
-            {
-                name: 'Focus Management',
-                description: 'Verify focus indicators are visible and focus moves logically',
-                automated: true
-            },
-            {
-                name: 'Screen Reader Compatibility',
-                description: 'Test with screen readers (NVDA, JAWS, VoiceOver)',
-                automated: false
-            },
-            {
-                name: 'Alternative Text',
-                description: 'Verify all images have appropriate alt text',
-                automated: true
-            },
-            {
-                name: 'Form Labels',
-                description: 'Ensure all form elements have proper labels',
-                automated: true
-            },
-            {
-                name: 'Heading Structure',
-                description: 'Verify proper heading hierarchy (h1-h6)',
-                automated: true
-            },
-            {
-                name: 'ARIA Usage',
-                description: 'Check proper use of ARIA attributes and roles',
-                automated: true
-            },
-            {
-                name: 'Error Handling',
-                description: 'Verify error messages are accessible and helpful',
-                automated: false
-            },
-            {
-                name: 'Motion and Animation',
-                description: 'Respect prefers-reduced-motion settings',
-                automated: false
-            }
-        ];
+    // Generate remediation guide
+    await this.generateRemediationGuide();
+  }
 
-        console.log('\nManual accessibility checklist:');
-        manualChecks.forEach((check, index) => {
-            const status = check.automated ? '🤖 Automated' : '👤 Manual';
-            console.log(`${index + 1}. ${check.name} - ${status}`);
-            console.log(`   ${check.description}`);
-        });
+  private buildReportContent(): string {
+    const timestamp = new Date().toISOString();
 
-        console.log('\n📝 Manual checks should be performed by QA team or accessibility specialist');
-    }
+    let report = `# Accessibility Compliance Report\n\n`;
+    report += `Generated on: ${timestamp}\n`;
+    report += `WCAG Level: ${config.wcagLevel}\n\n`;
 
-    private async generateReport(): Promise<void> {
-        const reportContent = this.buildReportContent();
-        const reportPath = join(config.outputDir, 'accessibility-compliance-report.md');
+    report += `## Executive Summary\n\n`;
+    report += `This report provides a comprehensive assessment of accessibility compliance for the Lumina design system.\n`;
+    report += `Testing was performed against WCAG ${config.wcagLevel} guidelines using automated tools and manual verification.\n\n`;
 
-        writeFileSync(reportPath, reportContent);
-        console.log(`\n📋 Accessibility report saved to: ${reportPath}`);
+    report += `## Test Coverage\n\n`;
+    report += `### Routes Tested\n`;
+    config.testRoutes.forEach(route => {
+      report += `- ${route}\n`;
+    });
 
-        // Generate WCAG checklist
-        await this.generateWCAGChecklist();
+    report += `\n### Test Categories\n`;
+    report += `- ✅ Automated axe-core accessibility scanning\n`;
+    report += `- ✅ Color contrast ratio validation\n`;
+    report += `- ✅ Keyboard navigation testing\n`;
+    report += `- ✅ ARIA attributes and roles validation\n`;
+    report += `- ✅ Form accessibility compliance\n`;
+    report += `- ✅ Image alternative text verification\n`;
+    report += `- ✅ Heading structure validation\n`;
+    report += `- ✅ Focus management testing\n`;
+    report += `- ✅ Screen reader compatibility checks\n\n`;
 
-        // Generate remediation guide
-        await this.generateRemediationGuide();
-    }
+    report += `## Key Findings\n\n`;
+    report += `### Strengths\n`;
+    report += `- Design system components follow semantic HTML patterns\n`;
+    report += `- Proper ARIA attributes are implemented throughout\n`;
+    report += `- Color contrast ratios meet WCAG AA standards\n`;
+    report += `- Keyboard navigation is fully functional\n`;
+    report += `- Focus indicators are visible and consistent\n\n`;
 
-    private buildReportContent(): string {
-        const timestamp = new Date().toISOString();
+    report += `### Areas for Improvement\n`;
+    report += `- Continue monitoring for new accessibility issues\n`;
+    report += `- Regular testing with actual assistive technologies\n`;
+    report += `- User testing with people who use assistive technologies\n\n`;
 
-        let report = `# Accessibility Compliance Report\n\n`;
-        report += `Generated on: ${timestamp}\n`;
-        report += `WCAG Level: ${config.wcagLevel}\n\n`;
+    report += `## WCAG ${config.wcagLevel} Compliance Status\n\n`;
 
-        report += `## Executive Summary\n\n`;
-        report += `This report provides a comprehensive assessment of accessibility compliance for the Lumina design system.\n`;
-        report += `Testing was performed against WCAG ${config.wcagLevel} guidelines using automated tools and manual verification.\n\n`;
+    const wcagPrinciples = [
+      {
+        name: 'Perceivable',
+        guidelines: [
+          { id: '1.1', name: 'Text Alternatives', status: '✅ Compliant' },
+          { id: '1.2', name: 'Time-based Media', status: '✅ Compliant' },
+          { id: '1.3', name: 'Adaptable', status: '✅ Compliant' },
+          { id: '1.4', name: 'Distinguishable', status: '✅ Compliant' },
+        ],
+      },
+      {
+        name: 'Operable',
+        guidelines: [
+          { id: '2.1', name: 'Keyboard Accessible', status: '✅ Compliant' },
+          { id: '2.2', name: 'Enough Time', status: '✅ Compliant' },
+          {
+            id: '2.3',
+            name: 'Seizures and Physical Reactions',
+            status: '✅ Compliant',
+          },
+          { id: '2.4', name: 'Navigable', status: '✅ Compliant' },
+          { id: '2.5', name: 'Input Modalities', status: '✅ Compliant' },
+        ],
+      },
+      {
+        name: 'Understandable',
+        guidelines: [
+          { id: '3.1', name: 'Readable', status: '✅ Compliant' },
+          { id: '3.2', name: 'Predictable', status: '✅ Compliant' },
+          { id: '3.3', name: 'Input Assistance', status: '✅ Compliant' },
+        ],
+      },
+      {
+        name: 'Robust',
+        guidelines: [{ id: '4.1', name: 'Compatible', status: '✅ Compliant' }],
+      },
+    ];
 
-        report += `## Test Coverage\n\n`;
-        report += `### Routes Tested\n`;
-        config.testRoutes.forEach(route => {
-            report += `- ${route}\n`;
-        });
+    wcagPrinciples.forEach(principle => {
+      report += `### ${principle.name}\n`;
+      principle.guidelines.forEach(guideline => {
+        report += `- **${guideline.id} ${guideline.name}**: ${guideline.status}\n`;
+      });
+      report += '\n';
+    });
 
-        report += `\n### Test Categories\n`;
-        report += `- ✅ Automated axe-core accessibility scanning\n`;
-        report += `- ✅ Color contrast ratio validation\n`;
-        report += `- ✅ Keyboard navigation testing\n`;
-        report += `- ✅ ARIA attributes and roles validation\n`;
-        report += `- ✅ Form accessibility compliance\n`;
-        report += `- ✅ Image alternative text verification\n`;
-        report += `- ✅ Heading structure validation\n`;
-        report += `- ✅ Focus management testing\n`;
-        report += `- ✅ Screen reader compatibility checks\n\n`;
+    report += `## Testing Tools Used\n\n`;
+    report += `- **axe-core**: Automated accessibility testing engine\n`;
+    report += `- **Playwright**: Browser automation for keyboard and interaction testing\n`;
+    report += `- **Manual Testing**: Human verification of accessibility features\n\n`;
 
-        report += `## Key Findings\n\n`;
-        report += `### Strengths\n`;
-        report += `- Design system components follow semantic HTML patterns\n`;
-        report += `- Proper ARIA attributes are implemented throughout\n`;
-        report += `- Color contrast ratios meet WCAG AA standards\n`;
-        report += `- Keyboard navigation is fully functional\n`;
-        report += `- Focus indicators are visible and consistent\n\n`;
+    report += `## Recommendations\n\n`;
+    report += `### Immediate Actions\n`;
+    report += `- Continue regular accessibility testing in CI/CD pipeline\n`;
+    report += `- Maintain focus on semantic HTML and ARIA best practices\n`;
+    report += `- Regular color contrast validation for new design elements\n\n`;
 
-        report += `### Areas for Improvement\n`;
-        report += `- Continue monitoring for new accessibility issues\n`;
-        report += `- Regular testing with actual assistive technologies\n`;
-        report += `- User testing with people who use assistive technologies\n\n`;
+    report += `### Long-term Improvements\n`;
+    report += `- Implement user testing with assistive technology users\n`;
+    report += `- Regular accessibility audits by certified professionals\n`;
+    report += `- Accessibility training for development team\n`;
+    report += `- Integration with accessibility monitoring tools\n\n`;
 
-        report += `## WCAG ${config.wcagLevel} Compliance Status\n\n`;
+    report += `## Resources\n\n`;
+    report += `- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)\n`;
+    report += `- [axe-core Rules](https://dequeuniversity.com/rules/axe/)\n`;
+    report += `- [WebAIM Accessibility Checklist](https://webaim.org/standards/wcag/checklist)\n`;
+    report += `- [A11y Project Checklist](https://www.a11yproject.com/checklist/)\n\n`;
 
-        const wcagPrinciples = [
-            {
-                name: 'Perceivable',
-                guidelines: [
-                    { id: '1.1', name: 'Text Alternatives', status: '✅ Compliant' },
-                    { id: '1.2', name: 'Time-based Media', status: '✅ Compliant' },
-                    { id: '1.3', name: 'Adaptable', status: '✅ Compliant' },
-                    { id: '1.4', name: 'Distinguishable', status: '✅ Compliant' }
-                ]
-            },
-            {
-                name: 'Operable',
-                guidelines: [
-                    { id: '2.1', name: 'Keyboard Accessible', status: '✅ Compliant' },
-                    { id: '2.2', name: 'Enough Time', status: '✅ Compliant' },
-                    { id: '2.3', name: 'Seizures and Physical Reactions', status: '✅ Compliant' },
-                    { id: '2.4', name: 'Navigable', status: '✅ Compliant' },
-                    { id: '2.5', name: 'Input Modalities', status: '✅ Compliant' }
-                ]
-            },
-            {
-                name: 'Understandable',
-                guidelines: [
-                    { id: '3.1', name: 'Readable', status: '✅ Compliant' },
-                    { id: '3.2', name: 'Predictable', status: '✅ Compliant' },
-                    { id: '3.3', name: 'Input Assistance', status: '✅ Compliant' }
-                ]
-            },
-            {
-                name: 'Robust',
-                guidelines: [
-                    { id: '4.1', name: 'Compatible', status: '✅ Compliant' }
-                ]
-            }
-        ];
+    return report;
+  }
 
-        wcagPrinciples.forEach(principle => {
-            report += `### ${principle.name}\n`;
-            principle.guidelines.forEach(guideline => {
-                report += `- **${guideline.id} ${guideline.name}**: ${guideline.status}\n`;
-            });
-            report += '\n';
-        });
-
-        report += `## Testing Tools Used\n\n`;
-        report += `- **axe-core**: Automated accessibility testing engine\n`;
-        report += `- **Playwright**: Browser automation for keyboard and interaction testing\n`;
-        report += `- **Manual Testing**: Human verification of accessibility features\n\n`;
-
-        report += `## Recommendations\n\n`;
-        report += `### Immediate Actions\n`;
-        report += `- Continue regular accessibility testing in CI/CD pipeline\n`;
-        report += `- Maintain focus on semantic HTML and ARIA best practices\n`;
-        report += `- Regular color contrast validation for new design elements\n\n`;
-
-        report += `### Long-term Improvements\n`;
-        report += `- Implement user testing with assistive technology users\n`;
-        report += `- Regular accessibility audits by certified professionals\n`;
-        report += `- Accessibility training for development team\n`;
-        report += `- Integration with accessibility monitoring tools\n\n`;
-
-        report += `## Resources\n\n`;
-        report += `- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)\n`;
-        report += `- [axe-core Rules](https://dequeuniversity.com/rules/axe/)\n`;
-        report += `- [WebAIM Accessibility Checklist](https://webaim.org/standards/wcag/checklist)\n`;
-        report += `- [A11y Project Checklist](https://www.a11yproject.com/checklist/)\n\n`;
-
-        return report;
-    }
-
-    private async generateWCAGChecklist(): Promise<void> {
-        const checklistContent = `# WCAG ${config.wcagLevel} Compliance Checklist
+  private async generateWCAGChecklist(): Promise<void> {
+    const checklistContent = `# WCAG ${config.wcagLevel} Compliance Checklist
 
 ## Perceivable
 
@@ -417,13 +419,16 @@ Each item should be verified through automated testing, manual testing, or both.
 - Verify with users who use assistive technologies
 `;
 
-        const checklistPath = join(config.outputDir, 'wcag-compliance-checklist.md');
-        writeFileSync(checklistPath, checklistContent);
-        console.log(`📋 WCAG checklist saved to: ${checklistPath}`);
-    }
+    const checklistPath = join(
+      config.outputDir,
+      'wcag-compliance-checklist.md'
+    );
+    writeFileSync(checklistPath, checklistContent);
+    console.log(`📋 WCAG checklist saved to: ${checklistPath}`);
+  }
 
-    private async generateRemediationGuide(): Promise<void> {
-        const guideContent = `# Accessibility Remediation Guide
+  private async generateRemediationGuide(): Promise<void> {
+    const guideContent = `# Accessibility Remediation Guide
 
 ## Common Issues and Solutions
 
@@ -575,29 +580,32 @@ Each item should be verified through automated testing, manual testing, or both.
 5. Design system accessibility guidelines
 `;
 
-        const guidePath = join(config.outputDir, 'accessibility-remediation-guide.md');
-        writeFileSync(guidePath, guideContent);
-        console.log(`🔧 Remediation guide saved to: ${guidePath}`);
-    }
+    const guidePath = join(
+      config.outputDir,
+      'accessibility-remediation-guide.md'
+    );
+    writeFileSync(guidePath, guideContent);
+    console.log(`🔧 Remediation guide saved to: ${guidePath}`);
+  }
 
-    private printSummary(): void {
-        console.log('\n=== Accessibility Testing Summary ===');
-        console.log('✅ Automated accessibility tests completed');
-        console.log('📋 WCAG compliance checklist generated');
-        console.log('🔧 Remediation guide created');
-        console.log('\nNext steps:');
-        console.log('1. Review generated reports in test-results/accessibility/');
-        console.log('2. Address any identified issues');
-        console.log('3. Perform manual testing with assistive technologies');
-        console.log('4. Consider user testing with disabled users');
-    }
+  private printSummary(): void {
+    console.log('\n=== Accessibility Testing Summary ===');
+    console.log('✅ Automated accessibility tests completed');
+    console.log('📋 WCAG compliance checklist generated');
+    console.log('🔧 Remediation guide created');
+    console.log('\nNext steps:');
+    console.log('1. Review generated reports in test-results/accessibility/');
+    console.log('2. Address any identified issues');
+    console.log('3. Perform manual testing with assistive technologies');
+    console.log('4. Consider user testing with disabled users');
+  }
 }
 
 async function main(): Promise<void> {
-    const args = process.argv.slice(2);
+  const args = process.argv.slice(2);
 
-    if (args.includes('--help') || args.includes('-h')) {
-        console.log(`
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
 Accessibility Testing Runner
 
 Usage:
@@ -614,26 +622,26 @@ Examples:
   # Run with WCAG AAA compliance
   tsx scripts/run-accessibility-tests.ts --wcag-level AAA
         `);
-        return;
-    }
+    return;
+  }
 
-    const wcagIndex = args.indexOf('--wcag-level');
-    if (wcagIndex !== -1 && args[wcagIndex + 1]) {
-        const level = args[wcagIndex + 1].toUpperCase();
-        if (['A', 'AA', 'AAA'].includes(level)) {
-            config.wcagLevel = level as 'A' | 'AA' | 'AAA';
-        }
+  const wcagIndex = args.indexOf('--wcag-level');
+  if (wcagIndex !== -1 && args[wcagIndex + 1]) {
+    const level = args[wcagIndex + 1].toUpperCase();
+    if (['A', 'AA', 'AAA'].includes(level)) {
+      config.wcagLevel = level as 'A' | 'AA' | 'AAA';
     }
+  }
 
-    const runner = new AccessibilityTestRunner();
-    await runner.runTests();
+  const runner = new AccessibilityTestRunner();
+  await runner.runTests();
 }
 
 if (require.main === module) {
-    main().catch(error => {
-        console.error('❌ Accessibility testing failed:', error);
-        process.exit(1);
-    });
+  main().catch(error => {
+    console.error('❌ Accessibility testing failed:', error);
+    process.exit(1);
+  });
 }
 
 export { AccessibilityTestRunner };

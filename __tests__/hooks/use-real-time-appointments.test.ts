@@ -1,6 +1,6 @@
 /**
  * Real-Time Appointments Hook Tests
- * 
+ *
  * Tests for the useRealTimeAppointments hook functionality.
  */
 
@@ -17,346 +17,375 @@ global.fetch = jest.fn();
 
 // Mock navigator.onLine
 Object.defineProperty(navigator, 'onLine', {
-    writable: true,
-    value: true,
+  writable: true,
+  value: true,
 });
 
 describe('useRealTimeAppointments', () => {
-    const mockAppointment: DashboardAppointment = {
-        id: 'apt-1',
-        businessId: 'business-1',
-        clientId: 'client-1',
-        staffId: 'staff-1',
-        startTime: new Date('2024-01-15T10:00:00Z'),
-        endTime: new Date('2024-01-15T11:00:00Z'),
-        status: 'confirmed',
-        services: [],
-        totalPrice: 100,
-        totalDuration: 60,
-        notes: 'Test appointment',
-        client: {
-            id: 'client-1',
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'john@example.com',
-            phone: '555-0123',
-        },
-        staff: {
-            id: 'staff-1',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            displayName: 'Jane Smith',
-            color: '#3B82F6',
-        },
-        isConflicted: false,
-        canEdit: true,
-        canCancel: true,
-        canReschedule: true,
-        lastUpdated: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
+  const mockAppointment: DashboardAppointment = {
+    id: 'apt-1',
+    businessId: 'business-1',
+    clientId: 'client-1',
+    staffId: 'staff-1',
+    startTime: new Date('2024-01-15T10:00:00Z'),
+    endTime: new Date('2024-01-15T11:00:00Z'),
+    status: 'confirmed',
+    services: [],
+    totalPrice: 100,
+    totalDuration: 60,
+    notes: 'Test appointment',
+    client: {
+      id: 'client-1',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      phone: '555-0123',
+    },
+    staff: {
+      id: 'staff-1',
+      firstName: 'Jane',
+      lastName: 'Smith',
+      displayName: 'Jane Smith',
+      color: '#3B82F6',
+    },
+    isConflicted: false,
+    canEdit: true,
+    canCancel: true,
+    canReschedule: true,
+    lastUpdated: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 
-    const defaultOptions = {
-        businessId: 'business-1',
-        userId: 'user-1',
-        initialAppointments: [mockAppointment],
-    };
+  const defaultOptions = {
+    businessId: 'business-1',
+    userId: 'user-1',
+    initialAppointments: [mockAppointment],
+  };
 
-    beforeEach(() => {
-        (fetch as jest.Mock).mockResolvedValue({
-            ok: true,
-            json: () => Promise.resolve(mockAppointment),
-        });
+  beforeEach(() => {
+    (fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockAppointment),
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Initialization', () => {
+    it('should initialize with default state', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      expect(result.current.appointments).toEqual([mockAppointment]);
+      expect(result.current.connectionStatus).toBe('disconnected');
+      expect(result.current.syncState.isOnline).toBe(true);
+      expect(result.current.conflicts).toEqual([]);
+      expect(result.current.notifications).toEqual([]);
     });
 
-    afterEach(() => {
-        jest.clearAllMocks();
+    it('should initialize with empty appointments when none provided', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments({
+          ...defaultOptions,
+          initialAppointments: undefined,
+        })
+      );
+
+      expect(result.current.appointments).toEqual([]);
     });
 
-    describe('Initialization', () => {
-        it('should initialize with default state', () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+    it('should auto-connect when WebSocket is enabled', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments({
+          ...defaultOptions,
+          enableWebSocket: true,
+        })
+      );
 
-            expect(result.current.appointments).toEqual([mockAppointment]);
-            expect(result.current.connectionStatus).toBe('disconnected');
-            expect(result.current.syncState.isOnline).toBe(true);
-            expect(result.current.conflicts).toEqual([]);
-            expect(result.current.notifications).toEqual([]);
-        });
+      expect(result.current.connectionStatus).toBe('disconnected');
+      // Connection would be attempted in useEffect
+    });
+  });
 
-        it('should initialize with empty appointments when none provided', () => {
-            const { result } = renderHook(() =>
-                useRealTimeAppointments({
-                    ...defaultOptions,
-                    initialAppointments: undefined,
-                })
-            );
+  describe('Appointment Operations', () => {
+    it('should update appointment with optimistic updates', async () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments({
+          ...defaultOptions,
+          enableOptimisticUpdates: true,
+        })
+      );
 
-            expect(result.current.appointments).toEqual([]);
-        });
+      const updates = { notes: 'Updated notes' };
 
-        it('should auto-connect when WebSocket is enabled', () => {
-            const { result } = renderHook(() =>
-                useRealTimeAppointments({
-                    ...defaultOptions,
-                    enableWebSocket: true,
-                })
-            );
+      await act(async () => {
+        const updateId = await result.current.updateAppointment(
+          'apt-1',
+          updates
+        );
+        expect(updateId).toBeDefined();
+      });
 
-            expect(result.current.connectionStatus).toBe('disconnected');
-            // Connection would be attempted in useEffect
-        });
+      // Should update the appointment in the list
+      expect(result.current.appointments[0].notes).toBe('Updated notes');
     });
 
-    describe('Appointment Operations', () => {
-        it('should update appointment with optimistic updates', async () => {
-            const { result } = renderHook(() =>
-                useRealTimeAppointments({
-                    ...defaultOptions,
-                    enableOptimisticUpdates: true,
-                })
-            );
+    it('should update appointment without optimistic updates', async () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments({
+          ...defaultOptions,
+          enableOptimisticUpdates: false,
+        })
+      );
 
-            const updates = { notes: 'Updated notes' };
+      const updates = { notes: 'Updated notes' };
 
-            await act(async () => {
-                const updateId = await result.current.updateAppointment('apt-1', updates);
-                expect(updateId).toBeDefined();
-            });
+      await act(async () => {
+        await result.current.updateAppointment('apt-1', updates);
+      });
 
-            // Should update the appointment in the list
-            expect(result.current.appointments[0].notes).toBe('Updated notes');
-        });
-
-        it('should update appointment without optimistic updates', async () => {
-            const { result } = renderHook(() =>
-                useRealTimeAppointments({
-                    ...defaultOptions,
-                    enableOptimisticUpdates: false,
-                })
-            );
-
-            const updates = { notes: 'Updated notes' };
-
-            await act(async () => {
-                await result.current.updateAppointment('apt-1', updates);
-            });
-
-            expect(fetch).toHaveBeenCalledWith('/api/appointments/apt-1', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updates),
-            });
-        });
-
-        it('should delete appointment with optimistic updates', async () => {
-            const { result } = renderHook(() =>
-                useRealTimeAppointments({
-                    ...defaultOptions,
-                    enableOptimisticUpdates: true,
-                })
-            );
-
-            await act(async () => {
-                const updateId = await result.current.deleteAppointment('apt-1');
-                expect(updateId).toBeDefined();
-            });
-
-            // Should remove the appointment from the list
-            expect(result.current.appointments).toHaveLength(0);
-        });
-
-        it('should create appointment with optimistic updates', async () => {
-            const { result } = renderHook(() =>
-                useRealTimeAppointments({
-                    ...defaultOptions,
-                    enableOptimisticUpdates: true,
-                })
-            );
-
-            const newAppointment = {
-                ...mockAppointment,
-                notes: 'New appointment',
-            };
-            delete (newAppointment as any).id; // Remove id for creation
-
-            await act(async () => {
-                const updateId = await result.current.createAppointment(newAppointment);
-                expect(updateId).toBeDefined();
-            });
-
-            // Should add the appointment to the list
-            expect(result.current.appointments).toHaveLength(2);
-        });
-
-        it('should handle appointment operation errors', async () => {
-            (fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
-
-            const { result } = renderHook(() =>
-                useRealTimeAppointments({
-                    ...defaultOptions,
-                    enableOptimisticUpdates: false,
-                })
-            );
-
-            await act(async () => {
-                await expect(
-                    result.current.updateAppointment('apt-1', { notes: 'Update' })
-                ).rejects.toThrow('Failed to update appointment');
-            });
-        });
+      expect(fetch).toHaveBeenCalledWith('/api/appointments/apt-1', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
     });
 
-    describe('Connection Management', () => {
-        it('should connect to WebSocket', () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+    it('should delete appointment with optimistic updates', async () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments({
+          ...defaultOptions,
+          enableOptimisticUpdates: true,
+        })
+      );
 
-            act(() => {
-                result.current.connect();
-            });
+      await act(async () => {
+        const updateId = await result.current.deleteAppointment('apt-1');
+        expect(updateId).toBeDefined();
+      });
 
-            // Connection status would be updated by the service
-            expect(result.current.connectionStatus).toBe('disconnected');
-        });
-
-        it('should disconnect from WebSocket', () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
-
-            act(() => {
-                result.current.disconnect();
-            });
-
-            expect(result.current.connectionStatus).toBe('disconnected');
-        });
+      // Should remove the appointment from the list
+      expect(result.current.appointments).toHaveLength(0);
     });
 
-    describe('Conflict Resolution', () => {
-        it('should resolve conflicts', () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+    it('should create appointment with optimistic updates', async () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments({
+          ...defaultOptions,
+          enableOptimisticUpdates: true,
+        })
+      );
 
-            act(() => {
-                result.current.resolveConflict('conflict-1', 'accept_server');
-            });
+      const newAppointment = {
+        ...mockAppointment,
+        notes: 'New appointment',
+      };
+      delete (newAppointment as any).id; // Remove id for creation
 
-            // Conflict resolution would be handled by the service
-            expect(result.current.conflicts).toEqual([]);
-        });
+      await act(async () => {
+        const updateId = await result.current.createAppointment(newAppointment);
+        expect(updateId).toBeDefined();
+      });
+
+      // Should add the appointment to the list
+      expect(result.current.appointments).toHaveLength(2);
     });
 
-    describe('Notifications', () => {
-        it('should add notifications', async () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+    it('should handle appointment operation errors', async () => {
+      (fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
-            // Simulate a notification being added by the service
-            act(() => {
-                // This would normally be called by the service callbacks
-                // For testing, we'll simulate the internal notification logic
-            });
+      const { result } = renderHook(() =>
+        useRealTimeAppointments({
+          ...defaultOptions,
+          enableOptimisticUpdates: false,
+        })
+      );
 
-            // Notifications would be managed internally
-            expect(result.current.notifications).toEqual([]);
-        });
+      await act(async () => {
+        await expect(
+          result.current.updateAppointment('apt-1', { notes: 'Update' })
+        ).rejects.toThrow('Failed to update appointment');
+      });
+    });
+  });
 
-        it('should dismiss notifications', () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+  describe('Connection Management', () => {
+    it('should connect to WebSocket', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
 
-            act(() => {
-                result.current.dismissNotification('notification-1');
-            });
+      act(() => {
+        result.current.connect();
+      });
 
-            // Notification should be removed
-            expect(result.current.notifications).toEqual([]);
-        });
-
-        it('should auto-dismiss info notifications', async () => {
-            jest.useFakeTimers();
-
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
-
-            // Simulate adding an info notification
-            act(() => {
-                // This would be called by the service
-            });
-
-            // Fast-forward time
-            act(() => {
-                jest.advanceTimersByTime(5000);
-            });
-
-            // Info notification should be auto-dismissed
-            expect(result.current.notifications).toEqual([]);
-
-            jest.useRealTimers();
-        });
+      // Connection status would be updated by the service
+      expect(result.current.connectionStatus).toBe('disconnected');
     });
 
-    describe('Force Sync', () => {
-        it('should force sync with server', async () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+    it('should disconnect from WebSocket', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
 
-            await act(async () => {
-                await result.current.forceSync();
-            });
+      act(() => {
+        result.current.disconnect();
+      });
 
-            // Force sync would be handled by the service
-            expect(result.current.syncState.syncInProgress).toBe(false);
-        });
+      expect(result.current.connectionStatus).toBe('disconnected');
+    });
+  });
+
+  describe('Conflict Resolution', () => {
+    it('should resolve conflicts', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      act(() => {
+        result.current.resolveConflict('conflict-1', 'accept_server');
+      });
+
+      // Conflict resolution would be handled by the service
+      expect(result.current.conflicts).toEqual([]);
+    });
+  });
+
+  describe('Notifications', () => {
+    it('should add notifications', async () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      // Simulate a notification being added by the service
+      act(() => {
+        // This would normally be called by the service callbacks
+        // For testing, we'll simulate the internal notification logic
+      });
+
+      // Notifications would be managed internally
+      expect(result.current.notifications).toEqual([]);
     });
 
-    describe('Rollback Operations', () => {
-        it('should rollback optimistic updates', () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+    it('should dismiss notifications', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
 
-            act(() => {
-                result.current.rollbackUpdate('update-1');
-            });
+      act(() => {
+        result.current.dismissNotification('notification-1');
+      });
 
-            // Rollback would be handled by the service
-            expect(result.current.appointments).toEqual([mockAppointment]);
-        });
+      // Notification should be removed
+      expect(result.current.notifications).toEqual([]);
     });
 
-    describe('Service Integration', () => {
-        it('should handle service callbacks correctly', () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+    it('should auto-dismiss info notifications', async () => {
+      jest.useFakeTimers();
 
-            // Services would be initialized and callbacks set up
-            expect(result.current.appointments).toEqual([mockAppointment]);
-        });
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
 
-        it('should clean up services on unmount', () => {
-            const { unmount } = renderHook(() => useRealTimeAppointments(defaultOptions));
+      // Simulate adding an info notification
+      act(() => {
+        // This would be called by the service
+      });
 
-            unmount();
+      // Fast-forward time
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
 
-            // Services should be cleaned up
-            // This would be verified by checking that destroy methods are called
-        });
+      // Info notification should be auto-dismissed
+      expect(result.current.notifications).toEqual([]);
+
+      jest.useRealTimers();
+    });
+  });
+
+  describe('Force Sync', () => {
+    it('should force sync with server', async () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      await act(async () => {
+        await result.current.forceSync();
+      });
+
+      // Force sync would be handled by the service
+      expect(result.current.syncState.syncInProgress).toBe(false);
+    });
+  });
+
+  describe('Rollback Operations', () => {
+    it('should rollback optimistic updates', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      act(() => {
+        result.current.rollbackUpdate('update-1');
+      });
+
+      // Rollback would be handled by the service
+      expect(result.current.appointments).toEqual([mockAppointment]);
+    });
+  });
+
+  describe('Service Integration', () => {
+    it('should handle service callbacks correctly', () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      // Services would be initialized and callbacks set up
+      expect(result.current.appointments).toEqual([mockAppointment]);
     });
 
-    describe('Error Handling', () => {
-        it('should handle service initialization errors', () => {
-            // Mock service constructor to throw
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    it('should clean up services on unmount', () => {
+      const { unmount } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
 
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
+      unmount();
 
-            // Should still provide a working interface even if services fail
-            expect(result.current.appointments).toEqual([mockAppointment]);
-
-            consoleSpy.mockRestore();
-        });
-
-        it('should handle missing sync service gracefully', async () => {
-            const { result } = renderHook(() => useRealTimeAppointments(defaultOptions));
-
-            // Simulate sync service not being available
-            await act(async () => {
-                await expect(
-                    result.current.updateAppointment('apt-1', { notes: 'Update' })
-                ).rejects.toThrow('Sync service not initialized');
-            });
-        });
+      // Services should be cleaned up
+      // This would be verified by checking that destroy methods are called
     });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle service initialization errors', () => {
+      // Mock service constructor to throw
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      // Should still provide a working interface even if services fail
+      expect(result.current.appointments).toEqual([mockAppointment]);
+
+      consoleSpy.mockRestore();
+    });
+
+    it('should handle missing sync service gracefully', async () => {
+      const { result } = renderHook(() =>
+        useRealTimeAppointments(defaultOptions)
+      );
+
+      // Simulate sync service not being available
+      await act(async () => {
+        await expect(
+          result.current.updateAppointment('apt-1', { notes: 'Update' })
+        ).rejects.toThrow('Sync service not initialized');
+      });
+    });
+  });
 });

@@ -1,6 +1,6 @@
 /**
  * Notification Metrics API Endpoint
- * 
+ *
  * GET /api/notifications/metrics
  * Returns notification metrics for a business including:
  * - Queue metrics (depth, processing rate, failure rate)
@@ -24,10 +24,7 @@ export async function GET(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get business ID from query params or user's primary business
@@ -62,7 +59,8 @@ export async function GET(request: NextRequest) {
     const queueMetrics = await emailQueueManager.getQueueMetrics();
 
     // Get rate limit status
-    const rateLimitStatus = await emailRateLimiter.getRateLimitStatus(businessId);
+    const rateLimitStatus =
+      await emailRateLimiter.getRateLimitStatus(businessId);
 
     // Get worker status
     const workerStatus = emailQueueWorker.getStatus();
@@ -143,7 +141,9 @@ export async function GET(request: NextRequest) {
         depth: queueMetrics.queueDepth,
         messagesProcessed: queueMetrics.messagesProcessed,
         messagesFailed: queueMetrics.messagesFailed,
-        averageProcessingTime: Math.round(queueMetrics.averageProcessingTime / 1000), // Convert to seconds
+        averageProcessingTime: Math.round(
+          queueMetrics.averageProcessingTime / 1000
+        ), // Convert to seconds
         oldestMessageAge: Math.round(queueMetrics.oldestMessageAge / 1000), // Convert to seconds
       },
 
@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
       },
 
       // Email breakdown by type
-      emailsByType: emailsByType.map((item) => ({
+      emailsByType: emailsByType.map(item => ({
         templateType: item.templateType,
         count: item._count.id,
       })),

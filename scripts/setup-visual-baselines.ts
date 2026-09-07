@@ -2,7 +2,7 @@
 
 /**
  * Visual Testing Baseline Setup Script
- * 
+ *
  * Sets up baseline screenshots for visual regression testing
  */
 
@@ -10,82 +10,82 @@ import { execSync } from 'child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 
 interface VisualTestSetup {
-    setupBaselines: boolean;
-    updateExisting: boolean;
-    componentsOnly: boolean;
-    verbose: boolean;
+  setupBaselines: boolean;
+  updateExisting: boolean;
+  componentsOnly: boolean;
+  verbose: boolean;
 }
 
 class VisualTestSetupManager {
-    private config: VisualTestSetup;
+  private config: VisualTestSetup;
 
-    constructor(config: VisualTestSetup) {
-        this.config = config;
+  constructor(config: VisualTestSetup) {
+    this.config = config;
+  }
+
+  async setupVisualTesting(): Promise<void> {
+    console.log('🎨 Setting up visual regression testing...\n');
+
+    // Ensure test directories exist
+    this.ensureDirectories();
+
+    // Generate baseline screenshots
+    if (this.config.setupBaselines) {
+      await this.generateBaselines();
     }
 
-    async setupVisualTesting(): Promise<void> {
-        console.log('🎨 Setting up visual regression testing...\n');
+    // Create visual test documentation
+    this.createDocumentation();
 
-        // Ensure test directories exist
-        this.ensureDirectories();
+    console.log('✅ Visual testing setup complete!\n');
+    this.printUsageInstructions();
+  }
 
-        // Generate baseline screenshots
-        if (this.config.setupBaselines) {
-            await this.generateBaselines();
+  private ensureDirectories(): void {
+    const directories = [
+      'test-results/visual',
+      'playwright-report/visual',
+      'e2e/components',
+      'e2e/utils',
+    ];
+
+    directories.forEach(dir => {
+      if (!existsSync(dir)) {
+        mkdirSync(dir, { recursive: true });
+        if (this.config.verbose) {
+          console.log(`📁 Created directory: ${dir}`);
         }
+      }
+    });
+  }
 
-        // Create visual test documentation
-        this.createDocumentation();
+  private async generateBaselines(): Promise<void> {
+    console.log('📸 Generating baseline screenshots...');
 
-        console.log('✅ Visual testing setup complete!\n');
-        this.printUsageInstructions();
-    }
+    try {
+      const command = this.config.updateExisting
+        ? 'npm run test:visual:update'
+        : 'npm run test:visual';
 
-    private ensureDirectories(): void {
-        const directories = [
-            'test-results/visual',
-            'playwright-report/visual',
-            'e2e/components',
-            'e2e/utils'
-        ];
-
-        directories.forEach(dir => {
-            if (!existsSync(dir)) {
-                mkdirSync(dir, { recursive: true });
-                if (this.config.verbose) {
-                    console.log(`📁 Created directory: ${dir}`);
-                }
-            }
+      if (this.config.componentsOnly) {
+        execSync(`${command} -- --grep "component visual"`, {
+          stdio: this.config.verbose ? 'inherit' : 'pipe',
         });
+      } else {
+        execSync(command, {
+          stdio: this.config.verbose ? 'inherit' : 'pipe',
+        });
+      }
+
+      console.log('✅ Baseline screenshots generated successfully');
+    } catch (error) {
+      console.error('❌ Failed to generate baseline screenshots:', error);
+      throw error;
     }
+  }
 
-    private async generateBaselines(): Promise<void> {
-        console.log('📸 Generating baseline screenshots...');
-
-        try {
-            const command = this.config.updateExisting
-                ? 'npm run test:visual:update'
-                : 'npm run test:visual';
-
-            if (this.config.componentsOnly) {
-                execSync(`${command} -- --grep "component visual"`, {
-                    stdio: this.config.verbose ? 'inherit' : 'pipe'
-                });
-            } else {
-                execSync(command, {
-                    stdio: this.config.verbose ? 'inherit' : 'pipe'
-                });
-            }
-
-            console.log('✅ Baseline screenshots generated successfully');
-        } catch (error) {
-            console.error('❌ Failed to generate baseline screenshots:', error);
-            throw error;
-        }
-    }
-
-    private createDocumentation(): void {
-        const visualTestingGuide = `# Visual Regression Testing Guide
+  private createDocumentation(): void {
+    const visualTestingGuide = `# Visual Regression Testing Guide
 
 ## Overview
 
@@ -216,9 +216,12 @@ To update baselines in CI, create a PR with updated screenshots using:
 \`npm run test:visual:update\`
 `;
 
-        writeFileSync('docs/testing/visual-regression-guide.md', visualTestingGuide);
+    writeFileSync(
+      'docs/testing/visual-regression-guide.md',
+      visualTestingGuide
+    );
 
-        const visualTestChecklist = `# Visual Testing Checklist
+    const visualTestChecklist = `# Visual Testing Checklist
 
 ## Before Committing Design Changes
 
@@ -256,36 +259,39 @@ To update baselines in CI, create a PR with updated screenshots using:
 - [ ] Consider test execution time in CI
 `;
 
-        writeFileSync('docs/testing/visual-testing-checklist.md', visualTestChecklist);
+    writeFileSync(
+      'docs/testing/visual-testing-checklist.md',
+      visualTestChecklist
+    );
 
-        if (this.config.verbose) {
-            console.log('📝 Created visual testing documentation');
-        }
+    if (this.config.verbose) {
+      console.log('📝 Created visual testing documentation');
     }
+  }
 
-    private printUsageInstructions(): void {
-        console.log('📋 Visual Testing Setup Complete!\n');
-        console.log('Next steps:');
-        console.log('1. Run visual tests: npm run test:visual');
-        console.log('2. View results: npm run test:visual:ui');
-        console.log('3. Update baselines: npm run test:visual:update');
-        console.log('4. Read the guide: docs/testing/visual-regression-guide.md\n');
-    }
+  private printUsageInstructions(): void {
+    console.log('📋 Visual Testing Setup Complete!\n');
+    console.log('Next steps:');
+    console.log('1. Run visual tests: npm run test:visual');
+    console.log('2. View results: npm run test:visual:ui');
+    console.log('3. Update baselines: npm run test:visual:update');
+    console.log('4. Read the guide: docs/testing/visual-regression-guide.md\n');
+  }
 }
 
 // CLI Interface
 async function main(): Promise<void> {
-    const args = process.argv.slice(2);
+  const args = process.argv.slice(2);
 
-    const config: VisualTestSetup = {
-        setupBaselines: !args.includes('--no-baselines'),
-        updateExisting: args.includes('--update'),
-        componentsOnly: args.includes('--components-only'),
-        verbose: args.includes('--verbose')
-    };
+  const config: VisualTestSetup = {
+    setupBaselines: !args.includes('--no-baselines'),
+    updateExisting: args.includes('--update'),
+    componentsOnly: args.includes('--components-only'),
+    verbose: args.includes('--verbose'),
+  };
 
-    if (args.includes('--help')) {
-        console.log(`
+  if (args.includes('--help')) {
+    console.log(`
 Visual Testing Setup Script
 
 Usage: tsx scripts/setup-visual-baselines.ts [options]
@@ -297,18 +303,18 @@ Options:
   --verbose         Show detailed output
   --help           Show this help message
 `);
-        return;
-    }
+    return;
+  }
 
-    const manager = new VisualTestSetupManager(config);
-    await manager.setupVisualTesting();
+  const manager = new VisualTestSetupManager(config);
+  await manager.setupVisualTesting();
 }
 
 if (require.main === module) {
-    main().catch(error => {
-        console.error('❌ Setup failed:', error);
-        process.exit(1);
-    });
+  main().catch(error => {
+    console.error('❌ Setup failed:', error);
+    process.exit(1);
+  });
 }
 
 export { VisualTestSetupManager };

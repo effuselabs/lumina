@@ -1,10 +1,10 @@
 /**
  * Test Email Notification API Endpoint
- * 
+ *
  * POST /api/notifications/test
  * Allows business owners to send test emails to verify configuration
  * Supports all template types for testing purposes
- * 
+ *
  * Requirements: 10.1, 10.5
  */
 
@@ -41,10 +41,7 @@ export async function POST(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate request body
@@ -123,7 +120,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map((e) => ({
+          details: error.errors.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),

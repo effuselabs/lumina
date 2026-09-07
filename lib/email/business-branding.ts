@@ -48,7 +48,8 @@ export async function getBusinessBranding(
       businessId: business.id,
       businessName: business.name,
       logoUrl: business.logo || undefined,
-      primaryColor: business.primaryColor || LUMINA_DEFAULT_BRANDING.primaryColor,
+      primaryColor:
+        business.primaryColor || LUMINA_DEFAULT_BRANDING.primaryColor,
       secondaryColor: LUMINA_DEFAULT_BRANDING.secondaryColor,
       accentColor: LUMINA_DEFAULT_BRANDING.accentColor,
       fontFamily: LUMINA_DEFAULT_BRANDING.fontFamily,
@@ -120,9 +121,10 @@ export function applyBrandingToHtml(
 /**
  * Validate business branding configuration
  */
-export function validateBranding(
-  branding: BusinessBranding
-): { valid: boolean; issues: string[] } {
+export function validateBranding(branding: BusinessBranding): {
+  valid: boolean;
+  issues: string[];
+} {
   const issues: string[] = [];
 
   // Validate business ID
@@ -142,10 +144,7 @@ export function validateBranding(
     issues.push('Primary color must be a valid hex color (e.g., #FFD25A)');
   }
 
-  if (
-    branding.secondaryColor &&
-    !hexColorRegex.test(branding.secondaryColor)
-  ) {
+  if (branding.secondaryColor && !hexColorRegex.test(branding.secondaryColor)) {
     issues.push('Secondary color must be a valid hex color (e.g., #FF7A5A)');
   }
 
@@ -180,8 +179,7 @@ export function mergeBrandingWithDefaults(
     businessId,
     businessName: branding.businessName || LUMINA_DEFAULT_BRANDING.businessName,
     logoUrl: branding.logoUrl || LUMINA_DEFAULT_BRANDING.logoUrl,
-    primaryColor:
-      branding.primaryColor || LUMINA_DEFAULT_BRANDING.primaryColor,
+    primaryColor: branding.primaryColor || LUMINA_DEFAULT_BRANDING.primaryColor,
     secondaryColor:
       branding.secondaryColor || LUMINA_DEFAULT_BRANDING.secondaryColor,
     accentColor: branding.accentColor || LUMINA_DEFAULT_BRANDING.accentColor,

@@ -1,10 +1,10 @@
 /**
  * Notification History API Endpoint
- * 
+ *
  * GET /api/notifications/history
  * Returns notification history for a business with filtering and pagination
  * Supports filtering by date, type, status, and appointment
- * 
+ *
  * Requirements: 10.2
  */
 
@@ -21,16 +21,30 @@ const historyQuerySchema = z.object({
   businessId: z.string().min(1, 'Business ID is required'),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
-  status: z.enum(['pending', 'queued', 'processing', 'sending', 'sent', 'delivered', 'failed', 'bounced', 'complained']).optional(),
-  templateType: z.enum([
-    'booking_confirmation',
-    'appointment_reminder_24h',
-    'appointment_reminder_2h',
-    'cancellation_notification',
-    'staff_booking_alert',
-    'staff_cancellation_alert',
-    'daily_booking_summary',
-  ]).optional(),
+  status: z
+    .enum([
+      'pending',
+      'queued',
+      'processing',
+      'sending',
+      'sent',
+      'delivered',
+      'failed',
+      'bounced',
+      'complained',
+    ])
+    .optional(),
+  templateType: z
+    .enum([
+      'booking_confirmation',
+      'appointment_reminder_24h',
+      'appointment_reminder_2h',
+      'cancellation_notification',
+      'staff_booking_alert',
+      'staff_cancellation_alert',
+      'daily_booking_summary',
+    ])
+    .optional(),
   appointmentId: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
@@ -45,10 +59,7 @@ export async function GET(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate query parameters
@@ -113,7 +124,9 @@ export async function GET(request: NextRequest) {
     // Calculate pagination metadata
     const total = notifications.length;
     const hasMore = total === validatedParams.limit;
-    const nextOffset = hasMore ? validatedParams.offset + validatedParams.limit : null;
+    const nextOffset = hasMore
+      ? validatedParams.offset + validatedParams.limit
+      : null;
 
     return NextResponse.json({
       notifications,
@@ -130,7 +143,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map((e) => ({
+          details: error.errors.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),

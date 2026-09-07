@@ -1,6 +1,6 @@
 /**
  * Base Email Provider Implementation
- * 
+ *
  * Abstract base class providing common functionality for all email providers.
  * Includes error handling, logging, and validation logic.
  */
@@ -115,8 +115,10 @@ export abstract class BaseEmailProvider implements EmailProvider {
     }
 
     // Validate content
-    if ((!email.html || email.html.trim().length === 0) && 
-        (!email.text || email.text.trim().length === 0)) {
+    if (
+      (!email.html || email.html.trim().length === 0) &&
+      (!email.text || email.text.trim().length === 0)
+    ) {
       throw new EmailProviderError(
         'Email must have either HTML or text content',
         EmailProviderErrorCode.INVALID_CONTENT,

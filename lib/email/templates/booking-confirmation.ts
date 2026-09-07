@@ -18,7 +18,9 @@ export interface BookingConfirmationData {
   primaryColor?: string;
 }
 
-export const bookingConfirmationHtml = (data: BookingConfirmationData): string => `
+export const bookingConfirmationHtml = (
+  data: BookingConfirmationData
+): string => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,7 +184,9 @@ export const bookingConfirmationHtml = (data: BookingConfirmationData): string =
 </html>
 `;
 
-export const bookingConfirmationText = (data: BookingConfirmationData): string => `
+export const bookingConfirmationText = (
+  data: BookingConfirmationData
+): string => `
 Booking Confirmed!
 
 Hi ${data.clientName},

@@ -216,32 +216,46 @@ const Layout = React.forwardRef<
     defaultTheme?: 'light' | 'dark' | 'system';
     storageKey?: string;
   }
->(({ className, enableTheme = true, defaultTheme = 'system', storageKey = 'lumina-theme', children, ...props }, ref) => {
-  if (enableTheme) {
+>(
+  (
+    {
+      className,
+      enableTheme = true,
+      defaultTheme = 'system',
+      storageKey = 'lumina-theme',
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    if (enableTheme) {
+      return (
+        <ThemeProvider defaultTheme={defaultTheme} storageKey={storageKey}>
+          <div
+            ref={ref}
+            className={cn(
+              'min-h-screen bg-background text-foreground',
+              className
+            )}
+            {...props}
+          >
+            {children}
+          </div>
+        </ThemeProvider>
+      );
+    }
+
     return (
-      <ThemeProvider defaultTheme={defaultTheme} storageKey={storageKey}>
-        <div
-          ref={ref}
-          className={cn('min-h-screen bg-background text-foreground', className)}
-          {...props}
-        >
-          {children}
-        </div>
-      </ThemeProvider>
+      <div
+        ref={ref}
+        className={cn('min-h-screen bg-background text-foreground', className)}
+        {...props}
+      >
+        {children}
+      </div>
     );
   }
-
-  return (
-    <div
-      ref={ref}
-      className={cn('min-h-screen bg-background text-foreground', className)}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-});
+);
 Layout.displayName = 'Layout';
 
 export { breakpoints, Container, Flex, Grid, Layout, Show, Stack };
-

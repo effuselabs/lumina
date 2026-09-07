@@ -56,8 +56,9 @@ const textareaVariants = cva(
 );
 
 export interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-  VariantProps<typeof textareaVariants> {
+  extends
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    VariantProps<typeof textareaVariants> {
   error?: boolean;
   success?: boolean;
   'aria-label'?: string;
@@ -66,18 +67,21 @@ export interface TextareaProps
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({
-    className,
-    variant,
-    size,
-    error,
-    success,
-    disabled,
-    'aria-label': ariaLabel,
-    'aria-describedby': ariaDescribedBy,
-    'aria-invalid': ariaInvalid,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      error,
+      success,
+      disabled,
+      'aria-label': ariaLabel,
+      'aria-describedby': ariaDescribedBy,
+      'aria-invalid': ariaInvalid,
+      ...props
+    },
+    ref
+  ) => {
     // Determine variant based on state
     const computedVariant = error ? 'error' : success ? 'success' : variant;
 
@@ -86,7 +90,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <textarea
-        className={cn(textareaVariants({ variant: computedVariant, size, className }))}
+        className={cn(
+          textareaVariants({ variant: computedVariant, size, className })
+        )}
         ref={ref}
         disabled={disabled}
         aria-disabled={disabled}

@@ -2,7 +2,7 @@
 
 /**
  * Setup Design System Visual Baselines
- * 
+ *
  * Creates baseline screenshots for all design system components
  * Run this after implementing new components or making visual changes
  */
@@ -12,69 +12,66 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 interface BaselineConfig {
-    testFiles: string[];
-    outputDir: string;
-    browsers: string[];
-    themes: string[];
-    breakpoints: string[];
+  testFiles: string[];
+  outputDir: string;
+  browsers: string[];
+  themes: string[];
+  breakpoints: string[];
 }
 
 const config: BaselineConfig = {
-    testFiles: [
-        'e2e/design-system-visual-regression.spec.ts'
-    ],
-    outputDir: 'test-results/visual/baselines',
-    browsers: ['chromium', 'firefox', 'webkit'],
-    themes: ['light', 'dark'],
-    breakpoints: ['mobile', 'tablet', 'desktop', 'wide']
+  testFiles: ['e2e/design-system-visual-regression.spec.ts'],
+  outputDir: 'test-results/visual/baselines',
+  browsers: ['chromium', 'firefox', 'webkit'],
+  themes: ['light', 'dark'],
+  breakpoints: ['mobile', 'tablet', 'desktop', 'wide'],
 };
 
 async function setupBaselines(): Promise<void> {
-    console.log('🎨 Setting up Design System Visual Baselines...\n');
+  console.log('🎨 Setting up Design System Visual Baselines...\n');
 
-    // Ensure output directory exists
-    if (!existsSync(config.outputDir)) {
-        mkdirSync(config.outputDir, { recursive: true });
-        console.log(`✅ Created baseline directory: ${config.outputDir}`);
-    }
+  // Ensure output directory exists
+  if (!existsSync(config.outputDir)) {
+    mkdirSync(config.outputDir, { recursive: true });
+    console.log(`✅ Created baseline directory: ${config.outputDir}`);
+  }
 
-    // Check if development server is running
-    try {
-        execSync('curl -f http://localhost:3000/api/health', { stdio: 'ignore' });
-        console.log('✅ Development server is running');
-    } catch (error) {
-        console.error('❌ Development server is not running');
-        console.log('Please start the development server with: npm run dev');
-        process.exit(1);
-    }
+  // Check if development server is running
+  try {
+    execSync('curl -f http://localhost:3000/api/health', { stdio: 'ignore' });
+    console.log('✅ Development server is running');
+  } catch (error) {
+    console.error('❌ Development server is not running');
+    console.log('Please start the development server with: npm run dev');
+    process.exit(1);
+  }
 
-    // Run visual tests to generate baselines
-    console.log('\n📸 Generating baseline screenshots...');
+  // Run visual tests to generate baselines
+  console.log('\n📸 Generating baseline screenshots...');
 
-    try {
-        // Run tests with update snapshots flag
-        const command = `npx playwright test ${config.testFiles.join(' ')} --config=e2e/visual-test.config.ts --update-snapshots`;
+  try {
+    // Run tests with update snapshots flag
+    const command = `npx playwright test ${config.testFiles.join(' ')} --config=e2e/visual-test.config.ts --update-snapshots`;
 
-        console.log(`Running: ${command}\n`);
-        execSync(command, {
-            stdio: 'inherit',
-            cwd: process.cwd()
-        });
+    console.log(`Running: ${command}\n`);
+    execSync(command, {
+      stdio: 'inherit',
+      cwd: process.cwd(),
+    });
 
-        console.log('\n✅ Baseline screenshots generated successfully!');
+    console.log('\n✅ Baseline screenshots generated successfully!');
 
-        // Generate baseline report
-        await generateBaselineReport();
-
-    } catch (error) {
-        console.error('\n❌ Failed to generate baseline screenshots');
-        console.error(error);
-        process.exit(1);
-    }
+    // Generate baseline report
+    await generateBaselineReport();
+  } catch (error) {
+    console.error('\n❌ Failed to generate baseline screenshots');
+    console.error(error);
+    process.exit(1);
+  }
 }
 
 async function generateBaselineReport(): Promise<void> {
-    const reportContent = `# Design System Visual Baselines Report
+  const reportContent = `# Design System Visual Baselines Report
 
 Generated on: ${new Date().toISOString()}
 
@@ -177,65 +174,67 @@ Baselines should be updated when:
 Always review visual diffs carefully before updating baselines to ensure changes are intentional.
 `;
 
-    const reportPath = join(config.outputDir, 'baseline-report.md');
-    writeFileSync(reportPath, reportContent);
+  const reportPath = join(config.outputDir, 'baseline-report.md');
+  writeFileSync(reportPath, reportContent);
 
-    console.log(`📋 Baseline report saved to: ${reportPath}`);
+  console.log(`📋 Baseline report saved to: ${reportPath}`);
 }
 
 async function validateBaselines(): Promise<void> {
-    console.log('\n🔍 Validating baseline screenshots...');
+  console.log('\n🔍 Validating baseline screenshots...');
 
-    const requiredComponents = [
-        'button',
-        'brand-colors',
-        'typography-scale',
-        'input',
-        'card',
-        'badge'
-    ];
+  const requiredComponents = [
+    'button',
+    'brand-colors',
+    'typography-scale',
+    'input',
+    'card',
+    'badge',
+  ];
 
-    const requiredThemes = config.themes;
-    const requiredBreakpoints = config.breakpoints;
+  const requiredThemes = config.themes;
+  const requiredBreakpoints = config.breakpoints;
 
-    let missingBaselines: string[] = [];
+  let missingBaselines: string[] = [];
 
-    for (const component of requiredComponents) {
-        for (const theme of requiredThemes) {
-            for (const breakpoint of requiredBreakpoints) {
-                const baselinePath = join(
-                    'test-results',
-                    `${component}-default-${theme}-${breakpoint}.png`
-                );
+  for (const component of requiredComponents) {
+    for (const theme of requiredThemes) {
+      for (const breakpoint of requiredBreakpoints) {
+        const baselinePath = join(
+          'test-results',
+          `${component}-default-${theme}-${breakpoint}.png`
+        );
 
-                if (!existsSync(baselinePath)) {
-                    missingBaselines.push(baselinePath);
-                }
-            }
+        if (!existsSync(baselinePath)) {
+          missingBaselines.push(baselinePath);
         }
+      }
+    }
+  }
+
+  if (missingBaselines.length > 0) {
+    console.log(`⚠️  Missing ${missingBaselines.length} baseline screenshots:`);
+    missingBaselines.slice(0, 10).forEach(path => {
+      console.log(`   - ${path}`);
+    });
+
+    if (missingBaselines.length > 10) {
+      console.log(`   ... and ${missingBaselines.length - 10} more`);
     }
 
-    if (missingBaselines.length > 0) {
-        console.log(`⚠️  Missing ${missingBaselines.length} baseline screenshots:`);
-        missingBaselines.slice(0, 10).forEach(path => {
-            console.log(`   - ${path}`);
-        });
-
-        if (missingBaselines.length > 10) {
-            console.log(`   ... and ${missingBaselines.length - 10} more`);
-        }
-
-        console.log('\nRun the baseline generation again to create missing screenshots.');
-    } else {
-        console.log('✅ All required baseline screenshots are present');
-    }
+    console.log(
+      '\nRun the baseline generation again to create missing screenshots.'
+    );
+  } else {
+    console.log('✅ All required baseline screenshots are present');
+  }
 }
 
 async function main(): Promise<void> {
-    const args = process.argv.slice(2);
+  const args = process.argv.slice(2);
 
-    if (args.includes('--help') || args.includes('-h')) {
-        console.log(`
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
 Design System Visual Baselines Setup
 
 Usage:
@@ -252,29 +251,29 @@ Examples:
   # Validate existing baselines
   tsx scripts/setup-design-system-visual-baselines.ts --validate
         `);
-        return;
-    }
+    return;
+  }
 
-    if (args.includes('--validate')) {
-        await validateBaselines();
-        return;
-    }
-
-    await setupBaselines();
+  if (args.includes('--validate')) {
     await validateBaselines();
+    return;
+  }
 
-    console.log('\n🎉 Design System Visual Baselines setup complete!');
-    console.log('\nNext steps:');
-    console.log('1. Review the generated screenshots in test-results/');
-    console.log('2. Run "npm run test:visual" to test against baselines');
-    console.log('3. Use "npm run test:visual:ui" for interactive debugging');
+  await setupBaselines();
+  await validateBaselines();
+
+  console.log('\n🎉 Design System Visual Baselines setup complete!');
+  console.log('\nNext steps:');
+  console.log('1. Review the generated screenshots in test-results/');
+  console.log('2. Run "npm run test:visual" to test against baselines');
+  console.log('3. Use "npm run test:visual:ui" for interactive debugging');
 }
 
 if (require.main === module) {
-    main().catch(error => {
-        console.error('❌ Setup failed:', error);
-        process.exit(1);
-    });
+  main().catch(error => {
+    console.error('❌ Setup failed:', error);
+    process.exit(1);
+  });
 }
 
 export { generateBaselineReport, setupBaselines, validateBaselines };

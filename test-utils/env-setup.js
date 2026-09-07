@@ -2,7 +2,8 @@
 process.env.NODE_ENV = 'test';
 process.env.NEXTAUTH_SECRET = 'test-secret-key-for-testing';
 process.env.NEXTAUTH_URL = 'http://localhost:3000';
-process.env.DATABASE_URL = 'postgresql://lumina_test:test_password@localhost:5432/lumina_test';
+process.env.DATABASE_URL =
+  'postgresql://lumina_test:test_password@localhost:5432/lumina_test';
 
 // Stripe test keys
 process.env.STRIPE_SECRET_KEY = 'sk_test_fake_key_for_testing';

@@ -11,12 +11,14 @@ This guide will help you set up the Lumina development environment using Docker.
 ## Quick Start with Docker
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd lumina
    ```
 
 2. **Start the development environment**
+
    ```bash
    npm run docker:dev
    ```
@@ -28,6 +30,7 @@ This guide will help you set up the Lumina development environment using Docker.
    - Prisma Studio on port 5555
 
 3. **Initialize the database**
+
    ```bash
    npx prisma migrate dev --name init
    npx prisma db seed
@@ -42,23 +45,27 @@ This guide will help you set up the Lumina development environment using Docker.
 ## Local Development (without Docker)
 
 1. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 2. **Set up environment variables**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
    ```
 
 3. **Set up the database**
+
    ```bash
    npm run db:migrate
    npm run db:seed
    ```
 
 4. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -69,19 +76,23 @@ This guide will help you set up the Lumina development environment using Docker.
 ## Available Scripts
 
 ### ⚠️ **Script Safety Warning**
+
 **DO NOT USE** the documentation audit scripts in `/scripts/` directory:
+
 - `scripts/cleanup-documentation.ts`
-- `scripts/audit-documentation.ts` 
+- `scripts/audit-documentation.ts`
 - `scripts/migrate-documentation.ts`
 
 These scripts have critical safety issues and may cause data loss. See [LUM-78](https://linear.app/scootr-ca/issue/LUM-78) for fix tracking.
 
 ### Development
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 
 ### Database
+
 - `npm run db:generate` - Generate Prisma client
 - `npm run db:migrate` - Run database migrations
 - `npm run db:seed` - Seed database with test data
@@ -89,18 +100,21 @@ These scripts have critical safety issues and may cause data loss. See [LUM-78](
 - `npm run db:reset` - Reset database
 
 ### Testing
+
 - `npm run test` - Run unit tests
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:coverage` - Run tests with coverage
 - `npm run test:e2e` - Run end-to-end tests
 
 ### Code Quality
+
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint issues
 - `npm run format` - Format code with Prettier
 - `npm run type-check` - Run TypeScript type checking
 
 ### Docker
+
 - `npm run docker:dev` - Start development environment with Docker
 - `npm run docker:dev:detached` - Start in detached mode
 - `npm run docker:down` - Stop Docker containers
@@ -111,21 +125,25 @@ These scripts have critical safety issues and may cause data loss. See [LUM-78](
 After seeding the database, you can use these demo accounts to explore the application:
 
 **Business Owner:**
+
 - Email: owner@lumina-demo.com
 - Password: demo123
 - Access: Full business management capabilities
 
 **Senior Hair Stylist:**
+
 - Email: mike@lumina-demo.com
 - Password: demo123
 - Services: Hair cuts, styling, color, eyebrow shaping
 
 **Nail Technician & Colorist:**
+
 - Email: emma@lumina-demo.com
 - Password: demo123
 - Services: Manicures, pedicures, gel nails, hair color, highlights
 
 **Demo Business:** Lumina Demo Salon
+
 - Pre-configured services with realistic pricing
 - Sample clients with contact information
 - Upcoming appointments for testing
@@ -179,6 +197,7 @@ REDIS_URL="redis://localhost:6379"
 ## Git Hooks
 
 Pre-commit hooks are automatically set up with Husky to:
+
 - Run lint-staged for code formatting
 - Perform TypeScript type checking
 - Ensure code quality before commits

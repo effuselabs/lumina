@@ -187,7 +187,7 @@ export function DataTable<T extends Record<string, unknown>>({
                   key={String(column.key)}
                   className={cn(
                     'text-lumina-primary font-medium',
-                    column.sortable && 'cursor-pointer hover:bg-muted/50',
+                    column.sortable && 'hover:bg-muted/50 cursor-pointer',
                     column.className
                   )}
                   onClick={() =>
@@ -242,7 +242,7 @@ export function DataTable<T extends Record<string, unknown>>({
                 <TableRow
                   key={index}
                   className={cn(
-                    'transition-colors hover:bg-muted/50',
+                    'hover:bg-muted/50 transition-colors',
                     onRowClick && 'cursor-pointer'
                   )}
                   onClick={() => onRowClick?.(row)}

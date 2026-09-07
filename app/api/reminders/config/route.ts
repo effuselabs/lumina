@@ -1,6 +1,6 @@
 /**
  * Reminder Configuration API
- * 
+ *
  * Endpoints for managing business-specific reminder settings
  */
 
@@ -15,14 +15,22 @@ import { z } from 'zod';
 const reminderConfigSchema = z.object({
   enable24hReminders: z.boolean().optional(),
   enable2hReminders: z.boolean().optional(),
-  quietHoursStart: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional().nullable(),
-  quietHoursEnd: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional().nullable(),
+  quietHoursStart: z
+    .string()
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional()
+    .nullable(),
+  quietHoursEnd: z
+    .string()
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional()
+    .nullable(),
   timezone: z.string().optional(),
 });
 
 /**
  * GET /api/reminders/config?businessId=xxx
- * 
+ *
  * Get reminder configuration for a business
  */
 export async function GET(request: NextRequest) {
@@ -30,10 +38,7 @@ export async function GET(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get business ID from query params
@@ -58,10 +63,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!businessUser) {
-      return NextResponse.json(
-        { error: 'Access denied' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
     // Get reminder configuration
@@ -107,7 +109,7 @@ export async function GET(request: NextRequest) {
 
 /**
  * PUT /api/reminders/config
- * 
+ *
  * Update reminder configuration for a business
  */
 export async function PUT(request: NextRequest) {
@@ -115,10 +117,7 @@ export async function PUT(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse request body
@@ -220,7 +219,7 @@ export async function PUT(request: NextRequest) {
 
 /**
  * DELETE /api/reminders/config?businessId=xxx
- * 
+ *
  * Reset reminder configuration to defaults
  */
 export async function DELETE(request: NextRequest) {
@@ -228,10 +227,7 @@ export async function DELETE(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get business ID from query params

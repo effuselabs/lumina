@@ -58,7 +58,7 @@ export function DashboardHeader({
           <Search className="text-lumina-secondary absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 transform" />
           <Input
             placeholder="Search clients, appointments, services, staff..."
-            className="rounded-xl border-2 border-gray-200 bg-white py-3 pl-12 pr-4 text-base transition-all duration-200 placeholder:text-gray-400 focus:border-lumina-gold focus:ring-2 focus:ring-lumina-gold/20"
+            className="focus:ring-lumina-gold/20 rounded-xl border-2 border-gray-200 bg-white py-3 pl-12 pr-4 text-base transition-all duration-200 placeholder:text-gray-400 focus:border-lumina-gold focus:ring-2"
             style={{
               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
             }}

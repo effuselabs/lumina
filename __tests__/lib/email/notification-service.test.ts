@@ -1,6 +1,6 @@
 /**
  * Unit Tests for NotificationService
- * 
+ *
  * Tests the core notification service business logic including:
  * - Booking confirmation notifications
  * - Appointment reminders (24h and 2h)
@@ -9,11 +9,15 @@
  * - Business context validation
  * - Email preference checking
  * - Error handling
- * 
+ *
  * Requirements: 10.1, 10.2, 10.3, 10.4, 10.5
  */
 
-import { NotificationService, NotificationError, NotificationErrorCode } from '@/lib/email/notification-service';
+import {
+  NotificationService,
+  NotificationError,
+  NotificationErrorCode,
+} from '@/lib/email/notification-service';
 import { prisma } from '@/lib/prisma';
 import { templateEngine } from '@/lib/email/template-engine';
 import { AppointmentStatus } from '@prisma/client';
@@ -128,9 +132,15 @@ describe('NotificationService', () => {
     }
 
     // Setup default mocks
-    (mockPrisma.business.findUnique as jest.Mock).mockResolvedValue(mockBusiness);
-    (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(mockAppointment);
-    (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(null);
+    (mockPrisma.business.findUnique as jest.Mock).mockResolvedValue(
+      mockBusiness
+    );
+    (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(
+      mockAppointment
+    );
+    (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(
+      null
+    );
     (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue({
       id: 'queue-123',
       businessId: mockBusinessId,
@@ -622,7 +632,9 @@ describe('NotificationService', () => {
 
   describe('Email Preference Checking', () => {
     it('should allow all emails when no preferences exist', async () => {
-      (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(null);
+      (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(
+        null
+      );
 
       const result = await notificationService.sendBookingConfirmation(
         mockAppointmentId,

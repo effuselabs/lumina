@@ -4,9 +4,9 @@ import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 interface AppointmentCalendarPageProps {
-    params: {
-        businessSlug: string;
-    };
+  params: {
+    businessSlug: string;
+  };
 }
 
 /**
@@ -20,59 +20,59 @@ interface AppointmentCalendarPageProps {
  * - Multi-tenant business scoping
  */
 export default async function AppointmentCalendarPage({
-    params,
+  params,
 }: AppointmentCalendarPageProps) {
-    const session = await auth();
+  const session = await auth();
 
-    if (!session?.user?.id) {
-        redirect('/auth/signin');
-    }
+  if (!session?.user?.id) {
+    redirect('/auth/signin');
+  }
 
-    // Get business information and verify access
-    const business = await prisma.business.findUnique({
-        where: { slug: params.businessSlug },
-        include: {
-            users: {
-                where: { userId: session.user.id },
-                select: { role: true },
+  // Get business information and verify access
+  const business = await prisma.business.findUnique({
+    where: { slug: params.businessSlug },
+    include: {
+      users: {
+        where: { userId: session.user.id },
+        select: { role: true },
+      },
+      staff: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          displayName: true,
+          isActive: true,
+          user: {
+            select: {
+              email: true,
             },
-            staff: {
-                select: {
-                    id: true,
-                    firstName: true,
-                    lastName: true,
-                    displayName: true,
-                    isActive: true,
-                    user: {
-                        select: {
-                            email: true,
-                        },
-                    },
-                },
-            },
-            services: {
-                select: {
-                    id: true,
-                    name: true,
-                    duration: true,
-                    price: true,
-                },
-            },
+          },
         },
-    });
+      },
+      services: {
+        select: {
+          id: true,
+          name: true,
+          duration: true,
+          price: true,
+        },
+      },
+    },
+  });
 
-    if (!business || business.users.length === 0) {
-        redirect('/onboarding');
-    }
+  if (!business || business.users.length === 0) {
+    redirect('/onboarding');
+  }
 
-    const userRole = business.users[0]?.role || 'STAFF';
+  const userRole = business.users[0]?.role || 'STAFF';
 
-    return (
-        <AppointmentCalendarPageContent
-            business={business}
-            userRole={userRole}
-            userName={session.user.name || session.user.email || 'User'}
-            businessSlug={params.businessSlug}
-        />
-    );
+  return (
+    <AppointmentCalendarPageContent
+      business={business}
+      userRole={userRole}
+      userName={session.user.name || session.user.email || 'User'}
+      businessSlug={params.businessSlug}
+    />
+  );
 }

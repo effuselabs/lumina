@@ -60,8 +60,9 @@ const inputVariants = cva(
 );
 
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
-  VariantProps<typeof inputVariants> {
+  extends
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
+    VariantProps<typeof inputVariants> {
   error?: boolean;
   success?: boolean;
   'aria-label'?: string;
@@ -70,19 +71,22 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({
-    className,
-    type = 'text',
-    variant,
-    size,
-    error,
-    success,
-    disabled,
-    'aria-label': ariaLabel,
-    'aria-describedby': ariaDescribedBy,
-    'aria-invalid': ariaInvalid,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      type = 'text',
+      variant,
+      size,
+      error,
+      success,
+      disabled,
+      'aria-label': ariaLabel,
+      'aria-describedby': ariaDescribedBy,
+      'aria-invalid': ariaInvalid,
+      ...props
+    },
+    ref
+  ) => {
     // Determine variant based on state
     const computedVariant = error ? 'error' : success ? 'success' : variant;
 
@@ -92,7 +96,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         type={type}
-        className={cn(inputVariants({ variant: computedVariant, size, className }))}
+        className={cn(
+          inputVariants({ variant: computedVariant, size, className })
+        )}
         ref={ref}
         disabled={disabled}
         aria-disabled={disabled}

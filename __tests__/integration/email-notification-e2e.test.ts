@@ -1,12 +1,12 @@
 /**
  * E2E Tests for Email Notification User Journeys
- * 
+ *
  * Tests complete user journeys including:
  * - Complete booking → confirmation → reminder flow
  * - Cancellation notification flow
  * - Staff notification flow
  * - Unsubscribe flow
- * 
+ *
  * Requirements: All requirements
  */
 
@@ -107,9 +107,15 @@ describe('Email Notification E2E User Journeys', () => {
     }
 
     // Setup default mocks
-    (mockPrisma.business.findUnique as jest.Mock).mockResolvedValue(mockBusiness);
-    (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(mockAppointment);
-    (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(null);
+    (mockPrisma.business.findUnique as jest.Mock).mockResolvedValue(
+      mockBusiness
+    );
+    (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(
+      mockAppointment
+    );
+    (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(
+      null
+    );
     (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue({
       id: 'queue-123',
       businessId: mockBusinessId,
@@ -123,10 +129,11 @@ describe('Email Notification E2E User Journeys', () => {
   describe('Complete Booking Journey', () => {
     it('should complete booking → confirmation → reminder flow', async () => {
       // Step 1: Send booking confirmation
-      const confirmationResult = await notificationService.sendBookingConfirmation(
-        mockAppointmentId,
-        mockBusinessId
-      );
+      const confirmationResult =
+        await notificationService.sendBookingConfirmation(
+          mockAppointmentId,
+          mockBusinessId
+        );
 
       expect(confirmationResult.success).toBe(true);
       expect(confirmationResult.deliveryStatus).toBe('queued');
@@ -224,12 +231,15 @@ describe('Email Notification E2E User Journeys', () => {
       expect(reminderResult.error).toContain('opted out');
 
       // But confirmation should still work
-      (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(mockAppointment);
-
-      const confirmationResult = await notificationService.sendBookingConfirmation(
-        mockAppointmentId,
-        mockBusinessId
+      (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(
+        mockAppointment
       );
+
+      const confirmationResult =
+        await notificationService.sendBookingConfirmation(
+          mockAppointmentId,
+          mockBusinessId
+        );
 
       expect(confirmationResult.success).toBe(true);
     });
@@ -247,18 +257,20 @@ describe('Email Notification E2E User Journeys', () => {
       });
 
       // Confirmation should still be sent (transactional)
-      const confirmationResult = await notificationService.sendBookingConfirmation(
-        mockAppointmentId,
-        mockBusinessId
-      );
+      const confirmationResult =
+        await notificationService.sendBookingConfirmation(
+          mockAppointmentId,
+          mockBusinessId
+        );
 
       expect(confirmationResult.success).toBe(true);
 
       // Cancellation should still be sent (transactional)
-      const cancellationResult = await notificationService.sendCancellationNotification(
-        mockAppointmentId,
-        mockBusinessId
-      );
+      const cancellationResult =
+        await notificationService.sendCancellationNotification(
+          mockAppointmentId,
+          mockBusinessId
+        );
 
       expect(cancellationResult.success).toBe(true);
     });

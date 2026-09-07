@@ -648,7 +648,7 @@ export const dailyBookingSummaryHtml = (
       <div class="appointment-list">
         ${data.appointments
           .map(
-            (apt) => `
+            apt => `
         <div class="appointment-item">
           <div class="appointment-time">${apt.time}</div>
           <div class="appointment-details">
@@ -695,7 +695,7 @@ APPOINTMENTS
 ------------
 ${data.appointments
   .map(
-    (apt) =>
+    apt =>
       `${apt.time} - ${apt.clientName}
   Service: ${apt.serviceName}
   Staff: ${apt.staffName}

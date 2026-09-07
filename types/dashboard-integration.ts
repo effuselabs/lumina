@@ -121,10 +121,7 @@ export interface CalendarSlot {
 
 export interface ConflictInfo {
   type:
-    | 'overlap'
-    | 'staff_unavailable'
-    | 'business_closed'
-    | 'service_conflict';
+    'overlap' | 'staff_unavailable' | 'business_closed' | 'service_conflict';
   severity: 'warning' | 'error';
   message: string;
   affectedAppointments: string[];

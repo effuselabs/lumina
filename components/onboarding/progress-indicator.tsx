@@ -33,8 +33,10 @@ export function ProgressIndicator({
                       'flex h-10 w-10 items-center justify-center rounded-full border-2',
                       {
                         'border-orange-600 bg-orange-600 text-white': isCurrent,
-                        'border-green-600 bg-green-600 text-white': isCompleted || isPast,
-                        'border-gray-300 bg-white text-gray-500': !isCurrent && !isCompleted && !isPast,
+                        'border-green-600 bg-green-600 text-white':
+                          isCompleted || isPast,
+                        'border-gray-300 bg-white text-gray-500':
+                          !isCurrent && !isCompleted && !isPast,
                       }
                     )}
                   >
@@ -47,13 +49,10 @@ export function ProgressIndicator({
 
                   {stepIdx < steps.length - 1 && (
                     <div
-                      className={cn(
-                        'ml-5 h-0.5 w-16',
-                        {
-                          'bg-green-600': isPast,
-                          'bg-gray-300': !isPast,
-                        }
-                      )}
+                      className={cn('ml-5 h-0.5 w-16', {
+                        'bg-green-600': isPast,
+                        'bg-gray-300': !isPast,
+                      })}
                     />
                   )}
                 </div>

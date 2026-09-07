@@ -11,6 +11,7 @@ The Lumina design token system provides a centralized foundation for all visual 
 ### 1. Colors (`colors.css`)
 
 #### Brand Colors
+
 - `--lumina-gold`: #ffd25a (Primary brand color)
 - `--lumina-coral`: #ff7a5a (Secondary brand color)
 - `--deep-teal`: #0b2b33 (Accent color)
@@ -18,10 +19,12 @@ The Lumina design token system provides a centralized foundation for all visual 
 - `--lumina-peach`: #ffe5b4 (Soft accent)
 
 #### Neutral Scale
+
 - `--neutral-50` to `--neutral-950`: Complete grayscale from lightest to darkest
 - `--neutral-white` and `--neutral-black`: Pure white and black
 
 #### Semantic Colors
+
 - `--color-primary`: Primary interactive color
 - `--color-secondary`: Secondary interactive color
 - `--color-success`: Success state color
@@ -30,6 +33,7 @@ The Lumina design token system provides a centralized foundation for all visual 
 - `--color-info`: Information state color
 
 #### Surface Colors
+
 - `--color-background`: Main background color
 - `--color-surface`: Card and component background
 - `--color-foreground`: Primary text color
@@ -38,14 +42,17 @@ The Lumina design token system provides a centralized foundation for all visual 
 ### 2. Typography (`typography.css`)
 
 #### Font Families
+
 - `--font-family-sans`: Inter font stack for UI text
 - `--font-family-mono`: Monospace font stack for code
 
 #### Font Sizes
+
 - `--font-size-xs` (12px) to `--font-size-9xl` (128px)
 - Based on 1.125 ratio (major second) for harmonious scaling
 
 #### Typography Hierarchy
+
 - `--typography-display-*`: Hero and major headings
 - `--typography-heading-*`: Section headings
 - `--typography-body-*`: Content text
@@ -55,15 +62,18 @@ The Lumina design token system provides a centralized foundation for all visual 
 ### 3. Spacing (`spacing.css`)
 
 #### Base Scale
+
 - `--spacing-0` (0px) to `--spacing-96` (384px)
 - Based on 0.25rem (4px) increments
 
 #### Semantic Spacing
+
 - `--padding-component-*`: Component padding tokens
 - `--margin-component-*`: Component margin tokens
 - `--gap-*`: Flexbox and grid gap tokens
 
 #### Layout Spacing
+
 - `--dashboard-*`: Dashboard-specific spacing
 - `--card-*`: Card component spacing
 - `--form-*`: Form component spacing
@@ -72,17 +82,20 @@ The Lumina design token system provides a centralized foundation for all visual 
 ### 4. Effects (`effects.css`)
 
 #### Shadows
+
 - `--shadow-xs` to `--shadow-2xl`: Standard elevation shadows
 - `--shadow-lumina-*`: Brand-colored shadows
 - `--shadow-glow-*`: Glow effects for interactive elements
 - `--shadow-focus`: Accessibility focus indicators
 
 #### Border Radius
+
 - `--radius-xs` (2px) to `--radius-3xl` (24px)
 - `--radius-full`: Fully rounded elements
 - Component-specific radius tokens
 
 #### Animations
+
 - `--duration-*`: Animation duration tokens
 - `--easing-*`: Easing curve tokens
 - `--transition-*`: Pre-configured transitions
@@ -105,7 +118,9 @@ The Lumina design token system provides a centralized foundation for all visual 
 ### Utility Classes
 
 ```html
-<div class="bg-surface text-foreground p-component-md rounded-card shadow-sm transition-card">
+<div
+  class="bg-surface p-component-md rounded-card transition-card text-foreground shadow-sm"
+>
   Content here
 </div>
 ```
@@ -115,7 +130,7 @@ The Lumina design token system provides a centralized foundation for all visual 
 ```html
 <button class="btn-lumina-primary">Primary Button</button>
 <div class="card-lumina">Card Content</div>
-<input class="input-lumina" type="text" placeholder="Input field">
+<input class="input-lumina" type="text" placeholder="Input field" />
 ```
 
 ## Theme Support
@@ -123,16 +138,19 @@ The Lumina design token system provides a centralized foundation for all visual 
 The design token system fully supports light and dark themes:
 
 ### Light Theme (Default)
+
 All tokens are optimized for light backgrounds with appropriate contrast ratios.
 
 ### Dark Theme
+
 Activated with `[data-theme='dark']` attribute on the root element:
 
 ```html
-<html data-theme="dark">
+<html data-theme="dark"></html>
 ```
 
 Dark theme automatically adjusts:
+
 - Background colors to darker variants
 - Text colors for proper contrast
 - Shadows for better visibility on dark backgrounds
@@ -141,16 +159,19 @@ Dark theme automatically adjusts:
 ## Accessibility Features
 
 ### WCAG Compliance
+
 - All color combinations meet WCAG 2.1 AA contrast requirements
 - Focus indicators are clearly visible and meet contrast standards
 - Color is never the only means of conveying information
 
 ### Reduced Motion Support
+
 - Respects `prefers-reduced-motion` user preference
 - Reduces animation durations and uses linear easing when requested
 - Maintains functionality while reducing motion
 
 ### High Contrast Support
+
 - Enhanced shadows and borders for `prefers-contrast: high`
 - Stronger focus indicators for better visibility
 - Improved definition between elements
@@ -158,27 +179,32 @@ Dark theme automatically adjusts:
 ## Responsive Design
 
 ### Breakpoint Adjustments
+
 - Typography scales down appropriately on smaller screens
 - Spacing reduces on mobile devices for better space utilization
 - Component sizing adapts to viewport constraints
 
 ### Container Queries
+
 - Tokens support container-based responsive design
 - Components adapt to their container size, not just viewport
 
 ## Best Practices
 
 ### Token Selection
+
 1. Always use semantic tokens (`--color-primary`) over literal tokens (`--lumina-gold`) when possible
 2. Use component-specific tokens (`--card-padding-md`) for consistent component styling
 3. Prefer pre-configured transitions over custom animations
 
 ### Customization
+
 1. Extend tokens by creating new semantic mappings
 2. Override tokens at the component level for specific needs
 3. Maintain consistency with the existing token scale
 
 ### Performance
+
 1. Tokens are optimized for CSS custom property performance
 2. Use utility classes for frequently repeated patterns
 3. Leverage component presets for complex styling patterns
@@ -208,12 +234,14 @@ This makes all tokens available throughout the application without additional im
 ## Migration Guide
 
 ### From Existing Styles
+
 1. Replace hardcoded values with appropriate tokens
 2. Use semantic color tokens instead of brand colors directly
 3. Replace custom shadows with token-based shadows
 4. Update animations to use token-based durations and easing
 
 ### Example Migration
+
 ```css
 /* Before */
 .card {
@@ -239,12 +267,14 @@ This makes all tokens available throughout the application without additional im
 ## Maintenance
 
 ### Adding New Tokens
+
 1. Add tokens to the appropriate category file
 2. Update this documentation
 3. Add utility classes if needed
 4. Test in both light and dark themes
 
 ### Updating Existing Tokens
+
 1. Consider backward compatibility
 2. Update all affected components
 3. Test across all breakpoints and themes

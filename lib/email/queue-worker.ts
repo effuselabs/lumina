@@ -1,6 +1,6 @@
 /**
  * Email Queue Worker
- * 
+ *
  * Background worker that processes the email queue.
  * Handles concurrent processing, priority ordering, and graceful shutdown.
  */
@@ -131,11 +131,17 @@ export class EmailQueueWorker {
     const maxWaitTime = 30000; // 30 seconds max wait
     const startWait = Date.now();
 
-    while (this.activeProcessing.size > 0 && Date.now() - startWait < maxWaitTime) {
-      console.log('[EmailQueueWorker] Waiting for active processing to complete', {
-        activeCount: this.activeProcessing.size,
-      });
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    while (
+      this.activeProcessing.size > 0 &&
+      Date.now() - startWait < maxWaitTime
+    ) {
+      console.log(
+        '[EmailQueueWorker] Waiting for active processing to complete',
+        {
+          activeCount: this.activeProcessing.size,
+        }
+      );
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     this.isRunning = false;
@@ -185,7 +191,10 @@ export class EmailQueueWorker {
 
       for (let i = 0; i < this.concurrentProcessing; i++) {
         // Check if we should stop or if we're at capacity
-        if (this.shouldStop || this.activeProcessing.size >= this.concurrentProcessing) {
+        if (
+          this.shouldStop ||
+          this.activeProcessing.size >= this.concurrentProcessing
+        ) {
           break;
         }
 
@@ -240,10 +249,13 @@ export class EmailQueueWorker {
       // Check rate limit before sending
       const canSend = await emailRateLimiter.checkRateLimit(email.businessId);
       if (!canSend) {
-        console.warn('[EmailQueueWorker] Rate limit exceeded, rescheduling email', {
-          queueId: email.id,
-          businessId: email.businessId,
-        });
+        console.warn(
+          '[EmailQueueWorker] Rate limit exceeded, rescheduling email',
+          {
+            queueId: email.id,
+            businessId: email.businessId,
+          }
+        );
 
         // Reschedule for 5 minutes later
         const nextAttempt = email.attemptCount; // Don't increment attempt count for rate limit
@@ -270,11 +282,14 @@ export class EmailQueueWorker {
         await emailQueueManager.scheduleRetry(email.id, nextAttempt);
         this.emailsFailed++;
 
-        console.error('[EmailQueueWorker] Email send failed, scheduled for retry', {
-          queueId: email.id,
-          attemptCount: nextAttempt,
-          error: result.error,
-        });
+        console.error(
+          '[EmailQueueWorker] Email send failed, scheduled for retry',
+          {
+            queueId: email.id,
+            attemptCount: nextAttempt,
+            error: result.error,
+          }
+        );
       }
     } catch (error) {
       console.error('[EmailQueueWorker] Error processing email', {
@@ -291,7 +306,10 @@ export class EmailQueueWorker {
         } catch (retryError) {
           console.error('[EmailQueueWorker] Failed to schedule retry', {
             queueId: email.id,
-            error: retryError instanceof Error ? retryError.message : String(retryError),
+            error:
+              retryError instanceof Error
+                ? retryError.message
+                : String(retryError),
           });
         }
       }
@@ -306,7 +324,7 @@ export class EmailQueueWorker {
   /**
    * Process a specific number of emails immediately
    * Useful for testing or manual processing
-   * 
+   *
    * @param count - Number of emails to process
    * @returns Number of emails successfully processed
    */

@@ -31,7 +31,10 @@ export interface CalendarViewProps {
   staffMembers: StaffMember[];
   businessHours: BusinessHoursEntry[];
   onAppointmentClick?: (appointment: DashboardAppointment) => void;
-  onAppointmentDrop?: (appointmentId: string, newSlot: unknown) => Promise<void>;
+  onAppointmentDrop?: (
+    appointmentId: string,
+    newSlot: unknown
+  ) => Promise<void>;
   onTimeSlotClick?: (date: Date, staffId?: string) => void;
 }
 

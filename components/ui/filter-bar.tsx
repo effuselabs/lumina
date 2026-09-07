@@ -134,7 +134,7 @@ export function FilterBar({
   return (
     <div
       className={cn(
-        'flex flex-wrap items-center gap-4 rounded-lg border bg-muted/30 p-4',
+        'bg-muted/30 flex flex-wrap items-center gap-4 rounded-lg border p-4',
         className
       )}
     >
@@ -211,13 +211,13 @@ export function FilterChips({
         return (
           <div
             key={filter.key}
-            className="text-lumina-primary inline-flex items-center gap-1 rounded-md border bg-lumina-gold/10 px-2 py-1 text-sm"
+            className="text-lumina-primary bg-lumina-gold/10 inline-flex items-center gap-1 rounded-md border px-2 py-1 text-sm"
           >
             <span className="font-medium">{filter.label}:</span>
             <span>{displayValue as ReactNode}</span>
             <button
               onClick={() => onChange(filter.key, '')}
-              className="ml-1 rounded p-0.5 transition-colors hover:bg-lumina-gold/20"
+              className="hover:bg-lumina-gold/20 ml-1 rounded p-0.5 transition-colors"
               aria-label={`Remove ${filter.label} filter`}
             >
               <X className="h-3 w-3" />

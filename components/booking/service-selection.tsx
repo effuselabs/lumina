@@ -41,7 +41,10 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { BookingErrorHandler } from './booking-error-handler';
-import { BookingLoadingState, NetworkStatusIndicator } from './booking-loading-states';
+import {
+  BookingLoadingState,
+  NetworkStatusIndicator,
+} from './booking-loading-states';
 
 export function ServiceSelection({
   businessId,
@@ -59,14 +62,15 @@ export function ServiceSelection({
   const [error, setError] = useState<PublicBookingError | Error | null>(null);
 
   // Network resilience hook
-  const { resilientFetch, networkState, getNetworkErrorMessage } = useNetworkResilience({
-    onConnectionChange: (isOnline) => {
-      if (isOnline && error) {
-        // Auto-retry when connection is restored
-        fetchServices();
-      }
-    },
-  });
+  const { resilientFetch, networkState, getNetworkErrorMessage } =
+    useNetworkResilience({
+      onConnectionChange: isOnline => {
+        if (isOnline && error) {
+          // Auto-retry when connection is restored
+          fetchServices();
+        }
+      },
+    });
 
   // Filter and search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -82,11 +86,11 @@ export function ServiceSelection({
       setLoading(true);
       setError(null);
 
-      const data = await resilientFetch(
+      const data = (await resilientFetch(
         `/api/public/booking/${businessId}`,
         {},
         `services-${businessId}`
-      ) as {
+      )) as {
         servicesByCategory: ServicesByCategory;
         services: Service[];
         business: BusinessInfo;
@@ -111,8 +115,6 @@ export function ServiceSelection({
   useEffect(() => {
     fetchServices();
   }, [businessId]);
-
-
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -222,7 +224,11 @@ export function ServiceSelection({
         <NetworkStatusIndicator />
         <BookingLoadingState
           type="services"
-          message={networkState.isSlowConnection ? "Loading services (slow connection detected)..." : undefined}
+          message={
+            networkState.isSlowConnection
+              ? 'Loading services (slow connection detected)...'
+              : undefined
+          }
           estimatedTime={networkState.isSlowConnection ? 10 : 5}
         />
       </div>
@@ -396,18 +402,19 @@ export function ServiceSelection({
                 const isAtMaxLimit =
                   bookingConfig &&
                   selectedServices.length >=
-                  bookingConfig.maxServicesPerBooking &&
+                    bookingConfig.maxServicesPerBooking &&
                   !isSelected;
 
                 return (
                   <Card
                     key={service.id}
-                    className={`transition-all duration-200 hover:shadow-lg ${isSelected
-                      ? 'border-[#FFD25A] bg-gradient-to-br from-[#FFD25A]/5 to-[#FF7A5A]/5 ring-2 ring-[#FFD25A]'
-                      : isAtMaxLimit
-                        ? 'cursor-not-allowed opacity-50'
-                        : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-[#FFD25A]/50'
-                      }`}
+                    className={`transition-all duration-200 hover:shadow-lg ${
+                      isSelected
+                        ? 'border-[#FFD25A] bg-gradient-to-br from-[#FFD25A]/5 to-[#FF7A5A]/5 ring-2 ring-[#FFD25A]'
+                        : isAtMaxLimit
+                          ? 'cursor-not-allowed opacity-50'
+                          : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-[#FFD25A]/50'
+                    }`}
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">

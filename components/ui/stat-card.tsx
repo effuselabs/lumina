@@ -101,7 +101,8 @@ const StatCard = memo(
     }, [icon]);
 
     // Animation hooks
-    const { ref: intersectionRef, isIntersecting } = useStatCardIntersectionObserver(animationDelay);
+    const { ref: intersectionRef, isIntersecting } =
+      useStatCardIntersectionObserver(animationDelay);
 
     // Count-up animation for numeric values
     const numericValue = typeof value === 'number' ? value : 0;
@@ -110,7 +111,11 @@ const StatCard = memo(
     const { value: animatedValue, start: startCountUp } = useCountUp({
       end: numericValue,
       duration: 2000,
-      formatter: formatter || (shouldUseCountUp && title.toLowerCase().includes('revenue') ? currencyFormatter : undefined),
+      formatter:
+        formatter ||
+        (shouldUseCountUp && title.toLowerCase().includes('revenue')
+          ? currencyFormatter
+          : undefined),
       preserveValue: false,
     });
 
@@ -209,7 +214,7 @@ const StatCard = memo(
             Object.defineProperty(ref, 'current', {
               value: element,
               writable: true,
-              configurable: true
+              configurable: true,
             });
           } catch {
             // Silently fail if we can't set the ref
@@ -218,7 +223,9 @@ const StatCard = memo(
       }
       // Handle intersection observer ref - use type assertion to bypass readonly
       if (intersectionRef && 'current' in intersectionRef) {
-        (intersectionRef as React.MutableRefObject<HTMLElement | null>).current = element;
+        (
+          intersectionRef as React.MutableRefObject<HTMLElement | null>
+        ).current = element;
       }
     };
 
@@ -248,20 +255,17 @@ const StatCard = memo(
               {title}
             </h3>
             <p
-              className={cn(
-                'stat-card-value',
-                {
-                  'stat-card-value-counting': shouldUseCountUp,
-                  'stat-card-value-enhanced': animated,
-                }
-              )}
+              className={cn('stat-card-value', {
+                'stat-card-value-counting': shouldUseCountUp,
+                'stat-card-value-enhanced': animated,
+              })}
               aria-label={`Value: ${formattedValue}`}
               role="text"
             >
               <span aria-hidden="true">{formattedValue}</span>
               <span className="sr-only">
                 {typeof value === 'number' &&
-                  title.toLowerCase().includes('revenue')
+                title.toLowerCase().includes('revenue')
                   ? `${value} dollars`
                   : formattedValue}
               </span>
@@ -317,4 +321,3 @@ StatCard.displayName = 'StatCard';
 
 export { StatCard };
 export type { StatCardProps };
-

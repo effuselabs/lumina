@@ -65,7 +65,7 @@ export function RevenueChart({
               <span className="text-gray-600">{entry.name}:</span>
               <span className="font-medium text-gray-900">
                 {entry.name.includes('Revenue') ||
-                  entry.name.includes('Earnings')
+                entry.name.includes('Earnings')
                   ? formatCurrency(entry.value)
                   : entry.value}
               </span>

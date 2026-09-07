@@ -1,14 +1,14 @@
 /**
  * Email Preferences API Endpoint
- * 
+ *
  * POST /api/notifications/preferences
  * Allows clients to update their email preferences
  * Supports unsubscribe functionality
  * Validates email ownership
- * 
+ *
  * GET /api/notifications/preferences
  * Retrieves current email preferences for a client
- * 
+ *
  * Requirements: 8.1, 8.2, 8.3, 8.4
  */
 
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map((e) => ({
+          details: error.errors.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),
@@ -290,7 +290,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map((e) => ({
+          details: error.errors.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),

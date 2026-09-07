@@ -2,332 +2,399 @@ import { useTouchGestures } from '@/hooks/use-touch-gestures';
 import { act, renderHook } from '@testing-library/react';
 
 // Mock touch events
-const createTouchEvent = (type: string, touches: Array<{ clientX: number; clientY: number }>) => {
-    const touchList = touches.map((touch: any) => ({
-        clientX: touch.clientX,
-        clientY: touch.clientY,
-        identifier: Math.random(),
-        target: document.body,
-        radiusX: 1,
-        radiusY: 1,
-        rotationAngle: 0,
-        force: 1,
-    }));
+const createTouchEvent = (
+  type: string,
+  touches: Array<{ clientX: number; clientY: number }>
+) => {
+  const touchList = touches.map((touch: any) => ({
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+    identifier: Math.random(),
+    target: document.body,
+    radiusX: 1,
+    radiusY: 1,
+    rotationAngle: 0,
+    force: 1,
+  }));
 
-    return new TouchEvent(type, {
-        touches: touchList as any,
-        changedTouches: touchList as any,
-        targetTouches: touchList as any,
-    });
+  return new TouchEvent(type, {
+    touches: touchList as any,
+    changedTouches: touchList as any,
+    targetTouches: touchList as any,
+  });
 };
 
 describe('useTouchGestures', () => {
-    let mockElement: HTMLElement;
-    let onSwipeLeft: jest.Mock;
-    let onSwipeRight: jest.Mock;
-    let onSwipeUp: jest.Mock;
-    let onSwipeDown: jest.Mock;
-    let onTap: jest.Mock;
-    let onLongPress: jest.Mock;
-    let onPinch: jest.Mock;
+  let mockElement: HTMLElement;
+  let onSwipeLeft: jest.Mock;
+  let onSwipeRight: jest.Mock;
+  let onSwipeUp: jest.Mock;
+  let onSwipeDown: jest.Mock;
+  let onTap: jest.Mock;
+  let onLongPress: jest.Mock;
+  let onPinch: jest.Mock;
 
-    beforeEach(() => {
-        mockElement = document.createElement('div');
-        document.body.appendChild(mockElement);
+  beforeEach(() => {
+    mockElement = document.createElement('div');
+    document.body.appendChild(mockElement);
 
-        onSwipeLeft = jest.fn();
-        onSwipeRight = jest.fn();
-        onSwipeUp = jest.fn();
-        onSwipeDown = jest.fn();
-        onTap = jest.fn();
-        onLongPress = jest.fn();
-        onPinch = jest.fn();
+    onSwipeLeft = jest.fn();
+    onSwipeRight = jest.fn();
+    onSwipeUp = jest.fn();
+    onSwipeDown = jest.fn();
+    onTap = jest.fn();
+    onLongPress = jest.fn();
+    onPinch = jest.fn();
 
-        jest.useFakeTimers();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    document.body.removeChild(mockElement);
+    jest.useRealTimers();
+  });
+
+  it('should initialize with correct default state', () => {
+    const { result } = renderHook(() => useTouchGestures());
+
+    expect(result.current.gestureState).toEqual({
+      isTouch: false,
+      isSwiping: false,
+      isPinching: false,
+      isLongPressing: false,
+    });
+  });
+
+  it('should detect swipe right gesture', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onSwipeRight,
+        threshold: 50,
+      })
+    );
+
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
+
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
+
+      // Move right beyond threshold
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 200, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
+
+      // End touch
+      const touchEnd = createTouchEvent('touchend', [
+        { clientX: 200, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchEnd);
+
+      cleanup?.();
     });
 
-    afterEach(() => {
-        document.body.removeChild(mockElement);
-        jest.useRealTimers();
+    expect(onSwipeRight).toHaveBeenCalled();
+  });
+
+  it('should detect swipe left gesture', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onSwipeLeft,
+        threshold: 50,
+      })
+    );
+
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
+
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 200, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
+
+      // Move left beyond threshold
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
+
+      // End touch
+      const touchEnd = createTouchEvent('touchend', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchEnd);
+
+      cleanup?.();
     });
 
-    it('should initialize with correct default state', () => {
-        const { result } = renderHook(() => useTouchGestures());
+    expect(onSwipeLeft).toHaveBeenCalled();
+  });
 
-        expect(result.current.gestureState).toEqual({
-            isTouch: false,
-            isSwiping: false,
-            isPinching: false,
-            isLongPressing: false,
-        });
+  it('should detect swipe up gesture', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onSwipeUp,
+        threshold: 50,
+      })
+    );
+
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
+
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 200 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
+
+      // Move up beyond threshold
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
+
+      // End touch
+      const touchEnd = createTouchEvent('touchend', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchEnd);
+
+      cleanup?.();
     });
 
-    it('should detect swipe right gesture', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onSwipeRight,
-            threshold: 50,
-        }));
+    expect(onSwipeUp).toHaveBeenCalled();
+  });
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+  it('should detect swipe down gesture', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onSwipeDown,
+        threshold: 50,
+      })
+    );
 
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            // Move right beyond threshold
-            const touchMove = createTouchEvent('touchmove', [{ clientX: 200, clientY: 100 }]);
-            mockElement.dispatchEvent(touchMove);
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
 
-            // End touch
-            const touchEnd = createTouchEvent('touchend', [{ clientX: 200, clientY: 100 }]);
-            mockElement.dispatchEvent(touchEnd);
+      // Move down beyond threshold
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 100, clientY: 200 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
 
-            cleanup?.();
-        });
+      // End touch
+      const touchEnd = createTouchEvent('touchend', [
+        { clientX: 100, clientY: 200 },
+      ]);
+      mockElement.dispatchEvent(touchEnd);
 
-        expect(onSwipeRight).toHaveBeenCalled();
+      cleanup?.();
     });
 
-    it('should detect swipe left gesture', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onSwipeLeft,
-            threshold: 50,
-        }));
+    expect(onSwipeDown).toHaveBeenCalled();
+  });
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+  it('should detect tap gesture', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onTap,
+      })
+    );
 
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 200, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            // Move left beyond threshold
-            const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchMove);
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
 
-            // End touch
-            const touchEnd = createTouchEvent('touchend', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchEnd);
+      // Quick end without movement
+      const touchEnd = createTouchEvent('touchend', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchEnd);
 
-            cleanup?.();
-        });
-
-        expect(onSwipeLeft).toHaveBeenCalled();
+      cleanup?.();
     });
 
-    it('should detect swipe up gesture', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onSwipeUp,
-            threshold: 50,
-        }));
+    expect(onTap).toHaveBeenCalled();
+  });
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+  it('should detect long press gesture', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onLongPress,
+        longPressDelay: 500,
+      })
+    );
 
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 200 }]);
-            mockElement.dispatchEvent(touchStart);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            // Move up beyond threshold
-            const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchMove);
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
 
-            // End touch
-            const touchEnd = createTouchEvent('touchend', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchEnd);
+      // Wait for long press delay
+      jest.advanceTimersByTime(500);
 
-            cleanup?.();
-        });
-
-        expect(onSwipeUp).toHaveBeenCalled();
+      cleanup?.();
     });
 
-    it('should detect swipe down gesture', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onSwipeDown,
-            threshold: 50,
-        }));
+    expect(onLongPress).toHaveBeenCalled();
+  });
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+  it('should detect pinch gesture', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onPinch,
+      })
+    );
 
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            // Move down beyond threshold
-            const touchMove = createTouchEvent('touchmove', [{ clientX: 100, clientY: 200 }]);
-            mockElement.dispatchEvent(touchMove);
+      // Start two-finger touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+        { clientX: 200, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
 
-            // End touch
-            const touchEnd = createTouchEvent('touchend', [{ clientX: 100, clientY: 200 }]);
-            mockElement.dispatchEvent(touchEnd);
+      // Move fingers closer (pinch in)
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 120, clientY: 100 },
+        { clientX: 180, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
 
-            cleanup?.();
-        });
-
-        expect(onSwipeDown).toHaveBeenCalled();
+      cleanup?.();
     });
 
-    it('should detect tap gesture', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onTap,
-        }));
+    expect(onPinch).toHaveBeenCalled();
+  });
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+  it('should update gesture state correctly', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onSwipeRight,
+        threshold: 50,
+      })
+    );
 
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            // Quick end without movement
-            const touchEnd = createTouchEvent('touchend', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchEnd);
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
 
-            cleanup?.();
-        });
-
-        expect(onTap).toHaveBeenCalled();
+      cleanup?.();
     });
 
-    it('should detect long press gesture', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onLongPress,
-            longPressDelay: 500,
-        }));
+    expect(result.current.gestureState.isTouch).toBe(true);
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
+      // Move beyond threshold
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 200, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
 
-            // Wait for long press delay
-            jest.advanceTimersByTime(500);
-
-            cleanup?.();
-        });
-
-        expect(onLongPress).toHaveBeenCalled();
+      cleanup?.();
     });
 
-    it('should detect pinch gesture', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onPinch,
-        }));
+    expect(result.current.gestureState.isSwiping).toBe(true);
+  });
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+  it('should respect custom threshold', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onSwipeRight,
+        threshold: 100,
+      })
+    );
 
-            // Start two-finger touch
-            const touchStart = createTouchEvent('touchstart', [
-                { clientX: 100, clientY: 100 },
-                { clientX: 200, clientY: 100 }
-            ]);
-            mockElement.dispatchEvent(touchStart);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            // Move fingers closer (pinch in)
-            const touchMove = createTouchEvent('touchmove', [
-                { clientX: 120, clientY: 100 },
-                { clientX: 180, clientY: 100 }
-            ]);
-            mockElement.dispatchEvent(touchMove);
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
 
-            cleanup?.();
-        });
+      // Move right but not beyond custom threshold
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 150, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
 
-        expect(onPinch).toHaveBeenCalled();
+      // End touch
+      const touchEnd = createTouchEvent('touchend', [
+        { clientX: 150, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchEnd);
+
+      cleanup?.();
     });
 
-    it('should update gesture state correctly', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onSwipeRight,
-            threshold: 50,
-        }));
+    // Should not trigger swipe with movement less than threshold
+    expect(onSwipeRight).not.toHaveBeenCalled();
+  });
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+  it('should cancel long press on movement', () => {
+    const { result } = renderHook(() =>
+      useTouchGestures({
+        onLongPress,
+        onSwipeRight,
+        longPressDelay: 500,
+        threshold: 50,
+      })
+    );
 
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
+    act(() => {
+      const cleanup = result.current.attachToElement(mockElement);
 
-            cleanup?.();
-        });
+      // Start touch
+      const touchStart = createTouchEvent('touchstart', [
+        { clientX: 100, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchStart);
 
-        expect(result.current.gestureState.isTouch).toBe(true);
+      // Move before long press delay
+      jest.advanceTimersByTime(200);
+      const touchMove = createTouchEvent('touchmove', [
+        { clientX: 200, clientY: 100 },
+      ]);
+      mockElement.dispatchEvent(touchMove);
 
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
+      // Complete long press delay
+      jest.advanceTimersByTime(300);
 
-            // Move beyond threshold
-            const touchMove = createTouchEvent('touchmove', [{ clientX: 200, clientY: 100 }]);
-            mockElement.dispatchEvent(touchMove);
-
-            cleanup?.();
-        });
-
-        expect(result.current.gestureState.isSwiping).toBe(true);
+      cleanup?.();
     });
 
-    it('should respect custom threshold', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onSwipeRight,
-            threshold: 100,
-        }));
-
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
-
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
-
-            // Move right but not beyond custom threshold
-            const touchMove = createTouchEvent('touchmove', [{ clientX: 150, clientY: 100 }]);
-            mockElement.dispatchEvent(touchMove);
-
-            // End touch
-            const touchEnd = createTouchEvent('touchend', [{ clientX: 150, clientY: 100 }]);
-            mockElement.dispatchEvent(touchEnd);
-
-            cleanup?.();
-        });
-
-        // Should not trigger swipe with movement less than threshold
-        expect(onSwipeRight).not.toHaveBeenCalled();
-    });
-
-    it('should cancel long press on movement', () => {
-        const { result } = renderHook(() => useTouchGestures({
-            onLongPress,
-            onSwipeRight,
-            longPressDelay: 500,
-            threshold: 50,
-        }));
-
-        act(() => {
-            const cleanup = result.current.attachToElement(mockElement);
-
-            // Start touch
-            const touchStart = createTouchEvent('touchstart', [{ clientX: 100, clientY: 100 }]);
-            mockElement.dispatchEvent(touchStart);
-
-            // Move before long press delay
-            jest.advanceTimersByTime(200);
-            const touchMove = createTouchEvent('touchmove', [{ clientX: 200, clientY: 100 }]);
-            mockElement.dispatchEvent(touchMove);
-
-            // Complete long press delay
-            jest.advanceTimersByTime(300);
-
-            cleanup?.();
-        });
-
-        // Long press should be cancelled by movement
-        expect(onLongPress).not.toHaveBeenCalled();
-    });
+    // Long press should be cancelled by movement
+    expect(onLongPress).not.toHaveBeenCalled();
+  });
 });

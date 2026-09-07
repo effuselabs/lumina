@@ -1,0 +1,8 @@
+# Revisions that changed formatting only, and should be skipped by `git blame`.
+#
+# Configure your clone once so blame skips them automatically:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# GitHub honours this file without any configuration.
+
+# chore: format the whole repository with Prettier

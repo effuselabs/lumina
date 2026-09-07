@@ -639,7 +639,7 @@ export class MultiServiceCoordinator {
         // Check minimum service count
         // Check if promotion applies to selected services
         if (promotion.applicableServices.length > 0) {
-          const hasApplicableService = services.some(service => 
+          const hasApplicableService = services.some(service =>
             promotion.applicableServices.includes(service.serviceId)
           );
           if (!hasApplicableService) {

@@ -71,7 +71,8 @@ const iconVariants = cva('', {
 });
 
 export interface IconProps
-  extends Omit<React.HTMLAttributes<SVGElement>, 'color'>,
+  extends
+    Omit<React.HTMLAttributes<SVGElement>, 'color'>,
     VariantProps<typeof iconVariants> {
   icon: LucideIcon;
 }
