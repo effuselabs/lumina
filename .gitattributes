@@ -1,0 +1,25 @@
+# Normalise line endings.
+#
+# Without this, `core.autocrlf=true` (the Windows default) checks files out with
+# CRLF while Prettier is configured `endOfLine: "lf"` — so `format:check` passes
+# on a Linux CI runner and fails on every Windows machine, for every file. The
+# repository already stores LF; this makes the working copy match on all
+# platforms rather than depending on each contributor's git config.
+* text=auto eol=lf
+
+# Binary files git must never touch.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.pdf   binary
+*.zip   binary
+
+# Generated; keep it out of diffs and language statistics.
+package-lock.json -diff linguist-generated

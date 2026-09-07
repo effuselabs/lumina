@@ -1,9 +1,12 @@
 import { z } from 'zod';
 
 // Employment type enums
-export const employmentTypeSchema = z.enum(['COMMISSION', 'CHAIR_RENTAL', 'HYBRID'], {
-  required_error: 'Please select an employment type',
-});
+export const employmentTypeSchema = z.enum(
+  ['COMMISSION', 'CHAIR_RENTAL', 'HYBRID'],
+  {
+    required_error: 'Please select an employment type',
+  }
+);
 
 export const rentalPeriodSchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY'], {
   required_error: 'Please select a rental period',
@@ -22,10 +25,7 @@ export const employmentConfigurationSchema = z.object({
     .min(0, 'Rental amount must be positive')
     .optional(),
   chairRentalPeriod: rentalPeriodSchema.optional(),
-  baseSalary: z
-    .number()
-    .min(0, 'Base salary must be positive')
-    .optional(),
+  baseSalary: z.number().min(0, 'Base salary must be positive').optional(),
 });
 
 // Commission-specific validation
@@ -35,20 +35,17 @@ export const commissionEmploymentSchema = employmentConfigurationSchema.extend({
     .number()
     .min(10, 'Commission rate must be at least 10%')
     .max(90, 'Commission rate cannot exceed 90%'),
-  baseSalary: z
-    .number()
-    .min(0, 'Base salary must be positive')
-    .optional(),
+  baseSalary: z.number().min(0, 'Base salary must be positive').optional(),
 });
 
 // Chair rental-specific validation
-export const chairRentalEmploymentSchema = employmentConfigurationSchema.extend({
-  employmentType: z.literal('CHAIR_RENTAL'),
-  chairRentalAmount: z
-    .number()
-    .min(50, 'Rental amount must be at least $50'),
-  chairRentalPeriod: rentalPeriodSchema,
-});
+export const chairRentalEmploymentSchema = employmentConfigurationSchema.extend(
+  {
+    employmentType: z.literal('CHAIR_RENTAL'),
+    chairRentalAmount: z.number().min(50, 'Rental amount must be at least $50'),
+    chairRentalPeriod: rentalPeriodSchema,
+  }
+);
 
 // Hybrid employment validation
 export const hybridEmploymentSchema = employmentConfigurationSchema.extend({
@@ -57,14 +54,9 @@ export const hybridEmploymentSchema = employmentConfigurationSchema.extend({
     .number()
     .min(5, 'Commission rate must be at least 5%')
     .max(70, 'Commission rate cannot exceed 70% in hybrid model'),
-  chairRentalAmount: z
-    .number()
-    .min(25, 'Rental amount must be at least $25'),
+  chairRentalAmount: z.number().min(25, 'Rental amount must be at least $25'),
   chairRentalPeriod: rentalPeriodSchema,
-  baseSalary: z
-    .number()
-    .min(0, 'Base salary must be positive')
-    .optional(),
+  baseSalary: z.number().min(0, 'Base salary must be positive').optional(),
 });
 
 // Employment transition schema
@@ -95,7 +87,9 @@ export const createEmploymentValidationSchema = (employmentType: string) => {
 // Types
 export type EmploymentType = z.infer<typeof employmentTypeSchema>;
 export type RentalPeriod = z.infer<typeof rentalPeriodSchema>;
-export type EmploymentConfiguration = z.infer<typeof employmentConfigurationSchema>;
+export type EmploymentConfiguration = z.infer<
+  typeof employmentConfigurationSchema
+>;
 export type CommissionEmployment = z.infer<typeof commissionEmploymentSchema>;
 export type ChairRentalEmployment = z.infer<typeof chairRentalEmploymentSchema>;
 export type HybridEmployment = z.infer<typeof hybridEmploymentSchema>;
@@ -122,8 +116,10 @@ export const employmentTypeDescriptions = {
   },
   CHAIR_RENTAL: {
     title: 'Chair Rental',
-    description: 'Staff pay a fixed fee to use workspace and keep all service revenue',
-    example: 'Staff pays $200/week for chair rental, keeps 100% of service revenue',
+    description:
+      'Staff pay a fixed fee to use workspace and keep all service revenue',
+    example:
+      'Staff pays $200/week for chair rental, keeps 100% of service revenue',
     requiredFields: ['chairRentalAmount', 'chairRentalPeriod'],
     optionalFields: [],
     pros: [
@@ -142,7 +138,11 @@ export const employmentTypeDescriptions = {
     title: 'Hybrid Model',
     description: 'Combination of chair rental and commission structure',
     example: 'Staff pays $100/week rental plus 30% commission on services',
-    requiredFields: ['commissionRate', 'chairRentalAmount', 'chairRentalPeriod'],
+    requiredFields: [
+      'commissionRate',
+      'chairRentalAmount',
+      'chairRentalPeriod',
+    ],
     optionalFields: ['baseSalary'],
     pros: [
       'Balanced risk sharing',

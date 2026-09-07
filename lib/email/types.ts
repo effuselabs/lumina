@@ -1,6 +1,6 @@
 /**
  * Email Provider Types and Interfaces
- * 
+ *
  * Defines the core types and interfaces for the email notification system.
  */
 

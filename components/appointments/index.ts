@@ -12,6 +12,9 @@ export { WeekView } from './week-view';
 // Re-export types
 export type { AppointmentFormProps } from './appointment-form';
 export type { AppointmentModalProps } from './appointment-modal';
-export type { AppointmentNote, AppointmentNotesProps } from './appointment-notes';
+export type {
+  AppointmentNote,
+  AppointmentNotesProps,
+} from './appointment-notes';
 export type { AppointmentStatusManagerProps } from './appointment-status-manager';
 export type { ClientData, ClientInfoProps } from './client-info';

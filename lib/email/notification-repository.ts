@@ -1,7 +1,7 @@
 /**
  * Notification Repository
  * Database operations for notification tracking and history
- * 
+ *
  * Handles all database operations related to email notifications including:
  * - Creating notification records
  * - Updating notification status
@@ -289,11 +289,14 @@ export class NotificationRepository {
 
       return this.mapToNotification(notification);
     } catch (error) {
-      console.error('[NotificationRepository] Failed to update notification status', {
-        notificationId,
-        status,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationRepository] Failed to update notification status',
+        {
+          notificationId,
+          status,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationRepositoryError) {
         throw error;
@@ -325,10 +328,13 @@ export class NotificationRepository {
 
       return this.mapToNotification(notification);
     } catch (error) {
-      console.error('[NotificationRepository] Failed to find notification by ID', {
-        notificationId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationRepository] Failed to find notification by ID',
+        {
+          notificationId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationRepositoryError) {
         throw error;
@@ -359,12 +365,15 @@ export class NotificationRepository {
       // Validate business context using first notification
       await this.validateBusinessContext(notifications[0].businessId);
 
-      return notifications.map((n) => this.mapToNotification(n));
+      return notifications.map(n => this.mapToNotification(n));
     } catch (error) {
-      console.error('[NotificationRepository] Failed to find notifications by appointment', {
-        appointmentId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationRepository] Failed to find notifications by appointment',
+        {
+          appointmentId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationRepositoryError) {
         throw error;
@@ -422,13 +431,16 @@ export class NotificationRepository {
         skip: filters?.offset || 0,
       });
 
-      return notifications.map((n) => this.mapToNotification(n));
+      return notifications.map(n => this.mapToNotification(n));
     } catch (error) {
-      console.error('[NotificationRepository] Failed to find notifications by business', {
-        businessId,
-        filters,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationRepository] Failed to find notifications by business',
+        {
+          businessId,
+          filters,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationRepositoryError) {
         throw error;
@@ -466,12 +478,15 @@ export class NotificationRepository {
         take: 100, // Limit to 100 for safety
       });
 
-      return notifications.map((n) => this.mapToNotification(n));
+      return notifications.map(n => this.mapToNotification(n));
     } catch (error) {
-      console.error('[NotificationRepository] Failed to find failed notifications', {
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationRepository] Failed to find failed notifications',
+        {
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationRepositoryError) {
         throw error;
@@ -511,17 +526,24 @@ export class NotificationRepository {
       });
 
       // Calculate statistics
-      const totalSent = notifications.filter((n) =>
+      const totalSent = notifications.filter(n =>
         ['sent', 'delivered'].includes(n.status)
       ).length;
 
-      const totalDelivered = notifications.filter((n) => n.status === 'delivered').length;
+      const totalDelivered = notifications.filter(
+        n => n.status === 'delivered'
+      ).length;
 
-      const totalFailed = notifications.filter((n) => n.status === 'failed').length;
+      const totalFailed = notifications.filter(
+        n => n.status === 'failed'
+      ).length;
 
-      const totalBounced = notifications.filter((n) => n.status === 'bounced').length;
+      const totalBounced = notifications.filter(
+        n => n.status === 'bounced'
+      ).length;
 
-      const deliveryRate = totalSent > 0 ? (totalDelivered / totalSent) * 100 : 0;
+      const deliveryRate =
+        totalSent > 0 ? (totalDelivered / totalSent) * 100 : 0;
 
       const bounceRate = totalSent > 0 ? (totalBounced / totalSent) * 100 : 0;
 
@@ -555,7 +577,9 @@ export class NotificationRepository {
   /**
    * Get notification metrics for monitoring
    */
-  async getNotificationMetrics(businessId: string): Promise<NotificationMetrics> {
+  async getNotificationMetrics(
+    businessId: string
+  ): Promise<NotificationMetrics> {
     try {
       // Validate business context
       await this.validateBusinessContext(businessId);
@@ -582,17 +606,21 @@ export class NotificationRepository {
       // Calculate metrics
       const totalNotifications = notifications.length;
 
-      const pendingCount = notifications.filter((n) => n.status === 'pending').length;
+      const pendingCount = notifications.filter(
+        n => n.status === 'pending'
+      ).length;
 
-      const sentCount = notifications.filter((n) =>
+      const sentCount = notifications.filter(n =>
         ['sent', 'delivered'].includes(n.status)
       ).length;
 
-      const failedCount = notifications.filter((n) => n.status === 'failed').length;
+      const failedCount = notifications.filter(
+        n => n.status === 'failed'
+      ).length;
 
       // Calculate average delivery time (in seconds)
       const deliveredNotifications = notifications.filter(
-        (n) => n.sentAt && n.status === 'sent'
+        n => n.sentAt && n.status === 'sent'
       );
       const totalDeliveryTime = deliveredNotifications.reduce((sum, n) => {
         if (n.sentAt) {
@@ -614,8 +642,9 @@ export class NotificationRepository {
 
       // Count by template type
       const byTemplateType: Record<string, number> = {};
-      notifications.forEach((n) => {
-        byTemplateType[n.templateType] = (byTemplateType[n.templateType] || 0) + 1;
+      notifications.forEach(n => {
+        byTemplateType[n.templateType] =
+          (byTemplateType[n.templateType] || 0) + 1;
       });
 
       return {
@@ -629,10 +658,13 @@ export class NotificationRepository {
         byTemplateType,
       };
     } catch (error) {
-      console.error('[NotificationRepository] Failed to get notification metrics', {
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[NotificationRepository] Failed to get notification metrics',
+        {
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof NotificationRepositoryError) {
         throw error;

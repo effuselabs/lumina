@@ -73,7 +73,7 @@ let appointmentIdCounter = 1;
 export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => {
   const id = `user-${userIdCounter++}`;
   const now = new Date();
-  
+
   return {
     id,
     email: `user${userIdCounter}@example.com`,
@@ -85,10 +85,12 @@ export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => {
   };
 };
 
-export const createMockBusiness = (overrides: Partial<MockBusiness> = {}): MockBusiness => {
+export const createMockBusiness = (
+  overrides: Partial<MockBusiness> = {}
+): MockBusiness => {
   const id = `business-${businessIdCounter++}`;
   const now = new Date();
-  
+
   return {
     id,
     name: `Test Salon ${businessIdCounter}`,
@@ -106,10 +108,12 @@ export const createMockBusiness = (overrides: Partial<MockBusiness> = {}): MockB
   };
 };
 
-export const createMockService = (overrides: Partial<MockService> = {}): MockService => {
+export const createMockService = (
+  overrides: Partial<MockService> = {}
+): MockService => {
   const id = `service-${serviceIdCounter++}`;
   const now = new Date();
-  
+
   const services = [
     { name: 'Haircut', duration: 60, price: 5000 },
     { name: 'Hair Color', duration: 120, price: 12000 },
@@ -117,9 +121,9 @@ export const createMockService = (overrides: Partial<MockService> = {}): MockSer
     { name: 'Shampoo & Style', duration: 45, price: 3500 },
     { name: 'Highlights', duration: 180, price: 15000 },
   ];
-  
+
   const service = services[(serviceIdCounter - 1) % services.length];
-  
+
   return {
     id,
     name: service.name,
@@ -134,16 +138,36 @@ export const createMockService = (overrides: Partial<MockService> = {}): MockSer
   };
 };
 
-export const createMockClient = (overrides: Partial<MockClient> = {}): MockClient => {
+export const createMockClient = (
+  overrides: Partial<MockClient> = {}
+): MockClient => {
   const id = `client-${clientIdCounter++}`;
   const now = new Date();
-  
-  const firstNames = ['John', 'Jane', 'Mike', 'Sarah', 'David', 'Lisa', 'Chris', 'Emma'];
-  const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis'];
-  
+
+  const firstNames = [
+    'John',
+    'Jane',
+    'Mike',
+    'Sarah',
+    'David',
+    'Lisa',
+    'Chris',
+    'Emma',
+  ];
+  const lastNames = [
+    'Smith',
+    'Johnson',
+    'Williams',
+    'Brown',
+    'Jones',
+    'Garcia',
+    'Miller',
+    'Davis',
+  ];
+
   const firstName = firstNames[(clientIdCounter - 1) % firstNames.length];
   const lastName = lastNames[(clientIdCounter - 1) % lastNames.length];
-  
+
   return {
     id,
     firstName,
@@ -157,12 +181,16 @@ export const createMockClient = (overrides: Partial<MockClient> = {}): MockClien
   };
 };
 
-export const createMockAppointment = (overrides: Partial<MockAppointment> = {}): MockAppointment => {
+export const createMockAppointment = (
+  overrides: Partial<MockAppointment> = {}
+): MockAppointment => {
   const id = `appointment-${appointmentIdCounter++}`;
   const now = new Date();
-  const startTime = new Date(now.getTime() + (appointmentIdCounter * 24 * 60 * 60 * 1000)); // Future dates
-  const endTime = new Date(startTime.getTime() + (60 * 60 * 1000)); // 1 hour later
-  
+  const startTime = new Date(
+    now.getTime() + appointmentIdCounter * 24 * 60 * 60 * 1000
+  ); // Future dates
+  const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour later
+
   return {
     id,
     clientId: `client-${appointmentIdCounter}`,
@@ -179,23 +207,38 @@ export const createMockAppointment = (overrides: Partial<MockAppointment> = {}):
 };
 
 // Batch creation helpers
-export const createMockUsers = (count: number, overrides: Partial<MockUser> = {}): MockUser[] => {
+export const createMockUsers = (
+  count: number,
+  overrides: Partial<MockUser> = {}
+): MockUser[] => {
   return Array.from({ length: count }, () => createMockUser(overrides));
 };
 
-export const createMockBusinesses = (count: number, overrides: Partial<MockBusiness> = {}): MockBusiness[] => {
+export const createMockBusinesses = (
+  count: number,
+  overrides: Partial<MockBusiness> = {}
+): MockBusiness[] => {
   return Array.from({ length: count }, () => createMockBusiness(overrides));
 };
 
-export const createMockServices = (count: number, overrides: Partial<MockService> = {}): MockService[] => {
+export const createMockServices = (
+  count: number,
+  overrides: Partial<MockService> = {}
+): MockService[] => {
   return Array.from({ length: count }, () => createMockService(overrides));
 };
 
-export const createMockClients = (count: number, overrides: Partial<MockClient> = {}): MockClient[] => {
+export const createMockClients = (
+  count: number,
+  overrides: Partial<MockClient> = {}
+): MockClient[] => {
   return Array.from({ length: count }, () => createMockClient(overrides));
 };
 
-export const createMockAppointments = (count: number, overrides: Partial<MockAppointment> = {}): MockAppointment[] => {
+export const createMockAppointments = (
+  count: number,
+  overrides: Partial<MockAppointment> = {}
+): MockAppointment[] => {
   return Array.from({ length: count }, () => createMockAppointment(overrides));
 };
 
@@ -206,14 +249,14 @@ export const createCompleteBusinessSetup = () => {
   const services = createMockServices(3, { businessId: business.id });
   const clients = createMockClients(5, { businessId: business.id });
   const staff = createMockUsers(2, { role: 'staff', businessId: business.id });
-  
-  const appointments = createMockAppointments(10, { 
+
+  const appointments = createMockAppointments(10, {
     businessId: business.id,
     serviceId: services[0]?.id || 'default-service-id',
     clientId: clients[0]?.id || 'default-client-id',
     staffId: staff[0]?.id || 'default-staff-id',
   });
-  
+
   return {
     owner,
     business,

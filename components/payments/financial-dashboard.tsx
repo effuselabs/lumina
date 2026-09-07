@@ -260,7 +260,7 @@ export default function FinancialDashboard({
           change={{
             value: 0, // TODO: Calculate change from previous period
             type: 'neutral',
-            period: `${report.revenue.transactionCount} transactions`
+            period: `${report.revenue.transactionCount} transactions`,
           }}
         />
 
@@ -272,7 +272,7 @@ export default function FinancialDashboard({
           change={{
             value: 0, // TODO: Calculate change from previous period
             type: 'neutral',
-            period: `After ${formatCurrency(report.revenue.refunds)} refunds`
+            period: `After ${formatCurrency(report.revenue.refunds)} refunds`,
           }}
         />
 
@@ -284,7 +284,7 @@ export default function FinancialDashboard({
           change={{
             value: 0, // TODO: Calculate change from previous period
             type: 'neutral',
-            period: 'After staff payments'
+            period: 'After staff payments',
           }}
         />
 
@@ -296,7 +296,7 @@ export default function FinancialDashboard({
           change={{
             value: 0, // TODO: Calculate change from previous period
             type: 'neutral',
-            period: `${totalEmploymentTypes} employment type${totalEmploymentTypes !== 1 ? 's' : ''}`
+            period: `${totalEmploymentTypes} employment type${totalEmploymentTypes !== 1 ? 's' : ''}`,
           }}
         />
       </div>
@@ -355,45 +355,60 @@ export default function FinancialDashboard({
                   {report.summary.activeEmploymentTypes.includes(
                     'COMMISSION'
                   ) && (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="default" className="bg-blue-500 text-white hover:bg-blue-500">Commission</Badge>
-                          <span className="text-sm">
-                            {report.employmentBreakdown.commission.staffCount}{' '}
-                            staff
-                          </span>
-                        </div>
-                        <span className="font-medium">
-                          {formatCurrency(
-                            report.employmentBreakdown.commission.totalRevenue
-                          )}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="default"
+                          className="bg-blue-500 text-white hover:bg-blue-500"
+                        >
+                          Commission
+                        </Badge>
+                        <span className="text-sm">
+                          {report.employmentBreakdown.commission.staffCount}{' '}
+                          staff
                         </span>
                       </div>
-                    )}
+                      <span className="font-medium">
+                        {formatCurrency(
+                          report.employmentBreakdown.commission.totalRevenue
+                        )}
+                      </span>
+                    </div>
+                  )}
 
                   {report.summary.activeEmploymentTypes.includes(
                     'CHAIR_RENTAL'
                   ) && (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="bg-green-500 text-white hover:bg-green-500">Chair Rental</Badge>
-                          <span className="text-sm">
-                            {report.employmentBreakdown.chairRental.staffCount}{' '}
-                            staff
-                          </span>
-                        </div>
-                        <span className="font-medium">
-                          {formatCurrency(
-                            report.employmentBreakdown.chairRental.totalRevenue
-                          )}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-500 text-white hover:bg-green-500"
+                        >
+                          Chair Rental
+                        </Badge>
+                        <span className="text-sm">
+                          {report.employmentBreakdown.chairRental.staffCount}{' '}
+                          staff
                         </span>
                       </div>
-                    )}
+                      <span className="font-medium">
+                        {formatCurrency(
+                          report.employmentBreakdown.chairRental.totalRevenue
+                        )}
+                      </span>
+                    </div>
+                  )}
 
                   {report.summary.activeEmploymentTypes.includes('HYBRID') && (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white">Hybrid</Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
+                        >
+                          Hybrid
+                        </Badge>
                         <span className="text-sm">
                           {report.employmentBreakdown.hybrid.staffCount} staff
                         </span>
@@ -422,11 +437,11 @@ export default function FinancialDashboard({
                 change={{
                   value: 0, // TODO: Calculate change from previous period
                   type: 'neutral',
-                  period: `${report.employmentBreakdown.commission.staffCount} staff • ${report.employmentBreakdown.commission.transactionCount} transactions`
+                  period: `${report.employmentBreakdown.commission.staffCount} staff • ${report.employmentBreakdown.commission.transactionCount} transactions`,
                 }}
                 action={{
                   label: `Avg: ${formatCurrency(report.employmentBreakdown.commission.averagePerStaff)} per staff`,
-                  href: '#'
+                  href: '#',
                 }}
               />
             )}
@@ -440,11 +455,11 @@ export default function FinancialDashboard({
                 change={{
                   value: 0, // TODO: Calculate change from previous period
                   type: 'neutral',
-                  period: `${report.employmentBreakdown.chairRental.staffCount} contractors • ${report.employmentBreakdown.chairRental.transactionCount} transactions`
+                  period: `${report.employmentBreakdown.chairRental.staffCount} contractors • ${report.employmentBreakdown.chairRental.transactionCount} transactions`,
                 }}
                 action={{
                   label: `Avg: ${formatCurrency(report.employmentBreakdown.chairRental.averagePerStaff)} per staff`,
-                  href: '#'
+                  href: '#',
                 }}
               />
             )}
@@ -458,11 +473,11 @@ export default function FinancialDashboard({
                 change={{
                   value: 0, // TODO: Calculate change from previous period
                   type: 'neutral',
-                  period: `${report.employmentBreakdown.hybrid.staffCount} staff • ${report.employmentBreakdown.hybrid.transactionCount} transactions`
+                  period: `${report.employmentBreakdown.hybrid.staffCount} staff • ${report.employmentBreakdown.hybrid.transactionCount} transactions`,
                 }}
                 action={{
                   label: `Avg: ${formatCurrency(report.employmentBreakdown.hybrid.averagePerStaff)} per staff`,
-                  href: '#'
+                  href: '#',
                 }}
               />
             )}

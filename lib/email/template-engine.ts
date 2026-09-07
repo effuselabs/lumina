@@ -126,12 +126,8 @@ export class TemplateEngine {
 
       case 'staff_cancellation_alert':
         return {
-          html: staffCancellationAlertHtml(
-            data as StaffCancellationAlertData
-          ),
-          text: staffCancellationAlertText(
-            data as StaffCancellationAlertData
-          ),
+          html: staffCancellationAlertHtml(data as StaffCancellationAlertData),
+          text: staffCancellationAlertText(data as StaffCancellationAlertData),
           subject: `Appointment Cancelled - ${data.businessName}`,
         };
 
@@ -172,8 +168,7 @@ export class TemplateEngine {
       ...data,
       businessLogoUrl: branding.logoUrl || (data as any).businessLogoUrl,
       primaryColor: branding.primaryColor || (data as any).primaryColor,
-      secondaryColor:
-        branding.secondaryColor || (data as any).secondaryColor,
+      secondaryColor: branding.secondaryColor || (data as any).secondaryColor,
       accentColor: branding.accentColor || (data as any).accentColor,
     };
   }
@@ -223,7 +218,7 @@ export class TemplateEngine {
       "'": '&#39;',
     };
 
-    return text.replace(/[&<>"']/g, (char) => htmlEscapeMap[char] || char);
+    return text.replace(/[&<>"']/g, char => htmlEscapeMap[char] || char);
   }
 
   /**
@@ -278,7 +273,7 @@ export class TemplateEngine {
       '&nbsp;': ' ',
     };
 
-    return text.replace(/&[a-z]+;|&#\d+;/gi, (entity) => {
+    return text.replace(/&[a-z]+;|&#\d+;/gi, entity => {
       return entityMap[entity.toLowerCase()] || entity;
     });
   }

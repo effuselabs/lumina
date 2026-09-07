@@ -1,6 +1,6 @@
 /**
  * Email Queue Monitoring and Alerting
- * 
+ *
  * Provides monitoring utilities and alerting for the email queue system.
  * Tracks queue health, rate limits, and delivery metrics.
  */
@@ -67,7 +67,7 @@ export class EmailQueueMonitor {
 
   /**
    * Check queue health and generate alerts
-   * 
+   *
    * @returns Array of alerts
    */
   async checkQueueHealth(): Promise<Alert[]> {
@@ -109,7 +109,9 @@ export class EmailQueueMonitor {
           threshold: this.thresholds.oldestMessageAgeCritical,
           timestamp: new Date(),
         });
-      } else if (oldestMessageAgeSeconds >= this.thresholds.oldestMessageAgeWarning) {
+      } else if (
+        oldestMessageAgeSeconds >= this.thresholds.oldestMessageAgeWarning
+      ) {
         alerts.push({
           severity: AlertSeverity.WARNING,
           message: `Oldest message age high: ${Math.round(oldestMessageAgeSeconds)}s`,
@@ -192,7 +194,7 @@ export class EmailQueueMonitor {
 
   /**
    * Check rate limit status for all businesses
-   * 
+   *
    * @returns Array of alerts for businesses approaching limits
    */
   async checkRateLimits(): Promise<Alert[]> {
@@ -205,13 +207,16 @@ export class EmailQueueMonitor {
         await emailRateLimiter.getBusinessesApproachingLimits(threshold);
 
       for (const status of businessesApproachingLimits) {
-        const hourlyUsage = (status.emailsSentLastHour / status.hourlyLimit) * 100;
+        const hourlyUsage =
+          (status.emailsSentLastHour / status.hourlyLimit) * 100;
         const dailyUsage = (status.emailsSentLastDay / status.dailyLimit) * 100;
 
         if (hourlyUsage >= this.thresholds.rateLimitWarning) {
           alerts.push({
             severity:
-              hourlyUsage >= 95 ? AlertSeverity.CRITICAL : AlertSeverity.WARNING,
+              hourlyUsage >= 95
+                ? AlertSeverity.CRITICAL
+                : AlertSeverity.WARNING,
             message: `Business ${status.businessId} approaching hourly rate limit: ${hourlyUsage.toFixed(1)}%`,
             metric: 'hourly_rate_limit',
             value: hourlyUsage,
@@ -265,7 +270,7 @@ export class EmailQueueMonitor {
 
   /**
    * Run all health checks and return combined alerts
-   * 
+   *
    * @returns Array of all alerts
    */
   async runHealthChecks(): Promise<Alert[]> {
@@ -279,7 +284,7 @@ export class EmailQueueMonitor {
 
   /**
    * Get summary of current system health
-   * 
+   *
    * @returns Health summary
    */
   async getHealthSummary(): Promise<{
@@ -292,11 +297,11 @@ export class EmailQueueMonitor {
     // Determine overall status based on alerts
     let status: 'healthy' | 'warning' | 'critical' = 'healthy';
 
-    if (alerts.some((alert) => alert.severity === AlertSeverity.CRITICAL)) {
+    if (alerts.some(alert => alert.severity === AlertSeverity.CRITICAL)) {
       status = 'critical';
     } else if (
       alerts.some(
-        (alert) =>
+        alert =>
           alert.severity === AlertSeverity.ERROR ||
           alert.severity === AlertSeverity.WARNING
       )
@@ -313,7 +318,7 @@ export class EmailQueueMonitor {
 
   /**
    * Update monitoring thresholds
-   * 
+   *
    * @param thresholds - New threshold values
    */
   updateThresholds(thresholds: Partial<MonitoringThresholds>): void {

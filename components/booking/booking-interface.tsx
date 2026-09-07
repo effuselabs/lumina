@@ -6,7 +6,9 @@ import { BookingConfirmationStep } from './booking-confirmation-step';
 import { BookingContainer } from './booking-container';
 import { BookingErrorBoundary } from './booking-error-boundary';
 import { BookingStep } from './booking-progress';
-import ClientInformationForm, { type ClientFormData } from './client-information-form';
+import ClientInformationForm, {
+  type ClientFormData,
+} from './client-information-form';
 import { ServiceSelection } from './service-selection';
 import { StaffTimeSelection, type TimeSlot } from './staff-time-selection';
 
@@ -96,7 +98,7 @@ export function BookingInterface({ businessId }: BookingInterfaceProps) {
         return (
           <ClientInformationForm
             businessId={businessId}
-            onSubmit={(data) => {
+            onSubmit={data => {
               setClientData(data);
               handleNext();
             }}
@@ -114,7 +116,8 @@ export function BookingInterface({ businessId }: BookingInterfaceProps) {
                 Missing Information
               </h2>
               <p className="mb-8 text-gray-600">
-                Please complete all previous steps before confirming your booking.
+                Please complete all previous steps before confirming your
+                booking.
               </p>
             </div>
           );

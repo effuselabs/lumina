@@ -12,7 +12,8 @@ export { StaffList } from './staff-list';
 
 // Re-export types for convenience
 export type {
-    EmploymentConfiguration, EmploymentTransition, EmploymentType,
-    RentalPeriod
+  EmploymentConfiguration,
+  EmploymentTransition,
+  EmploymentType,
+  RentalPeriod,
 } from '@/lib/validations/employment';
-

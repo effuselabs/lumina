@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
       // Don't reveal if user exists or not for security
       return NextResponse.json({
         success: true,
-        message: 'If an account with that email exists, we sent you a reset link',
+        message:
+          'If an account with that email exists, we sent you a reset link',
       });
     }
 
@@ -48,7 +49,9 @@ export async function POST(request: NextRequest) {
     // TODO: Send email with reset link
     // For now, we'll just log it (in production, integrate with email service)
     console.log(`Password reset token for ${email}: ${resetToken}`);
-    console.log(`Reset link: ${process.env.NEXTAUTH_URL}/auth/reset-password?token=${resetToken}`);
+    console.log(
+      `Reset link: ${process.env.NEXTAUTH_URL}/auth/reset-password?token=${resetToken}`
+    );
 
     return NextResponse.json({
       success: true,

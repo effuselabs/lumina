@@ -1,23 +1,23 @@
 import { Badge } from '@/components/ui/badge';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { Grid, GridItem } from '@/components/ui/grid';
 import { StatCard } from '@/components/ui/stat-card';
 import {
-    ArrowRight,
-    Calendar,
-    Check,
-    Shield,
-    Sparkles,
-    Star,
-    TrendingUp,
-    Users,
-    Zap,
+  ArrowRight,
+  Calendar,
+  Check,
+  Shield,
+  Sparkles,
+  Star,
+  TrendingUp,
+  Users,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -54,7 +54,7 @@ export default async function HomePage() {
   //   }
   // }
   return (
-    <div className="theme-transitioning min-h-screen page-bg-gradient">
+    <div className="theme-transitioning page-bg-gradient min-h-screen">
       {/* Enhanced Navigation Header */}
       <header className="nav-enhanced theme-transitioning relative z-10">
         <div className="container mx-auto px-4 lg:px-6">
@@ -64,7 +64,7 @@ export default async function HomePage() {
           >
             {/* Enhanced Logo */}
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl nav-logo-enhanced">
+              <div className="nav-logo-enhanced flex h-10 w-10 items-center justify-center rounded-xl">
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <div className="flex flex-col">
@@ -79,19 +79,25 @@ export default async function HomePage() {
 
             {/* Enhanced Navigation */}
             <div className="hidden items-center gap-2 md:flex">
-              <Link href="/features" className="nav-link">Features</Link>
-              <Link href="/pricing" className="nav-link">Pricing</Link>
-              <Link href="/design-system" className="nav-link">Design System</Link>
+              <Link href="/features" className="nav-link">
+                Features
+              </Link>
+              <Link href="/pricing" className="nav-link">
+                Pricing
+              </Link>
+              <Link href="/design-system" className="nav-link">
+                Design System
+              </Link>
               <div className="mx-2 h-6 w-px bg-border" aria-hidden="true" />
               <Link
                 href="/auth/signin"
-                className="btn-nav-ghost inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300"
+                className="btn-nav-ghost inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300"
               >
                 Sign In
               </Link>
               <Link
                 href="/auth/signup"
-                className="btn-nav-primary inline-flex items-center justify-center px-5 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
+                className="btn-nav-primary inline-flex items-center justify-center rounded-lg px-5 py-2 text-sm font-semibold transition-all duration-300"
               >
                 Get Started Free
               </Link>
@@ -101,7 +107,7 @@ export default async function HomePage() {
             <div className="md:hidden">
               <Link
                 href="/auth/signup"
-                className="btn-nav-primary inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
+                className="btn-nav-primary inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300"
               >
                 Get Started
               </Link>
@@ -115,54 +121,42 @@ export default async function HomePage() {
         aria-labelledby="hero-title"
       >
         {/* Enhanced Background */}
-        <div
-          className="absolute inset-0 hero-bg-gradient"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute inset-0 hero-radial-bg"
-          aria-hidden="true"
-        />
+        <div className="hero-bg-gradient absolute inset-0" aria-hidden="true" />
+        <div className="hero-radial-bg absolute inset-0" aria-hidden="true" />
 
         <div className="container relative mx-auto px-4 lg:px-6">
           <div className="mx-auto max-w-5xl text-center">
             {/* Enhanced Brand Badge */}
             <Badge
               variant="secondary"
-              className="animate-lumina-fade-in mb-8 px-4 py-2 text-sm font-semibold shadow-sm badge-lumina-gold"
+              className="animate-lumina-fade-in badge-lumina-gold mb-8 px-4 py-2 text-sm font-semibold shadow-sm"
             >
               <Sparkles className="mr-2 h-4 w-4" />
               AI-Powered Business Management Platform
             </Badge>
 
             {/* Enhanced Hero Title */}
-            <div
-              className="animate-lumina-fade-in mb-8 animate-delay-100"
-            >
+            <div className="animate-lumina-fade-in animate-delay-100 mb-8">
               <h1
                 id="hero-title"
-                className="mb-4 text-5xl font-bold tracking-tight lg:text-7xl text-deep-teal"
+                className="mb-4 text-5xl font-bold tracking-tight text-deep-teal lg:text-7xl"
               >
                 Lumina
               </h1>
-              <p className="text-2xl font-semibold tracking-tight lg:text-4xl text-gradient-lumina">
+              <p className="text-gradient-lumina text-2xl font-semibold tracking-tight lg:text-4xl">
                 Intelligent Software for Salon Success
               </p>
             </div>
 
             {/* Enhanced Hero Description */}
-            <p
-              className="text-foreground-muted animate-lumina-fade-in mx-auto mb-12 max-w-3xl text-lg leading-relaxed lg:text-xl animate-delay-200"
-            >
+            <p className="text-foreground-muted animate-lumina-fade-in animate-delay-200 mx-auto mb-12 max-w-3xl text-lg leading-relaxed lg:text-xl">
               Transform your salon or barbershop with our AI-powered platform.
               Streamline appointments, delight clients, and boost revenue while
               you focus on what you love most—creating beautiful experiences.
             </p>
 
             {/* Enhanced CTA Section */}
-            <div
-              className="animate-lumina-fade-in mb-16 animate-delay-300"
-            >
+            <div className="animate-lumina-fade-in animate-delay-300 mb-16">
               <div
                 className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
                 role="group"
@@ -171,7 +165,7 @@ export default async function HomePage() {
                 <Link
                   href="/auth/signup"
                   aria-describedby="signup-description"
-                  className="btn-primary-gradient min-w-[14rem] inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300"
+                  className="btn-primary-gradient inline-flex min-w-[14rem] items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
                 >
                   Start Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
@@ -179,7 +173,7 @@ export default async function HomePage() {
                 <Link
                   href="/book/demo"
                   aria-describedby="demo-description"
-                  className="btn-secondary-outline min-w-[14rem] inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300"
+                  className="btn-secondary-outline inline-flex min-w-[14rem] items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
                 >
                   Watch Demo
                   <Zap className="ml-2 h-5 w-5" aria-hidden="true" />
@@ -189,8 +183,8 @@ export default async function HomePage() {
               {/* Enhanced Social Proof */}
               <div className="text-foreground-muted flex flex-wrap items-center justify-center gap-6 text-sm lg:gap-8">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full check-success-bg">
-                    <Check className="h-3 w-3 text-semantic-success" />
+                  <div className="check-success-bg flex h-5 w-5 items-center justify-center rounded-full">
+                    <Check className="text-semantic-success h-3 w-3" />
                   </div>
                   <span className="font-medium">14-day free trial</span>
                 </div>
@@ -225,29 +219,33 @@ export default async function HomePage() {
       {/* Value Proposition Section */}
       <section className="section-py-md section-bg-soft-peach theme-transitioning">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+              <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
                 Stop managing your business. Start building your passion.
               </h2>
-              <p className="text-foreground-muted text-lg leading-relaxed mb-8">
-                Lumina handles the administrative burden so you can focus on what you love most—creating beautiful experiences for your clients.
+              <p className="text-foreground-muted mb-8 text-lg leading-relaxed">
+                Lumina handles the administrative burden so you can focus on
+                what you love most—creating beautiful experiences for your
+                clients.
               </p>
               <ul className="space-y-4">
                 <li className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-success-subtle">
+                  <div className="bg-success-subtle flex h-6 w-6 items-center justify-center rounded-full">
                     <TrendingUp className="h-4 w-4 text-success" />
                   </div>
-                  <span className="font-medium">24% average revenue increase</span>
+                  <span className="font-medium">
+                    24% average revenue increase
+                  </span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-info-subtle">
+                  <div className="bg-info-subtle flex h-6 w-6 items-center justify-center rounded-full">
                     <Calendar className="h-4 w-4 text-info" />
                   </div>
                   <span className="font-medium">8.5 hours saved weekly</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-warning-subtle">
+                  <div className="bg-warning-subtle flex h-6 w-6 items-center justify-center rounded-full">
                     <Users className="h-4 w-4 text-warning" />
                   </div>
                   <span className="font-medium">89% client retention rate</span>
@@ -255,10 +253,12 @@ export default async function HomePage() {
               </ul>
             </div>
             <div className="relative">
-              <div className="aspect-video rounded-2xl bg-lumina-section border-2 border-lumina-gold-subtle flex items-center justify-center">
+              <div className="bg-lumina-section border-lumina-gold-subtle flex aspect-video items-center justify-center rounded-2xl border-2">
                 <div className="text-center">
-                  <Sparkles className="h-16 w-16 mx-auto mb-4 text-lumina-coral" />
-                  <p className="text-foreground-muted font-medium">Product Preview Coming Soon</p>
+                  <Sparkles className="mx-auto mb-4 h-16 w-16 text-lumina-coral" />
+                  <p className="text-foreground-muted font-medium">
+                    Product Preview Coming Soon
+                  </p>
                 </div>
               </div>
             </div>
@@ -269,44 +269,53 @@ export default async function HomePage() {
       {/* How It Works Section */}
       <section className="section-py-lg section-bg-clarity-blue theme-transitioning">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-6 badge-lumina-gold">
+          <div className="mb-16 text-center">
+            <Badge variant="secondary" className="badge-lumina-gold mb-6">
               <Zap className="mr-2 h-4 w-4" />
               Simple Process
             </Badge>
-            <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
               Get started in minutes, not months
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
               Our streamlined onboarding gets your salon up and running quickly
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-3">
             <div className="text-center">
-              <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-white font-bold text-xl">1</span>
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
+                <span className="text-xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-deep-teal">Sign Up & Setup</h3>
+              <h3 className="mb-4 text-xl font-semibold text-deep-teal">
+                Sign Up & Setup
+              </h3>
               <p className="text-foreground-muted">
-                Create your account and customize your salon profile in under 5 minutes.
+                Create your account and customize your salon profile in under 5
+                minutes.
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-white font-bold text-xl">2</span>
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
+                <span className="text-xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-deep-teal">Import Your Data</h3>
+              <h3 className="mb-4 text-xl font-semibold text-deep-teal">
+                Import Your Data
+              </h3>
               <p className="text-foreground-muted">
-                Easily migrate your existing client data and service information.
+                Easily migrate your existing client data and service
+                information.
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-white font-bold text-xl">3</span>
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
+                <span className="text-xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-deep-teal">Start Growing</h3>
+              <h3 className="mb-4 text-xl font-semibold text-deep-teal">
+                Start Growing
+              </h3>
               <p className="text-foreground-muted">
-                Begin accepting bookings and watch your business thrive with AI insights.
+                Begin accepting bookings and watch your business thrive with AI
+                insights.
               </p>
             </div>
           </div>
@@ -320,16 +329,13 @@ export default async function HomePage() {
       >
         <div className="container mx-auto px-4 lg:px-6">
           <div className="mb-20 text-center">
-            <Badge
-              variant="secondary"
-              className="mb-6 badge-lumina-coral"
-            >
+            <Badge variant="secondary" className="badge-lumina-coral mb-6">
               <TrendingUp className="mr-2 h-4 w-4" />
               Powerful Features
             </Badge>
             <h2
               id="features-title"
-              className="mb-6 text-4xl font-bold tracking-tight lg:text-5xl text-deep-teal"
+              className="mb-6 text-4xl font-bold tracking-tight text-deep-teal lg:text-5xl"
             >
               Everything you need to grow your business
             </h2>
@@ -343,13 +349,13 @@ export default async function HomePage() {
           <Grid variant="cards" gap="lg" className="mb-20">
             <GridItem>
               <Card
-                className="group h-full border-2 transition-all duration-300 hover:-translate-y-1 feature-card"
+                className="feature-card group h-full border-2 transition-all duration-300 hover:-translate-y-1"
                 role="article"
                 aria-labelledby="booking-title"
               >
                 <CardHeader className="pb-4">
                   <div
-                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 feature-icon-bg"
+                    className="feature-icon-bg mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300"
                     aria-hidden="true"
                   >
                     <Calendar className="h-7 w-7 text-lumina-coral" />
@@ -399,13 +405,13 @@ export default async function HomePage() {
 
             <GridItem>
               <Card
-                className="group h-full border-2 transition-all duration-300 hover:-translate-y-1 feature-card"
+                className="feature-card group h-full border-2 transition-all duration-300 hover:-translate-y-1"
                 role="article"
                 aria-labelledby="client-title"
               >
                 <CardHeader className="pb-4">
                   <div
-                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 feature-icon-bg"
+                    className="feature-icon-bg mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300"
                     aria-hidden="true"
                   >
                     <Users className="h-7 w-7 text-lumina-coral" />
@@ -455,13 +461,13 @@ export default async function HomePage() {
 
             <GridItem>
               <Card
-                className="group h-full border-2 transition-all duration-300 hover:-translate-y-1 feature-card"
+                className="feature-card group h-full border-2 transition-all duration-300 hover:-translate-y-1"
                 role="article"
                 aria-labelledby="insights-title"
               >
                 <CardHeader className="pb-4">
                   <div
-                    className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 feature-icon-bg"
+                    className="feature-icon-bg mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300"
                     aria-hidden="true"
                   >
                     <TrendingUp className="h-7 w-7 text-lumina-coral" />
@@ -515,15 +521,16 @@ export default async function HomePage() {
       <section className="section-py-lg section-bg-gradient-gold theme-transitioning">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="mb-16 text-center">
-            <Badge variant="secondary" className="mb-6 badge-deep-teal">
+            <Badge variant="secondary" className="badge-deep-teal mb-6">
               <Star className="mr-2 h-4 w-4" />
               Proven Results
             </Badge>
-            <h3 className="mb-6 text-3xl font-bold tracking-tight lg:text-4xl text-deep-teal">
+            <h3 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
               See the impact in action
             </h3>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
-              Real results from salon and barbershop owners who transformed their business with Lumina
+              Real results from salon and barbershop owners who transformed
+              their business with Lumina
             </p>
           </div>
 
@@ -539,7 +546,7 @@ export default async function HomePage() {
                 }}
                 icon="trending-up"
                 size="default"
-                className="hover-lumina-lift-subtle border-2 bg-success-subtle"
+                className="hover-lumina-lift-subtle bg-success-subtle border-2"
               />
             </GridItem>
             <GridItem>
@@ -553,7 +560,7 @@ export default async function HomePage() {
                 }}
                 icon="calendar"
                 size="default"
-                className="hover-lumina-lift-subtle border-2 bg-info-subtle"
+                className="hover-lumina-lift-subtle bg-info-subtle border-2"
               />
             </GridItem>
             <GridItem>
@@ -567,7 +574,7 @@ export default async function HomePage() {
                 }}
                 icon="users"
                 size="default"
-                className="hover-lumina-lift-subtle border-2 bg-warning-subtle"
+                className="hover-lumina-lift-subtle bg-warning-subtle border-2"
               />
             </GridItem>
           </Grid>
@@ -575,16 +582,20 @@ export default async function HomePage() {
           {/* Customer Success Quote */}
           <div className="text-center">
             <blockquote className="mx-auto max-w-3xl">
-              <p className="text-xl font-medium text-foreground-muted italic mb-6">
-                "                &ldquo;Lumina transformed how we run our salon. We&apos;re booking 40% more appointments and our clients love the seamless experience.&rdquo;"
+              <p className="text-foreground-muted mb-6 text-xl font-medium italic">
+                " &ldquo;Lumina transformed how we run our salon. We&apos;re
+                booking 40% more appointments and our clients love the seamless
+                experience.&rdquo;"
               </p>
               <footer className="flex items-center justify-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-lumina-section flex items-center justify-center">
+                <div className="bg-lumina-section flex h-12 w-12 items-center justify-center rounded-full">
                   <Users className="h-6 w-6 text-lumina-coral" />
                 </div>
                 <div className="text-left">
                   <div className="font-semibold text-deep-teal">Sarah Chen</div>
-                  <div className="text-sm text-foreground-muted">Owner, Bloom Beauty Salon</div>
+                  <div className="text-foreground-muted text-sm">
+                    Owner, Bloom Beauty Salon
+                  </div>
                 </div>
               </footer>
             </blockquote>
@@ -595,12 +606,12 @@ export default async function HomePage() {
       {/* Pricing Preview Section */}
       <section className="section-py-lg section-bg-lavender-mist theme-transitioning">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-6 badge-lumina-coral">
+          <div className="mb-16 text-center">
+            <Badge variant="secondary" className="badge-lumina-coral mb-6">
               <TrendingUp className="mr-2 h-4 w-4" />
               Simple Pricing
             </Badge>
-            <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
               Simple, transparent pricing
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -608,49 +619,57 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="max-w-md mx-auto">
-            <Card className="text-center p-8 border-2 border-lumina-gold-subtle bg-surface-translucent shadow-xl">
+          <div className="mx-auto max-w-md">
+            <Card className="border-lumina-gold-subtle bg-surface-translucent border-2 p-8 text-center shadow-xl">
               <div className="mb-6">
-                <div className="w-16 h-16 bg-lumina-radiant rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
                   <Sparkles className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2 text-deep-teal">Early Access</h3>
-                <p className="text-foreground-muted">Perfect for getting started</p>
+                <h3 className="mb-2 text-2xl font-bold text-deep-teal">
+                  Early Access
+                </h3>
+                <p className="text-foreground-muted">
+                  Perfect for getting started
+                </p>
               </div>
 
               <div className="mb-6">
-                <div className="text-5xl font-bold mb-2 text-gradient-lumina">Free</div>
-                <p className="text-foreground-muted">During development phase</p>
+                <div className="text-gradient-lumina mb-2 text-5xl font-bold">
+                  Free
+                </div>
+                <p className="text-foreground-muted">
+                  During development phase
+                </p>
               </div>
 
-              <ul className="space-y-3 mb-8 text-left">
+              <ul className="mb-8 space-y-3 text-left">
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
                   <span className="text-sm">Full platform access</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
                   <span className="text-sm">Priority support</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
                   <span className="text-sm">Shape the product roadmap</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-success flex-shrink-0" />
+                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
                   <span className="text-sm">Grandfathered pricing</span>
                 </li>
               </ul>
 
               <Link
                 href="/auth/signup"
-                className="w-full btn-primary-gradient inline-flex items-center justify-center py-3 text-base font-semibold rounded-lg transition-all duration-300"
+                className="btn-primary-gradient inline-flex w-full items-center justify-center rounded-lg py-3 text-base font-semibold transition-all duration-300"
               >
                 Join Early Access
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
 
-              <p className="text-xs text-foreground-muted mt-4">
+              <p className="text-foreground-muted mt-4 text-xs">
                 No credit card required • Cancel anytime
               </p>
             </Card>
@@ -661,36 +680,38 @@ export default async function HomePage() {
       {/* Enhanced Development Status */}
       <section className="section-py-lg section-bg-gradient-coral theme-transitioning">
         <div className="container mx-auto px-4 lg:px-6">
-          <Card className="mx-auto max-w-3xl border-2 text-center shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl border-lumina-gold-subtle bg-surface-translucent">
+          <Card className="border-lumina-gold-subtle bg-surface-translucent mx-auto max-w-3xl border-2 text-center shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl">
             <CardHeader className="pb-6">
-              <div className="mx-auto mb-6 flex h-20 w-20 animate-lumina-pulse-subtle items-center justify-center rounded-2xl shadow-lg bg-lumina-radiant">
+              <div className="mx-auto mb-6 flex h-20 w-20 animate-lumina-pulse-subtle items-center justify-center rounded-2xl bg-lumina-radiant shadow-lg">
                 <Sparkles className="h-10 w-10 text-white" />
               </div>
               <Badge
                 variant="secondary"
-                className="mx-auto mb-4 badge-lumina-coral"
+                className="badge-lumina-coral mx-auto mb-4"
               >
                 <Zap className="mr-2 h-4 w-4" />
                 Early Access Available
               </Badge>
-              <CardTitle className="mb-4 text-2xl font-bold lg:text-3xl text-deep-teal">
+              <CardTitle className="mb-4 text-2xl font-bold text-deep-teal lg:text-3xl">
                 🎯 Be Part of Something Revolutionary
               </CardTitle>
               <CardDescription className="text-foreground-muted text-lg leading-relaxed lg:text-xl">
-                Join forward-thinking salon owners who are shaping the future of beauty business management. Get exclusive early access, priority support, and help us build the perfect platform for your needs.
+                Join forward-thinking salon owners who are shaping the future of
+                beauty business management. Get exclusive early access, priority
+                support, and help us build the perfect platform for your needs.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="mb-6 flex flex-col justify-center gap-4 sm:flex-row">
                 <Link
                   href="/auth/signup"
-                  className="btn-primary-gradient inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="btn-primary-gradient inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:shadow-xl"
                 >
                   Join Early Access
                 </Link>
                 <Link
                   href="/design-system"
-                  className="btn-secondary-outline inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300 border-2"
+                  className="btn-secondary-outline inline-flex items-center justify-center rounded-lg border-2 px-6 py-3 text-base font-semibold transition-all duration-300"
                 >
                   View Design System
                 </Link>
@@ -698,31 +719,33 @@ export default async function HomePage() {
 
               {/* Progress Indicators */}
               <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
-                <div className="flex flex-col items-center gap-2 rounded-lg p-3 progress-success">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full progress-success-icon">
-                    <Check className="h-4 w-4 text-semantic-success" />
+                <div className="progress-success flex flex-col items-center gap-2 rounded-lg p-3">
+                  <div className="progress-success-icon flex h-8 w-8 items-center justify-center rounded-full">
+                    <Check className="text-semantic-success h-4 w-4" />
                   </div>
-                  <span className="font-medium text-semantic-success">
+                  <span className="text-semantic-success font-medium">
                     Core Platform
                   </span>
                   <span className="text-foreground-muted text-xs">Ready</span>
                 </div>
-                <div className="flex flex-col items-center gap-2 rounded-lg p-3 progress-warning">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full progress-warning-icon">
-                    <Zap className="h-4 w-4 text-semantic-warning" />
+                <div className="progress-warning flex flex-col items-center gap-2 rounded-lg p-3">
+                  <div className="progress-warning-icon flex h-8 w-8 items-center justify-center rounded-full">
+                    <Zap className="text-semantic-warning h-4 w-4" />
                   </div>
-                  <span className="font-medium text-semantic-warning">
+                  <span className="text-semantic-warning font-medium">
                     Booking System
                   </span>
                   <span className="text-foreground-muted text-xs">
                     In Progress
                   </span>
                 </div>
-                <div className="flex flex-col items-center gap-2 rounded-lg p-3 progress-info">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full progress-info-icon">
-                    <Star className="h-4 w-4 text-semantic-info" />
+                <div className="progress-info flex flex-col items-center gap-2 rounded-lg p-3">
+                  <div className="progress-info-icon flex h-8 w-8 items-center justify-center rounded-full">
+                    <Star className="text-semantic-info h-4 w-4" />
                   </div>
-                  <span className="font-medium text-semantic-info">AI Features</span>
+                  <span className="text-semantic-info font-medium">
+                    AI Features
+                  </span>
                   <span className="text-foreground-muted text-xs">
                     Coming Soon
                   </span>
@@ -736,62 +759,75 @@ export default async function HomePage() {
       {/* FAQ Section */}
       <section className="section-py-lg section-bg-sage-green theme-transitioning">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-6 badge-lumina-gold">
+          <div className="mb-16 text-center">
+            <Badge variant="secondary" className="badge-lumina-gold mb-6">
               <Shield className="mr-2 h-4 w-4" />
               Frequently Asked
             </Badge>
-            <h2 className="text-3xl font-bold tracking-tight lg:text-4xl mb-6 text-deep-teal">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
               Questions & Answers
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
-              Everything you need to know about Lumina and our early access program
+              Everything you need to know about Lumina and our early access
+              program
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-6">
+          <div className="mx-auto max-w-3xl space-y-6">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
                 Is Lumina really free during early access?
               </h3>
               <p className="text-foreground-muted">
-                Yes! Early access is completely free with no hidden costs. You&apos;ll get full platform access and help shape our development roadmap. Early access users will also receive grandfathered pricing when we launch.
+                Yes! Early access is completely free with no hidden costs.
+                You&apos;ll get full platform access and help shape our
+                development roadmap. Early access users will also receive
+                grandfathered pricing when we launch.
               </p>
             </Card>
 
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
                 How do I migrate my existing client data?
               </h3>
               <p className="text-foreground-muted">
-                Our onboarding team will help you import your existing client data, appointment history, and service information. We support imports from most major salon management systems and spreadsheets.
+                Our onboarding team will help you import your existing client
+                data, appointment history, and service information. We support
+                imports from most major salon management systems and
+                spreadsheets.
               </p>
             </Card>
 
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
                 What happens when Lumina officially launches?
               </h3>
               <p className="text-foreground-muted">
-                Early access users will automatically transition to our launch version with special grandfathered pricing. You&apos;ll keep all your data and settings, plus get priority access to new features.
+                Early access users will automatically transition to our launch
+                version with special grandfathered pricing. You&apos;ll keep all
+                your data and settings, plus get priority access to new
+                features.
               </p>
             </Card>
 
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-3 text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
                 Do you offer training and support?
               </h3>
               <p className="text-foreground-muted">
-                Absolutely! Early access users get priority support, personalized onboarding, and direct access to our development team. We&apos;re here to ensure your success every step of the way.
+                Absolutely! Early access users get priority support,
+                personalized onboarding, and direct access to our development
+                team. We&apos;re here to ensure your success every step of the
+                way.
               </p>
             </Card>
           </div>
 
-          <div className="text-center mt-12">
+          <div className="mt-12 text-center">
             <p className="text-foreground-muted mb-6">Still have questions?</p>
             <Link
               href="/contact"
-              className="btn-contact-prominent inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300"
+              className="btn-contact-prominent inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
             >
               Contact Our Team
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -812,12 +848,12 @@ export default async function HomePage() {
                 </div>
                 <div>
                   <span className="text-2xl font-bold">Lumina</span>
-                  <div className="text-sm font-medium footer-text-secondary">
+                  <div className="footer-text-secondary text-sm font-medium">
                     Salon Management Platform
                   </div>
                 </div>
               </div>
-              <p className="mb-6 max-w-md text-lg leading-relaxed footer-text-muted">
+              <p className="footer-text-muted mb-6 max-w-md text-lg leading-relaxed">
                 AI-powered business management platform designed specifically
                 for salons and barbershops. Focus on your craft, not paperwork.
               </p>
@@ -826,13 +862,13 @@ export default async function HomePage() {
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/auth/signup"
-                  className="btn-white-elevated inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
+                  className="btn-white-elevated inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300"
                 >
                   Start Free Trial
                 </Link>
                 <Link
                   href="/contact"
-                  className="btn-footer-ghost inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
+                  className="btn-footer-ghost inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300"
                 >
                   Contact Sales
                 </Link>
@@ -842,44 +878,29 @@ export default async function HomePage() {
             {/* Product Links */}
             <div>
               <h4 className="mb-6 text-lg font-semibold">Product</h4>
-              <ul className="space-y-3 footer-text-muted">
+              <ul className="footer-text-muted space-y-3">
                 <li>
-                  <Link
-                    href="/features"
-                    className="footer-link"
-                  >
+                  <Link href="/features" className="footer-link">
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/pricing"
-                    className="footer-link"
-                  >
+                  <Link href="/pricing" className="footer-link">
                     Pricing
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/integrations"
-                    className="footer-link"
-                  >
+                  <Link href="/integrations" className="footer-link">
                     Integrations
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/api"
-                    className="footer-link"
-                  >
+                  <Link href="/api" className="footer-link">
                     API
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/design-system"
-                    className="footer-link"
-                  >
+                  <Link href="/design-system" className="footer-link">
                     Design System
                   </Link>
                 </li>
@@ -888,26 +909,34 @@ export default async function HomePage() {
           </div>
 
           {/* Enhanced Footer Bottom */}
-          <div className="mt-12 border-t footer-border pt-8">
+          <div className="footer-border mt-12 border-t pt-8">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <div className="text-center footer-text-subtle md:text-left">
+              <div className="footer-text-subtle text-center md:text-left">
                 <p>&copy; 2024 Lumina. All rights reserved.</p>
                 <p className="mt-1 text-sm">
-                  Created by <Link href="https://effuselabs.com" target="_blank" rel="noopener noreferrer" className="footer-link font-medium">Effuse Labs</Link>
+                  Created by{' '}
+                  <Link
+                    href="https://effuselabs.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-link font-medium"
+                  >
+                    Effuse Labs
+                  </Link>
                 </p>
               </div>
 
               {/* Social Links Placeholder */}
               <div className="flex items-center gap-4">
-                <span className="text-sm footer-text-subtle">Follow us:</span>
+                <span className="footer-text-subtle text-sm">Follow us:</span>
                 <div className="flex gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full btn-social">
+                  <div className="btn-social flex h-8 w-8 items-center justify-center rounded-full">
                     <span className="text-xs">𝕏</span>
                   </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full btn-social">
+                  <div className="btn-social flex h-8 w-8 items-center justify-center rounded-full">
                     <span className="text-xs">in</span>
                   </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full btn-social">
+                  <div className="btn-social flex h-8 w-8 items-center justify-center rounded-full">
                     <span className="text-xs">ig</span>
                   </div>
                 </div>

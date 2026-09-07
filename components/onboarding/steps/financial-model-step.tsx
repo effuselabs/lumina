@@ -16,7 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { BusinessFinancialModel, businessFinancialModelSchema, financialModelDescriptions } from '@/lib/validations/business';
+import {
+  BusinessFinancialModel,
+  businessFinancialModelSchema,
+  financialModelDescriptions,
+} from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -26,7 +30,11 @@ interface FinancialModelStepProps {
   onPrevious: () => void;
 }
 
-export function FinancialModelStep({ data, onNext, onPrevious }: FinancialModelStepProps) {
+export function FinancialModelStep({
+  data,
+  onNext,
+  onPrevious,
+}: FinancialModelStepProps) {
   const form = useForm<BusinessFinancialModel>({
     resolver: zodResolver(businessFinancialModelSchema),
     defaultValues: {
@@ -40,7 +48,9 @@ export function FinancialModelStep({ data, onNext, onPrevious }: FinancialModelS
   };
 
   const selectedModel = form.watch('financialModel');
-  const modelInfo = selectedModel ? financialModelDescriptions[selectedModel] : null;
+  const modelInfo = selectedModel
+    ? financialModelDescriptions[selectedModel]
+    : null;
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -52,18 +62,23 @@ export function FinancialModelStep({ data, onNext, onPrevious }: FinancialModelS
             render={({ field }) => (
               <FormItem>
                 <FormLabel>How do you pay your staff? *</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger className="focus:ring-2 focus:ring-orange-500">
                       <SelectValue placeholder="Select a financial model" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {Object.entries(financialModelDescriptions).map(([key, model]) => (
-                      <SelectItem key={key} value={key}>
-                        {model.title}
-                      </SelectItem>
-                    ))}
+                    {Object.entries(financialModelDescriptions).map(
+                      ([key, model]) => (
+                        <SelectItem key={key} value={key}>
+                          {model.title}
+                        </SelectItem>
+                      )
+                    )}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -73,14 +88,18 @@ export function FinancialModelStep({ data, onNext, onPrevious }: FinancialModelS
 
           {modelInfo && (
             <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
-              <h3 className="font-semibold text-orange-900 mb-2">{modelInfo.title}</h3>
-              <p className="text-orange-800 mb-3">{modelInfo.description}</p>
-              <p className="text-sm text-orange-700 mb-3 italic">{modelInfo.example}</p>
+              <h3 className="mb-2 font-semibold text-orange-900">
+                {modelInfo.title}
+              </h3>
+              <p className="mb-3 text-orange-800">{modelInfo.description}</p>
+              <p className="mb-3 text-sm italic text-orange-700">
+                {modelInfo.example}
+              </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <h4 className="font-medium text-orange-900 mb-1">Pros:</h4>
-                  <ul className="text-sm text-orange-700 space-y-1">
+                  <h4 className="mb-1 font-medium text-orange-900">Pros:</h4>
+                  <ul className="space-y-1 text-sm text-orange-700">
                     {modelInfo.pros.map((pro, index) => (
                       <li key={index}>• {pro}</li>
                     ))}
@@ -88,8 +107,8 @@ export function FinancialModelStep({ data, onNext, onPrevious }: FinancialModelS
                 </div>
 
                 <div>
-                  <h4 className="font-medium text-orange-900 mb-1">Cons:</h4>
-                  <ul className="text-sm text-orange-700 space-y-1">
+                  <h4 className="mb-1 font-medium text-orange-900">Cons:</h4>
+                  <ul className="space-y-1 text-sm text-orange-700">
                     {modelInfo.cons.map((con, index) => (
                       <li key={index}>• {con}</li>
                     ))}
@@ -100,11 +119,7 @@ export function FinancialModelStep({ data, onNext, onPrevious }: FinancialModelS
           )}
 
           <div className="flex justify-between">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onPrevious}
-            >
+            <Button type="button" variant="outline" onClick={onPrevious}>
               Previous
             </Button>
 

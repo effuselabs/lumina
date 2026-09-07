@@ -1,17 +1,21 @@
 /**
  * Unit Tests for EmailQueueManager
- * 
+ *
  * Tests the email queue management system including:
  * - Queue operations (enqueue, dequeue)
  * - Priority handling
  * - Rate limiting
  * - Retry scheduling
  * - Queue metrics
- * 
+ *
  * Requirements: 9.1, 9.2, 9.3, 9.4, 9.5
  */
 
-import { EmailQueueManager, QueueError, QueueErrorCode } from '@/lib/email/queue-manager';
+import {
+  EmailQueueManager,
+  QueueError,
+  QueueErrorCode,
+} from '@/lib/email/queue-manager';
 import { prisma } from '@/lib/prisma';
 import { emailRateLimiter } from '@/lib/email/rate-limiter';
 import type { EmailMessage } from '@/lib/email/types';
@@ -21,7 +25,9 @@ jest.mock('@/lib/prisma');
 jest.mock('@/lib/email/rate-limiter');
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
-const mockRateLimiter = emailRateLimiter as jest.Mocked<typeof emailRateLimiter>;
+const mockRateLimiter = emailRateLimiter as jest.Mocked<
+  typeof emailRateLimiter
+>;
 
 describe('EmailQueueManager', () => {
   let queueManager: EmailQueueManager;
@@ -82,7 +88,9 @@ describe('EmailQueueManager', () => {
         createdAt: new Date(),
       };
 
-      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
 
       const queueId = await queueManager.enqueue(mockEmailMessage, 'normal');
 
@@ -108,7 +116,9 @@ describe('EmailQueueManager', () => {
         createdAt: new Date(),
       };
 
-      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
 
       const queueId = await queueManager.enqueue(mockEmailMessage, 'high');
 
@@ -129,7 +139,9 @@ describe('EmailQueueManager', () => {
         createdAt: new Date(),
       };
 
-      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
 
       const queueId = await queueManager.enqueue(mockEmailMessage, 'low');
 
@@ -150,11 +162,15 @@ describe('EmailQueueManager', () => {
         createdAt: new Date(),
       };
 
-      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
 
       await queueManager.enqueue(mockEmailMessage);
 
-      expect(mockRateLimiter.checkRateLimit).toHaveBeenCalledWith(mockBusinessId);
+      expect(mockRateLimiter.checkRateLimit).toHaveBeenCalledWith(
+        mockBusinessId
+      );
     });
 
     it('should still enqueue if rate limit exceeded (for later processing)', async () => {
@@ -168,7 +184,9 @@ describe('EmailQueueManager', () => {
         createdAt: new Date(),
       };
 
-      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
 
       const queueId = await queueManager.enqueue(mockEmailMessage);
 
@@ -179,8 +197,12 @@ describe('EmailQueueManager', () => {
     it('should throw error when queue is full', async () => {
       (mockPrisma.emailQueue.count as jest.Mock).mockResolvedValue(10000);
 
-      await expect(queueManager.enqueue(mockEmailMessage)).rejects.toThrow(QueueError);
-      await expect(queueManager.enqueue(mockEmailMessage)).rejects.toThrow('Queue is full');
+      await expect(queueManager.enqueue(mockEmailMessage)).rejects.toThrow(
+        QueueError
+      );
+      await expect(queueManager.enqueue(mockEmailMessage)).rejects.toThrow(
+        'Queue is full'
+      );
     });
 
     it('should throw error for invalid priority', async () => {
@@ -194,7 +216,9 @@ describe('EmailQueueManager', () => {
         new Error('Database connection failed')
       );
 
-      await expect(queueManager.enqueue(mockEmailMessage)).rejects.toThrow(QueueError);
+      await expect(queueManager.enqueue(mockEmailMessage)).rejects.toThrow(
+        QueueError
+      );
     });
   });
 
@@ -218,7 +242,9 @@ describe('EmailQueueManager', () => {
         metadata: {},
       };
 
-      (mockPrisma.emailQueue.findFirst as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.findFirst as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
       (mockPrisma.emailQueue.update as jest.Mock).mockResolvedValue({
         ...mockQueueEntry,
         status: 'processing',
@@ -313,7 +339,9 @@ describe('EmailQueueManager', () => {
     };
 
     it('should schedule retry with exponential backoff', async () => {
-      (mockPrisma.emailQueue.findUnique as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.findUnique as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
       (mockPrisma.emailQueue.update as jest.Mock).mockResolvedValue({
         ...mockQueueEntry,
         status: 'pending',
@@ -356,7 +384,9 @@ describe('EmailQueueManager', () => {
     it('should throw error for non-existent queue entry', async () => {
       (mockPrisma.emailQueue.findUnique as jest.Mock).mockResolvedValue(null);
 
-      await expect(queueManager.scheduleRetry('invalid-id', 1)).rejects.toThrow(QueueError);
+      await expect(queueManager.scheduleRetry('invalid-id', 1)).rejects.toThrow(
+        QueueError
+      );
     });
   });
 
@@ -498,15 +528,21 @@ describe('EmailQueueManager', () => {
       const canSend = await queueManager.checkRateLimit(mockBusinessId);
 
       expect(canSend).toBe(true);
-      expect(mockRateLimiter.checkRateLimit).toHaveBeenCalledWith(mockBusinessId);
+      expect(mockRateLimiter.checkRateLimit).toHaveBeenCalledWith(
+        mockBusinessId
+      );
     });
 
     it('should increment rate limit counter', async () => {
-      (mockRateLimiter.incrementRateLimit as jest.Mock).mockResolvedValue(undefined);
+      (mockRateLimiter.incrementRateLimit as jest.Mock).mockResolvedValue(
+        undefined
+      );
 
       await queueManager.incrementRateLimit(mockBusinessId);
 
-      expect(mockRateLimiter.incrementRateLimit).toHaveBeenCalledWith(mockBusinessId);
+      expect(mockRateLimiter.incrementRateLimit).toHaveBeenCalledWith(
+        mockBusinessId
+      );
     });
   });
 
@@ -531,7 +567,9 @@ describe('EmailQueueManager', () => {
         },
       ];
 
-      (mockPrisma.emailQueue.findMany as jest.Mock).mockResolvedValue(mockFailedMessages);
+      (mockPrisma.emailQueue.findMany as jest.Mock).mockResolvedValue(
+        mockFailedMessages
+      );
 
       const failedMessages = await queueManager.getFailedMessages();
 
@@ -568,9 +606,12 @@ describe('EmailQueueManager', () => {
         },
       ];
 
-      (mockPrisma.emailQueue.findMany as jest.Mock).mockResolvedValue(mockFailedMessages);
+      (mockPrisma.emailQueue.findMany as jest.Mock).mockResolvedValue(
+        mockFailedMessages
+      );
 
-      const failedMessages = await queueManager.getFailedMessages(mockBusinessId);
+      const failedMessages =
+        await queueManager.getFailedMessages(mockBusinessId);
 
       expect(failedMessages).toHaveLength(1);
       expect(mockPrisma.emailQueue.findMany).toHaveBeenCalledWith({

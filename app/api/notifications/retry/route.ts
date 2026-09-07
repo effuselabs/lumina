@@ -1,10 +1,10 @@
 /**
  * Retry Failed Notification API Endpoint
- * 
+ *
  * POST /api/notifications/retry
  * Allows manual retry of failed notifications
  * Validates business ownership before retrying
- * 
+ *
  * Requirements: 5.1, 5.2, 10.5
  */
 
@@ -30,10 +30,7 @@ export async function POST(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate request body
@@ -117,7 +114,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map((e) => ({
+          details: error.errors.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),

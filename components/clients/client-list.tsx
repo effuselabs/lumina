@@ -234,7 +234,7 @@ export function ClientList({
       <Card className="p-4">
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               Search clients
             </label>
             <div className="relative">
@@ -250,7 +250,7 @@ export function ClientList({
 
           <div className="flex gap-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
                 Filter by staff
               </label>
               <Select value={selectedStaff} onValueChange={setSelectedStaff}>
@@ -270,7 +270,7 @@ export function ClientList({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
                 Sort by
               </label>
               <Select

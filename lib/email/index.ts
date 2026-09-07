@@ -58,9 +58,7 @@ export {
 } from './template-repository';
 
 // Email Provider
-export {
-  BaseEmailProvider,
-} from './base-email-provider';
+export { BaseEmailProvider } from './base-email-provider';
 
 export {
   ResendEmailProvider,

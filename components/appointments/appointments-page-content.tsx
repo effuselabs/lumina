@@ -6,7 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageHeader } from '@/components/ui/page-header';
 import { StatCard } from '@/components/ui/stat-card';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Calendar, CalendarDays, Clock, Filter, Plus, Search, Users } from 'lucide-react';
+import {
+  Calendar,
+  CalendarDays,
+  Clock,
+  Filter,
+  Plus,
+  Search,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -117,10 +125,10 @@ export function AppointmentsPageContent({
           {/* Calendar View Navigation */}
           <div className="grid gap-4 md:grid-cols-3">
             <Link href={`/dashboard/${businessSlug}/appointments`}>
-              <Card className="border-color-border hover:border-lumina-coral cursor-pointer transition-colors shadow-sm">
+              <Card className="border-color-border cursor-pointer shadow-sm transition-colors hover:border-lumina-coral">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-lumina-radiant/10">
+                    <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
                       <Calendar className="h-6 w-6 text-lumina-coral" />
                     </div>
                     <div>
@@ -135,10 +143,10 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/dashboard/${businessSlug}/appointments/calendar`}>
-              <Card className="border-color-border hover:border-lumina-coral cursor-pointer transition-colors shadow-sm">
+              <Card className="border-color-border cursor-pointer shadow-sm transition-colors hover:border-lumina-coral">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-lumina-radiant/10">
+                    <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
                       <CalendarDays className="h-6 w-6 text-lumina-coral" />
                     </div>
                     <div>
@@ -153,10 +161,10 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/dashboard/${businessSlug}/appointments/book`}>
-              <Card className="border-color-border hover:border-lumina-coral cursor-pointer transition-colors shadow-sm">
+              <Card className="border-color-border cursor-pointer shadow-sm transition-colors hover:border-lumina-coral">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-lumina-radiant/10">
+                    <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
                       <Plus className="h-6 w-6 text-lumina-coral" />
                     </div>
                     <div>
@@ -220,7 +228,7 @@ export function AppointmentsPageContent({
                 <p className="text-color-foreground-muted mb-4">
                   This is the foundation for your appointment management system.
                 </p>
-                <div className="text-color-foreground-muted text-sm space-y-2">
+                <div className="text-color-foreground-muted space-y-2 text-sm">
                   <p>✓ Dashboard layout and navigation integrated</p>
                   <p>✓ Responsive design for desktop and mobile</p>
                   <p>✓ Quick access to calendar views and booking</p>

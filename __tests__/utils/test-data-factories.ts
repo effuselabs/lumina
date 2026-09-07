@@ -1,13 +1,13 @@
 /**
  * Test Data Factories
- * 
+ *
  * Provides factory functions to create properly typed test data objects
  * with all required properties for Prisma models.
- * 
+ *
  * Usage:
  * ```typescript
  * import { createTestAppointment, createTestClient } from '@/__tests__/utils/test-data-factories';
- * 
+ *
  * const appointment = createTestAppointment({ status: 'CONFIRMED' });
  * const client = createTestClient({ email: 'custom@example.com' });
  * ```
@@ -153,7 +153,7 @@ export function createTestAppointment(overrides: Partial<any> = {}) {
   const client = createTestClient();
   const staff = createTestStaff();
   const service = createTestAppointmentService();
-  
+
   return {
     id: 'test-appointment-id',
     businessId: 'test-business-id',
@@ -281,7 +281,10 @@ export function createTestSession(overrides: Partial<any> = {}) {
 /**
  * Create multiple test objects
  */
-export function createTestAppointments(count: number, overrides: Partial<any> = {}) {
+export function createTestAppointments(
+  count: number,
+  overrides: Partial<any> = {}
+) {
   return Array.from({ length: count }, (_, i) =>
     createTestAppointment({ id: `test-appointment-${i}`, ...overrides })
   );
@@ -293,13 +296,19 @@ export function createTestClients(count: number, overrides: Partial<any> = {}) {
   );
 }
 
-export function createTestStaffMembers(count: number, overrides: Partial<any> = {}) {
+export function createTestStaffMembers(
+  count: number,
+  overrides: Partial<any> = {}
+) {
   return Array.from({ length: count }, (_, i) =>
     createTestStaff({ id: `test-staff-${i}`, ...overrides })
   );
 }
 
-export function createTestServices(count: number, overrides: Partial<any> = {}) {
+export function createTestServices(
+  count: number,
+  overrides: Partial<any> = {}
+) {
   return Array.from({ length: count }, (_, i) =>
     createTestService({ id: `test-service-${i}`, ...overrides })
   );
@@ -310,7 +319,7 @@ export function createTestServices(count: number, overrides: Partial<any> = {}) 
  */
 export function createTestDashboardAppointment(overrides: Partial<any> = {}) {
   const baseAppointment = createTestAppointment();
-  
+
   return {
     id: baseAppointment.id,
     businessId: baseAppointment.businessId,
@@ -376,21 +385,30 @@ export function createTestStaffMember(overrides: Partial<any> = {}) {
 /**
  * Create multiple test dashboard appointments
  */
-export function createTestDashboardAppointments(count: number, overrides: Partial<any> = {}) {
+export function createTestDashboardAppointments(
+  count: number,
+  overrides: Partial<any> = {}
+) {
   return Array.from({ length: count }, (_, i) =>
-    createTestDashboardAppointment({ id: `test-appointment-${i}`, ...overrides })
+    createTestDashboardAppointment({
+      id: `test-appointment-${i}`,
+      ...overrides,
+    })
   );
 }
 
 /**
  * Create multiple test staff members
  */
-export function createTestStaffMembersList(count: number, overrides: Partial<any> = {}) {
+export function createTestStaffMembersList(
+  count: number,
+  overrides: Partial<any> = {}
+) {
   return Array.from({ length: count }, (_, i) =>
-    createTestStaffMember({ 
+    createTestStaffMember({
       id: `test-staff-member-${i}`,
       displayName: `Staff Member ${i}`,
-      ...overrides 
+      ...overrides,
     })
   );
 }

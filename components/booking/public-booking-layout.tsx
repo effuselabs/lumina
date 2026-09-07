@@ -120,8 +120,7 @@ export function PublicBookingLayout({
         <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="text-center text-sm text-gray-600">
             <p>
-              © {new Date().getFullYear()} {business.name}. All rights
-              reserved.
+              © {new Date().getFullYear()} {business.name}. All rights reserved.
             </p>
             <p className="mt-1">
               Powered by{' '}

@@ -8,7 +8,16 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', hover = 'none', animated = false, ...props }, ref) => (
+  (
+    {
+      className,
+      variant = 'default',
+      hover = 'none',
+      animated = false,
+      ...props
+    },
+    ref
+  ) => (
     <div
       ref={ref}
       className={cn(
@@ -97,6 +106,10 @@ const CardFooter = React.forwardRef<
 CardFooter.displayName = 'CardFooter';
 
 export {
-  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 };
-

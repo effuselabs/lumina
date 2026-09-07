@@ -139,10 +139,10 @@ export function SignUpForm() {
           <CheckCircle className="h-16 w-16 text-green-500" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-neutral-off-black">
+          <h1 className="text-neutral-off-black text-2xl font-bold">
             Account Created!
           </h1>
-          <p className="mt-2 text-neutral-medium-grey">
+          <p className="text-neutral-medium-grey mt-2">
             Welcome to Lumina! Signing you in...
           </p>
         </div>
@@ -156,10 +156,10 @@ export function SignUpForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-neutral-off-black">
+        <h1 className="text-neutral-off-black text-2xl font-bold">
           Create your account
         </h1>
-        <p className="mt-2 text-neutral-medium-grey">
+        <p className="text-neutral-medium-grey mt-2">
           Get started with Lumina today
         </p>
       </div>
@@ -251,7 +251,7 @@ export function SignUpForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-medium-grey hover:text-neutral-off-black"
+              className="text-neutral-medium-grey hover:text-neutral-off-black absolute right-3 top-1/2 -translate-y-1/2"
               disabled={isLoading}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -260,7 +260,7 @@ export function SignUpForm() {
           {errors.password && (
             <p className="text-sm text-red-500">{errors.password}</p>
           )}
-          <p className="text-xs text-neutral-medium-grey">
+          <p className="text-neutral-medium-grey text-xs">
             Password must be at least 8 characters long
           </p>
         </div>
@@ -283,10 +283,10 @@ export function SignUpForm() {
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-neutral-light-grey" />
+          <span className="border-neutral-light-grey w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-neutral-medium-grey">
+          <span className="text-neutral-medium-grey bg-white px-2">
             Or continue with
           </span>
         </div>

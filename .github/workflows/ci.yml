@@ -53,6 +53,13 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Formatting is a gate now that the repository is actually formatted.
+      # It was not before: 772 files were unformatted, so `lint-staged` rewrote
+      # any file a commit happened to touch, and a one-line change arrived as a
+      # 1,200-line diff. Enforcing it is what stops that returning.
+      - name: Formatting
+        run: npm run format:check
+
       - name: Unit tests
         run: npm run test:ci
 

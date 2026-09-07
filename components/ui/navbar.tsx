@@ -15,7 +15,7 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     <nav
       ref={ref}
       className={cn(
-        'sticky top-0 z-50 w-full border-b border-neutral-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60',
+        'border-neutral-border sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60',
         className
       )}
       {...props}
@@ -29,7 +29,7 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-lumina-radiant">
                   <span className="text-sm font-bold text-white">L</span>
                 </div>
-                <span className="text-xl font-bold text-neutral-off-black">
+                <span className="text-neutral-off-black text-xl font-bold">
                   Lumina
                 </span>
               </Link>
@@ -66,19 +66,19 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       <aside
         ref={ref}
         className={cn(
-          'fixed left-0 top-0 z-50 h-full w-64 transform border-r border-neutral-border bg-white transition-transform duration-300 ease-in-out lg:translate-x-0',
+          'border-neutral-border fixed left-0 top-0 z-50 h-full w-64 transform border-r bg-white transition-transform duration-300 ease-in-out lg:translate-x-0',
           isOpen ? 'translate-x-0' : '-translate-x-full',
           className
         )}
         {...props}
       >
         {/* Sidebar Header */}
-        <div className="flex h-16 items-center justify-between border-b border-neutral-border px-6">
+        <div className="border-neutral-border flex h-16 items-center justify-between border-b px-6">
           <Link href="/" className="flex items-center space-x-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-lumina-radiant">
               <span className="text-sm font-bold text-white">L</span>
             </div>
-            <span className="text-xl font-bold text-neutral-off-black">
+            <span className="text-neutral-off-black text-xl font-bold">
               Lumina
             </span>
           </Link>
@@ -152,7 +152,7 @@ const BreadcrumbList = React.forwardRef<
   <ol
     ref={ref}
     className={cn(
-      'flex flex-wrap items-center gap-1.5 break-words text-sm text-neutral-medium-grey sm:gap-2.5',
+      'text-neutral-medium-grey flex flex-wrap items-center gap-1.5 break-words text-sm sm:gap-2.5',
       className
     )}
     {...props}

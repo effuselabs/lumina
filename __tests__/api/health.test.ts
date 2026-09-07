@@ -13,7 +13,7 @@ describe('/api/health', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Mock successful database connection by default
-    mockPrisma.$queryRaw.mockResolvedValue([{ "?column?": 1 }]);
+    mockPrisma.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
   });
 
   describe('GET /api/health', () => {
@@ -51,7 +51,9 @@ describe('/api/health', () => {
     it('returns proper cache headers', async () => {
       const response = await GET();
 
-      expect(response.headers.get('Cache-Control')).toBe('no-cache, no-store, must-revalidate');
+      expect(response.headers.get('Cache-Control')).toBe(
+        'no-cache, no-store, must-revalidate'
+      );
       expect(response.headers.get('Pragma')).toBe('no-cache');
       expect(response.headers.get('Expires')).toBe('0');
     });
@@ -62,7 +64,9 @@ describe('/api/health', () => {
       const response = await HEAD();
 
       expect(response.status).toBe(200);
-      expect(mockPrisma.$queryRaw).toHaveBeenCalledWith(expect.arrayContaining([expect.stringContaining('SELECT 1')]));
+      expect(mockPrisma.$queryRaw).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.stringContaining('SELECT 1')])
+      );
     });
 
     it('returns 503 when database is unhealthy', async () => {

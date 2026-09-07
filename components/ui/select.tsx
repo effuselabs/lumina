@@ -29,10 +29,10 @@ const SelectTrigger = React.forwardRef<
       'motion-reduce:transition-none',
       '[&>span]:line-clamp-1',
       error
-        ? 'border-red-500 dark:border-red-400 hover:border-red-600 dark:hover:border-red-300 focus:border-red-500 focus:ring-red-500 dark:focus:border-red-400 dark:focus:ring-red-400'
+        ? 'border-red-500 hover:border-red-600 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:hover:border-red-300 dark:focus:border-red-400 dark:focus:ring-red-400'
         : success
-          ? 'border-green-500 dark:border-green-400 hover:border-green-600 dark:hover:border-green-300 focus:border-green-500 focus:ring-green-500 dark:focus:border-green-400 dark:focus:ring-green-400'
-          : 'border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 focus:border-lumina-gold focus:ring-lumina-gold',
+          ? 'border-green-500 hover:border-green-600 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:hover:border-green-300 dark:focus:border-green-400 dark:focus:ring-green-400'
+          : 'border-neutral-300 hover:border-neutral-400 focus:border-lumina-gold focus:ring-lumina-gold dark:border-neutral-700 dark:hover:border-neutral-600',
       className
     )}
     {...props}
@@ -99,7 +99,7 @@ const SelectContent = React.forwardRef<
         'data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         'motion-reduce:animate-none',
         position === 'popper' &&
-        'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
         className
       )}
       position={position}
@@ -110,7 +110,7 @@ const SelectContent = React.forwardRef<
         className={cn(
           'p-1',
           position === 'popper' &&
-          'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
+            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
         )}
       >
         {children}
@@ -143,8 +143,8 @@ const SelectItem = React.forwardRef<
       'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors duration-150',
       'text-neutral-900 dark:text-neutral-100',
       'hover:bg-neutral-100 dark:hover:bg-neutral-800',
-      'focus:bg-lumina-gold/10 focus:text-lumina-gold dark:focus:bg-lumina-gold/20',
-      'data-[state=checked]:bg-lumina-gold/10 data-[state=checked]:text-lumina-gold dark:data-[state=checked]:bg-lumina-gold/20',
+      'focus:bg-lumina-gold/10 dark:focus:bg-lumina-gold/20 focus:text-lumina-gold',
+      'data-[state=checked]:bg-lumina-gold/10 dark:data-[state=checked]:bg-lumina-gold/20 data-[state=checked]:text-lumina-gold',
       'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       'motion-reduce:transition-none',
       className
@@ -175,6 +175,14 @@ const SelectSeparator = React.forwardRef<
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 export {
-  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
 };
-

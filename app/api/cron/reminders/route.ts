@@ -1,9 +1,9 @@
 /**
  * Reminder Processing Cron Job
- * 
+ *
  * API endpoint to be called by a cron service (e.g., Vercel Cron, GitHub Actions)
  * Runs every 15 minutes to process appointment reminders.
- * 
+ *
  * Security: Protected by CRON_SECRET environment variable
  */
 
@@ -12,7 +12,7 @@ import { reminderScheduler } from '@/lib/email/reminder-scheduler';
 
 /**
  * POST /api/cron/reminders
- * 
+ *
  * Processes appointment reminders for all businesses
  * Should be called every 15 minutes by a cron service
  */
@@ -34,10 +34,7 @@ export async function POST(request: NextRequest) {
       console.warn('[Cron:Reminders] Unauthorized cron job attempt', {
         hasAuthHeader: !!authHeader,
       });
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     console.log('[Cron:Reminders] Starting reminder processing');
@@ -59,7 +56,8 @@ export async function POST(request: NextRequest) {
       success: true,
       reminders24hScheduled: result.reminders24hScheduled,
       reminders2hScheduled: result.reminders2hScheduled,
-      totalScheduled: result.reminders24hScheduled + result.reminders2hScheduled,
+      totalScheduled:
+        result.reminders24hScheduled + result.reminders2hScheduled,
       errors: result.errors,
       duration,
     });
@@ -81,7 +79,7 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET /api/cron/reminders
- * 
+ *
  * Health check endpoint
  */
 export async function GET() {

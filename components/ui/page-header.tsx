@@ -13,7 +13,8 @@ interface PageHeaderProps {
     onClick?: () => void;
     href?: string;
     icon?: LucideIcon;
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
+    variant?:
+      'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
     primary?: boolean;
     disabled?: boolean;
   }>;
@@ -86,7 +87,7 @@ export function PageHeader({
               <li key={index} className="flex items-center">
                 {index > 0 && (
                   <ChevronRight
-                    className="mx-2 h-4 w-4 text-color-foreground-muted"
+                    className="text-color-foreground-muted mx-2 h-4 w-4"
                     aria-hidden="true"
                   />
                 )}
@@ -112,19 +113,11 @@ export function PageHeader({
       <div className="page-header__content">
         <div className="page-header__text">
           <div className="page-header__title-group">
-            <h1 className="page-header__title">
-              {title}
-            </h1>
-            {subtitle && (
-              <p className="page-header__subtitle">
-                {subtitle}
-              </p>
-            )}
+            <h1 className="page-header__title">{title}</h1>
+            {subtitle && <p className="page-header__subtitle">{subtitle}</p>}
           </div>
           {description && (
-            <p className="page-header__description">
-              {description}
-            </p>
+            <p className="page-header__description">{description}</p>
           )}
         </div>
 
@@ -138,7 +131,9 @@ export function PageHeader({
             {actions.map((action, index) => {
               const Icon = action.icon;
               const buttonProps = {
-                variant: action.primary ? 'primary' : (action.variant || 'outline'),
+                variant: action.primary
+                  ? 'primary'
+                  : action.variant || 'outline',
                 onClick: action.onClick,
                 disabled: action.disabled,
                 className: cn(
@@ -146,7 +141,9 @@ export function PageHeader({
                   action.primary && 'page-header__action-button--primary'
                 ),
                 'aria-label': action.label,
-                'aria-describedby': action.primary ? `${action.label.toLowerCase().replace(/\s+/g, '-')}-primary-action` : undefined,
+                'aria-describedby': action.primary
+                  ? `${action.label.toLowerCase().replace(/\s+/g, '-')}-primary-action`
+                  : undefined,
               };
 
               const content = (
@@ -181,11 +178,7 @@ export function PageHeader({
       </div>
 
       {/* Additional Content */}
-      {children && (
-        <div className="page-header__children">
-          {children}
-        </div>
-      )}
+      {children && <div className="page-header__children">{children}</div>}
     </div>
   );
 }

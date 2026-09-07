@@ -8,7 +8,16 @@ const inter = Inter({
   display: 'swap', // Prevent layout shifts
   variable: '--font-inter',
   preload: true,
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  fallback: [
+    'system-ui',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    'Arial',
+    'sans-serif',
+  ],
   // Enable font features for better rendering
   adjustFontFallback: true,
 });
@@ -78,13 +87,15 @@ export default function RootLayout({
       <body className={`${inter.className} font-sans antialiased`}>
         <a
           href="#main-content"
-          className="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           Skip to main content
         </a>
         <Providers>
           <div id="root" className="min-h-screen">
-            <main id="main-content" className="component-container">{children}</main>
+            <main id="main-content" className="component-container">
+              {children}
+            </main>
           </div>
         </Providers>
       </body>

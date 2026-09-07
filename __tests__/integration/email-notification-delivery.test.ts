@@ -1,12 +1,12 @@
 /**
  * Integration Tests for Email Notification Delivery
- * 
+ *
  * Tests end-to-end email delivery flows including:
  * - Booking confirmation flow
  * - Reminder scheduling and delivery
  * - Multi-tenant data isolation
  * - Provider integration
- * 
+ *
  * Requirements: All requirements
  */
 
@@ -115,9 +115,15 @@ describe('Email Notification Delivery Integration', () => {
     }
 
     // Setup default mocks
-    (mockPrisma.business.findUnique as jest.Mock).mockResolvedValue(mockBusiness);
-    (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(mockAppointment);
-    (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(null);
+    (mockPrisma.business.findUnique as jest.Mock).mockResolvedValue(
+      mockBusiness
+    );
+    (mockPrisma.appointment.findUnique as jest.Mock).mockResolvedValue(
+      mockAppointment
+    );
+    (mockPrisma.emailPreference.findUnique as jest.Mock).mockResolvedValue(
+      null
+    );
     (mockPrisma.emailQueue.create as jest.Mock).mockResolvedValue({
       id: 'queue-123',
       businessId: mockBusinessId,
@@ -255,7 +261,9 @@ describe('Email Notification Delivery Integration', () => {
         metadata: {},
       };
 
-      (mockPrisma.emailQueue.findFirst as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.findFirst as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
       (mockPrisma.emailQueue.update as jest.Mock).mockResolvedValue({
         ...mockQueueEntry,
         status: 'processing',
@@ -287,7 +295,9 @@ describe('Email Notification Delivery Integration', () => {
         createdAt: new Date(),
       };
 
-      (mockPrisma.emailQueue.findUnique as jest.Mock).mockResolvedValue(mockQueueEntry);
+      (mockPrisma.emailQueue.findUnique as jest.Mock).mockResolvedValue(
+        mockQueueEntry
+      );
       (mockPrisma.emailQueue.update as jest.Mock).mockResolvedValue({
         ...mockQueueEntry,
         status: 'pending',
@@ -401,7 +411,9 @@ describe('Email Notification Delivery Integration', () => {
         createdAt: new Date(),
       };
 
-      await expect(queueManager.enqueue(mockEmail)).rejects.toThrow('Queue is full');
+      await expect(queueManager.enqueue(mockEmail)).rejects.toThrow(
+        'Queue is full'
+      );
     });
   });
 });

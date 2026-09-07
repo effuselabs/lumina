@@ -1,6 +1,6 @@
 /**
  * Resend Email Provider Implementation
- * 
+ *
  * Implements the EmailProvider interface using Resend as the email service.
  * Includes error handling, delivery tracking, and health checks.
  */
@@ -35,7 +35,7 @@ export class ResendEmailProvider extends BaseEmailProvider {
 
   constructor(config: ResendProviderConfig) {
     super('Resend');
-    
+
     if (!config.apiKey) {
       throw new EmailProviderError(
         'Resend API key is required',
@@ -88,7 +88,8 @@ export class ResendEmailProvider extends BaseEmailProvider {
       }
 
       // Extract message ID from successful response
-      const messageId = 'data' in response && response.data ? response.data.id : undefined;
+      const messageId =
+        'data' in response && response.data ? response.data.id : undefined;
 
       return {
         success: true,
@@ -215,8 +216,10 @@ export class ResendEmailProvider extends BaseEmailProvider {
    */
   private isRateLimitError(error: unknown): boolean {
     if (error instanceof Error) {
-      return error.message.toLowerCase().includes('rate limit') ||
-             error.message.toLowerCase().includes('too many requests');
+      return (
+        error.message.toLowerCase().includes('rate limit') ||
+        error.message.toLowerCase().includes('too many requests')
+      );
     }
     return false;
   }
@@ -226,9 +229,11 @@ export class ResendEmailProvider extends BaseEmailProvider {
    */
   private isAuthenticationError(error: unknown): boolean {
     if (error instanceof Error) {
-      return error.message.toLowerCase().includes('unauthorized') ||
-             error.message.toLowerCase().includes('invalid api key') ||
-             error.message.toLowerCase().includes('authentication');
+      return (
+        error.message.toLowerCase().includes('unauthorized') ||
+        error.message.toLowerCase().includes('invalid api key') ||
+        error.message.toLowerCase().includes('authentication')
+      );
     }
     return false;
   }

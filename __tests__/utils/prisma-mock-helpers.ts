@@ -1,16 +1,16 @@
 /**
  * Prisma Mock Helpers
- * 
+ *
  * Provides properly typed mock utilities for Prisma client methods in tests.
  * Resolves TypeScript errors with mockResolvedValue/mockRejectedValue on Prisma methods.
- * 
+ *
  * Usage:
  * ```typescript
  * import { asMock, mockFindMany } from '@/__tests__/utils/prisma-mock-helpers';
- * 
+ *
  * // Option 1: Use helper functions
  * mockFindMany(mockPrisma.user.findMany, [{ id: '1', name: 'Test' }]);
- * 
+ *
  * // Option 2: Cast to jest.Mock
  * asMock(mockPrisma.user.findMany).mockResolvedValue([{ id: '1', name: 'Test' }]);
  * ```
@@ -35,120 +35,84 @@ export type MockPrismaModel<T> = {
 /**
  * Type-safe mock for Prisma findMany operations
  */
-export function mockFindMany<T>(
-  method: any,
-  data: T[]
-): void {
+export function mockFindMany<T>(method: any, data: T[]): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma findUnique operations
  */
-export function mockFindUnique<T>(
-  method: any,
-  data: T | null
-): void {
+export function mockFindUnique<T>(method: any, data: T | null): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma findFirst operations
  */
-export function mockFindFirst<T>(
-  method: any,
-  data: T | null
-): void {
+export function mockFindFirst<T>(method: any, data: T | null): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma create operations
  */
-export function mockCreate<T>(
-  method: any,
-  data: T
-): void {
+export function mockCreate<T>(method: any, data: T): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma update operations
  */
-export function mockUpdate<T>(
-  method: any,
-  data: T
-): void {
+export function mockUpdate<T>(method: any, data: T): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma delete operations
  */
-export function mockDelete<T>(
-  method: any,
-  data: T
-): void {
+export function mockDelete<T>(method: any, data: T): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma upsert operations
  */
-export function mockUpsert<T>(
-  method: any,
-  data: T
-): void {
+export function mockUpsert<T>(method: any, data: T): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma count operations
  */
-export function mockCount(
-  method: any,
-  count: number
-): void {
+export function mockCount(method: any, count: number): void {
   (method as jest.Mock).mockResolvedValue(count);
 }
 
 /**
  * Type-safe mock for rejected promises
  */
-export function mockRejected(
-  method: any,
-  error: Error
-): void {
+export function mockRejected(method: any, error: Error): void {
   (method as jest.Mock).mockRejectedValue(error);
 }
 
 /**
  * Type-safe mock for Prisma aggregate operations
  */
-export function mockAggregate<T>(
-  method: any,
-  data: T
-): void {
+export function mockAggregate<T>(method: any, data: T): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Type-safe mock for Prisma groupBy operations
  */
-export function mockGroupBy<T>(
-  method: any,
-  data: T[]
-): void {
+export function mockGroupBy<T>(method: any, data: T[]): void {
   (method as jest.Mock).mockResolvedValue(data);
 }
 
 /**
  * Helper to create a mock implementation that can be chained
  */
-export function mockChainable<T>(
-  method: any,
-  data: T
-): any {
+export function mockChainable<T>(method: any, data: T): any {
   const mock = jest.fn().mockReturnValue({
     ...data,
     then: (resolve: (value: T) => void) => {
@@ -171,60 +135,42 @@ export function asMock<T = any>(method: any): jest.Mock<T> {
 /**
  * Type-safe mock for one-time resolved value (mockResolvedValueOnce)
  */
-export function mockFindManyOnce<T>(
-  method: any,
-  data: T[]
-): void {
+export function mockFindManyOnce<T>(method: any, data: T[]): void {
   (method as jest.Mock).mockResolvedValueOnce(data);
 }
 
 /**
  * Type-safe mock for one-time findUnique
  */
-export function mockFindUniqueOnce<T>(
-  method: any,
-  data: T | null
-): void {
+export function mockFindUniqueOnce<T>(method: any, data: T | null): void {
   (method as jest.Mock).mockResolvedValueOnce(data);
 }
 
 /**
  * Type-safe mock for one-time findFirst
  */
-export function mockFindFirstOnce<T>(
-  method: any,
-  data: T | null
-): void {
+export function mockFindFirstOnce<T>(method: any, data: T | null): void {
   (method as jest.Mock).mockResolvedValueOnce(data);
 }
 
 /**
  * Type-safe mock for one-time create
  */
-export function mockCreateOnce<T>(
-  method: any,
-  data: T
-): void {
+export function mockCreateOnce<T>(method: any, data: T): void {
   (method as jest.Mock).mockResolvedValueOnce(data);
 }
 
 /**
  * Type-safe mock for one-time update
  */
-export function mockUpdateOnce<T>(
-  method: any,
-  data: T
-): void {
+export function mockUpdateOnce<T>(method: any, data: T): void {
   (method as jest.Mock).mockResolvedValueOnce(data);
 }
 
 /**
  * Type-safe mock for one-time rejected promise
  */
-export function mockRejectedOnce(
-  method: any,
-  error: Error
-): void {
+export function mockRejectedOnce(method: any, error: Error): void {
   (method as jest.Mock).mockRejectedValueOnce(error);
 }
 

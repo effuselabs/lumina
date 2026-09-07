@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         hasConflicts: false,
         conflictCount: 0,
         conflicts: [],
-        message: 'No staff specified - general availability check passed'
+        message: 'No staff specified - general availability check passed',
       });
     }
 
@@ -293,7 +293,9 @@ export async function POST(request: NextRequest) {
             endTime: conflict.details.conflictingAppointment?.endTime,
           },
           clientName: conflict.details.conflictingAppointment?.clientName,
-          serviceName: conflict.details.conflictingAppointment?.services?.[0] || 'Unknown Service',
+          serviceName:
+            conflict.details.conflictingAppointment?.services?.[0] ||
+            'Unknown Service',
         })),
       },
 

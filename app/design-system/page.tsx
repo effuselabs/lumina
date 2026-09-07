@@ -7,13 +7,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 
 import { HeroBackground } from '@/components/ui/hero-background';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
 
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -22,7 +28,16 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 
 import { cn } from '@/lib/utils';
-import { AlertCircle, DollarSign, Info, Loader2, Moon, Sun, TrendingUp, Users } from 'lucide-react';
+import {
+  AlertCircle,
+  DollarSign,
+  Info,
+  Loader2,
+  Moon,
+  Sun,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { TestimonialCard } from '../../components/ui/testimonial-card';
 
@@ -35,10 +50,10 @@ function ThemeToggle() {
       variant="outline"
       size="sm"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="h-9 w-9 p-0 border-2 border-foreground/20 hover:border-foreground/40 hover:bg-foreground/5"
+      className="border-foreground/20 hover:border-foreground/40 hover:bg-foreground/5 h-9 w-9 border-2 p-0"
     >
-      <Sun className="h-4 w-4 text-foreground rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 text-foreground rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className="h-4 w-4 rotate-0 scale-100 text-foreground transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 text-foreground transition-all dark:rotate-0 dark:scale-100" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
@@ -54,7 +69,14 @@ interface ColorSwatchProps {
   contrast?: string;
 }
 
-function ColorSwatch({ name, value, className, description, usage, contrast }: ColorSwatchProps) {
+function ColorSwatch({
+  name,
+  value,
+  className,
+  description,
+  usage,
+  contrast,
+}: ColorSwatchProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -71,7 +93,10 @@ function ColorSwatch({ name, value, className, description, usage, contrast }: C
     <Card className="group relative overflow-hidden transition-all duration-200 hover:shadow-md">
       {/* Color Preview */}
       <div
-        className={cn('h-24 w-full cursor-pointer transition-all duration-200 group-hover:h-28', className)}
+        className={cn(
+          'h-24 w-full cursor-pointer transition-all duration-200 group-hover:h-28',
+          className
+        )}
         onClick={handleCopy}
         role="button"
         tabIndex={0}
@@ -91,7 +116,7 @@ function ColorSwatch({ name, value, className, description, usage, contrast }: C
           <h4 className="font-semibold text-card-foreground">{name}</h4>
           <button
             onClick={handleCopy}
-            className="rounded px-2 py-1 text-xs font-mono text-muted-foreground transition-colors hover:bg-muted hover:text-card-foreground"
+            className="rounded px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-card-foreground"
             aria-label={`Copy ${name} color value`}
           >
             {copied ? 'Copied!' : value}
@@ -111,7 +136,9 @@ function ColorSwatch({ name, value, className, description, usage, contrast }: C
 function DesignSystemContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [_selectedDate, _setSelectedDate] = useState<Date | undefined>(new Date());
+  const [_selectedDate, _setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
 
   // Prevent hydration issues by ensuring client-side rendering
   React.useEffect(() => {
@@ -136,8 +163,9 @@ function DesignSystemContent() {
             <h1 className="text-4xl font-bold text-foreground">
               Lumina Design System
             </h1>
-            <p className="text-lg text-muted-foreground mt-2">
-              Comprehensive component library with WCAG AAA accessibility compliance
+            <p className="mt-2 text-lg text-muted-foreground">
+              Comprehensive component library with WCAG AAA accessibility
+              compliance
             </p>
           </div>
           <ThemeToggle />
@@ -145,10 +173,10 @@ function DesignSystemContent() {
 
         {/* Brand Colors Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Brand Colors
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <ColorSwatch
               name="Lumina Gold"
               value="#FFD25A"
@@ -178,10 +206,10 @@ function DesignSystemContent() {
 
         {/* Tertiary Brand Colors Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Tertiary Brand Colors
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <ColorSwatch
               name="Clarity Blue"
               value="#89CFF0"
@@ -203,10 +231,10 @@ function DesignSystemContent() {
 
         {/* Complementary Colors Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Complementary Colors
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <ColorSwatch
               name="Sage Green"
               value="#87A96B"
@@ -244,10 +272,10 @@ function DesignSystemContent() {
 
         {/* Semantic Colors Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Semantic Colors
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <ColorSwatch
               name="Success Green"
               value="#16A34A"
@@ -285,7 +313,7 @@ function DesignSystemContent() {
 
         {/* Typography Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Typography
           </h2>
           <Card>
@@ -301,49 +329,65 @@ function DesignSystemContent() {
                   <h1 className="text-4xl font-bold text-card-foreground">
                     Heading 1 - 36px Bold
                   </h1>
-                  <p className="text-sm text-muted-foreground">Used for page titles and main headings</p>
+                  <p className="text-sm text-muted-foreground">
+                    Used for page titles and main headings
+                  </p>
                 </div>
                 <div>
                   <h2 className="text-3xl font-semibold text-card-foreground">
                     Heading 2 - 30px Semibold
                   </h2>
-                  <p className="text-sm text-muted-foreground">Used for section headings</p>
+                  <p className="text-sm text-muted-foreground">
+                    Used for section headings
+                  </p>
                 </div>
                 <div>
                   <h3 className="text-2xl font-semibold text-card-foreground">
                     Heading 3 - 24px Semibold
                   </h3>
-                  <p className="text-sm text-muted-foreground">Used for subsection headings</p>
+                  <p className="text-sm text-muted-foreground">
+                    Used for subsection headings
+                  </p>
                 </div>
                 <div>
                   <h4 className="text-xl font-medium text-card-foreground">
                     Heading 4 - 20px Medium
                   </h4>
-                  <p className="text-sm text-muted-foreground">Used for component titles</p>
+                  <p className="text-sm text-muted-foreground">
+                    Used for component titles
+                  </p>
                 </div>
                 <div>
                   <p className="text-lg text-card-foreground">
                     Body Large - 18px Regular
                   </p>
-                  <p className="text-sm text-muted-foreground">Used for important body text and descriptions</p>
+                  <p className="text-sm text-muted-foreground">
+                    Used for important body text and descriptions
+                  </p>
                 </div>
                 <div>
                   <p className="text-base text-card-foreground">
                     Body - 16px Regular
                   </p>
-                  <p className="text-sm text-muted-foreground">Standard body text for most content</p>
+                  <p className="text-sm text-muted-foreground">
+                    Standard body text for most content
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">
                     Body Small - 14px Regular
                   </p>
-                  <p className="text-xs text-muted-foreground">Secondary information and captions</p>
+                  <p className="text-xs text-muted-foreground">
+                    Secondary information and captions
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     Caption - 12px Uppercase
                   </p>
-                  <p className="text-xs text-muted-foreground">Labels and metadata</p>
+                  <p className="text-xs text-muted-foreground">
+                    Labels and metadata
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -352,9 +396,7 @@ function DesignSystemContent() {
 
         {/* Button Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Buttons
-          </h2>
+          <h2 className="mb-6 text-3xl font-bold text-foreground">Buttons</h2>
           <div className="space-y-8">
             {/* Button Variants */}
             <Card>
@@ -405,15 +447,23 @@ function DesignSystemContent() {
                 <div className="space-y-4">
                   <div className="flex flex-wrap gap-4">
                     <Button disabled>Disabled Button</Button>
-                    <Button variant="outline" disabled>Disabled Outline</Button>
-                    <Button variant="secondary" disabled>Disabled Secondary</Button>
+                    <Button variant="outline" disabled>
+                      Disabled Outline
+                    </Button>
+                    <Button variant="secondary" disabled>
+                      Disabled Secondary
+                    </Button>
                   </div>
                   <div className="flex flex-wrap gap-4">
                     <Button disabled>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Loading...
                     </Button>
-                    <Button variant="outline" onClick={handleLoadingDemo} disabled={isLoading}>
+                    <Button
+                      variant="outline"
+                      onClick={handleLoadingDemo}
+                      disabled={isLoading}
+                    >
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -432,10 +482,10 @@ function DesignSystemContent() {
 
         {/* Form Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Form Components
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {/* Basic Form */}
             <Card>
               <CardHeader>
@@ -447,15 +497,27 @@ function DesignSystemContent() {
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
-                  <Input id="email" type="email" placeholder="Enter your email" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" placeholder="Enter your password" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" placeholder="Enter your message" rows={3} />
+                  <Textarea
+                    id="message"
+                    placeholder="Enter your message"
+                    rows={3}
+                  />
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox id="terms" />
@@ -496,7 +558,9 @@ function DesignSystemContent() {
                     readOnly
                     className="border-error focus:border-error focus:ring-error"
                   />
-                  <p className="text-sm text-error">Please enter a valid email address</p>
+                  <p className="text-sm text-error">
+                    Please enter a valid email address
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="warning-input">Warning Input</Label>
@@ -506,7 +570,9 @@ function DesignSystemContent() {
                     readOnly
                     className="border-warning focus:border-warning focus:ring-warning"
                   />
-                  <p className="text-sm text-warning">This email domain may not receive emails</p>
+                  <p className="text-sm text-warning">
+                    This email domain may not receive emails
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -515,9 +581,7 @@ function DesignSystemContent() {
 
         {/* Badge Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Badges
-          </h2>
+          <h2 className="mb-6 text-3xl font-bold text-foreground">Badges</h2>
           <Card>
             <CardHeader>
               <CardTitle>Badge Variants</CardTitle>
@@ -546,18 +610,19 @@ function DesignSystemContent() {
 
         {/* Card Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Cards
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">Cards</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle>Basic Card</CardTitle>
-                <CardDescription>Simple card with header and content</CardDescription>
+                <CardDescription>
+                  Simple card with header and content
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  This is a basic card component with proper contrast and spacing.
+                  This is a basic card component with proper contrast and
+                  spacing.
                 </p>
               </CardContent>
               <CardFooter>
@@ -568,19 +633,24 @@ function DesignSystemContent() {
             <Card>
               <CardHeader>
                 <CardTitle>Feature Card</CardTitle>
-                <CardDescription>Card with badge and multiple actions</CardDescription>
+                <CardDescription>
+                  Card with badge and multiple actions
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <Badge variant="feature">New Feature</Badge>
                   <p className="text-muted-foreground">
-                    Cards are versatile components that can hold various types of content.
+                    Cards are versatile components that can hold various types
+                    of content.
                   </p>
                 </div>
               </CardContent>
               <CardFooter className="flex gap-2">
                 <Button size="sm">Primary</Button>
-                <Button variant="outline" size="sm">Secondary</Button>
+                <Button variant="outline" size="sm">
+                  Secondary
+                </Button>
               </CardFooter>
             </Card>
 
@@ -593,11 +663,15 @@ function DesignSystemContent() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-success"></div>
-                    <span className="text-sm text-muted-foreground">Active</span>
+                    <span className="text-sm text-muted-foreground">
+                      Active
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-warning"></div>
-                    <span className="text-sm text-muted-foreground">Pending</span>
+                    <span className="text-sm text-muted-foreground">
+                      Pending
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-error"></div>
@@ -611,10 +685,10 @@ function DesignSystemContent() {
 
         {/* Interactive Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Interactive Components
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Switches and Checkboxes</CardTitle>
@@ -655,16 +729,22 @@ function DesignSystemContent() {
                   <Label>Processing...</Label>
                   <div className="flex items-center space-x-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm text-muted-foreground">Loading data</span>
+                    <span className="text-sm text-muted-foreground">
+                      Loading data
+                    </span>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Progress Indicator</Label>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full w-3/4 transition-all duration-300"></div>
+                  <div className="h-2 w-full rounded-full bg-muted">
+                    <div className="h-2 w-3/4 rounded-full bg-primary transition-all duration-300"></div>
                   </div>
                 </div>
-                <Button onClick={handleLoadingDemo} disabled={isLoading} className="w-full">
+                <Button
+                  onClick={handleLoadingDemo}
+                  disabled={isLoading}
+                  className="w-full"
+                >
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -681,7 +761,7 @@ function DesignSystemContent() {
 
         {/* Enhanced StatCard Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Enhanced StatCard Components
           </h2>
           <div className="space-y-8">
@@ -690,18 +770,19 @@ function DesignSystemContent() {
               <CardHeader>
                 <CardTitle>Animated StatCards</CardTitle>
                 <CardDescription>
-                  StatCards with scroll-triggered animations and count-up effects
+                  StatCards with scroll-triggered animations and count-up
+                  effects
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                   <StatCard
                     title="Monthly Revenue"
                     value={45750}
                     change={{
                       value: 15.3,
                       type: 'increase',
-                      period: 'from last month'
+                      period: 'from last month',
                     }}
                     icon="dollar-sign"
                     animated={true}
@@ -714,7 +795,7 @@ function DesignSystemContent() {
                     change={{
                       value: 23.1,
                       type: 'increase',
-                      period: 'this month'
+                      period: 'this month',
                     }}
                     icon="users"
                     animated={true}
@@ -728,7 +809,7 @@ function DesignSystemContent() {
                     change={{
                       value: 5.7,
                       type: 'increase',
-                      period: 'from last week'
+                      period: 'from last week',
                     }}
                     icon="bar-chart"
                     animated={true}
@@ -742,7 +823,7 @@ function DesignSystemContent() {
                     change={{
                       value: 0.2,
                       type: 'increase',
-                      period: 'from last month'
+                      period: 'from last month',
                     }}
                     icon="star"
                     animated={true}
@@ -753,10 +834,14 @@ function DesignSystemContent() {
               <CardFooter>
                 <p className="text-sm text-muted-foreground">
                   <strong>Note:</strong> Visit the{' '}
-                  <a href="/design-system/stat-cards" className="text-primary hover:underline">
+                  <a
+                    href="/design-system/stat-cards"
+                    className="text-primary hover:underline"
+                  >
                     StatCard showcase page
                   </a>{' '}
-                  to see the full animated versions with count-up effects and scroll triggers.
+                  to see the full animated versions with count-up effects and
+                  scroll triggers.
                 </p>
               </CardFooter>
             </Card>
@@ -770,20 +855,28 @@ function DesignSystemContent() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-card-foreground">Animation Features</h4>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Scroll-triggered animations with Intersection Observer</li>
+                    <h4 className="font-semibold text-card-foreground">
+                      Animation Features
+                    </h4>
+                    <ul className="space-y-1 text-sm text-muted-foreground">
+                      <li>
+                        • Scroll-triggered animations with Intersection Observer
+                      </li>
                       <li>• Smooth count-up effects for numeric values</li>
                       <li>• Staggered animation delays for multiple cards</li>
-                      <li>• Visual progress indicators with gradient effects</li>
+                      <li>
+                        • Visual progress indicators with gradient effects
+                      </li>
                       <li>• Customizable animation timing and easing</li>
                     </ul>
                   </div>
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-card-foreground">Accessibility & Performance</h4>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <h4 className="font-semibold text-card-foreground">
+                      Accessibility & Performance
+                    </h4>
+                    <ul className="space-y-1 text-sm text-muted-foreground">
                       <li>• Respects prefers-reduced-motion setting</li>
                       <li>• GPU-accelerated animations for 60fps</li>
                       <li>• Proper ARIA labels during animations</li>
@@ -799,7 +892,7 @@ function DesignSystemContent() {
 
         {/* Accessibility Information */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Accessibility Compliance
           </h2>
           <Card>
@@ -810,27 +903,35 @@ function DesignSystemContent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">Color Contrast</h4>
+                  <h4 className="font-semibold text-card-foreground">
+                    Color Contrast
+                  </h4>
                   <p className="text-sm text-muted-foreground">
                     All text meets WCAG AAA standards with 7:1+ contrast ratios
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">Keyboard Navigation</h4>
+                  <h4 className="font-semibold text-card-foreground">
+                    Keyboard Navigation
+                  </h4>
                   <p className="text-sm text-muted-foreground">
                     All interactive elements are keyboard accessible
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">Screen Readers</h4>
+                  <h4 className="font-semibold text-card-foreground">
+                    Screen Readers
+                  </h4>
                   <p className="text-sm text-muted-foreground">
                     Proper ARIA labels and semantic HTML throughout
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">Focus Management</h4>
+                  <h4 className="font-semibold text-card-foreground">
+                    Focus Management
+                  </h4>
                   <p className="text-sm text-muted-foreground">
                     Clear focus indicators and logical tab order
                   </p>
@@ -842,7 +943,7 @@ function DesignSystemContent() {
 
         {/* Alert Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Alert Components
           </h2>
           <Card>
@@ -857,7 +958,8 @@ function DesignSystemContent() {
                 <Info className="h-4 w-4" />
                 <div className="font-medium">Information</div>
                 <AlertDescription>
-                  This is an informational alert with helpful details for the user.
+                  This is an informational alert with helpful details for the
+                  user.
                 </AlertDescription>
               </Alert>
 
@@ -874,14 +976,15 @@ function DesignSystemContent() {
 
         {/* Avatar Components */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Avatar Components
           </h2>
           <Card>
             <CardHeader>
               <CardTitle>Avatar Variants</CardTitle>
               <CardDescription>
-                User profile images with fallbacks and different sizes - essential for salon client management
+                User profile images with fallbacks and different sizes -
+                essential for salon client management
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -889,11 +992,14 @@ function DesignSystemContent() {
                 <div className="space-y-2">
                   <Label>With Image</Label>
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="Client Profile" />
+                    <AvatarImage
+                      src="https://github.com/shadcn.png"
+                      alt="Client Profile"
+                    />
                     <AvatarFallback>JD</AvatarFallback>
                   </Avatar>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Fallback Only</Label>
                   <Avatar>
@@ -919,33 +1025,31 @@ function DesignSystemContent() {
           </Card>
         </section>
 
-
-
-
-
-
-
         {/* Loading States */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-6">
+          <h2 className="mb-6 text-3xl font-bold text-foreground">
             Loading States
           </h2>
           <Card>
             <CardHeader>
               <CardTitle>Skeleton Loading</CardTitle>
               <CardDescription>
-                Placeholder content while data loads - improves perceived performance. Includes enhanced contrast examples for better visibility.
+                Placeholder content while data loads - improves perceived
+                performance. Includes enhanced contrast examples for better
+                visibility.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-3">
-                <Label className="text-sm font-medium">Text Content Loading</Label>
+                <Label className="text-sm font-medium">
+                  Text Content Loading
+                </Label>
                 <div className="space-y-2">
                   <Skeleton className="h-4 w-[250px]" />
                   <Skeleton className="h-4 w-[200px]" />
                 </div>
               </div>
-              
+
               <div className="space-y-3">
                 <Label className="text-sm font-medium">Article Loading</Label>
                 <div className="space-y-2">
@@ -954,9 +1058,11 @@ function DesignSystemContent() {
                   <Skeleton className="h-4 w-[150px]" />
                 </div>
               </div>
-              
+
               <div className="space-y-3">
-                <Label className="text-sm font-medium">Profile Card Loading</Label>
+                <Label className="text-sm font-medium">
+                  Profile Card Loading
+                </Label>
                 <div className="flex items-center space-x-4">
                   <Skeleton className="h-12 w-12 rounded-full" />
                   <div className="space-y-2">
@@ -965,7 +1071,7 @@ function DesignSystemContent() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-3">
                 <Label className="text-sm font-medium">Button Loading</Label>
                 <div className="flex gap-2">
@@ -973,12 +1079,14 @@ function DesignSystemContent() {
                   <Skeleton className="h-10 w-[80px] rounded-md" />
                 </div>
               </div>
-              
+
               <div className="space-y-3">
-                <Label className="text-sm font-medium">Enhanced Contrast (if default is too light)</Label>
+                <Label className="text-sm font-medium">
+                  Enhanced Contrast (if default is too light)
+                </Label>
                 <div className="space-y-2">
-                  <div className="h-4 w-[250px] bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
-                  <div className="h-4 w-[200px] bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                  <div className="h-4 w-[250px] animate-pulse rounded bg-gray-300 dark:bg-gray-600"></div>
+                  <div className="h-4 w-[200px] animate-pulse rounded bg-gray-300 dark:bg-gray-600"></div>
                 </div>
               </div>
             </CardContent>
@@ -996,22 +1104,25 @@ function DesignSystemContent() {
             <CardHeader>
               <CardTitle>Hero Background</CardTitle>
               <CardDescription>
-                Animated background components for hero sections with multiple variants
+                Animated background components for hero sections with multiple
+                variants
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-foreground">Gradient Mesh</h4>
-                  <div className="relative h-32 rounded-lg overflow-hidden border-2 border-border bg-background">
+                  <h4 className="font-semibold text-foreground">
+                    Gradient Mesh
+                  </h4>
+                  <div className="relative h-32 overflow-hidden rounded-lg border-2 border-border bg-background">
                     <HeroBackground
                       variant="gradient-mesh"
                       animation={true}
                       intensity="strong"
-                      className="w-full h-full opacity-100"
+                      className="h-full w-full opacity-100"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm font-semibold text-foreground bg-background/90 px-3 py-1 rounded-md border border-border shadow-sm">
+                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-sm">
                         Gradient Mesh
                       </span>
                     </div>
@@ -1019,16 +1130,18 @@ function DesignSystemContent() {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-foreground">Particle Field</h4>
-                  <div className="relative h-32 rounded-lg overflow-hidden border-2 border-border bg-background">
+                  <h4 className="font-semibold text-foreground">
+                    Particle Field
+                  </h4>
+                  <div className="relative h-32 overflow-hidden rounded-lg border-2 border-border bg-background">
                     <HeroBackground
                       variant="particle-field"
                       animation={true}
                       intensity="strong"
-                      className="w-full h-full opacity-100"
+                      className="h-full w-full opacity-100"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm font-semibold text-foreground bg-background/90 px-3 py-1 rounded-md border border-border shadow-sm">
+                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-sm">
                         Particle Field
                       </span>
                     </div>
@@ -1047,7 +1160,7 @@ function DesignSystemContent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <TestimonialCard
                   quote="Lumina has transformed how we manage our salon. The booking system is intuitive and our clients love it."
                   author="Sarah Martinez"
@@ -1078,11 +1191,12 @@ function DesignSystemContent() {
             <CardHeader>
               <CardTitle>Animated Counter</CardTitle>
               <CardDescription>
-                Statistics components with smooth count-up animations and multiple formats
+                Statistics components with smooth count-up animations and
+                multiple formats
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <AnimatedCounter
                   value={125000}
                   format="currency"
@@ -1131,10 +1245,11 @@ function DesignSystemContent() {
         </section>
 
         {/* Footer */}
-        <section className="text-center py-8">
+        <section className="py-8 text-center">
           <Separator className="mb-6" />
           <p className="text-muted-foreground">
-            Lumina Design System - Built with accessibility, performance, and developer experience in mind
+            Lumina Design System - Built with accessibility, performance, and
+            developer experience in mind
           </p>
         </section>
       </div>

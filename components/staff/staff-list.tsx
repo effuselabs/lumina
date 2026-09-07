@@ -229,7 +229,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       case 'COMMISSION':
         return 'default'; // Blue variant
       case 'CHAIR_RENTAL':
-        return 'secondary'; // Green variant  
+        return 'secondary'; // Green variant
       case 'HYBRID':
         return 'outline'; // Purple variant
       default:
@@ -263,11 +263,11 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, i) => (
-          <Card key={i} className="border-0 shadow-md animate-pulse">
+          <Card key={i} className="animate-pulse border-0 shadow-md">
             <CardHeader className="pb-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="h-14 w-14 rounded-full bg-neutral-200 dark:bg-neutral-700 ring-2 ring-neutral-100 dark:ring-neutral-800"></div>
+                  <div className="h-14 w-14 rounded-full bg-neutral-200 ring-2 ring-neutral-100 dark:bg-neutral-700 dark:ring-neutral-800"></div>
                   <div className="space-y-2">
                     <div className="h-5 w-24 rounded bg-neutral-200 dark:bg-neutral-700"></div>
                     <div className="h-4 w-20 rounded bg-neutral-200 dark:bg-neutral-700"></div>
@@ -281,19 +281,19 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                 <div className="h-6 w-20 rounded bg-neutral-200 dark:bg-neutral-700"></div>
                 <div className="h-5 w-32 rounded bg-neutral-200 dark:bg-neutral-700"></div>
               </div>
-              <div className="grid grid-cols-2 gap-6 border-t border-neutral-100 dark:border-neutral-800 pt-4">
-                <div className="text-center space-y-2">
-                  <div className="h-4 w-20 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
-                  <div className="h-8 w-12 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
-                  <div className="h-3 w-16 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+              <div className="grid grid-cols-2 gap-6 border-t border-neutral-100 pt-4 dark:border-neutral-800">
+                <div className="space-y-2 text-center">
+                  <div className="mx-auto h-4 w-20 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="mx-auto h-8 w-12 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="mx-auto h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700"></div>
                 </div>
-                <div className="text-center space-y-2">
-                  <div className="h-4 w-20 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
-                  <div className="h-8 w-12 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
-                  <div className="h-3 w-16 mx-auto rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                <div className="space-y-2 text-center">
+                  <div className="mx-auto h-4 w-20 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="mx-auto h-8 w-12 rounded bg-neutral-200 dark:bg-neutral-700"></div>
+                  <div className="mx-auto h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700"></div>
                 </div>
               </div>
-              <div className="flex items-center justify-between border-t border-neutral-100 dark:border-neutral-800 pt-4">
+              <div className="flex items-center justify-between border-t border-neutral-100 pt-4 dark:border-neutral-800">
                 <div className="h-4 w-12 rounded bg-neutral-200 dark:bg-neutral-700"></div>
                 <div className="h-6 w-16 rounded bg-neutral-200 dark:bg-neutral-700"></div>
               </div>
@@ -483,7 +483,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
               <div className="space-y-3">
                 <Badge
                   variant={getEmploymentBadgeVariant(member.employmentType)}
-                  className="px-3 py-1 text-xs uppercase tracking-wide font-medium"
+                  className="px-3 py-1 text-xs font-medium uppercase tracking-wide"
                 >
                   {member.employmentType.replace('_', ' ')}
                 </Badge>

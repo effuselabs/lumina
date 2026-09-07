@@ -170,7 +170,7 @@ export class TemplateRepository {
         },
       });
 
-      return templates.map((t) => this.mapToEmailTemplate(t));
+      return templates.map(t => this.mapToEmailTemplate(t));
     } catch (error) {
       if (error instanceof TemplateRepositoryError) {
         throw error;
@@ -199,7 +199,7 @@ export class TemplateRepository {
         },
       });
 
-      return templates.map((t) => this.mapToEmailTemplate(t));
+      return templates.map(t => this.mapToEmailTemplate(t));
     } catch (error) {
       throw new TemplateRepositoryError(
         `Failed to find default templates: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -321,7 +321,10 @@ export class TemplateRepository {
       }
 
       // Check if business already has this template type
-      const existing = await this.findByTypeAndBusiness(source.type, businessId);
+      const existing = await this.findByTypeAndBusiness(
+        source.type,
+        businessId
+      );
       if (existing && existing.businessId === businessId) {
         throw new TemplateRepositoryError(
           `Business already has a template of type ${source.type}`,
@@ -368,12 +371,12 @@ export class TemplateRepository {
 
       const stats = {
         total: templates.length,
-        active: templates.filter((t) => t.isActive).length,
-        inactive: templates.filter((t) => !t.isActive).length,
+        active: templates.filter(t => t.isActive).length,
+        inactive: templates.filter(t => !t.isActive).length,
         byType: {} as Record<string, number>,
       };
 
-      templates.forEach((template) => {
+      templates.forEach(template => {
         stats.byType[template.type] = (stats.byType[template.type] || 0) + 1;
       });
 

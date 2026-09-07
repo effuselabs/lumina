@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function SignUpPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-light-grey px-4">
+    <div className="bg-neutral-light-grey flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="rounded-lg bg-white p-8 shadow-lumina">
           <ClientOnly

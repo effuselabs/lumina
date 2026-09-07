@@ -1,6 +1,6 @@
 /**
  * Email Provider Factory
- * 
+ *
  * Factory for creating email provider instances based on configuration.
  * Supports multiple providers and testing modes.
  */
@@ -58,7 +58,9 @@ export class EmailProviderFactory {
   /**
    * Create a test provider with mock configuration
    */
-  static createTestProvider(providerType: EmailProviderType = 'resend'): EmailProvider {
+  static createTestProvider(
+    providerType: EmailProviderType = 'resend'
+  ): EmailProvider {
     const testConfig: EmailConfig = {
       provider: providerType,
       apiKey: 'test-api-key',

@@ -5,7 +5,10 @@ import { z } from 'zod';
 
 // Validation schema for business creation
 const businessSchema = z.object({
-  name: z.string().min(2, 'Business name must be at least 2 characters').max(255),
+  name: z
+    .string()
+    .min(2, 'Business name must be at least 2 characters')
+    .max(255),
   description: z.string().optional(),
   email: z.string().email('Invalid email format').optional(),
   phone: z.string().optional(),
@@ -16,7 +19,9 @@ const businessSchema = z.object({
   zipCode: z.string().optional(),
   country: z.string().default('US'),
   timezone: z.string().default('America/New_York'),
-  financialModel: z.enum(['COMMISSION', 'CHAIR_RENTAL', 'HOURLY', 'HYBRID']).default('COMMISSION'),
+  financialModel: z
+    .enum(['COMMISSION', 'CHAIR_RENTAL', 'HOURLY', 'HYBRID'])
+    .default('COMMISSION'),
   currency: z.string().default('USD'),
   bookingEnabled: z.boolean().default(true),
   onlineBooking: z.boolean().default(true),

@@ -1,6 +1,6 @@
 /**
  * Email Rate Limiter
- * 
+ *
  * Implements rate limiting per business to prevent abuse and comply with
  * email provider limits. Tracks hourly and daily send rates.
  */
@@ -72,7 +72,7 @@ export class EmailRateLimiter {
   /**
    * Check if a business can send an email
    * Returns true if within rate limits, false otherwise
-   * 
+   *
    * @param businessId - Business ID to check
    * @returns True if business can send, false otherwise
    */
@@ -93,7 +93,7 @@ export class EmailRateLimiter {
 
   /**
    * Get detailed rate limit status for a business
-   * 
+   *
    * @param businessId - Business ID to check
    * @returns Rate limit status
    */
@@ -182,7 +182,7 @@ export class EmailRateLimiter {
   /**
    * Increment rate limit counter for a business
    * Called after successfully sending an email
-   * 
+   *
    * @param businessId - Business ID to increment
    */
   async incrementRateLimit(businessId: string): Promise<void> {
@@ -205,7 +205,7 @@ export class EmailRateLimiter {
   /**
    * Check rate limit and throw error if exceeded
    * Useful for enforcing rate limits before queuing
-   * 
+   *
    * @param businessId - Business ID to check
    * @throws RateLimiterError if rate limit exceeded
    */
@@ -242,7 +242,7 @@ export class EmailRateLimiter {
   /**
    * Get rate limit statistics for all businesses
    * Useful for monitoring and alerting
-   * 
+   *
    * @returns Array of rate limit statuses
    */
   async getAllRateLimitStatuses(): Promise<RateLimitStatus[]> {
@@ -259,14 +259,17 @@ export class EmailRateLimiter {
 
       // Get rate limit status for each business
       const statuses = await Promise.all(
-        businesses.map((business) => this.getRateLimitStatus(business.id))
+        businesses.map(business => this.getRateLimitStatus(business.id))
       );
 
       return statuses;
     } catch (error) {
-      console.error('[EmailRateLimiter] Error getting all rate limit statuses', {
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[EmailRateLimiter] Error getting all rate limit statuses',
+        {
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       throw new RateLimiterError(
         'Failed to get all rate limit statuses',
@@ -279,7 +282,7 @@ export class EmailRateLimiter {
   /**
    * Get businesses that are approaching their rate limits
    * Useful for proactive monitoring and alerting
-   * 
+   *
    * @param threshold - Percentage threshold (0-1) for warning
    * @returns Array of businesses approaching limits
    */
@@ -290,16 +293,19 @@ export class EmailRateLimiter {
       const allStatuses = await this.getAllRateLimitStatuses();
 
       // Filter businesses that have used >= threshold of their limits
-      return allStatuses.filter((status) => {
+      return allStatuses.filter(status => {
         const hourlyUsage = status.emailsSentLastHour / status.hourlyLimit;
         const dailyUsage = status.emailsSentLastDay / status.dailyLimit;
         return hourlyUsage >= threshold || dailyUsage >= threshold;
       });
     } catch (error) {
-      console.error('[EmailRateLimiter] Error getting businesses approaching limits', {
-        threshold,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[EmailRateLimiter] Error getting businesses approaching limits',
+        {
+          threshold,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       throw new RateLimiterError(
         'Failed to get businesses approaching limits',
@@ -311,7 +317,7 @@ export class EmailRateLimiter {
 
   /**
    * Update rate limit configuration
-   * 
+   *
    * @param config - New rate limit configuration
    */
   updateConfig(config: RateLimitConfig): void {

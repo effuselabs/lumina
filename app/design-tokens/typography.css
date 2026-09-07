@@ -3,8 +3,12 @@
 
 :root {
   /* ===== FONT FAMILY TOKENS ===== */
-  --font-family-sans: var(--font-inter, 'Inter'), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  --font-family-sans:
+    var(--font-inter, 'Inter'), system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New',
+    monospace;
 
   /* ===== FONT SIZE SCALE ===== */
   /* Consistent scale based on 1.125 ratio (major second) */

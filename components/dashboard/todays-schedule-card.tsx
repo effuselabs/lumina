@@ -83,7 +83,7 @@ export function TodaysScheduleCard({
               variant="ghost"
               size="sm"
               asChild
-              className="h-6 w-6 p-0 hover:bg-lumina-peach/20"
+              className="hover:bg-lumina-peach/20 h-6 w-6 p-0"
             >
               <Link href={`/dashboard/${businessSlug}/appointments/new`}>
                 <Plus className="h-3 w-3" />

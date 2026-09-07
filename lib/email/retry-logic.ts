@@ -1,6 +1,6 @@
 /**
  * Email Retry Logic with Exponential Backoff
- * 
+ *
  * Implements retry logic for failed email deliveries with exponential backoff.
  * Supports configurable retry attempts and delay schedules.
  */
@@ -51,8 +51,9 @@ export function calculateRetryDelay(
   }
 
   // Calculate exponential backoff
-  const delay = config.baseDelay * Math.pow(config.backoffMultiplier, attemptNumber - 1);
-  
+  const delay =
+    config.baseDelay * Math.pow(config.backoffMultiplier, attemptNumber - 1);
+
   // Cap at maximum delay
   return Math.min(delay, config.maxDelay);
 }
@@ -84,7 +85,7 @@ export function shouldRetry(
 export function isRetryableError(error: unknown): boolean {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
-    
+
     // Network errors are retryable
     if (
       message.includes('network') ||
@@ -216,8 +217,10 @@ export async function retryWithBackoff<T>(
 
     // Calculate delay and wait
     const delay = calculateRetryDelay(attemptNumber, config);
-    console.log(`Retrying after ${delay}ms (attempt ${attemptNumber}/${config.maxAttempts})`);
-    
+    console.log(
+      `Retrying after ${delay}ms (attempt ${attemptNumber}/${config.maxAttempts})`
+    );
+
     await sleep(delay);
 
     // Retry the operation
@@ -229,7 +232,7 @@ export async function retryWithBackoff<T>(
  * Sleep utility for delays
  */
 export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
@@ -259,9 +262,13 @@ export function getRetryStatistics(metadata: RetryMetadata): {
   lastAttemptAt: Date;
 } {
   const totalAttempts = metadata.retryHistory.length;
-  const totalDelay = metadata.retryHistory.reduce((sum, attempt) => sum + attempt.delayMs, 0);
+  const totalDelay = metadata.retryHistory.reduce(
+    (sum, attempt) => sum + attempt.delayMs,
+    0
+  );
   const averageDelay = totalAttempts > 0 ? totalDelay / totalAttempts : 0;
-  const lastAttemptAt = metadata.retryHistory[totalAttempts - 1]?.attemptedAt || new Date();
+  const lastAttemptAt =
+    metadata.retryHistory[totalAttempts - 1]?.attemptedAt || new Date();
 
   return {
     totalAttempts,

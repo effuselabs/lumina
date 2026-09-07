@@ -1,6 +1,6 @@
 /**
  * Reminder Scheduling Service
- * 
+ *
  * Handles automated scheduling and queuing of appointment reminders.
  * Queries appointments that need reminders and schedules them for delivery.
  */
@@ -119,7 +119,9 @@ export class ReminderScheduler {
     const currentMinute = now.getMinutes();
     const currentTime = currentHour * 60 + currentMinute;
 
-    const [startHour, startMinute] = config.quietHoursStart.split(':').map(Number);
+    const [startHour, startMinute] = config.quietHoursStart
+      .split(':')
+      .map(Number);
     const [endHour, endMinute] = config.quietHoursEnd.split(':').map(Number);
     const startTime = startHour * 60 + startMinute;
     const endTime = endHour * 60 + endMinute;
@@ -148,7 +150,7 @@ export class ReminderScheduler {
   > {
     const now = new Date();
     const reminderTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours from now
-    
+
     // Window: 15 minutes before and after the 24-hour mark
     const windowStart = new Date(reminderTime.getTime() - 15 * 60 * 1000);
     const windowEnd = new Date(reminderTime.getTime() + 15 * 60 * 1000);
@@ -193,10 +195,13 @@ export class ReminderScheduler {
 
       return appointmentsWithoutReminder;
     } catch (error) {
-      console.error('[ReminderScheduler] Error finding appointments for 24h reminder', {
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[ReminderScheduler] Error finding appointments for 24h reminder',
+        {
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       throw new ReminderSchedulerError(
         'Failed to find appointments for 24h reminder',
@@ -223,7 +228,7 @@ export class ReminderScheduler {
   > {
     const now = new Date();
     const reminderTime = new Date(now.getTime() + 2 * 60 * 60 * 1000); // 2 hours from now
-    
+
     // Window: 15 minutes before and after the 2-hour mark
     const windowStart = new Date(reminderTime.getTime() - 15 * 60 * 1000);
     const windowEnd = new Date(reminderTime.getTime() + 15 * 60 * 1000);
@@ -275,10 +280,13 @@ export class ReminderScheduler {
 
       return appointmentsWithoutReminder;
     } catch (error) {
-      console.error('[ReminderScheduler] Error finding appointments for 2h reminder', {
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[ReminderScheduler] Error finding appointments for 2h reminder',
+        {
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       throw new ReminderSchedulerError(
         'Failed to find appointments for 2h reminder',
@@ -290,11 +298,13 @@ export class ReminderScheduler {
 
   /**
    * Schedule reminders for a specific business
-   * 
+   *
    * @param businessId - Business ID to schedule reminders for
    * @returns Result with count of scheduled reminders and any errors
    */
-  async scheduleRemindersForBusiness(businessId: string): Promise<ReminderScheduleResult> {
+  async scheduleRemindersForBusiness(
+    businessId: string
+  ): Promise<ReminderScheduleResult> {
     const result: ReminderScheduleResult = {
       success: true,
       reminders24hScheduled: 0,
@@ -318,7 +328,9 @@ export class ReminderScheduler {
       }
 
       if (!business.isActive) {
-        console.log('[ReminderScheduler] Skipping inactive business', { businessId });
+        console.log('[ReminderScheduler] Skipping inactive business', {
+          businessId,
+        });
         return result;
       }
 
@@ -327,18 +339,22 @@ export class ReminderScheduler {
 
       // Check if we're in quiet hours
       if (this.isQuietHours(config)) {
-        console.log('[ReminderScheduler] Skipping reminders during quiet hours', {
-          businessId,
-          quietHoursStart: config.quietHoursStart,
-          quietHoursEnd: config.quietHoursEnd,
-        });
+        console.log(
+          '[ReminderScheduler] Skipping reminders during quiet hours',
+          {
+            businessId,
+            quietHoursStart: config.quietHoursStart,
+            quietHoursEnd: config.quietHoursEnd,
+          }
+        );
         return result;
       }
 
       // Schedule 24-hour reminders
       if (config.enable24hReminders) {
-        const appointments24h = await this.findAppointmentsNeed24hReminder(businessId);
-        
+        const appointments24h =
+          await this.findAppointmentsNeed24hReminder(businessId);
+
         for (const appointment of appointments24h) {
           try {
             await notificationService.sendAppointmentReminder(
@@ -348,10 +364,13 @@ export class ReminderScheduler {
             );
             result.reminders24hScheduled++;
           } catch (error) {
-            console.error('[ReminderScheduler] Failed to schedule 24h reminder', {
-              appointmentId: appointment.id,
-              error: error instanceof Error ? error.message : String(error),
-            });
+            console.error(
+              '[ReminderScheduler] Failed to schedule 24h reminder',
+              {
+                appointmentId: appointment.id,
+                error: error instanceof Error ? error.message : String(error),
+              }
+            );
             result.errors.push({
               appointmentId: appointment.id,
               error: error instanceof Error ? error.message : 'Unknown error',
@@ -362,8 +381,9 @@ export class ReminderScheduler {
 
       // Schedule 2-hour reminders
       if (config.enable2hReminders) {
-        const appointments2h = await this.findAppointmentsNeed2hReminder(businessId);
-        
+        const appointments2h =
+          await this.findAppointmentsNeed2hReminder(businessId);
+
         for (const appointment of appointments2h) {
           try {
             await notificationService.sendAppointmentReminder(
@@ -373,10 +393,13 @@ export class ReminderScheduler {
             );
             result.reminders2hScheduled++;
           } catch (error) {
-            console.error('[ReminderScheduler] Failed to schedule 2h reminder', {
-              appointmentId: appointment.id,
-              error: error instanceof Error ? error.message : String(error),
-            });
+            console.error(
+              '[ReminderScheduler] Failed to schedule 2h reminder',
+              {
+                appointmentId: appointment.id,
+                error: error instanceof Error ? error.message : String(error),
+              }
+            );
             result.errors.push({
               appointmentId: appointment.id,
               error: error instanceof Error ? error.message : 'Unknown error',
@@ -394,10 +417,13 @@ export class ReminderScheduler {
 
       return result;
     } catch (error) {
-      console.error('[ReminderScheduler] Error scheduling reminders for business', {
-        businessId,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[ReminderScheduler] Error scheduling reminders for business',
+        {
+          businessId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       if (error instanceof ReminderSchedulerError) {
         throw error;
@@ -413,7 +439,7 @@ export class ReminderScheduler {
 
   /**
    * Schedule reminders for all active businesses
-   * 
+   *
    * @returns Result with count of scheduled reminders and any errors
    */
   async scheduleRemindersForAllBusinesses(): Promise<ReminderScheduleResult> {
@@ -435,38 +461,52 @@ export class ReminderScheduler {
         },
       });
 
-      console.log('[ReminderScheduler] Scheduling reminders for all businesses', {
-        businessCount: businesses.length,
-      });
+      console.log(
+        '[ReminderScheduler] Scheduling reminders for all businesses',
+        {
+          businessCount: businesses.length,
+        }
+      );
 
       // Schedule reminders for each business
       for (const business of businesses) {
         try {
-          const businessResult = await this.scheduleRemindersForBusiness(business.id);
+          const businessResult = await this.scheduleRemindersForBusiness(
+            business.id
+          );
           result.reminders24hScheduled += businessResult.reminders24hScheduled;
           result.reminders2hScheduled += businessResult.reminders2hScheduled;
           result.errors.push(...businessResult.errors);
         } catch (error) {
-          console.error('[ReminderScheduler] Error scheduling reminders for business', {
-            businessId: business.id,
-            error: error instanceof Error ? error.message : String(error),
-          });
+          console.error(
+            '[ReminderScheduler] Error scheduling reminders for business',
+            {
+              businessId: business.id,
+              error: error instanceof Error ? error.message : String(error),
+            }
+          );
           // Continue with other businesses even if one fails
         }
       }
 
-      console.log('[ReminderScheduler] Reminders scheduled for all businesses', {
-        businessCount: businesses.length,
-        reminders24h: result.reminders24hScheduled,
-        reminders2h: result.reminders2hScheduled,
-        errors: result.errors.length,
-      });
+      console.log(
+        '[ReminderScheduler] Reminders scheduled for all businesses',
+        {
+          businessCount: businesses.length,
+          reminders24h: result.reminders24hScheduled,
+          reminders2h: result.reminders2hScheduled,
+          errors: result.errors.length,
+        }
+      );
 
       return result;
     } catch (error) {
-      console.error('[ReminderScheduler] Error scheduling reminders for all businesses', {
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error(
+        '[ReminderScheduler] Error scheduling reminders for all businesses',
+        {
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       throw new ReminderSchedulerError(
         'Failed to schedule reminders for all businesses',

@@ -2,13 +2,13 @@
 
 /* Prevent zoom on input focus (iOS Safari) */
 @media screen and (max-width: 768px) {
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="number"],
-  input[type="password"],
-  input[type="date"],
-  input[type="datetime-local"],
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
+  input[type='password'],
+  input[type='date'],
+  input[type='datetime-local'],
   textarea,
   select {
     font-size: 16px !important; /* Prevents zoom on iOS */
@@ -77,7 +77,7 @@ html {
   .smooth-transition {
     transition: none !important;
   }
-  
+
   .gpu-accelerated {
     will-change: auto;
   }
@@ -88,7 +88,7 @@ html {
   .booking-button {
     border: 2px solid currentColor !important;
   }
-  
+
   .booking-card {
     border: 1px solid currentColor !important;
   }
@@ -100,7 +100,7 @@ html {
     background-color: #1a1a1a;
     color: #ffffff;
   }
-  
+
   .booking-card {
     background-color: #2a2a2a;
     border-color: #404040;
@@ -156,15 +156,15 @@ html {
   .safe-area-top {
     padding-top: max(1rem, env(safe-area-inset-top));
   }
-  
+
   .safe-area-bottom {
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
-  
+
   .safe-area-left {
     padding-left: max(1rem, env(safe-area-inset-left));
   }
-  
+
   .safe-area-right {
     padding-right: max(1rem, env(safe-area-inset-right));
   }
@@ -176,11 +176,11 @@ html {
     max-height: 80vh;
     overflow-y: auto;
   }
-  
+
   .mobile-landscape-header {
     padding: 0.5rem 1rem !important;
   }
-  
+
   .mobile-landscape-content {
     padding: 1rem !important;
   }
@@ -205,7 +205,7 @@ html {
   .data-saver-hide {
     display: none !important;
   }
-  
+
   .data-saver-simplify {
     background-image: none !important;
     box-shadow: none !important;
@@ -217,7 +217,7 @@ html {
   .no-print {
     display: none !important;
   }
-  
+
   .print-optimize {
     background: white !important;
     color: black !important;
@@ -246,7 +246,9 @@ html {
 .lazy-load {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .lazy-load.loaded {

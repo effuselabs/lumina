@@ -246,8 +246,9 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   /** Render as a child component using Radix Slot */
   asChild?: boolean;
   /** Show loading state with spinner */
@@ -264,14 +265,14 @@ export interface ButtonProps
   'aria-expanded'?: boolean;
   /** Type of popup controlled by this button */
   'aria-haspopup'?:
-  | boolean
-  | 'false'
-  | 'true'
-  | 'menu'
-  | 'listbox'
-  | 'tree'
-  | 'grid'
-  | 'dialog';
+    | boolean
+    | 'false'
+    | 'true'
+    | 'menu'
+    | 'listbox'
+    | 'tree'
+    | 'grid'
+    | 'dialog';
   /** Whether the button controls a pressed state */
   'aria-pressed'?: boolean | 'false' | 'true' | 'mixed';
   /** Whether the button is currently selected */
@@ -331,7 +332,10 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const loadingAnnouncement = loading ? 'Loading' : undefined;
 
     // Build class names with proper fallbacks
-    const animationClass = animation && animation !== 'none' ? `btn-animation-${animation.replace('hover-', '')}` : '';
+    const animationClass =
+      animation && animation !== 'none'
+        ? `btn-animation-${animation.replace('hover-', '')}`
+        : '';
     const buttonClassName = cn(
       buttonVariants({ variant, size }),
       animationClass,
@@ -348,7 +352,11 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return () => {
           performance.mark('button-render-end');
           try {
-            performance.measure('button-render', 'button-render-start', 'button-render-end');
+            performance.measure(
+              'button-render',
+              'button-render-start',
+              'button-render-end'
+            );
           } catch {
             // Ignore measurement errors
           }
@@ -383,15 +391,19 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <>
             <Spinner
-              size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : size === 'xl' ? 'xl' : 'default'}
+              size={
+                size === 'sm'
+                  ? 'sm'
+                  : size === 'lg'
+                    ? 'lg'
+                    : size === 'xl'
+                      ? 'xl'
+                      : 'default'
+              }
               className="text-current"
               aria-hidden="true"
             />
-            <span
-              className="opacity-70"
-              aria-live="polite"
-              aria-atomic="true"
-            >
+            <span className="opacity-70" aria-live="polite" aria-atomic="true">
               {children}
             </span>
             {loadingAnnouncement && (
@@ -446,4 +458,3 @@ MemoizedButton.displayName = 'MemoizedButton';
 const Button = MemoizedButton;
 
 export { Button, buttonVariants };
-

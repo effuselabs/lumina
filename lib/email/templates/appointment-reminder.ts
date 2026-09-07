@@ -19,10 +19,12 @@ export interface AppointmentReminderData {
   primaryColor?: string;
 }
 
-export const appointmentReminderHtml = (data: AppointmentReminderData): string => {
+export const appointmentReminderHtml = (
+  data: AppointmentReminderData
+): string => {
   const timeframe = data.reminderType === '24h' ? '24 hours' : '2 hours';
   const urgency = data.reminderType === '2h' ? 'soon' : 'tomorrow';
-  
+
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -225,10 +227,12 @@ export const appointmentReminderHtml = (data: AppointmentReminderData): string =
 `;
 };
 
-export const appointmentReminderText = (data: AppointmentReminderData): string => {
+export const appointmentReminderText = (
+  data: AppointmentReminderData
+): string => {
   const timeframe = data.reminderType === '24h' ? '24 hours' : '2 hours';
   const urgency = data.reminderType === '2h' ? 'soon' : 'tomorrow';
-  
+
   return `
 Appointment Reminder - Coming up ${urgency}!
 

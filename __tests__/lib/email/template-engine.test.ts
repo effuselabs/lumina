@@ -1,6 +1,6 @@
 /**
  * Unit Tests for TemplateEngine
- * 
+ *
  * Tests the email template rendering engine including:
  * - Template rendering with various data
  * - Business branding application
@@ -8,12 +8,20 @@
  * - Variable substitution
  * - HTML to plain text conversion
  * - Template validation
- * 
+ *
  * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5
  */
 
-import { TemplateEngine, TemplateRenderError, type BusinessBranding } from '@/lib/email/template-engine';
-import type { BookingConfirmationData, AppointmentReminderData, CancellationNotificationData } from '@/lib/email/templates';
+import {
+  TemplateEngine,
+  TemplateRenderError,
+  type BusinessBranding,
+} from '@/lib/email/template-engine';
+import type {
+  BookingConfirmationData,
+  AppointmentReminderData,
+  CancellationNotificationData,
+} from '@/lib/email/templates';
 
 describe('TemplateEngine', () => {
   let templateEngine: TemplateEngine;
@@ -39,7 +47,10 @@ describe('TemplateEngine', () => {
     };
 
     it('should render booking confirmation template successfully', async () => {
-      const result = await templateEngine.render('booking_confirmation', mockBookingData);
+      const result = await templateEngine.render(
+        'booking_confirmation',
+        mockBookingData
+      );
 
       expect(result).toBeDefined();
       expect(result.html).toContain('Test Salon');
@@ -59,7 +70,10 @@ describe('TemplateEngine', () => {
         rescheduleLink: 'https://example.com/reschedule/123',
       };
 
-      const result = await templateEngine.render('appointment_reminder_24h', mockReminderData);
+      const result = await templateEngine.render(
+        'appointment_reminder_24h',
+        mockReminderData
+      );
 
       expect(result).toBeDefined();
       expect(result.html).toContain('Test Salon');
@@ -76,7 +90,10 @@ describe('TemplateEngine', () => {
         rescheduleLink: 'https://example.com/reschedule/123',
       };
 
-      const result = await templateEngine.render('appointment_reminder_2h', mockReminderData);
+      const result = await templateEngine.render(
+        'appointment_reminder_2h',
+        mockReminderData
+      );
 
       expect(result).toBeDefined();
       expect(result.subject).toContain('in 2 Hours');
@@ -89,7 +106,10 @@ describe('TemplateEngine', () => {
         rebookLink: 'https://example.com/book/123',
       };
 
-      const result = await templateEngine.render('cancellation_notification', mockCancellationData);
+      const result = await templateEngine.render(
+        'cancellation_notification',
+        mockCancellationData
+      );
 
       expect(result).toBeDefined();
       expect(result.html).toContain('Test Salon');
@@ -145,7 +165,10 @@ describe('TemplateEngine', () => {
     });
 
     it('should use default values when branding not provided', async () => {
-      const result = await templateEngine.render('booking_confirmation', mockBookingData);
+      const result = await templateEngine.render(
+        'booking_confirmation',
+        mockBookingData
+      );
 
       expect(result).toBeDefined();
       expect(result.html).toBeDefined();
@@ -185,7 +208,10 @@ describe('TemplateEngine', () => {
         cancellationLink: 'https://example.com/cancel/123',
       };
 
-      const result = await templateEngine.render('booking_confirmation', mockData);
+      const result = await templateEngine.render(
+        'booking_confirmation',
+        mockData
+      );
 
       expect(result.html).toContain('John Doe');
       expect(result.html).toContain('Haircut & Styling');
@@ -230,7 +256,10 @@ describe('TemplateEngine', () => {
         cancellationLink: 'https://example.com/cancel/123',
       };
 
-      const result = await templateEngine.render('booking_confirmation', dataWithSpecialChars);
+      const result = await templateEngine.render(
+        'booking_confirmation',
+        dataWithSpecialChars
+      );
 
       // Should render successfully with special characters
       expect(result.html).toContain('Test');
@@ -293,7 +322,8 @@ describe('TemplateEngine', () => {
     });
 
     it('should convert links to text with URLs', () => {
-      const html = '<p>Visit <a href="https://example.com">our website</a> for more info.</p>';
+      const html =
+        '<p>Visit <a href="https://example.com">our website</a> for more info.</p>';
 
       const text = templateEngine.generatePlainTextFromHtml(html);
 
@@ -343,7 +373,10 @@ describe('TemplateEngine', () => {
         cancellationLink: 'https://example.com/cancel/123',
       };
 
-      const result = templateEngine.validateTemplateData('booking_confirmation', completeData);
+      const result = templateEngine.validateTemplateData(
+        'booking_confirmation',
+        completeData
+      );
 
       expect(result.valid).toBe(true);
       expect(result.missingFields).toHaveLength(0);
@@ -356,7 +389,10 @@ describe('TemplateEngine', () => {
         // Missing many required fields
       };
 
-      const result = templateEngine.validateTemplateData('booking_confirmation', incompleteData);
+      const result = templateEngine.validateTemplateData(
+        'booking_confirmation',
+        incompleteData
+      );
 
       expect(result.valid).toBe(false);
       expect(result.missingFields.length).toBeGreaterThan(0);
@@ -372,7 +408,10 @@ describe('TemplateEngine', () => {
         // Missing reminderType and other fields
       };
 
-      const result = templateEngine.validateTemplateData('appointment_reminder_24h', incompleteData);
+      const result = templateEngine.validateTemplateData(
+        'appointment_reminder_24h',
+        incompleteData
+      );
 
       expect(result.valid).toBe(false);
       expect(result.missingFields).toContain('reminderType');
@@ -387,7 +426,10 @@ describe('TemplateEngine', () => {
         // Missing rebookLink and other fields
       };
 
-      const result = templateEngine.validateTemplateData('cancellation_notification', incompleteData);
+      const result = templateEngine.validateTemplateData(
+        'cancellation_notification',
+        incompleteData
+      );
 
       expect(result.valid).toBe(false);
       expect(result.missingFields).toContain('rebookLink');
@@ -406,7 +448,10 @@ describe('TemplateEngine', () => {
         cancellationLink: 'https://example.com/cancel/123',
       };
 
-      const result = templateEngine.validateTemplateData('booking_confirmation', dataWithEmptyStrings);
+      const result = templateEngine.validateTemplateData(
+        'booking_confirmation',
+        dataWithEmptyStrings
+      );
 
       expect(result.valid).toBe(false);
       expect(result.missingFields).toContain('businessAddress');
@@ -420,7 +465,9 @@ describe('TemplateEngine', () => {
         fail('Should have thrown TemplateRenderError');
       } catch (error) {
         expect(error).toBeInstanceOf(TemplateRenderError);
-        expect((error as TemplateRenderError).message).toContain('Failed to render template');
+        expect((error as TemplateRenderError).message).toContain(
+          'Failed to render template'
+        );
       }
     });
 
@@ -446,7 +493,10 @@ describe('TemplateEngine', () => {
         viewAppointmentLink: 'https://example.com/appointments/123',
       };
 
-      const result = await templateEngine.render('staff_booking_alert', mockStaffData);
+      const result = await templateEngine.render(
+        'staff_booking_alert',
+        mockStaffData
+      );
 
       expect(result).toBeDefined();
       expect(result.html).toContain('Jane Smith');
@@ -465,7 +515,10 @@ describe('TemplateEngine', () => {
         viewScheduleLink: 'https://example.com/schedule',
       };
 
-      const result = await templateEngine.render('staff_cancellation_alert', mockStaffData);
+      const result = await templateEngine.render(
+        'staff_cancellation_alert',
+        mockStaffData
+      );
 
       expect(result).toBeDefined();
       expect(result.html).toContain('Jane Smith');
@@ -497,7 +550,10 @@ describe('TemplateEngine', () => {
         viewDashboardLink: 'https://example.com/dashboard',
       };
 
-      const result = await templateEngine.render('daily_booking_summary', mockSummaryData);
+      const result = await templateEngine.render(
+        'daily_booking_summary',
+        mockSummaryData
+      );
 
       expect(result).toBeDefined();
       expect(result.html).toContain('Jane Smith');
