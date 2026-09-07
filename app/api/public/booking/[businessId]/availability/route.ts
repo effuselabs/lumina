@@ -152,8 +152,9 @@ export async function GET(
       );
     }
 
-    // Validate business context
-    await validateBusinessForAvailability(params.businessId);
+    // Validate business context. Keep the row: its timezone is what every
+    // time in the response means, and the browser cannot guess it.
+    const business = await validateBusinessForAvailability(params.businessId);
 
     // Parse and validate query parameters
     const { searchParams } = new URL(request.url);
@@ -180,6 +181,9 @@ export async function GET(
       availableSlots: availabilityResult.slots,
       nextAvailableDate: availabilityResult.nextAvailableDate,
       requestedDate: validatedQuery.date,
+      // Slot instants are absolute; rendering them without this shows the
+      // viewer's own zone, which is how a 9-to-6 salon offered 4 AM slots.
+      timezone: business.timezone,
       totalSlotsFound: availabilityResult.slots.length,
       metadata: {
         ...availabilityResult.metadata,
