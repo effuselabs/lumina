@@ -156,6 +156,19 @@ time, after the booking loop works.
   (`timezoneId`). Both halves are needed; `timezoneId` alone moves only the
   browser while every conversion at issue happens in Node.
 
+  **What the fix actually taught.** The availability calculator and the
+  conflict engine that re-validates its output were wrong in the same
+  direction, so they agreed, and the bug hid in the agreement — fixing one and
+  not the other turned a wrong answer into no answer at all, and the public
+  endpoint returned zero slots for a day the salon was open. Both now share
+  `lib/services/business-time.ts`, which holds the only conversions between a
+  salon's wall clock and an instant. Two more silent failures surfaced the same
+  way, both fixed: `AvailabilityCache` is a Postgres table whose key had no
+  timezone, so every row computed by the old code would have kept being served
+  after deploy; and `getAvailableStaff` filtered on a relation named
+  `staffServices` where the schema declares `services`, so Prisma rejected the
+  query and the surrounding catch turned that into an empty staff list.
+
   `timezone-aware-availability.ts` is still to be deleted — dead, wrapping the
   broken calculator rather than replacing it, 13 of its 19 tests failing, and
   its `getBusinessTimeZone` a stub returning a hardcoded `'America/New_York'`.
@@ -190,6 +203,25 @@ time, after the booking loop works.
   anyone outside UTC, and had been. CI never saw it. The three-zone Playwright
   config now closes that hole for the booking path; nothing yet closes it for
   the rest of the suite.
+
+- **Railway had stopped reading `railway.json`.** The service's
+  `railwayConfigFile` was null and every setting it supplied had reverted to
+  defaults — no `healthcheckPath`, no `preDeployCommand`, `RAILPACK` instead of
+  `NIXPACKS`. So the guarantee `deploy.yml` documents ("Railway aborts the
+  release if the pre-deploy command fails, so new code can never go live
+  against an un-migrated schema") was not true. Restored to `/railway.json`
+  with its six settings on 2026-09-06.
+
+  Cause: a `railway config` run created `.railway/railway.ts` and switched the
+  service to Infrastructure-as-Code, but that file was never committed and its
+  `builder` and `preDeployCommand` are commented out. **Config as Code stops
+  working 2026-12-01** — migrating to `.railway/railway.ts` properly, which
+  needs the `railway` package as a devDependency, is Phase 7 work with a real
+  deadline.
+
+  Separately: a deploy is skipped, not failed, when CI is red — `skippedReason:
+"CI check suite failed"`. Staging silently ran week-old code. Worth knowing
+  that a red `main` is invisible from the staging URL.
 
 - **`npm run test:e2e` cannot pass — two spec files fail to load at all.**
   `cross-browser-responsive.spec.ts:21` and `public-booking-e2e.spec.ts:174`
