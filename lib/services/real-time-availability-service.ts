@@ -1,7 +1,7 @@
 /**
  * Real-time Availability Service for Public Booking Interface
  *
- * Integrates with Calendar Infrastructure (LUM-96) to provide real-time availability
+ * Integrates with Calendar Infrastructure to provide real-time availability
  * checking with conflict detection and caching for the public booking interface.
  *
  * Requirements: 1.3, 6.1, 6.2, 6.3, 6.5, 10.1
@@ -92,7 +92,7 @@ export interface SlotValidationResult {
  * Real-time Availability Service
  *
  * Provides real-time availability checking for public booking interface
- * with integration to Calendar Infrastructure (LUM-96)
+ * with integration to Calendar Infrastructure
  */
 export class RealTimeAvailabilityService {
   private static readonly SLOT_INTERVAL_MINUTES = 15;

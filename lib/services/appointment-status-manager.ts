@@ -234,7 +234,7 @@ export class AppointmentStatusManager {
       // - Email/SMS notifications
       // - Webhook triggers
       // - Analytics events
-      // - Integration with notification system (LUM-100)
+      // - Integration with notification system
     } catch (error) {
       console.error('Failed to trigger status change events:', error);
       // Don't throw error to avoid breaking the main status update flow

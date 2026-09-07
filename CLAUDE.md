@@ -27,8 +27,10 @@ npm run db:migrate && npm run db:seed
 - `components/` — `ui/` holds primitives; feature folders hold the rest.
 - `lib/services/` — domain logic (availability, conflicts, appointments).
 - `lib/repositories/` — data access.
-- `prisma/schema.prisma` — 44 models. Models under the `PARKED` marker have no
-  active code path; do not build against them without saying so.
+- `prisma/schema.prisma` — 53 models, and many have no active code path. There
+  is no marker distinguishing them, so check for a repository, service or route
+  that actually reads a model before building on it. Say so explicitly if you
+  are the first.
 - `auth.config.ts` is Edge-safe and has no providers; `auth.ts` adds the
   Node-only Credentials provider. `middleware.ts` must import `auth.config.ts`
   — importing `auth.ts` drags bcrypt and Prisma into the Edge runtime.

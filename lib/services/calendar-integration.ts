@@ -2,7 +2,7 @@
  * Calendar Infrastructure Integration Layer
  *
  * This service provides a unified interface for the Appointment Booking Engine
- * to interact with the LUM-96 Calendar Infrastructure components:
+ * to interact with the Calendar Infrastructure components:
  * - Availability Calculator
  * - Conflict Detection Engine
  * - Service Duration Validator
@@ -140,7 +140,7 @@ export interface CacheCoordinationMetrics {
  * Calendar Infrastructure Integration Service
  *
  * Provides a unified interface for appointment booking operations to interact
- * with the LUM-96 calendar infrastructure components with proper error handling
+ * with the calendar infrastructure components with proper error handling
  * and fallback mechanisms. Enhanced with appointment cache coordination.
  */
 export class CalendarIntegration {
@@ -165,7 +165,7 @@ export class CalendarIntegration {
 
   /**
    * Check availability for an appointment request
-   * Integrates with LUM-96 availability calculator
+   * Integrates with the availability calculator
    * Requirements: 4.1, 4.2, 4.3, 1.2, 1.3
    */
   static async checkAvailability(
@@ -182,7 +182,7 @@ export class CalendarIntegration {
         (request.endTime.getTime() - request.startTime.getTime()) / (1000 * 60)
       );
 
-      // Build availability query for LUM-96
+      // Build availability query for the calendar infrastructure
       const availabilityQuery: AvailabilityQuery = {
         businessId: request.businessId,
         staffId: request.staffId,
@@ -191,7 +191,7 @@ export class CalendarIntegration {
         serviceId: request.serviceIds[0], // Use first service for availability calculation
       };
 
-      // Get availability from LUM-96 calculator with retry logic
+      // Get availability from the calendar infrastructure calculator with retry logic
       const availabilityResult = await this.withRetry(
         () => AvailabilityCalculator.calculateAvailability(availabilityQuery),
         'availability calculation'
@@ -276,7 +276,7 @@ export class CalendarIntegration {
 
   /**
    * Detect conflicts for an appointment request
-   * Integrates with LUM-96 conflict detection engine
+   * Integrates with the conflict detection engine
    * Requirements: 4.1, 4.2, 4.3, 1.1, 1.5
    */
   static async detectConflicts(
@@ -286,7 +286,7 @@ export class CalendarIntegration {
       // Validate input parameters
       this.validateConflictRequest(request);
 
-      // Build appointment request for LUM-96 conflict engine
+      // Build appointment request for the calendar infrastructure conflict engine
       const appointmentRequest: AppointmentRequest = {
         businessId: request.businessId,
         staffId: request.staffId,
@@ -297,7 +297,7 @@ export class CalendarIntegration {
         excludeAppointmentId: request.excludeAppointmentId,
       };
 
-      // Detect conflicts using LUM-96 engine with retry logic
+      // Detect conflicts using calendar infrastructure engine with retry logic
       const conflicts = await this.withRetry(
         () => ConflictDetectionEngine.detectConflicts(appointmentRequest),
         'conflict detection'
@@ -347,7 +347,7 @@ export class CalendarIntegration {
 
   /**
    * Validate service duration against time slot
-   * Integrates with LUM-96 service duration validator
+   * Integrates with the service duration validator
    * Requirements: 4.1, 4.2, 4.3, 1.1, 1.5
    */
   static async validateServiceDuration(
@@ -429,7 +429,7 @@ export class CalendarIntegration {
 
   /**
    * Invalidate availability and appointment cache
-   * Coordinates with LUM-96 availability cache and appointment cache
+   * Coordinates with the availability cache and appointment cache
    * Requirements: 4.4, 6.1, 6.2, 6.3
    */
   static async invalidateAvailabilityCache(
@@ -578,7 +578,7 @@ export class CalendarIntegration {
 
   /**
    * Warm availability and appointment cache for upcoming dates
-   * Coordinates with LUM-96 availability cache and appointment cache
+   * Coordinates with the availability cache and appointment cache
    * Requirements: 4.4, 6.1, 6.2, 6.3
    */
   static async warmAvailabilityCache(
@@ -588,7 +588,7 @@ export class CalendarIntegration {
     serviceId?: string
   ): Promise<void> {
     try {
-      // Use LUM-96 batch calculation and caching
+      // Use calendar infrastructure batch calculation and caching
       await AvailabilityCalculator.batchCalculateAndCache(
         businessId,
         staffIds,

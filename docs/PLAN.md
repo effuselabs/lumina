@@ -179,8 +179,13 @@ time, after the booking loop works.
 
 - Client CRM, staff management, analytics dashboards
 - Stripe payments and POS
-- ~20 Prisma models with no active code path — marked `PARKED` in
-  `schema.prisma`; tables still exist, nothing is lost
+- Prisma models with no active code path — roughly 20 of the 53 in
+  `schema.prisma`. Tables still exist, nothing is lost. **There is no `PARKED`
+  marker**, despite this document and `CLAUDE.md` both having claimed one:
+  check for a repository, service or route that reads a model before building
+  on it. A marker, or a test asserting no application code imports a parked
+  model, would make the rule real — worth doing when the models are next
+  touched
 - Playwright browser projects beyond Chromium and Mobile Safari
 - Raising lint rules from `warn` to `error` as their counts reach zero:
   **56** routes importing Prisma directly, **167** raw hex colours in `.tsx`
@@ -262,6 +267,47 @@ time, after the booking loop works.
   anyone outside UTC, and had been. CI never saw it. The three-zone Playwright
   config now closes that hole for the booking path; nothing yet closes it for
   the rest of the suite.
+
+- **`npm run test:visual` has never run.** `e2e/visual-test.config.ts:105`
+  resolves `./e2e/global-setup` from inside `e2e/`, so Playwright cannot load
+  the config at all, and `tsc -p tsconfig.test.json` reports two further errors
+  in the same file (an invalid `fontFamily` option and a duplicate key). Five
+  npm scripts point at it — `test:visual`, `:ui`, `:update`, `:headed` and
+  `:setup`. Either fix it or delete the visual-regression setup; leaving five
+  scripts that cannot start is worse than either.
+
+- **`npm run format:check` fails on 772 files**, so the `ci:lint` script in
+  `package.json` would fail if anyone ran it. CI runs `lint` rather than
+  `ci:lint`, so nothing is currently broken — but a contributor following the
+  script names hits it immediately. Either format the repo once and add
+  `format:check` to CI, or drop it from `ci:lint`.
+
+- **Merging two pull requests within seconds of each other skips a deploy.**
+  The CI workflow sets `cancel-in-progress: true` on a concurrency group keyed
+  by ref, so a second merge cancels the first merge's run — and Railway reads a
+  cancelled check suite as failed and skips that deployment
+  (`skippedReason: "CI check suite failed"`). Observed on 2026-09-06 with #108
+  and #109: harmless there because the second commit contained the first's
+  code, but merging in the other order would have skipped the deploy of the
+  code that mattered, with no failure anywhere to notice. Space merges out, or
+  wait for each to go green.
+
+- **What a first `knip` run found**, recorded as input to 4d rather than as a
+  task in itself. 112 unused files, 10 unused dependencies and 8 unused
+  devDependencies, 25 unlisted dependencies, 363 unused exports — and, most
+  usefully, **13 unresolved imports**: test files importing modules that do not
+  exist (`lib/daily-status-blocker-tracker`, `lib/documentation-audit`,
+  `@/components/appointments/appointment-dashboard`,
+  `@/test-utils/appointment-mocks`, `@/lib/services/booking-api`,
+  `@/lib/framework-integration`). Those suites cannot pass under any
+  circumstances. `__tests__/agent-hooks/` is the same category: tests for the
+  previous era's process tooling, not for this application.
+
+  Treat the output as candidates, not a delete list — it flags `public/sw.js`
+  (a service worker, loaded at runtime), the `app/design-tokens/*.css` files
+  (reachable via CSS `@import`, which knip does not trace), and `husky` and
+  `lint-staged` (which it simultaneously reports as used by the pre-commit
+  hook). Verify against the gates, in small batches.
 
 - **Availability re-validates every slot two or three times over.** Measured:
   one request issued **1,318 database queries**, reading the day's opening

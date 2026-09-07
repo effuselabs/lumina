@@ -116,7 +116,7 @@ async function validateBusinessForAvailability(businessId: string) {
 }
 
 // Real-time availability is now handled by RealTimeAvailabilityService
-// which integrates with Calendar Infrastructure (LUM-96)
+// which integrates with Calendar Infrastructure
 
 // GET /api/public/booking/[businessId]/availability
 export async function GET(

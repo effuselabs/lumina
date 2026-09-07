@@ -2,7 +2,7 @@
  * Calendar Cache Coordinator
  *
  * Coordinates cache invalidation between appointment cache and calendar infrastructure
- * (LUM-96) to ensure data consistency and optimal performance.
+ * to ensure data consistency and optimal performance.
  *
  * Requirements: 6.3, 6.4, 4.4
  *
@@ -201,7 +201,7 @@ export class CalendarCacheCoordinator extends EventEmitter {
     event: CacheInvalidationEvent
   ): Promise<void> {
     try {
-      // This would coordinate with LUM-96 availability cache
+      // This would coordinate with the availability cache
       // For now, we'll emit an event that the calendar infrastructure can listen to
       this.emit('invalidate_availability_cache', {
         businessId: event.businessId,
@@ -268,13 +268,13 @@ export class CalendarCacheCoordinator extends EventEmitter {
   // ============================================================================
 
   /**
-   * Coordinate cache invalidation with calendar infrastructure (LUM-96)
+   * Coordinate cache invalidation with calendar infrastructure
    */
   private async coordinateWithCalendarInfrastructure(
     event: CacheInvalidationEvent
   ): Promise<void> {
     try {
-      // This would integrate with the LUM-96 calendar infrastructure
+      // This would integrate with the calendar infrastructure
       // to coordinate cache invalidation across both systems
 
       const coordinationPayload = {
@@ -292,7 +292,7 @@ export class CalendarCacheCoordinator extends EventEmitter {
       this.emit('calendar_coordination_request', coordinationPayload);
 
       // In a real implementation, this might:
-      // 1. Call LUM-96 cache invalidation API
+      // 1. Call calendar infrastructure cache invalidation API
       // 2. Publish to a message queue
       // 3. Update shared cache coordination state
 
