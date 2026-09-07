@@ -26,10 +26,9 @@ respect.
 
 ## Reporting
 
-If someone is behaving this way, tell the maintainer:
-[@jshields-ca](https://github.com/jshields-ca), by direct message or by opening
-a private security advisory on this repository if you would rather it not be
-public. Reports are taken seriously, kept confidential, and answered.
+If someone is behaving this way, email <jeremy@effuse.io>, or tell the
+maintainer [@jshields-ca](https://github.com/jshields-ca) on GitHub. Reports are
+taken seriously, kept confidential, and answered.
 
 If the person you need to report is the maintainer, GitHub's own
 [report abuse](https://github.com/contact/report-abuse) route exists precisely
