@@ -4,7 +4,7 @@ name: Deploy
 #
 # Routine staging deploys are handled by Railway itself: the service has GitHub
 # auto-deploy enabled with "Wait for CI", so it deploys on a push to main only
-# once the CI check is green. railway.json supplies the rest — migrations via
+# once the CI check is green. `.railway/railway.ts` supplies the rest —
 # preDeployCommand, and healthcheckPath so Railway will not promote a release
 # that fails to answer /api/health.
 #
@@ -65,7 +65,7 @@ jobs:
           fi
 
       - name: Deploy
-        # Migrations run via `deploy.preDeployCommand` in railway.json, inside
+        # Migrations run via `deploy.preDeployCommand` in .railway/railway.ts,
         # Railway, where DATABASE_URL resolves to the Postgres plugin. That is
         # more reliable than running them from CI, and Railway aborts the
         # release if the pre-deploy command fails, so new code can never go
@@ -123,7 +123,7 @@ jobs:
         run: npm i -g @railway/cli
 
       - name: Deploy
-        # Migrations run via railway.json's preDeployCommand — see staging.
+        # Migrations run via .railway/railway.ts preDeployCommand — see staging.
         run: railway up --service "$RAILWAY_SERVICE" --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}

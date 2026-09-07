@@ -43,7 +43,7 @@ data rather than real client records.
 with **Wait for CI**, so a push to `main` deploys only once the CI check is
 green. Nothing in GitHub Actions drives it.
 
-`railway.json` supplies the safety rails:
+`.railway/railway.ts` supplies the safety rails:
 
 - `deploy.preDeployCommand` runs `prisma migrate deploy` inside Railway, where
   `DATABASE_URL` resolves to the Postgres plugin. Railway aborts the release if
@@ -166,9 +166,9 @@ same list with production values.
 1. Create a project, e.g. `lumina`.
 2. Add a **Postgres** database to it.
 3. Add a service from this GitHub repo. Set **Root Directory** to `/` and let
-   Nixpacks build — `railway.json` supplies the build and start commands and
+   Nixpacks build — `.railway/railway.ts` supplies the build and start commands and
    points the healthcheck at `/api/health`. Note that Railway prefers a
-   root-level `Dockerfile` over `railway.json`'s declared builder if one
+   root-level `Dockerfile` over `.railway/railway.ts`'s declared builder if one
    exists; this repo deliberately has none.
 4. Note the **service** name (the repo service, e.g. `lumina`) — it is not the
    project name, and the manual deploy workflow refers to the service.
