@@ -339,7 +339,8 @@ time, after the booking loop works.
   startTime) and handle the violation. Worth doing before real customers, not
   before the loop works.
 
-- **Railway had stopped reading `railway.json`.** The service's
+- ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
+  service has since migrated to Infrastructure as Code entirely. The service's
   `railwayConfigFile` was null and every setting it supplied had reverted to
   defaults — no `healthcheckPath`, no `preDeployCommand`, `RAILPACK` instead of
   `NIXPACKS`. So the guarantee `deploy.yml` documents ("Railway aborts the
