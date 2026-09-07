@@ -4,7 +4,15 @@
   "private": true,
   "description": "Intelligent Software for Small Business Growth - AI-powered business management platform for salons and barbershops",
   "author": "Effuse Labs",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-only",
+  "homepage": "https://github.com/jshields-ca/lumina#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jshields-ca/lumina.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jshields-ca/lumina/issues"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -68,6 +76,7 @@
     "format:check": "prettier --check .",
     "prepare": "node -e \"try{require('husky').install()}catch{}\"",
     "postinstall": "prisma generate",
+    "docker:dev": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:clean": "docker-compose down -v --remove-orphans",
     "ci:install": "npm ci",
