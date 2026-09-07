@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import {
+  businessDayBounds,
   dateKeyIn,
   dayOfWeekFor,
   dayOfWeekIn,
@@ -7,6 +8,11 @@ import {
   minutesIntoBusinessDay,
   resolveBusinessTimezone,
 } from './business-time';
+import {
+  BOOKING_STATE_TTL_MS,
+  CONFIG_TTL_MS,
+  remember,
+} from './schedule-cache';
 import { TimeSlot } from './service-duration-validator';
 import { TimeSlotAnalysisEngine } from './time-slot-analysis-engine';
 
@@ -397,14 +403,19 @@ export class ConflictDetectionEngine {
       const date = new Date(`${dateKey}T00:00:00.000Z`);
 
       // Check for availability override first
-      const override = await prisma.staffAvailabilityOverride.findUnique({
-        where: {
-          staffId_date: {
-            staffId: request.staffId,
-            date,
-          },
-        },
-      });
+      const override = await remember(
+        `cde:override:${request.staffId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.staffAvailabilityOverride.findUnique({
+            where: {
+              staffId_date: {
+                staffId: request.staffId,
+                date,
+              },
+            },
+          })
+      );
 
       if (override && !override.isAvailable) {
         return {
@@ -421,21 +432,29 @@ export class ConflictDetectionEngine {
       }
 
       // Get regular availability
-      const availability = await prisma.staffAvailability.findMany({
-        where: {
-          staffId: request.staffId,
-          dayOfWeek,
-          isRecurring: true,
-          AND: [
-            {
-              OR: [{ effectiveDate: null }, { effectiveDate: { lte: date } }],
+      const availability = await remember(
+        `cde:staffHours:${request.staffId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.staffAvailability.findMany({
+            where: {
+              staffId: request.staffId,
+              dayOfWeek,
+              isRecurring: true,
+              AND: [
+                {
+                  OR: [
+                    { effectiveDate: null },
+                    { effectiveDate: { lte: date } },
+                  ],
+                },
+                {
+                  OR: [{ expiryDate: null }, { expiryDate: { gte: date } }],
+                },
+              ],
             },
-            {
-              OR: [{ expiryDate: null }, { expiryDate: { gte: date } }],
-            },
-          ],
-        },
-      });
+          })
+      );
 
       if (availability.length === 0) {
         return {
@@ -516,14 +535,43 @@ export class ConflictDetectionEngine {
       const conflicts: Conflict[] = [];
 
       // Get approved time-off requests that overlap with the appointment
-      const timeOffRequests = await prisma.timeOffRequest.findMany({
-        where: {
-          staffId: request.staffId,
-          status: 'APPROVED',
-          startDate: { lte: request.endTime },
-          endDate: { gte: request.startTime },
-        },
-      });
+      // Keyed by the salon's day rather than the exact slot: approved time off
+      // spans days, so every slot on a day gets the same answer, and asking
+      // once per slot was two hundred identical queries per request.
+      // Fetch the whole salon day, then narrow to this slot in memory.
+      //
+      // The query used to be bounded by the slot itself, which cannot be
+      // cached: every slot on a day asked the same question and got the same
+      // answer, two hundred times per request. Widening it to the day and
+      // filtering here is both cacheable and still exact — narrowing by the
+      // day alone would let a 10:00 slot's empty result stand in for a 15:00
+      // slot during an afternoon's time off, and book straight through it.
+      const timeOffTimezone = await resolveBusinessTimezone(request.businessId);
+      const timeOffDateKey = dateKeyIn(request.startTime, timeOffTimezone);
+      const { startOfDay: dayStart, endOfDay: dayEnd } = businessDayBounds(
+        timeOffDateKey,
+        timeOffTimezone
+      );
+
+      const timeOffForDay = await remember(
+        `cde:timeOff:${request.staffId}:${timeOffDateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.timeOffRequest.findMany({
+            where: {
+              staffId: request.staffId,
+              status: 'APPROVED',
+              startDate: { lte: dayEnd },
+              endDate: { gte: dayStart },
+            },
+          })
+      );
+
+      const timeOffRequests = timeOffForDay.filter(
+        timeOff =>
+          timeOff.startDate <= request.endTime &&
+          timeOff.endDate >= request.startTime
+      );
 
       for (const timeOff of timeOffRequests) {
         conflicts.push({
@@ -696,10 +744,15 @@ export class ConflictDetectionEngine {
     businessId: string
   ): Promise<void> {
     try {
-      const business = await prisma.business.findUnique({
-        where: { id: businessId },
-        select: { id: true },
-      });
+      const business = await remember(
+        `cde:businessExists:${businessId}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.business.findUnique({
+            where: { id: businessId },
+            select: { id: true },
+          })
+      );
 
       if (!business) {
         throw new Error('Invalid business context');
@@ -725,14 +778,19 @@ export class ConflictDetectionEngine {
   ): Promise<{ openTime: string; closeTime: string } | null> {
     try {
       // Try structured business hours first
-      const businessHours = await prisma.businessHours.findUnique({
-        where: {
-          businessId_dayOfWeek: {
-            businessId,
-            dayOfWeek,
-          },
-        },
-      });
+      const businessHours = await remember(
+        `cde:hours:${businessId}:${dayOfWeek}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.businessHours.findUnique({
+            where: {
+              businessId_dayOfWeek: {
+                businessId,
+                dayOfWeek,
+              },
+            },
+          })
+      );
 
       if (
         businessHours &&

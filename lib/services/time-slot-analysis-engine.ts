@@ -5,6 +5,7 @@ import {
   minutesIntoBusinessDay,
   resolveBusinessTimezone,
 } from './business-time';
+import { CONFIG_TTL_MS, remember } from './schedule-cache';
 import {
   MultiServiceBooking,
   ServiceDurationValidator,
@@ -814,14 +815,19 @@ export class TimeSlotAnalysisEngine {
   ): Promise<{ openTime: string; closeTime: string } | null> {
     // Same implementation as in ServiceDurationValidator
     try {
-      const businessHours = await prisma.businessHours.findUnique({
-        where: {
-          businessId_dayOfWeek: {
-            businessId,
-            dayOfWeek,
-          },
-        },
-      });
+      const businessHours = await remember(
+        `tsae:hours:${businessId}:${dayOfWeek}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.businessHours.findUnique({
+            where: {
+              businessId_dayOfWeek: {
+                businessId,
+                dayOfWeek,
+              },
+            },
+          })
+      );
 
       if (
         businessHours &&
@@ -836,10 +842,15 @@ export class TimeSlotAnalysisEngine {
       }
 
       // Fall back to JSON operating hours
-      const business = await prisma.business.findUnique({
-        where: { id: businessId },
-        select: { operatingHours: true },
-      });
+      const business = await remember(
+        `tsae:operatingHours:${businessId}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.business.findUnique({
+            where: { id: businessId },
+            select: { operatingHours: true },
+          })
+      );
 
       if (business?.operatingHours) {
         const hours = business.operatingHours as any;

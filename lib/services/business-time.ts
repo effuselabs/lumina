@@ -18,6 +18,7 @@
 import { DateTime } from 'luxon';
 
 import { prisma } from '@/lib/prisma';
+import { CONFIG_TTL_MS, remember } from './schedule-cache';
 import { TimeZoneHandler } from './timezone-handler';
 
 /** Used when a business has no timezone recorded. Never the server's zone. */
@@ -102,18 +103,6 @@ export function minutesFromClockTime(time: string): number {
 }
 
 /**
- * How long a resolved timezone is reused before being read again. A business
- * changes zone approximately never, and a minute of staleness costs at most one
- * request's worth of slots computed against the previous zone.
- */
-const TIMEZONE_TTL_MS = 60_000;
-
-const timezoneCache = new Map<
-  string,
-  { timezone: string; expiresAt: number }
->();
-
-/**
  * The salon's timezone, from the business row.
  *
  * Callers used to be trusted to pass this and routinely did not — the public
@@ -123,43 +112,23 @@ const timezoneCache = new Map<
  *
  * Memoised because of where it is needed: the conflict engine re-validates
  * every proposed slot, so an unmemoised read here is one `business.findUnique`
- * per slot per staff member — several hundred round trips for a single
- * availability request, which took the public endpoint past its 15-second
- * budget on a CI runner while returning perfectly correct answers.
+ * per slot per staff member — several hundred round trips for one availability
+ * request. It shares `schedule-cache`, so one call clears every memo on this
+ * path rather than each having its own escape hatch to forget.
  */
 export async function resolveBusinessTimezone(
   businessId: string
 ): Promise<string> {
-  const cached = timezoneCache.get(businessId);
+  return remember(`timezone:${businessId}`, CONFIG_TTL_MS, async () => {
+    const business = await prisma.business.findUnique({
+      where: { id: businessId },
+      select: { timezone: true },
+    });
 
-  if (cached && cached.expiresAt > Date.now()) {
-    return cached.timezone;
-  }
+    const stored = business?.timezone || FALLBACK_TIMEZONE;
 
-  const business = await prisma.business.findUnique({
-    where: { id: businessId },
-    select: { timezone: true },
+    return TimeZoneHandler.validateTimeZone(stored)
+      ? stored
+      : FALLBACK_TIMEZONE;
   });
-
-  const stored = business?.timezone || FALLBACK_TIMEZONE;
-  const timezone = TimeZoneHandler.validateTimeZone(stored)
-    ? stored
-    : FALLBACK_TIMEZONE;
-
-  timezoneCache.set(businessId, {
-    timezone,
-    expiresAt: Date.now() + TIMEZONE_TTL_MS,
-  });
-
-  return timezone;
-}
-
-/** Drops the memo. For tests, and for a business whose zone has just changed. */
-export function forgetBusinessTimezone(businessId?: string): void {
-  if (businessId) {
-    timezoneCache.delete(businessId);
-    return;
-  }
-
-  timezoneCache.clear();
 }

@@ -24,6 +24,11 @@ import {
   toDateKey,
 } from './business-time';
 import { ConflictDetectionEngine } from './conflict-detection-engine';
+import {
+  BOOKING_STATE_TTL_MS,
+  CONFIG_TTL_MS,
+  remember,
+} from './schedule-cache';
 
 // Types for availability calculation
 export interface AvailabilitySlot {
@@ -330,56 +335,71 @@ export class AvailabilityCalculator {
       // day's.
       const { startOfDay, endOfDay } = businessDayBounds(dateKey, timezone);
 
-      const existingAppointments = await prisma.appointment.findMany({
-        where: {
-          staffId,
-          businessId,
-          startTime: {
-            gte: startOfDay,
-            lte: endOfDay,
-          },
-          status: {
-            in: ['CONFIRMED'],
-          },
-        },
-        select: {
-          startTime: true,
-          endTime: true,
-        },
-      });
+      const existingAppointments = await remember(
+        `appointments:${businessId}:${staffId}:${dateKey}`,
+        BOOKING_STATE_TTL_MS,
+        () =>
+          prisma.appointment.findMany({
+            where: {
+              staffId,
+              businessId,
+              startTime: {
+                gte: startOfDay,
+                lte: endOfDay,
+              },
+              status: {
+                in: ['CONFIRMED'],
+              },
+            },
+            select: {
+              startTime: true,
+              endTime: true,
+            },
+          })
+      );
 
       // Get time-off periods that overlap with this date
-      const timeOffPeriods = await prisma.timeOffRequest.findMany({
-        where: {
-          staffId,
-          status: 'APPROVED',
-          startDate: {
-            lte: endOfDay,
-          },
-          endDate: {
-            gte: startOfDay,
-          },
-        },
-        select: {
-          startDate: true,
-          endDate: true,
-        },
-      });
+      const timeOffPeriods = await remember(
+        `timeOff:${staffId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.timeOffRequest.findMany({
+            where: {
+              staffId,
+              status: 'APPROVED',
+              startDate: {
+                lte: endOfDay,
+              },
+              endDate: {
+                gte: startOfDay,
+              },
+            },
+            select: {
+              startDate: true,
+              endDate: true,
+            },
+          })
+      );
 
       // Get holidays for this date (business-wide)
-      const holidays = (await prisma.businessHoliday.findMany({
-        where: {
-          businessId,
-          date: {
-            gte: startOfDay,
-            lte: endOfDay,
-          },
-        },
-        select: {
-          date: true,
-          name: true,
-        },
-      })) as { date: Date; name: string }[];
+      const holidays = (await remember(
+        `holidays:${businessId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.businessHoliday.findMany({
+            where: {
+              businessId,
+              date: {
+                gte: startOfDay,
+                lte: endOfDay,
+              },
+            },
+            select: {
+              date: true,
+              name: true,
+            },
+          })
+      )) as { date: Date; name: string }[];
 
       return {
         businessHours,
@@ -582,14 +602,19 @@ export class AvailabilityCalculator {
   ): Promise<{ openTime: string; closeTime: string } | null> {
     try {
       // Map JavaScript day (0=Sunday) to our database day format
-      const businessHours = await prisma.businessHours.findUnique({
-        where: {
-          businessId_dayOfWeek: {
-            businessId,
-            dayOfWeek,
-          },
-        },
-      });
+      const businessHours = await remember(
+        `hours:${businessId}:${dayOfWeek}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.businessHours.findUnique({
+            where: {
+              businessId_dayOfWeek: {
+                businessId,
+                dayOfWeek,
+              },
+            },
+          })
+      );
 
       if (
         businessHours &&
@@ -624,14 +649,19 @@ export class AvailabilityCalculator {
       // `@db.Date`, which Prisma reads and writes at midnight UTC, so the key
       // must be built there too — `new Date(y, m, d)` is midnight *locally*
       // and matches no row at all west of Greenwich.
-      const override = await prisma.staffAvailabilityOverride.findUnique({
-        where: {
-          staffId_date: {
-            staffId,
-            date: new Date(`${dateKey}T00:00:00.000Z`),
-          },
-        },
-      });
+      const override = await remember(
+        `override:${staffId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.staffAvailabilityOverride.findUnique({
+            where: {
+              staffId_date: {
+                staffId,
+                date: new Date(`${dateKey}T00:00:00.000Z`),
+              },
+            },
+          })
+      );
 
       if (override) {
         if (override.isAvailable && override.startTime && override.endTime) {
@@ -642,20 +672,25 @@ export class AvailabilityCalculator {
       }
 
       // Get regular weekly availability
-      const availability = await prisma.staffAvailability.findMany({
-        where: {
-          staffId,
-          dayOfWeek,
-          // isActive: true
-        },
-        select: {
-          startTime: true,
-          endTime: true,
-        },
-        orderBy: {
-          startTime: 'asc',
-        },
-      });
+      const availability = await remember(
+        `staffHours:${staffId}:${dayOfWeek}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.staffAvailability.findMany({
+            where: {
+              staffId,
+              dayOfWeek,
+              // isActive: true
+            },
+            select: {
+              startTime: true,
+              endTime: true,
+            },
+            orderBy: {
+              startTime: 'asc',
+            },
+          })
+      );
 
       return availability.length > 0 ? availability : null;
     } catch (error) {
@@ -777,10 +812,15 @@ export class AvailabilityCalculator {
     // Read through the shared memo rather than directly: the conflict engine
     // re-enters this method once per proposed slot, so an unmemoised lookup is
     // hundreds of `business.findUnique` calls for one availability request.
-    const business = await prisma.business.findUnique({
-      where: { id: businessId },
-      select: { id: true },
-    });
+    const business = await remember(
+      `businessExists:${businessId}`,
+      CONFIG_TTL_MS,
+      () =>
+        prisma.business.findUnique({
+          where: { id: businessId },
+          select: { id: true },
+        })
+    );
 
     if (!business) {
       throw new Error(`Business ${businessId} not found`);
