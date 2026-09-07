@@ -53,6 +53,17 @@ jobs:
       - name: Install Railway CLI
         run: npm i -g @railway/cli
 
+      # The service name is configuration rather than a credential, so it
+      # lives in a repository variable. Failing loudly here beats `railway up
+      # --service ""`, which deploys nowhere and still reports success.
+      - name: Check the service is configured
+        run: |
+          if [ -z "${{ vars.RAILWAY_STAGING_SERVICE }}" ]; then
+            echo "::error::vars.RAILWAY_STAGING_SERVICE is not set. Add it under"
+            echo "Settings > Secrets and variables > Actions > Variables."
+            exit 1
+          fi
+
       - name: Deploy
         # Migrations run via `deploy.preDeployCommand` in railway.json, inside
         # Railway, where DATABASE_URL resolves to the Postgres plugin. That is
