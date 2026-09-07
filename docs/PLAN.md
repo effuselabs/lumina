@@ -75,6 +75,65 @@ staff member and client.
 
 ---
 
+## Open source positioning
+
+Lumina becomes a public repository, with self-hosting free and revenue coming
+from managed hosting and support. That is a licensing and documentation change,
+not just a visibility toggle, and two parts of it are blocking.
+
+**Blocking before the repository goes public:**
+
+- **There is no licence.** No `LICENSE` file exists and `package.json` declares
+  `"license": "UNLICENSED"`. Published in that state the code is legally all
+  rights reserved — nobody may use, modify or redistribute it, which is the
+  opposite of the intent. Nothing else on this list matters until a licence is
+  chosen and added.
+- **Run a real secret scan over the full history**, with a tool built for it
+  (gitleaks or trufflehog), not a grep. A manual pass found nothing dangerous —
+  `.env` has never been committed and `.gitignore` covers it; the only hits are
+  `sk_test_fake_key_for_testing` in `test-utils/env-setup.js` and
+  `lumina_dev_password` in an old `docker-compose.yml`, both local-only
+  placeholders. Confirm that with a proper tool before publishing, because
+  history cannot be un-published once it is forked or indexed.
+- **Rotate the Railway API token.** It was pasted in plaintext into a chat
+  transcript and has not been rotated.
+
+**The licence decision: AGPL-3.0.** Decided 2026-09-06. The requirement — free
+to self-host, revenue from running it for people — is the case AGPL-3.0 exists
+for: OSI-approved open source, while making it unattractive for someone else to
+offer Lumina as a closed hosted service. The alternatives were permissive
+(MIT/Apache-2.0, simpler and friendlier to contributors, but nothing stops a
+competitor hosting it) or source-available (BSL/SSPL, which are not open source
+and would contradict the positioning).
+
+Two consequences that follow from it, and are easier to handle now than later:
+
+- **A CLA is needed from the first external contribution onward** if selling a
+  proprietary licence stays an option. Without it, every contributor holds
+  copyright in their own work under AGPL, and relicensing later means tracking
+  down each of them individually. Adding a CLA on day one costs a bot and a
+  file; retrofitting one can be impossible.
+- **AGPL's obligations reach across the network.** Anyone running a modified
+  Lumina as a service must offer their users the modified source. That is the
+  point, and it also applies to us: our own deployment is unmodified upstream,
+  so the obligation is satisfied by the public repository, but that stops being
+  true the moment staging or production carries a patch that is not pushed.
+
+Adding the `LICENSE` file and the matching `package.json` field is its own
+change — the licence text is a legal document, and it should be reviewable on
+its own rather than buried in a documentation diff.
+
+**Documentation to follow the decision:** a `LICENSE` file and a matching
+`package.json` field; a README that leads with what Lumina is and how to run it
+yourself rather than with internal rebuild status; self-hosting instructions
+(`docs/environments.md` currently documents _our_ Railway staging, not a
+stranger's deployment); a CONTRIBUTING file; and a clear statement of what is
+free and what is paid, so the boundary is not something people have to infer.
+
+Sequence it with Phase 6, alongside brand assets and the production launch —
+the repository going public and the project page describing it are the same
+announcement.
+
 ## Dependency policy
 
 Two triggers, and only two:
