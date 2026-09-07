@@ -8,6 +8,10 @@ Use GitHub's private vulnerability reporting: the **Security** tab on this
 repository, then **Report a vulnerability**. It goes only to the maintainers and
 lets us discuss a fix before anything is public.
 
+If GitHub is not an option for you, email <jeremy@effuse.io> instead — but
+please do not include the details of the vulnerability in a first email, only
+that you have one.
+
 You should get an acknowledgement within a few days. Lumina is maintained by a
 very small team, so please allow a little patience — you will get a real answer
 rather than an automated one.

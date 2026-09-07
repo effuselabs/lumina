@@ -916,7 +916,7 @@ export default async function HomePage() {
                 <p className="mt-1 text-sm">
                   Created by{' '}
                   <Link
-                    href="https://effuselabs.com"
+                    href="https://effuse.io"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="footer-link font-medium"
