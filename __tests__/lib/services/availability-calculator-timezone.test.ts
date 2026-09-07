@@ -21,6 +21,7 @@ import { prisma } from '@/lib/prisma';
 import { AvailabilityCalculator } from '@/lib/services/availability-calculator';
 import { AvailabilityCache } from '@/lib/services/availability-cache';
 import { ConflictDetectionEngine } from '@/lib/services/conflict-detection-engine';
+import { forgetBusinessTimezone } from '@/lib/services/business-time';
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers';
 
 jest.mock('@/lib/prisma', () => ({
@@ -58,6 +59,9 @@ const MONDAY = new Date('2026-09-14T00:00:00.000Z');
 describe('AvailabilityCalculator — business timezone', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // The zone is memoised in-process for a minute, so without this the
+    // Sydney case below is answered from the Los Angeles case above.
+    forgetBusinessTimezone();
 
     asMock(mockPrisma.business.findUnique).mockResolvedValue({
       id: BUSINESS_ID,

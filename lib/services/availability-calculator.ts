@@ -20,10 +20,10 @@ import {
   businessDayBounds,
   businessTimeToInstant,
   dayOfWeekFor,
+  resolveBusinessTimezone,
   toDateKey,
 } from './business-time';
 import { ConflictDetectionEngine } from './conflict-detection-engine';
-import { TimeZoneHandler } from './timezone-handler';
 
 // Types for availability calculation
 export interface AvailabilitySlot {
@@ -770,27 +770,23 @@ export class AvailabilityCalculator {
   private static async validateBusinessContext(
     businessId: string
   ): Promise<{ timezone: string }> {
+    // The business row is the authority, not the caller. Every route that
+    // reaches this used to either forget the timezone or fetch it and drop it,
+    // so asking for it here is the only way it cannot go missing again.
+    //
+    // Read through the shared memo rather than directly: the conflict engine
+    // re-enters this method once per proposed slot, so an unmemoised lookup is
+    // hundreds of `business.findUnique` calls for one availability request.
     const business = await prisma.business.findUnique({
       where: { id: businessId },
-      select: { id: true, timezone: true },
+      select: { id: true },
     });
 
     if (!business) {
       throw new Error(`Business ${businessId} not found`);
     }
 
-    // The business row is the authority, not the caller. Every route that
-    // reaches this used to either forget the timezone or fetch it and drop it,
-    // so asking for it here is the only way it cannot go missing again.
-    const timezone = business.timezone || 'UTC';
-
-    if (!TimeZoneHandler.validateTimeZone(timezone)) {
-      throw new Error(
-        `Business ${businessId} has an unusable timezone: ${timezone}`
-      );
-    }
-
-    return { timezone };
+    return { timezone: await resolveBusinessTimezone(businessId) };
   }
 
   /**

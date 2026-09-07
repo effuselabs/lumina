@@ -102,24 +102,64 @@ export function minutesFromClockTime(time: string): number {
 }
 
 /**
+ * How long a resolved timezone is reused before being read again. A business
+ * changes zone approximately never, and a minute of staleness costs at most one
+ * request's worth of slots computed against the previous zone.
+ */
+const TIMEZONE_TTL_MS = 60_000;
+
+const timezoneCache = new Map<
+  string,
+  { timezone: string; expiresAt: number }
+>();
+
+/**
  * The salon's timezone, from the business row.
  *
  * Callers used to be trusted to pass this and routinely did not — the public
  * availability route fetched it and dropped the row, and the real-time service
  * never passed one at all. Fetching it where it is needed is the only
  * arrangement in which it cannot go missing again.
+ *
+ * Memoised because of where it is needed: the conflict engine re-validates
+ * every proposed slot, so an unmemoised read here is one `business.findUnique`
+ * per slot per staff member — several hundred round trips for a single
+ * availability request, which took the public endpoint past its 15-second
+ * budget on a CI runner while returning perfectly correct answers.
  */
 export async function resolveBusinessTimezone(
   businessId: string
 ): Promise<string> {
+  const cached = timezoneCache.get(businessId);
+
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.timezone;
+  }
+
   const business = await prisma.business.findUnique({
     where: { id: businessId },
     select: { timezone: true },
   });
 
-  const timezone = business?.timezone || FALLBACK_TIMEZONE;
-
-  return TimeZoneHandler.validateTimeZone(timezone)
-    ? timezone
+  const stored = business?.timezone || FALLBACK_TIMEZONE;
+  const timezone = TimeZoneHandler.validateTimeZone(stored)
+    ? stored
     : FALLBACK_TIMEZONE;
+
+  timezoneCache.set(businessId, {
+    timezone,
+    expiresAt: Date.now() + TIMEZONE_TTL_MS,
+  });
+
+  return timezone;
+}
+
+/** Drops the memo. For tests, and for a business whose zone has just changed. */
+export function forgetBusinessTimezone(businessId?: string): void {
+  if (businessId) {
+    timezoneCache.delete(businessId);
+    return;
+  }
+
+  timezoneCache.clear();
 }

@@ -20,6 +20,7 @@
 import { prisma } from '@/lib/prisma';
 import { ConflictDetectionEngine } from '@/lib/services/conflict-detection-engine';
 import { TimeSlotAnalysisEngine } from '@/lib/services/time-slot-analysis-engine';
+import { forgetBusinessTimezone } from '@/lib/services/business-time';
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers';
 
 jest.mock('@/lib/prisma', () => ({
@@ -49,6 +50,9 @@ const NOON_PACIFIC = new Date('2026-09-14T19:00:00.000Z');
 describe('ConflictDetectionEngine — business timezone', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // The zone is memoised in-process, so a stale entry would let a test pass
+    // on the previous test's business rather than its own mock.
+    forgetBusinessTimezone();
 
     asMock(mockPrisma.business.findUnique).mockResolvedValue({
       id: BUSINESS_ID,
