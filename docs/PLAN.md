@@ -66,6 +66,11 @@ staff member and client.
 
 ## Working agreement
 
+- **Decision rights are in `CLAUDE.md`.** The lead developer decides how the
+  work is structured — pull requests, branches, debugging order, what gets
+  fixed now versus recorded here. The owner decides direction, licensing, and
+  anything irreversible or outward-facing.
+
 - **One branch per PR**, named for the change. Never per phase.
 - Failing test first, then make it pass.
 - `type-check && lint && test:ci && build` green locally before every commit.
