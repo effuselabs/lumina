@@ -8,7 +8,7 @@ import {
   createSecurePublicBookingResponse,
   securePublicBookingPOST,
 } from '@/lib/security/public-booking-security-middleware';
-import { format } from 'date-fns';
+import { DateTime } from 'luxon';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { emailService } from '../../../../../../lib/email/email-service';
@@ -481,6 +481,28 @@ async function createAppointmentWithServices(
   });
 }
 
+/**
+ * An appointment time as the salon and the client both understand it.
+ *
+ * `date-fns` `format` renders in the server's zone, so a Railway container in
+ * UTC told a Los Angeles salon its 2 PM booking was at 9 PM. The instant in the
+ * database was right; every human-readable copy of it was wrong — in the
+ * confirmation email, in the staff notification, and nowhere else visible until
+ * somebody missed an appointment.
+ */
+function inBusinessZone(
+  instant: Date,
+  timezone: string | null,
+  format: string
+): string {
+  return DateTime.fromJSDate(instant)
+    .setZone(timezone || 'UTC')
+    .toFormat(format);
+}
+
+const DATE_FORMAT = 'cccc, LLLL d, yyyy';
+const TIME_FORMAT = 'h:mm a ZZZZ';
+
 // Send staff notification for new booking
 async function sendStaffNotification({
   businessId,
@@ -491,7 +513,7 @@ async function sendStaffNotification({
   businessId: string;
   staffId: string;
   appointment: CreatedAppointment;
-  business: any;
+  business: { timezone: string | null };
 }) {
   try {
     // Create a staff notification record in the database
@@ -501,7 +523,7 @@ async function sendStaffNotification({
         staffId,
         type: 'NEW_BOOKING',
         title: 'New Appointment Booked',
-        message: `New appointment scheduled with ${appointment.client.firstName} ${appointment.client.lastName} for ${appointment.services.map(s => s.name).join(', ')} on ${format(appointment.dateTime, 'EEEE, MMMM d, yyyy')} at ${format(appointment.dateTime, 'h:mm a')}.`,
+        message: `New appointment scheduled with ${appointment.client.firstName} ${appointment.client.lastName} for ${appointment.services.map(s => s.name).join(', ')} on ${inBusinessZone(appointment.dateTime, business.timezone, DATE_FORMAT)} at ${inBusinessZone(appointment.dateTime, business.timezone, TIME_FORMAT)}.`,
         metadata: {
           appointmentId: appointment.id,
           confirmationNumber: appointment.confirmationNumber,
@@ -658,8 +680,16 @@ export async function POST(
         businessName: business.name,
         serviceName: services.map(s => s.name).join(', '),
         staffName: staff.displayName,
-        appointmentDate: format(appointment.startTime, 'EEEE, MMMM d, yyyy'),
-        appointmentTime: format(appointment.startTime, 'h:mm a'),
+        appointmentDate: inBusinessZone(
+          appointment.startTime,
+          business.timezone,
+          DATE_FORMAT
+        ),
+        appointmentTime: inBusinessZone(
+          appointment.startTime,
+          business.timezone,
+          TIME_FORMAT
+        ),
         duration: actualDuration,
         price: actualPrice,
         businessAddress: business.address || undefined,
