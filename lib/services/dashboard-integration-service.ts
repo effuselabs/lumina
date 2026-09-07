@@ -2,8 +2,8 @@
  * Dashboard Integration Service
  *
  * Central integration layer for the Dashboard Appointment Management system.
- * Connects with existing systems: Appointment Booking Engine (LUM-97),
- * Calendar Infrastructure (LUM-96), Client Management, Service Management,
+ * Connects with existing systems: Appointment Booking Engine,
+ * Calendar Infrastructure, Client Management, Service Management,
  * Staff Management, and Notification systems.
  *
  * Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7
@@ -191,7 +191,7 @@ export class DashboardIntegrationService {
   }
 
   // ============================================================================
-  // APPOINTMENT BOOKING ENGINE INTEGRATION (LUM-97)
+  // APPOINTMENT BOOKING ENGINE INTEGRATION
   // ============================================================================
 
   /**
@@ -354,7 +354,7 @@ export class DashboardIntegrationService {
   }
 
   // ============================================================================
-  // CALENDAR INFRASTRUCTURE INTEGRATION (LUM-96)
+  // CALENDAR INFRASTRUCTURE INTEGRATION
   // ============================================================================
 
   /**

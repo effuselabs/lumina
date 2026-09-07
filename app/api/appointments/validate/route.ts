@@ -378,7 +378,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Check business hours (this would integrate with business hours from LUM-96)
+      // Check business hours (this would integrate with business hours from the calendar infrastructure)
       // For now, we'll mark as passed
       validationResult.validations.businessRulesValidation = {
         passed: validatedData.startTime > new Date(),

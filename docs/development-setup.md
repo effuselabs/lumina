@@ -222,5 +222,5 @@ After setting up the development environment:
 3. Check the Authentication Documentation for auth system details
 4. Read the Testing Guide for testing framework usage
 5. Explore the Design System for brand guidelines and components
-6. Review the [Project Overview](./project-overview.md) for current project status
+6. Review [the plan](./PLAN.md) for where the rebuild is and what is next
 7. Check the Deployment Guide for deployment procedures

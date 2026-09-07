@@ -150,7 +150,7 @@ async function demonstrateDataManagement() {
     console.log('✅ Data Management Demonstration Complete!');
     console.log('');
     console.log('📚 For more information, see:');
-    console.log('  - docs/api/seed-data-management.md');
+    console.log('  - prisma/factories/README.md');
     console.log('  - prisma/factories/data-reset-manager.ts');
     console.log('  - scripts/manage-seed-data.ts');
   } catch (error) {
