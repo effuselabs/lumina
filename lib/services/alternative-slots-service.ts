@@ -2,33 +2,11 @@ import { prisma } from '@/lib/prisma';
 import { TimeSlot } from '@/types/booking';
 import { DateTime } from 'luxon';
 
-/**
- * The salon's own day for an instant, as `yyyy-MM-dd`.
- *
- * This service built its slots with `setHours`, which reads the server's zone.
- * On a UTC host that offered a Los Angeles salon alternatives at two in the
- * morning — the same defect as the main availability path, in the fallback
- * nobody looks at until the main path finds nothing.
- */
-function dateKeyIn(instant: Date, timezone: string): string {
-  return DateTime.fromJSDate(instant).setZone(timezone).toFormat('yyyy-MM-dd');
-}
-
-/** `HH:MM` on a salon day, as an absolute instant. */
-function businessTimeToInstant(
-  dateKey: string,
-  time: string,
-  timezone: string
-): Date {
-  return DateTime.fromFormat(`${dateKey} ${time}`, 'yyyy-MM-dd HH:mm', {
-    zone: timezone,
-  }).toJSDate();
-}
-
-/** JavaScript's day numbering (0 = Sunday) for a `yyyy-MM-dd` calendar date. */
-function dayOfWeekFor(dateKey: string): number {
-  return DateTime.fromISO(dateKey, { zone: 'utc' }).weekday % 7;
-}
+import {
+  businessTimeToInstant,
+  dateKeyIn,
+  dayOfWeekFor,
+} from './business-time';
 
 /** The salon's day, `dayOffset` days on. */
 function addDaysTo(dateKey: string, dayOffset: number): string {

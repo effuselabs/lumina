@@ -14,56 +14,16 @@
  * @author Lumina Development Team
  */
 
-import { DateTime } from 'luxon';
-
 import { prisma } from '@/lib/prisma';
 import { AvailabilityCache } from './availability-cache';
+import {
+  businessDayBounds,
+  businessTimeToInstant,
+  dayOfWeekFor,
+  toDateKey,
+} from './business-time';
 import { ConflictDetectionEngine } from './conflict-detection-engine';
 import { TimeZoneHandler } from './timezone-handler';
-
-/**
- * The calendar date a query is asking about, as `yyyy-MM-dd`.
- *
- * The API builds this Date with `new Date('2026-09-14')`, which is midnight
- * UTC — a *label* for a day, not an instant in anyone's day. Reading it back
- * with `getFullYear`/`getMonth`/`getDate` returns the previous day anywhere
- * west of Greenwich, which is how a request for Monday came back with Sunday's
- * business hours. Read the label the same way it was written: in UTC.
- */
-function toDateKey(date: Date): string {
-  return DateTime.fromJSDate(date, { zone: 'utc' }).toFormat('yyyy-MM-dd');
-}
-
-/**
- * `HH:MM` on a calendar date in the business's zone, as an absolute instant.
- * 09:00 for a Los Angeles salon is 16:00Z in summer and 17:00Z in winter;
- * Luxon knows which, `Date.prototype.setHours` only knows the server's zone.
- */
-function businessTimeToInstant(
-  dateKey: string,
-  time: string,
-  timezone: string
-): Date {
-  return TimeZoneHandler.localToUTC(time, dateKey, timezone).toJSDate();
-}
-
-/** The instants at which the business's calendar day opens and closes out. */
-function businessDayBounds(
-  dateKey: string,
-  timezone: string
-): { startOfDay: Date; endOfDay: Date } {
-  const start = DateTime.fromISO(dateKey, { zone: timezone }).startOf('day');
-
-  return {
-    startOfDay: start.toUTC().toJSDate(),
-    endOfDay: start.endOf('day').toUTC().toJSDate(),
-  };
-}
-
-/** JavaScript's day numbering (0 = Sunday) for a calendar date. */
-function dayOfWeekFor(dateKey: string): number {
-  return DateTime.fromISO(dateKey, { zone: 'utc' }).weekday % 7;
-}
 
 // Types for availability calculation
 export interface AvailabilitySlot {
