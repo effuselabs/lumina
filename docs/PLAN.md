@@ -204,6 +204,31 @@ time, after the booking loop works.
   config now closes that hole for the booking path; nothing yet closes it for
   the rest of the suite.
 
+- **Availability re-validates every slot two or three times over.** Measured:
+  one request issued **1,318 database queries**, reading the day's opening
+  hours 180 times. The calculator checks each slot it generates through the
+  conflict engine; the real-time service then re-checks each survivor through
+  `CalendarIntegration`, which calls the calculator again. Each layer keeps its
+  own copy of the same queries.
+
+  `schedule-cache.ts` brought that to **391 queries / 312ms**, which is enough:
+  the booking page aborts its own request after 8 seconds
+  (`use-network-resilience.ts:174`), and it was exceeding that on CI while
+  returning correct answers. But memoising reads treats the symptom. Removing a
+  validation layer is the fix, and it is not a tidy-up — it touches the booking
+  write path, so it wants its own PR, its own failing test, and this
+  measurement to check itself against. `Appointment.findMany` is still issued
+  per slot and is the largest remaining item.
+
+- **The booking write re-checks conflicts outside its transaction.**
+  `book/route.ts:297` queries for conflicting appointments, then opens a
+  transaction at `:442` to create the appointment. Two clients booking the same
+  slot at the same time can both pass the check before either writes. Not
+  reachable by the e2e spec, which books alone; the fix is either to move the
+  check inside the transaction or to add a unique constraint on (staffId,
+  startTime) and handle the violation. Worth doing before real customers, not
+  before the loop works.
+
 - **Railway had stopped reading `railway.json`.** The service's
   `railwayConfigFile` was null and every setting it supplied had reverted to
   defaults — no `healthcheckPath`, no `preDeployCommand`, `RAILPACK` instead of
