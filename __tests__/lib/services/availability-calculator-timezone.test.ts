@@ -144,6 +144,48 @@ describe('AvailabilityCalculator — business timezone', () => {
     );
   });
 
+  it('keys the cache by timezone, so old entries cannot be served', async () => {
+    await AvailabilityCalculator.calculateAvailability({
+      businessId: BUSINESS_ID,
+      staffId: STAFF_ID,
+      date: MONDAY,
+      duration: 60,
+      timezone: TIMEZONE,
+    });
+
+    // The zone is part of the answer, so it has to be part of the key. It is
+    // also what stops every row computed by the pre-fix calculator from being
+    // served as though it were still right.
+    expect(AvailabilityCache.get).toHaveBeenCalledWith(
+      expect.objectContaining({ timezone: TIMEZONE })
+    );
+    expect(AvailabilityCache.set).toHaveBeenCalledWith(
+      expect.objectContaining({ timezone: TIMEZONE }),
+      expect.anything()
+    );
+  });
+
+  it('finds staff by the relation the schema actually declares', async () => {
+    await AvailabilityCalculator.calculateAvailability({
+      businessId: BUSINESS_ID,
+      date: MONDAY,
+      duration: 60,
+      serviceId: 'service-1',
+      timezone: TIMEZONE,
+    });
+
+    // Staff.services, not Staff.staffServices. The wrong name made Prisma
+    // reject the query outright, and the catch around it turned that into an
+    // empty staff list — zero slots, no error, no clue.
+    expect(mockPrisma.staff.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          services: { some: { serviceId: 'service-1' } },
+        }),
+      })
+    );
+  });
+
   it('handles a zone whose offset differs from the server’s', async () => {
     asMock(mockPrisma.business.findUnique).mockResolvedValue({
       id: BUSINESS_ID,

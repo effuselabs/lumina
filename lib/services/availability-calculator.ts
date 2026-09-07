@@ -147,6 +147,7 @@ export class AvailabilityCalculator {
         date: query.date,
         serviceId: query.serviceId,
         duration: query.duration,
+        timezone,
       };
 
       const cachedSlots = await AvailabilityCache.get(cacheOptions);
@@ -713,22 +714,18 @@ export class AvailabilityCalculator {
     date?: Date
   ): Promise<string[]> {
     try {
-      const whereClause: any = {
-        businessId,
-        isActive: true,
-      };
-
-      // If serviceId is provided, filter by staff who can perform this service
-      if (serviceId) {
-        whereClause.staffServices = {
-          some: {
-            serviceId,
-          },
-        };
-      }
-
+      // `services`, not `staffServices`. The relation on Staff is named
+      // `services` (schema.prisma), so the old name made Prisma reject the
+      // whole query — and the catch below turned that into an empty staff
+      // list, so `calculateAvailability` without an explicit `staffId`
+      // returned zero slots and reported no error. Typed rather than `any`,
+      // which is what let the wrong name through in the first place.
       const staff = await prisma.staff.findMany({
-        where: whereClause,
+        where: {
+          businessId,
+          isActive: true,
+          ...(serviceId ? { services: { some: { serviceId } } } : {}),
+        },
         select: {
           id: true,
         },
