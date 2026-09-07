@@ -1,0 +1,28 @@
+# gitleaks configuration.
+#
+# Extends the upstream default ruleset rather than replacing it, so new rules
+# arrive automatically. Only deliberate, explained exceptions live here.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = """
+Local-only placeholders. None grants access to anything.
+
+- The Stripe key is a literal fake that satisfies an import during tests.
+- The Postgres password is the docker-compose one, for a container bound to
+  localhost on a developer's own machine.
+- The encryption key is assigned inline in a test file so the data-protection
+  service has something to initialise with.
+
+All three are deliberately in the repository so that a fresh clone runs.
+"""
+regexes = [
+  '''sk_test_fake_key_for_testing''',
+  '''lumina_dev_password''',
+]
+paths = [
+  '''__tests__/security/data-protection\.test\.ts$''',
+  '''\.env\.example$''',
+]

@@ -5,13 +5,13 @@
   "description": "Intelligent Software for Small Business Growth - AI-powered business management platform for salons and barbershops",
   "author": "Effuse Labs",
   "license": "AGPL-3.0-only",
-  "homepage": "https://github.com/jshields-ca/lumina#readme",
+  "homepage": "https://github.com/effuselabs/lumina#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jshields-ca/lumina.git"
+    "url": "git+https://github.com/effuselabs/lumina.git"
   },
   "bugs": {
-    "url": "https://github.com/jshields-ca/lumina/issues"
+    "url": "https://github.com/effuselabs/lumina/issues"
   },
   "scripts": {
     "dev": "next dev",
