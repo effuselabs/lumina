@@ -7,6 +7,15 @@ export interface CacheOptions {
   date: Date;
   serviceId?: string;
   duration?: number;
+  /**
+   * The business timezone the slots were computed in. Part of the key, because
+   * it is part of the answer: the same business, day, staff and service yield
+   * different instants in a different zone. Without it a business that corrects
+   * its timezone keeps being served the old times until the entries expire —
+   * and, when the calculator itself was fixed, every row written by the old
+   * code stayed servable and correct-looking.
+   */
+  timezone?: string;
 }
 
 export interface CacheEntry {
@@ -415,6 +424,7 @@ export class AvailabilityCache {
       options.date.toISOString().split('T')[0], // YYYY-MM-DD format
       options.serviceId || 'any',
       options.duration?.toString() || 'default',
+      options.timezone || 'unzoned',
     ];
 
     return parts.join(':');

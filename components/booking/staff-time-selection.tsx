@@ -31,6 +31,14 @@ import {
   NetworkStatusIndicator,
 } from './booking-loading-states';
 
+/** A calendar cell as `YYYY-MM-DD`, read in the zone it was built in. */
+function toDateParam(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
 export interface TimeSlot {
   startTime: Date;
   endTime: Date;
@@ -70,6 +78,7 @@ interface AvailabilityResponse {
   availableSlots: TimeSlot[];
   nextAvailableDate?: string;
   requestedDate: string;
+  timezone: string;
   totalSlotsFound: number;
   metadata: {
     totalSlots: number;
@@ -99,6 +108,9 @@ export function StaffTimeSelection({
     null
   );
   const [alternativeSlots, setAlternativeSlots] = useState<TimeSlot[]>([]);
+  // The salon's zone, from the availability response. Null until the first
+  // one lands, which is also before any slot exists to render.
+  const [businessTimezone, setBusinessTimezone] = useState<string | null>(null);
 
   // Network resilience hook
   const { resilientFetch, networkState, getNetworkErrorMessage } =
@@ -136,20 +148,58 @@ export function StaffTimeSelection({
     }
   };
 
-  const formatTime = (date: Date) => {
+  // A slot is an absolute instant. Formatting it with no `timeZone` renders it
+  // wherever the visitor happens to be, which is how a 9-to-6 salon offered
+  // 4:00 AM appointments to someone three zones away. The salon's own clock is
+  // the only one that means anything here, so every slot time and slot date is
+  // rendered in it — and labelled, so nobody has to guess which it is.
+  const formatSlotTime = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
+      ...(businessTimezone ? { timeZone: businessTimezone } : {}),
     }).format(date);
   };
 
+  const formatSlotDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      ...(businessTimezone ? { timeZone: businessTimezone } : {}),
+    }).format(date);
+  };
+
+  const timezoneLabel = () => {
+    if (!businessTimezone) return null;
+
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: businessTimezone,
+      timeZoneName: 'short',
+    })
+      .formatToParts(new Date())
+      .find(part => part.type === 'timeZoneName')?.value;
+  };
+
+  // `selectedDate` and `lastUpdateTime` are not slots. The first is a calendar
+  // label the visitor picked and the second is when their own screen last
+  // refreshed, so both belong in the viewer's zone, not the salon's.
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+    }).format(date);
+  };
+
+  const formatViewerTime = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
     }).format(date);
   };
 
@@ -189,7 +239,11 @@ export function StaffTimeSelection({
 
       const params = new URLSearchParams({
         serviceIds: serviceIds.join(','),
-        date: selectedDate.toISOString().split('T')[0],
+        // The day the visitor clicked, not the instant it starts. Calendar
+        // cells are built at browser-local midnight, so `toISOString()` on one
+        // rolls to the previous day for every visitor east of Greenwich — they
+        // asked for Wednesday and were shown Tuesday.
+        date: toDateParam(selectedDate),
         duration: totalDuration.toString(),
       });
 
@@ -216,6 +270,7 @@ export function StaffTimeSelection({
           endTime: new Date(slot.endTime),
         }))
       );
+      setBusinessTimezone(data.timezone ?? null);
       setNextAvailableDate(data.nextAvailableDate || null);
       setLastUpdateTime(new Date());
 
@@ -593,40 +648,48 @@ export function StaffTimeSelection({
                     )}
                   </div>
                 ) : (
-                  Object.entries(slotsByStaff).map(
-                    ([staffId, { staff, slots }]) => (
-                      <div key={staffId} className="space-y-2">
-                        <h4 className="font-medium text-neutral-700">
-                          {staff.name}
-                        </h4>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                          {slots.map((slot, index) => (
-                            <Button
-                              key={index}
-                              variant={
-                                selectedSlot &&
-                                selectedSlot.startTime.getTime() ===
-                                  slot.startTime.getTime() &&
-                                selectedSlot.staffId === slot.staffId
-                                  ? 'primary'
-                                  : 'outline'
-                              }
-                              size="sm"
-                              onClick={() => handleSlotSelect(slot)}
-                              className="flex flex-col items-center p-2 text-xs"
-                            >
-                              <span className="font-medium">
-                                {formatTime(slot.startTime)}
-                              </span>
-                              <span className="text-xs text-neutral-500">
-                                {formatDuration(slot.totalDuration)}
-                              </span>
-                            </Button>
-                          ))}
+                  <>
+                    {timezoneLabel() && (
+                      <p className="text-sm text-neutral-500">
+                        Times shown in the salon&rsquo;s local time (
+                        {timezoneLabel()}).
+                      </p>
+                    )}
+                    {Object.entries(slotsByStaff).map(
+                      ([staffId, { staff, slots }]) => (
+                        <div key={staffId} className="space-y-2">
+                          <h4 className="font-medium text-neutral-700">
+                            {staff.name}
+                          </h4>
+                          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                            {slots.map((slot, index) => (
+                              <Button
+                                key={index}
+                                variant={
+                                  selectedSlot &&
+                                  selectedSlot.startTime.getTime() ===
+                                    slot.startTime.getTime() &&
+                                  selectedSlot.staffId === slot.staffId
+                                    ? 'primary'
+                                    : 'outline'
+                                }
+                                size="sm"
+                                onClick={() => handleSlotSelect(slot)}
+                                className="flex flex-col items-center p-2 text-xs"
+                              >
+                                <span className="font-medium">
+                                  {formatSlotTime(slot.startTime)}
+                                </span>
+                                <span className="text-xs text-neutral-500">
+                                  {formatDuration(slot.totalDuration)}
+                                </span>
+                              </Button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )
-                  )
+                      )
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -634,7 +697,7 @@ export function StaffTimeSelection({
             {/* Real-time update indicator */}
             {!loading && availableSlots.length > 0 && (
               <div className="text-center text-xs text-neutral-500">
-                Last updated: {formatTime(lastUpdateTime)}
+                Last updated: {formatViewerTime(lastUpdateTime)}
                 <br />
                 Times update automatically every 30 seconds
               </div>
@@ -659,11 +722,11 @@ export function StaffTimeSelection({
                   Date & Time
                 </p>
                 <p className="text-lg font-semibold">
-                  {formatDate(selectedSlot.startTime)}
+                  {formatSlotDate(selectedSlot.startTime)}
                 </p>
                 <p className="text-lg font-semibold">
-                  {formatTime(selectedSlot.startTime)} -{' '}
-                  {formatTime(selectedSlot.endTime)}
+                  {formatSlotTime(selectedSlot.startTime)} -{' '}
+                  {formatSlotTime(selectedSlot.endTime)}
                 </p>
               </div>
               <div>

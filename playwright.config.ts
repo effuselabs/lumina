@@ -38,6 +38,20 @@ export default defineConfig({
 
     /* Record video on failure */
     video: 'retain-on-failure',
+
+    /*
+     * The browser runs in a third zone, different from both the server's and
+     * the salon's.
+     *
+     * Three distinct zones is the whole point. The availability bug was
+     * invisible for months because CI ran in UTC and the seeded salon is in
+     * America/Los_Angeles, so every naive `setHours` and `getDay` agreed with
+     * itself. Any two of the three matching hides a class of this bug, so:
+     * salon in Los Angeles (prisma/seed.ts), server in Halifax (webServer.env
+     * below), browser in Sydney — and Sydney is across the date line from both,
+     * which is where day-shifting errors show up rather than hour-shifting ones.
+     */
+    timezoneId: 'Australia/Sydney',
   },
 
   /*
@@ -70,6 +84,19 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    env: {
+      /*
+       * The server half of the gate, and the half that actually matters.
+       *
+       * `timezoneId` above only moves the browser. Every naive date conversion
+       * this suite is meant to catch happens in Node — in the availability
+       * calculator, in the confirmation email — so a browser-only zone would
+       * report green while the server bug survived untouched. Halifax because
+       * it is an hour off Eastern and observes DST, so an offset hardcoded
+       * anywhere shows up here as a wrong answer rather than a lucky one.
+       */
+      TZ: 'America/Halifax',
+    },
   },
 
   /* Global setup and teardown */

@@ -134,40 +134,45 @@ time, after the booking loop works.
   root cause as the seed-reset bug: a process that instantiates Prisma directly
   gets no `.env`, because only the Prisma and Next CLIs load it.
 
-- **Availability times are timezone-wrong.** The API emits naive local times
-  tagged as UTC — a salon open 09:00 Los Angeles time returns
-  `2026-09-14T09:00:00.000Z`. The browser then renders that in the viewer's
-  zone, so a 9-to-6 salon showed 4:00 AM slots to a UTC-3 visitor, and asking
-  for Wednesday returned Tuesday's slots. `npx playwright test` passes in CI
-  only because CI runs in UTC, where the bug is invisible; with
-  `TZ=America/Halifax` the availability spec fails with zero slots.
+- ~~**Availability times are timezone-wrong.**~~ **Fixed** in
+  `fix/availability-business-timezone`. The API emitted naive local times
+  tagged as UTC — a salon open 09:00 Los Angeles returned
+  `2026-09-14T09:00:00.000Z` — so a 9-to-6 salon showed 4:00 AM slots to a
+  UTC-3 visitor and asking for Wednesday returned Tuesday's slots.
 
-  Reviewed by three agents; findings verified independently. The business
-  timezone is already fetched and then thrown away — `availability/route.ts:81`
-  selects it, `:156` discards the return value, and every mention of
-  `timezone` in `availability-calculator.ts` is a type, a pass-through, or
-  response metadata. Not one is a computation. The naive conversions are
-  `setHours`/`getDay` at `availability-calculator.ts:290, 305-308, 521-555,
-599, 607, 795` and `alternative-slots-service.ts:329-333`. Two render sites
-  finish the job: `staff-time-selection.tsx:139-145` formats with no
-  `timeZone`, and `book/route.ts:661-662` renders confirmation emails in the
-  server's zone, so emails are already wrong independently. The client also
-  shifts the day — `staff-time-selection.tsx:293` builds cells at browser-local
-  midnight and `:192` sends `toISOString()`, so a UTC+ viewer requests the
-  wrong date. No schema migration is needed; appointments are already stored
-  as instants and the write path works purely in instants.
+  `AvailabilityCalculator` now resolves the timezone from the business row
+  itself rather than trusting a caller to pass one, and computes with
+  `TimeZoneHandler.localToUTC`. Fixed alongside it: the booking page sent
+  `toISOString()` of a browser-local midnight and rendered slots with no
+  `timeZone`; `book/route.ts` formatted confirmation emails and staff
+  notifications with the server's clock; `alternative-slots-service.ts` had the
+  same `setHours` defect in the fallback path.
 
-  **An earlier version of this entry said the fix needs
-  `timezone-aware-availability.ts` to become the single path. That was wrong.**
-  That file is dead (its only importer is its own test), it wraps the broken
-  calculator rather than replacing it, 13 of its 19 tests fail, and its
-  `getBusinessTimeZone` is a stub returning a hardcoded `'America/New_York'` —
-  adopting it would turn a 7-hour error into a 3-hour one. Delete it in 4d.
-  `lib/services/timezone-handler.ts` is the salvage: luxon-based, 39/40 tests
-  passing, with the `localToUTC` primitive the fix needs, and called by no UI.
+  The gate is `__tests__/lib/services/availability-calculator-timezone.test.ts`
+  in `test:ci`, asserting absolute instants so it fails in UTC too — a test
+  that only failed under `TZ=America/Halifax` would gate nothing on a UTC
+  runner. `playwright.config.ts` now runs three distinct zones: salon in Los
+  Angeles, server in Halifax (`webServer.env.TZ`), browser in Sydney
+  (`timezoneId`). Both halves are needed; `timezoneId` alone moves only the
+  browser while every conversion at issue happens in Node.
 
-  Sequenced as three PRs — the failing gate first, then the fix, then the
-  deletion. See "Phase 4 — the current milestone".
+  **What the fix actually taught.** The availability calculator and the
+  conflict engine that re-validates its output were wrong in the same
+  direction, so they agreed, and the bug hid in the agreement — fixing one and
+  not the other turned a wrong answer into no answer at all, and the public
+  endpoint returned zero slots for a day the salon was open. Both now share
+  `lib/services/business-time.ts`, which holds the only conversions between a
+  salon's wall clock and an instant. Two more silent failures surfaced the same
+  way, both fixed: `AvailabilityCache` is a Postgres table whose key had no
+  timezone, so every row computed by the old code would have kept being served
+  after deploy; and `getAvailableStaff` filtered on a relation named
+  `staffServices` where the schema declares `services`, so Prisma rejected the
+  query and the surrounding catch turned that into an empty staff list.
+
+  `timezone-aware-availability.ts` is still to be deleted — dead, wrapping the
+  broken calculator rather than replacing it, 13 of its 19 tests failing, and
+  its `getBusinessTimeZone` a stub returning a hardcoded `'America/New_York'`.
+  Its own PR, per 4d.
 
 - **An appointment outside business hours is invisible on the calendar.**
   `components/appointments/week-view.tsx:95-108` bounds the grid to the
@@ -182,6 +187,75 @@ time, after the booking loop works.
   reproduce it, and in every case the salon silently loses sight of a client
   who will still turn up. The grid should span business hours _union the
   appointments actually present_, and say so when it extends.
+
+- **Business metrics should bucket by the salon's day, not UTC.**
+  `business-metrics-tracker.ts` bucketed by the _server's_ day, so two hosts in
+  different zones wrote two rows for the same date and neither could find the
+  other's — the upsert key is (businessId, date, type). Pinned to UTC in
+  `fix/availability-business-timezone`, because production runs in UTC and every
+  row already written uses UTC midnight, so that keeps them all reachable. But
+  UTC is not what a salon owner means by "Tuesday's bookings", and the
+  peak-hours histogram is a chart of the wrong hours. Bucketing by business
+  timezone changes what the numbers mean and needs a migration for the existing
+  rows; it belongs with the analytics work, not behind a bug fix.
+
+  Worth noting how it was found: `npm run test:ci` was **red on `main`** for
+  anyone outside UTC, and had been. CI never saw it. The three-zone Playwright
+  config now closes that hole for the booking path; nothing yet closes it for
+  the rest of the suite.
+
+- **Availability re-validates every slot two or three times over.** Measured:
+  one request issued **1,318 database queries**, reading the day's opening
+  hours 180 times. The calculator checks each slot it generates through the
+  conflict engine; the real-time service then re-checks each survivor through
+  `CalendarIntegration`, which calls the calculator again. Each layer keeps its
+  own copy of the same queries.
+
+  `schedule-cache.ts` brought that to **391 queries / 312ms**, which is enough:
+  the booking page aborts its own request after 8 seconds
+  (`use-network-resilience.ts:174`), and it was exceeding that on CI while
+  returning correct answers. But memoising reads treats the symptom. Removing a
+  validation layer is the fix, and it is not a tidy-up — it touches the booking
+  write path, so it wants its own PR, its own failing test, and this
+  measurement to check itself against. `Appointment.findMany` is still issued
+  per slot and is the largest remaining item.
+
+- **The booking write re-checks conflicts outside its transaction.**
+  `book/route.ts:297` queries for conflicting appointments, then opens a
+  transaction at `:442` to create the appointment. Two clients booking the same
+  slot at the same time can both pass the check before either writes. Not
+  reachable by the e2e spec, which books alone; the fix is either to move the
+  check inside the transaction or to add a unique constraint on (staffId,
+  startTime) and handle the violation. Worth doing before real customers, not
+  before the loop works.
+
+- **Railway had stopped reading `railway.json`.** The service's
+  `railwayConfigFile` was null and every setting it supplied had reverted to
+  defaults — no `healthcheckPath`, no `preDeployCommand`, `RAILPACK` instead of
+  `NIXPACKS`. So the guarantee `deploy.yml` documents ("Railway aborts the
+  release if the pre-deploy command fails, so new code can never go live
+  against an un-migrated schema") was not true. Restored to `/railway.json`
+  with its six settings on 2026-09-06.
+
+  Cause: a `railway config` run created `.railway/railway.ts` and switched the
+  service to Infrastructure-as-Code, but that file was never committed and its
+  `builder` and `preDeployCommand` are commented out. **Config as Code stops
+  working 2026-12-01** — migrating to `.railway/railway.ts` properly, which
+  needs the `railway` package as a devDependency, is Phase 7 work with a real
+  deadline.
+
+  Separately: a deploy is skipped, not failed, when CI is red — `skippedReason:
+"CI check suite failed"`. Staging silently ran week-old code. Worth knowing
+  that a red `main` is invisible from the staging URL.
+
+- **`npm run test:e2e` cannot pass — two spec files fail to load at all.**
+  `cross-browser-responsive.spec.ts:21` and `public-booking-e2e.spec.ts:174`
+  call `test.use({ browserName })` inside a `test.describe`, which Playwright
+  rejects before running anything. So the documented five-gate command is
+  currently unrunnable as a whole, and the working measure is the four
+  collectable specs. Of those, 23 of 40 fail identically on `main` — legacy
+  suites from the deleted-tests era, in `appointment-management.spec.ts` and
+  friends. Part of 4d.
 
 - The Clients page's staff filter matches `Client.preferredStaff`
   (`app/api/clients/route.ts:108`), not the staff a client has actually

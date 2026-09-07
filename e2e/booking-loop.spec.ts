@@ -341,7 +341,15 @@ test.describe('booking loop', () => {
     await expect(
       page.getByRole('heading', { name: business.name })
     ).toBeVisible();
-    await expect(page.getByText(/select services/i)).toBeVisible();
+    // The step's own <h2>, not the progress stepper's "Select Services" label.
+    // That label is hidden below the stepper's breakpoint, so this assertion
+    // could never pass on Mobile Safari, and on desktop it passed only once the
+    // stepper had hydrated — which is why this line failed CI on `main` in one
+    // run and its own retry. The heading is the actual content of the step and
+    // is present in both viewports.
+    await expect(
+      page.getByRole('heading', { name: /select your services/i })
+    ).toBeVisible();
 
     const firstService = page
       .getByRole('button', { name: /add|select/i })

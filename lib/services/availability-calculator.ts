@@ -16,7 +16,19 @@
 
 import { prisma } from '@/lib/prisma';
 import { AvailabilityCache } from './availability-cache';
+import {
+  businessDayBounds,
+  businessTimeToInstant,
+  dayOfWeekFor,
+  resolveBusinessTimezone,
+  toDateKey,
+} from './business-time';
 import { ConflictDetectionEngine } from './conflict-detection-engine';
+import {
+  BOOKING_STATE_TTL_MS,
+  CONFIG_TTL_MS,
+  remember,
+} from './schedule-cache';
 
 // Types for availability calculation
 export interface AvailabilitySlot {
@@ -83,8 +95,9 @@ export class AvailabilityCalculator {
     const startTime = Date.now();
 
     try {
-      // Validate business context
-      await this.validateBusinessContext(query.businessId);
+      // Validate business context, and take its timezone while we are here.
+      const { timezone } = await this.validateBusinessContext(query.businessId);
+      const dateKey = toDateKey(query.date);
 
       // AvailabilityCache takes CacheOptions and derives its own key.
       // This used to pass a pre-built string with `as any`, so
@@ -99,6 +112,7 @@ export class AvailabilityCalculator {
         date: query.date,
         serviceId: query.serviceId,
         duration: query.duration,
+        timezone,
       };
 
       const cachedSlots = await AvailabilityCache.get(cacheOptions);
@@ -120,7 +134,7 @@ export class AvailabilityCalculator {
             conflictedSlots: slots.length - availableSlots,
             cacheHit: true,
             calculationTime: Date.now() - startTime,
-            timezone: query.timezone || 'UTC',
+            timezone,
           },
         };
       }
@@ -153,7 +167,7 @@ export class AvailabilityCalculator {
             conflictedSlots: 0,
             cacheHit: false,
             calculationTime: Date.now() - startTime,
-            timezone: query.timezone || 'UTC',
+            timezone,
           },
         };
       }
@@ -166,7 +180,8 @@ export class AvailabilityCalculator {
           query.businessId,
           query.date,
           duration,
-          query.timezone
+          timezone,
+          dateKey
         );
         allSlots.push(...staffSlots);
       }
@@ -186,7 +201,7 @@ export class AvailabilityCalculator {
           conflictedSlots: conflictedSlots.length,
           cacheHit: false,
           calculationTime: Date.now() - startTime,
-          timezone: query.timezone || 'UTC',
+          timezone,
         },
       };
 
@@ -213,7 +228,10 @@ export class AvailabilityCalculator {
    * @param businessId - The business ID
    * @param date - The date to calculate availability for
    * @param requiredDuration - Required duration in minutes
-   * @param timezone - Optional timezone for calculations
+   * @param timezone - The business's IANA timezone. Every slot instant is
+   *   derived from it; without it the slots mean nothing.
+   * @param dateKey - The requested calendar date as `yyyy-MM-dd`, resolved by
+   *   the caller so a day is not re-derived (and re-shifted) at each level.
    * @returns Promise<AvailabilitySlot[]> - Available slots for the staff member
    */
   static async calculateStaffAvailability(
@@ -221,9 +239,15 @@ export class AvailabilityCalculator {
     businessId: string,
     date: Date,
     requiredDuration: number,
-    timezone?: string
+    timezone?: string,
+    dateKey?: string
   ): Promise<AvailabilitySlot[]> {
     try {
+      // Callers that reach this directly do not have to know the zone; the
+      // business row does. Resolving here keeps the public entry points honest.
+      const zone =
+        timezone ?? (await this.validateBusinessContext(businessId)).timezone;
+      const day = dateKey ?? toDateKey(date);
       // Validate staff context
       await this.validateStaffContext(staffId, businessId);
 
@@ -235,13 +259,15 @@ export class AvailabilityCalculator {
       const constraints = await this.getAvailabilityConstraints(
         staffId,
         businessId,
-        date
+        day,
+        zone
       );
 
       // Generate potential time slots
       const potentialSlots = await this.generatePotentialSlots(
         constraints,
-        date,
+        day,
+        zone,
         requiredDuration,
         staffId,
         staffName
@@ -284,10 +310,11 @@ export class AvailabilityCalculator {
   private static async getAvailabilityConstraints(
     staffId: string,
     businessId: string,
-    date: Date
+    dateKey: string,
+    timezone: string
   ): Promise<AvailabilityConstraints> {
     try {
-      const dayOfWeek = date.getDay();
+      const dayOfWeek = dayOfWeekFor(dateKey);
 
       // Get business hours for the day
       const businessHours = await this.getBusinessHoursForDay(
@@ -298,65 +325,81 @@ export class AvailabilityCalculator {
       // Get staff availability for the day
       const staffAvailability = await this.getStaffAvailabilityForDay(
         staffId,
-        date
+        dateKey,
+        dayOfWeek
       );
 
-      // Get existing appointments for the staff member on this date
-      const startOfDay = new Date(date);
-      startOfDay.setHours(0, 0, 0, 0);
-      const endOfDay = new Date(date);
-      endOfDay.setHours(23, 59, 59, 999);
+      // The salon's own day, not the server's. In Los Angeles it runs from
+      // 07:00Z to 07:00Z the next morning, so bounding on the server's midnight
+      // both misses that evening's appointments and picks up the previous
+      // day's.
+      const { startOfDay, endOfDay } = businessDayBounds(dateKey, timezone);
 
-      const existingAppointments = await prisma.appointment.findMany({
-        where: {
-          staffId,
-          businessId,
-          startTime: {
-            gte: startOfDay,
-            lte: endOfDay,
-          },
-          status: {
-            in: ['CONFIRMED'],
-          },
-        },
-        select: {
-          startTime: true,
-          endTime: true,
-        },
-      });
+      const existingAppointments = await remember(
+        `appointments:${businessId}:${staffId}:${dateKey}`,
+        BOOKING_STATE_TTL_MS,
+        () =>
+          prisma.appointment.findMany({
+            where: {
+              staffId,
+              businessId,
+              startTime: {
+                gte: startOfDay,
+                lte: endOfDay,
+              },
+              status: {
+                in: ['CONFIRMED'],
+              },
+            },
+            select: {
+              startTime: true,
+              endTime: true,
+            },
+          })
+      );
 
       // Get time-off periods that overlap with this date
-      const timeOffPeriods = await prisma.timeOffRequest.findMany({
-        where: {
-          staffId,
-          status: 'APPROVED',
-          startDate: {
-            lte: endOfDay,
-          },
-          endDate: {
-            gte: startOfDay,
-          },
-        },
-        select: {
-          startDate: true,
-          endDate: true,
-        },
-      });
+      const timeOffPeriods = await remember(
+        `timeOff:${staffId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.timeOffRequest.findMany({
+            where: {
+              staffId,
+              status: 'APPROVED',
+              startDate: {
+                lte: endOfDay,
+              },
+              endDate: {
+                gte: startOfDay,
+              },
+            },
+            select: {
+              startDate: true,
+              endDate: true,
+            },
+          })
+      );
 
       // Get holidays for this date (business-wide)
-      const holidays = (await prisma.businessHoliday.findMany({
-        where: {
-          businessId,
-          date: {
-            gte: startOfDay,
-            lte: endOfDay,
-          },
-        },
-        select: {
-          date: true,
-          name: true,
-        },
-      })) as { date: Date; name: string }[];
+      const holidays = (await remember(
+        `holidays:${businessId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.businessHoliday.findMany({
+            where: {
+              businessId,
+              date: {
+                gte: startOfDay,
+                lte: endOfDay,
+              },
+            },
+            select: {
+              date: true,
+              name: true,
+            },
+          })
+      )) as { date: Date; name: string }[];
 
       return {
         businessHours,
@@ -377,7 +420,8 @@ export class AvailabilityCalculator {
    */
   private static async generatePotentialSlots(
     constraints: AvailabilityConstraints,
-    date: Date,
+    dateKey: string,
+    timezone: string,
     requiredDuration: number,
     staffId: string,
     staffName: string
@@ -403,12 +447,14 @@ export class AvailabilityCalculator {
     // Get the effective working hours (intersection of business hours and staff availability)
     for (const staffPeriod of constraints.staffAvailability) {
       const effectiveStart = this.getLatestTime(
-        date,
+        dateKey,
+        timezone,
         constraints.businessHours.openTime,
         staffPeriod.startTime
       );
       const effectiveEnd = this.getEarliestTime(
-        date,
+        dateKey,
+        timezone,
         constraints.businessHours.closeTime,
         staffPeriod.endTime
       );
@@ -518,14 +564,14 @@ export class AvailabilityCalculator {
    * Get the latest of two times on a given date
    * Private helper method
    */
-  private static getLatestTime(date: Date, time1: string, time2: string): Date {
-    const date1 = new Date(date);
-    const [hours1, minutes1] = time1.split(':').map(Number);
-    date1.setHours(hours1, minutes1, 0, 0);
-
-    const date2 = new Date(date);
-    const [hours2, minutes2] = time2.split(':').map(Number);
-    date2.setHours(hours2, minutes2, 0, 0);
+  private static getLatestTime(
+    dateKey: string,
+    timezone: string,
+    time1: string,
+    time2: string
+  ): Date {
+    const date1 = businessTimeToInstant(dateKey, time1, timezone);
+    const date2 = businessTimeToInstant(dateKey, time2, timezone);
 
     return date1 > date2 ? date1 : date2;
   }
@@ -535,17 +581,13 @@ export class AvailabilityCalculator {
    * Private helper method
    */
   private static getEarliestTime(
-    date: Date,
+    dateKey: string,
+    timezone: string,
     time1: string,
     time2: string
   ): Date {
-    const date1 = new Date(date);
-    const [hours1, minutes1] = time1.split(':').map(Number);
-    date1.setHours(hours1, minutes1, 0, 0);
-
-    const date2 = new Date(date);
-    const [hours2, minutes2] = time2.split(':').map(Number);
-    date2.setHours(hours2, minutes2, 0, 0);
+    const date1 = businessTimeToInstant(dateKey, time1, timezone);
+    const date2 = businessTimeToInstant(dateKey, time2, timezone);
 
     return date1 < date2 ? date1 : date2;
   }
@@ -560,14 +602,19 @@ export class AvailabilityCalculator {
   ): Promise<{ openTime: string; closeTime: string } | null> {
     try {
       // Map JavaScript day (0=Sunday) to our database day format
-      const businessHours = await prisma.businessHours.findUnique({
-        where: {
-          businessId_dayOfWeek: {
-            businessId,
-            dayOfWeek,
-          },
-        },
-      });
+      const businessHours = await remember(
+        `hours:${businessId}:${dayOfWeek}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.businessHours.findUnique({
+            where: {
+              businessId_dayOfWeek: {
+                businessId,
+                dayOfWeek,
+              },
+            },
+          })
+      );
 
       if (
         businessHours &&
@@ -594,20 +641,27 @@ export class AvailabilityCalculator {
    */
   private static async getStaffAvailabilityForDay(
     staffId: string,
-    date: Date
+    dateKey: string,
+    dayOfWeek: number
   ): Promise<Array<{ startTime: string; endTime: string }> | null> {
-    const dayOfWeek = date.getDay();
-
     try {
-      // First check for any overrides for this specific date
-      const override = await prisma.staffAvailabilityOverride.findUnique({
-        where: {
-          staffId_date: {
-            staffId,
-            date: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-          },
-        },
-      });
+      // First check for any overrides for this specific date. The column is
+      // `@db.Date`, which Prisma reads and writes at midnight UTC, so the key
+      // must be built there too — `new Date(y, m, d)` is midnight *locally*
+      // and matches no row at all west of Greenwich.
+      const override = await remember(
+        `override:${staffId}:${dateKey}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.staffAvailabilityOverride.findUnique({
+            where: {
+              staffId_date: {
+                staffId,
+                date: new Date(`${dateKey}T00:00:00.000Z`),
+              },
+            },
+          })
+      );
 
       if (override) {
         if (override.isAvailable && override.startTime && override.endTime) {
@@ -618,20 +672,25 @@ export class AvailabilityCalculator {
       }
 
       // Get regular weekly availability
-      const availability = await prisma.staffAvailability.findMany({
-        where: {
-          staffId,
-          dayOfWeek,
-          // isActive: true
-        },
-        select: {
-          startTime: true,
-          endTime: true,
-        },
-        orderBy: {
-          startTime: 'asc',
-        },
-      });
+      const availability = await remember(
+        `staffHours:${staffId}:${dayOfWeek}`,
+        CONFIG_TTL_MS,
+        () =>
+          prisma.staffAvailability.findMany({
+            where: {
+              staffId,
+              dayOfWeek,
+              // isActive: true
+            },
+            select: {
+              startTime: true,
+              endTime: true,
+            },
+            orderBy: {
+              startTime: 'asc',
+            },
+          })
+      );
 
       return availability.length > 0 ? availability : null;
     } catch (error) {
@@ -650,22 +709,18 @@ export class AvailabilityCalculator {
     date?: Date
   ): Promise<string[]> {
     try {
-      const whereClause: any = {
-        businessId,
-        isActive: true,
-      };
-
-      // If serviceId is provided, filter by staff who can perform this service
-      if (serviceId) {
-        whereClause.staffServices = {
-          some: {
-            serviceId,
-          },
-        };
-      }
-
+      // `services`, not `staffServices`. The relation on Staff is named
+      // `services` (schema.prisma), so the old name made Prisma reject the
+      // whole query — and the catch below turned that into an empty staff
+      // list, so `calculateAvailability` without an explicit `staffId`
+      // returned zero slots and reported no error. Typed rather than `any`,
+      // which is what let the wrong name through in the first place.
       const staff = await prisma.staff.findMany({
-        where: whereClause,
+        where: {
+          businessId,
+          isActive: true,
+          ...(serviceId ? { services: { some: { serviceId } } } : {}),
+        },
         select: {
           id: true,
         },
@@ -749,15 +804,29 @@ export class AvailabilityCalculator {
    */
   private static async validateBusinessContext(
     businessId: string
-  ): Promise<void> {
-    const business = await prisma.business.findUnique({
-      where: { id: businessId },
-      select: { id: true },
-    });
+  ): Promise<{ timezone: string }> {
+    // The business row is the authority, not the caller. Every route that
+    // reaches this used to either forget the timezone or fetch it and drop it,
+    // so asking for it here is the only way it cannot go missing again.
+    //
+    // Read through the shared memo rather than directly: the conflict engine
+    // re-enters this method once per proposed slot, so an unmemoised lookup is
+    // hundreds of `business.findUnique` calls for one availability request.
+    const business = await remember(
+      `businessExists:${businessId}`,
+      CONFIG_TTL_MS,
+      () =>
+        prisma.business.findUnique({
+          where: { id: businessId },
+          select: { id: true },
+        })
+    );
 
     if (!business) {
       throw new Error(`Business ${businessId} not found`);
     }
+
+    return { timezone: await resolveBusinessTimezone(businessId) };
   }
 
   /**
@@ -785,15 +854,6 @@ export class AvailabilityCalculator {
     if (!staff.isActive) {
       throw new Error(`Staff member ${staffId} is not active`);
     }
-  }
-
-  /**
-   * Generate a cache key for availability queries
-   * Private helper method
-   */
-  private static generateCacheKey(query: AvailabilityQuery): string {
-    const dateStr = query.date.toISOString().split('T')[0];
-    return `availability:${query.businessId}:${query.serviceId || 'any'}:${query.staffId || 'any'}:${dateStr}:${query.duration}`;
   }
 
   // Public cache management methods
