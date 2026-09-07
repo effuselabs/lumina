@@ -98,16 +98,30 @@ not just a visibility toggle, and two parts of it are blocking.
 - **Rotate the Railway API token.** It was pasted in plaintext into a chat
   transcript and has not been rotated.
 
-**The licence decision itself.** The requirement — free to self-host, revenue
-from running it for people — is the case AGPL-3.0 exists for: OSI-approved
-open source, while making it unattractive for someone else to offer Lumina as
-a closed hosted service. The alternatives are permissive (MIT/Apache-2.0,
-simpler and friendlier to contributors, but nothing stops a competitor hosting
-it) or source-available (BSL/SSPL, which are not open source and would
-contradict the positioning). Decide deliberately, and note that keeping the
-option of selling a proprietary licence later requires collecting a CLA from
-contributors from the first external commit — retrofitting one means tracking
-down everyone who ever contributed.
+**The licence decision: AGPL-3.0.** Decided 2026-09-06. The requirement — free
+to self-host, revenue from running it for people — is the case AGPL-3.0 exists
+for: OSI-approved open source, while making it unattractive for someone else to
+offer Lumina as a closed hosted service. The alternatives were permissive
+(MIT/Apache-2.0, simpler and friendlier to contributors, but nothing stops a
+competitor hosting it) or source-available (BSL/SSPL, which are not open source
+and would contradict the positioning).
+
+Two consequences that follow from it, and are easier to handle now than later:
+
+- **A CLA is needed from the first external contribution onward** if selling a
+  proprietary licence stays an option. Without it, every contributor holds
+  copyright in their own work under AGPL, and relicensing later means tracking
+  down each of them individually. Adding a CLA on day one costs a bot and a
+  file; retrofitting one can be impossible.
+- **AGPL's obligations reach across the network.** Anyone running a modified
+  Lumina as a service must offer their users the modified source. That is the
+  point, and it also applies to us: our own deployment is unmodified upstream,
+  so the obligation is satisfied by the public repository, but that stops being
+  true the moment staging or production carries a patch that is not pushed.
+
+Adding the `LICENSE` file and the matching `package.json` field is its own
+change — the licence text is a legal document, and it should be reviewable on
+its own rather than buried in a documentation diff.
 
 **Documentation to follow the decision:** a `LICENSE` file and a matching
 `package.json` field; a README that leads with what Lumina is and how to run it
