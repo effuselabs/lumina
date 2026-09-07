@@ -89,6 +89,12 @@ Routes live in `app/`, domain logic in `lib/services/`, data access in
 where design tokens live — are in [CLAUDE.md](CLAUDE.md), which is the working
 agreement rather than a style guide.
 
+## Security
+
+Found something that crosses a tenant boundary, or anything else security
+related? Please report it privately rather than in an issue —
+[SECURITY.md](SECURITY.md) explains how, and what is already known.
+
 ## Contributing
 
 Contributions are welcome, and small ones especially. Start with
