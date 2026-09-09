@@ -431,7 +431,27 @@ time, after the booking loop works.
   appropriate mid-rebuild.
 - Before real customers: `/api/gdpr/export` and `/delete` are untested while
   handling PII, and there is no privacy policy or terms.
-- Tenant isolation has no test coverage. 67 API routes reference `businessId`;
-  33 verify membership. Some of the gap is legitimate (public booking routes
-  take a businessId by design), but this is the highest-value security work
-  outstanding — schedule it with the Phase 4d rebuild.
+- ~~Tenant isolation has no test coverage.~~ **Done.** Thirty authenticated
+  routes took a `businessId` from the caller and never checked it. The cause
+  was that `CLAUDE.md` mandated `requireBusinessAccess`, which calls
+  `redirect()` and so cannot work in a route handler — a rule nobody could
+  follow, hand-rolled six ways instead. `authorizeBusinessAccess` in
+  `lib/auth/business-access.ts` is the one that works, and
+  `__tests__/security/tenant-isolation.test.ts` fails the build for any new
+  route that skips it.
+
+  Ten routes were fixed; fifteen were deleted as dead (`/api/availability/*`
+  in full, three `/api/booking/*` duplicates, three telemetry routes whose
+  only caller had no importers); five turned out to authorize correctly by a
+  mechanism the detector could not see, and are recorded as such.
+
+  Two things the sweep found and did not fix:
+
+  - `/api/monitoring/performance` now checks membership, but
+    `appointmentPerformanceMonitor.generateReport` takes only a time window —
+    it does not scope by business. The check stops a stranger asking; it does
+    not yet make the answer theirs. Scoping the report is real work with no
+    consumer today, since nothing calls the endpoint.
+  - There is no admin role. Several endpoints are application-wide by nature
+    and are currently open to any authenticated user. Worth a decision before
+    real customers.
