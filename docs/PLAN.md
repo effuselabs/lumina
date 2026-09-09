@@ -24,7 +24,7 @@ start:
 | `npm run db:seed`       | fails                                  | exits 0                   |
 | `npm run type-check`    | 686 errors                             | 0                         |
 | `npm run lint`          | 180 errors, not run at build           | 0 errors, gates the build |
-| Jest                    | 101 of 114 suites failing, 0% coverage | 427 tests green in CI     |
+| Jest                    | 101 of 114 suites failing, 0% coverage | 495 tests green in CI     |
 | Deployment              | never happened                         | auto-deploys on green CI  |
 | Booking loop            | never completed once                   | green in CI, end to end   |
 | Prod high/critical CVEs | 16 (6 direct)                          | 2 (1 direct)              |
@@ -44,12 +44,12 @@ how "MVP 86% complete" and 0% coverage coexisted for months.
 | 1 — Unblock and demolish                         | Done                                   |
 | 2 — Foundation (`CLAUDE.md`, auth, tokens, lint) | Done                                   |
 | 3 — Environments and pipeline                    | Done — `staging.uselumina.app` healthy |
-| **4 — Make the booking loop work**               | **In progress**                        |
-| 5 — Design system collapse                       | Not started                            |
+| 4 — Make the booking loop work                   | Done                                   |
+| **5 — Design system collapse**                   | **Next**                               |
 | 6 — Brand assets + production launch             | Not started                            |
 | 7 — Ratchet and expand                           | Not started                            |
 
-### Phase 4 — the current milestone
+### Phase 4 — done
 
 `e2e/booking-loop.spec.ts` is the definition of done: a stranger opens a
 salon's public booking page, picks a service and a time, enters their details,
@@ -66,7 +66,33 @@ staff member and client.
 - [x] **4d.2** Make the E2E suite runnable — legacy specs deleted, the suite
       collects and passes for the first time: **18 tests, 22s**, and CI runs
       `npm run test:e2e` rather than one named file
-- [ ] **4d.3** Rebuild the missing tests, starting with tenant isolation
+- [x] **4d.3** Rebuild the missing tests, starting with tenant isolation —
+      **495 tests, 35 suites**, and tenant isolation went from untested to
+      enforced by a gate that fails the build for any new unguarded route
+
+### Phase 5 — what the demolition revealed
+
+Scope this against a measurement taken after 4d, not against the original
+guess. Deleting 133 test files removed the only importer many components had,
+so `knip` can now see what is genuinely unreachable:
+
+|                                        |                                 |
+| -------------------------------------- | ------------------------------- |
+| Components that nothing renders        | **85 of 187 — 45%**             |
+| Unused files under `lib/` and `hooks/` | 52                              |
+| `components/ui` primitives unused      | 20 of 56                        |
+| Raw hex colours in `.tsx`              | 224 occurrences across 31 files |
+| API routes importing Prisma directly   | 43 of 63                        |
+
+The number that changes the plan is the first one. **Nearly half the component
+tree is dead**, so "collapse the design system" and "delete what nothing
+renders" are the same job — and doing them in the other order means restyling
+components no user can reach, which is how 29 design-system documents came to
+describe a system nobody used.
+
+So: delete first, then collapse what survives. The 9 `app/design-system/*`
+pages are the exception — they render the primitives and are the only place
+the system is visible, so they stay until the collapse is done.
 
 ---
 
@@ -88,62 +114,48 @@ staff member and client.
 
 ## Open source positioning
 
-Lumina becomes a public repository, with self-hosting free and revenue coming
-from managed hosting and support. That is a licensing and documentation change,
-not just a visibility toggle, and two parts of it are blocking.
+**Done.** The repository is public at `github.com/effuselabs/lumina` under
+AGPL-3.0, self-hosting free, revenue intended from managed hosting and support.
 
-**Blocking before the repository goes public:**
+The licence decision, made 2026-09-06: the requirement — free to self-host,
+revenue from running it for people — is the case AGPL-3.0 exists for. It is
+OSI-approved open source while making it unattractive for someone else to offer
+Lumina as a closed hosted service. The alternatives were permissive
+(MIT/Apache-2.0, friendlier to contributors, but nothing stops a competitor
+hosting it) or source-available (BSL/SSPL, which are not open source and would
+contradict the positioning).
 
-- **There is no licence.** No `LICENSE` file exists and `package.json` declares
-  `"license": "UNLICENSED"`. Published in that state the code is legally all
-  rights reserved — nobody may use, modify or redistribute it, which is the
-  opposite of the intent. Nothing else on this list matters until a licence is
-  chosen and added.
-- **Run a real secret scan over the full history**, with a tool built for it
-  (gitleaks or trufflehog), not a grep. A manual pass found nothing dangerous —
-  `.env` has never been committed and `.gitignore` covers it; the only hits are
-  `sk_test_fake_key_for_testing` in `test-utils/env-setup.js` and
-  `lumina_dev_password` in an old `docker-compose.yml`, both local-only
-  placeholders. Confirm that with a proper tool before publishing, because
-  history cannot be un-published once it is forked or indexed.
-- **Rotate the Railway API token.** It was pasted in plaintext into a chat
-  transcript and has not been rotated.
+Everything that blocked publication is closed: `LICENSE` and the matching
+`package.json` field (`AGPL-3.0-only`), a gitleaks scan over the full history
+running as a CI workflow, the Railway token rotated, `CONTRIBUTING.md`, and a
+README that leads with what Lumina is rather than with rebuild status.
 
-**The licence decision: AGPL-3.0.** Decided 2026-09-06. The requirement — free
-to self-host, revenue from running it for people — is the case AGPL-3.0 exists
-for: OSI-approved open source, while making it unattractive for someone else to
-offer Lumina as a closed hosted service. The alternatives were permissive
-(MIT/Apache-2.0, simpler and friendlier to contributors, but nothing stops a
-competitor hosting it) or source-available (BSL/SSPL, which are not open source
-and would contradict the positioning).
+The history rewrite deserves recording, because the obvious approach does not
+work. A Kiro MCP configuration containing an API key was found in the history.
+Rewriting with `git filter-repo` and force-pushing is **not sufficient**:
+GitHub keeps the original commits of every pull request at `refs/pull/N/head`
+indefinitely, and they stay reachable by SHA. The repository was rebuilt from
+scratch under the `effuselabs` organisation and the original archived, which is
+why the history starts where it does. The key was revoked regardless.
 
-Two consequences that follow from it, and are easier to handle now than later:
+**Still open, and worth doing before the first outside contribution:**
 
-- **A CLA is needed from the first external contribution onward** if selling a
-  proprietary licence stays an option. Without it, every contributor holds
-  copyright in their own work under AGPL, and relicensing later means tracking
-  down each of them individually. Adding a CLA on day one costs a bot and a
-  file; retrofitting one can be impossible.
-- **AGPL's obligations reach across the network.** Anyone running a modified
-  Lumina as a service must offer their users the modified source. That is the
-  point, and it also applies to us: our own deployment is unmodified upstream,
-  so the obligation is satisfied by the public repository, but that stops being
-  true the moment staging or production carries a patch that is not pushed.
+- **A CLA**, if selling a proprietary licence is ever to stay an option.
+  Without one, every contributor holds copyright in their own work under AGPL,
+  and relicensing later means tracking each of them down individually. Adding
+  one on day one costs a bot and a file; retrofitting it can be impossible.
+- **Self-hosting instructions.** `docs/environments.md` documents _our_ Railway
+  staging, not a stranger's deployment. Registration is closed by default now
+  (`ALLOW_PUBLIC_SIGNUP`), with a first-account bootstrap so a fresh install is
+  usable — that behaviour needs writing down where a self-hoster will find it.
+- **A statement of what is free and what is paid**, so the boundary is not
+  something people have to infer.
+- An organisation profile README for `effuselabs`.
 
-Adding the `LICENSE` file and the matching `package.json` field is its own
-change — the licence text is a legal document, and it should be reviewable on
-its own rather than buried in a documentation diff.
-
-**Documentation to follow the decision:** a `LICENSE` file and a matching
-`package.json` field; a README that leads with what Lumina is and how to run it
-yourself rather than with internal rebuild status; self-hosting instructions
-(`docs/environments.md` currently documents _our_ Railway staging, not a
-stranger's deployment); a CONTRIBUTING file; and a clear statement of what is
-free and what is paid, so the boundary is not something people have to infer.
-
-Sequence it with Phase 6, alongside brand assets and the production launch —
-the repository going public and the project page describing it are the same
-announcement.
+**AGPL's obligations reach across the network**, and that applies to us: our
+own deployment is unmodified upstream, so the obligation is satisfied by the
+public repository — but that stops being true the moment staging or production
+carries a patch that is not pushed.
 
 ## Dependency policy
 
@@ -199,7 +211,8 @@ time, after the booking loop works.
   touched
 - Playwright browser projects beyond Chromium and Mobile Safari
 - Raising lint rules from `warn` to `error` as their counts reach zero:
-  **56** routes importing Prisma directly, **167** raw hex colours in `.tsx`
+  **43** of 63 routes importing Prisma directly (was 56; fifteen dead routes
+  were deleted in 4d), **224** raw hex colours across 31 `.tsx` files
 
 ## Known, unaddressed
 
