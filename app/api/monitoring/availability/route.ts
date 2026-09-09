@@ -3,6 +3,7 @@
  * Provides real-time metrics, alerts, and system health status
  */
 
+import { authorizeBusinessAccess } from '@/lib/auth/business-access';
 import {
   LogLevel,
   availabilityLogger,
@@ -19,7 +20,17 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const businessId = searchParams.get('businessId');
+
+    /*
+     * This handler had no authentication at all, and `businessId` was
+     * optional — omit it and the filter below was skipped, returning every
+     * alert for every salon. It is required now, and checked.
+     */
+    const access = await authorizeBusinessAccess(
+      searchParams.get('businessId')
+    );
+    if (!access.ok) return access.response;
+    const businessId = access.businessId;
     const timeRange = searchParams.get('timeRange') || '1h';
     const alertType = searchParams.get('alertType') as AlertType | null;
 

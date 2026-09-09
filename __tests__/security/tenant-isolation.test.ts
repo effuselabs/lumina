@@ -27,6 +27,7 @@ const GUARDS = [
   'verifyBusinessAccess',
   'businessUser.findFirst',
   'businessUser.findUnique',
+  'businessUser.findMany',
 ];
 
 /**
@@ -47,29 +48,27 @@ const SCOPED_BY_SESSION: Record<string, string> = {
  * the test below fails if an entry is guarded, so this cannot quietly become a
  * list of things that were fixed years ago.
  */
-const UNGUARDED_DEBT: Record<string, string> = {
-  '/api/analytics/track-error': 'dead: analytics-provider.tsx has no importers',
-  '/api/analytics/track-event': 'dead: analytics-provider.tsx has no importers',
-  '/api/analytics/track-performance':
-    'dead: analytics-provider.tsx has no importers',
-  '/api/availability/business-hours': "reads and writes another salon's hours",
-  '/api/availability/business-hours/validate': "reads another salon's hours",
-  '/api/availability/conflicts': "reads another salon's appointments",
-  '/api/availability/slots': "reads another salon's availability",
-  '/api/availability/staff': "reads another salon's staff",
-  '/api/availability/staff/[staffId]': "reads another salon's staff",
-  '/api/availability/staff/[staffId]/override': "writes another salon's staff",
-  '/api/availability/time-off': "reads and writes another salon's time off",
-  '/api/availability/validate': "reads another salon's availability",
-  '/api/booking/availability': 'duplicate of the public booking API; see PLAN',
-  '/api/booking/create': 'duplicate of the public booking API; see PLAN',
-  '/api/booking/services': 'duplicate of the public booking API; see PLAN',
-  '/api/monitoring/availability': "reads another salon's metrics",
-  '/api/monitoring/performance': "reads another salon's metrics",
-  '/api/notifications/preferences': "reads and writes another salon's settings",
-  '/api/staff/[staffId]': "reads and writes another salon's staff",
-  '/api/transactions': "reads another salon's money",
+/**
+ * Routes that authorize correctly by a mechanism this file cannot recognise
+ * from the source text. Substring detection has false negatives; these were
+ * each read and confirmed, and the mechanism is named so the next reader does
+ * not have to repeat the work.
+ */
+const GUARDED_BY_INSPECTION: Record<string, string> = {
+  '/api/staff/[staffId]':
+    'loads the staff row with business.users filtered to session.user.id, then 403s on an empty list',
+  '/api/notifications/preferences':
+    'an HMAC of businessId + email, like an unsubscribe link — a capability, not a session',
 };
+
+/**
+ * Routes that genuinely do not check. Every entry is a real hole.
+ *
+ * The list only shrinks, in both directions: the test fails if an entry starts
+ * passing, and fails if an entry stops existing, so it cannot decay into a
+ * record of things fixed or deleted long ago.
+ */
+const UNGUARDED_DEBT: Record<string, string> = {};
 
 function routeFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
@@ -110,6 +109,7 @@ describe('tenant isolation', () => {
   const mustBeGuarded = needsGuard.filter(
     route =>
       !(route.pathname in SCOPED_BY_SESSION) &&
+      !(route.pathname in GUARDED_BY_INSPECTION) &&
       !(route.pathname in UNGUARDED_DEBT)
   );
 
@@ -130,25 +130,33 @@ describe('tenant isolation', () => {
         .map(route => route.pathname)
     );
 
-    it.each(recorded)(
-      '%s is still unguarded, or should leave the list',
-      path => {
-        // A route that has been fixed must be removed from UNGUARDED_DEBT.
-        // Without this, the list rots into a record of things that were fixed
-        // long ago, and stops meaning anything.
-        expect(stillUnguarded.has(path)).toBe(true);
+    // Written as a loop rather than `it.each`, which rejects an empty list —
+    // and empty is the goal state, reached in this commit.
+    it('lists only routes that are still real, and still unguarded', () => {
+      for (const path of recorded) {
+        // A route that has been fixed must leave the list, or it rots into a
+        // record of things repaired long ago.
+        expect(stillUnguarded).toContain(path);
+        // A route that has been deleted must leave the list too.
+        expect(routes.map(route => route.pathname)).toContain(path);
       }
-    );
+    });
 
-    it.each(recorded)('%s still exists', path => {
-      // A deleted route must also leave the list.
-      expect(routes.map(r => r.pathname)).toContain(path);
+    it('does not classify the same route twice', () => {
+      const seen = [
+        ...Object.keys(SCOPED_BY_SESSION),
+        ...Object.keys(GUARDED_BY_INSPECTION),
+        ...recorded,
+      ];
+
+      expect(new Set(seen).size).toBe(seen.length);
     });
   });
 
   it('records why each accepted route needs no guard', () => {
     for (const reason of Object.values({
       ...SCOPED_BY_SESSION,
+      ...GUARDED_BY_INSPECTION,
       ...UNGUARDED_DEBT,
     })) {
       expect(reason.length).toBeGreaterThan(10);
