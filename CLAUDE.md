@@ -78,8 +78,26 @@ npm run db:migrate && npm run db:seed
 
 1. **Tenant scoping.** Every query touching business data filters by
    `businessId`. Before serving a tenant-scoped route, verify the session user
-   belongs to that business — use `requireBusinessAccess` in `lib/auth.ts`.
-   Never trust a `businessId` or `businessSlug` from the URL or body alone.
+   belongs to that business. Never trust a `businessId` or `businessSlug` from
+   the URL or body alone — a session proves someone is signed in, not that they
+   are signed in _here_.
+
+   In an API route use `authorizeBusinessAccess` from
+   `lib/auth/business-access.ts`, which returns a result you must narrow before
+   you can reach the verified id:
+
+   ```ts
+   const access = await authorizeBusinessAccess(searchParams.get('businessId'));
+   if (!access.ok) return access.response;
+   ```
+
+   `requireBusinessAccess` in `lib/auth.ts` is for **pages**, not routes: it
+   calls `redirect()`, so in a handler it answers a `fetch` with a 307 to an
+   HTML page instead of a 403. This rule previously named it for everything,
+   which made it unfollowable in a route — so it was followed by nobody, the
+   check got hand-rolled five different ways, and 30 routes ended up with no
+   check at all. `__tests__/security/tenant-isolation.test.ts` is the gate now.
+
 2. **Every route authenticates.** Public routes are only those listed in
    `middleware.ts` (`PUBLIC_EXACT_ROUTES` / `PUBLIC_ROUTE_PREFIXES`). Adding a
    route there is a security decision — say so explicitly.

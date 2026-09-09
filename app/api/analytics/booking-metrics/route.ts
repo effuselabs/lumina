@@ -1,23 +1,22 @@
 import { bookingAnalytics } from '@/lib/analytics/booking-analytics';
-import { auth } from '@/lib/auth';
+import { authorizeBusinessAccess } from '@/lib/auth/business-access';
 import { createPerformanceMonitor } from '@/lib/monitoring/booking-performance-monitor';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-
-    if (!session?.user?.businessId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const body = await request.json();
     const { businessId, startDate, endDate } = body;
 
-    // Validate business access
-    if (businessId !== session.user.businessId) {
-      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
-    }
+    /*
+     * This did check access, by comparing against `session.user.businessId` —
+     * a single business id carried on the session. That is a fifth variant of
+     * the check, and it is wrong for anyone who belongs to more than one
+     * business: they would be refused their own second salon. Membership is a
+     * relation, so it is read from the relation.
+     */
+    const access = await authorizeBusinessAccess(businessId);
+    if (!access.ok) return access.response;
 
     const start = new Date(startDate);
     const end = new Date(endDate);

@@ -1,27 +1,28 @@
-import { auth } from '@/auth';
+import { authorizeBusinessAccess } from '@/lib/auth/business-access';
 import { DashboardDataService } from '@/lib/dashboard-data';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { searchParams } = new URL(request.url);
-    const businessId = searchParams.get('businessId');
     const from = searchParams.get('from');
     const to = searchParams.get('to');
 
-    if (!businessId || !from || !to) {
+    // A session alone is not authorization: the businessId arrives in the
+    // query string, so it must be checked against this user's memberships.
+    const access = await authorizeBusinessAccess(
+      searchParams.get('businessId')
+    );
+    if (!access.ok) return access.response;
+
+    if (!from || !to) {
       return NextResponse.json(
         { error: 'Missing required parameters' },
         { status: 400 }
       );
     }
 
-    const dataService = new DashboardDataService(businessId);
+    const dataService = new DashboardDataService(access.businessId);
     const dateRange = {
       from: new Date(from),
       to: new Date(to),
