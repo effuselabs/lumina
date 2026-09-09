@@ -1,5 +1,5 @@
 import { appointmentAnalyticsService } from '@/lib/analytics/appointment-analytics-service';
-import { auth } from '@/lib/auth';
+import { authorizeBusinessAccess } from '@/lib/auth/business-access';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -12,11 +12,6 @@ const GetAnalyticsSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { searchParams } = new URL(request.url);
     const params = GetAnalyticsSchema.parse({
       businessId: searchParams.get('businessId'),
@@ -25,7 +20,11 @@ export async function GET(request: NextRequest) {
       compareWithPrevious: searchParams.get('compareWithPrevious'),
     });
 
-    // TODO: Validate user has access to this business
+    // Replaces `// TODO: Validate user has access to this business`. The
+    // businessId comes from the query string, so a session by itself proves
+    // only that someone is signed in — not that they are signed in here.
+    const access = await authorizeBusinessAccess(params.businessId);
+    if (!access.ok) return access.response;
 
     const analytics = await appointmentAnalyticsService.getAppointmentAnalytics(
       params.businessId,

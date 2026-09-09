@@ -1,3 +1,4 @@
+import { authorizeBusinessAccess } from '@/lib/auth/business-access';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -195,19 +196,18 @@ async function storePerformanceMetrics(
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const businessId = searchParams.get('businessId');
     const timeRange = searchParams.get('timeRange') || '24h';
 
-    if (!businessId) {
-      return NextResponse.json(
-        { error: 'businessId parameter is required' },
-        { status: 400 }
-      );
-    }
+    // This handler had no authentication of any kind: it read a businessId
+    // from the query string and answered.
+    const access = await authorizeBusinessAccess(
+      searchParams.get('businessId')
+    );
+    if (!access.ok) return access.response;
 
     // In a real implementation, query your database for performance metrics
     const performanceAnalytics = await getPerformanceAnalytics(
-      businessId,
+      access.businessId,
       timeRange
     );
 

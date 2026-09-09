@@ -184,68 +184,78 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
-// Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
-
-// Mock scrollTo
-Object.defineProperty(window, 'scrollTo', {
-  writable: true,
-  value: jest.fn(),
-});
-
-// Mock performance API for component performance monitoring
-Object.defineProperty(global, 'performance', {
-  writable: true,
-  value: {
-    mark: jest.fn(),
-    measure: jest.fn(),
-    now: jest.fn(() => Date.now()),
-    getEntriesByName: jest.fn(() => []),
-    getEntriesByType: jest.fn(() => []),
-  },
-});
-
-// Also add to window object for browser-like environment
+/*
+ * Browser shims, and only in a browser environment.
+ *
+ * These used to run unconditionally, so a suite with `@jest-environment node`
+ * — which is the honest environment for anything touching `next/server`, since
+ * `NextResponse` extends the Web `Response` that jsdom does not provide —
+ * crashed here on `window is not defined` before reaching its first test.
+ */
 if (typeof window !== 'undefined') {
-  Object.defineProperty(window, 'performance', {
+  // Mock matchMedia
+  Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: global.performance,
+    value: jest.fn().mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+
+  // Mock scrollTo
+  Object.defineProperty(window, 'scrollTo', {
+    writable: true,
+    value: jest.fn(),
+  });
+
+  // Mock performance API for component performance monitoring
+  Object.defineProperty(global, 'performance', {
+    writable: true,
+    value: {
+      mark: jest.fn(),
+      measure: jest.fn(),
+      now: jest.fn(() => Date.now()),
+      getEntriesByName: jest.fn(() => []),
+      getEntriesByType: jest.fn(() => []),
+    },
+  });
+
+  // Also add to window object for browser-like environment
+  if (typeof window !== 'undefined') {
+    Object.defineProperty(window, 'performance', {
+      writable: true,
+      value: global.performance,
+    });
+  }
+
+  // Mock localStorage
+  const localStorageMock = {
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    removeItem: jest.fn(),
+    clear: jest.fn(),
+  };
+  Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock,
+  });
+
+  // Mock sessionStorage
+  const sessionStorageMock = {
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    removeItem: jest.fn(),
+    clear: jest.fn(),
+  };
+  Object.defineProperty(window, 'sessionStorage', {
+    value: sessionStorageMock,
   });
 }
-
-// Mock localStorage
-const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-};
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
-
-// Mock sessionStorage
-const sessionStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-};
-Object.defineProperty(window, 'sessionStorage', {
-  value: sessionStorageMock,
-});
 
 // Console error suppression for known issues
 // eslint-disable-next-line no-console
