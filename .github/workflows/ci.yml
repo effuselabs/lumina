@@ -8,11 +8,14 @@ name: CI
 # Checks are added back as they start passing, not before: a red pipeline
 # everyone ignores is worse than a small green one.
 #
+# `test:ci` now means the whole Jest suite. It used to name twelve files
+# explicitly, because the other 147 could not pass; those have been deleted.
+#
 # Not yet included, and why:
-#   - Full unit suite: the legacy suite has 101 failing files and is being
-#     replaced rather than repaired. Only known-passing suites run (test:ci).
-#   - Coverage thresholds: measured coverage is ~0%. Enforced once the rebuilt
-#     suite exists, then ratcheted upward.
+#   - Coverage thresholds. The suite is green but thin, and a threshold set
+#     against a thin suite locks in the thinness. Added, and then ratcheted,
+#     once the rebuilt tests land.
+#   - The E2E suite beyond the booking loop: see the e2e job below.
 
 on:
   push:
