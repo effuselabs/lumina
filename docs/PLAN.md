@@ -216,20 +216,16 @@ time, after the booking loop works.
 
 ## Known, unaddressed
 
-- **The booking loop spec races itself locally.** Both Playwright projects,
-  Chromium and Mobile Safari, resolve the same `nextOpenDate` and then click
-  `.first()` of the offered slots — the same staff member at the same time. CI
-  runs `workers: 1`, so the first booking lands and availability is recomputed
-  before the second starts; locally `workers: 2` runs them concurrently and one
-  of the two gets `HTTP 400` from the conflict check. Reproduced at roughly one
-  run in six.
+- **The booking loop spec still fails about one local run in twenty.** Three
+  causes were found and fixed — see the commit — and the residue is a step
+  transition that reports `element(s) not found` rather than a slow render.
+  Twenty consecutive runs: nineteen green.
 
-  The 400 is correct: conflict detection is doing its job, and the appointment
-  it refuses is genuinely taken. The defect is in the spec, which assumes it is
-  the only booker. The fix is to give each project its own date or slot rather
-  than to serialise, since serialising would hide exactly the class of bug the
-  two projects exist to catch. Its own change, and worth doing before the
-  suite is trusted as a gate on a busier runner.
+  CI does not see it: `workers: 1` removes the concurrency, and `retries: 2`
+  would absorb a five-percent flake regardless. That is a reason not to trust
+  a green CI run as evidence the spec is stable, not a reason to leave it.
+  Reproduce with a loop of `npx playwright test booking-loop.spec.ts`, not a
+  single run — every bug in this area passed on the first attempt.
 
 - `npm run test:e2e` needs `DATABASE_URL` exported; it does not read `.env`.
   CI supplies it as a job variable so the gate is unaffected, but a fresh clone

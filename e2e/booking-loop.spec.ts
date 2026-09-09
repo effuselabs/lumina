@@ -178,7 +178,39 @@ test.describe('booking loop', () => {
    * tracked separately in docs/PLAN.md; fixing it here would hide the bug the
    * timezone gate is being written to catch.
    */
-  async function nextOpenDate(businessId: string): Promise<string> {
+  /**
+   * Which open day this browser project books on.
+   *
+   * Chromium and Mobile Safari run the same spec. Both used to resolve the
+   * same next open day and then click the first offered slot — the same staff
+   * member at the same minute — so whichever booked second got a correct HTTP
+   * 400 from the conflict check and failed. CI never saw it because
+   * `workers: 1` lets availability recompute in between; locally, at
+   * `workers: 2`, it reproduced about one run in six.
+   *
+   * Serialising the projects would also fix it, and would be the wrong fix:
+   * running the two viewports concurrently is what makes them independent
+   * checks rather than the same check twice.
+   *
+   * Derived from the position in `projects` rather than a hardcoded map, so a
+   * third project gets its own day instead of silently sharing Chromium's.
+   */
+  /** A step is a lazily-loaded chunk the dev server compiles on first use. */
+  const STEP_TRANSITION_TIMEOUT = 20_000;
+
+  function projectDayOffset(): number {
+    const info = test.info();
+    const index = info.config.projects.findIndex(
+      project => project.name === info.project.name
+    );
+
+    return index < 0 ? 0 : index;
+  }
+
+  async function nextOpenDate(
+    businessId: string,
+    skipOpenDays = 0
+  ): Promise<string> {
     const openDays = await prisma.businessHours.findMany({
       where: { businessId, isClosed: false },
       select: { dayOfWeek: true },
@@ -193,18 +225,25 @@ test.describe('booking loop', () => {
     const candidate = new Date();
     candidate.setDate(candidate.getDate() + 7);
 
-    // At most a full week of steps, so a business open on a single weekday
-    // still resolves rather than looping.
-    for (let attempt = 0; attempt < 7; attempt += 1) {
+    // Enough steps to reach the (skipOpenDays + 1)-th open day even for a
+    // business open on a single weekday, which is one week per day skipped.
+    const horizon = 7 * (skipOpenDays + 1);
+    let found = 0;
+
+    for (let attempt = 0; attempt < horizon; attempt += 1) {
       if (openDayNumbers.has(candidate.getUTCDay())) {
-        return candidate.toISOString().split('T')[0];
+        if (found === skipOpenDays) {
+          return candidate.toISOString().split('T')[0];
+        }
+        found += 1;
       }
       candidate.setDate(candidate.getDate() + 1);
     }
 
     throw new Error(
-      `No open day found within a week of ${candidate.toISOString()} — ` +
-        `business hours seeded as open on days [${[...openDayNumbers].join(', ')}]`
+      `No open day number ${skipOpenDays + 1} found within ${horizon} days of ` +
+        `${candidate.toISOString()} — business hours seeded as open on days ` +
+        `[${[...openDayNumbers].join(', ')}]`
     );
   }
 
@@ -230,9 +269,17 @@ test.describe('booking loop', () => {
       name: /^[A-Z][a-z]+ \d{4}$/,
     });
 
-    // The search window for an open day is under a fortnight, so the target
-    // can cross one month boundary but never two.
-    if ((await monthHeading.textContent())?.trim() !== targetMonth) {
+    /*
+     * Advance until the month matches, rather than clicking once.
+     *
+     * A single click was enough while every project booked the same day about
+     * a week out. Now each project takes its own open day, so the target can
+     * be three weeks out and land two months ahead when the run starts near
+     * the end of a month. Three clicks is more than that ever needs; the bound
+     * is there so a mislabelled control fails the test rather than hanging it.
+     */
+    for (let hop = 0; hop < 3; hop += 1) {
+      if ((await monthHeading.textContent())?.trim() === targetMonth) break;
       await page.getByRole('button', { name: /^next month$/i }).click();
     }
     await expect(monthHeading).toHaveText(targetMonth);
@@ -354,17 +401,56 @@ test.describe('booking loop', () => {
     const firstService = page
       .getByRole('button', { name: /add|select/i })
       .first();
-    await firstService.click();
-    await page.getByRole('button', { name: /^continue/i }).click();
+    const continueButton = page.getByRole('button', { name: /^continue/i });
+
+    /*
+     * Wait for the click to actually register before moving on.
+     *
+     * `Continue` starts disabled and is enabled by React state once a service
+     * is selected. On a cold dev server the first navigation compiles the
+     * route, so hydration can land after the button is painted — the click
+     * then hits an element with no handler attached, the selection never
+     * happens, and the spec sat on `continueButton.click()` until the
+     * 120s test timeout, reporting a click failure rather than a lost one.
+     *
+     * `toPass` retries the whole block, and the guard makes the retry safe:
+     * selecting a service toggles it, so re-clicking an already-selected card
+     * would deselect it. Only click while `Continue` is still disabled.
+     */
+    await expect(async () => {
+      if (await continueButton.isDisabled()) {
+        await firstService.click();
+      }
+      await expect(continueButton).toBeEnabled({ timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
+
+    await continueButton.click();
 
     // Step 2 — Choose Date & Time
-    await expect(page.getByText(/date & time|choose a time/i)).toBeVisible();
+    /*
+     * Step transitions get an explicit timeout, not the 5s default.
+     *
+     * Each step is a lazily-loaded chunk, and the dev server compiles it on
+     * first request — so the transition that takes a moment in production can
+     * take several seconds on a cold run, and on the mobile project it renders
+     * a different component tree that has to compile separately. The default
+     * expired mid-compile and reported "element(s) not found", which reads as
+     * a broken flow rather than a slow one.
+     */
+    await expect(page.getByText(/date & time|choose a time/i)).toBeVisible({
+      timeout: STEP_TRANSITION_TIMEOUT,
+    });
 
     // The calendar opens on today. When today is a day the salon is closed —
     // Sunday, for the demo salon — there are no slots to click and this test
     // fails for a reason that has nothing to do with the booking flow. Move to
     // a day the business is actually open before looking for a time.
-    await selectOpenDate(page, await nextOpenDate(business.id));
+    // A different open day per browser project, so the two do not compete for
+    // the same slot when they run concurrently. See projectDayOffset.
+    await selectOpenDate(
+      page,
+      await nextOpenDate(business.id, projectDayOffset())
+    );
 
     const firstSlot = page
       .getByRole('button', { name: /\d{1,2}:\d{2}\s*(am|pm)/i })
@@ -380,7 +466,9 @@ test.describe('booking loop', () => {
     // Matched by role, not getByLabel: the marketing opt-in is labelled
     // "...reminders and special offers via email", so getByLabel(/email/i)
     // resolves to both the text box and that checkbox.
-    await expect(page.getByText(/your information/i)).toBeVisible();
+    await expect(page.getByText(/your information/i)).toBeVisible({
+      timeout: STEP_TRANSITION_TIMEOUT,
+    });
     await page
       .getByRole('textbox', { name: /first name/i })
       .fill(client.firstName);
@@ -395,7 +483,9 @@ test.describe('booking loop', () => {
 
     // Step 4 — Review, then confirm. The button here is what actually creates
     // the appointment; reaching this screen is not the same as booking.
-    await expect(page.getByText(/review your booking/i)).toBeVisible();
+    await expect(page.getByText(/review your booking/i)).toBeVisible({
+      timeout: STEP_TRANSITION_TIMEOUT,
+    });
     await page.getByRole('button', { name: /confirm booking/i }).click();
 
     // Confirmed to the client.
@@ -435,5 +525,53 @@ test.describe('booking loop', () => {
     ).toBeGreaterThan(0);
     expect(appointment!.totalDuration, 'has a duration').toBeGreaterThan(0);
     expect(appointment!.client?.email).toBe(client.email);
+
+    /*
+     * Remove what this run created.
+     *
+     * The spec books a real appointment against the seeded salon and used to
+     * leave it there. Every run consumed one more slot on the same day, so a
+     * developer's database degraded steadily: after about thirty runs the day
+     * had no bookable slots left and the availability test above began failing
+     * with "zero usually means business hours or staff availability are not
+     * seeded" — pointing at the seed, which was fine, rather than at the
+     * eighty-three appointments this spec had written. CI never saw it because
+     * every run gets an empty database.
+     *
+     * Scoped to this run's own client rather than to a pattern, because the
+     * other browser project may be mid-run in the next transaction.
+     */
+    const bookedDay = appointment!.startTime;
+
+    await prisma.appointment.deleteMany({
+      where: { businessId: business.id, client: { email: client.email } },
+    });
+    await prisma.client.deleteMany({
+      where: { businessId: business.id, email: client.email },
+    });
+
+    /*
+     * And the cached availability derived from it.
+     *
+     * Booking through the UI invalidates this correctly — book/route.ts calls
+     * AvailabilityCacheInvalidation.handleAppointmentEvent. These deletes do
+     * not go through the application, so nothing invalidates on their behalf,
+     * and the cache keeps answering "no slots" for a day that is now empty
+     * until its fifteen-minute TTL expires. Cleaning up the appointment but
+     * not its cached shadow made the availability test fail on every run
+     * rather than one in six, which is how this came to light.
+     */
+    await prisma.availabilityCache.deleteMany({
+      where: {
+        businessId: business.id,
+        date: new Date(
+          Date.UTC(
+            bookedDay.getUTCFullYear(),
+            bookedDay.getUTCMonth(),
+            bookedDay.getUTCDate()
+          )
+        ),
+      },
+    });
   });
 });
