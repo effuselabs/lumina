@@ -1,5 +1,5 @@
+import { decideSignup, isOpenSignupEnabled } from '@/lib/auth/signup-policy';
 import { prisma } from '@/lib/prisma';
-import type { UserRole } from '@prisma/client';
 import { hash } from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -12,13 +12,33 @@ const registerSchema = z.object({
     .string()
     .min(2, 'Business name must be at least 2 characters')
     .optional(),
-  role: z.enum(['OWNER', 'STAFF', 'CLIENT']).default('OWNER'),
+  // No `role`. It used to be accepted from the request body and defaulted to
+  // OWNER, so a caller could name their own privileges. Registration creates
+  // the owner of a new business and nothing else; staff arrive through
+  // /api/staff/invite/accept, which carries a single-use token.
 });
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password, role } = registerSchema.parse(body);
+    const { name, email, password } = registerSchema.parse(body);
+
+    // Is anyone allowed to create an account here at all?
+    const decision = decideSignup({
+      openSignupEnabled: isOpenSignupEnabled(),
+      existingUserCount: await prisma.user.count(),
+    });
+
+    if (!decision.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            'Registration is closed on this instance. Ask an owner for an invitation.',
+        },
+        { status: 403 }
+      );
+    }
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -41,7 +61,7 @@ export async function POST(request: NextRequest) {
         name,
         email,
         password: hashedPassword,
-        role: role as UserRole,
+        role: 'OWNER',
       },
     });
 
