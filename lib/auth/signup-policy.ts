@@ -50,7 +50,10 @@ export function decideSignup(input: {
  * it closed, because the failure mode of guessing wrong here is an open door.
  */
 export function isOpenSignupEnabled(
-  env: NodeJS.ProcessEnv = process.env
+  // Not `NodeJS.ProcessEnv`: Next declares `NODE_ENV` as required on it, so a
+  // caller — a test, most obviously — cannot pass a small object with just
+  // this one variable in it without also naming an environment.
+  env: Record<string, string | undefined> = process.env
 ): boolean {
   return env[OPEN_SIGNUP_ENV_VAR] === 'true';
 }
