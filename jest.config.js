@@ -36,9 +36,16 @@ const customJestConfig = {
     '^@/factories$': '<rootDir>/factories',
     '^@/factories/(.*)$': '<rootDir>/factories/$1',
     '^@/test-utils/(.*)$': '<rootDir>/test-utils/$1',
-    '\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      'jest-transform-stub',
+    /*
+     * CSS and static assets are NOT mapped here.
+     *
+     * This used to name `identity-obj-proxy` and `jest-transform-stub`.
+     * Neither is installed, and neither is in package.json — the tests passed
+     * only because `next/jest` supplies its own mappings for both, and its
+     * `moduleNameMapper` is spread after ours below, so it won. The entries
+     * were config that pointed at packages that were not there, waiting to
+     * fail the day Next stopped covering for them.
+     */
   },
 
   testMatch: ['<rootDir>/__tests__/**/*.test.{js,jsx,ts,tsx}'],
