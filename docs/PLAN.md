@@ -24,7 +24,7 @@ start:
 | `npm run db:seed`       | fails                                  | exits 0                   |
 | `npm run type-check`    | 686 errors                             | 0                         |
 | `npm run lint`          | 180 errors, not run at build           | 0 errors, gates the build |
-| Jest                    | 101 of 114 suites failing, 0% coverage | 56 tests green in CI      |
+| Jest                    | 101 of 114 suites failing, 0% coverage | 427 tests green in CI     |
 | Deployment              | never happened                         | auto-deploys on green CI  |
 | Booking loop            | never completed once                   | green in CI, end to end   |
 | Prod high/critical CVEs | 16 (6 direct)                          | 2 (1 direct)              |
@@ -60,7 +60,13 @@ staff member and client.
 - [x] **4b** Availability returns real slots — 43 slots in 1.24s cold, 0.61s warm
 - [x] **4c** Walk the remaining layers until the spec passes — **all four tests
       green**, and the E2E job now gates `main`
-- [ ] **4d** Delete the legacy `__tests__` suite and rebuild ~30 real tests
+- [x] **4d.1** Delete the legacy suite — 133 files, and the whole of Jest is
+      the gate again: **32 suites, 427 tests, green in 7.7s**, down from 117 of
+      159 suites failing
+- [x] **4d.2** Make the E2E suite runnable — legacy specs deleted, the suite
+      collects and passes for the first time: **18 tests, 22s**, and CI runs
+      `npm run test:e2e` rather than one named file
+- [ ] **4d.3** Rebuild the missing tests, starting with tenant isolation
 
 ---
 
@@ -238,10 +244,10 @@ time, after the booking loop works.
   `staffServices` where the schema declares `services`, so Prisma rejected the
   query and the surrounding catch turned that into an empty staff list.
 
-  `timezone-aware-availability.ts` is still to be deleted — dead, wrapping the
-  broken calculator rather than replacing it, 13 of its 19 tests failing, and
-  its `getBusinessTimeZone` a stub returning a hardcoded `'America/New_York'`.
-  Its own PR, per 4d.
+  `timezone-aware-availability.ts` is gone, along with the test that was its
+  last remaining reference — dead, wrapping the broken calculator rather than
+  replacing it, 13 of its 19 tests failing, and its `getBusinessTimeZone` a
+  stub returning a hardcoded `'America/New_York'`.
 
 - **An appointment outside business hours is invisible on the calendar.**
   `components/appointments/week-view.tsx:95-108` bounds the grid to the
@@ -273,19 +279,15 @@ time, after the booking loop works.
   config now closes that hole for the booking path; nothing yet closes it for
   the rest of the suite.
 
-- **`npm run test:visual` has never run.** `e2e/visual-test.config.ts:105`
-  resolves `./e2e/global-setup` from inside `e2e/`, so Playwright cannot load
-  the config at all, and `tsc -p tsconfig.test.json` reports two further errors
-  in the same file (an invalid `fontFamily` option and a duplicate key). Five
-  npm scripts point at it — `test:visual`, `:ui`, `:update`, `:headed` and
-  `:setup`. Either fix it or delete the visual-regression setup; leaving five
-  scripts that cannot start is worse than either.
+- ~~**`npm run test:visual` has never run.**~~ **Deleted.** The config could
+  not load — it resolved `./e2e/global-setup` from inside `e2e/` — and carried
+  two further type errors. Five npm scripts pointed at it. Visual regression
+  needs a design system to regress against, so it comes back in Phase 5, built
+  against `lib/design/tokens.ts` rather than restored.
 
-- **`npm run format:check` fails on 772 files**, so the `ci:lint` script in
-  `package.json` would fail if anyone ran it. CI runs `lint` rather than
-  `ci:lint`, so nothing is currently broken — but a contributor following the
-  script names hits it immediately. Either format the repo once and add
-  `format:check` to CI, or drop it from `ci:lint`.
+- ~~**`npm run format:check` fails on 772 files.**~~ **Resolved.** The
+  repository was formatted in one pass and `format:check` is a CI gate, so it
+  cannot drift back.
 
 - **Merging two pull requests within seconds of each other skips a deploy.**
   The CI workflow sets `cancel-in-progress: true` on a concurrency group keyed
@@ -359,14 +361,18 @@ time, after the booking loop works.
 "CI check suite failed"`. Staging silently ran week-old code. Worth knowing
   that a red `main` is invisible from the staging URL.
 
-- **`npm run test:e2e` cannot pass — two spec files fail to load at all.**
-  `cross-browser-responsive.spec.ts:21` and `public-booking-e2e.spec.ts:174`
-  call `test.use({ browserName })` inside a `test.describe`, which Playwright
-  rejects before running anything. So the documented five-gate command is
-  currently unrunnable as a whole, and the working measure is the four
-  collectable specs. Of those, 23 of 40 fail identically on `main` — legacy
-  suites from the deleted-tests era, in `appointment-management.spec.ts` and
-  friends. Part of 4d.
+- ~~**`npm run test:e2e` cannot pass — two spec files fail to load at all.**~~
+  **Resolved in 4d.2.** `cross-browser-responsive.spec.ts` and
+  `public-booking-e2e.spec.ts` called `test.use({ browserName })` inside a
+  `test.describe`, which Playwright rejects at collection — so the command
+  could not start, whatever you passed it. They and the rest of the
+  deleted-tests-era specs are gone; three remain, and all 18 tests pass in 22s
+  across both browser projects. CI runs the suite rather than one named file.
+
+  One real defect surfaced on the way: `health-check.spec.ts` asserted
+  `checks.memory === 'healthy'`, but the route downgrades to `'warning'` above
+  a 512MB heap and still returns 200 by design. The test passed alone and
+  failed inside the full suite — an assertion on how busy the machine was.
 
 - The Clients page's staff filter matches `Client.preferredStaff`
   (`app/api/clients/route.ts:108`), not the staff a client has actually

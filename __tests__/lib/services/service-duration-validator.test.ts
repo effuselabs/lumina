@@ -138,7 +138,7 @@ describe('ServiceDurationValidator', () => {
 
   describe('getMinimumSlotDuration', () => {
     it('should calculate total duration for multiple services', async () => {
-      mockPrisma.service.findUnique
+      asMock(mockPrisma.service.findUnique)
         .mockResolvedValueOnce({
           id: 'service-1',
           duration: 30,
@@ -199,7 +199,7 @@ describe('ServiceDurationValidator', () => {
 
   describe('validateMultiServiceBooking', () => {
     it('should validate multi-service booking fits in time slot', async () => {
-      mockPrisma.service.findUnique
+      asMock(mockPrisma.service.findUnique)
         .mockResolvedValueOnce({
           id: 'service-1',
           duration: 30,
@@ -234,7 +234,7 @@ describe('ServiceDurationValidator', () => {
     });
 
     it('should reject multi-service booking that exceeds time slot', async () => {
-      mockPrisma.service.findUnique
+      asMock(mockPrisma.service.findUnique)
         .mockResolvedValueOnce({
           id: 'service-1',
           duration: 60,

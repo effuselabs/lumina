@@ -15,7 +15,6 @@ name: CI
 #   - Coverage thresholds. The suite is green but thin, and a threshold set
 #     against a thin suite locks in the thinness. Added, and then ratcheted,
 #     once the rebuilt tests land.
-#   - The E2E suite beyond the booking loop: see the e2e job below.
 
 on:
   push:
@@ -62,6 +61,13 @@ jobs:
       # 1,200-line diff. Enforcing it is what stops that returning.
       - name: Formatting
         run: npm run format:check
+
+      # `tsc --noEmit` on the application sources does not cover `__tests__/`
+      # or `e2e/` — they have their own tsconfig, and nothing ran it. Babel
+      # strips the types at test time, so a test could reference a field that
+      # does not exist and still pass. It is clean now, so it becomes a gate.
+      - name: Type-check tests and E2E
+        run: npm run test:types
 
       - name: Unit tests
         run: npm run test:ci
@@ -186,8 +192,12 @@ jobs:
         # system libraries WebKit needs on a bare runner.
         run: npx playwright install --with-deps chromium webkit
 
-      - name: Booking loop
-        run: npm run test:e2e -- booking-loop.spec.ts
+      # The whole suite, not one file. It used to name `booking-loop.spec.ts`
+      # explicitly because two of the other specs called `test.use()` inside a
+      # `test.describe()`, which Playwright rejects at collection — so
+      # `npm run test:e2e` could not start at all. Those specs are gone.
+      - name: End-to-end suite
+        run: npm run test:e2e
 
       - name: Upload report on failure
         if: failure()

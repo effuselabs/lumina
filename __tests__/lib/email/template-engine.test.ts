@@ -13,14 +13,16 @@
  */
 
 import {
+  type BusinessBranding,
   TemplateEngine,
   TemplateRenderError,
-  type BusinessBranding,
 } from '@/lib/email/template-engine';
 import type {
-  BookingConfirmationData,
   AppointmentReminderData,
+  BookingConfirmationData,
   CancellationNotificationData,
+  EmailTemplateType,
+  TemplateData,
 } from '@/lib/email/templates';
 
 describe('TemplateEngine', () => {
@@ -461,7 +463,13 @@ describe('TemplateEngine', () => {
   describe('Error Handling', () => {
     it('should throw TemplateRenderError with details', async () => {
       try {
-        await templateEngine.render('unknown_template' as any, {});
+        // Both casts are the point of the test: an unknown template name
+        // with data that fits no template. `render` must reject rather than
+        // fall through to a partially rendered email.
+        await templateEngine.render(
+          'unknown_template' as unknown as EmailTemplateType,
+          {} as unknown as TemplateData
+        );
         fail('Should have thrown TemplateRenderError');
       } catch (error) {
         expect(error).toBeInstanceOf(TemplateRenderError);
@@ -490,6 +498,7 @@ describe('TemplateEngine', () => {
         appointmentDate: 'Monday, December 1, 2024',
         appointmentTime: '10:00 AM',
         serviceName: 'Haircut',
+        servicePrice: '50.00',
         viewAppointmentLink: 'https://example.com/appointments/123',
       };
 
@@ -538,12 +547,14 @@ describe('TemplateEngine', () => {
             time: '10:00 AM',
             clientName: 'John Doe',
             serviceName: 'Haircut',
+            staffName: 'Jane Smith',
             price: '50.00',
           },
           {
             time: '11:00 AM',
             clientName: 'Jane Doe',
             serviceName: 'Styling',
+            staffName: 'Jane Smith',
             price: '75.00',
           },
         ],

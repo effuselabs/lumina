@@ -9,7 +9,18 @@ test.describe('Health Check API', () => {
     const data = await response.json();
     expect(data.status).toBe('healthy');
     expect(data.checks.database).toBe('healthy');
-    expect(data.checks.memory).toBe('healthy');
+
+    /*
+     * Not `toBe('healthy')`. The route downgrades memory to 'warning' above a
+     * 512MB heap and deliberately keeps returning 200 — memory pressure means
+     * degraded, not down. Asserting 'healthy' made this test a function of how
+     * busy the machine was: it passed alone and failed inside the full suite,
+     * where the dev server is compiling nine specs across two browsers.
+     *
+     * What the endpoint promises is that it can measure memory at all.
+     */
+    expect(data.checks.memory).not.toBe('unhealthy');
+    expect(data.checks.memory).not.toBe('unknown');
     expect(data.timestamp).toBeTruthy();
     expect(data.environment).toBeTruthy();
   });

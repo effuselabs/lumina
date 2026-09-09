@@ -593,7 +593,7 @@ describe('ConflictDetectionEngine', () => {
       ] as any);
 
       // Mock back-to-back appointment
-      mockPrisma.appointment.findMany
+      asMock(mockPrisma.appointment.findMany)
         .mockResolvedValueOnce([]) // For overlap check
         .mockResolvedValueOnce([
           {
