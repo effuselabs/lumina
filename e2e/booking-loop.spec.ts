@@ -296,15 +296,28 @@ test.describe('booking loop', () => {
   }) => {
     const business = await seededBusiness();
 
+    // A week out, to sit clear of same-day lead-time rules — then forward to
+    // the next day the salon is actually open. Resolved first, because which
+    // service is bookable depends on which weekday this lands on.
+    const dateString = await nextOpenDate(business.id);
+    const dayOfWeek = new Date(`${dateString}T00:00:00Z`).getUTCDay();
+
     /*
-     * A service a client could actually book — one somebody can perform.
+     * A service a client could actually book on *this* day.
      *
-     * This used to take the first active service in the table. The seed
-     * assigns services to staff by specialty, so a run can leave a service
-     * with nobody able to perform it; picking one of those and then asserting
-     * on slots made the test fail for a correct empty result. Roughly one
-     * service in six on a seeded salon, and which one `findFirst` returns is
-     * arbitrary — so this failed at random rather than when something broke.
+     * Two filters, and the second is the one that was missing. The seed
+     * assigns services to staff by specialty, so a service can end up with
+     * nobody able to perform it — that much was already handled. But staff are
+     * also seeded with their own weekly availability, and not every one of
+     * them works every day: on this salon, six of the twenty-four have no
+     * StaffAvailability row for Tuesday through Friday.
+     *
+     * So a service could pass "somebody can perform it" and still have nobody
+     * rostered on the day being asked about, and the API would correctly
+     * return no slots. Which service `findFirst` returns is arbitrary, so this
+     * failed on the day the calendar happened to land on a weekday its chosen
+     * service was not staffed for — deterministically on CI, and never on a
+     * developer's machine whose seeded staff happened to differ.
      */
     const service = await prisma.service.findFirst({
       where: {
@@ -312,19 +325,22 @@ test.describe('booking loop', () => {
         isActive: true,
         isOnline: true,
         staff: {
-          some: { staff: { isActive: true, acceptsOnlineBookings: true } },
+          some: {
+            staff: {
+              isActive: true,
+              acceptsOnlineBookings: true,
+              staffAvailability: { some: { dayOfWeek } },
+            },
+          },
         },
       },
       select: { id: true, duration: true },
     });
     expect(
       service,
-      'a bookable service — active, online, and with staff who can perform it'
+      `a service that is active and online, with staff who accept online ` +
+        `bookings and are rostered on day ${dayOfWeek} (${dateString})`
     ).toBeTruthy();
-
-    // A week out, to sit clear of same-day lead-time rules — then forward to
-    // the next day the salon is actually open.
-    const dateString = await nextOpenDate(business.id);
 
     // `duration` is required — omitting it returns a Zod VALIDATION_ERROR
     // ("Number must be greater than or equal to 1"), not an empty slot list.

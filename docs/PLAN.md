@@ -234,16 +234,36 @@ time, after the booking loop works.
 
 ## Known, unaddressed
 
-- **The booking loop spec still fails about one local run in twenty.** Three
-  causes were found and fixed — see the commit — and the residue is a step
-  transition that reports `element(s) not found` rather than a slow render.
+- **The booking loop spec still fails about one local run in twenty**, on a
+  step transition reporting `element(s) not found` rather than a slow render.
   Twenty consecutive runs: nineteen green.
 
-  CI does not see it: `workers: 1` removes the concurrency, and `retries: 2`
-  would absorb a five-percent flake regardless. That is a reason not to trust
-  a green CI run as evidence the spec is stable, not a reason to leave it.
-  Reproduce with a loop of `npx playwright test booking-loop.spec.ts`, not a
-  single run — every bug in this area passed on the first attempt.
+  CI does not see it: `workers: 1` removes the concurrency and `retries: 2`
+  would absorb a five-percent flake regardless. That is a reason not to read a
+  green CI run as evidence the spec is stable, not a reason to leave it.
+  Reproduce with a loop, not a single run — every bug found in this area so far
+  passed on the first attempt.
+
+- **The booking test can pick a service nobody is rostered to perform that
+  day.** It clicks the first service card, then asserts a slot is offered. The
+  seed gives each staff member their own weekly availability and not everyone
+  works every weekday, so a service can have staff who could perform it and
+  none who are working on the day the calendar lands on — and the API
+  correctly returns nothing. Measured on a seeded salon: 4 of 95 bookable
+  services, about 4%.
+
+  This is the same defect fixed in the availability test, which now requires
+  `staffAvailability: { some: { dayOfWeek } }`. The booking test cannot use
+  that fix directly, because every service card's button reads "Add Service"
+  with no per-service accessible name, so choosing a known-good service means
+  locating a card by the text near it — and making the definition-of-done spec
+  depend on a brittle ancestor locator to fix flakiness is a poor trade.
+
+  The better fix is a `data-testid` carrying the service id on the card, which
+  belongs with the Phase 5 component work rather than in a spec patch. Until
+  then this is a roughly one-in-twenty-five chance per seeded database of a
+  hard, retry-proof CI failure, because which service is first is deterministic
+  for a given seed.
 
 - `npm run test:e2e` needs `DATABASE_URL` exported; it does not read `.env`.
   CI supplies it as a job variable so the gate is unaffected, but a fresh clone
