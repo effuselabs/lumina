@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "app/**/{page,layout,route,error,loading,not-found,template,default}.{ts,tsx}",
+    "middleware.ts",
+    "auth.ts",
+    "auth.config.ts",
+    "prisma/seed.ts",
+    "e2e/**/*.spec.ts",
+    "__tests__/**/*.test.{ts,tsx}",
+    "scripts/**/*.{ts,js}"
+  ],
+  "ignore": [".railway/railway.ts", "app/design-tokens/**", "public/**"],
+  "ignoreDependencies": [],
+  "ignoreBinaries": ["docker-compose"]
+}

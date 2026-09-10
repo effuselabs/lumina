@@ -70,29 +70,47 @@ staff member and client.
       **495 tests, 35 suites**, and tenant isolation went from untested to
       enforced by a gate that fails the build for any new unguarded route
 
-### Phase 5 — what the demolition revealed
+### Phase 5 — the demolition is done; the collapse is next
 
-Scope this against a measurement taken after 4d, not against the original
-guess. Deleting 133 test files removed the only importer many components had,
-so `knip` can now see what is genuinely unreachable:
+Deleting 133 test files removed the only importer many components had, and
+what that exposed was larger than the phase originally assumed: 85 of 187
+components rendered nowhere. Five batches later:
 
-|                                        |                                 |
-| -------------------------------------- | ------------------------------- |
-| Components that nothing renders        | **85 of 187 — 45%**             |
-| Unused files under `lib/` and `hooks/` | 52                              |
-| `components/ui` primitives unused      | 20 of 56                        |
-| Raw hex colours in `.tsx`              | 224 occurrences across 31 files |
-| API routes importing Prisma directly   | 43 of 63                        |
+|                                   | Before 4d                             | After the sweep |
+| --------------------------------- | ------------------------------------- | --------------- |
+| Unused files                      | 112 reported, 181 once the tests went | **0**           |
+| `components/`                     | 187 files                             | **106**         |
+| `components/ui` primitives        | 57                                    | 37              |
+| Lines removed across five batches | —                                     | **~49,000**     |
 
-The number that changes the plan is the first one. **Nearly half the component
-tree is dead**, so "collapse the design system" and "delete what nothing
-renders" are the same job — and doing them in the other order means restyling
-components no user can reach, which is how 29 design-system documents came to
-describe a system nobody used.
+Nothing reported unused now. The eleven that knip still flagged were all
+legitimate — the Railway IaC file, the `app/design-tokens/*.css` reached
+through CSS `@import`, `public/sw.js` registered at runtime by
+`offline-support.tsx`, and the resolver script itself — so `knip.json` records
+them as entry points rather than leaving a report everyone learns to ignore.
 
-So: delete first, then collapse what survives. The 9 `app/design-system/*`
-pages are the exception — they render the primitives and are the only place
-the system is visible, so they stay until the collapse is done.
+**What the sweep taught, kept because the next sweep will need it.** Grep is
+not a dependency graph: matching importers by basename made
+`lib/availability/availability-calculator` look alive because a different
+directory holds a file of the same name, and matching only same-directory
+relative imports missed `../lib/theme-validation`. Both are now handled by
+`scripts/maintenance/find-importers.js`, which resolves specifiers to files.
+It still is not the authority — knip proposes, the script narrows, the five
+gates decide, and `npm run db:seed` runs by hand on anything near
+`prisma/factories`.
+
+**Next, in order:**
+
+1. **28 unused dependencies**, seventeen of them runtime — including six Radix
+   primitives whose components went in batch 2. Less install, less CVE
+   surface. `husky` and `railway` are false positives, used by the pre-commit
+   hook and the IaC respectively. `glob` is genuinely undeclared in
+   `scripts/migrate-calendar-data.ts`.
+2. **The collapse itself**, against 37 primitives instead of 57 and a
+   component tree that is entirely reachable. 224 raw hex colours across 31
+   `.tsx` files are the measure of what is left to fold into
+   `lib/design/tokens.ts`.
+3. 336 unused exports — worth a pass once the collapse settles, not before.
 
 ---
 
@@ -216,16 +234,36 @@ time, after the booking loop works.
 
 ## Known, unaddressed
 
-- **The booking loop spec still fails about one local run in twenty.** Three
-  causes were found and fixed — see the commit — and the residue is a step
-  transition that reports `element(s) not found` rather than a slow render.
+- **The booking loop spec still fails about one local run in twenty**, on a
+  step transition reporting `element(s) not found` rather than a slow render.
   Twenty consecutive runs: nineteen green.
 
-  CI does not see it: `workers: 1` removes the concurrency, and `retries: 2`
-  would absorb a five-percent flake regardless. That is a reason not to trust
-  a green CI run as evidence the spec is stable, not a reason to leave it.
-  Reproduce with a loop of `npx playwright test booking-loop.spec.ts`, not a
-  single run — every bug in this area passed on the first attempt.
+  CI does not see it: `workers: 1` removes the concurrency and `retries: 2`
+  would absorb a five-percent flake regardless. That is a reason not to read a
+  green CI run as evidence the spec is stable, not a reason to leave it.
+  Reproduce with a loop, not a single run — every bug found in this area so far
+  passed on the first attempt.
+
+- **The booking test can pick a service nobody is rostered to perform that
+  day.** It clicks the first service card, then asserts a slot is offered. The
+  seed gives each staff member their own weekly availability and not everyone
+  works every weekday, so a service can have staff who could perform it and
+  none who are working on the day the calendar lands on — and the API
+  correctly returns nothing. Measured on a seeded salon: 4 of 95 bookable
+  services, about 4%.
+
+  This is the same defect fixed in the availability test, which now requires
+  `staffAvailability: { some: { dayOfWeek } }`. The booking test cannot use
+  that fix directly, because every service card's button reads "Add Service"
+  with no per-service accessible name, so choosing a known-good service means
+  locating a card by the text near it — and making the definition-of-done spec
+  depend on a brittle ancestor locator to fix flakiness is a poor trade.
+
+  The better fix is a `data-testid` carrying the service id on the card, which
+  belongs with the Phase 5 component work rather than in a spec patch. Until
+  then this is a roughly one-in-twenty-five chance per seeded database of a
+  hard, retry-proof CI failure, because which service is first is deterministic
+  for a given seed.
 
 - `npm run test:e2e` needs `DATABASE_URL` exported; it does not read `.env`.
   CI supplies it as a job variable so the gate is unaffected, but a fresh clone
