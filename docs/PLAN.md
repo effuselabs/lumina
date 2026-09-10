@@ -70,29 +70,47 @@ staff member and client.
       **495 tests, 35 suites**, and tenant isolation went from untested to
       enforced by a gate that fails the build for any new unguarded route
 
-### Phase 5 — what the demolition revealed
+### Phase 5 — the demolition is done; the collapse is next
 
-Scope this against a measurement taken after 4d, not against the original
-guess. Deleting 133 test files removed the only importer many components had,
-so `knip` can now see what is genuinely unreachable:
+Deleting 133 test files removed the only importer many components had, and
+what that exposed was larger than the phase originally assumed: 85 of 187
+components rendered nowhere. Five batches later:
 
-|                                        |                                 |
-| -------------------------------------- | ------------------------------- |
-| Components that nothing renders        | **85 of 187 — 45%**             |
-| Unused files under `lib/` and `hooks/` | 52                              |
-| `components/ui` primitives unused      | 20 of 56                        |
-| Raw hex colours in `.tsx`              | 224 occurrences across 31 files |
-| API routes importing Prisma directly   | 43 of 63                        |
+|                                   | Before 4d                             | After the sweep |
+| --------------------------------- | ------------------------------------- | --------------- |
+| Unused files                      | 112 reported, 181 once the tests went | **0**           |
+| `components/`                     | 187 files                             | **106**         |
+| `components/ui` primitives        | 57                                    | 37              |
+| Lines removed across five batches | —                                     | **~49,000**     |
 
-The number that changes the plan is the first one. **Nearly half the component
-tree is dead**, so "collapse the design system" and "delete what nothing
-renders" are the same job — and doing them in the other order means restyling
-components no user can reach, which is how 29 design-system documents came to
-describe a system nobody used.
+Nothing reported unused now. The eleven that knip still flagged were all
+legitimate — the Railway IaC file, the `app/design-tokens/*.css` reached
+through CSS `@import`, `public/sw.js` registered at runtime by
+`offline-support.tsx`, and the resolver script itself — so `knip.json` records
+them as entry points rather than leaving a report everyone learns to ignore.
 
-So: delete first, then collapse what survives. The 9 `app/design-system/*`
-pages are the exception — they render the primitives and are the only place
-the system is visible, so they stay until the collapse is done.
+**What the sweep taught, kept because the next sweep will need it.** Grep is
+not a dependency graph: matching importers by basename made
+`lib/availability/availability-calculator` look alive because a different
+directory holds a file of the same name, and matching only same-directory
+relative imports missed `../lib/theme-validation`. Both are now handled by
+`scripts/maintenance/find-importers.js`, which resolves specifiers to files.
+It still is not the authority — knip proposes, the script narrows, the five
+gates decide, and `npm run db:seed` runs by hand on anything near
+`prisma/factories`.
+
+**Next, in order:**
+
+1. **28 unused dependencies**, seventeen of them runtime — including six Radix
+   primitives whose components went in batch 2. Less install, less CVE
+   surface. `husky` and `railway` are false positives, used by the pre-commit
+   hook and the IaC respectively. `glob` is genuinely undeclared in
+   `scripts/migrate-calendar-data.ts`.
+2. **The collapse itself**, against 37 primitives instead of 57 and a
+   component tree that is entirely reachable. 224 raw hex colours across 31
+   `.tsx` files are the measure of what is left to fold into
+   `lib/design/tokens.ts`.
+3. 336 unused exports — worth a pass once the collapse settles, not before.
 
 ---
 
