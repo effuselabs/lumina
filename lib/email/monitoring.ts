@@ -12,7 +12,7 @@ import { emailQueueWorker } from './queue-worker';
 /**
  * Alert severity levels
  */
-export enum AlertSeverity {
+enum AlertSeverity {
   INFO = 'info',
   WARNING = 'warning',
   ERROR = 'error',
@@ -22,7 +22,7 @@ export enum AlertSeverity {
 /**
  * Alert type
  */
-export interface Alert {
+interface Alert {
   severity: AlertSeverity;
   message: string;
   metric: string;
@@ -35,7 +35,7 @@ export interface Alert {
 /**
  * Monitoring thresholds configuration
  */
-export interface MonitoringThresholds {
+interface MonitoringThresholds {
   queueDepthWarning?: number;
   queueDepthCritical?: number;
   oldestMessageAgeWarning?: number; // Seconds
@@ -49,7 +49,7 @@ export interface MonitoringThresholds {
  * Email Queue Monitor
  * Monitors queue health and generates alerts
  */
-export class EmailQueueMonitor {
+class EmailQueueMonitor {
   private thresholds: Required<MonitoringThresholds>;
 
   constructor(thresholds?: MonitoringThresholds) {

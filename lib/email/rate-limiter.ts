@@ -10,7 +10,7 @@ import { prisma } from '@/lib/prisma';
 /**
  * Rate limit configuration
  */
-export interface RateLimitConfig {
+interface RateLimitConfig {
   maxEmailsPerHour?: number;
   maxEmailsPerDay?: number;
 }
@@ -18,7 +18,7 @@ export interface RateLimitConfig {
 /**
  * Rate limit status for a business
  */
-export interface RateLimitStatus {
+interface RateLimitStatus {
   businessId: string;
   emailsSentLastHour: number;
   emailsSentLastDay: number;
@@ -34,7 +34,7 @@ export interface RateLimitStatus {
 /**
  * Rate Limiter Error Codes
  */
-export enum RateLimiterErrorCode {
+enum RateLimiterErrorCode {
   HOURLY_LIMIT_EXCEEDED = 'HOURLY_LIMIT_EXCEEDED',
   DAILY_LIMIT_EXCEEDED = 'DAILY_LIMIT_EXCEEDED',
   INVALID_BUSINESS = 'INVALID_BUSINESS',
@@ -44,7 +44,7 @@ export enum RateLimiterErrorCode {
 /**
  * Custom error class for rate limiter errors
  */
-export class RateLimiterError extends Error {
+class RateLimiterError extends Error {
   constructor(
     message: string,
     public code: RateLimiterErrorCode,
@@ -59,7 +59,7 @@ export class RateLimiterError extends Error {
  * Email Rate Limiter
  * Enforces hourly and daily email sending limits per business
  */
-export class EmailRateLimiter {
+class EmailRateLimiter {
   private maxEmailsPerHour: number;
   private maxEmailsPerDay: number;
 

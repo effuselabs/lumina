@@ -189,7 +189,13 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          and three other references resolve to nothing, so those elements
          have no fill. Defining it paints them for the first time, so it goes
          with screenshots.
-4. 336 unused exports — worth a pass once the collapse settles, not before.
+4. [ ] **Unused exports** — 334 exports and 237 exported types by `knip`,
+       taken a directory at a time.
+   - `lib/email/` (166): done. Its barrel `index.ts` re-exported everything
+     and had one consumer, which now imports `notification-service` directly;
+     with the barrel gone, `business-branding.ts`, `retry-logic.ts` and
+     `template-repository.ts` (965 lines) had no importer at all and
+     were deleted. The rest lost only an `export` keyword.
 
 ---
 
@@ -443,6 +449,15 @@ time, after the booking loop works.
   requires a process younger than the deploy. The wider lesson: a green deploy
   job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
   is live.
+
+- **Railway's native deploy can lag CI by a quarter of an hour.** After #32
+  merged, main CI finished at 20:28 and the deployment went live at 20:42 —
+  #30 and #31 had taken 8–9 minutes, #33 about 7. At 20:43 a manual
+  `deploy.yml` run was dispatched as if the deploy had been skipped, and
+  duplicated one that had gone live a minute earlier; its upload then
+  replaced the native deployment with the same code under commit `unknown`.
+  Wait about 20 minutes after CI before treating a deploy as stuck, and check
+  Railway's deployment list rather than inferring from `/api/health` alone.
 
 - **Merging two pull requests within seconds of each other skips a deploy.**
   The CI workflow sets `cancel-in-progress: true` on a concurrency group keyed

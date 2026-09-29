@@ -30,7 +30,7 @@ import {
   MultiServiceCoordinator,
   ServiceBookingRequest,
 } from '@/lib/services/multi-service-coordinator';
-import { notificationService } from '@/lib/email';
+import { notificationService } from '@/lib/email/notification-service';
 import { AppointmentWithRelations } from '@/types/database';
 import { AppointmentStatus } from '@prisma/client';
 
