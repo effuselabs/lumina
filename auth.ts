@@ -1,15 +1,9 @@
 import { authConfig } from '@/auth.config';
+import { authorizeCredentials } from '@/lib/auth/authorize-credentials';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { z } from 'zod';
-
-// Validation schema for credentials
-const credentialsSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
 
 // Session strategy, pages and callbacks live in auth.config.ts so that
 // middleware.ts can consume them without pulling bcryptjs/Prisma into the
@@ -25,60 +19,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
-        try {
-          // Validate credentials format
-          const validatedCredentials = credentialsSchema.parse(credentials);
-          const { email, password } = validatedCredentials;
-
-          // Find user in database with business relationships
-          const user = await prisma.user.findUnique({
-            where: { email },
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              password: true,
-              role: true,
-              businesses: {
-                select: {
-                  businessId: true,
-                  role: true,
+      authorize: credentials =>
+        authorizeCredentials(credentials, {
+          findUserByEmail: email =>
+            prisma.user.findUnique({
+              where: { email },
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                password: true,
+                role: true,
+                businesses: {
+                  select: { businessId: true, role: true },
+                  orderBy: { createdAt: 'asc' }, // The first business is primary
+                  take: 1,
                 },
-                orderBy: {
-                  createdAt: 'asc', // Use the first business as primary
-                },
-                take: 1, // Get the primary business
               },
-            },
-          });
-
-          if (!user || !user.password) {
-            return null;
-          }
-
-          // Verify password
-          const isPasswordValid = await bcrypt.compare(password, user.password);
-          if (!isPasswordValid) {
-            return null;
-          }
-
-          // Return user data (password excluded)
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            businessId: user.businesses[0]?.businessId, // Primary business
-          };
-        } catch (error) {
-          // Log authentication errors for security monitoring
-          if (!(error instanceof z.ZodError)) {
-            // Log to monitoring service in production
-          }
-          return null;
-        }
-      },
+            }),
+          verifyPassword: (plain, hash) => bcrypt.compare(plain, hash),
+          logError: (message, error) =>
+            // There is no structured logger yet; Railway captures stderr.
+            // eslint-disable-next-line no-console
+            console.error(`[auth] ${message}`, error),
+        }),
     }),
   ],
 

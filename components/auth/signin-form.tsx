@@ -71,7 +71,14 @@ export function SignInForm() {
           redirect: false,
         });
 
-        if (result?.error) {
+        if (result?.code === 'service_unavailable') {
+          // The check itself failed (see lib/auth/authorize-credentials.ts).
+          // Saying "invalid password" here sends people to reset a password
+          // that was never wrong.
+          setGeneralError(
+            "We couldn't reach our servers to check your sign-in. Your details may be fine — please try again in a moment."
+          );
+        } else if (result?.error) {
           setGeneralError('Invalid email or password. Please try again.');
         } else if (result?.ok) {
           // Force redirect to dashboard after successful sign-in
