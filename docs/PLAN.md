@@ -143,13 +143,11 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          1.9:1, under the 3:1 UI minimum); links are deep teal, gold in dark.
          `__tests__/design/gradient-text.test.ts` fails on white text on the
          gradient anywhere in `app/` or `components/`.
-
-         It also found that `dark:` utilities followed the OS, not the theme:
-                     Tailwind defaulted to `darkMode: 'media'` while the app is
-                     light-only by design, so a dark-OS visitor got dark styles on the
-                     light page — the booking page's search box turned black. It is
-                     `class` now; the same page went from 76,570 px different between OS
-                     settings to 0.
+     - It also found that `dark:` utilities followed the OS, not the theme.
+       Tailwind defaulted to `darkMode: 'media'` while the app is light-only
+       by design, so a dark-OS visitor got dark styles on the light page — the
+       booking page's search box turned black. It is `class` now; the same
+       page went from 76,570 px different between OS settings to 0.
 
    - [ ] **3e — hex outside `.tsx`.** The rule covers `.tsx`; the `.ts` email
          templates and the CSS under `app/design-tokens/` still carry their
