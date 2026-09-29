@@ -1,45 +1,3 @@
-export interface DashboardWidget {
-  id: string;
-  title: string;
-  type: WidgetType;
-  size: WidgetSize;
-  position: WidgetPosition;
-  config: WidgetConfig;
-  isLoading?: boolean;
-  error?: string;
-}
-
-export type WidgetType =
-  | 'revenue-chart'
-  | 'appointment-calendar'
-  | 'client-metrics'
-  | 'quick-stats'
-  | 'recent-activity'
-  | 'staff-performance'
-  | 'service-analytics'
-  | 'financial-summary';
-
-export interface WidgetSize {
-  width: number;
-  height: number;
-  minWidth?: number;
-  minHeight?: number;
-  maxWidth?: number;
-  maxHeight?: number;
-}
-
-export interface WidgetPosition {
-  x: number;
-  y: number;
-}
-
-export interface WidgetConfig {
-  [key: string]: any;
-  refreshInterval?: number;
-  dateRange?: DateRange;
-  filters?: WidgetFilters;
-}
-
 export interface WidgetFilters {
   staffIds?: string[];
   serviceIds?: string[];
@@ -51,18 +9,6 @@ export interface WidgetFilters {
 export interface DateRange {
   from: Date;
   to: Date;
-}
-
-// Dashboard Layout
-export interface DashboardLayout {
-  id: string;
-  name: string;
-  businessId: string;
-  userId: string;
-  widgets: DashboardWidget[];
-  isDefault: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 // Revenue Analytics
@@ -143,45 +89,4 @@ export interface AppointmentSummary {
   status: string;
   totalAmount: number;
   notes?: string;
-}
-
-// Dashboard State
-export interface DashboardState {
-  currentLayout: DashboardLayout | null;
-  availableLayouts: DashboardLayout[];
-  isEditing: boolean;
-  selectedDateRange: DateRange;
-  globalFilters: WidgetFilters;
-  isLoading: boolean;
-  error: string | null;
-}
-
-// Widget Component Props
-export interface WidgetComponentProps<T = any> {
-  widget: DashboardWidget;
-  data: T;
-  isLoading: boolean;
-  error?: string;
-  onConfigChange: (config: WidgetConfig) => void;
-  onResize?: (size: WidgetSize) => void;
-  businessId: string;
-}
-
-// Chart Data Types
-export interface ChartDataPoint {
-  date: string;
-  value: number;
-  label?: string;
-  category?: string;
-}
-
-export interface ChartConfig {
-  type: 'line' | 'bar' | 'area' | 'pie' | 'donut';
-  xAxisKey: string;
-  yAxisKey: string;
-  colorScheme: string[];
-  showGrid?: boolean;
-  showLegend?: boolean;
-  showTooltip?: boolean;
-  height?: number;
 }
