@@ -682,6 +682,3 @@ export class AppointmentStatusManager {
     };
   }
 }
-
-// Export singleton instance
-export const appointmentStatusManager = new AppointmentStatusManager();

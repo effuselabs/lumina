@@ -34,7 +34,7 @@ export interface Conflict {
   suggestedResolutions?: Resolution[];
 }
 
-export interface ConflictDetails {
+interface ConflictDetails {
   conflictingAppointment?: {
     id: string;
     startTime: Date;
@@ -87,7 +87,6 @@ export enum ConflictType {
   STAFF_UNAVAILABLE = 'STAFF_UNAVAILABLE',
   TIME_OFF_CONFLICT = 'TIME_OFF_CONFLICT',
   INSUFFICIENT_DURATION = 'INSUFFICIENT_DURATION',
-  BUSINESS_CLOSED = 'BUSINESS_CLOSED',
 }
 
 export enum ConflictSeverity {
@@ -96,7 +95,7 @@ export enum ConflictSeverity {
   INFO = 'INFO', // Informational only
 }
 
-export enum ResolutionType {
+enum ResolutionType {
   RESCHEDULE = 'RESCHEDULE',
   CHANGE_STAFF = 'CHANGE_STAFF',
   SPLIT_SERVICES = 'SPLIT_SERVICES',

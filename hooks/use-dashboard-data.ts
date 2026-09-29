@@ -37,22 +37,6 @@ export function useDashboardData({
   });
 }
 
-// Hook for real-time dashboard updates
-export function useRealtimeDashboard(businessId: string) {
-  return useDashboardData({
-    businessId,
-    refreshInterval: 10000, // 10 seconds for real-time feel
-  });
-}
-
-// Hook for dashboard data with manual refresh
-export function useDashboardDataManual(businessId: string) {
-  return useDashboardData({
-    businessId,
-    refreshInterval: undefined, // No automatic refresh
-  });
-}
-
 // Hook for dashboard charts data
 export function useDashboardCharts(
   businessId: string,

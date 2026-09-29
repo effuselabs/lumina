@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 
-export interface BookingAnalyticsEvent {
+interface BookingAnalyticsEvent {
   businessId: string;
   eventType:
     | 'booking_started'
@@ -16,7 +16,7 @@ export interface BookingAnalyticsEvent {
   clientId?: string;
 }
 
-export interface BookingConversionMetrics {
+interface BookingConversionMetrics {
   totalSessions: number;
   completedBookings: number;
   conversionRate: number;
@@ -28,7 +28,7 @@ export interface BookingConversionMetrics {
   };
 }
 
-export interface BookingPerformanceMetrics {
+interface BookingPerformanceMetrics {
   averagePageLoadTime: number;
   averageApiResponseTime: number;
   errorRate: number;
@@ -36,7 +36,7 @@ export interface BookingPerformanceMetrics {
   peakBookingHours: Array<{ hour: number; count: number }>;
 }
 
-export class BookingAnalyticsService {
+class BookingAnalyticsService {
   async trackEvent(event: BookingAnalyticsEvent): Promise<void> {
     try {
       await prisma.bookingAnalyticsEvent.create({

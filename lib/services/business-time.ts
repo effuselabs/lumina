@@ -22,7 +22,7 @@ import { CONFIG_TTL_MS, remember } from './schedule-cache';
 import { TimeZoneHandler } from './timezone-handler';
 
 /** Used when a business has no timezone recorded. Never the server's zone. */
-export const FALLBACK_TIMEZONE = 'UTC';
+const FALLBACK_TIMEZONE = 'UTC';
 
 /**
  * The calendar date a query is asking about, as `yyyy-MM-dd`.

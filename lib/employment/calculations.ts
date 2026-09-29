@@ -243,27 +243,6 @@ export function generateCalculationPreview(
   }));
 }
 
-/**
- * Compare different employment types for the same revenue
- */
-export function compareEmploymentTypes(
-  revenue: number,
-  configurations: EmploymentConfiguration[]
-): Array<{ config: EmploymentConfiguration; result: CalculationResult }> {
-  return configurations.map(config => ({
-    config,
-    result: calculateEmploymentEarnings({
-      grossRevenue: revenue,
-      employmentType: config.employmentType,
-      commissionRate: config.commissionRate,
-      chairRentalAmount: config.chairRentalAmount,
-      chairRentalPeriod: config.chairRentalPeriod,
-      baseSalary: config.baseSalary,
-      periodsWorked: 1,
-    }),
-  }));
-}
-
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
@@ -286,22 +265,6 @@ export function formatCurrency(
  */
 export function formatPercentage(value: number): string {
   return `${value.toFixed(1)}%`;
-}
-
-/**
- * Get rental period multiplier for calculations
- */
-export function getRentalPeriodMultiplier(period: RentalPeriod): number {
-  switch (period) {
-    case 'DAILY':
-      return 1;
-    case 'WEEKLY':
-      return 7;
-    case 'MONTHLY':
-      return 30;
-    default:
-      return 1;
-  }
 }
 
 /**

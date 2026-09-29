@@ -244,8 +244,3 @@ export function useDragDropActions() {
   const { startDrag, endDrag, setHoveredSlot } = useDragDrop();
   return { startDrag, endDrag, setHoveredSlot };
 }
-
-export function useUndoActions() {
-  const { canUndo, undo, clearUndoHistory, undoHistory } = useDragDrop();
-  return { canUndo, undo, clearUndoHistory, undoHistory };
-}

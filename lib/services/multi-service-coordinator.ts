@@ -51,13 +51,6 @@ export interface ServiceCompatibility {
   requiredAfter: string[];
 }
 
-export interface StaffSkill {
-  staffId: string;
-  serviceIds: string[];
-  skillLevel: 'BASIC' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT';
-  certifications: string[];
-}
-
 export interface DiscountRule {
   id: string;
   name: string;

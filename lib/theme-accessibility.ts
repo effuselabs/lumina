@@ -13,7 +13,7 @@ import {
   themeSurface,
 } from '@/lib/design/tokens';
 
-export interface ColorContrastResult {
+interface ColorContrastResult {
   ratio: number;
   wcagAA: boolean;
   wcagAAA: boolean;
@@ -40,14 +40,14 @@ export interface AccessibilityValidationResult {
  * Contrast ratio between two colours, 1:1 to 21:1. The maths lives in
  * lib/design/contrast.ts, shared with the contrast test.
  */
-export function calculateContrastRatio(color1: string, color2: string): number {
+function calculateContrastRatio(color1: string, color2: string): number {
   return contrastRatio(color1, color2);
 }
 
 /**
  * Evaluate contrast ratio against WCAG standards
  */
-export function evaluateContrast(
+function evaluateContrast(
   foreground: string,
   background: string,
   isLargeText: boolean = false
@@ -82,7 +82,7 @@ export function evaluateContrast(
  * defines — dark mode reuses --semantic-*. The page passed colours users never
  * saw, and hid that the ones they do see fail AA on dark surfaces.
  */
-export const LUMINA_COLORS = {
+const LUMINA_COLORS = {
   luminaGold: brand.gold,
   luminaCoral: brand.coral,
   deepTeal: brand.deepTeal,
@@ -114,7 +114,7 @@ export const LUMINA_COLORS = {
 /**
  * Validate accessibility for light theme
  */
-export function validateLightThemeAccessibility(): AccessibilityValidationResult {
+function validateLightThemeAccessibility(): AccessibilityValidationResult {
   const lightBackground = LUMINA_COLORS.cream;
   const lightSurface = LUMINA_COLORS.white;
 
@@ -197,7 +197,7 @@ export function validateLightThemeAccessibility(): AccessibilityValidationResult
 /**
  * Validate accessibility for dark theme
  */
-export function validateDarkThemeAccessibility(): AccessibilityValidationResult {
+function validateDarkThemeAccessibility(): AccessibilityValidationResult {
   const darkBackground = LUMINA_COLORS.neutral950;
   const darkSurface = LUMINA_COLORS.neutral900;
 

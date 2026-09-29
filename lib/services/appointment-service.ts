@@ -1462,6 +1462,3 @@ export class AppointmentService {
     }
   }
 }
-
-// Export singleton instance
-export const appointmentService = new AppointmentService();

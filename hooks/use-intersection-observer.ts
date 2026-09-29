@@ -125,50 +125,6 @@ export function useIntersectionObserver(
 }
 
 /**
- * Hook for staggered animations with automatic delay calculation
- *
- * @param index - Index of the element in a list (0-based)
- * @param baseDelay - Base delay in milliseconds (default: 100ms)
- * @param options - Standard intersection observer options
- * @returns Same as useIntersectionObserver but with calculated delay
- */
-export function useStaggeredIntersectionObserver(
-  index: number,
-  baseDelay: number = 100,
-  options: Omit<UseIntersectionObserverOptions, 'delay'> = {}
-): UseIntersectionObserverReturn {
-  const calculatedDelay = index * baseDelay;
-
-  return useIntersectionObserver({
-    ...options,
-    delay: calculatedDelay,
-  });
-}
-
-/**
- * Hook for multiple elements with staggered animations
- *
- * @param count - Number of elements to observe
- * @param baseDelay - Base delay between animations (default: 100ms)
- * @param options - Standard intersection observer options
- * @returns Array of intersection observer results
- */
-export function useMultipleIntersectionObserver(
-  count: number,
-  baseDelay: number = 100,
-  options: Omit<UseIntersectionObserverOptions, 'delay'> = {}
-): UseIntersectionObserverReturn[] {
-  const observers: UseIntersectionObserverReturn[] = [];
-
-  for (let i = 0; i < count; i++) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    observers.push(useStaggeredIntersectionObserver(i, baseDelay, options));
-  }
-
-  return observers;
-}
-
-/**
  * Performance-optimized hook for StatCard animations
  *
  * Pre-configured with optimal settings for StatCard components:

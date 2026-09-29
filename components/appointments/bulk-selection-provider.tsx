@@ -1,7 +1,7 @@
 'use client';
 
 import { DashboardAppointment } from '@/types/dashboard-appointments';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useContext } from 'react';
 
 interface BulkSelectionContextType {
   selectedAppointments: Set<string>;
@@ -30,85 +30,4 @@ export function useBulkSelection() {
     );
   }
   return context;
-}
-
-interface BulkSelectionProviderProps {
-  children: React.ReactNode;
-}
-
-export function BulkSelectionProvider({
-  children,
-}: BulkSelectionProviderProps) {
-  const [selectedAppointments, setSelectedAppointments] = useState<Set<string>>(
-    new Set()
-  );
-  const [isSelectionMode, setIsSelectionMode] = useState(false);
-
-  const selectAppointment = useCallback((appointmentId: string) => {
-    setSelectedAppointments(prev => new Set(prev).add(appointmentId));
-  }, []);
-
-  const deselectAppointment = useCallback((appointmentId: string) => {
-    setSelectedAppointments(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(appointmentId);
-      return newSet;
-    });
-  }, []);
-
-  const toggleAppointment = useCallback((appointmentId: string) => {
-    setSelectedAppointments(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(appointmentId)) {
-        newSet.delete(appointmentId);
-      } else {
-        newSet.add(appointmentId);
-      }
-      return newSet;
-    });
-  }, []);
-
-  const selectAll = useCallback((appointments: DashboardAppointment[]) => {
-    const allIds = appointments.map(apt => apt.id);
-    setSelectedAppointments(new Set(allIds));
-  }, []);
-
-  const clearSelection = useCallback(() => {
-    setSelectedAppointments(new Set());
-  }, []);
-
-  const enterSelectionMode = useCallback(() => {
-    setIsSelectionMode(true);
-  }, []);
-
-  const exitSelectionMode = useCallback(() => {
-    setIsSelectionMode(false);
-    clearSelection();
-  }, [clearSelection]);
-
-  const getSelectedAppointments = useCallback(
-    (appointments: DashboardAppointment[]) => {
-      return appointments.filter(apt => selectedAppointments.has(apt.id));
-    },
-    [selectedAppointments]
-  );
-
-  const value: BulkSelectionContextType = {
-    selectedAppointments,
-    isSelectionMode,
-    selectAppointment,
-    deselectAppointment,
-    toggleAppointment,
-    selectAll,
-    clearSelection,
-    enterSelectionMode,
-    exitSelectionMode,
-    getSelectedAppointments,
-  };
-
-  return (
-    <BulkSelectionContext.Provider value={value}>
-      {children}
-    </BulkSelectionContext.Provider>
-  );
 }

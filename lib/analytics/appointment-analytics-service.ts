@@ -65,14 +65,14 @@ export interface PeakHourMetrics {
   utilizationRate: number;
 }
 
-export interface DailyVolumeMetric {
+interface DailyVolumeMetric {
   date: Date;
   appointments: number;
   revenue: number;
   successRate: number;
 }
 
-export interface WeeklyComparisonMetric {
+interface WeeklyComparisonMetric {
   weekStart: Date;
   appointments: number;
   revenue: number;

@@ -10,7 +10,7 @@
 
 const CSRF_HEADER = 'x-csrf-token';
 
-export class CSRFTokenError extends Error {
+class CSRFTokenError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'CSRFTokenError';
