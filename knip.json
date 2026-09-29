@@ -14,6 +14,10 @@
   "ignoreIssues": {
     "components/ui/{alert-dialog,dialog,dropdown-menu,select,table}.tsx": [
       "exports"
-    ]
+    ],
+    "lib/design/tokens.ts": ["exports"],
+    "lib/stripe.ts": ["exports", "types"],
+    "lib/financial/**": ["exports", "types"],
+    "components/payments/**": ["exports", "types"]
   }
 }

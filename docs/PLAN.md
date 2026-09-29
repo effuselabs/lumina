@@ -189,7 +189,7 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          and three other references resolve to nothing, so those elements
          have no fill. Defining it paints them for the first time, so it goes
          with screenshots.
-4. [ ] **Unused exports** — 334 exports and 237 exported types by `knip`,
+4. [x] **Unused exports** — 334 exports and 237 exported types by `knip`,
        taken a directory at a time.
    - `lib/email/` (166): done. Its barrel `index.ts` re-exported everything
      and had one consumer, which now imports `notification-service` directly;
@@ -237,10 +237,18 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      and two error classes nothing threw. New unused locals were checked
      against a baseline from `main`: only the seven orphaned imports were
      new, and they are removed.
-   - Left: `lib/stripe.ts`, `lib/financial/` and `components/payments/`,
-     read on their own because they are payments; `lib/auth.ts`, above; and
-     `lib/design/tokens.ts`, whose unused exports (`typography`, `spacing`,
-     `radii`, `shadows`) are the design system's surface, not dead code.
+   - Closed with `knip.json` `ignoreIssues` entries, each for a reason that
+     is not "dead": the vendored shadcn/Radix kit; `lib/design/tokens.ts`,
+     the design system's surface; and payments (`lib/stripe.ts`,
+     `lib/financial/`, `components/payments/`), which is **parked**, not
+     unused. The server side is live — payment intents, refunds and the
+     webhook — while `POSInterface`, `TransactionHistory` and `PaymentForm`
+     (1,281 lines) are built but wired to nothing, behind "Coming Soon" POS,
+     transactions and reports pages. Deleting parked feature work is a
+     product decision; it returns with its own spec (see _Parked_).
+   - knip now reports exactly one thing: `lib/auth.ts`, deliberately not
+     silenced. It clears when the dashboard pages adopt
+     `requireBusinessAccess` — the next item.
 
 ---
 
