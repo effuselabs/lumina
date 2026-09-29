@@ -192,10 +192,14 @@ async function performRollback(migrationService: DataMigrationService) {
   console.log('🔄 Looking for rollback data...\n');
 
   const fs = await import('fs/promises');
-  const glob = await import('glob');
 
   // Find the most recent rollback file
-  const rollbackFiles = glob.sync('migration-rollback-*.json').sort().reverse();
+  const rollbackFiles = (await fs.readdir('.'))
+    .filter(
+      name => name.startsWith('migration-rollback-') && name.endsWith('.json')
+    )
+    .sort()
+    .reverse();
 
   if (rollbackFiles.length === 0) {
     console.log('❌ No rollback data found. Cannot perform rollback.');
