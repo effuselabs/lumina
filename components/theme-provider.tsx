@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { base, brand, neutral, themeSurface } from '@/lib/design/tokens';
 
 type Theme = 'light' | 'dark' | 'system';
 type ResolvedTheme = 'light' | 'dark';
@@ -78,15 +79,18 @@ export function ThemeProvider({
 
       // Force CSS custom properties update
       if (resolvedTheme === 'dark') {
-        root.style.setProperty('--color-background', '#0a0a0a');
-        root.style.setProperty('--color-foreground', '#fafafa');
-        root.style.setProperty('--color-surface', '#171717');
-        root.style.setProperty('--color-border', '#27272a');
+        root.style.setProperty(
+          '--color-background',
+          themeSurface.darkBackground
+        );
+        root.style.setProperty('--color-foreground', neutral[50]);
+        root.style.setProperty('--color-surface', neutral[900]);
+        root.style.setProperty('--color-border', themeSurface.darkBorder);
       } else {
-        root.style.setProperty('--color-background', '#ffffff');
-        root.style.setProperty('--color-foreground', '#0B2B33');
-        root.style.setProperty('--color-surface', '#ffffff');
-        root.style.setProperty('--color-border', '#e5e7eb');
+        root.style.setProperty('--color-background', base.white);
+        root.style.setProperty('--color-foreground', brand.deepTeal);
+        root.style.setProperty('--color-surface', base.white);
+        root.style.setProperty('--color-border', themeSurface.lightBorder);
       }
 
       // Update meta theme-color for mobile browsers
@@ -94,7 +98,7 @@ export function ThemeProvider({
       if (metaThemeColor) {
         metaThemeColor.setAttribute(
           'content',
-          resolvedTheme === 'dark' ? '#0A0A0A' : '#F7F5F0'
+          resolvedTheme === 'dark' ? themeSurface.darkBackground : brand.cream
         );
       }
 

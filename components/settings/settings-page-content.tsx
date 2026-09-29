@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Building, CreditCard, Lock, Settings, Users, Zap } from 'lucide-react';
 import { useState } from 'react';
+import { legacy } from '@/lib/design/tokens';
 
 interface SettingsPageContentProps {
   business: {
@@ -59,7 +60,10 @@ export function SettingsPageContent({
           {/* Page Header */}
           <div>
             <h1 className="lumina-heading-2">Settings</h1>
-            <p className="lumina-body-large" style={{ color: '#808285' }}>
+            <p
+              className="lumina-body-large"
+              style={{ color: legacy.textMuted }}
+            >
               Configure your business settings, integrations, and preferences.
             </p>
           </div>

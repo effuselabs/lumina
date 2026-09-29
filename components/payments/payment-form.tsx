@@ -25,6 +25,7 @@ import {
 import { loadStripe } from '@stripe/stripe-js';
 import { AlertCircle, CheckCircle, CreditCard, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { base, brand, stripeAppearance } from '@/lib/design/tokens';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -50,14 +51,14 @@ const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
       fontSize: '16px',
-      color: '#424770',
+      color: stripeAppearance.text,
       '::placeholder': {
-        color: '#aab7c4',
+        color: stripeAppearance.placeholder,
       },
       fontFamily: 'Inter, system-ui, sans-serif',
     },
     invalid: {
-      color: '#9e2146',
+      color: stripeAppearance.invalid,
     },
   },
   hidePostalCode: false,
@@ -313,10 +314,10 @@ export default function PaymentForm(props: PaymentFormProps) {
     appearance: {
       theme: 'stripe' as const,
       variables: {
-        colorPrimary: '#FFD25A',
-        colorBackground: '#ffffff',
-        colorText: '#1f2937',
-        colorDanger: '#ef4444',
+        colorPrimary: brand.gold,
+        colorBackground: base.white,
+        colorText: stripeAppearance.textDark,
+        colorDanger: stripeAppearance.danger,
         fontFamily: 'Inter, system-ui, sans-serif',
         spacingUnit: '4px',
         borderRadius: '6px',

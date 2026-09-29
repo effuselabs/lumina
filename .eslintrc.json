@@ -97,10 +97,19 @@
       "rules": {
         // Colours come from lib/design/tokens.ts. Raw hex in components is
         // exactly what let four competing sources of design truth drift apart.
+        //
+        // An error, now that the count is zero. It matches hex anywhere in a
+        // string or template, not only a string that is exactly a colour: the
+        // earlier `^#...$` form saw 93 of 162, and missed every Tailwind
+        // arbitrary value (`bg-[#FFD25A]`) and every colour inside a CSS string.
         "no-restricted-syntax": [
-          "warn",
+          "error",
           {
-            "selector": "Literal[value=/^#(?:[0-9a-fA-F]{3}){1,2}$/]",
+            "selector": "Literal[value=/(^|[^&\\w])#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})(?![0-9a-zA-Z_-])/]",
+            "message": "No raw hex colours in components. Import from lib/design/tokens.ts or use a Tailwind class."
+          },
+          {
+            "selector": "TemplateElement[value.raw=/(^|[^&\\w])#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})(?![0-9a-zA-Z_-])/]",
             "message": "No raw hex colours in components. Import from lib/design/tokens.ts or use a Tailwind class."
           }
         ]

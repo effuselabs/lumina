@@ -21,6 +21,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { chart, legacy } from '@/lib/design/tokens';
 
 interface AppointmentData {
   date: string;
@@ -186,40 +187,40 @@ export function AppointmentChart({
               data={data}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#E4E6E7" />
+              <CartesianGrid strokeDasharray="3 3" stroke={legacy.gridline} />
               <XAxis
                 dataKey="date"
-                stroke="#808285"
+                stroke={legacy.textMuted}
                 fontSize={12}
                 tickFormatter={formatDate}
               />
-              <YAxis stroke="#808285" fontSize={12} />
+              <YAxis stroke={legacy.textMuted} fontSize={12} />
               <Tooltip content={<CustomTooltip />} />
               <Bar
                 dataKey="completed"
                 stackId="a"
-                fill="#22C58B"
+                fill={legacy.positive}
                 name="Completed"
                 radius={[0, 0, 0, 0]}
               />
               <Bar
                 dataKey="scheduled"
                 stackId="a"
-                fill="#3B82F6"
+                fill={chart.blue}
                 name="Scheduled"
                 radius={[0, 0, 0, 0]}
               />
               <Bar
                 dataKey="cancelled"
                 stackId="a"
-                fill="#F59E0B"
+                fill={chart.amber}
                 name="Cancelled"
                 radius={[0, 0, 0, 0]}
               />
               <Bar
                 dataKey="noShow"
                 stackId="a"
-                fill="#E5484D"
+                fill={legacy.negative}
                 name="No Show"
                 radius={[2, 2, 0, 0]}
               />

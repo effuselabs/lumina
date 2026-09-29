@@ -22,6 +22,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { brand, chart, legacy } from '@/lib/design/tokens';
 
 interface StaffPerformanceData {
   name: string;
@@ -94,13 +95,13 @@ export function StaffPerformanceChart({
   const getEmploymentTypeColor = (type: string) => {
     switch (type) {
       case 'COMMISSION':
-        return '#22C58B';
+        return legacy.positive;
       case 'CHAIR_RENTAL':
-        return '#3B82F6';
+        return chart.blue;
       case 'HYBRID':
-        return '#8B5CF6';
+        return chart.violet;
       default:
-        return '#6B7280';
+        return chart.slate;
     }
   };
 
@@ -196,22 +197,26 @@ export function StaffPerformanceChart({
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               layout="horizontal"
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#E4E6E7" />
+              <CartesianGrid strokeDasharray="3 3" stroke={legacy.gridline} />
               <XAxis
                 type="number"
-                stroke="#808285"
+                stroke={legacy.textMuted}
                 fontSize={12}
                 tickFormatter={formatCurrency}
               />
               <YAxis
                 type="category"
                 dataKey="name"
-                stroke="#808285"
+                stroke={legacy.textMuted}
                 fontSize={12}
                 width={80}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="revenue" fill="#22C58B" radius={[0, 4, 4, 0]} />
+              <Bar
+                dataKey="revenue"
+                fill={legacy.positive}
+                radius={[0, 4, 4, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
 
@@ -247,21 +252,21 @@ export function StaffPerformanceChart({
         <CardContent>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
-              <PolarGrid stroke="#E4E6E7" />
+              <PolarGrid stroke={legacy.gridline} />
               <PolarAngleAxis
                 dataKey="metric"
-                tick={{ fontSize: 12, fill: '#808285' }}
+                tick={{ fontSize: 12, fill: legacy.textMuted }}
               />
               <PolarRadiusAxis
                 angle={90}
                 domain={[0, 100]}
-                tick={{ fontSize: 10, fill: '#808285' }}
+                tick={{ fontSize: 10, fill: legacy.textMuted }}
               />
               <Radar
                 name="Performance"
                 dataKey="value"
-                stroke="#FFD25A"
-                fill="#FFD25A"
+                stroke={brand.gold}
+                fill={brand.gold}
                 fillOpacity={0.3}
                 strokeWidth={2}
               />

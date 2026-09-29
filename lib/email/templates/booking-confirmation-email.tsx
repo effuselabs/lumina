@@ -11,6 +11,7 @@ import {
   Section,
   Text,
 } from '@react-email/components';
+import { base, brand, email } from '@/lib/design/tokens';
 
 interface BookingConfirmationEmailProps {
   customerName: string;
@@ -217,13 +218,13 @@ export default function BookingConfirmationEmail({
 
 // Styles
 const main = {
-  backgroundColor: '#f6f9fc',
+  backgroundColor: email.canvas,
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
 };
 
 const container = {
-  backgroundColor: '#ffffff',
+  backgroundColor: base.white,
   margin: '0 auto',
   padding: '20px 0 48px',
   marginBottom: '64px',
@@ -233,35 +234,35 @@ const container = {
 const header = {
   padding: '32px 24px',
   textAlign: 'center' as const,
-  backgroundColor: '#FFD25A',
+  backgroundColor: brand.gold,
 };
 
 const h1 = {
-  color: '#0B2B33',
+  color: brand.deepTeal,
   fontSize: '28px',
   fontWeight: 'bold',
   margin: '0 0 8px',
 };
 
 const subtitle = {
-  color: '#0B2B33',
+  color: brand.deepTeal,
   fontSize: '16px',
   margin: '0',
 };
 
 const appointmentSection = {
   padding: '24px',
-  borderBottom: '1px solid #e6ebf1',
+  borderBottom: `1px solid ${email.divider}`,
 };
 
 const businessSection = {
   padding: '24px',
-  borderBottom: '1px solid #e6ebf1',
+  borderBottom: `1px solid ${email.divider}`,
 };
 
 const importantSection = {
   padding: '24px',
-  borderBottom: '1px solid #e6ebf1',
+  borderBottom: `1px solid ${email.divider}`,
 };
 
 const footer = {
@@ -270,7 +271,7 @@ const footer = {
 };
 
 const h2 = {
-  color: '#0B2B33',
+  color: brand.deepTeal,
   fontSize: '20px',
   fontWeight: 'bold',
   margin: '0 0 16px',
@@ -291,40 +292,40 @@ const valueColumn = {
 };
 
 const label = {
-  color: '#6b7280',
+  color: email.textMuted,
   fontSize: '14px',
   fontWeight: '500',
   margin: '0',
 };
 
 const value = {
-  color: '#111827',
+  color: email.text,
   fontSize: '14px',
   fontWeight: '600',
   margin: '0',
 };
 
 const businessNameStyle = {
-  color: '#111827',
+  color: email.text,
   fontSize: '18px',
   fontWeight: 'bold',
   margin: '0 0 8px',
 };
 
 const businessDetail = {
-  color: '#6b7280',
+  color: email.textMuted,
   fontSize: '14px',
   margin: '0 0 4px',
 };
 
 const importantText = {
-  color: '#111827',
+  color: email.text,
   fontSize: '14px',
   margin: '0 0 8px',
 };
 
 const footerText = {
-  color: '#6b7280',
+  color: email.textMuted,
   fontSize: '12px',
   margin: '0 0 8px',
 };

@@ -14,6 +14,7 @@ import {
 } from '../../types/dashboard-appointments';
 import { CalendarHeader } from './calendar-header';
 import { CalendarView } from './calendar-view';
+import { brand } from '@/lib/design/tokens';
 
 interface Staff {
   id: string;
@@ -99,7 +100,7 @@ export function AppointmentCalendarPageContent({
     firstName: staff.firstName,
     lastName: staff.lastName,
     displayName: `${staff.firstName} ${staff.lastName}`,
-    color: '#FF7A5A', // Lumina coral color
+    color: brand.coral, // Lumina coral color
     isActive: staff.isActive,
   }));
 

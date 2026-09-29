@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { ArrowRight, Calendar, Clock, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { ScheduleItem, ScheduleItemData } from './schedule-item';
+import { brand } from '@/lib/design/tokens';
 
 interface TodaysScheduleCardProps {
   businessSlug: string;
@@ -35,7 +36,7 @@ export function TodaysScheduleCard({
       <Card className={cn('schedule-card h-fit', className)}>
         <div className="schedule-card-header">
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" style={{ color: '#ff7a5a' }} />
+            <Clock className="h-4 w-4" style={{ color: brand.coral }} />
             <h3 className="stat-card-title">Today&apos;s Schedule</h3>
           </div>
         </div>
@@ -67,7 +68,7 @@ export function TodaysScheduleCard({
       <div className="schedule-card-header">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" style={{ color: '#ff7a5a' }} />
+            <Clock className="h-4 w-4" style={{ color: brand.coral }} />
             <h3 className="stat-card-title">Today&apos;s Schedule</h3>
           </div>
           <div className="flex items-center gap-3">
