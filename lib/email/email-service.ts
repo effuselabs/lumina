@@ -179,4 +179,3 @@ Thank you for choosing ${data.businessName}! We look forward to seeing you.
 // Export a singleton instance. Constructing it is now free — the provider,
 // and therefore the API key, is resolved on first send.
 export const emailService = new EmailService();
-export default EmailService;

@@ -15,7 +15,7 @@ import type { EmailTemplateType } from './types';
 /**
  * Input for creating a new notification record
  */
-export interface CreateNotificationInput {
+interface CreateNotificationInput {
   businessId: string;
   appointmentId?: string;
   recipientEmail: string;
@@ -31,7 +31,7 @@ export interface CreateNotificationInput {
 /**
  * Notification status types
  */
-export type NotificationStatus =
+type NotificationStatus =
   | 'pending'
   | 'queued'
   | 'processing'
@@ -45,7 +45,7 @@ export type NotificationStatus =
 /**
  * Notification record from database
  */
-export interface Notification {
+interface Notification {
   id: string;
   businessId: string;
   appointmentId?: string;
@@ -67,7 +67,7 @@ export interface Notification {
 /**
  * Filters for querying notifications
  */
-export interface NotificationFilters {
+interface NotificationFilters {
   startDate?: Date;
   endDate?: Date;
   status?: string;
@@ -80,7 +80,7 @@ export interface NotificationFilters {
 /**
  * Date range for analytics queries
  */
-export interface DateRange {
+interface DateRange {
   startDate: Date;
   endDate: Date;
 }
@@ -88,7 +88,7 @@ export interface DateRange {
 /**
  * Delivery statistics for a business
  */
-export interface DeliveryStats {
+interface DeliveryStats {
   totalSent: number;
   totalDelivered: number;
   totalFailed: number;
@@ -100,7 +100,7 @@ export interface DeliveryStats {
 /**
  * Notification metrics for monitoring
  */
-export interface NotificationMetrics {
+interface NotificationMetrics {
   totalNotifications: number;
   pendingCount: number;
   sentCount: number;
@@ -114,7 +114,7 @@ export interface NotificationMetrics {
 /**
  * Notification Repository Error Codes
  */
-export enum NotificationRepositoryErrorCode {
+enum NotificationRepositoryErrorCode {
   INVALID_BUSINESS_CONTEXT = 'INVALID_BUSINESS_CONTEXT',
   NOTIFICATION_NOT_FOUND = 'NOTIFICATION_NOT_FOUND',
   DATABASE_ERROR = 'DATABASE_ERROR',
@@ -124,7 +124,7 @@ export enum NotificationRepositoryErrorCode {
 /**
  * Custom error class for repository errors
  */
-export class NotificationRepositoryError extends Error {
+class NotificationRepositoryError extends Error {
   constructor(
     message: string,
     public code: NotificationRepositoryErrorCode,
@@ -139,7 +139,7 @@ export class NotificationRepositoryError extends Error {
  * Notification Repository
  * Handles all database operations for email notifications
  */
-export class NotificationRepository {
+class NotificationRepository {
   /**
    * Validate business context
    * Ensures the business exists and is active

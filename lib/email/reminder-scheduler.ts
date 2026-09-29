@@ -11,7 +11,7 @@ import { notificationService } from './notification-service';
 /**
  * Reminder configuration per business
  */
-export interface ReminderConfig {
+interface ReminderConfig {
   enable24hReminders: boolean;
   enable2hReminders: boolean;
   quietHoursStart?: string; // HH:MM format
@@ -22,7 +22,7 @@ export interface ReminderConfig {
 /**
  * Result of reminder scheduling operation
  */
-export interface ReminderScheduleResult {
+interface ReminderScheduleResult {
   success: boolean;
   reminders24hScheduled: number;
   reminders2hScheduled: number;
@@ -35,7 +35,7 @@ export interface ReminderScheduleResult {
 /**
  * Reminder Scheduler Error Codes
  */
-export enum ReminderSchedulerErrorCode {
+enum ReminderSchedulerErrorCode {
   INVALID_BUSINESS = 'INVALID_BUSINESS',
   DATABASE_ERROR = 'DATABASE_ERROR',
   NOTIFICATION_ERROR = 'NOTIFICATION_ERROR',
@@ -44,7 +44,7 @@ export enum ReminderSchedulerErrorCode {
 /**
  * Custom error class for reminder scheduler errors
  */
-export class ReminderSchedulerError extends Error {
+class ReminderSchedulerError extends Error {
   constructor(
     message: string,
     public code: ReminderSchedulerErrorCode,
@@ -59,7 +59,7 @@ export class ReminderSchedulerError extends Error {
  * Reminder Scheduling Service
  * Queries appointments and schedules reminder emails
  */
-export class ReminderScheduler {
+class ReminderScheduler {
   /**
    * Get reminder configuration for a business
    * Fetches from database or returns default configuration

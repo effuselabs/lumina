@@ -13,7 +13,7 @@ import type { EmailMessage, EmailProvider } from './types';
 /**
  * Queue Worker Configuration
  */
-export interface QueueWorkerConfig {
+interface QueueWorkerConfig {
   emailProvider?: EmailProvider;
   processingInterval?: number; // Milliseconds between processing cycles
   concurrentProcessing?: number; // Number of emails to process concurrently
@@ -23,7 +23,7 @@ export interface QueueWorkerConfig {
 /**
  * Queue Worker Status
  */
-export interface QueueWorkerStatus {
+interface QueueWorkerStatus {
   isRunning: boolean;
   emailsProcessed: number;
   emailsFailed: number;
@@ -35,7 +35,7 @@ export interface QueueWorkerStatus {
  * Email Queue Worker
  * Processes queued emails in the background with priority support
  */
-export class EmailQueueWorker {
+class EmailQueueWorker {
   private injectedProvider?: EmailProvider;
   private lazyProvider?: EmailProvider;
   private processingInterval: number;

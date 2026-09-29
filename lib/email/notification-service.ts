@@ -27,7 +27,7 @@ import { brand } from '@/lib/design/tokens';
 /**
  * Result of a notification operation
  */
-export interface NotificationResult {
+interface NotificationResult {
   success: boolean;
   notificationId?: string;
   messageId?: string;
@@ -38,7 +38,7 @@ export interface NotificationResult {
 /**
  * Appointment changes for modification notifications
  */
-export interface AppointmentChanges {
+interface AppointmentChanges {
   oldStartTime?: Date;
   newStartTime?: Date;
   oldStaffId?: string;
@@ -51,7 +51,7 @@ export interface AppointmentChanges {
 /**
  * Filters for notification history queries
  */
-export interface NotificationFilters {
+interface NotificationFilters {
   startDate?: Date;
   endDate?: Date;
   status?: string;
@@ -63,7 +63,7 @@ export interface NotificationFilters {
 /**
  * Notification history record
  */
-export interface NotificationHistory {
+interface NotificationHistory {
   id: string;
   businessId: string;
   appointmentId?: string;
@@ -81,7 +81,7 @@ export interface NotificationHistory {
 /**
  * Notification Service Error Codes
  */
-export enum NotificationErrorCode {
+enum NotificationErrorCode {
   INVALID_BUSINESS_CONTEXT = 'INVALID_BUSINESS_CONTEXT',
   APPOINTMENT_NOT_FOUND = 'APPOINTMENT_NOT_FOUND',
   CLIENT_NOT_FOUND = 'CLIENT_NOT_FOUND',
@@ -95,7 +95,7 @@ export enum NotificationErrorCode {
 /**
  * Custom error class for notification errors
  */
-export class NotificationError extends Error {
+class NotificationError extends Error {
   constructor(
     message: string,
     public code: NotificationErrorCode,
@@ -109,7 +109,7 @@ export class NotificationError extends Error {
 /**
  * Notification Service Configuration
  */
-export interface NotificationServiceConfig {
+interface NotificationServiceConfig {
   emailProvider?: EmailProvider;
   fromEmail?: string;
   fromName?: string;
@@ -127,7 +127,7 @@ function nullToUndefined<T>(value: T | null): T | undefined {
  * Notification Service
  * Orchestrates email notification creation and delivery
  */
-export class NotificationService {
+class NotificationService {
   private injectedProvider?: EmailProvider;
   private lazyProvider?: EmailProvider;
   private config?: NotificationServiceConfig;
