@@ -390,6 +390,17 @@ time, after the booking loop works.
   repository was formatted in one pass and `format:check` is a CI gate, so it
   cannot drift back.
 
+- **The manual staging deploy reported success against the old deployment.**
+  `deploy.yml`'s wait step accepted the first `healthy` response, and the
+  running deployment is healthy by definition. On 2026-09-29, during a Railway
+  incident ("API degradation causing slow or stuck deployments", from 15:29
+  UTC), Railway created no deployment for #26's merge and the manual
+  `railway up` was never promoted — and the job went green 0.4s after
+  uploading, while staging still served the previous commit. The step now
+  requires a process younger than the deploy. The wider lesson: a green deploy
+  job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
+  is live.
+
 - **Merging two pull requests within seconds of each other skips a deploy.**
   The CI workflow sets `cancel-in-progress: true` on a concurrency group keyed
   by ref, so a second merge cancels the first merge's run — and Railway reads a
