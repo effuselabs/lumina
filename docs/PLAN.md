@@ -174,7 +174,8 @@ gates decide, and `npm run db:seed` runs by hand on anything near
        if the file is stale or either stylesheet gains a hex. Every existing
        custom property resolved the same on six pages, light and `.dark`, and
        every element's computed colours matched.
-     - Left: `prisma/seed.ts` (1), outside `next lint`'s directories.
+     - `prisma/seed.ts`, the last one, takes the demo salon's colour from
+       `brand.gold`. Nothing in the application writes a hex of its own.
    - [ ] **3f — dark mode does not work, and would fail AA if it did.**
      - The `.dark` overrides never apply. `:root` in `globals.css` is
        unlayered and `.dark` sits in `@layer base`; the theme switcher puts
@@ -516,14 +517,14 @@ time, after the booking loop works.
   neither HSTS nor a CSP. Worth adding before production (Phase 6) — a CSP in
   report-only mode first, since inline styles are in use.
 
-- **`npm run db:seed` is not idempotent.** Each run appends another copy of
-  the catalogue: after six runs a local database held 264 services, each
-  name six times, and the booking e2e failed because it needs a uniquely
-  named service. CI is unaffected — it seeds an empty database — but anyone
-  following `CLAUDE.md`'s `npm run db:migrate && npm run db:seed` twice gets
-  a database the e2e cannot book against. `npx prisma migrate reset --force`
-  recovers. The fix is for the seed to clear the demo business's rows first
-  (`cleanExistingSeedData` once existed for this, but nothing ever called it).
+- ~~**`npm run db:seed` is not idempotent.**~~ **Fixed.** A second run
+  appended another copy of the catalogue — six local runs left 264 services,
+  each name six times, and the booking e2e failed for want of a uniquely named
+  one. The seed now stops after its upserts when the demo salon already has
+  staff, and says so; `npm run db:seed:refresh` (reset the demo salon, then
+  seed) is the way to a fresh dataset. This entry first said
+  `prisma migrate reset` was the recovery, which destroys every table:
+  `db:seed:refresh` already existed and deletes one row.
 
 - **Railway's native deploy can lag CI by a quarter of an hour.** After #32
   merged, main CI finished at 20:28 and the deployment went live at 20:42 —
