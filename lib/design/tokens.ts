@@ -128,11 +128,26 @@ export const chart = {
   cyan: '#06B6D4',
 } as const;
 
-/** Surfaces the runtime theme switcher writes onto `:root`. */
+/**
+ * Theme surfaces: the light and dark values `app/globals.css` maps its
+ * `--color-*` properties onto, beyond the brand and neutral ramps.
+ */
 export const themeSurface = {
-  darkBackground: '#0A0A0A',
-  darkBorder: '#27272A',
+  lightForegroundSecondary: '#2D5A5F',
   lightBorder: '#E5E7EB',
+  lightBorderMuted: '#F3F4F6',
+  lightBackgroundMuted: '#F9FAFB',
+  lightTextDisabled: '#D1D5DB',
+  secondaryHover: '#0F3A44',
+  darkBackground: '#0A0A0A',
+  darkForegroundSecondary: '#A1A1AA',
+  darkForegroundMuted: '#71717A',
+  darkBorder: '#27272A',
+  darkBorderMuted: '#1F1F23',
+  darkTextDisabled: '#3F3F46',
+  /** The loading shimmer in app/booking-mobile.css. */
+  skeletonBase: '#F0F0F0',
+  skeletonHighlight: '#E0E0E0',
 } as const;
 
 /**
@@ -420,33 +435,51 @@ export const prohibitedPairs = [
 ] as const;
 
 /**
- * CSS custom properties emitted into `:root`. This is the bridge to any
- * styling that cannot import TypeScript, and to the runtime theme switcher.
+ * CSS custom properties generated into `app/tokens.css`, which
+ * `app/globals.css` imports. CSS cannot import this file, so this is the
+ * bridge: globals.css refers to these names and holds no colour of its own.
+ * Regenerate with `npm run tokens:css`; __tests__/design/tokens-css.test.ts
+ * fails if the checked-in file is stale.
+ *
+ * The names are the ones globals.css already used, so nothing that reads
+ * them changed. `--lumina-peach` is deliberately absent: tailwind.config.ts
+ * and a few components refer to it, it has never been defined, and defining
+ * it now would paint those elements for the first time — see docs/PLAN.md.
  */
 export const cssVariables: Record<string, string> = {
   '--lumina-gold': brand.gold,
   '--lumina-coral': brand.coral,
-  '--lumina-peach': brand.peach,
   '--deep-teal': brand.deepTeal,
+  '--soft-peach': brand.peach,
   '--cream': brand.cream,
   '--clarity-blue': accent.clarityBlue,
   '--sage-green': accent.sageGreen,
-  '--lavender-mist': accent.lavenderMist,
   '--warm-gray': accent.warmGray,
-  '--lumina-radiant-gradient': gradients.radiant,
-  '--lumina-radiant-gradient-reverse': gradients.radiantReverse,
+  '--lavender-mist': accent.lavenderMist,
+  ...Object.fromEntries(
+    Object.entries(status).map(([name, value]) => [`--semantic-${name}`, value])
+  ),
   ...Object.fromEntries(
     Object.entries(neutral).map(([step, value]) => [`--neutral-${step}`, value])
   ),
+  '--neutral-950': themeSurface.darkBackground,
+  '--white': base.white,
+  '--chart-blue': chart.blue,
   ...Object.fromEntries(
-    Object.entries(status).map(([name, value]) => [`--${name}`, value])
+    Object.entries(themeSurface).map(([name, value]) => [
+      `--theme-${name.replace(/[A-Z]/g, c => `-${c.toLowerCase()}`)}`,
+      value,
+    ])
   ),
 };
 
-/** Serialise `cssVariables` into a `:root { ... }` block. */
+/**
+ * `cssVariables` as a stylesheet. Values are lower-cased to match the rest of
+ * the CSS; colour hex is case-insensitive.
+ */
 export function cssVariablesBlock(selector = ':root'): string {
   const body = Object.entries(cssVariables)
-    .map(([name, value]) => `  ${name}: ${value};`)
+    .map(([name, value]) => `  ${name}: ${value.toLowerCase()};`)
     .join('\n');
   return `${selector} {\n${body}\n}`;
 }

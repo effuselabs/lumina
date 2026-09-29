@@ -2,32 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Every colour below is a custom property generated from lib/design/tokens.ts */
+@import './tokens.css';
+
 /* Import mobile-specific optimizations */
 @import './booking-mobile.css';
 
 /* ===== LUMINA DESIGN SYSTEM COLORS ===== */
 :root {
-  /* Primary Brand Colors - Exact Design System Values */
-  --lumina-gold: #ffd25a;
-  --lumina-coral: #ff7a5a;
-  --deep-teal: #0b2b33;
-
-  /* Tertiary Brand Colors */
-  --clarity-blue: #89cff0;
-  --soft-peach: #ffe5b4;
-
-  /* Complementary Colors */
-  --sage-green: #87a96b;
-  --warm-gray: #8b8680;
-  --lavender-mist: #c8b5d1;
-  --cream: #f7f5f0;
-
-  /* Semantic Colors */
-  /* Must equal `status` in lib/design/tokens.ts — css-token-parity.test.ts */
-  --semantic-success: #15803d;
-  --semantic-warning: #b45309;
-  --semantic-error: #dc2626;
-  --semantic-info: #2563eb;
+  /* Brand, neutral and status primitives come from ./tokens.css */
 
   /* Brand Gradients */
   --lumina-radiant-gradient: linear-gradient(
@@ -47,14 +30,14 @@
   --brand-accent: var(--deep-teal);
 
   /* Common Design System Variables */
-  --color-background: #ffffff;
-  --color-foreground: #0b2b33;
-  --color-foreground-secondary: #2d5a5f;
-  --color-foreground-muted: #8b8680;
-  --color-surface: #ffffff;
-  --color-border: #e5e7eb;
-  --color-border-muted: #f3f4f6;
-  --color-background-muted: #f9fafb;
+  --color-background: var(--white);
+  --color-foreground: var(--deep-teal);
+  --color-foreground-secondary: var(--theme-light-foreground-secondary);
+  --color-foreground-muted: var(--warm-gray);
+  --color-surface: var(--white);
+  --color-border: var(--theme-light-border);
+  --color-border-muted: var(--theme-light-border-muted);
+  --color-background-muted: var(--theme-light-background-muted);
 
   /* Primary and Secondary Colors */
   --color-primary: var(--lumina-gold);
@@ -66,46 +49,37 @@
   --color-error: var(--semantic-error);
   --color-info: var(--semantic-info);
 
-  /* Neutral Colors */
-  --neutral-50: #fafafa;
-  --neutral-100: #f5f5f5;
-  --neutral-200: #e5e5e5;
-  --neutral-300: #d4d4d4;
-  --neutral-400: #a3a3a3;
-  --neutral-500: #737373;
-  --neutral-600: #525252;
-  --neutral-700: #404040;
-  --neutral-800: #262626;
-  --neutral-900: #171717;
-  --neutral-950: #0a0a0a;
-
   /* Interactive Colors */
   --color-interactive-focus: var(--lumina-gold);
 
   /* Foreground Colors - Optimized for Contrast */
-  --color-primary-foreground: #0b2b33; /* Dark text on bright gold for better contrast */
-  --color-secondary-foreground: #ffffff; /* White text on dark teal */
-  --color-success-foreground: #ffffff;
-  --color-warning-foreground: #0b2b33; /* Dark text on bright warning */
-  --color-info-foreground: #ffffff;
-  --color-destructive-foreground: #ffffff;
+  --color-primary-foreground: var(
+    --deep-teal
+  ); /* Dark text on bright gold for better contrast */
+  --color-secondary-foreground: var(--white); /* White text on dark teal */
+  --color-success-foreground: var(--white);
+  --color-warning-foreground: var(
+    --deep-teal
+  ); /* Dark text on bright warning */
+  --color-info-foreground: var(--white);
+  --color-destructive-foreground: var(--white);
 
   /* Secondary Color System */
   --color-secondary: var(--deep-teal);
-  --color-secondary-hover: #0f3a44;
+  --color-secondary-hover: var(--theme-secondary-hover);
 
   /* Text Colors */
   --color-text-primary: var(--color-foreground);
   --color-text-secondary: var(--color-foreground-secondary);
   --color-text-muted: var(--color-foreground-muted);
-  --color-text-disabled: #d1d5db;
-  --color-text-inverse: #ffffff;
+  --color-text-disabled: var(--theme-light-text-disabled);
+  --color-text-inverse: var(--white);
 
   /* Semantic Foreground Colors */
-  --color-success-foreground: #ffffff;
-  --color-warning-foreground: #ffffff;
-  --color-error-foreground: #ffffff;
-  --color-info-foreground: #ffffff;
+  --color-success-foreground: var(--white);
+  --color-warning-foreground: var(--white);
+  --color-error-foreground: var(--white);
+  --color-info-foreground: var(--white);
 
   /* Shadows */
   --dashboard-shadow:
@@ -191,30 +165,15 @@
 @layer base {
   /* Dark theme color variables */
   .dark {
-    /* Primary Brand Colors remain the same */
-    --lumina-gold: #ffd25a;
-    --lumina-coral: #ff7a5a;
-    --deep-teal: #0b2b33;
-
-    /* Tertiary Brand Colors */
-    --clarity-blue: #89cff0;
-    --soft-peach: #ffe5b4;
-
-    /* Complementary Colors */
-    --sage-green: #87a96b;
-    --warm-gray: #8b8680;
-    --lavender-mist: #c8b5d1;
-    --cream: #f7f5f0;
-
     /* Dark theme specific colors */
-    --color-background: #0a0a0a;
-    --color-foreground: #fafafa;
-    --color-foreground-secondary: #a1a1aa;
-    --color-foreground-muted: #71717a;
-    --color-surface: #171717;
-    --color-border: #27272a;
-    --color-border-muted: #1f1f23;
-    --color-background-muted: #171717;
+    --color-background: var(--theme-dark-background);
+    --color-foreground: var(--neutral-50);
+    --color-foreground-secondary: var(--theme-dark-foreground-secondary);
+    --color-foreground-muted: var(--theme-dark-foreground-muted);
+    --color-surface: var(--neutral-900);
+    --color-border: var(--theme-dark-border);
+    --color-border-muted: var(--theme-dark-border-muted);
+    --color-background-muted: var(--neutral-900);
 
     /* Primary and Secondary Colors (same in dark) */
     --color-primary: var(--lumina-gold);
@@ -230,46 +189,34 @@
     --color-interactive-focus: var(--lumina-gold);
 
     /* Foreground Colors - Dark Theme Optimized */
-    --color-primary-foreground: #0b2b33; /* Dark text on bright gold (same in dark) */
-    --color-secondary-foreground: #ffffff; /* White text on dark teal (same in dark) */
-    --color-success-foreground: #ffffff;
-    --color-warning-foreground: #0b2b33; /* Dark text on bright warning (same in dark) */
-    --color-info-foreground: #ffffff;
-    --color-destructive-foreground: #ffffff;
+    --color-primary-foreground: var(
+      --deep-teal
+    ); /* Dark text on bright gold (same in dark) */
+    --color-secondary-foreground: var(
+      --white
+    ); /* White text on dark teal (same in dark) */
+    --color-success-foreground: var(--white);
+    --color-warning-foreground: var(
+      --deep-teal
+    ); /* Dark text on bright warning (same in dark) */
+    --color-info-foreground: var(--white);
+    --color-destructive-foreground: var(--white);
 
     /* Secondary Color System */
     --color-secondary: var(--deep-teal);
-    --color-secondary-hover: #0f3a44;
+    --color-secondary-hover: var(--theme-secondary-hover);
 
     /* Text Colors */
     --color-text-primary: var(--color-foreground);
     --color-text-secondary: var(--color-foreground-secondary);
     --color-text-muted: var(--color-foreground-muted);
-    --color-text-disabled: #3f3f46;
-    --color-text-inverse: #0a0a0a;
+    --color-text-disabled: var(--theme-dark-text-disabled);
+    --color-text-inverse: var(--theme-dark-background);
   }
 }
 
 /* ===== CSS CUSTOM PROPERTY SUPPORT DETECTION ===== */
 @layer base {
-  /* Graceful degradation when CSS custom properties aren't supported */
-  @supports not (color: var(--test)) {
-    :root {
-      /* Fallback colors for older browsers - Exact Design System Values */
-      --lumina-gold: #ffd25a;
-      --lumina-coral: #ff7a5a;
-      --deep-teal: #0b2b33;
-      --clarity-blue: #89cff0;
-      --soft-peach: #ffe5b4;
-      --sage-green: #87a96b;
-      --warm-gray: #8b8680;
-      --lavender-mist: #c8b5d1;
-      --cream: #f7f5f0;
-      --color-background: #ffffff;
-      --color-foreground: #1d2d35;
-    }
-  }
-
   /* Enhanced support for modern browsers */
   @supports (color: var(--test)) {
     .modern-browser {
@@ -589,7 +536,7 @@
   }
 
   .btn-lumina-secondary:hover {
-    background-color: var(--color-secondary-hover, #0f3a44);
+    background-color: var(--color-secondary-hover);
     transform: translateY(-1px);
   }
 
@@ -1324,7 +1271,7 @@
   .hero-bg-gradient-orb-1 {
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, #ffd25a 0%, transparent 70%);
+    background: radial-gradient(circle, var(--lumina-gold) 0%, transparent 70%);
     top: 10%;
     left: 20%;
     opacity: 1;
@@ -1335,7 +1282,11 @@
   .hero-bg-gradient-orb-2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, #ff7a5a 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--lumina-coral) 0%,
+      transparent 70%
+    );
     top: 60%;
     right: 15%;
     opacity: 1;
@@ -1346,7 +1297,11 @@
   .hero-bg-gradient-orb-3 {
     width: 250px;
     height: 250px;
-    background: radial-gradient(circle, #89cff0 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--clarity-blue) 0%,
+      transparent 70%
+    );
     bottom: 20%;
     left: 60%;
     opacity: 0.8;
@@ -1427,12 +1382,12 @@
     position: absolute !important;
     width: 12px !important;
     height: 12px !important;
-    background: #ffd25a !important;
+    background: var(--lumina-gold) !important;
     border-radius: 50% !important;
     opacity: 1 !important;
     will-change: transform;
     box-shadow:
-      0 0 25px #ffd25a,
+      0 0 25px var(--lumina-gold),
       0 0 50px rgba(255, 210, 90, 0.8) !important;
     z-index: 10 !important;
     display: block !important;
@@ -4110,7 +4065,7 @@
   }
 
   .testimonial-card:hover .testimonial-author-name {
-    color: #ffd25a !important;
+    color: var(--lumina-gold) !important;
     transition: color 0.25s ease !important;
   }
 
@@ -4120,7 +4075,7 @@
 
   .testimonial-card:hover .testimonial-quote-icon svg {
     transform: scale(1.1) !important;
-    color: #ff7a5a !important;
+    color: var(--lumina-coral) !important;
   }
 
   /* Staggered animation delays for multiple testimonial cards - Faster sequence */
