@@ -17,6 +17,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "tokens:css": "tsx scripts/generate-token-css.ts",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",

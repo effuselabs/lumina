@@ -94,22 +94,14 @@ html {
   }
 }
 
-/* Dark mode optimizations */
-@media (prefers-color-scheme: dark) {
-  .booking-interface {
-    background-color: #1a1a1a;
-    color: #ffffff;
-  }
-
-  .booking-card {
-    background-color: #2a2a2a;
-    border-color: #404040;
-  }
-}
-
 /* Loading states */
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(
+    90deg,
+    var(--theme-skeleton-base) 25%,
+    var(--theme-skeleton-highlight) 50%,
+    var(--theme-skeleton-base) 75%
+  );
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
@@ -134,21 +126,6 @@ html {
   text-align: center;
   font-size: 0.875rem;
   font-weight: 500;
-}
-
-.network-offline {
-  background-color: #dc2626;
-  color: white;
-}
-
-.network-slow {
-  background-color: #f59e0b;
-  color: white;
-}
-
-.network-online {
-  background-color: #10b981;
-  color: white;
 }
 
 /* Safe area support for devices with notches */
@@ -188,7 +165,7 @@ html {
 
 /* Focus management for accessibility */
 .focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--chart-blue);
   outline-offset: 2px;
 }
 

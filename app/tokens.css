@@ -1,0 +1,43 @@
+/* Generated from lib/design/tokens.ts by `npm run tokens:css`. Do not edit. */
+:root {
+  --lumina-gold: #ffd25a;
+  --lumina-coral: #ff7a5a;
+  --deep-teal: #0b2b33;
+  --soft-peach: #ffe5b4;
+  --cream: #f7f5f0;
+  --clarity-blue: #89cff0;
+  --sage-green: #87a96b;
+  --warm-gray: #8b8680;
+  --lavender-mist: #c8b5d1;
+  --semantic-success: #15803d;
+  --semantic-warning: #b45309;
+  --semantic-error: #dc2626;
+  --semantic-info: #2563eb;
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+  --white: #ffffff;
+  --chart-blue: #3b82f6;
+  --theme-light-foreground-secondary: #2d5a5f;
+  --theme-light-border: #e5e7eb;
+  --theme-light-border-muted: #f3f4f6;
+  --theme-light-background-muted: #f9fafb;
+  --theme-light-text-disabled: #d1d5db;
+  --theme-secondary-hover: #0f3a44;
+  --theme-dark-background: #0a0a0a;
+  --theme-dark-foreground-secondary: #a1a1aa;
+  --theme-dark-foreground-muted: #71717a;
+  --theme-dark-border: #27272a;
+  --theme-dark-border-muted: #1f1f23;
+  --theme-dark-text-disabled: #3f3f46;
+  --theme-skeleton-base: #f0f0f0;
+  --theme-skeleton-highlight: #e0e0e0;
+}

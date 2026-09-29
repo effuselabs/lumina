@@ -155,34 +155,40 @@ gates decide, and `npm run db:seed` runs by hand on anything near
        booking page's search box turned black. It is `class` now; the same
        page went from 76,570 px different between OS settings to 0.
 
-   - [ ] **3e — hex outside `.tsx`.** `app/design-tokens/` is gone: ten
-         CSS files, 2,210 lines, that nothing imported — `globals.css`
-         imports only `booking-mobile.css`, and the compiled stylesheet was
-         byte-identical with and without the directory. `knip.json` had
-         ignored it on the belief that it was reached through `@import`, which
-         is why no report ever flagged it.
-     - Every `.ts` under the lint gate now takes colours from `tokens.ts`,
-       and the hex rule covers `.ts` as well as `.tsx`. The email templates
-       moved at their exact values: all 60 renders (every template, with and
-       without a business colour and optional fields) hash the same before
-       and after.
-     - `lib/theme-accessibility.ts` kept its own palette, and it had drifted
-       like `tokens.ts` had: `/design-system/accessibility-test` graded a
-       success green and info blue nothing renders, and "lighter" dark-theme
-       status colours `globals.css` never defines. It grades the token values
-       now, which surfaced the item below.
-     - `tailwind.config.ts` has no hex either. Its safelist forced 87
-       rules (11 KB) into the stylesheet for the Button override 3d removed —
-       `[data-testid="button"]` selectors for an attribute nothing renders —
-       and they are gone; screenshots were identical bar the analytics
-       chart's own noise. Its 67 tint and shade steps moved into
-       `tokens.scales`, and the compiled CSS was byte-identical after.
-     - Left: `globals.css` (90 hex), `booking-mobile.css` (11), and
-       `prisma/seed.ts` (1), which sits outside `next lint`'s directories.
-   - [ ] **3f — status text fails AA in dark mode.** Dark mode reuses the
-         light `--semantic-*` values, and on the dark surface `#171717` they
-         reach 3.47–3.71:1 (info lowest). Dark mode needs its own lighter
-         status values, which changes what dark-mode users see.
+   - [x] **3e — hex outside `.tsx`.** No stylesheet, config or `.ts`
+         under the lint gate writes a colour of its own; `tokens.ts` is the
+         one place a value lives.
+     - `app/design-tokens/` is gone: ten CSS files, 2,210 lines, that
+       nothing imported. `knip.json` had ignored it on the belief that it
+       was reached through `@import`, which is why no report flagged it.
+     - `.ts`: the email templates and every other module import tokens, and
+       the hex lint rule covers `.ts`. All 60 email renders hashed the same.
+       `lib/theme-accessibility.ts` had its own drifted palette and now
+       grades what renders, which surfaced 3f.
+     - `tailwind.config.ts`: a dead safelist (87 rules, 11 KB, for the
+       Button override 3d removed) is gone and its 67 tint steps live in
+       `tokens.scales`; the CSS was byte-identical after the move.
+     - CSS: `app/tokens.css` is generated from `tokens.ts`
+       (`npm run tokens:css`), and `globals.css` and `booking-mobile.css`
+       refer to its properties. `__tests__/design/tokens-css.test.ts` fails
+       if the file is stale or either stylesheet gains a hex. Every existing
+       custom property resolved the same on six pages, light and `.dark`, and
+       every element's computed colours matched.
+     - Left: `prisma/seed.ts` (1), outside `next lint`'s directories.
+   - [ ] **3f — dark mode does not work, and would fail AA if it did.**
+     - The `.dark` overrides never apply. `:root` in `globals.css` is
+       unlayered and `.dark` sits in `@layer base`; the theme switcher puts
+       `dark` on `<html>`, the element `:root` matches, and unlayered
+       declarations beat layered ones whatever their specificity. Measured:
+       with `.dark` on `<html>`, `--color-background` stays `#ffffff`.
+     - Dark mode reuses the light `--semantic-*` values, which on the dark
+       surface `#171717` reach 3.47–3.71:1 (info lowest).
+     - The app is light-only by design (see 3d), so the question is whether
+       to fix dark mode or delete it — a product call, not a refactor.
+   - [ ] **3g — `--lumina-peach` has never been defined.** `bg-lumina-peach`
+         and three other references resolve to nothing, so those elements
+         have no fill. Defining it paints them for the first time, so it goes
+         with screenshots.
 4. 336 unused exports — worth a pass once the collapse settles, not before.
 
 ---
