@@ -196,6 +196,15 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      with the barrel gone, `business-branding.ts`, `retry-logic.ts` and
      `template-repository.ts` (965 lines) had no importer at all and
      were deleted. The rest lost only an `export` keyword.
+   - `prisma/factories/` (59): done, 1,458 lines. Five of the six validator
+     classes (`BusinessLogicValidator` and the four it composed) were reached
+     only through the barrel, as were two seeding helpers and 21 interfaces;
+     `DataIntegrityValidator`, which `data-reset-manager` uses, stays. The
+     seed runs as before.
+   - `lib/security/` (47) is next, on its own: unused CSRF, sanitiser and
+     abuse-detection modules say something about which protections the
+     public booking routes actually have, which is worth reading before it is
+     deleted.
 
 ---
 
@@ -449,6 +458,15 @@ time, after the booking loop works.
   requires a process younger than the deploy. The wider lesson: a green deploy
   job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
   is live.
+
+- **`npm run db:seed` is not idempotent.** Each run appends another copy of
+  the catalogue: after six runs a local database held 264 services, each
+  name six times, and the booking e2e failed because it needs a uniquely
+  named service. CI is unaffected — it seeds an empty database — but anyone
+  following `CLAUDE.md`'s `npm run db:migrate && npm run db:seed` twice gets
+  a database the e2e cannot book against. `npx prisma migrate reset --force`
+  recovers. The fix is for the seed to clear the demo business's rows first
+  (`cleanExistingSeedData` once existed for this, but nothing ever called it).
 
 - **Railway's native deploy can lag CI by a quarter of an hour.** After #32
   merged, main CI finished at 20:28 and the deployment went live at 20:42 —

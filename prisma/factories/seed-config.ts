@@ -4,7 +4,7 @@
 
 import { SeedConfiguration } from './types';
 
-export const DEFAULT_SEED_CONFIG: SeedConfiguration = {
+const DEFAULT_SEED_CONFIG: SeedConfiguration = {
   clients: {
     count: 50,
     demographics: {
