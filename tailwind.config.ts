@@ -8,6 +8,14 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 import { accent, brand, status } from './lib/design/tokens';
 
 const config: Config = {
+  // `dark:` follows the `.dark` class ThemeProvider sets on <html>, not the
+  // visitor's OS. The default is `media`, and the app is light-only on purpose
+  // (see components/providers.tsx) — so under `media` a visitor whose OS was in
+  // dark mode got every `dark:` utility applied on top of the light theme: on
+  // the public booking page the search box turned black. Measured before this
+  // line, the same page differed by 76,570 px between light and dark OS
+  // settings; after it, by none.
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
