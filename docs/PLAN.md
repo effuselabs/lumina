@@ -216,6 +216,8 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      `dropdown-menu`, `select`, `table`) keep their full surface —
      `DialogClose` or `SelectGroup` unused today is a vendored kit, not dead
      code — and `knip.json` says so through `ignoreIssues`.
+   - `types/` (about 70): done, 675 lines net — 66 type declarations
+     nothing referenced. Type-only, so type-check is the whole proof.
 
 ---
 

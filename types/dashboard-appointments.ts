@@ -6,7 +6,7 @@
 import { AppointmentStatus } from '@prisma/client';
 
 // StaffMember interface (duplicated to avoid circular dependency)
-export interface StaffMember {
+interface StaffMember {
   id: string;
   firstName: string;
   lastName: string;
@@ -64,14 +64,6 @@ export interface CalendarHeaderProps {
   onDateChange: (date: Date) => void;
   onNavigate: (direction: 'prev' | 'next') => void;
   onToday: () => void;
-}
-
-export interface TimeSlotProps {
-  slot: CalendarSlot;
-  view: CalendarView;
-  isSelected?: boolean;
-  onClick?: (slot: CalendarSlot) => void;
-  className?: string;
 }
 
 export interface DashboardAppointment {
@@ -149,7 +141,7 @@ export interface ConflictInfo {
   suggestedAlternatives?: TimeSlotAlternative[];
 }
 
-export interface TimeSlotAlternative {
+interface TimeSlotAlternative {
   startTime: Date;
   endTime: Date;
   staffId: string;
