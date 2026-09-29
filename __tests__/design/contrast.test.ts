@@ -1,3 +1,4 @@
+import { contrastRatio } from '@/lib/design/contrast';
 import { contrastPairs, prohibitedPairs } from '@/lib/design/tokens';
 
 /**
@@ -8,31 +9,6 @@ import { contrastPairs, prohibitedPairs } from '@/lib/design/tokens';
  * a token change that breaks contrast fails CI immediately, on the commit that
  * caused it.
  */
-
-/** Relative luminance per WCAG 2.1, from an #rrggbb string. */
-function relativeLuminance(hex: string): number {
-  const normalized = hex.replace('#', '');
-  if (!/^[0-9a-fA-F]{6}$/.test(normalized)) {
-    throw new Error(`Expected a 6-digit hex colour, received "${hex}"`);
-  }
-
-  const channels = [0, 2, 4].map(offset => {
-    const srgb = parseInt(normalized.slice(offset, offset + 2), 16) / 255;
-    return srgb <= 0.03928 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
-  }) as [number, number, number];
-
-  const [r, g, b] = channels;
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-/** Contrast ratio between two colours, 1:1 to 21:1. */
-function contrastRatio(foreground: string, background: string): number {
-  const a = relativeLuminance(foreground);
-  const b = relativeLuminance(background);
-  const lighter = Math.max(a, b);
-  const darker = Math.min(a, b);
-  return (lighter + 0.05) / (darker + 0.05);
-}
 
 describe('design token contrast', () => {
   it('has pairs declared', () => {

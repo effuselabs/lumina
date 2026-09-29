@@ -27,7 +27,8 @@ import { StatCard } from '@/components/ui/stat-card';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 
-import { cn } from '@/lib/utils';
+import { contrastRatio } from '@/lib/design/contrast';
+import { accent, base, brand, status } from '@/lib/design/tokens';
 import {
   AlertCircle,
   DollarSign,
@@ -62,21 +63,27 @@ function ThemeToggle() {
 // Color Swatch Component
 interface ColorSwatchProps {
   name: string;
+  /** A token from lib/design/tokens.ts — the swatch, label and contrast all derive from it. */
   value: string;
-  className: string;
   description: string;
   usage: string;
-  contrast?: string;
 }
 
-function ColorSwatch({
-  name,
-  value,
-  className,
-  description,
-  usage,
-  contrast,
-}: ColorSwatchProps) {
+/** Computed, not written: the hand-written figures on this page were wrong. */
+function contrastOnWhite(value: string): string {
+  const ratio = contrastRatio(value, base.white);
+  const grade =
+    ratio >= 7
+      ? 'AAA'
+      : ratio >= 4.5
+        ? 'AA'
+        : ratio >= 3
+          ? 'AA large text only'
+          : 'fails AA';
+  return `${ratio.toFixed(2)}:1 on white (${grade})`;
+}
+
+function ColorSwatch({ name, value, description, usage }: ColorSwatchProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -93,10 +100,8 @@ function ColorSwatch({
     <Card className="group relative overflow-hidden transition-all duration-200 hover:shadow-md">
       {/* Color Preview */}
       <div
-        className={cn(
-          'h-24 w-full cursor-pointer transition-all duration-200 group-hover:h-28',
-          className
-        )}
+        className="h-24 w-full cursor-pointer transition-all duration-200 group-hover:h-28"
+        style={{ backgroundColor: value }}
         onClick={handleCopy}
         role="button"
         tabIndex={0}
@@ -124,9 +129,9 @@ function ColorSwatch({
         </div>
         <p className="mb-2 text-sm text-muted-foreground">{description}</p>
         <p className="mb-2 text-xs text-muted-foreground">{usage}</p>
-        {contrast && (
-          <p className="text-xs font-medium text-card-foreground">{contrast}</p>
-        )}
+        <p className="text-xs font-medium text-card-foreground">
+          {contrastOnWhite(value)}
+        </p>
       </CardContent>
     </Card>
   );
@@ -179,27 +184,21 @@ function DesignSystemContent() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <ColorSwatch
               name="Lumina Gold"
-              value="#FFD25A"
-              className="bg-[#FFD25A]"
+              value={brand.gold}
               description="Primary brand color - warm, inviting gold"
               usage="Primary buttons, highlights, brand elements"
-              contrast="4.5:1 on white (WCAG AA)"
             />
             <ColorSwatch
               name="Lumina Coral"
-              value="#FF7A5A"
-              className="bg-[#FF7A5A]"
+              value={brand.coral}
               description="Secondary brand color - energetic coral"
               usage="Secondary buttons, accents, gradients"
-              contrast="4.8:1 on white (WCAG AA)"
             />
             <ColorSwatch
               name="Deep Teal"
-              value="#0B2B33"
-              className="bg-[#0B2B33]"
+              value={brand.deepTeal}
               description="Professional dark accent"
               usage="Headers, navigation, professional elements"
-              contrast="16.94:1 on white (WCAG AAA)"
             />
           </div>
         </section>
@@ -212,19 +211,15 @@ function DesignSystemContent() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <ColorSwatch
               name="Clarity Blue"
-              value="#89CFF0"
-              className="bg-[#89CFF0]"
+              value={accent.clarityBlue}
               description="Clear communication and transparency"
               usage="Information states, links, tertiary elements"
-              contrast="3.2:1 on white (WCAG AA large text)"
             />
             <ColorSwatch
               name="Soft Peach"
-              value="#FFE5B4"
-              className="bg-[#FFE5B4]"
+              value={brand.peach}
               description="Gentle warmth and approachability"
               usage="Backgrounds, subtle highlights, warm accents"
-              contrast="1.8:1 on white (decorative only)"
             />
           </div>
         </section>
@@ -237,35 +232,27 @@ function DesignSystemContent() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <ColorSwatch
               name="Sage Green"
-              value="#87A96B"
-              className="bg-[#87A96B]"
+              value={accent.sageGreen}
               description="Natural complement to warm brand colors"
               usage="Secondary accents, nature themes, calm states"
-              contrast="4.1:1 on white (WCAG AA)"
             />
             <ColorSwatch
               name="Warm Gray"
-              value="#8B8680"
-              className="bg-[#8B8680]"
+              value={accent.warmGray}
               description="Sophisticated neutral for typography hierarchy"
               usage="Secondary text, subtle borders, backgrounds"
-              contrast="5.2:1 on white (WCAG AA)"
             />
             <ColorSwatch
               name="Lavender Mist"
-              value="#C8B5D1"
-              className="bg-[#C8B5D1]"
+              value={accent.lavenderMist}
               description="Enhances existing Clarity Blue palette"
               usage="Accent highlights, soft backgrounds, premium feel"
-              contrast="2.9:1 on white (WCAG AA large text)"
             />
             <ColorSwatch
               name="Cream"
-              value="#F7F5F0"
-              className="bg-[#F7F5F0]"
+              value={brand.cream}
               description="Warmer alternative to pure white for backgrounds"
               usage="Page backgrounds, card backgrounds, soft containers"
-              contrast="1.1:1 on white (background use only)"
             />
           </div>
         </section>
@@ -278,35 +265,27 @@ function DesignSystemContent() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <ColorSwatch
               name="Success Green"
-              value="#16A34A"
-              className="bg-green-600"
+              value={status.success}
               description="Success states and positive actions"
               usage="Success messages, confirmations, completed states"
-              contrast="7.2:1 on white (WCAG AAA)"
             />
             <ColorSwatch
               name="Warning Amber"
-              value="#D97706"
-              className="bg-amber-600"
+              value={status.warning}
               description="Warning states and caution"
               usage="Warnings, cautions, attention states"
-              contrast="5.1:1 on white (WCAG AA)"
             />
             <ColorSwatch
               name="Error Red"
-              value="#DC2626"
-              className="bg-red-600"
+              value={status.error}
               description="Error states and destructive actions"
               usage="Errors, destructive actions, critical alerts"
-              contrast="9.2:1 on white (WCAG AAA)"
             />
             <ColorSwatch
               name="Info Blue"
-              value="#2563EB"
-              className="bg-blue-600"
+              value={status.info}
               description="Information and neutral notifications"
               usage="Information, tips, neutral notifications"
-              contrast="8.1:1 on white (WCAG AAA)"
             />
           </div>
         </section>
