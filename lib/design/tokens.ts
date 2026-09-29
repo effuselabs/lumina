@@ -125,6 +125,7 @@ export const chart = {
   amber: '#F59E0B',
   violet: '#8B5CF6',
   slate: '#6B7280',
+  cyan: '#06B6D4',
 } as const;
 
 /** Surfaces the runtime theme switcher writes onto `:root`. */
@@ -156,6 +157,23 @@ export const email = {
   divider: '#E6EBF1',
   text: '#111827',
   textMuted: '#6B7280',
+  /**
+   * The HTML-string templates in lib/email/templates/*.ts, which carry their
+   * own greys and callout tints. Recorded at their exact values so moving them
+   * here changed no email; aligning them with the React template above is a
+   * design change, not a refactor.
+   */
+  html: {
+    page: '#F5F5F5',
+    body: '#333333',
+    bodyMuted: '#666666',
+    panel: '#F9F9F9',
+    rule: '#E0E0E0',
+    reminderSurface: '#FFF8E1',
+    cancellationSurface: '#FFF3F3',
+    cancellationAccent: '#D32F2F',
+    bookingSurface: '#F0F8FF',
+  },
 } as const;
 
 /** Gradients. The radiant gradient is the single strongest brand signal. */

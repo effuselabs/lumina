@@ -160,9 +160,26 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          imports only `booking-mobile.css`, and the compiled stylesheet was
          byte-identical with and without the directory. `knip.json` had
          ignored it on the belief that it was reached through `@import`, which
-         is why no report ever flagged it. Left: `globals.css` (90 hex),
-         `booking-mobile.css` (11), and the `.ts` email templates and
-         `lib/theme-accessibility.ts` (about 170 between them).
+         is why no report ever flagged it.
+     - Every `.ts` under the lint gate now takes colours from `tokens.ts`,
+       and the hex rule covers `.ts` as well as `.tsx`. The email templates
+       moved at their exact values: all 60 renders (every template, with and
+       without a business colour and optional fields) hash the same before
+       and after.
+     - `lib/theme-accessibility.ts` kept its own palette, and it had drifted
+       like `tokens.ts` had: `/design-system/accessibility-test` graded a
+       success green and info blue nothing renders, and "lighter" dark-theme
+       status colours `globals.css` never defines. It grades the token values
+       now, which surfaced the item below.
+     - Left: `globals.css` (90 hex) and `booking-mobile.css` (11); the
+       `tailwind.config.ts` safelist (about 130 hex), which exists for the
+       Button stylesheet 3d removed — its `[data-testid="button"]` selectors
+       match nothing; and `prisma/seed.ts` (1). The last two sit outside
+       `next lint`'s directories, so the rule does not reach them yet.
+   - [ ] **3f — status text fails AA in dark mode.** Dark mode reuses the
+         light `--semantic-*` values, and on the dark surface `#171717` they
+         reach 3.47–3.71:1 (info lowest). Dark mode needs its own lighter
+         status values, which changes what dark-mode users see.
 4. 336 unused exports — worth a pass once the collapse settles, not before.
 
 ---
@@ -293,6 +310,12 @@ time, after the booking loop works.
   were deleted in 4d). Raw hex in `.tsx` reached zero and is an error.
 
 ## Known, unaddressed
+
+- **`npm run lint` does not reach `hooks/`, `prisma/`, or root config.**
+  `next lint` checks `app/`, `components/`, `lib/`, `pages/` and `src/` unless
+  `eslint.dirs` says otherwise, so a rule can be at zero in the gate while
+  `hooks/use-theme-switcher.ts` and `prisma/factories/` carry errors
+  `npx eslint .` reports. Widening the gate means fixing those first.
 
 - ~~**The booking loop spec fails about one local run in twenty.**~~
   **Fixed.** This entry said it failed "rather than a slow render", and that

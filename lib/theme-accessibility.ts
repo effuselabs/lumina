@@ -3,6 +3,16 @@
  * Provides functions to validate color contrast ratios and accessibility compliance
  */
 
+import { contrastRatio } from '@/lib/design/contrast';
+import {
+  accent,
+  base,
+  brand,
+  neutral,
+  status,
+  themeSurface,
+} from '@/lib/design/tokens';
+
 export interface ColorContrastResult {
   ratio: number;
   wcagAA: boolean;
@@ -27,53 +37,11 @@ export interface AccessibilityValidationResult {
 }
 
 /**
- * Convert hex color to RGB values
- */
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null;
-}
-
-/**
- * Calculate relative luminance of a color
- * Based on WCAG 2.1 specification
- */
-function getRelativeLuminance(r: number, g: number, b: number): number {
-  const [rs, gs, bs] = [r, g, b].map(c => {
-    c = c / 255;
-    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  });
-
-  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
-}
-
-/**
- * Calculate contrast ratio between two colors
- * Returns a value between 1 and 21
+ * Contrast ratio between two colours, 1:1 to 21:1. The maths lives in
+ * lib/design/contrast.ts, shared with the contrast test.
  */
 export function calculateContrastRatio(color1: string, color2: string): number {
-  const rgb1 = hexToRgb(color1);
-  const rgb2 = hexToRgb(color2);
-
-  if (!rgb1 || !rgb2) {
-    throw new Error(
-      'Invalid color format. Please use hex colors (e.g., #FFFFFF)'
-    );
-  }
-
-  const l1 = getRelativeLuminance(rgb1.r, rgb1.g, rgb1.b);
-  const l2 = getRelativeLuminance(rgb2.r, rgb2.g, rgb2.b);
-
-  const lighter = Math.max(l1, l2);
-  const darker = Math.min(l1, l2);
-
-  return (lighter + 0.05) / (darker + 0.05);
+  return contrastRatio(color1, color2);
 }
 
 /**
@@ -106,54 +74,49 @@ export function evaluateContrast(
 }
 
 /**
- * Lumina brand colors for validation
+ * The colours this page grades, taken from lib/design/tokens.ts.
+ *
+ * This used to be its own palette, and it had drifted: success was #0F7B6C
+ * and info #1E40AF, which nothing renders, and the dark-theme checks graded
+ * "lighter" status colours (#10B981, #3B82F6, ...) that globals.css never
+ * defines — dark mode reuses --semantic-*. The page passed colours users never
+ * saw, and hid that the ones they do see fail AA on dark surfaces.
  */
 export const LUMINA_COLORS = {
-  // Primary brand colors
-  luminaGold: '#FFD25A',
-  luminaCoral: '#FF7A5A',
-  deepTeal: '#0B2B33',
-
-  // Tertiary colors
-  clarityBlue: '#89CFF0',
-  softPeach: '#FFE5B4',
-
-  // Complementary colors
-  sageGreen: '#87A96B',
-  warmGray: '#8B8680',
-  lavenderMist: '#C8B5D1',
-  cream: '#F7F5F0',
-
-  // Enhanced semantic colors - Updated for WCAG AA compliance
-  successGreen: '#0F7B6C',
-  warningAmber: '#92400E',
-  errorRed: '#B91C1C',
-  infoBlue: '#1E40AF',
-
-  // Neutral colors
-  neutral50: '#FAFAFA',
-  neutral100: '#F5F5F5',
-  neutral200: '#E5E5E5',
-  neutral300: '#D4D4D4',
-  neutral400: '#A3A3A3',
-  neutral500: '#737373',
-  neutral600: '#525252',
-  neutral700: '#404040',
-  neutral800: '#262626',
-  neutral900: '#171717',
-  neutral950: '#0A0A0A',
-
-  // Pure colors
-  white: '#FFFFFF',
-  black: '#000000',
+  luminaGold: brand.gold,
+  luminaCoral: brand.coral,
+  deepTeal: brand.deepTeal,
+  clarityBlue: accent.clarityBlue,
+  softPeach: brand.peach,
+  sageGreen: accent.sageGreen,
+  warmGray: accent.warmGray,
+  lavenderMist: accent.lavenderMist,
+  cream: brand.cream,
+  successGreen: status.success,
+  warningAmber: status.warning,
+  errorRed: status.error,
+  infoBlue: status.info,
+  neutral50: neutral[50],
+  neutral100: neutral[100],
+  neutral200: neutral[200],
+  neutral300: neutral[300],
+  neutral400: neutral[400],
+  neutral500: neutral[500],
+  neutral600: neutral[600],
+  neutral700: neutral[700],
+  neutral800: neutral[800],
+  neutral900: neutral[900],
+  neutral950: themeSurface.darkBackground,
+  white: base.white,
+  black: base.black,
 } as const;
 
 /**
  * Validate accessibility for light theme
  */
 export function validateLightThemeAccessibility(): AccessibilityValidationResult {
-  const lightBackground = LUMINA_COLORS.cream; // #F7F5F0
-  const lightSurface = LUMINA_COLORS.white; // #FFFFFF
+  const lightBackground = LUMINA_COLORS.cream;
+  const lightSurface = LUMINA_COLORS.white;
 
   const colorCombinations = {
     'Primary text on background': {
@@ -235,8 +198,8 @@ export function validateLightThemeAccessibility(): AccessibilityValidationResult
  * Validate accessibility for dark theme
  */
 export function validateDarkThemeAccessibility(): AccessibilityValidationResult {
-  const darkBackground = LUMINA_COLORS.neutral950; // #0A0A0A
-  const darkSurface = LUMINA_COLORS.neutral900; // #171717
+  const darkBackground = LUMINA_COLORS.neutral950;
+  const darkSurface = LUMINA_COLORS.neutral900;
 
   const colorCombinations = {
     'Primary text on background': {
@@ -268,29 +231,33 @@ export function validateDarkThemeAccessibility(): AccessibilityValidationResult 
       ),
     },
     'Secondary button text (dark theme)': {
-      background: '#1A4A56', // Lighter version of deep teal for dark theme
+      // --color-secondary is deep teal in both themes.
+      background: LUMINA_COLORS.deepTeal,
       foreground: LUMINA_COLORS.neutral50,
-      contrast: evaluateContrast(LUMINA_COLORS.neutral50, '#1A4A56'),
+      contrast: evaluateContrast(
+        LUMINA_COLORS.neutral50,
+        LUMINA_COLORS.deepTeal
+      ),
     },
     'Success text': {
       background: darkSurface,
-      foreground: '#10B981', // Lighter success green for dark theme
-      contrast: evaluateContrast('#10B981', darkSurface),
+      foreground: LUMINA_COLORS.successGreen,
+      contrast: evaluateContrast(LUMINA_COLORS.successGreen, darkSurface),
     },
     'Warning text': {
       background: darkSurface,
-      foreground: '#F59E0B', // Lighter warning amber for dark theme
-      contrast: evaluateContrast('#F59E0B', darkSurface),
+      foreground: LUMINA_COLORS.warningAmber,
+      contrast: evaluateContrast(LUMINA_COLORS.warningAmber, darkSurface),
     },
     'Error text': {
       background: darkSurface,
-      foreground: '#EF4444', // Lighter error red for dark theme
-      contrast: evaluateContrast('#EF4444', darkSurface),
+      foreground: LUMINA_COLORS.errorRed,
+      contrast: evaluateContrast(LUMINA_COLORS.errorRed, darkSurface),
     },
     'Info text': {
       background: darkSurface,
-      foreground: '#3B82F6', // Lighter info blue for dark theme
-      contrast: evaluateContrast('#3B82F6', darkSurface),
+      foreground: LUMINA_COLORS.infoBlue,
+      contrast: evaluateContrast(LUMINA_COLORS.infoBlue, darkSurface),
     },
   };
 

@@ -3,6 +3,8 @@
  * Sent immediately after a client books an appointment
  */
 
+import { base, brand, email } from '@/lib/design/tokens';
+
 export interface BookingConfirmationData {
   clientName: string;
   appointmentDate: string;
@@ -32,16 +34,16 @@ export const bookingConfirmationHtml = (
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: ${email.html.page};
       line-height: 1.6;
     }
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background-color: #ffffff;
+      background-color: ${base.white};
     }
     .header {
-      background: linear-gradient(135deg, ${data.primaryColor || '#FFD25A'} 0%, ${data.primaryColor || '#FF7A5A'} 100%);
+      background: linear-gradient(135deg, ${data.primaryColor || brand.gold} 0%, ${data.primaryColor || brand.coral} 100%);
       padding: 40px 20px;
       text-align: center;
     }
@@ -51,7 +53,7 @@ export const bookingConfirmationHtml = (
       margin-bottom: 20px;
     }
     .header-title {
-      color: #ffffff;
+      color: ${base.white};
       font-size: 28px;
       font-weight: 600;
       margin: 0;
@@ -61,12 +63,12 @@ export const bookingConfirmationHtml = (
     }
     .greeting {
       font-size: 18px;
-      color: #333333;
+      color: ${email.html.body};
       margin-bottom: 20px;
     }
     .confirmation-box {
-      background-color: #f9f9f9;
-      border-left: 4px solid ${data.primaryColor || '#FFD25A'};
+      background-color: ${email.html.panel};
+      border-left: 4px solid ${data.primaryColor || brand.gold};
       padding: 20px;
       margin: 30px 0;
     }
@@ -74,38 +76,38 @@ export const bookingConfirmationHtml = (
       display: flex;
       justify-content: space-between;
       padding: 12px 0;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid ${email.html.rule};
     }
     .detail-row:last-child {
       border-bottom: none;
     }
     .detail-label {
       font-weight: 600;
-      color: #666666;
+      color: ${email.html.bodyMuted};
     }
     .detail-value {
-      color: #333333;
+      color: ${email.html.body};
       text-align: right;
     }
     .button {
       display: inline-block;
       padding: 14px 32px;
-      background-color: ${data.primaryColor || '#FF7A5A'};
-      color: #ffffff;
+      background-color: ${data.primaryColor || brand.coral};
+      color: ${base.white};
       text-decoration: none;
       border-radius: 6px;
       font-weight: 600;
       margin: 20px 0;
     }
     .footer {
-      background-color: #0B2B33;
-      color: #ffffff;
+      background-color: ${brand.deepTeal};
+      color: ${base.white};
       padding: 30px;
       text-align: center;
       font-size: 14px;
     }
     .footer-link {
-      color: #FFD25A;
+      color: ${brand.gold};
       text-decoration: none;
     }
     @media only screen and (max-width: 600px) {
@@ -168,7 +170,7 @@ export const bookingConfirmationHtml = (
         <a href="${data.cancellationLink}" class="button">Manage Appointment</a>
       </center>
       
-      <p style="margin-top: 30px; color: #666666; font-size: 14px;">
+      <p style="margin-top: 30px; color: ${email.html.bodyMuted}; font-size: 14px;">
         Please arrive 5-10 minutes early for your appointment. If you need to cancel, please do so at least 24 hours in advance.
       </p>
     </div>

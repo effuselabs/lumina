@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { brand } from '@/lib/design/tokens';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -30,7 +31,7 @@ const businessSchema = z.object({
   cancellationPolicy: z.string().optional(),
   operatingHours: z.any().optional(),
   logo: z.string().optional(),
-  primaryColor: z.string().default('#FFD25A'),
+  primaryColor: z.string().default(brand.gold),
 });
 
 // POST /api/business - Create a new business

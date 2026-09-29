@@ -3,6 +3,8 @@
  * Provides helper functions for theme detection, validation, and manipulation
  */
 
+import { brand, themeSurface } from '@/lib/design/tokens';
+
 export type Theme = 'light' | 'dark' | 'system';
 export type ResolvedTheme = 'light' | 'dark';
 
@@ -126,7 +128,7 @@ export function applyThemeToDocument(
     if (metaThemeColor) {
       metaThemeColor.setAttribute(
         'content',
-        resolvedTheme === 'dark' ? '#0A0A0A' : '#F7F5F0'
+        resolvedTheme === 'dark' ? themeSurface.darkBackground : brand.cream
       );
     }
   }

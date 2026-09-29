@@ -22,6 +22,7 @@ import type {
   StaffBookingAlertData,
   StaffCancellationAlertData,
 } from './templates';
+import { brand } from '@/lib/design/tokens';
 
 /**
  * Result of a notification operation
@@ -526,7 +527,7 @@ export class NotificationService {
         businessAddress,
         businessPhone: appointment.business.phone || undefined,
         businessLogoUrl: nullToUndefined(appointment.business.logo),
-        primaryColor: appointment.business.primaryColor || '#FFD25A',
+        primaryColor: appointment.business.primaryColor || brand.gold,
         clientName: recipientName || 'Valued Client',
         appointmentDate: appointment.startTime.toLocaleDateString('en-US', {
           weekday: 'long',
@@ -799,7 +800,7 @@ export class NotificationService {
         businessAddress,
         businessPhone: appointment.business.phone || undefined,
         businessLogoUrl: nullToUndefined(appointment.business.logo),
-        primaryColor: appointment.business.primaryColor || '#FFD25A',
+        primaryColor: appointment.business.primaryColor || brand.gold,
         clientName: recipientName || 'Valued Client',
         appointmentDate: appointment.startTime.toLocaleDateString('en-US', {
           weekday: 'long',
@@ -1038,7 +1039,7 @@ export class NotificationService {
         businessAddress,
         businessPhone: appointment.business.phone || undefined,
         businessLogoUrl: nullToUndefined(appointment.business.logo),
-        primaryColor: appointment.business.primaryColor || '#FFD25A',
+        primaryColor: appointment.business.primaryColor || brand.gold,
         clientName: recipientName || 'Valued Client',
         appointmentDate: appointment.startTime.toLocaleDateString('en-US', {
           weekday: 'long',
@@ -1264,7 +1265,7 @@ export class NotificationService {
       const templateData: StaffBookingAlertData = {
         businessName: appointment.business.name,
         businessLogoUrl: nullToUndefined(appointment.business.logo),
-        primaryColor: appointment.business.primaryColor || '#FFD25A',
+        primaryColor: appointment.business.primaryColor || brand.gold,
         staffName: staff.displayName,
         clientName,
         clientPhone:
@@ -1447,7 +1448,7 @@ export class NotificationService {
       const templateData: StaffCancellationAlertData = {
         businessName: appointment.business.name,
         businessLogoUrl: nullToUndefined(appointment.business.logo),
-        primaryColor: appointment.business.primaryColor || '#FFD25A',
+        primaryColor: appointment.business.primaryColor || brand.gold,
         staffName: staff.displayName,
         clientName,
         appointmentDate: appointment.startTime.toLocaleDateString('en-US', {
@@ -1650,7 +1651,7 @@ export class NotificationService {
       const templateData: DailyBookingSummaryData = {
         businessName: business.name,
         businessLogoUrl: nullToUndefined(business.logo),
-        primaryColor: business.primaryColor || '#FFD25A',
+        primaryColor: business.primaryColor || brand.gold,
         recipientName: owner.user.name || 'Business Owner',
         date: date.toLocaleDateString('en-US', {
           weekday: 'long',
@@ -1784,7 +1785,7 @@ export class NotificationService {
             businessAddress,
             businessPhone: business.phone || undefined,
             businessLogoUrl: nullToUndefined(business.logo),
-            primaryColor: business.primaryColor || '#FFD25A',
+            primaryColor: business.primaryColor || brand.gold,
             clientName: 'Test Client',
             appointmentDate: testDate.toLocaleDateString('en-US', {
               weekday: 'long',
@@ -1807,7 +1808,7 @@ export class NotificationService {
             businessAddress,
             businessPhone: business.phone || undefined,
             businessLogoUrl: nullToUndefined(business.logo),
-            primaryColor: business.primaryColor || '#FFD25A',
+            primaryColor: business.primaryColor || brand.gold,
             clientName: 'Test Client',
             appointmentDate: testDate.toLocaleDateString('en-US', {
               weekday: 'long',
@@ -1831,7 +1832,7 @@ export class NotificationService {
             businessAddress,
             businessPhone: business.phone || undefined,
             businessLogoUrl: nullToUndefined(business.logo),
-            primaryColor: business.primaryColor || '#FFD25A',
+            primaryColor: business.primaryColor || brand.gold,
             clientName: 'Test Client',
             appointmentDate: testDate.toLocaleDateString('en-US', {
               weekday: 'long',
@@ -1851,7 +1852,7 @@ export class NotificationService {
           templateData = {
             businessName: business.name,
             businessLogoUrl: nullToUndefined(business.logo),
-            primaryColor: business.primaryColor || '#FFD25A',
+            primaryColor: business.primaryColor || brand.gold,
             staffName: 'Test Staff Member',
             clientName: 'Test Client',
             clientPhone: '(555) 123-4567',
@@ -1874,7 +1875,7 @@ export class NotificationService {
           templateData = {
             businessName: business.name,
             businessLogoUrl: nullToUndefined(business.logo),
-            primaryColor: business.primaryColor || '#FFD25A',
+            primaryColor: business.primaryColor || brand.gold,
             staffName: 'Test Staff Member',
             clientName: 'Test Client',
             appointmentDate: testDate.toLocaleDateString('en-US', {
@@ -1894,7 +1895,7 @@ export class NotificationService {
           templateData = {
             businessName: business.name,
             businessLogoUrl: nullToUndefined(business.logo),
-            primaryColor: business.primaryColor || '#FFD25A',
+            primaryColor: business.primaryColor || brand.gold,
             recipientName: 'Business Owner',
             date: testDate.toLocaleDateString('en-US', {
               weekday: 'long',
