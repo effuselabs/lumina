@@ -247,36 +247,32 @@ time, after the booking loop works.
 
 ## Known, unaddressed
 
-- **The booking loop spec still fails about one local run in twenty**, on a
-  step transition reporting `element(s) not found` rather than a slow render.
-  Twenty consecutive runs: nineteen green.
+- ~~**The booking loop spec fails about one local run in twenty.**~~
+  **Fixed.** This entry said it failed "rather than a slow render", and that
+  was wrong: the failure context shows step 1 still on its `<Suspense>`
+  fallback ("Loading Services", 4s elapsed) when the heading assertion's
+  default 5s ran out. Steps 2–4 already waited `STEP_TRANSITION_TIMEOUT` for
+  exactly this — a lazy chunk the dev server compiles on first request — and
+  step 1 had been missed. Under load it was far worse than one in twenty:
+  `--repeat-each=3` at two workers failed two runs in three on `main`. With
+  the step timeout, and one worker as CI runs it, `--repeat-each=5` is 20 of 20.
 
-  CI does not see it: `workers: 1` removes the concurrency and `retries: 2`
-  would absorb a five-percent flake regardless. That is a reason not to read a
-  green CI run as evidence the spec is stable, not a reason to leave it.
-  Reproduce with a loop, not a single run — every bug found in this area so far
-  passed on the first attempt.
+  Still true at two workers, and worth knowing before reading a local run:
+  two copies of the _same_ project (which `--repeat-each` creates and a normal
+  run does not) book the same day's first slot and can hold availability past
+  15s while the dev server compiles for the other. Two projects book different
+  days (`projectDayOffset`), so the suite as configured does not do this.
 
-- **The booking test can pick a service nobody is rostered to perform that
-  day.** It clicks the first service card, then asserts a slot is offered. The
-  seed gives each staff member their own weekly availability and not everyone
-  works every weekday, so a service can have staff who could perform it and
-  none who are working on the day the calendar lands on — and the API
-  correctly returns nothing. Measured on a seeded salon: 4 of 95 bookable
-  services, about 4%.
-
-  This is the same defect fixed in the availability test, which now requires
-  `staffAvailability: { some: { dayOfWeek } }`. The booking test cannot use
-  that fix directly, because every service card's button reads "Add Service"
-  with no per-service accessible name, so choosing a known-good service means
-  locating a card by the text near it — and making the definition-of-done spec
-  depend on a brittle ancestor locator to fix flakiness is a poor trade.
-
-  The better fix is a `data-testid` carrying the service id on the card, which
-  belongs with the Phase 5 component work rather than in a spec patch. Until
-  then this is a roughly one-in-twenty-five chance per seeded database of a
-  hard, retry-proof CI failure, because which service is first is deterministic
-  for a given seed.
+- ~~**The booking test can pick a service nobody is rostered to perform that
+  day.**~~ **Fixed.** It clicked the first service card; about 4% of seeded
+  services have nobody working on a given weekday, and which card is first is
+  stable for a seed, so it failed on every retry. The spec now resolves the
+  date first and books a service with staff rostered that weekday, through
+  the same helper the availability test uses. The card is found by its
+  accessible name, `Add Service: <name>` — every card's button used to read
+  just "Add Service", which is the same defect for a screen-reader user as for
+  the test, so fixing the name fixed both. The remove button in the selected
+  list had no accessible name at all and now has one.
 
 - `npm run test:e2e` needs `DATABASE_URL` exported; it does not read `.env`.
   CI supplies it as a job variable so the gate is unaffected, but a fresh clone
