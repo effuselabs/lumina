@@ -171,11 +171,14 @@ gates decide, and `npm run db:seed` runs by hand on anything near
        success green and info blue nothing renders, and "lighter" dark-theme
        status colours `globals.css` never defines. It grades the token values
        now, which surfaced the item below.
-     - Left: `globals.css` (90 hex) and `booking-mobile.css` (11); the
-       `tailwind.config.ts` safelist (about 130 hex), which exists for the
-       Button stylesheet 3d removed — its `[data-testid="button"]` selectors
-       match nothing; and `prisma/seed.ts` (1). The last two sit outside
-       `next lint`'s directories, so the rule does not reach them yet.
+     - `tailwind.config.ts` has no hex either. Its safelist forced 87
+       rules (11 KB) into the stylesheet for the Button override 3d removed —
+       `[data-testid="button"]` selectors for an attribute nothing renders —
+       and they are gone; screenshots were identical bar the analytics
+       chart's own noise. Its 67 tint and shade steps moved into
+       `tokens.scales`, and the compiled CSS was byte-identical after.
+     - Left: `globals.css` (90 hex), `booking-mobile.css` (11), and
+       `prisma/seed.ts` (1), which sits outside `next lint`'s directories.
    - [ ] **3f — status text fails AA in dark mode.** Dark mode reuses the
          light `--semantic-*` values, and on the dark surface `#171717` they
          reach 3.47–3.71:1 (info lowest). Dark mode needs its own lighter
