@@ -40,7 +40,7 @@ const DeleteRequestSchema = z.object({
  * Delete client data for GDPR compliance (Article 17 - Right to erasure)
  */
 export async function POST(request: NextRequest) {
-  const securityContext = extractServerSecurityContext();
+  const securityContext = await extractServerSecurityContext();
 
   try {
     // Parse and validate request body
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
  * Generate confirmation code for client deletion
  */
 export async function GET(request: NextRequest) {
-  const securityContext = extractServerSecurityContext();
+  const securityContext = await extractServerSecurityContext();
 
   try {
     const { searchParams } = new URL(request.url);

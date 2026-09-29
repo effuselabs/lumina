@@ -10,7 +10,6 @@ import {
 } from '@/lib/financial/transaction-service';
 import { prisma } from '@/lib/prisma';
 import { extractBusinessContext, validateWebhookSignature } from '@/lib/stripe';
-import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 
@@ -32,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.text();
-    const signature = headers().get('stripe-signature');
+    const signature = request.headers.get('stripe-signature');
 
     if (!signature) {
       console.error('Missing Stripe signature');

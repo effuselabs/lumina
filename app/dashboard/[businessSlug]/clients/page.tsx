@@ -4,12 +4,13 @@ import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 interface ClientsPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
-export default async function ClientsPage({ params }: ClientsPageProps) {
+export default async function ClientsPage(props: ClientsPageProps) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

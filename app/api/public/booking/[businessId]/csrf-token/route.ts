@@ -28,8 +28,9 @@ import { NextRequest } from 'next/server';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { businessId: string } }
+  props: { params: Promise<{ businessId: string }> }
 ) {
+  const params = await props.params;
   const securityResult = await securePublicBookingGET(
     request,
     params.businessId,

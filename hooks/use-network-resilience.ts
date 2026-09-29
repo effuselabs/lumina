@@ -65,7 +65,7 @@ export function useNetworkResilience(
     retryCount: 0,
   });
 
-  const retryTimeoutRef = useRef<NodeJS.Timeout>();
+  const retryTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const requestCacheRef = useRef<Map<string, Promise<any>>>(new Map());
 
   /*

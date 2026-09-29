@@ -87,12 +87,17 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
         )}
 
         <div className="relative">
-          {React.cloneElement(children as React.ReactElement, {
-            id: htmlFor || fieldId,
-            'aria-describedby': describedBy,
-            'aria-invalid': !!error,
-            error: !!error,
-          })}
+          {React.cloneElement(
+            children as React.ReactElement<
+              React.InputHTMLAttributes<HTMLElement> & { error?: boolean }
+            >,
+            {
+              id: htmlFor || fieldId,
+              'aria-describedby': describedBy,
+              'aria-invalid': !!error,
+              error: !!error,
+            }
+          )}
         </div>
 
         {hint && !error && (

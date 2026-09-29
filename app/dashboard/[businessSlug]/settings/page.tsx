@@ -4,12 +4,13 @@ import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 interface SettingsPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
-export default async function SettingsPage({ params }: SettingsPageProps) {
+export default async function SettingsPage(props: SettingsPageProps) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

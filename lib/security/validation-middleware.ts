@@ -230,7 +230,7 @@ export class ValidationMiddleware {
   // Get client IP address
   private static getClientIP(req: NextRequest): string {
     const forwarded = req.headers.get('x-forwarded-for');
-    return forwarded ? forwarded.split(',')[0].trim() : req.ip || 'unknown';
+    return forwarded ? forwarded.split(',')[0].trim() : 'unknown';
   }
 
   // Sanitize request body

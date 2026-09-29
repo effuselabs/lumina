@@ -1,0 +1,52 @@
+name: Dependency audit
+
+# Fails when a production dependency carries a high or critical advisory.
+#
+# This is the dependency policy's first trigger, made into something that
+# fires. The old pipeline ran `npm audit` inside CI, was never green, and so
+# was ignored and then removed. Without it the production count drifted from
+# 2 to 5 high/critical between 2026-09-06 and 2026-09-29 with no change on our
+# side, including an unauthenticated RCE that was live on staging, and nothing
+# noticed. It is back now that it passes.
+#
+# Deliberately not part of ci.yml and deliberately not run on pushes to main.
+# Advisories are published against code that has not changed, so this goes red
+# on its own schedule; inside the gate that would turn main red, and Railway
+# skips the staging deploy of any commit whose checks failed, silently. Here
+# it fails a pull request, which is the moment to pull a fix forward, and it
+# fails the daily run, which is how a new advisory against unchanged code gets
+# noticed.
+#
+# --omit=dev because the policy counts what production runs. Dev tooling
+# advisories are worth reading, not worth blocking on.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Daily. Advisories land continuously, and a critical should not wait a
+    # week to be seen.
+    - cron: '17 6 * * *'
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  audit:
+    name: Production dependencies have no high or critical advisories
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Audit production dependencies
+        # Reads package-lock.json; nothing is installed, so this takes seconds.
+        run: npm audit --omit=dev --audit-level=high

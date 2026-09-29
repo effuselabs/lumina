@@ -5,14 +5,13 @@ import { notFound } from 'next/navigation';
 
 interface PublicBookingLayoutProps {
   children: React.ReactNode;
-  params: { businessId: string };
+  params: Promise<{ businessId: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { businessId: string };
+export async function generateMetadata(props: {
+  params: Promise<{ businessId: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   try {
     const business = await getBusinessForPublicBooking(params.businessId);
 
@@ -29,10 +28,11 @@ export async function generateMetadata({
   }
 }
 
-export default async function BookingLayout({
-  children,
-  params,
-}: PublicBookingLayoutProps) {
+export default async function BookingLayout(props: PublicBookingLayoutProps) {
+  const params = await props.params;
+
+  const { children } = props;
+
   try {
     const business = await getBusinessForPublicBooking(params.businessId);
 

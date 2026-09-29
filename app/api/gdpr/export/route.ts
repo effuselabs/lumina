@@ -29,7 +29,7 @@ const ExportRequestSchema = z.object({
  * Export client data for GDPR compliance (Article 20 - Right to data portability)
  */
 export async function POST(request: NextRequest) {
-  const securityContext = extractServerSecurityContext();
+  const securityContext = await extractServerSecurityContext();
 
   try {
     // Parse and validate request body

@@ -12,21 +12,21 @@ const nextConfig = {
   experimental: {
     // Optimize package imports
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    // External packages for server components.
-    // isomorphic-dompurify pulls in jsdom, which reads asset files (e.g.
-    // browser/default-stylesheet.css) relative to its own package at import
-    // time. Bundling it rewrites those paths and the read fails during
-    // `next build`, so it must stay external.
-    serverComponentsExternalPackages: [
-      '@prisma/client',
-      'bcryptjs',
-      'isomorphic-dompurify',
-      'jsdom',
-    ],
   },
 
+  // External packages for server components.
+  // isomorphic-dompurify pulls in jsdom, which reads asset files (e.g.
+  // browser/default-stylesheet.css) relative to its own package at import
+  // time. Bundling it rewrites those paths and the read fails during
+  // `next build`, so it must stay external.
+  serverExternalPackages: [
+    '@prisma/client',
+    'bcryptjs',
+    'isomorphic-dompurify',
+    'jsdom',
+  ],
+
   // Performance optimizations
-  swcMinify: true,
   compress: true,
 
   // SWC compiler optimizations
@@ -50,13 +50,16 @@ const nextConfig = {
   // warned was misconfigured. Restore this only alongside a start command
   // that runs the standalone server.
 
-  // The image optimizer is off. GHSA-2xp9-vwfh-vxw4 is unauthenticated remote
-  // code execution in it when an AVIF file is optimized, and 14.x has no
-  // patch — the fix is 15.5.24. The endpoint is public (middleware excludes
-  // /_next/image) and fetches from any allowed host on request, so while it
-  // is on, the whole server is exposed. Two components render <Image>; with
-  // this set they emit the source URL directly and the browser fetches it.
-  // Restore optimization only on a patched Next.js.
+  // The image optimizer is off, by choice rather than by necessity. It was
+  // turned off on 14.x for GHSA-2xp9-vwfh-vxw4, an unauthenticated RCE when it
+  // optimizes an AVIF, and 15.5.24 fixes that. It stays off because the
+  // trade is poor: it serves two small images (a testimonial avatar and the
+  // business logo on the public booking page) through a public endpoint
+  // (middleware excludes /_next/image) that fetches remote URLs on request
+  // and writes the results to disk: four of the 23 advisories against 14.2.35.
+  // And with it on, a logo hosted anywhere but an allowed domain renders as
+  // a broken image, because the optimizer refuses the URL. Turn it on when a
+  // page is heavy enough with images to measure the difference.
   images: {
     unoptimized: true,
   },

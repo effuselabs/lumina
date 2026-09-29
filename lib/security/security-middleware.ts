@@ -57,8 +57,8 @@ export function extractRequestSecurityContext(
 /**
  * Extract security context from server-side headers (for API routes)
  */
-export function extractServerSecurityContext(): RequestSecurityContext {
-  const headersList = headers();
+export async function extractServerSecurityContext(): Promise<RequestSecurityContext> {
+  const headersList = await headers();
   const requestId = headersList.get('x-request-id') || uuidv4();
 
   return {
@@ -94,8 +94,7 @@ export function extractClientIP(request: NextRequest): string | undefined {
     return remoteAddr;
   }
 
-  // Fallback to connection remote address (may not be available in all environments)
-  return request.ip || undefined;
+  return undefined;
 }
 
 /**

@@ -120,7 +120,7 @@ export class RateLimiter {
 
     // Fall back to IP address
     const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : req.ip || 'unknown';
+    const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
     return `ip:${ip}`;
   }
 }
@@ -260,7 +260,7 @@ export class AbuseDetector {
     if (userId) return `user:${userId}`;
 
     const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : req.ip || 'unknown';
+    const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
     return `ip:${ip}`;
   }
 

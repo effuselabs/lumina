@@ -6,14 +6,15 @@ import { BarChart3, FileText, TrendingUp } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 interface FinancialReportsPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
-export default async function FinancialReportsPage({
-  params,
-}: FinancialReportsPageProps) {
+export default async function FinancialReportsPage(
+  props: FinancialReportsPageProps
+) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

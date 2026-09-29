@@ -4,9 +4,9 @@ import { redirect } from 'next/navigation';
 import { AnalyticsDashboard } from './analytics-dashboard';
 
 interface AnalyticsDashboardPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
 /**
@@ -19,9 +19,10 @@ interface AnalyticsDashboardPageProps {
  * - Staff performance and utilization
  * - Business intelligence insights
  */
-export default async function AnalyticsDashboardPage({
-  params,
-}: AnalyticsDashboardPageProps) {
+export default async function AnalyticsDashboardPage(
+  props: AnalyticsDashboardPageProps
+) {
+  const params = await props.params;
   const session = await auth();
 
   // Enforce authentication

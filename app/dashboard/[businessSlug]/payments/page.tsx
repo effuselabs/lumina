@@ -10,12 +10,13 @@ import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 interface PaymentsPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
-export default async function PaymentsPage({ params }: PaymentsPageProps) {
+export default async function PaymentsPage(props: PaymentsPageProps) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

@@ -3,9 +3,9 @@ import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 interface BusinessDashboardPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
 /**
@@ -19,9 +19,10 @@ interface BusinessDashboardPageProps {
  *
  * Security: All queries include businessId scoping
  */
-export default async function BusinessDashboardPage({
-  params,
-}: BusinessDashboardPageProps) {
+export default async function BusinessDashboardPage(
+  props: BusinessDashboardPageProps
+) {
+  const params = await props.params;
   const session = await auth();
 
   // Enforce authentication

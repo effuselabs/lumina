@@ -6,14 +6,13 @@ import { CreditCard, DollarSign, Receipt } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 interface TransactionsPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
-export default async function TransactionsPage({
-  params,
-}: TransactionsPageProps) {
+export default async function TransactionsPage(props: TransactionsPageProps) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

@@ -123,8 +123,8 @@ export function useCountUp(options: UseCountUpOptions): UseCountUpReturn {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  const animationRef = useRef<number>();
-  const startTimeRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
+  const startTimeRef = useRef<number | undefined>(undefined);
   const pausedTimeRef = useRef<number>(0);
   const hasCompletedRef = useRef(false);
 

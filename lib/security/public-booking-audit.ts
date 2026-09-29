@@ -499,7 +499,7 @@ export class PublicBookingAuditLogger {
     sessionId?: string;
   } {
     const forwarded = req.headers.get('x-forwarded-for');
-    const ipAddress = forwarded ? forwarded.split(',')[0] : req.ip || 'unknown';
+    const ipAddress = forwarded ? forwarded.split(',')[0] : 'unknown';
 
     return {
       ipAddress,
@@ -514,7 +514,7 @@ export class PublicBookingAuditLogger {
    * Generate session ID for tracking
    */
   private generateSessionId(req: NextRequest): string {
-    const ip = req.headers.get('x-forwarded-for') || req.ip || 'unknown';
+    const ip = req.headers.get('x-forwarded-for') || 'unknown';
     const userAgent = req.headers.get('user-agent') || '';
 
     // Create a simple hash for session tracking

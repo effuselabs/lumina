@@ -4,10 +4,11 @@ import { getBusinessForPublicBooking } from '@/lib/services/business-service';
 import { Suspense } from 'react';
 
 interface BookingPageProps {
-  params: { businessId: string };
+  params: Promise<{ businessId: string }>;
 }
 
-export default async function BookingPage({ params }: BookingPageProps) {
+export default async function BookingPage(props: BookingPageProps) {
+  const params = await props.params;
   try {
     const business = await getBusinessForPublicBooking(params.businessId);
 

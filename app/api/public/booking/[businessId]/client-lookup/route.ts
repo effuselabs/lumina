@@ -155,8 +155,9 @@ async function lookupClient(
 // POST /api/public/booking/[businessId]/client-lookup
 export async function POST(
   request: NextRequest,
-  { params }: { params: { businessId: string } }
+  props: { params: Promise<{ businessId: string }> }
 ) {
+  const params = await props.params;
   try {
     // Apply rate limiting
     const rateLimitResult = await withPublicBookingRateLimit(

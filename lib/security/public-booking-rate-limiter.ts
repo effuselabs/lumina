@@ -111,7 +111,7 @@ export class PublicBookingRateLimiter {
   private getClientIdentifier(req: NextRequest): string {
     // For public endpoints, primarily use IP address
     const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : req.ip || 'unknown';
+    const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
 
     // Add user agent hash for additional uniqueness without storing PII
     const userAgent = req.headers.get('user-agent') || '';
@@ -368,7 +368,7 @@ export class PublicBookingAbuseDetector {
 
   private getClientIdentifier(req: NextRequest): string {
     const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : req.ip || 'unknown';
+    const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
 
     const userAgent = req.headers.get('user-agent') || '';
     const userAgentHash = this.simpleHash(userAgent);
