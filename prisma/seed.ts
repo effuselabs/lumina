@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
+import { brand } from '../lib/design/tokens';
 import {
   initializeSeedSystem,
   loadSeedConfig,
@@ -93,11 +94,28 @@ async function main() {
         saturday: { isOpen: true, openTime: '08:00', closeTime: '17:00' },
         sunday: { isOpen: false, openTime: '10:00', closeTime: '16:00' },
       },
-      primaryColor: '#FFD25A',
+      primaryColor: brand.gold,
     },
   });
 
   console.log('✅ Created demo business');
+
+  // Everything above is upserted; everything below is created, because the
+  // factories generate fresh rows. Running this twice used to append a second
+  // copy of the catalogue — six runs left 264 services, each name six times,
+  // and the booking e2e could no longer find a uniquely named one. So a second
+  // run stops here and changes nothing. `db:seed:refresh` removes the demo
+  // salon first, for a fresh dataset.
+  const existingStaff = await prisma.staff.count({
+    where: { businessId: demoBusiness.id },
+  });
+  if (existingStaff > 0) {
+    console.log(
+      `ℹ️  The demo salon is already seeded (${existingStaff} staff). ` +
+        'Nothing changed. For a fresh dataset: npm run db:seed:refresh'
+    );
+    return;
+  }
 
   // Initialize enhanced seed system with optimized batch processing
   const seedSystem = await initializeSeedSystem(prisma, demoBusiness.id);
@@ -634,13 +652,6 @@ async function main() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, '');
   console.log(
     `   ${appUrl ? `${appUrl}/book/${demoBusiness.id}` : `<host>/book/${demoBusiness.id}`}`
-  );
-
-  console.log(
-    '\n🏗️  Enhanced seed infrastructure ready for comprehensive data generation'
-  );
-  console.log(
-    'Next steps: Implement individual factory classes for clients, staff, services, appointments, and transactions'
   );
 }
 
