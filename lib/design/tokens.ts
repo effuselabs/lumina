@@ -92,27 +92,27 @@ export const base = {
 /**
  * The second palette, as components use it today.
  *
- * `app/design-tokens/colors.css` defines its own neutral ramp and semantic
- * colours, and components reached for those values directly: `#808285` for
- * muted text in a dozen places, `#22C58B` for positive trends where `status`
- * says `#16A34A`. They are recorded here at their exact values so that moving
+ * The deleted `app/design-tokens/colors.css` defined its own neutral ramp
+ * and semantic colours. Nothing ever loaded that file, but components had
+ * copied its values in directly: `#808285` for muted text in a dozen places,
+ * `#22C58B` for positive trends where `status` says otherwise. They are recorded here at their exact values so that moving
  * every hex into this file changes nothing anyone can see. Reconciling them
  * with `neutral` and `status` does change what people see, so it is a design
  * decision with its own screenshots, tracked in docs/PLAN.md — not something
  * to fold in silently.
  */
 export const legacy = {
-  /** Secondary text and chart axes. colors.css `--neutral-600`. */
+  /** Secondary text and chart axes. Was colors.css `--neutral-600`. */
   textMuted: '#808285',
-  /** Body text on light surfaces. colors.css `--neutral-900`. */
+  /** Body text on light surfaces. Was colors.css `--neutral-900`. */
   textStrong: '#1D2D35',
-  /** Chart gridlines. colors.css `--neutral-300`. */
+  /** Chart gridlines. Was colors.css `--neutral-300`. */
   gridline: '#E4E6E7',
-  /** Positive trends and revenue. colors.css `--semantic-success`. */
+  /** Positive trends and revenue. Was colors.css `--semantic-success`. */
   positive: '#22C58B',
   positiveSurface: '#ECFDF5',
   positiveBorder: '#A7F3D0',
-  /** Negative trends. colors.css `--semantic-error`. */
+  /** Negative trends. Was colors.css `--semantic-error`. */
   negative: '#E5484D',
   /** The pressed radiant gradient on the analytics page. */
   radiantPressedFrom: '#FFCD47',
