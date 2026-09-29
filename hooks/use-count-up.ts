@@ -295,9 +295,4 @@ export function useIntegerCountUp(
 }
 
 // Export easing functions for external use
-export {
-  currencyFormatter,
-  defaultFormatter,
-  easingFunctions,
-  percentageFormatter,
-};
+export { currencyFormatter, easingFunctions };

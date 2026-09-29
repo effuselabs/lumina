@@ -19,7 +19,7 @@ export enum LogLevel {
 }
 
 // Log entry structure
-export interface LogEntry {
+interface LogEntry {
   timestamp: Date;
   level: LogLevel;
   message: string;
@@ -439,92 +439,3 @@ class AvailabilityLogger {
 
 // Export singleton instance
 export const availabilityLogger = AvailabilityLogger.getInstance();
-
-// Utility functions for common logging patterns
-export function withPerformanceLogging<T>(
-  operation: string,
-  businessId: string,
-  fn: () => Promise<T>
-): Promise<T> {
-  const startTime = Date.now();
-
-  return fn()
-    .then(result => {
-      const duration = Date.now() - startTime;
-      availabilityLogger.logPerformance({
-        operation,
-        duration,
-        timestamp: new Date(),
-        businessId,
-        success: true,
-      });
-      return result;
-    })
-    .catch(error => {
-      const duration = Date.now() - startTime;
-      const errorCode =
-        error instanceof AvailabilityError ? error.code : 'UNKNOWN_ERROR';
-
-      availabilityLogger.logPerformance({
-        operation,
-        duration,
-        timestamp: new Date(),
-        businessId,
-        success: false,
-        errorCode,
-      });
-
-      if (error instanceof AvailabilityError) {
-        availabilityLogger.logError(error, { operation, businessId });
-      } else {
-        availabilityLogger.log(
-          LogLevel.ERROR,
-          `Unexpected error in ${operation}`,
-          {
-            operation,
-            businessId,
-            errorCode: 'UNEXPECTED_ERROR',
-          },
-          { error: error.message, stack: error.stack }
-        );
-      }
-
-      throw error;
-    });
-}
-
-// Cache operation logging wrapper
-export function withCacheLogging<T>(
-  operation: 'hit' | 'miss' | 'set' | 'invalidate',
-  key: string,
-  businessId: string,
-  fn: () => Promise<T>
-): Promise<T> {
-  const startTime = Date.now();
-
-  return fn()
-    .then(result => {
-      const duration = Date.now() - startTime;
-      availabilityLogger.logCache({
-        operation,
-        key,
-        timestamp: new Date(),
-        businessId,
-        duration,
-      });
-      return result;
-    })
-    .catch(error => {
-      const duration = Date.now() - startTime;
-      availabilityLogger.logCache({
-        operation: 'error',
-        key,
-        timestamp: new Date(),
-        businessId,
-        duration,
-        errorCode:
-          error instanceof AvailabilityError ? error.code : 'CACHE_ERROR',
-      });
-      throw error;
-    });
-}

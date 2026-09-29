@@ -18,17 +18,6 @@ export interface CacheOptions {
   timezone?: string;
 }
 
-export interface CacheEntry {
-  id: string;
-  businessId: string;
-  staffId?: string;
-  date: Date;
-  availableSlots: AvailabilitySlot[];
-  cacheKey: string;
-  expiresAt: Date;
-  createdAt: Date;
-}
-
 export interface CacheMetrics {
   hitRate: number;
   totalRequests: number;

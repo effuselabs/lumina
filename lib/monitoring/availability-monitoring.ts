@@ -48,7 +48,7 @@ export enum AlertSeverity {
 }
 
 // Alert interface
-export interface Alert {
+interface Alert {
   id: string;
   type: AlertType;
   severity: AlertSeverity;
@@ -633,62 +633,3 @@ class AvailabilityMonitoring {
 
 // Export singleton instance
 export const availabilityMonitoring = AvailabilityMonitoring.getInstance();
-
-// Convenience functions for recording metrics
-export function recordAvailabilityQuery(
-  businessId: string,
-  duration: number,
-  success: boolean,
-  errorCode?: string
-): void {
-  availabilityMonitoring.recordPerformanceMetric({
-    operation: 'availability_check',
-    duration,
-    timestamp: new Date(),
-    businessId,
-    success,
-    errorCode,
-  });
-}
-
-export function recordConflictDetection(
-  businessId: string,
-  duration: number,
-  conflictCount: number
-): void {
-  availabilityMonitoring.recordPerformanceMetric({
-    operation: 'conflict_detection',
-    duration,
-    timestamp: new Date(),
-    businessId,
-    success: true,
-    metadata: { conflictCount },
-  });
-}
-
-export function recordCacheOperation(
-  operation: 'hit' | 'miss' | 'set' | 'invalidate',
-  key: string,
-  businessId: string
-): void {
-  availabilityMonitoring.recordCacheMetric({
-    operation,
-    key,
-    timestamp: new Date(),
-    businessId,
-  });
-}
-
-export function recordBookingAttempt(
-  businessId: string,
-  success: boolean,
-  errorCode?: string
-): void {
-  availabilityMonitoring.recordBusinessMetric({
-    type: 'booking_attempt',
-    businessId,
-    timestamp: new Date(),
-    value: success ? 1 : 0,
-    metadata: { success, errorCode },
-  });
-}

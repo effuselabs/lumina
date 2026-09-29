@@ -17,16 +17,6 @@ export interface TimeZoneInfo {
   offsetName: string;
 }
 
-export interface BusinessTimeZoneConfig {
-  businessId: string;
-  timezone: string;
-  locations?: Array<{
-    id: string;
-    name: string;
-    timezone: string;
-  }>;
-}
-
 export interface TimeSlot {
   start: DateTime;
   end: DateTime;
@@ -415,101 +405,5 @@ export class TimeZoneHandler {
       ],
       Other: ['UTC'],
     };
-  }
-}
-
-/**
- * Multi-location business timezone manager
- */
-export class MultiLocationTimeZoneManager {
-  private businessConfig: BusinessTimeZoneConfig;
-
-  constructor(config: BusinessTimeZoneConfig) {
-    this.businessConfig = config;
-  }
-
-  /**
-   * Gets timezone for a specific location, falls back to business default
-   */
-  getLocationTimeZone(locationId?: string): string {
-    if (locationId && this.businessConfig.locations) {
-      const location = this.businessConfig.locations.find(
-        l => l.id === locationId
-      );
-      if (location && TimeZoneHandler.validateTimeZone(location.timezone)) {
-        return location.timezone;
-      }
-    }
-
-    return TimeZoneHandler.getBusinessTimeZone(this.businessConfig.timezone);
-  }
-
-  /**
-   * Converts availability across multiple locations to a common timezone (UTC)
-   */
-  normalizeAvailabilityAcrossLocations(
-    availability: Array<{
-      locationId?: string;
-      startTime: string;
-      endTime: string;
-      date: string;
-    }>
-  ): Array<{
-    locationId?: string;
-    utcStart: DateTime;
-    utcEnd: DateTime;
-    localTimezone: string;
-  }> {
-    return availability.map(slot => {
-      const timezone = this.getLocationTimeZone(slot.locationId);
-      const utcStart = TimeZoneHandler.localToUTC(
-        slot.startTime,
-        slot.date,
-        timezone
-      );
-      const utcEnd = TimeZoneHandler.localToUTC(
-        slot.endTime,
-        slot.date,
-        timezone
-      );
-
-      return {
-        locationId: slot.locationId,
-        utcStart,
-        utcEnd,
-        localTimezone: timezone,
-      };
-    });
-  }
-
-  /**
-   * Gets business hours for all locations in their respective timezones
-   */
-  getBusinessHoursAllLocations(date: string): Array<{
-    locationId?: string;
-    timezone: string;
-    businessHours: {
-      openTime: string;
-      closeTime: string;
-      isClosed: boolean;
-    };
-  }> {
-    const locations = this.businessConfig.locations || [
-      {
-        id: 'default',
-        name: 'Main Location',
-        timezone: this.businessConfig.timezone,
-      },
-    ];
-
-    return locations.map(location => ({
-      locationId: location.id,
-      timezone: location.timezone,
-      businessHours: {
-        openTime: '09:00', // This would come from database
-        closeTime: '18:00', // This would come from database
-        isClosed: false, // This would come from database
-      },
-    }));
   }
 }

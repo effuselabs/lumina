@@ -298,37 +298,6 @@ export class CacheFailureError extends AvailabilityError {
   }
 }
 
-export class DatabaseConnectionError extends AvailabilityError {
-  constructor(operation: string) {
-    super(
-      'DATABASE_CONNECTION_ERROR',
-      `Database connection failed during ${operation}`,
-      "We're experiencing technical difficulties. Please try again in a moment.",
-      [],
-      { operation }
-    );
-  }
-}
-
-export class ValidationError extends AvailabilityError {
-  constructor(
-    field: string,
-    value: any,
-    expectedFormat: string,
-    suggestedAlternatives: SuggestedAlternative[] = []
-  ) {
-    const userMessage = `Please check the ${field} field. Expected format: ${expectedFormat}.`;
-
-    super(
-      'VALIDATION_ERROR',
-      `Validation failed for field ${field}: expected ${expectedFormat}, got ${value}`,
-      userMessage,
-      suggestedAlternatives,
-      { field, value, expectedFormat }
-    );
-  }
-}
-
 // Error factory for creating appropriate error instances
 export class AvailabilityErrorFactory {
   static createBusinessClosedError(
@@ -423,22 +392,6 @@ export function isStaffUnavailableError(
   error: any
 ): error is StaffUnavailableError {
   return error instanceof StaffUnavailableError;
-}
-
-export function isSchedulingConflictError(
-  error: any
-): error is SchedulingConflictError {
-  return error instanceof SchedulingConflictError;
-}
-
-export function isInsufficientDurationError(
-  error: any
-): error is InsufficientDurationError {
-  return error instanceof InsufficientDurationError;
-}
-
-export function isCacheFailureError(error: any): error is CacheFailureError {
-  return error instanceof CacheFailureError;
 }
 
 // Error severity levels for monitoring and alerting

@@ -241,7 +241,7 @@ export function getDragFeedbackStyles(
 /**
  * Generates a unique key for undo operations
  */
-export function generateUndoKey(): string {
+function generateUndoKey(): string {
   return `undo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 

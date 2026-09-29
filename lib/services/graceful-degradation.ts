@@ -427,38 +427,3 @@ class GracefulDegradationManager {
 
 // Export singleton instance
 export const gracefulDegradation = GracefulDegradationManager.getInstance();
-
-// Utility functions for common degradation patterns
-export async function withCacheDegradation<T>(
-  cacheKey: string,
-  businessId: string,
-  cacheOperation: () => Promise<T | null>,
-  databaseFallback: () => Promise<T>
-): Promise<T> {
-  return await gracefulDegradation.executeWithDegradation(
-    'cache',
-    async () => {
-      const cached = await cacheOperation();
-      if (cached === null) {
-        return await databaseFallback();
-      }
-      return cached;
-    },
-    databaseFallback,
-    { businessId, operation: 'cache_with_fallback' }
-  );
-}
-
-export async function withDatabaseDegradation<T>(
-  operationName: string,
-  businessId: string,
-  databaseOperation: () => Promise<T>,
-  fallbackValue?: T
-): Promise<T> {
-  return await gracefulDegradation.executeDatabaseOperationWithFallback(
-    operationName,
-    businessId,
-    databaseOperation,
-    fallbackValue
-  );
-}

@@ -432,7 +432,7 @@ class BookingPerformanceMonitor {
 }
 
 // Global performance monitor instance
-export const bookingPerformanceMonitor = new BookingPerformanceMonitor();
+const bookingPerformanceMonitor = new BookingPerformanceMonitor();
 
 // React hook for performance monitoring
 export function useBookingPerformance(businessId?: string) {
@@ -458,49 +458,3 @@ export function useBookingPerformance(businessId?: string) {
     ),
   };
 }
-
-// Performance optimization utilities
-export const performanceOptimizations = {
-  // Preload critical resources
-  preloadResource(href: string, as: string) {
-    if (typeof document === 'undefined') return;
-
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href = href;
-    link.as = as;
-    document.head.appendChild(link);
-  },
-
-  // Prefetch next page resources
-  prefetchResource(href: string) {
-    if (typeof document === 'undefined') return;
-
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = href;
-    document.head.appendChild(link);
-  },
-
-  // Optimize images for current viewport
-  optimizeImage(src: string, width: number, quality = 80): string {
-    if (src.includes('?')) {
-      return `${src}&w=${width}&q=${quality}`;
-    }
-    return `${src}?w=${width}&q=${quality}`;
-  },
-
-  // Lazy load non-critical CSS
-  loadCSS(href: string) {
-    if (typeof document === 'undefined') return;
-
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = href;
-    link.media = 'print';
-    link.onload = () => {
-      link.media = 'all';
-    };
-    document.head.appendChild(link);
-  },
-};

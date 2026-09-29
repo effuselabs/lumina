@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 
-export interface AlertRule {
+interface AlertRule {
   id: string;
   name: string;
   condition: AlertCondition;
@@ -9,20 +9,20 @@ export interface AlertRule {
   cooldownMinutes: number;
 }
 
-export interface AlertCondition {
+interface AlertCondition {
   metric: string;
   operator: 'gt' | 'lt' | 'eq' | 'gte' | 'lte';
   threshold: number;
   timeWindow?: number; // minutes
 }
 
-export enum AlertSeverity {
+enum AlertSeverity {
   INFO = 'INFO',
   WARNING = 'WARNING',
   CRITICAL = 'CRITICAL',
 }
 
-export interface AlertNotification {
+interface AlertNotification {
   id: string;
   type: string;
   severity: AlertSeverity;
@@ -31,7 +31,7 @@ export interface AlertNotification {
   timestamp: Date;
 }
 
-export class AlertingSystem {
+class AlertingSystem {
   private static instance: AlertingSystem;
   private alertRules: AlertRule[] = [];
   private lastAlertTimes: Map<string, Date> = new Map();

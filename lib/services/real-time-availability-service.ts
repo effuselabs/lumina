@@ -39,7 +39,7 @@ export interface PublicAvailabilityRequest {
   includeNextAvailableDate?: boolean;
 }
 
-export interface PublicTimeSlot {
+interface PublicTimeSlot {
   startTime: Date;
   endTime: Date;
   staffId: string;

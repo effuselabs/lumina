@@ -269,18 +269,3 @@ export function DragDropManager(props: DragDropManagerProps) {
     </DragDropProvider>
   );
 }
-
-/**
- * Hook for integrating with the drag-drop system
- */
-export function useDragDropIntegration() {
-  const dragDrop = useDragDrop();
-
-  return {
-    isDragging: dragDrop.state.isDragging,
-    draggedAppointment: dragDrop.state.draggedAppointment,
-    canUndo: dragDrop.canUndo,
-    undoHistory: dragDrop.undoHistory,
-    clearUndoHistory: dragDrop.clearUndoHistory,
-  };
-}

@@ -230,6 +230,17 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      The fix is for the pages to call `requireBusinessAccess` and for a test
      to hold them to it, as `tenant-isolation.test.ts` does for routes —
      not to delete the helper the rule points at.
+   - The remainder (components, hooks, monitoring, performance, theme,
+     utils, errors, services): done — 85 declarations nothing referenced,
+     among them `lib/theme-utils.ts`'s own theme engine (the switcher uses
+     `hooks/use-theme-switcher.ts`), six unused formatters in `lib/utils.ts`
+     and two error classes nothing threw. New unused locals were checked
+     against a baseline from `main`: only the seven orphaned imports were
+     new, and they are removed.
+   - Left: `lib/stripe.ts`, `lib/financial/` and `components/payments/`,
+     read on their own because they are payments; `lib/auth.ts`, above; and
+     `lib/design/tokens.ts`, whose unused exports (`typography`, `spacing`,
+     `radii`, `shadows`) are the design system's surface, not dead code.
 
 ---
 

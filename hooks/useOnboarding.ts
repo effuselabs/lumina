@@ -113,11 +113,6 @@ export function useOnboarding(): UseOnboardingReturn {
   };
 }
 
-// Helper function to get step progress percentage
-export function getStepProgress(currentStep: number): number {
-  return (currentStep / TOTAL_STEPS) * 100;
-}
-
 // Helper function to check if step is completed
 export function isStepCompleted(
   step: number,
