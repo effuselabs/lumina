@@ -40,7 +40,7 @@ const defaultConfig: Omit<PublicCSRFConfig, 'secret'> = {
 
 const DEVELOPMENT_CSRF_SECRET = 'lumina-development-public-booking-csrf';
 
-export class PublicBookingCSRFProtection {
+class PublicBookingCSRFProtection {
   private config: Omit<PublicCSRFConfig, 'secret'> & { secret?: string };
   private resolvedSecret?: string;
 
@@ -249,7 +249,7 @@ export class PublicBookingCSRFProtection {
 }
 
 // Global instance for public booking CSRF protection
-export const publicBookingCSRF = new PublicBookingCSRFProtection();
+const publicBookingCSRF = new PublicBookingCSRFProtection();
 
 /**
  * Middleware function to validate CSRF for public booking endpoints
@@ -269,13 +269,4 @@ export function addCSRFTokenToResponse(
 ): NextResponse {
   const sessionIdentifier = publicBookingCSRF.getSessionIdentifier(req);
   return publicBookingCSRF.addTokenToResponse(response, sessionIdentifier);
-}
-
-/**
- * Generate CSRF token for client-side use
- */
-export function generatePublicBookingCSRFToken(
-  sessionIdentifier?: string
-): string {
-  return publicBookingCSRF.generateToken(sessionIdentifier);
 }

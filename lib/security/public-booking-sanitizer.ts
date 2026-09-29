@@ -4,7 +4,6 @@
  */
 
 import DOMPurify from 'isomorphic-dompurify';
-import { z } from 'zod';
 
 // Sanitization configuration
 interface SanitizationConfig {
@@ -56,7 +55,7 @@ const DISPOSABLE_EMAIL_DOMAINS = [
   'yopmail.com',
 ] as const;
 
-export class PublicBookingSanitizer {
+class PublicBookingSanitizer {
   private config: SanitizationConfig;
 
   constructor(config?: Partial<SanitizationConfig>) {
@@ -565,38 +564,3 @@ export function sanitizeBookingRequestData(data: any): {
 } {
   return publicBookingSanitizer.sanitizeBookingData(data);
 }
-
-/**
- * Validation schemas with sanitization
- */
-export const publicBookingSchemas = {
-  clientData: z.object({
-    firstName: z.string().min(1).max(100),
-    lastName: z.string().min(1).max(100),
-    email: z.string().email().max(254),
-    phone: z.string().min(10).max(20),
-    notes: z.string().max(1000).optional(),
-    marketingOptIn: z.boolean().default(false),
-  }),
-
-  bookingRequest: z.object({
-    services: z
-      .array(z.string().regex(/^c[a-z0-9]{24}$/))
-      .min(1)
-      .max(5),
-    staffId: z.string().regex(/^c[a-z0-9]{24}$/),
-    timeSlot: z.object({
-      startTime: z.string().datetime(),
-      endTime: z.string().datetime(),
-      staffId: z.string().regex(/^c[a-z0-9]{24}$/),
-    }),
-    client: z.object({
-      firstName: z.string().min(1).max(100),
-      lastName: z.string().min(1).max(100),
-      email: z.string().email().max(254),
-      phone: z.string().min(10).max(20),
-      notes: z.string().max(1000).optional(),
-      marketingOptIn: z.boolean().default(false),
-    }),
-  }),
-};

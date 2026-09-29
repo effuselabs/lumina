@@ -10,26 +10,26 @@ import {
 // TYPES AND INTERFACES
 // ============================================================================
 
-export interface EncryptionConfig {
+interface EncryptionConfig {
   algorithm: string;
   keyLength: number;
   ivLength: number;
 }
 
-export interface EncryptedData {
+interface EncryptedData {
   encryptedValue: string;
   iv: string;
   tag?: string;
 }
 
-export interface DataMaskingOptions {
+interface DataMaskingOptions {
   maskChar: string;
   visibleStart: number;
   visibleEnd: number;
   minLength: number;
 }
 
-export interface GDPRExportData {
+interface GDPRExportData {
   personalData: Record<string, any>;
   appointments: any[];
   transactions: any[];
@@ -42,7 +42,7 @@ export interface GDPRExportData {
   };
 }
 
-export interface DataRetentionPolicy {
+interface DataRetentionPolicy {
   appointmentData: number; // days
   transactionData: number; // days
   communicationData: number; // days
@@ -55,7 +55,7 @@ export interface DataRetentionPolicy {
 // DATA PROTECTION SERVICE
 // ============================================================================
 
-export class DataProtectionService {
+class DataProtectionService {
   private readonly encryptionConfig: EncryptionConfig = {
     algorithm: 'aes-256-gcm',
     keyLength: 32,
@@ -797,55 +797,3 @@ export class DataProtectionService {
 // ============================================================================
 
 export const dataProtection = new DataProtectionService();
-
-// ============================================================================
-// CONVENIENCE FUNCTIONS
-// ============================================================================
-
-/**
- * Encrypt sensitive client information
- */
-export function encryptClientData(data: string): EncryptedData {
-  return dataProtection.encrypt(data);
-}
-
-/**
- * Decrypt sensitive client information
- */
-export function decryptClientData(encryptedData: EncryptedData): string {
-  return dataProtection.decrypt(encryptedData);
-}
-
-/**
- * Mask sensitive data for logging
- */
-export function maskSensitiveData(data: any): any {
-  return dataProtection.maskSensitiveData(data);
-}
-
-/**
- * Export client data for GDPR compliance
- */
-export async function exportGDPRData(
-  clientId: string,
-  businessId: string
-): Promise<GDPRExportData> {
-  return dataProtection.exportClientData(clientId, businessId);
-}
-
-/**
- * Delete client data for GDPR compliance
- */
-export async function deleteGDPRData(
-  clientId: string,
-  businessId: string,
-  requestedBy: string,
-  reason?: string
-) {
-  return dataProtection.deleteClientData(
-    clientId,
-    businessId,
-    requestedBy,
-    reason
-  );
-}

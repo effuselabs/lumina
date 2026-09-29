@@ -193,7 +193,7 @@ export async function withRateLimit(
 }
 
 // Abuse detection patterns
-export class AbuseDetector {
+class AbuseDetector {
   private suspiciousPatterns = new Map<
     string,
     { count: number; lastSeen: number }

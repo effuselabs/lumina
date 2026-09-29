@@ -546,28 +546,3 @@ export const appointmentValidators = {
     });
   },
 };
-
-// Error response helper
-export function createSecurityErrorResponse(
-  message: string,
-  code: string,
-  status: number = 400
-): NextResponse {
-  const response = NextResponse.json(
-    {
-      success: false,
-      error: {
-        message,
-        code,
-      },
-    },
-    { status }
-  );
-
-  // Add security headers
-  Object.entries(securityHeaders).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
-
-  return response;
-}

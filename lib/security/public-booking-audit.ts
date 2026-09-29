@@ -37,7 +37,7 @@ export enum PublicBookingAuditEvent {
 }
 
 // Audit log entry for public booking
-export interface PublicBookingAuditEntry {
+interface PublicBookingAuditEntry {
   event: PublicBookingAuditEvent;
   businessId: string;
   sessionId?: string;
@@ -67,14 +67,14 @@ export interface PublicBookingAuditEntry {
 }
 
 // Risk assessment levels
-export enum RiskLevel {
+enum RiskLevel {
   LOW = 'LOW',
   MEDIUM = 'MEDIUM',
   HIGH = 'HIGH',
   CRITICAL = 'CRITICAL',
 }
 
-export class PublicBookingAuditLogger {
+class PublicBookingAuditLogger {
   /**
    * Log public booking audit event
    */
@@ -635,7 +635,7 @@ export class PublicBookingAuditLogger {
 }
 
 // Global instance for public booking audit logging
-export const publicBookingAuditLogger = new PublicBookingAuditLogger();
+const publicBookingAuditLogger = new PublicBookingAuditLogger();
 
 /**
  * Convenience functions for common audit events

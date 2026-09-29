@@ -6,7 +6,7 @@ import { BusinessRole, UserRole } from '@prisma/client';
 // TYPES AND INTERFACES
 // ============================================================================
 
-export interface SecurityContext {
+interface SecurityContext {
   userId: string;
   businessId: string;
   userRole: UserRole;
@@ -16,7 +16,7 @@ export interface SecurityContext {
   requestId?: string;
 }
 
-export interface SecurityViolation {
+interface SecurityViolation {
   type: SecurityViolationType;
   userId?: string;
   businessId?: string;
@@ -40,7 +40,7 @@ export enum SecurityViolationType {
   RATE_LIMIT_EXCEEDED = 'RATE_LIMIT_EXCEEDED',
 }
 
-export interface AuditLogEntry {
+interface AuditLogEntry {
   userId: string;
   businessId: string;
   action: string;
@@ -54,7 +54,7 @@ export interface AuditLogEntry {
   requestId?: string;
 }
 
-export interface BusinessContextValidationResult {
+interface BusinessContextValidationResult {
   isValid: boolean;
   securityContext?: SecurityContext;
   violations: SecurityViolation[];
@@ -64,7 +64,7 @@ export interface BusinessContextValidationResult {
 // BUSINESS CONTEXT SECURITY SERVICE
 // ============================================================================
 
-export class BusinessContextSecurityService {
+class BusinessContextSecurityService {
   /**
    * Validate business context for any operation
    */
@@ -613,59 +613,3 @@ export class BusinessContextSecurityService {
 // ============================================================================
 
 export const businessContextSecurity = new BusinessContextSecurityService();
-
-// ============================================================================
-// CONVENIENCE FUNCTIONS
-// ============================================================================
-
-/**
- * Validate business context for any operation
- */
-export async function validateBusinessContext(
-  businessId: string,
-  userId?: string,
-  requiredRoles?: BusinessRole[],
-  metadata?: Record<string, any>
-): Promise<BusinessContextValidationResult> {
-  return businessContextSecurity.validateBusinessContext(
-    businessId,
-    userId,
-    requiredRoles,
-    metadata
-  );
-}
-
-/**
- * Validate resource ownership within business context
- */
-export async function validateResourceOwnership(
-  resourceType: string,
-  resourceId: string,
-  businessId: string,
-  userId?: string,
-  metadata?: Record<string, any>
-): Promise<BusinessContextValidationResult> {
-  return businessContextSecurity.validateResourceOwnership(
-    resourceType,
-    resourceId,
-    businessId,
-    userId,
-    metadata
-  );
-}
-
-/**
- * Log security violation
- */
-export async function logSecurityViolation(
-  violation: SecurityViolation
-): Promise<void> {
-  return businessContextSecurity.logSecurityViolation(violation);
-}
-
-/**
- * Create audit log entry
- */
-export async function createAuditLog(entry: AuditLogEntry): Promise<void> {
-  return businessContextSecurity.createAuditLog(entry);
-}
