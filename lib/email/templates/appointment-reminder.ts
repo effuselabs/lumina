@@ -3,6 +3,8 @@
  * Sent 24 hours and 2 hours before appointments
  */
 
+import { base, brand, email } from '@/lib/design/tokens';
+
 export interface AppointmentReminderData {
   clientName: string;
   appointmentDate: string;
@@ -37,16 +39,16 @@ export const appointmentReminderHtml = (
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: ${email.html.page};
       line-height: 1.6;
     }
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background-color: #ffffff;
+      background-color: ${base.white};
     }
     .header {
-      background: linear-gradient(135deg, ${data.primaryColor || '#FFD25A'} 0%, ${data.primaryColor || '#FF7A5A'} 100%);
+      background: linear-gradient(135deg, ${data.primaryColor || brand.gold} 0%, ${data.primaryColor || brand.coral} 100%);
       padding: 40px 20px;
       text-align: center;
     }
@@ -56,7 +58,7 @@ export const appointmentReminderHtml = (
       margin-bottom: 20px;
     }
     .header-title {
-      color: #ffffff;
+      color: ${base.white};
       font-size: 28px;
       font-weight: 600;
       margin: 0;
@@ -64,7 +66,7 @@ export const appointmentReminderHtml = (
     .reminder-badge {
       display: inline-block;
       background-color: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
+      color: ${base.white};
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 14px;
@@ -75,12 +77,12 @@ export const appointmentReminderHtml = (
     }
     .greeting {
       font-size: 18px;
-      color: #333333;
+      color: ${email.html.body};
       margin-bottom: 20px;
     }
     .reminder-box {
-      background-color: #fff8e1;
-      border: 2px solid ${data.primaryColor || '#FFD25A'};
+      background-color: ${email.html.reminderSurface};
+      border: 2px solid ${data.primaryColor || brand.gold};
       border-radius: 8px;
       padding: 25px;
       margin: 30px 0;
@@ -89,24 +91,24 @@ export const appointmentReminderHtml = (
     .reminder-time {
       font-size: 24px;
       font-weight: 700;
-      color: #FF7A5A;
+      color: ${brand.coral};
       margin-bottom: 10px;
     }
     .detail-row {
       display: flex;
       justify-content: space-between;
       padding: 12px 0;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid ${email.html.rule};
     }
     .detail-row:last-child {
       border-bottom: none;
     }
     .detail-label {
       font-weight: 600;
-      color: #666666;
+      color: ${email.html.bodyMuted};
     }
     .detail-value {
-      color: #333333;
+      color: ${email.html.body};
       text-align: right;
     }
     .button-group {
@@ -123,23 +125,23 @@ export const appointmentReminderHtml = (
       font-size: 14px;
     }
     .button-primary {
-      background-color: ${data.primaryColor || '#FF7A5A'};
-      color: #ffffff;
+      background-color: ${data.primaryColor || brand.coral};
+      color: ${base.white};
     }
     .button-secondary {
-      background-color: #ffffff;
-      color: ${data.primaryColor || '#FF7A5A'};
-      border: 2px solid ${data.primaryColor || '#FF7A5A'};
+      background-color: ${base.white};
+      color: ${data.primaryColor || brand.coral};
+      border: 2px solid ${data.primaryColor || brand.coral};
     }
     .footer {
-      background-color: #0B2B33;
-      color: #ffffff;
+      background-color: ${brand.deepTeal};
+      color: ${base.white};
       padding: 30px;
       text-align: center;
       font-size: 14px;
     }
     .footer-link {
-      color: #FFD25A;
+      color: ${brand.gold};
       text-decoration: none;
     }
     @media only screen and (max-width: 600px) {
@@ -175,7 +177,7 @@ export const appointmentReminderHtml = (
       
       <div class="reminder-box">
         <div class="reminder-time">In ${timeframe}</div>
-        <p style="margin: 0; color: #666666;">Don't forget your appointment!</p>
+        <p style="margin: 0; color: ${email.html.bodyMuted};">Don't forget your appointment!</p>
       </div>
       
       <div style="margin: 30px 0;">
@@ -207,7 +209,7 @@ export const appointmentReminderHtml = (
         <a href="${data.cancellationLink}" class="button button-secondary">Cancel</a>
       </div>
       
-      <p style="margin-top: 30px; color: #666666; font-size: 14px;">
+      <p style="margin-top: 30px; color: ${email.html.bodyMuted}; font-size: 14px;">
         Please arrive 5-10 minutes early. If you need to cancel, please do so as soon as possible.
       </p>
     </div>

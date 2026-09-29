@@ -3,6 +3,8 @@
  * Sent when an appointment is cancelled
  */
 
+import { base, brand, email } from '@/lib/design/tokens';
+
 export interface CancellationNotificationData {
   clientName: string;
   appointmentDate: string;
@@ -32,16 +34,16 @@ export const cancellationNotificationHtml = (
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: ${email.html.page};
       line-height: 1.6;
     }
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background-color: #ffffff;
+      background-color: ${base.white};
     }
     .header {
-      background-color: #0B2B33;
+      background-color: ${brand.deepTeal};
       padding: 40px 20px;
       text-align: center;
     }
@@ -51,7 +53,7 @@ export const cancellationNotificationHtml = (
       margin-bottom: 20px;
     }
     .header-title {
-      color: #ffffff;
+      color: ${base.white};
       font-size: 28px;
       font-weight: 600;
       margin: 0;
@@ -61,12 +63,12 @@ export const cancellationNotificationHtml = (
     }
     .greeting {
       font-size: 18px;
-      color: #333333;
+      color: ${email.html.body};
       margin-bottom: 20px;
     }
     .cancellation-box {
-      background-color: #fff3f3;
-      border-left: 4px solid #d32f2f;
+      background-color: ${email.html.cancellationSurface};
+      border-left: 4px solid ${email.html.cancellationAccent};
       padding: 20px;
       margin: 30px 0;
     }
@@ -74,21 +76,21 @@ export const cancellationNotificationHtml = (
       display: flex;
       justify-content: space-between;
       padding: 12px 0;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid ${email.html.rule};
     }
     .detail-row:last-child {
       border-bottom: none;
     }
     .detail-label {
       font-weight: 600;
-      color: #666666;
+      color: ${email.html.bodyMuted};
     }
     .detail-value {
-      color: #333333;
+      color: ${email.html.body};
       text-align: right;
     }
     .reason-box {
-      background-color: #f9f9f9;
+      background-color: ${email.html.panel};
       padding: 15px;
       border-radius: 6px;
       margin: 20px 0;
@@ -96,22 +98,22 @@ export const cancellationNotificationHtml = (
     .button {
       display: inline-block;
       padding: 14px 32px;
-      background-color: ${data.primaryColor || '#FF7A5A'};
-      color: #ffffff;
+      background-color: ${data.primaryColor || brand.coral};
+      color: ${base.white};
       text-decoration: none;
       border-radius: 6px;
       font-weight: 600;
       margin: 20px 0;
     }
     .footer {
-      background-color: #0B2B33;
-      color: #ffffff;
+      background-color: ${brand.deepTeal};
+      color: ${base.white};
       padding: 30px;
       text-align: center;
       font-size: 14px;
     }
     .footer-link {
-      color: #FFD25A;
+      color: ${brand.gold};
       text-decoration: none;
     }
     @media only screen and (max-width: 600px) {

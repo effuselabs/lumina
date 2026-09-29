@@ -93,7 +93,9 @@
       }
     },
     {
-      "files": ["**/*.tsx"],
+      "files": ["**/*.tsx", "**/*.ts"],
+      // tokens.ts is where hex belongs. Tests assert on literal values.
+      "excludedFiles": ["lib/design/tokens.ts", "__tests__/**", "e2e/**"],
       "rules": {
         // Colours come from lib/design/tokens.ts. Raw hex in components is
         // exactly what let four competing sources of design truth drift apart.

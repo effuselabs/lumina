@@ -1,6 +1,7 @@
 import { PublicBookingError } from '@/lib/errors/public-booking-error';
 import { prisma } from '@/lib/prisma';
 import { BusinessInfo, PublicBookingErrorType } from '@/types/booking';
+import { brand } from '@/lib/design/tokens';
 
 export async function getBusinessForPublicBooking(
   businessId: string
@@ -56,13 +57,13 @@ export async function getBusinessForPublicBooking(
             brandColors: {
               primary:
                 (business.publicBookingConfig.brandColors as any)?.primary ||
-                '#FFD25A',
+                brand.gold,
               secondary:
                 (business.publicBookingConfig.brandColors as any)?.secondary ||
-                '#FF7A5A',
+                brand.coral,
               accent:
                 (business.publicBookingConfig.brandColors as any)?.accent ||
-                '#0B2B33',
+                brand.deepTeal,
             },
             customDomain:
               business.publicBookingConfig.customDomain || undefined,

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { brand } from '@/lib/design/tokens';
 
 // Business onboarding step schemas
 export const businessBasicInfoSchema = z.object({
@@ -39,7 +40,7 @@ export const businessSettingsSchema = z.object({
   requireDeposit: z.boolean().default(false),
   depositAmount: z.number().min(0).optional(),
   cancellationPolicy: z.string().optional(),
-  primaryColor: z.string().default('#FFD25A'),
+  primaryColor: z.string().default(brand.gold),
 });
 
 export const businessOperatingHoursSchema = z.object({

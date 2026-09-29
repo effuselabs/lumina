@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { endOfDay, format, startOfDay, subDays } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
+import { chart, legacy } from '@/lib/design/tokens';
 
 export interface ChartData {
   revenue: Array<{
@@ -146,12 +147,12 @@ async function generateServiceData(businessId: string) {
   });
 
   const colors = [
-    '#22C58B',
-    '#3B82F6',
-    '#8B5CF6',
-    '#F59E0B',
-    '#E5484D',
-    '#06B6D4',
+    legacy.positive,
+    chart.blue,
+    chart.violet,
+    chart.amber,
+    legacy.negative,
+    chart.cyan,
   ];
 
   // Get appointment counts for each service

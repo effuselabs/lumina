@@ -5,6 +5,7 @@
 
 import { prisma } from '@/lib/prisma';
 import type { BusinessBranding } from './template-engine';
+import { brand } from '@/lib/design/tokens';
 
 /**
  * Default Lumina branding used as fallback
@@ -12,9 +13,9 @@ import type { BusinessBranding } from './template-engine';
 const LUMINA_DEFAULT_BRANDING: Omit<BusinessBranding, 'businessId'> = {
   businessName: 'Lumina',
   logoUrl: undefined, // No default logo URL
-  primaryColor: '#FFD25A',
-  secondaryColor: '#FF7A5A',
-  accentColor: '#0B2B33',
+  primaryColor: brand.gold,
+  secondaryColor: brand.coral,
+  accentColor: brand.deepTeal,
   fontFamily:
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 };
@@ -141,15 +142,21 @@ export function validateBranding(branding: BusinessBranding): {
   const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
 
   if (branding.primaryColor && !hexColorRegex.test(branding.primaryColor)) {
-    issues.push('Primary color must be a valid hex color (e.g., #FFD25A)');
+    issues.push(
+      `Primary color must be a valid hex color (e.g., ${brand.gold})`
+    );
   }
 
   if (branding.secondaryColor && !hexColorRegex.test(branding.secondaryColor)) {
-    issues.push('Secondary color must be a valid hex color (e.g., #FF7A5A)');
+    issues.push(
+      `Secondary color must be a valid hex color (e.g., ${brand.coral})`
+    );
   }
 
   if (branding.accentColor && !hexColorRegex.test(branding.accentColor)) {
-    issues.push('Accent color must be a valid hex color (e.g., #0B2B33)');
+    issues.push(
+      `Accent color must be a valid hex color (e.g., ${brand.deepTeal})`
+    );
   }
 
   // Validate logo URL format
