@@ -10,7 +10,6 @@ interface StaffPageContentProps {
   business: {
     id: string;
     name: string;
-    users: Array<{ role: string }>;
   };
   userRole: string;
   userName: string;

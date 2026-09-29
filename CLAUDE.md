@@ -101,6 +101,18 @@ npm run db:migrate && npm run db:seed
    check got hand-rolled five different ways, and 30 routes ended up with no
    check at all. `__tests__/security/tenant-isolation.test.ts` is the gate now.
 
+   In a page, it takes the slug from the URL and returns what the page needs:
+
+   ```ts
+   const { user, business, role } = await requireBusinessAccess(
+     params.businessSlug
+   );
+   ```
+
+   Never call it inside a `try`: `redirect()` throws, and a `catch` swallows
+   it. `__tests__/security/dashboard-page-access.test.ts` is the gate for
+   pages.
+
 2. **Every route authenticates.** Public routes are only those listed in
    `middleware.ts` (`PUBLIC_EXACT_ROUTES` / `PUBLIC_ROUTE_PREFIXES`). Adding a
    route there is a security decision — say so explicitly.

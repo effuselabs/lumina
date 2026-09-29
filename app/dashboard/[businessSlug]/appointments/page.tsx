@@ -1,7 +1,5 @@
-import { auth } from '@/auth';
+import { requireBusinessAccess } from '@/lib/auth';
 import { AppointmentsPageContent } from '@/components/appointments/appointments-page-content';
-import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
 
 interface AppointmentsPageProps {
   params: Promise<{
@@ -11,34 +9,17 @@ interface AppointmentsPageProps {
 
 export default async function AppointmentsPage(props: AppointmentsPageProps) {
   const params = await props.params;
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    redirect('/auth/signin');
-  }
-
-  // Get business information and verify access
-  const business = await prisma.business.findUnique({
-    where: { slug: params.businessSlug },
-    include: {
-      users: {
-        where: { userId: session.user.id },
-        select: { role: true },
-      },
-    },
-  });
-
-  if (!business || business.users.length === 0) {
-    redirect('/onboarding');
-  }
-
-  const userRole = business.users[0]?.role || 'STAFF';
+  const {
+    user,
+    business,
+    role: userRole,
+  } = await requireBusinessAccess(params.businessSlug);
 
   return (
     <AppointmentsPageContent
       business={business}
       userRole={userRole}
-      userName={session.user.name || session.user.email || 'User'}
+      userName={user.name || user.email || 'User'}
       businessSlug={params.businessSlug}
     />
   );
