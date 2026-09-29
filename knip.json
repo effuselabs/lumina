@@ -10,5 +10,10 @@
   ],
   "ignore": [".railway/railway.ts", "public/**"],
   "ignoreDependencies": ["husky", "railway"],
-  "ignoreBinaries": ["docker-compose", "railway"]
+  "ignoreBinaries": ["docker-compose", "railway"],
+  "ignoreIssues": {
+    "components/ui/{alert-dialog,dialog,dropdown-menu,select,table}.tsx": [
+      "exports"
+    ]
+  }
 }

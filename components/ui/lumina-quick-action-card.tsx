@@ -67,4 +67,3 @@ const LuminaQuickActionCard = forwardRef<
 LuminaQuickActionCard.displayName = 'LuminaQuickActionCard';
 
 export { LuminaQuickActionCard };
-export type { LuminaQuickActionCardProps };

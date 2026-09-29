@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 
-export interface HeroBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {
+interface HeroBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Background variant type */
   variant?:
     'gradient-mesh' | 'particle-field' | 'geometric-pattern' | 'minimal';

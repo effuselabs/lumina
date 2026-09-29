@@ -136,4 +136,4 @@ function GridItem({ children, colSpan, rowSpan, className }: GridItemProps) {
 }
 
 // Export both components
-export { Grid as default, GridItem };
+export { GridItem };

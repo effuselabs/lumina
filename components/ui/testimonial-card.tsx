@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useIntersectionObserver } from '../../hooks/use-intersection-observer';
 import { Card, CardContent } from './card';
 
-export interface TestimonialCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface TestimonialCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The testimonial quote text */
   quote: string;
   /** Author's name */

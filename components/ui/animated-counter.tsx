@@ -11,7 +11,7 @@ import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 
-export interface AnimatedCounterProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AnimatedCounterProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The target number to count up to */
   value: number;
   /** Starting value (default: 0) */
