@@ -23,8 +23,9 @@
   --cream: #f7f5f0;
 
   /* Semantic Colors */
-  --semantic-success: #16a34a;
-  --semantic-warning: #d97706;
+  /* Must equal `status` in lib/design/tokens.ts — css-token-parity.test.ts */
+  --semantic-success: #15803d;
+  --semantic-warning: #b45309;
   --semantic-error: #dc2626;
   --semantic-info: #2563eb;
 

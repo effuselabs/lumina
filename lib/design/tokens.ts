@@ -64,12 +64,23 @@ export const neutral = {
   900: '#171717',
 } as const;
 
-/** Semantic status colours. */
+/**
+ * Semantic status colours. Each is used as text on white as well as a fill,
+ * so each meets AA (4.5:1) against white both ways round — `contrastPairs`
+ * below holds them to it.
+ *
+ * success and warning were #16A34A (3.30:1) and #D97706 (3.19:1), which
+ * failed as text. info was #0284C7 (4.10:1, also failing) here while the CSS
+ * rendered #2563EB (5.17:1): the two had drifted, and this file was the one
+ * nobody saw. It now holds what renders. `app/globals.css` repeats these as
+ * `--semantic-*`; __tests__/design/css-token-parity.test.ts fails if the two
+ * disagree again.
+ */
 export const status = {
-  success: '#16A34A',
-  warning: '#D97706',
+  success: '#15803D',
+  warning: '#B45309',
   error: '#DC2626',
-  info: '#0284C7',
+  info: '#2563EB',
 } as const;
 
 /** Pure white and black, for the places a named neutral would be a lie. */
@@ -256,6 +267,23 @@ export const contrastPairs: ReadonlyArray<{
     foreground: brand.deepTeal,
     background: brand.cream,
   },
+  // Status colours are text as often as they are fills: "Active", "+12%",
+  // "Payment failed". Both directions are checked, since badges put white
+  // text on the same colours.
+  ...(Object.entries(status) as Array<[string, string]>).flatMap(
+    ([name, value]) => [
+      {
+        name: `${name} text on white`,
+        foreground: value,
+        background: '#FFFFFF',
+      },
+      {
+        name: `white on ${name} fill`,
+        foreground: '#FFFFFF',
+        background: value,
+      },
+    ]
+  ),
 ];
 
 /**
