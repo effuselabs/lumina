@@ -1,19 +1,16 @@
 import { z } from 'zod';
 
 // Employment type enums
-export const employmentTypeSchema = z.enum(
-  ['COMMISSION', 'CHAIR_RENTAL', 'HYBRID'],
-  {
-    required_error: 'Please select an employment type',
-  }
-);
+const employmentTypeSchema = z.enum(['COMMISSION', 'CHAIR_RENTAL', 'HYBRID'], {
+  required_error: 'Please select an employment type',
+});
 
-export const rentalPeriodSchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY'], {
+const rentalPeriodSchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY'], {
   required_error: 'Please select a rental period',
 });
 
 // Base employment configuration schema
-export const employmentConfigurationSchema = z.object({
+const employmentConfigurationSchema = z.object({
   employmentType: employmentTypeSchema,
   commissionRate: z
     .number()
@@ -29,7 +26,7 @@ export const employmentConfigurationSchema = z.object({
 });
 
 // Commission-specific validation
-export const commissionEmploymentSchema = employmentConfigurationSchema.extend({
+const commissionEmploymentSchema = employmentConfigurationSchema.extend({
   employmentType: z.literal('COMMISSION'),
   commissionRate: z
     .number()
@@ -39,16 +36,14 @@ export const commissionEmploymentSchema = employmentConfigurationSchema.extend({
 });
 
 // Chair rental-specific validation
-export const chairRentalEmploymentSchema = employmentConfigurationSchema.extend(
-  {
-    employmentType: z.literal('CHAIR_RENTAL'),
-    chairRentalAmount: z.number().min(50, 'Rental amount must be at least $50'),
-    chairRentalPeriod: rentalPeriodSchema,
-  }
-);
+const chairRentalEmploymentSchema = employmentConfigurationSchema.extend({
+  employmentType: z.literal('CHAIR_RENTAL'),
+  chairRentalAmount: z.number().min(50, 'Rental amount must be at least $50'),
+  chairRentalPeriod: rentalPeriodSchema,
+});
 
 // Hybrid employment validation
-export const hybridEmploymentSchema = employmentConfigurationSchema.extend({
+const hybridEmploymentSchema = employmentConfigurationSchema.extend({
   employmentType: z.literal('HYBRID'),
   commissionRate: z
     .number()
@@ -57,17 +52,6 @@ export const hybridEmploymentSchema = employmentConfigurationSchema.extend({
   chairRentalAmount: z.number().min(25, 'Rental amount must be at least $25'),
   chairRentalPeriod: rentalPeriodSchema,
   baseSalary: z.number().min(0, 'Base salary must be positive').optional(),
-});
-
-// Employment transition schema
-export const employmentTransitionSchema = z.object({
-  staffId: z.string().min(1, 'Staff ID is required'),
-  fromEmploymentType: employmentTypeSchema,
-  toEmploymentType: employmentTypeSchema,
-  transitionDate: z.date(),
-  reason: z.string().optional(),
-  preserveHistoricalCalculations: z.boolean().default(true),
-  migrateOngoingCalculations: z.boolean().default(true),
 });
 
 // Dynamic validation based on employment type
@@ -90,10 +74,6 @@ export type RentalPeriod = z.infer<typeof rentalPeriodSchema>;
 export type EmploymentConfiguration = z.infer<
   typeof employmentConfigurationSchema
 >;
-export type CommissionEmployment = z.infer<typeof commissionEmploymentSchema>;
-export type ChairRentalEmployment = z.infer<typeof chairRentalEmploymentSchema>;
-export type HybridEmployment = z.infer<typeof hybridEmploymentSchema>;
-export type EmploymentTransition = z.infer<typeof employmentTransitionSchema>;
 
 // Employment type descriptions for UI
 export const employmentTypeDescriptions = {
@@ -174,30 +154,5 @@ export const rentalPeriodDescriptions = {
     title: 'Monthly',
     description: 'Rental fee charged per month',
     multiplier: 30,
-  },
-} as const;
-
-// Validation rules for employment types
-export const employmentValidationRules = {
-  COMMISSION: {
-    requiresCommissionRate: true,
-    minCommissionRate: 10,
-    maxCommissionRate: 90,
-    allowsBaseSalary: true,
-    allowsRental: false,
-  },
-  CHAIR_RENTAL: {
-    requiresRentalAmount: true,
-    requiresRentalPeriod: true,
-    minRentalAmount: 50,
-    allowedPeriods: ['DAILY', 'WEEKLY', 'MONTHLY'] as const,
-    allowsCommission: false,
-  },
-  HYBRID: {
-    requiresBothModels: true,
-    minCommissionRate: 5,
-    maxCommissionRate: 70,
-    minRentalAmount: 25,
-    allowsBaseSalary: true,
   },
 } as const;

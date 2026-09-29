@@ -62,12 +62,6 @@ export const businessProfileSchema = businessBasicInfoSchema
   .merge(businessSettingsSchema)
   .merge(businessOperatingHoursSchema);
 
-// Onboarding step validation
-export const onboardingStepSchema = z.object({
-  step: z.number().min(1).max(5),
-  data: z.record(z.any()),
-});
-
 // Types
 export type BusinessBasicInfo = z.infer<typeof businessBasicInfoSchema>;
 export type BusinessAddress = z.infer<typeof businessAddressSchema>;
@@ -79,7 +73,6 @@ export type BusinessOperatingHours = z.infer<
   typeof businessOperatingHoursSchema
 >;
 export type BusinessProfile = z.infer<typeof businessProfileSchema>;
-export type OnboardingStep = z.infer<typeof onboardingStepSchema>;
 
 // Default operating hours
 export const defaultOperatingHours = {

@@ -218,6 +218,18 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      code — and `knip.json` says so through `ignoreIssues`.
    - `types/` (about 70): done, 675 lines net — 66 type declarations
      nothing referenced. Type-only, so type-check is the whole proof.
+   - `lib/validations/` (24): done — 16 schemas and request types nothing
+     parsed with. `lib/auth/public-routes.ts` keeps its route lists, now
+     unexported: `middleware.ts` reaches them through `isPublicRoute`.
+   - `lib/auth.ts` (15) is held back, deliberately. knip is right that
+     nothing calls `requireBusinessAccess` — and `CLAUDE.md` names it as the
+     page-level tenant check. Every one of the 13 `/dashboard/[businessSlug]`
+     pages hand-writes that check instead (a `users where userId` include and
+     a redirect). All 13 do check, so there is no gap today, but it is the
+     same five-ways-hand-rolled pattern that left 30 API routes unchecked.
+     The fix is for the pages to call `requireBusinessAccess` and for a test
+     to hold them to it, as `tenant-isolation.test.ts` does for routes —
+     not to delete the helper the rule points at.
 
 ---
 

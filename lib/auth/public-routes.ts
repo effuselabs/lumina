@@ -18,14 +18,14 @@
  * every path starts with '/', that made `isPublicRoute` unconditionally true
  * and the middleware a no-op for every request.
  */
-export const PUBLIC_EXACT_ROUTES = ['/', '/api/health'] as const;
+const PUBLIC_EXACT_ROUTES = ['/', '/api/health'] as const;
 
 /**
  * Route trees that are public in their entirety. Each entry must end in '/'
  * so that a prefix test cannot match a sibling route by accident (e.g.
  * '/book/' must not match a future '/bookkeeping').
  */
-export const PUBLIC_ROUTE_PREFIXES = [
+const PUBLIC_ROUTE_PREFIXES = [
   '/auth/', // sign-in, sign-up, error, verify-request, staff-invite
   '/api/auth/', // NextAuth handlers
   '/api/public/', // unauthenticated public booking API

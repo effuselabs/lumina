@@ -17,7 +17,7 @@ import { z } from 'zod';
 // BASE VALIDATION SCHEMAS
 // ============================================================================
 
-export const appointmentServiceSchema = z.object({
+const appointmentServiceSchema = z.object({
   serviceId: z.string().cuid('Invalid service ID format'),
   serviceName: z.string().min(1, 'Service name is required').max(255),
   price: z.number().min(0, 'Price must be positive'),
@@ -33,17 +33,7 @@ export const appointmentServiceSchema = z.object({
   assignedStaffId: z.string().cuid('Invalid staff ID format').optional(),
 });
 
-export const dateRangeSchema = z
-  .object({
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date(),
-  })
-  .refine(data => data.endDate >= data.startDate, {
-    message: 'End date must be after or equal to start date',
-    path: ['endDate'],
-  });
-
-export const paginationSchema = z.object({
+const paginationSchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(20),
   offset: z.coerce.number().min(0).default(0),
 });
@@ -298,19 +288,5 @@ export const conflictCheckSchema = z
     message: 'End date must be after or equal to start date',
     path: ['endDate'],
   });
-
-// ============================================================================
-// EXPORTED TYPES
-// ============================================================================
-
-export type CreateAppointmentRequest = z.infer<typeof createAppointmentSchema>;
-export type UpdateAppointmentRequest = z.infer<typeof updateAppointmentSchema>;
-export type AppointmentFilters = z.infer<typeof appointmentFiltersSchema>;
-export type UpdateStatusRequest = z.infer<typeof updateStatusSchema>;
 export type CancelAppointmentRequest = z.infer<typeof cancelAppointmentSchema>;
-export type AddServicesRequest = z.infer<typeof addServicesSchema>;
 export type RemoveServicesRequest = z.infer<typeof removeServicesSchema>;
-export type ValidateAppointmentRequest = z.infer<
-  typeof validateAppointmentSchema
->;
-export type ConflictCheckRequest = z.infer<typeof conflictCheckSchema>;
