@@ -258,7 +258,7 @@ export function ServiceSelection({
       <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-[#0B2B33]">
+        <h2 className="text-3xl font-bold tracking-tight text-brand-deepTeal">
           Select Your Services
         </h2>
         <p className="text-xl text-neutral-600">at {business?.name}</p>
@@ -324,7 +324,7 @@ export function ServiceSelection({
 
       {/* Selected Services Summary */}
       {selectedServices.length > 0 && (
-        <Card className="border-[#FFD25A]/30 bg-gradient-to-r from-[#FFD25A]/10 to-[#FF7A5A]/10">
+        <Card className="border-brand-gold/30 bg-gradient-to-r from-brand-gold/10 to-brand-coral/10">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Check className="h-5 w-5 text-green-600" />
@@ -416,10 +416,10 @@ export function ServiceSelection({
                     key={service.id}
                     className={`transition-all duration-200 hover:shadow-lg ${
                       isSelected
-                        ? 'border-[#FFD25A] bg-gradient-to-br from-[#FFD25A]/5 to-[#FF7A5A]/5 ring-2 ring-[#FFD25A]'
+                        ? 'border-brand-gold bg-gradient-to-br from-brand-gold/5 to-brand-coral/5 ring-2 ring-brand-gold'
                         : isAtMaxLimit
                           ? 'cursor-not-allowed opacity-50'
-                          : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-[#FFD25A]/50'
+                          : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-brand-gold/50'
                     }`}
                   >
                     <CardHeader className="pb-3">

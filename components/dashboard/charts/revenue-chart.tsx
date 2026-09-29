@@ -18,6 +18,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { brand, legacy } from '@/lib/design/tokens';
 
 interface RevenueData {
   date: string;
@@ -173,23 +174,31 @@ export function RevenueChart({
           >
             <defs>
               <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#22C58B" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#22C58B" stopOpacity={0} />
+                <stop
+                  offset="5%"
+                  stopColor={legacy.positive}
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={legacy.positive}
+                  stopOpacity={0}
+                />
               </linearGradient>
               <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#FFD25A" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#FFD25A" stopOpacity={0} />
+                <stop offset="5%" stopColor={brand.gold} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={brand.gold} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E4E6E7" />
+            <CartesianGrid strokeDasharray="3 3" stroke={legacy.gridline} />
             <XAxis
               dataKey="date"
-              stroke="#808285"
+              stroke={legacy.textMuted}
               fontSize={12}
               tickFormatter={formatDate}
             />
             <YAxis
-              stroke="#808285"
+              stroke={legacy.textMuted}
               fontSize={12}
               tickFormatter={formatCurrency}
             />
@@ -197,7 +206,7 @@ export function RevenueChart({
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#22C58B"
+              stroke={legacy.positive}
               strokeWidth={3}
               fill="url(#revenueGradient)"
               name="Revenue"
@@ -206,7 +215,7 @@ export function RevenueChart({
               <Area
                 type="monotone"
                 dataKey="target"
-                stroke="#FFD25A"
+                stroke={brand.gold}
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 fill="url(#targetGradient)"

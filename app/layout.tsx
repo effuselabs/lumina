@@ -2,6 +2,7 @@ import { Providers } from '@/components/providers';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { brand } from '@/lib/design/tokens';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -81,7 +82,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
-        <meta name="theme-color" content="#F7F5F0" />
+        <meta name="theme-color" content={brand.cream} />
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className={`${inter.className} font-sans antialiased`}>

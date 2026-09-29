@@ -18,6 +18,7 @@ import {
 } from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { brand } from '@/lib/design/tokens';
 
 interface SettingsStepProps {
   data: Partial<BusinessSettings>;
@@ -34,7 +35,7 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
       requireDeposit: data.requireDeposit ?? false,
       depositAmount: data.depositAmount || 0,
       cancellationPolicy: data.cancellationPolicy || '',
-      primaryColor: data.primaryColor || '#FFD25A',
+      primaryColor: data.primaryColor || brand.gold,
     },
   });
 

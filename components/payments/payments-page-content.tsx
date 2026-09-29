@@ -4,6 +4,7 @@ import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { FinancialDashboard } from '@/components/payments';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
+import { legacy } from '@/lib/design/tokens';
 
 interface PaymentsPageContentProps {
   business: {
@@ -57,7 +58,10 @@ export function PaymentsPageContent({
           {/* Page Header */}
           <div>
             <h1 className="lumina-heading-2">Payments & Finance</h1>
-            <p className="lumina-body-large" style={{ color: '#808285' }}>
+            <p
+              className="lumina-body-large"
+              style={{ color: legacy.textMuted }}
+            >
               Process payments, track transactions, and manage your business
               finances.
             </p>

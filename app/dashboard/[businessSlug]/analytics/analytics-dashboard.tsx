@@ -23,6 +23,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useState } from 'react';
+import { brand, gradients, legacy } from '@/lib/design/tokens';
 
 interface AnalyticsDashboardProps {
   business: {
@@ -143,7 +144,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="lumina-heading-2">Analytics & Reports</h1>
-          <p className="lumina-body-large" style={{ color: '#808285' }}>
+          <p className="lumina-body-large" style={{ color: legacy.textMuted }}>
             Comprehensive business insights and performance analytics
           </p>
         </div>
@@ -163,7 +164,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
           <button
             onClick={handleRefresh}
             className="inline-flex h-10 items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-            style={{ color: '#0b2b33' }}
+            style={{ color: brand.deepTeal }}
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
@@ -173,15 +174,13 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             onClick={handleExport}
             className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             style={{
-              background: 'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
+              background: gradients.radiant,
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background =
-                'linear-gradient(135deg, #ffcd47 0%, #ff6b47 100%)';
+              e.currentTarget.style.background = `linear-gradient(135deg, ${legacy.radiantPressedFrom} 0%, ${legacy.radiantPressedTo} 100%)`;
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.background =
-                'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)';
+              e.currentTarget.style.background = gradients.radiant;
             }}
           >
             <Download className="mr-2 h-4 w-4" />
@@ -211,8 +210,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
                 onClick={handleRefresh}
                 className="ml-auto inline-flex h-8 items-center justify-center rounded-md px-3 py-1 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 style={{
-                  background:
-                    'linear-gradient(135deg, #ffd25a 0%, #ff7a5a 100%)',
+                  background: gradients.radiant,
                 }}
               >
                 Try Again
@@ -227,7 +225,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <TrendingUp className="h-4 w-4" style={{ color: '#ff7a5a' }} />
+              <TrendingUp className="h-4 w-4" style={{ color: brand.coral }} />
               Total Revenue
             </CardTitle>
           </CardHeader>
@@ -237,7 +235,9 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             </div>
             <div
               className={`mt-1 flex items-center gap-1 text-sm ${revenueGrowth > 0 ? 'text-green-600' : revenueGrowth < 0 ? 'text-red-600' : ''}`}
-              style={{ color: revenueGrowth === 0 ? '#808285' : undefined }}
+              style={{
+                color: revenueGrowth === 0 ? legacy.textMuted : undefined,
+              }}
             >
               {revenueGrowth > 0 ? '+' : ''}
               {revenueGrowth}% vs last period
@@ -248,7 +248,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <Calendar className="h-4 w-4" style={{ color: '#ff7a5a' }} />
+              <Calendar className="h-4 w-4" style={{ color: brand.coral }} />
               Appointments
             </CardTitle>
           </CardHeader>
@@ -256,7 +256,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             <div className="text-lumina-primary text-2xl font-bold">
               {totalAppointments}
             </div>
-            <div className="mt-1 text-sm" style={{ color: '#808285' }}>
+            <div className="mt-1 text-sm" style={{ color: legacy.textMuted }}>
               {completionRate}% completion rate
             </div>
           </CardContent>
@@ -265,7 +265,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <Users className="h-4 w-4" style={{ color: '#ff7a5a' }} />
+              <Users className="h-4 w-4" style={{ color: brand.coral }} />
               Top Performer
             </CardTitle>
           </CardHeader>
@@ -273,7 +273,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             <div className="text-lumina-primary text-2xl font-bold">
               {topPerformer?.name || 'N/A'}
             </div>
-            <div className="mt-1 text-sm" style={{ color: '#808285' }}>
+            <div className="mt-1 text-sm" style={{ color: legacy.textMuted }}>
               ${topPerformer?.revenue.toLocaleString() || 0} revenue
             </div>
           </CardContent>
@@ -282,7 +282,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <BarChart3 className="h-4 w-4" style={{ color: '#ff7a5a' }} />
+              <BarChart3 className="h-4 w-4" style={{ color: brand.coral }} />
               Avg Utilization
             </CardTitle>
           </CardHeader>
@@ -290,7 +290,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             <div className="text-lumina-primary text-2xl font-bold">
               {averageUtilization}%
             </div>
-            <div className="mt-1 text-sm" style={{ color: '#808285' }}>
+            <div className="mt-1 text-sm" style={{ color: legacy.textMuted }}>
               Staff efficiency
             </div>
           </CardContent>

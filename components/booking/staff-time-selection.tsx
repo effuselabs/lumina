@@ -422,7 +422,7 @@ export function StaffTimeSelection({
       <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-[#0B2B33]">
+        <h2 className="text-3xl font-bold tracking-tight text-brand-deepTeal">
           Choose Date & Time
         </h2>
         <p className="text-xl text-neutral-600">
@@ -519,7 +519,7 @@ export function StaffTimeSelection({
               <p className="text-sm font-medium text-neutral-700">
                 Selected Date
               </p>
-              <p className="text-lg font-semibold text-[#0B2B33]">
+              <p className="text-lg font-semibold text-brand-deepTeal">
                 {formatDate(selectedDate)}
               </p>
             </div>
@@ -708,7 +708,7 @@ export function StaffTimeSelection({
 
       {/* Selected Slot Summary */}
       {selectedSlot && (
-        <Card className="border-[#FFD25A]/30 bg-gradient-to-r from-[#FFD25A]/10 to-[#FF7A5A]/10">
+        <Card className="border-brand-gold/30 bg-gradient-to-r from-brand-gold/10 to-brand-coral/10">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Clock className="h-5 w-5 text-green-600" />

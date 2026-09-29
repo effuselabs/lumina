@@ -5,6 +5,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 import { shallowEqual } from '../../lib/performance-utils';
+import { base, brand, legacy } from '../../lib/design/tokens';
 import { cn } from '../../lib/utils';
 import { Spinner } from './spinner';
 
@@ -12,79 +13,79 @@ import { Spinner } from './spinner';
 const buttonStyles = `
   /* Force Outline Button visibility on light theme - MAXIMUM SPECIFICITY */
   button[data-variant="outline"][data-testid="button"] {
-    border: 2px solid #000000 !important;
-    border-color: #000000 !important;
+    border: 2px solid ${base.black} !important;
+    border-color: ${base.black} !important;
     border-style: solid !important;
     border-width: 2px !important;
-    color: #000000 !important;
+    color: ${base.black} !important;
     background-color: transparent !important;
     background: transparent !important;
   }
   button[data-variant="outline"][data-testid="button"]:hover {
-    background-color: #000000 !important;
-    background: #000000 !important;
-    color: #ffffff !important;
-    border-color: #000000 !important;
+    background-color: ${base.black} !important;
+    background: ${base.black} !important;
+    color: ${base.white} !important;
+    border-color: ${base.black} !important;
   }
   
   /* Additional specificity - try multiple selectors */
   .lumina-component button[data-variant="outline"][data-testid="button"] {
-    border: 2px solid #000000 !important;
-    color: #000000 !important;
+    border: 2px solid ${base.black} !important;
+    color: ${base.black} !important;
     background-color: transparent !important;
   }
   
   /* Even more specific - target the exact component */
   [data-testid="button"][data-variant="outline"] {
-    border: 2px solid #000000 !important;
-    color: #000000 !important;
+    border: 2px solid ${base.black} !important;
+    color: ${base.black} !important;
     background-color: transparent !important;
   }
 
   /* Force Ghost Button visibility on light theme */
   button[data-variant="ghost"][data-testid="button"] {
-    color: #000000 !important;
+    color: ${base.black} !important;
   }
   button[data-variant="ghost"][data-testid="button"]:hover {
     background-color: rgba(0, 0, 0, 0.1) !important;
-    color: #000000 !important;
+    color: ${base.black} !important;
   }
   
   /* Force Link Button visibility on light theme */
   button[data-variant="link"][data-testid="button"] {
-    color: #1d4ed8 !important;
+    color: ${legacy.link} !important;
     text-decoration: underline !important;
-    text-decoration-color: #1d4ed8 !important;
+    text-decoration-color: ${legacy.link} !important;
   }
   button[data-variant="link"][data-testid="button"]:hover {
-    color: #1e40af !important;
-    text-decoration-color: #1e40af !important;
+    color: ${legacy.linkHover} !important;
+    text-decoration-color: ${legacy.linkHover} !important;
   }
   
   /* Dark theme overrides */
   .dark button[data-variant="outline"][data-testid="button"] {
-    border-color: #ffffff !important;
-    color: #ffffff !important;
+    border-color: ${base.white} !important;
+    color: ${base.white} !important;
   }
   .dark button[data-variant="outline"][data-testid="button"]:hover {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border-color: #ffffff !important;
+    background-color: ${base.white} !important;
+    color: ${base.black} !important;
+    border-color: ${base.white} !important;
   }
   .dark button[data-variant="ghost"][data-testid="button"] {
-    color: #ffffff !important;
+    color: ${base.white} !important;
   }
   .dark button[data-variant="ghost"][data-testid="button"]:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
-    color: #ffffff !important;
+    color: ${base.white} !important;
   }
   .dark button[data-variant="link"][data-testid="button"] {
-    color: #FFD25A !important;
-    text-decoration-color: #FFD25A !important;
+    color: ${brand.gold} !important;
+    text-decoration-color: ${brand.gold} !important;
   }
   .dark button[data-variant="link"][data-testid="button"]:hover {
-    color: #FFD25ACC !important;
-    text-decoration-color: #FFD25ACC !important;
+    color: ${brand.gold}CC !important;
+    text-decoration-color: ${brand.gold}CC !important;
   }
   
   /* REFINED Primary Button text - Elegant white text with subtle shadow */
@@ -92,7 +93,7 @@ const buttonStyles = `
   button[data-variant="primary"][data-testid="button"],
   button[data-testid="button"]:not([data-variant]),
   button[data-testid="button"][data-variant="primary"] {
-    color: #ffffff !important;  /* Clean white text - classic and elegant */
+    color: ${base.white} !important;  /* Clean white text - classic and elegant */
     text-shadow: 
       0 1px 2px rgba(0, 0, 0, 0.4),     /* Subtle dark shadow for definition */
       0 2px 4px rgba(0, 0, 0, 0.2) !important;  /* Light depth shadow */
@@ -106,7 +107,7 @@ const buttonStyles = `
   button[data-variant="primary"][data-testid="button"]:hover,
   button[data-testid="button"]:not([data-variant]):hover,
   button[data-testid="button"][data-variant="primary"]:hover {
-    color: #ffffff !important;  /* Keep white text on hover */
+    color: ${base.white} !important;  /* Keep white text on hover */
     text-shadow: 
       0 1px 3px rgba(0, 0, 0, 0.5),     /* Slightly stronger shadow on hover */
       0 2px 6px rgba(0, 0, 0, 0.25) !important;  /* Enhanced depth */
@@ -115,7 +116,7 @@ const buttonStyles = `
   /* Additional catch-all for any primary buttons with gradient background */
   button[data-testid="button"].bg-lumina-radiant,
   button[data-testid="button"][class*="bg-lumina-radiant"] {
-    color: #ffffff !important;
+    color: ${base.white} !important;
     text-shadow: 
       0 1px 2px rgba(0, 0, 0, 0.4),
       0 2px 4px rgba(0, 0, 0, 0.2) !important;

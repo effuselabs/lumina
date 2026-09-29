@@ -72,6 +72,84 @@ export const status = {
   info: '#0284C7',
 } as const;
 
+/** Pure white and black, for the places a named neutral would be a lie. */
+export const base = {
+  white: '#FFFFFF',
+  black: '#000000',
+} as const;
+
+/**
+ * The second palette, as components use it today.
+ *
+ * `app/design-tokens/colors.css` defines its own neutral ramp and semantic
+ * colours, and components reached for those values directly: `#808285` for
+ * muted text in a dozen places, `#22C58B` for positive trends where `status`
+ * says `#16A34A`. They are recorded here at their exact values so that moving
+ * every hex into this file changes nothing anyone can see. Reconciling them
+ * with `neutral` and `status` does change what people see, so it is a design
+ * decision with its own screenshots, tracked in docs/PLAN.md — not something
+ * to fold in silently.
+ */
+export const legacy = {
+  /** Secondary text and chart axes. colors.css `--neutral-600`. */
+  textMuted: '#808285',
+  /** Body text on light surfaces. colors.css `--neutral-900`. */
+  textStrong: '#1D2D35',
+  /** Chart gridlines. colors.css `--neutral-300`. */
+  gridline: '#E4E6E7',
+  /** Positive trends and revenue. colors.css `--semantic-success`. */
+  positive: '#22C58B',
+  positiveSurface: '#ECFDF5',
+  positiveBorder: '#A7F3D0',
+  /** Negative trends. colors.css `--semantic-error`. */
+  negative: '#E5484D',
+  /** The Button link variant, which forces blue rather than `primary`. */
+  link: '#1D4ED8',
+  linkHover: '#1E40AF',
+  /** The pressed radiant gradient on the analytics page. */
+  radiantPressedFrom: '#FFCD47',
+  radiantPressedTo: '#FF6B47',
+} as const;
+
+/** Chart series beyond the brand colours. */
+export const chart = {
+  blue: '#3B82F6',
+  amber: '#F59E0B',
+  violet: '#8B5CF6',
+  slate: '#6B7280',
+} as const;
+
+/** Surfaces the runtime theme switcher writes onto `:root`. */
+export const themeSurface = {
+  darkBackground: '#0A0A0A',
+  darkBorder: '#27272A',
+  lightBorder: '#E5E7EB',
+} as const;
+
+/**
+ * Stripe Elements appearance. Stripe renders card fields in its own iframe and
+ * accepts only literal colours, so these cannot be CSS variables.
+ */
+export const stripeAppearance = {
+  text: '#424770',
+  placeholder: '#AAB7C4',
+  invalid: '#9E2146',
+  textDark: '#1F2937',
+  danger: '#EF4444',
+} as const;
+
+/**
+ * Email templates. Mail clients ignore CSS variables and most stylesheets, so
+ * templates inline literal colours — taken from here, so they still have one
+ * source.
+ */
+export const email = {
+  canvas: '#F6F9FC',
+  divider: '#E6EBF1',
+  text: '#111827',
+  textMuted: '#6B7280',
+} as const;
+
 /** Gradients. The radiant gradient is the single strongest brand signal. */
 export const gradients = {
   radiant: `linear-gradient(135deg, ${brand.gold} 0%, ${brand.coral} 100%)`,
@@ -236,6 +314,12 @@ export const tokens = {
   accent,
   neutral,
   status,
+  base,
+  legacy,
+  chart,
+  themeSurface,
+  stripeAppearance,
+  email,
   gradients,
   typography,
   spacing,

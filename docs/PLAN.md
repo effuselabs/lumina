@@ -113,9 +113,36 @@ gates decide, and `npm run db:seed` runs by hand on anything near
    touches. `.github/workflows/dependency-audit.yml` now fails any pull
    request, and a daily run, on a high or critical production advisory.
 3. **The collapse itself**, against 37 primitives instead of 57 and a
-   component tree that is entirely reachable. 224 raw hex colours across 31
-   `.tsx` files are the measure of what is left to fold into
-   `lib/design/tokens.ts`.
+   component tree that is entirely reachable.
+   - [x] **3a — every colour in a `.tsx` comes from `lib/design/tokens.ts`.**
+         162 raw hex across 23 files (224 across 31 before the sweep deleted
+         the rest), now **0**, and the lint rule is an **error** that
+         matches hex anywhere in a string — the old form saw 93 of the 162.
+         Done at identical values: 9 of 11 pages pixel-identical before and
+         after, the analytics chart within its run-to-run noise, and the
+         design-system page changed only where it had been wrong (below).
+   - [ ] **3b — reconcile the second palette.** `app/design-tokens/colors.css`
+         carries its own neutral ramp and semantic colours, which components
+         used directly; they sit in `tokens.legacy` at their current values.
+         `#808285` against `neutral[600]` `#525252`, `#22C58B` against
+         `status.success` `#16A34A`, and so on. Choosing one changes what
+         people see, so it goes page by page with screenshots.
+   - [ ] **3c — `status` colours fail AA as text.** The design-system page
+         now computes contrast instead of claiming it, and on white:
+         `success` 3.30:1, `warning` 3.19:1, `info` 4.10:1 — all below 4.5
+         for body text. The page had claimed 7.2, 5.1 and 8.1. Fix the tokens
+         (or restrict them to large text and icons), then add the pairs to
+         `contrastPairs` so the test holds them.
+   - [ ] **3d — the Button's injected stylesheet.** `components/ui/button.tsx`
+         writes a `<style>` of `!important` rules that override its own
+         variants: black outline borders, blue links, and white primary text
+         on the radiant gradient — the prohibited pair in `tokens.ts`, and the
+         "Confirm Booking" contrast entry below. Deleting it is the fix and a
+         visible change to every button, so it wants screenshots of each
+         variant.
+   - [ ] **3e — hex outside `.tsx`.** The rule covers `.tsx`; the `.ts` email
+         templates and the CSS under `app/design-tokens/` still carry their
+         own values.
 4. 336 unused exports — worth a pass once the collapse settles, not before.
 
 ---
@@ -243,7 +270,7 @@ time, after the booking loop works.
 - Playwright browser projects beyond Chromium and Mobile Safari
 - Raising lint rules from `warn` to `error` as their counts reach zero:
   **43** of 63 routes importing Prisma directly (was 56; fifteen dead routes
-  were deleted in 4d), **224** raw hex colours across 31 `.tsx` files
+  were deleted in 4d). Raw hex in `.tsx` reached zero and is an error.
 
 ## Known, unaddressed
 

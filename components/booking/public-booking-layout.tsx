@@ -6,6 +6,7 @@ import { BusinessInfo } from '@/types/booking';
 import { ArrowLeft, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
 import { ReactNode } from 'react';
+import { brand } from '@/lib/design/tokens';
 
 interface PublicBookingLayoutProps {
   business: BusinessInfo;
@@ -21,9 +22,9 @@ export function PublicBookingLayout({
   onBack,
 }: PublicBookingLayoutProps) {
   const brandColors = business.branding?.brandColors || {
-    primary: '#FFD25A',
-    secondary: '#FF7A5A',
-    accent: '#0B2B33',
+    primary: brand.gold,
+    secondary: brand.coral,
+    accent: brand.deepTeal,
   };
 
   return (
@@ -144,9 +145,9 @@ interface BusinessInfoSidebarProps {
 
 function BusinessInfoSidebar({ business }: BusinessInfoSidebarProps) {
   const brandColors = business.branding?.brandColors || {
-    primary: '#FFD25A',
-    secondary: '#FF7A5A',
-    accent: '#0B2B33',
+    primary: brand.gold,
+    secondary: brand.coral,
+    accent: brand.deepTeal,
   };
 
   return (
