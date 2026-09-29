@@ -101,16 +101,20 @@ gates decide, and `npm run db:seed` runs by hand on anything near
 
 **Next, in order:**
 
-1. **28 unused dependencies**, seventeen of them runtime — including six Radix
-   primitives whose components went in batch 2. Less install, less CVE
-   surface. `husky` and `railway` are false positives, used by the pre-commit
-   hook and the IaC respectively. `glob` is genuinely undeclared in
-   `scripts/migrate-calendar-data.ts`.
-2. **The collapse itself**, against 37 primitives instead of 57 and a
+1. ~~**28 unused dependencies**~~ **Done** — 26 removed, 120 packages out of
+   `node_modules`. `husky` and `railway` are recorded in `knip.json` as used,
+   and `glob` is gone from `scripts/migrate-calendar-data.ts` rather than
+   declared. knip now reports no unused dependencies, unlisted dependencies or
+   files.
+2. **Next.js 15.5.24** — see _Known, unaddressed_. Ahead of the collapse
+   because it is a security fix under the dependency policy's first trigger,
+   and because the collapse rewrites the same components a React 19 upgrade
+   touches; doing the upgrade second would mean doing that work twice.
+3. **The collapse itself**, against 37 primitives instead of 57 and a
    component tree that is entirely reachable. 224 raw hex colours across 31
    `.tsx` files are the measure of what is left to fold into
    `lib/design/tokens.ts`.
-3. 336 unused exports — worth a pass once the collapse settles, not before.
+4. 336 unused exports — worth a pass once the collapse settles, not before.
 
 ---
 
@@ -187,8 +191,13 @@ Two triggers, and only two:
 
 Everything else waits. A version bump has no observable outcome — the booking
 loop cannot tell you it worked — so it is precisely the kind of work that
-consumed this project the first time while nothing shipped. `next@16` is
-already parked on these grounds.
+consumed this project the first time while nothing shipped.
+
+`next@16` was parked on these grounds, and that stopped being the right call
+once a critical landed: see `next` under _Known, unaddressed_. The lesson is in
+the first trigger's wording — the count to watch is the one `npm audit
+--omit=dev` prints _today_. It drifted from 2 to 5 high/critical between
+2026-09-06 and 2026-09-29 without any change on our side, and nothing noticed.
 
 **Do not upgrade to a release candidate.** The Prisma CLI currently advertises
 `8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
@@ -489,8 +498,24 @@ time, after the booking loop works.
   `public-booking-interface.tsx` and `simple-booking-layout.tsx` have zero
   importers. An earlier demolition list had this backwards — do not delete the
   wrong one.
-- `next` carries advisories that need `next@16`, a major upgrade not
-  appropriate mid-rebuild.
+- **`next@14.2.35` carries 23 advisories, two of them critical RCE, and 14.x
+  has no patch for either.** GHSA-2xp9-vwfh-vxw4 (Image Optimization API,
+  AVIF) reached us: `/_next/image` is excluded from auth in `middleware.ts`
+  and fetched from allowed hosts on request. **Mitigated** by
+  `images.unoptimized`, which makes the endpoint 404 — measured before and
+  after against a production build. GHSA-p293-qw3h-jr36 is Windows-hosted
+  only; Railway runs Linux. The rest are DoS, SSRF and cache poisoning in
+  Server Components, Server Actions and rewrites, and are not mitigated.
+
+  The fix floor is **15.5.24**, not 16 — `npm audit` names 16.3.6 because it
+  proposes the latest, not the smallest, fix. 15 is still a major: React 19
+  for the App Router, and `cookies()`, `headers()` and route `params` become
+  async. Restore image optimization once it lands.
+
+  The production audit is otherwise clean: three new transitive highs
+  (`brace-expansion`, `fast-uri`, `nanoid`) had in-range fixes and were taken.
+  `postcss` is bundled inside `next` and goes with it.
+
 - Before real customers: `/api/gdpr/export` and `/delete` are untested while
   handling PII, and there is no privacy policy or terms.
 - ~~Tenant isolation has no test coverage.~~ **Done.** Thirty authenticated
