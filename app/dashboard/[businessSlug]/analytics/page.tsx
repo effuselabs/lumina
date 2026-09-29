@@ -1,6 +1,4 @@
-import { auth } from '@/auth';
-import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
+import { requireBusinessAccess } from '@/lib/auth';
 import { AnalyticsDashboard } from './analytics-dashboard';
 
 interface AnalyticsDashboardPageProps {
@@ -23,57 +21,21 @@ export default async function AnalyticsDashboardPage(
   props: AnalyticsDashboardPageProps
 ) {
   const params = await props.params;
-  const session = await auth();
+  // Analytics is for owners and managers; anyone else goes back to the
+  // dashboard. This used to sit inside a try whose catch swallowed the
+  // redirect and sent staff to /onboarding instead.
+  const {
+    user,
+    business,
+    role: userRole,
+  } = await requireBusinessAccess(params.businessSlug, ['OWNER', 'MANAGER']);
 
-  // Enforce authentication
-  if (!session?.user?.id) {
-    redirect('/auth/signin');
-  }
-
-  try {
-    // Get business with user access validation
-    const business = await prisma.business.findFirst({
-      where: {
-        slug: params.businessSlug,
-      },
-      include: {
-        users: {
-          where: {
-            userId: session.user.id,
-          },
-          select: {
-            role: true,
-            userId: true,
-          },
-        },
-      },
-    });
-
-    // Verify user has access to this business
-    const userHasAccess = business?.users && business.users.length > 0;
-
-    if (!business || !userHasAccess) {
-      redirect('/onboarding');
-    }
-
-    const userRole = business.users[0]?.role;
-
-    // Check if user has analytics access (OWNER or MANAGER)
-    if (!['OWNER', 'MANAGER'].includes(userRole)) {
-      redirect(`/dashboard/${params.businessSlug}`);
-    }
-
-    return (
-      <AnalyticsDashboard
-        business={business}
-        userRole={userRole}
-        userName={session.user.name || 'User'}
-        businessSlug={params.businessSlug}
-      />
-    );
-  } catch (error) {
-    // Log error for debugging
-    console.error('Analytics dashboard error:', error);
-    redirect('/onboarding');
-  }
+  return (
+    <AnalyticsDashboard
+      business={business}
+      userRole={userRole}
+      userName={user.name || 'User'}
+      businessSlug={params.businessSlug}
+    />
+  );
 }

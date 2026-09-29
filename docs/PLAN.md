@@ -221,15 +221,18 @@ gates decide, and `npm run db:seed` runs by hand on anything near
    - `lib/validations/` (24): done — 16 schemas and request types nothing
      parsed with. `lib/auth/public-routes.ts` keeps its route lists, now
      unexported: `middleware.ts` reaches them through `isPublicRoute`.
-   - `lib/auth.ts` (15) is held back, deliberately. knip is right that
-     nothing calls `requireBusinessAccess` — and `CLAUDE.md` names it as the
-     page-level tenant check. Every one of the 13 `/dashboard/[businessSlug]`
-     pages hand-writes that check instead (a `users where userId` include and
-     a redirect). All 13 do check, so there is no gap today, but it is the
-     same five-ways-hand-rolled pattern that left 30 API routes unchecked.
-     The fix is for the pages to call `requireBusinessAccess` and for a test
-     to hold them to it, as `tenant-isolation.test.ts` does for routes —
-     not to delete the helper the rule points at.
+   - `lib/auth.ts`: done, by adoption rather than deletion. All 13
+     `/dashboard/[businessSlug]` pages had hand-written the membership check
+     while `requireBusinessAccess` — the helper `CLAUDE.md` names — had no
+     callers, took an id the pages did not have, and sent non-members to a
+     `/unauthorized` page that does not exist. It now takes the slug, returns
+     the business and role, and every page calls it;
+     `__tests__/security/dashboard-page-access.test.ts` fails on a page that
+     does not, or that calls it inside a `try`. That last rule is from a real
+     bug: the dashboard and analytics pages wrapped their check in a `try`
+     whose `catch` redirected to `/onboarding`, so staff opening analytics
+     were sent to onboarding instead of back to the dashboard, and a
+     database failure looked like having no business.
    - The remainder (components, hooks, monitoring, performance, theme,
      utils, errors, services): done — 85 declarations nothing referenced,
      among them `lib/theme-utils.ts`'s own theme engine (the switcher uses
@@ -246,9 +249,7 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      (1,281 lines) are built but wired to nothing, behind "Coming Soon" POS,
      transactions and reports pages. Deleting parked feature work is a
      product decision; it returns with its own spec (see _Parked_).
-   - knip now reports exactly one thing: `lib/auth.ts`, deliberately not
-     silenced. It clears when the dashboard pages adopt
-     `requireBusinessAccess` — the next item.
+   - knip reports nothing.
 
 ---
 
@@ -502,6 +503,12 @@ time, after the booking loop works.
   requires a process younger than the deploy. The wider lesson: a green deploy
   job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
   is live.
+
+- **There is no `error.tsx` anywhere in `app/`.** A server error in a page
+  shows Next's default error screen. The dashboard pages used to catch
+  everything and redirect to `/onboarding` instead, which hid outages as
+  "you have no business"; that is gone, and a branded error boundary for
+  `/dashboard` is the proper replacement.
 
 - **No `Strict-Transport-Security` or `Content-Security-Policy` header.**
   `next.config.js` sets `X-Frame-Options`, `X-Content-Type-Options`,

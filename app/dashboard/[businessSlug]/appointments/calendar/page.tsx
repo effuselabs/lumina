@@ -1,7 +1,6 @@
-import { auth } from '@/auth';
+import { requireBusinessAccess } from '@/lib/auth';
 import { AppointmentCalendarPageContent } from '@/components/appointments/appointment-calendar-page-content';
 import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
 
 interface AppointmentCalendarPageProps {
   params: Promise<{
@@ -23,56 +22,37 @@ export default async function AppointmentCalendarPage(
   props: AppointmentCalendarPageProps
 ) {
   const params = await props.params;
-  const session = await auth();
+  const {
+    user,
+    business: accessible,
+    role: userRole,
+  } = await requireBusinessAccess(params.businessSlug);
 
-  if (!session?.user?.id) {
-    redirect('/auth/signin');
-  }
-
-  // Get business information and verify access
-  const business = await prisma.business.findUnique({
-    where: { slug: params.businessSlug },
-    include: {
-      users: {
-        where: { userId: session.user.id },
-        select: { role: true },
+  // Scoped by the business the check just proved access to.
+  const [staff, services] = await Promise.all([
+    prisma.staff.findMany({
+      where: { businessId: accessible.id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        displayName: true,
+        isActive: true,
+        user: { select: { email: true } },
       },
-      staff: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          displayName: true,
-          isActive: true,
-          user: {
-            select: {
-              email: true,
-            },
-          },
-        },
-      },
-      services: {
-        select: {
-          id: true,
-          name: true,
-          duration: true,
-          price: true,
-        },
-      },
-    },
-  });
-
-  if (!business || business.users.length === 0) {
-    redirect('/onboarding');
-  }
-
-  const userRole = business.users[0]?.role || 'STAFF';
+    }),
+    prisma.service.findMany({
+      where: { businessId: accessible.id },
+      select: { id: true, name: true, duration: true, price: true },
+    }),
+  ]);
+  const business = { ...accessible, staff, services };
 
   return (
     <AppointmentCalendarPageContent
       business={business}
       userRole={userRole}
-      userName={session.user.name || session.user.email || 'User'}
+      userName={user.name || user.email || 'User'}
       businessSlug={params.businessSlug}
     />
   );

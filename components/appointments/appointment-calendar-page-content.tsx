@@ -38,7 +38,6 @@ interface AppointmentCalendarPageContentProps {
   business: {
     id: string;
     name: string;
-    users: Array<{ role: string }>;
     staff: Staff[];
     services: Service[];
   };

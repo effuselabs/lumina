@@ -1,7 +1,5 @@
-import { auth } from '@/auth';
+import { requireBusinessAccess } from '@/lib/auth';
 import { StaffPageContent } from '@/components/staff/staff-page-content';
-import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
 
 interface StaffPageProps {
   params: Promise<{
@@ -11,34 +9,17 @@ interface StaffPageProps {
 
 export default async function StaffPage(props: StaffPageProps) {
   const params = await props.params;
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    redirect('/auth/signin');
-  }
-
-  // Get business by slug and verify user access
-  const business = await prisma.business.findUnique({
-    where: { slug: params.businessSlug },
-    include: {
-      users: {
-        where: { userId: session.user.id },
-        select: { role: true },
-      },
-    },
-  });
-
-  if (!business || business.users.length === 0) {
-    redirect('/onboarding');
-  }
-
-  const userRole = business.users[0]?.role || 'STAFF';
+  const {
+    user,
+    business,
+    role: userRole,
+  } = await requireBusinessAccess(params.businessSlug);
 
   return (
     <StaffPageContent
       business={business}
       userRole={userRole}
-      userName={session.user.name || session.user.email || 'User'}
+      userName={user.name || user.email || 'User'}
       businessSlug={params.businessSlug}
     />
   );

@@ -1,6 +1,5 @@
-import { auth } from '@/auth';
+import { requireBusinessAccess } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { redirect } from 'next/navigation';
 
 interface BusinessDashboardPageProps {
   params: Promise<{
@@ -23,67 +22,36 @@ export default async function BusinessDashboardPage(
   props: BusinessDashboardPageProps
 ) {
   const params = await props.params;
-  const session = await auth();
+  const {
+    user,
+    business: accessible,
+    role: userRole,
+  } = await requireBusinessAccess(params.businessSlug);
 
-  // Enforce authentication
-  if (!session?.user?.id) {
-    redirect('/auth/signin');
-  }
-
-  try {
-    // First, get the business
-    const business = await prisma.business.findFirst({
-      where: {
-        slug: params.businessSlug,
-      },
-      include: {
-        _count: {
-          select: {
-            staff: true,
-            services: true,
-            clients: true,
-            appointments: true,
-          },
+  // Scoped by the business the check just proved access to.
+  const counts = await prisma.business.findUniqueOrThrow({
+    where: { id: accessible.id },
+    select: {
+      _count: {
+        select: {
+          staff: true,
+          services: true,
+          clients: true,
+          appointments: true,
         },
       },
-    });
+    },
+  });
+  const business = { ...accessible, ...counts };
 
-    if (!business) {
-      redirect('/onboarding');
-    }
+  const { BusinessDashboard } = await import('./business-dashboard');
 
-    // Separately check user access to this business
-    const userBusinessRelation = await prisma.businessUser.findFirst({
-      where: {
-        businessId: business.id,
-        userId: session.user.id,
-      },
-      select: {
-        role: true,
-      },
-    });
-
-    if (!userBusinessRelation) {
-      redirect('/onboarding');
-    }
-
-    const userRole = userBusinessRelation.role;
-
-    // Business dashboard ready to render
-
-    // Import the proper dashboard component
-    const { BusinessDashboard } = await import('./business-dashboard');
-
-    return (
-      <BusinessDashboard
-        business={business}
-        userRole={userRole}
-        userName={session.user.name || session.user.email || 'User'}
-        businessSlug={params.businessSlug}
-      />
-    );
-  } catch (_error) {
-    // Log error for monitoring in production
-    redirect('/onboarding');
-  }
+  return (
+    <BusinessDashboard
+      business={business}
+      userRole={userRole}
+      userName={user.name || user.email || 'User'}
+      businessSlug={params.businessSlug}
+    />
+  );
 }
