@@ -524,14 +524,13 @@ time, after the booking loop works.
 - ~~"Confirm Booking" renders white text on the coral/gold gradient.~~
   **Fixed** in 3d, and gated by a test that reads the components, not only
   the tokens.
-- **Sign-in reports a database outage as a wrong password.** With Postgres
-  down, the credentials form says "Invalid email or password. Please try
-  again." — found when the local database stopped mid-session. A salon owner
-  locked out by an outage would reset a password that was never wrong, and
-  nothing tells us the database is the cause. `authorize` in `auth.ts` catches
-  every error and returns `null`, and its "log to monitoring service" branch
-  is empty, so the failure is not recorded anywhere either. Only a
-  `ZodError` or a genuine credential mismatch should become `null`.
+- ~~**Sign-in reports a database outage as a wrong password.**~~ **Fixed.**
+  `authorize` caught every error, returned `null`, and logged nothing, so a
+  stopped database read as "Invalid email or password". It now lives in
+  `lib/auth/authorize-credentials.ts`: `null` only for malformed input, an
+  unknown email or a wrong password; anything else is logged and thrown as a
+  `CredentialsSignin` with `code: 'service_unavailable'`, which the form shows
+  as an outage. Checked against a real server with Postgres stopped.
 - `optimized-booking-interface.tsx` is the **live** booking UI.
   `public-booking-interface.tsx` and `simple-booking-layout.tsx` have zero
   importers. An earlier demolition list had this backwards — do not delete the

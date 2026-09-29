@@ -60,7 +60,11 @@ const customJestConfig = {
   // default — importing it from a test fails with "Cannot use import statement
   // outside a module". The seed factories depend on it, and the seed is the
   // thing this project most needs tests around.
-  transformIgnorePatterns: ['/node_modules/(?!@faker-js/faker)'],
+  // ESM packages Jest must transform. @auth/core/errors is where next-auth's
+  // CredentialsSignin lives; it has no imports of its own.
+  transformIgnorePatterns: [
+    '/node_modules/(?!(@faker-js/faker|@auth/core/errors))',
+  ],
 
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
