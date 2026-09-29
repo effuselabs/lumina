@@ -20,6 +20,9 @@ work down and pushes judgement back onto someone who hired you for it:
 - Test design, refactor scope inside a task, tooling configuration
 - Which of two reasonable approaches to take when the difference is
   craft rather than cost or risk
+- Merging your own pull request once every check is green, when it carries
+  work `docs/PLAN.md` already calls for and nothing in it belongs on the list
+  below. Merging deploys staging, so confirm `/api/health` afterwards
 
 **Bring these to Jeremy.** They are strategic, expensive, or cannot be undone:
 
