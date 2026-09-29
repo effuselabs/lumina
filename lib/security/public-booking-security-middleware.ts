@@ -44,7 +44,7 @@ interface SecurityMiddlewareConfig {
   checkAbuse: boolean;
 }
 
-export class PublicBookingSecurityMiddleware {
+class PublicBookingSecurityMiddleware {
   /**
    * Apply comprehensive security validation to public booking request
    */
@@ -553,8 +553,7 @@ export class PublicBookingSecurityMiddleware {
 }
 
 // Global instance
-export const publicBookingSecurityMiddleware =
-  new PublicBookingSecurityMiddleware();
+const publicBookingSecurityMiddleware = new PublicBookingSecurityMiddleware();
 
 /**
  * Convenience function for applying security to GET requests

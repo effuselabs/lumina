@@ -199,7 +199,7 @@ export async function withPublicBookingRateLimit(
 }
 
 // Enhanced abuse detection for public booking
-export class PublicBookingAbuseDetector {
+class PublicBookingAbuseDetector {
   private suspiciousPatterns = new Map<
     string,
     {

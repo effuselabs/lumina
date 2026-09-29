@@ -201,10 +201,14 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      only through the barrel, as were two seeding helpers and 21 interfaces;
      `DataIntegrityValidator`, which `data-reset-manager` uses, stays. The
      seed runs as before.
-   - `lib/security/` (47) is next, on its own: unused CSRF, sanitiser and
-     abuse-detection modules say something about which protections the
-     public booking routes actually have, which is worth reading before it is
-     deleted.
+   - `lib/security/` (47): done, 408 lines. Read before deleting, because
+     an unused security module can mean an unapplied protection. None was:
+     the public booking POST requires CSRF, rate-limits and checks for abuse
+     through `securePublicBookingPOST`; security headers come from
+     `next.config.js` (live on staging), so `generateSecurityHeaders` was a
+     second copy; the GDPR helpers were aliases of the service methods the
+     routes call. `DataProtectionService.encrypt` is never called — no field
+     is encrypted at the application level — but nothing claims otherwise.
 
 ---
 
@@ -458,6 +462,12 @@ time, after the booking loop works.
   requires a process younger than the deploy. The wider lesson: a green deploy
   job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
   is live.
+
+- **No `Strict-Transport-Security` or `Content-Security-Policy` header.**
+  `next.config.js` sets `X-Frame-Options`, `X-Content-Type-Options`,
+  `Referrer-Policy` and `Permissions-Policy`, and staging serves them; it sets
+  neither HSTS nor a CSP. Worth adding before production (Phase 6) — a CSP in
+  report-only mode first, since inline styles are in use.
 
 - **`npm run db:seed` is not idempotent.** Each run appends another copy of
   the catalogue: after six runs a local database held 264 services, each
