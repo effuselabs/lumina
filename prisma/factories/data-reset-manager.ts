@@ -65,7 +65,7 @@ export interface ValidationWarning {
   message: string;
 }
 
-export interface ValidationSummary {
+interface ValidationSummary {
   totalEntities: number;
   validatedEntities: number;
   criticalErrors: number;

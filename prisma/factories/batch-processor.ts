@@ -26,7 +26,7 @@ export interface BatchOperationResult<T> {
   errors: BatchError[];
 }
 
-export interface BatchError {
+interface BatchError {
   batchIndex: number;
   itemIndex: number;
   error: Error;
