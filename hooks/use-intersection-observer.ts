@@ -11,7 +11,7 @@ interface UseIntersectionObserverOptions {
 }
 
 interface UseIntersectionObserverReturn {
-  ref: React.RefObject<HTMLElement>;
+  ref: React.RefObject<HTMLElement | null>;
   isIntersecting: boolean;
   entry: IntersectionObserverEntry | null;
 }

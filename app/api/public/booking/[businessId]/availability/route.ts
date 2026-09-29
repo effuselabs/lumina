@@ -121,8 +121,9 @@ async function validateBusinessForAvailability(businessId: string) {
 // GET /api/public/booking/[businessId]/availability
 export async function GET(
   request: NextRequest,
-  { params }: { params: { businessId: string } }
+  props: { params: Promise<{ businessId: string }> }
 ) {
+  const params = await props.params;
   try {
     // Apply rate limiting
     const rateLimitResult = await withPublicBookingRateLimit(

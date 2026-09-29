@@ -6,14 +6,15 @@ import { Calendar, Clock, User } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 interface BookAppointmentPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
-export default async function BookAppointmentPage({
-  params,
-}: BookAppointmentPageProps) {
+export default async function BookAppointmentPage(
+  props: BookAppointmentPageProps
+) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

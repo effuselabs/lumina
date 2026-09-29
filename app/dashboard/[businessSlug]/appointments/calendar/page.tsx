@@ -4,9 +4,9 @@ import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 interface AppointmentCalendarPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
 /**
@@ -19,9 +19,10 @@ interface AppointmentCalendarPageProps {
  * - Staff scheduling and availability
  * - Multi-tenant business scoping
  */
-export default async function AppointmentCalendarPage({
-  params,
-}: AppointmentCalendarPageProps) {
+export default async function AppointmentCalendarPage(
+  props: AppointmentCalendarPageProps
+) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

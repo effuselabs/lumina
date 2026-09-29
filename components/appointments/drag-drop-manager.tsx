@@ -221,9 +221,14 @@ function DragDropManagerInner({
   return (
     <>
       {/* Wrap children with context that includes our drop handler */}
-      {React.cloneElement(children as React.ReactElement, {
-        onAppointmentDrop: handleAppointmentDrop,
-      })}
+      {React.cloneElement(
+        children as React.ReactElement<{
+          onAppointmentDrop?: typeof handleAppointmentDrop;
+        }>,
+        {
+          onAppointmentDrop: handleAppointmentDrop,
+        }
+      )}
 
       {/* Confirmation Dialog */}
       <AppointmentMoveConfirmation

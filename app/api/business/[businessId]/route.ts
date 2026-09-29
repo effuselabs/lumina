@@ -4,12 +4,13 @@ import { businessProfileSchema } from '@/lib/validations/business';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     businessId: string;
-  };
+  }>;
 }
 
-export async function GET(_: NextRequest, { params }: RouteParams) {
+export async function GET(_: NextRequest, props: RouteParams) {
+  const params = await props.params;
   try {
     const session = await auth();
 
@@ -64,7 +65,8 @@ export async function GET(_: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, props: RouteParams) {
+  const params = await props.params;
   try {
     const session = await auth();
 
@@ -121,7 +123,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: RouteParams) {
+export async function DELETE(_: NextRequest, props: RouteParams) {
+  const params = await props.params;
   try {
     const session = await auth();
 

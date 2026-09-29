@@ -14,8 +14,9 @@ const updateBookingSchema = z.object({
 // Get booking details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   try {
     const bookingId = params.id;
 
@@ -96,8 +97,9 @@ export async function GET(
 // Update booking (reschedule or modify)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   try {
     const bookingId = params.id;
     const body = await request.json();
@@ -294,8 +296,9 @@ export async function PUT(
 // Cancel booking
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   try {
     const bookingId = params.id;
 

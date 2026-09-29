@@ -6,12 +6,13 @@ import { CreditCard, Monitor, ShoppingCart } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 interface POSPageProps {
-  params: {
+  params: Promise<{
     businessSlug: string;
-  };
+  }>;
 }
 
-export default async function POSPage({ params }: POSPageProps) {
+export default async function POSPage(props: POSPageProps) {
+  const params = await props.params;
   const session = await auth();
 
   if (!session?.user?.id) {

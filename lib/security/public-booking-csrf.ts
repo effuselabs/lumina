@@ -237,7 +237,7 @@ export class PublicBookingCSRFProtection {
     }
 
     // Generate new identifier based on request characteristics
-    const ip = req.headers.get('x-forwarded-for') || req.ip || 'unknown';
+    const ip = req.headers.get('x-forwarded-for') || 'unknown';
     const userAgent = req.headers.get('user-agent') || '';
 
     // Create deterministic but unique identifier

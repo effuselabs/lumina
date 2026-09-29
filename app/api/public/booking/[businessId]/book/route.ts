@@ -550,8 +550,9 @@ async function sendStaffNotification({
 // POST /api/public/booking/[businessId]/book
 export async function POST(
   request: NextRequest,
-  { params }: { params: { businessId: string } }
+  props: { params: Promise<{ businessId: string }> }
 ) {
+  const params = await props.params;
   const requestStartTime: number = Date.now();
   let validatedData: any = null;
 
