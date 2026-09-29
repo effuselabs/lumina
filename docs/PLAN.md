@@ -84,8 +84,7 @@ components rendered nowhere. Five batches later:
 | Lines removed across five batches | —                                     | **~49,000**     |
 
 Nothing reported unused now. The eleven that knip still flagged were all
-legitimate — the Railway IaC file, the `app/design-tokens/*.css` reached
-through CSS `@import`, `public/sw.js` registered at runtime by
+legitimate — the Railway IaC file, `public/sw.js` registered at runtime by
 `offline-support.tsx`, and the resolver script itself — so `knip.json` records
 them as entry points rather than leaving a report everyone learns to ignore.
 
@@ -121,11 +120,12 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          Done at identical values: 9 of 11 pages pixel-identical before and
          after, the analytics chart within its run-to-run noise, and the
          design-system page changed only where it had been wrong (below).
-   - [ ] **3b — reconcile the second palette.** `app/design-tokens/colors.css`
-         carries its own neutral ramp and semantic colours, which components
-         used directly; they sit in `tokens.legacy` at their current values.
-         `#808285` against `neutral[600]` `#525252`, `#22C58B` against
-         `status.success` `#16A34A`, and so on. Choosing one changes what
+   - [ ] **3b — reconcile the second palette.** Its values sit in
+         `tokens.legacy` — `#808285` against `neutral[600]` `#525252`,
+         `#22C58B` against `status.success`, and so on — copied into
+         components from `app/design-tokens/colors.css`. That file turned out
+         never to have been loaded (see 3e), so this is now purely a question
+         of which value each component should show. Choosing changes what
          people see, so it goes page by page with screenshots.
    - [x] **3c — `status` colours meet AA as text.** success `#15803D` and
          warning `#B45309` (both 5.02:1 on white, and white on them), were
@@ -155,9 +155,14 @@ gates decide, and `npm run db:seed` runs by hand on anything near
        booking page's search box turned black. It is `class` now; the same
        page went from 76,570 px different between OS settings to 0.
 
-   - [ ] **3e — hex outside `.tsx`.** The rule covers `.tsx`; the `.ts` email
-         templates and the CSS under `app/design-tokens/` still carry their
-         own values.
+   - [ ] **3e — hex outside `.tsx`.** `app/design-tokens/` is gone: ten
+         CSS files, 2,210 lines, that nothing imported — `globals.css`
+         imports only `booking-mobile.css`, and the compiled stylesheet was
+         byte-identical with and without the directory. `knip.json` had
+         ignored it on the belief that it was reached through `@import`, which
+         is why no report ever flagged it. Left: `globals.css` (90 hex),
+         `booking-mobile.css` (11), and the `.ts` email templates and
+         `lib/theme-accessibility.ts` (about 170 between them).
 4. 336 unused exports — worth a pass once the collapse settles, not before.
 
 ---
@@ -430,7 +435,9 @@ time, after the booking loop works.
 
   Treat the output as candidates, not a delete list — it flags `public/sw.js`
   (a service worker, loaded at runtime), the `app/design-tokens/*.css` files
-  (reachable via CSS `@import`, which knip does not trace), and `husky` and
+  (believed reachable via CSS `@import` — wrong, as it turned out: nothing
+  imported them, knip had been right, and they were deleted in 3e), and
+  `husky` and
   `lint-staged` (which it simultaneously reports as used by the pre-commit
   hook). Verify against the gates, in small batches.
 

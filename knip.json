@@ -8,7 +8,7 @@
     "__tests__/**/*.test.{ts,tsx}",
     "scripts/**/*.{ts,js}"
   ],
-  "ignore": [".railway/railway.ts", "app/design-tokens/**", "public/**"],
+  "ignore": [".railway/railway.ts", "public/**"],
   "ignoreDependencies": ["husky", "railway"],
   "ignoreBinaries": ["docker-compose", "railway"]
 }
