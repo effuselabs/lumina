@@ -355,6 +355,7 @@ export function ServiceSelection({
                     variant="ghost"
                     size="sm"
                     onClick={() => handleServiceToggle(service)}
+                    aria-label={`Remove ${service.name}`}
                     className="text-red-600 hover:bg-red-50 hover:text-red-700"
                   >
                     <Minus className="h-4 w-4" />
@@ -404,6 +405,11 @@ export function ServiceSelection({
                   selectedServices.length >=
                     bookingConfig.maxServicesPerBooking &&
                   !isSelected;
+                const actionLabel = isSelected
+                  ? 'Selected'
+                  : isAtMaxLimit
+                    ? 'Max Services Reached'
+                    : 'Add Service';
 
                 return (
                   <Card
@@ -535,21 +541,20 @@ export function ServiceSelection({
                         size="sm"
                         onClick={() => handleServiceToggle(service)}
                         disabled={isAtMaxLimit || false}
+                        // Every card's button reads the same, so the visible
+                        // text alone cannot say which service it acts on. The
+                        // name starts with that text (WCAG 2.5.3, label in
+                        // name) and adds the service.
+                        aria-label={`${actionLabel}: ${service.name}`}
+                        aria-pressed={isSelected}
                         className="w-full"
                       >
                         {isSelected ? (
-                          <>
-                            <Check className="mr-2 h-4 w-4" />
-                            Selected
-                          </>
+                          <Check className="mr-2 h-4 w-4" />
                         ) : (
-                          <>
-                            <Plus className="mr-2 h-4 w-4" />
-                            {isAtMaxLimit
-                              ? 'Max Services Reached'
-                              : 'Add Service'}
-                          </>
+                          <Plus className="mr-2 h-4 w-4" />
                         )}
+                        {actionLabel}
                       </Button>
                     </CardContent>
                   </Card>
