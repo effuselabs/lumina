@@ -274,12 +274,6 @@ time, after the booking loop works.
   the test, so fixing the name fixed both. The remove button in the selected
   list had no accessible name at all and now has one.
 
-- `npm run test:e2e` needs `DATABASE_URL` exported; it does not read `.env`.
-  CI supplies it as a job variable so the gate is unaffected, but a fresh clone
-  with a working `.env` cannot run the spec without setting it by hand. Same
-  root cause as the seed-reset bug: a process that instantiates Prisma directly
-  gets no `.env`, because only the Prisma and Next CLIs load it.
-
 - ~~**Availability times are timezone-wrong.**~~ **Fixed** in
   `fix/availability-business-timezone`. The API emitted naive local times
   tagged as UTC — a salon open 09:00 Los Angeles returned
