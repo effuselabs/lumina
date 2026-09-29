@@ -77,7 +77,7 @@ export function EmptyState({
               variant={action.variant || 'primary'}
               className={
                 action.variant === 'primary'
-                  ? 'bg-lumina-radiant text-white hover:bg-lumina-radiant-hover'
+                  ? 'bg-lumina-radiant text-primary-foreground hover:bg-lumina-radiant-hover'
                   : undefined
               }
             >
@@ -89,7 +89,7 @@ export function EmptyState({
               variant={action.variant || 'primary'}
               className={
                 action.variant === 'primary'
-                  ? 'bg-lumina-radiant text-white hover:bg-lumina-radiant-hover'
+                  ? 'bg-lumina-radiant text-primary-foreground hover:bg-lumina-radiant-hover'
                   : undefined
               }
             >

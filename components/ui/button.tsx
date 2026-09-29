@@ -5,141 +5,24 @@ import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 import { shallowEqual } from '../../lib/performance-utils';
-import { base, brand, legacy } from '../../lib/design/tokens';
 import { cn } from '../../lib/utils';
 import { Spinner } from './spinner';
-
-// CRITICAL: Add CSS-in-JS styles for problematic variants
-const buttonStyles = `
-  /* Force Outline Button visibility on light theme - MAXIMUM SPECIFICITY */
-  button[data-variant="outline"][data-testid="button"] {
-    border: 2px solid ${base.black} !important;
-    border-color: ${base.black} !important;
-    border-style: solid !important;
-    border-width: 2px !important;
-    color: ${base.black} !important;
-    background-color: transparent !important;
-    background: transparent !important;
-  }
-  button[data-variant="outline"][data-testid="button"]:hover {
-    background-color: ${base.black} !important;
-    background: ${base.black} !important;
-    color: ${base.white} !important;
-    border-color: ${base.black} !important;
-  }
-  
-  /* Additional specificity - try multiple selectors */
-  .lumina-component button[data-variant="outline"][data-testid="button"] {
-    border: 2px solid ${base.black} !important;
-    color: ${base.black} !important;
-    background-color: transparent !important;
-  }
-  
-  /* Even more specific - target the exact component */
-  [data-testid="button"][data-variant="outline"] {
-    border: 2px solid ${base.black} !important;
-    color: ${base.black} !important;
-    background-color: transparent !important;
-  }
-
-  /* Force Ghost Button visibility on light theme */
-  button[data-variant="ghost"][data-testid="button"] {
-    color: ${base.black} !important;
-  }
-  button[data-variant="ghost"][data-testid="button"]:hover {
-    background-color: rgba(0, 0, 0, 0.1) !important;
-    color: ${base.black} !important;
-  }
-  
-  /* Force Link Button visibility on light theme */
-  button[data-variant="link"][data-testid="button"] {
-    color: ${legacy.link} !important;
-    text-decoration: underline !important;
-    text-decoration-color: ${legacy.link} !important;
-  }
-  button[data-variant="link"][data-testid="button"]:hover {
-    color: ${legacy.linkHover} !important;
-    text-decoration-color: ${legacy.linkHover} !important;
-  }
-  
-  /* Dark theme overrides */
-  .dark button[data-variant="outline"][data-testid="button"] {
-    border-color: ${base.white} !important;
-    color: ${base.white} !important;
-  }
-  .dark button[data-variant="outline"][data-testid="button"]:hover {
-    background-color: ${base.white} !important;
-    color: ${base.black} !important;
-    border-color: ${base.white} !important;
-  }
-  .dark button[data-variant="ghost"][data-testid="button"] {
-    color: ${base.white} !important;
-  }
-  .dark button[data-variant="ghost"][data-testid="button"]:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: ${base.white} !important;
-  }
-  .dark button[data-variant="link"][data-testid="button"] {
-    color: ${brand.gold} !important;
-    text-decoration-color: ${brand.gold} !important;
-  }
-  .dark button[data-variant="link"][data-testid="button"]:hover {
-    color: ${brand.gold}CC !important;
-    text-decoration-color: ${brand.gold}CC !important;
-  }
-  
-  /* REFINED Primary Button text - Elegant white text with subtle shadow */
-  /* Multiple selectors to catch all primary button instances */
-  button[data-variant="primary"][data-testid="button"],
-  button[data-testid="button"]:not([data-variant]),
-  button[data-testid="button"][data-variant="primary"] {
-    color: ${base.white} !important;  /* Clean white text - classic and elegant */
-    text-shadow: 
-      0 1px 2px rgba(0, 0, 0, 0.4),     /* Subtle dark shadow for definition */
-      0 2px 4px rgba(0, 0, 0, 0.2) !important;  /* Light depth shadow */
-    font-weight: 600 !important;  /* Medium-bold for clarity without heaviness */
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
-    letter-spacing: 0.015em !important; /* Subtle spacing for elegance */
-  }
-  
-  /* Refined hover state with slightly enhanced shadow */
-  button[data-variant="primary"][data-testid="button"]:hover,
-  button[data-testid="button"]:not([data-variant]):hover,
-  button[data-testid="button"][data-variant="primary"]:hover {
-    color: ${base.white} !important;  /* Keep white text on hover */
-    text-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.5),     /* Slightly stronger shadow on hover */
-      0 2px 6px rgba(0, 0, 0, 0.25) !important;  /* Enhanced depth */
-  }
-  
-  /* Additional catch-all for any primary buttons with gradient background */
-  button[data-testid="button"].bg-lumina-radiant,
-  button[data-testid="button"][class*="bg-lumina-radiant"] {
-    color: ${base.white} !important;
-    text-shadow: 
-      0 1px 2px rgba(0, 0, 0, 0.4),
-      0 2px 4px rgba(0, 0, 0, 0.2) !important;
-    font-weight: 600 !important;
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
-    letter-spacing: 0.015em !important;
-  }
-`;
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden contain-layout',
   {
     variants: {
       variant: {
-        // Primary - Lumina Radiant Gradient using CSS custom properties
+        // Primary - Lumina Radiant Gradient using CSS custom properties.
+        // Deep teal text, never white: white on the gradient's coral end is
+        // 2.57:1, the prohibited pair in lib/design/tokens.ts. Deep teal is
+        // 5.81:1 there and higher on gold. __tests__/components/button.test.ts
+        // holds this.
         primary: [
-          'bg-lumina-radiant text-white shadow-md',
+          'bg-lumina-radiant text-primary-foreground font-semibold shadow-md',
           'hover:bg-lumina-radiant-hover hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed disabled:hover:bg-neutral-400',
-          // Enhanced text readability with shadow
-          '[text-shadow:0_1px_2px_rgba(0,0,0,0.3)]',
           // High contrast mode support
           'contrast-more:border-2 contrast-more:border-white',
           // Performance optimizations
@@ -159,7 +42,7 @@ const buttonVariants = cva(
         // Outline - Fixed visibility with proper contrast
         outline: [
           'border-2 bg-transparent shadow-sm',
-          'border-foreground/30 text-foreground',
+          'border-foreground text-foreground',
           'hover:bg-foreground hover:text-background',
           'hover:shadow-md hover:scale-105 active:scale-95',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
@@ -188,7 +71,9 @@ const buttonVariants = cva(
         // Link - Fixed visibility with proper contrast
         link: [
           'underline-offset-4 bg-transparent shadow-none p-0 h-auto underline decoration-2',
-          'text-primary hover:text-primary/80',
+          'text-foreground hover:text-foreground/80',
+          // Gold reads well on dark (about 12:1); on white it is 1.44:1.
+          'dark:text-brand-gold dark:hover:text-brand-gold/80',
           'hover:decoration-4',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1',
           'disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed',
@@ -206,12 +91,10 @@ const buttonVariants = cva(
         ],
         // Premium Glow - Enhanced glow effect with theme-specific colors
         'premium-glow': [
-          'bg-lumina-radiant text-white shadow-lg border-0',
+          'bg-lumina-radiant text-primary-foreground shadow-lg border-0',
           'hover:shadow-xl hover:scale-105 active:scale-95',
           'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
-          // Enhanced text readability
-          '[text-shadow:0_1px_2px_rgba(0,0,0,0.4)]',
           // Performance optimizations
           'gpu-accelerated optimize-repaint transition-all-smooth',
           // Theme-aware glow effects (handled by CSS classes)
@@ -308,20 +191,6 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Inject CSS styles for problematic variants
-    React.useEffect(() => {
-      if (typeof window !== 'undefined') {
-        const styleId = 'button-variant-fixes';
-        let styleElement = document.getElementById(styleId) as HTMLStyleElement;
-
-        if (!styleElement) {
-          styleElement = document.createElement('style');
-          styleElement.id = styleId;
-          styleElement.textContent = buttonStyles;
-          document.head.appendChild(styleElement);
-        }
-      }
-    }, []);
     const Comp = asChild ? Slot : 'button';
     const isDisabled = disabled || loading;
 
@@ -383,7 +252,6 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading}
         role={asChild ? undefined : 'button'}
         tabIndex={isDisabled ? -1 : 0}
-        data-testid="button"
         data-variant={variant}
         data-size={size}
         data-loading={loading}

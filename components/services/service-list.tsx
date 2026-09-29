@@ -244,7 +244,7 @@ export function ServiceList({ businessId }: ServiceListProps) {
 
         <Button
           onClick={() => setCreateDialogOpen(true)}
-          className="bg-lumina-radiant text-white hover:bg-lumina-radiant-hover"
+          className="bg-lumina-radiant text-primary-foreground hover:bg-lumina-radiant-hover"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Service
@@ -267,7 +267,7 @@ export function ServiceList({ businessId }: ServiceListProps) {
           </p>
           <Button
             onClick={() => setCreateDialogOpen(true)}
-            className="bg-lumina-radiant text-white hover:bg-lumina-radiant-hover"
+            className="bg-lumina-radiant text-primary-foreground hover:bg-lumina-radiant-hover"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Service

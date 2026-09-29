@@ -132,14 +132,23 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          `success` 3.30:1, `warning` 3.19:1, `info` 4.10:1 — all below 4.5
          for body text. The page had claimed 7.2, 5.1 and 8.1. Fix the tokens
          (or restrict them to large text and icons), then add the pairs to
-         `contrastPairs` so the test holds them.
-   - [ ] **3d — the Button's injected stylesheet.** `components/ui/button.tsx`
-         writes a `<style>` of `!important` rules that override its own
-         variants: black outline borders, blue links, and white primary text
-         on the radiant gradient — the prohibited pair in `tokens.ts`, and the
-         "Confirm Booking" contrast entry below. Deleting it is the fix and a
-         visible change to every button, so it wants screenshots of each
-         variant.
+         `contrastPairs` so the test holds them. Same class of defect, found
+         in 3d's screenshots: service titles on the services page are gold on
+         white, 1.44:1.
+   - [x] **3d — the Button's injected stylesheet is gone**, and the
+         variants carry what it had been papering over. Primary text is deep
+         teal on the gradient (5.81:1 at the coral end, where white was 2.57:1)
+         — "Confirm Booking" included, and four call sites that set white text
+         themselves. Outline borders are full `foreground` (its `/30` was about
+         1.9:1, under the 3:1 UI minimum); links are deep teal, gold in dark.
+         `__tests__/design/gradient-text.test.ts` fails on white text on the
+         gradient anywhere in `app/` or `components/`.
+     - It also found that `dark:` utilities followed the OS, not the theme.
+       Tailwind defaulted to `darkMode: 'media'` while the app is light-only
+       by design, so a dark-OS visitor got dark styles on the light page — the
+       booking page's search box turned black. It is `class` now; the same
+       page went from 76,570 px different between OS settings to 0.
+
    - [ ] **3e — hex outside `.tsx`.** The rule covers `.tsx`; the `.ts` email
          templates and the CSS under `app/design-tokens/` still carry their
          own values.
@@ -512,9 +521,17 @@ time, after the booking loop works.
   overrides the visible `<Label>`. Screen-reader users hear "Enter your email
   address" where the label says "Email Address". Fix with the Phase 5 primitive
   rebuild.
-- "Confirm Booking" renders white text on the coral/gold gradient — 2.57:1,
-  already listed in `prohibitedPairs` in `lib/design/tokens.ts`. The contrast
-  test covers tokens, not rendered components; Phase 5.
+- ~~"Confirm Booking" renders white text on the coral/gold gradient.~~
+  **Fixed** in 3d, and gated by a test that reads the components, not only
+  the tokens.
+- **Sign-in reports a database outage as a wrong password.** With Postgres
+  down, the credentials form says "Invalid email or password. Please try
+  again." — found when the local database stopped mid-session. A salon owner
+  locked out by an outage would reset a password that was never wrong, and
+  nothing tells us the database is the cause. `authorize` in `auth.ts` catches
+  every error and returns `null`, and its "log to monitoring service" branch
+  is empty, so the failure is not recorded anywhere either. Only a
+  `ZodError` or a genuine credential mismatch should become `null`.
 - `optimized-booking-interface.tsx` is the **live** booking UI.
   `public-booking-interface.tsx` and `simple-booking-layout.tsx` have zero
   importers. An earlier demolition list had this backwards — do not delete the

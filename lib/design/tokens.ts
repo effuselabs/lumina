@@ -103,9 +103,6 @@ export const legacy = {
   positiveBorder: '#A7F3D0',
   /** Negative trends. colors.css `--semantic-error`. */
   negative: '#E5484D',
-  /** The Button link variant, which forces blue rather than `primary`. */
-  link: '#1D4ED8',
-  linkHover: '#1E40AF',
   /** The pressed radiant gradient on the analytics page. */
   radiantPressedFrom: '#FFCD47',
   radiantPressedTo: '#FF6B47',
