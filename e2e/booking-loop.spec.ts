@@ -162,23 +162,6 @@ test.describe('booking loop', () => {
   });
 
   /**
-   * The first date at least a week out on which the business is open.
-   *
-   * This used to be a flat `date.getDate() + 7`, which always lands on the
-   * same weekday as today. The demo salon is closed on Sundays, so the whole
-   * suite failed every Sunday and passed the rest of the week — a scheduled
-   * flake that looks exactly like a real availability regression. It cost a
-   * red build on a PR that had nothing to do with it.
-   *
-   * Reading the seeded business hours instead means the spec keeps working if
-   * those hours change, and cannot be broken again by the day it runs on.
-   *
-   * The date string is still derived in UTC, matching what the availability
-   * API expects today. That is wrong for a business in another zone and is
-   * tracked separately in docs/PLAN.md; fixing it here would hide the bug the
-   * timezone gate is being written to catch.
-   */
-  /**
    * Which open day this browser project books on.
    *
    * Chromium and Mobile Safari run the same spec. Both used to resolve the
@@ -207,6 +190,23 @@ test.describe('booking loop', () => {
     return index < 0 ? 0 : index;
   }
 
+  /**
+   * The first date at least a week out on which the business is open.
+   *
+   * This used to be a flat `date.getDate() + 7`, which always lands on the
+   * same weekday as today. The demo salon is closed on Sundays, so the whole
+   * suite failed every Sunday and passed the rest of the week — a scheduled
+   * flake that looks exactly like a real availability regression. It cost a
+   * red build on a PR that had nothing to do with it.
+   *
+   * Reading the seeded business hours instead means the spec keeps working if
+   * those hours change, and cannot be broken again by the day it runs on.
+   *
+   * The date string is still derived in UTC, matching what the availability
+   * API expects today. That is wrong for a business in another zone and is
+   * tracked separately in docs/PLAN.md; fixing it here would hide the bug the
+   * timezone gate is being written to catch.
+   */
   async function nextOpenDate(
     businessId: string,
     skipOpenDays = 0
@@ -245,6 +245,67 @@ test.describe('booking loop', () => {
         `${candidate.toISOString()} — business hours seeded as open on days ` +
         `[${[...openDayNumbers].join(', ')}]`
     );
+  }
+
+  /**
+   * A service a client could actually book on the given weekday.
+   *
+   * Two filters, and the second is the one that was missing. The seed
+   * assigns services to staff by specialty, so a service can end up with
+   * nobody able to perform it. But staff are also seeded with their own
+   * weekly availability, and not every one of them works every day: on one
+   * seeded salon, six of the twenty-four had no StaffAvailability row for
+   * Tuesday through Friday. So a service could pass "somebody can perform it"
+   * and still have nobody rostered on the day being asked about, and the API
+   * would correctly return no slots — about four services in a hundred.
+   *
+   * Which service `findFirst` or "the first card" picks is arbitrary but
+   * stable for a given seed, so that failure was deterministic: it recurred
+   * on every retry, on the days the calendar landed on the wrong weekday.
+   *
+   * The name has to be unique within the salon, because the booking test
+   * finds the card by it. The seed is random, so that is checked here rather
+   * than assumed.
+   */
+  async function bookableServiceOn(businessId: string, dayOfWeek: number) {
+    const candidates = await prisma.service.findMany({
+      where: {
+        businessId,
+        isActive: true,
+        isOnline: true,
+        staff: {
+          some: {
+            staff: {
+              isActive: true,
+              acceptsOnlineBookings: true,
+              staffAvailability: { some: { dayOfWeek } },
+            },
+          },
+        },
+      },
+      select: { id: true, name: true, duration: true },
+      orderBy: { name: 'asc' },
+    });
+
+    const listed = await prisma.service.groupBy({
+      by: ['name'],
+      where: { businessId, isActive: true, isOnline: true },
+      _count: { name: true },
+    });
+    const duplicated = new Set(
+      listed.filter(row => row._count.name > 1).map(row => row.name)
+    );
+    const service = candidates.find(
+      candidate => !duplicated.has(candidate.name)
+    );
+
+    expect(
+      service,
+      `a service that is active and online, uniquely named, with staff who ` +
+        `accept online bookings and are rostered on day ${dayOfWeek}`
+    ).toBeTruthy();
+
+    return service!;
   }
 
   /**
@@ -302,51 +363,13 @@ test.describe('booking loop', () => {
     const dateString = await nextOpenDate(business.id);
     const dayOfWeek = new Date(`${dateString}T00:00:00Z`).getUTCDay();
 
-    /*
-     * A service a client could actually book on *this* day.
-     *
-     * Two filters, and the second is the one that was missing. The seed
-     * assigns services to staff by specialty, so a service can end up with
-     * nobody able to perform it — that much was already handled. But staff are
-     * also seeded with their own weekly availability, and not every one of
-     * them works every day: on this salon, six of the twenty-four have no
-     * StaffAvailability row for Tuesday through Friday.
-     *
-     * So a service could pass "somebody can perform it" and still have nobody
-     * rostered on the day being asked about, and the API would correctly
-     * return no slots. Which service `findFirst` returns is arbitrary, so this
-     * failed on the day the calendar happened to land on a weekday its chosen
-     * service was not staffed for — deterministically on CI, and never on a
-     * developer's machine whose seeded staff happened to differ.
-     */
-    const service = await prisma.service.findFirst({
-      where: {
-        businessId: business.id,
-        isActive: true,
-        isOnline: true,
-        staff: {
-          some: {
-            staff: {
-              isActive: true,
-              acceptsOnlineBookings: true,
-              staffAvailability: { some: { dayOfWeek } },
-            },
-          },
-        },
-      },
-      select: { id: true, duration: true },
-    });
-    expect(
-      service,
-      `a service that is active and online, with staff who accept online ` +
-        `bookings and are rostered on day ${dayOfWeek} (${dateString})`
-    ).toBeTruthy();
+    const service = await bookableServiceOn(business.id, dayOfWeek);
 
     // `duration` is required — omitting it returns a Zod VALIDATION_ERROR
     // ("Number must be greater than or equal to 1"), not an empty slot list.
     const response = await request.get(
       `/api/public/booking/${business.id}/availability` +
-        `?date=${dateString}&serviceIds=${service!.id}&duration=${service!.duration}`,
+        `?date=${dateString}&serviceIds=${service.id}&duration=${service.duration}`,
       { timeout: 30_000 }
     );
 
@@ -382,6 +405,15 @@ test.describe('booking loop', () => {
 
     const business = await seededBusiness();
 
+    // The day first, because it decides which services are bookable. A
+    // different open day per browser project, so the two do not compete for
+    // the same slot when they run concurrently. See projectDayOffset.
+    const bookingDate = await nextOpenDate(business.id, projectDayOffset());
+    const service = await bookableServiceOn(
+      business.id,
+      new Date(`${bookingDate}T00:00:00Z`).getUTCDay()
+    );
+
     // A unique client per run, so repeated runs never collide and the
     // assertion below cannot match an appointment from an earlier run.
     //
@@ -410,13 +442,24 @@ test.describe('booking loop', () => {
     // stepper had hydrated — which is why this line failed CI on `main` in one
     // run and its own retry. The heading is the actual content of the step and
     // is present in both viewports.
+    //
+    // It gets the step timeout too, and for the same reason as the steps after
+    // it: step 1 is a lazily-loaded chunk behind a <Suspense> fallback
+    // ("Loading Services"). Under the default 5s this failed two runs in three
+    // at `--repeat-each=3` locally, on `main` as well as here, with the page
+    // still showing the fallback at "4s elapsed" — the dev server compiling
+    // the chunk while the other worker competed for it. This was the "one
+    // local run in twenty" flake docs/PLAN.md recorded as unexplained.
     await expect(
       page.getByRole('heading', { name: /select your services/i })
-    ).toBeVisible();
+    ).toBeVisible({ timeout: STEP_TRANSITION_TIMEOUT });
 
-    const firstService = page
-      .getByRole('button', { name: /add|select/i })
-      .first();
+    // By name, not "the first card": the first card is whichever service
+    // sorts first, and it may have nobody working on bookingDate.
+    const serviceButton = page.getByRole('button', {
+      name: `Add Service: ${service.name}`,
+      exact: true,
+    });
     const continueButton = page.getByRole('button', { name: /^continue/i });
 
     /*
@@ -435,7 +478,7 @@ test.describe('booking loop', () => {
      */
     await expect(async () => {
       if (await continueButton.isDisabled()) {
-        await firstService.click();
+        await serviceButton.click();
       }
       await expect(continueButton).toBeEnabled({ timeout: 2_000 });
     }).toPass({ timeout: 30_000 });
@@ -461,12 +504,7 @@ test.describe('booking loop', () => {
     // Sunday, for the demo salon — there are no slots to click and this test
     // fails for a reason that has nothing to do with the booking flow. Move to
     // a day the business is actually open before looking for a time.
-    // A different open day per browser project, so the two do not compete for
-    // the same slot when they run concurrently. See projectDayOffset.
-    await selectOpenDate(
-      page,
-      await nextOpenDate(business.id, projectDayOffset())
-    );
+    await selectOpenDate(page, bookingDate);
 
     const firstSlot = page
       .getByRole('button', { name: /\d{1,2}:\d{2}\s*(am|pm)/i })
