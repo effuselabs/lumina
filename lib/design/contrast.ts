@@ -8,7 +8,7 @@
  */
 
 /** Relative luminance per WCAG 2.1, from an #rrggbb string. */
-export function relativeLuminance(hex: string): number {
+function relativeLuminance(hex: string): number {
   const normalized = hex.replace('#', '');
   if (!/^[0-9a-fA-F]{6}$/.test(normalized)) {
     throw new Error(`Expected a 6-digit hex colour, received "${hex}"`);
