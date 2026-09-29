@@ -27,7 +27,7 @@ start:
 | Jest                    | 101 of 114 suites failing, 0% coverage | 495 tests green in CI     |
 | Deployment              | never happened                         | auto-deploys on green CI  |
 | Booking loop            | never completed once                   | green in CI, end to end   |
-| Prod high/critical CVEs | 16 (6 direct)                          | 2 (1 direct)              |
+| Prod high/critical CVEs | 16 (6 direct)                          | 0, gated daily and per PR |
 
 The mechanical root cause was a seed factory that computed required fields and
 never returned them. No seed data meant no working local app, which meant no
@@ -106,10 +106,12 @@ gates decide, and `npm run db:seed` runs by hand on anything near
    and `glob` is gone from `scripts/migrate-calendar-data.ts` rather than
    declared. knip now reports no unused dependencies, unlisted dependencies or
    files.
-2. **Next.js 15.5.24** — see _Known, unaddressed_. Ahead of the collapse
-   because it is a security fix under the dependency policy's first trigger,
-   and because the collapse rewrites the same components a React 19 upgrade
-   touches; doing the upgrade second would mean doing that work twice.
+2. ~~**Next.js 15.5.24**~~ **Done** — on 15.5.26 and React 19, and
+   `npm audit` reports nothing, dev dependencies included. Taken ahead of the
+   collapse because it was a security fix under the dependency policy's first
+   trigger, and because the collapse rewrites the same components React 19
+   touches. `.github/workflows/dependency-audit.yml` now fails any pull
+   request, and a daily run, on a high or critical production advisory.
 3. **The collapse itself**, against 37 primitives instead of 57 and a
    component tree that is entirely reachable. 224 raw hex colours across 31
    `.tsx` files are the measure of what is left to fold into
@@ -194,10 +196,12 @@ loop cannot tell you it worked — so it is precisely the kind of work that
 consumed this project the first time while nothing shipped.
 
 `next@16` was parked on these grounds, and that stopped being the right call
-once a critical landed: see `next` under _Known, unaddressed_. The lesson is in
-the first trigger's wording — the count to watch is the one `npm audit
---omit=dev` prints _today_. It drifted from 2 to 5 high/critical between
-2026-09-06 and 2026-09-29 without any change on our side, and nothing noticed.
+once two criticals landed with no 14.x patch; the upgrade went to 15.5.26, the
+smallest line that fixed them. The lesson is in the first trigger's wording —
+the count that matters is the one `npm audit --omit=dev` prints _today_. It
+drifted from 2 to 5 high/critical between 2026-09-06 and 2026-09-29 without
+any change on our side, and nothing noticed, so the trigger is now a workflow
+rather than a sentence. `next@16` itself remains Phase 7 work.
 
 **Do not upgrade to a release candidate.** The Prisma CLI currently advertises
 `8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
@@ -498,23 +502,15 @@ time, after the booking loop works.
   `public-booking-interface.tsx` and `simple-booking-layout.tsx` have zero
   importers. An earlier demolition list had this backwards — do not delete the
   wrong one.
-- **`next@14.2.35` carries 23 advisories, two of them critical RCE, and 14.x
-  has no patch for either.** GHSA-2xp9-vwfh-vxw4 (Image Optimization API,
-  AVIF) reached us: `/_next/image` is excluded from auth in `middleware.ts`
-  and fetched from allowed hosts on request. **Mitigated** by
-  `images.unoptimized`, which makes the endpoint 404 — measured before and
-  after against a production build. GHSA-p293-qw3h-jr36 is Windows-hosted
-  only; Railway runs Linux. The rest are DoS, SSRF and cache poisoning in
-  Server Components, Server Actions and rewrites, and are not mitigated.
-
-  The fix floor is **15.5.24**, not 16 — `npm audit` names 16.3.6 because it
-  proposes the latest, not the smallest, fix. 15 is still a major: React 19
-  for the App Router, and `cookies()`, `headers()` and route `params` become
-  async. Restore image optimization once it lands.
-
-  The production audit is otherwise clean: three new transitive highs
-  (`brace-expansion`, `fast-uri`, `nanoid`) had in-range fixes and were taken.
-  `postcss` is bundled inside `next` and goes with it.
+- ~~**`next@14.2.35` carried 23 advisories, two of them critical RCE, with
+  no 14.x patch.**~~ **Fixed** by the upgrade to 15.5.26. GHSA-2xp9-vwfh-vxw4
+  (Image Optimization API, AVIF) had reached us: `/_next/image` is excluded
+  from auth in `middleware.ts` and fetched from allowed hosts on request. It
+  was mitigated first with `images.unoptimized` — measured on a production
+  build, the endpoint went from fetching on request to 404 — and the
+  optimizer stays off after the fix, for the reasons in `next.config.js`.
+  `postcss`, pinned inside `next` at a vulnerable 8.4.31, is redirected to the
+  root copy with an npm `overrides` entry; remove it when `next` stops pinning.
 
 - Before real customers: `/api/gdpr/export` and `/delete` are untested while
   handling PII, and there is no privacy policy or terms.
