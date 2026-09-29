@@ -70,27 +70,43 @@ jobs:
         # more reliable than running them from CI, and Railway aborts the
         # release if the pre-deploy command fails, so new code can never go
         # live against an un-migrated schema.
-        run: railway up --service "$RAILWAY_SERVICE" --detach
+        run: |
+          echo "DEPLOY_STARTED=$(date +%s)" >> "$GITHUB_ENV"
+          railway up --service "$RAILWAY_SERVICE" --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
           RAILWAY_SERVICE: ${{ vars.RAILWAY_STAGING_SERVICE }}
 
-      - name: Wait for health check
-        # A deploy is not done until the app answers. /api/health also verifies
-        # database connectivity, so this catches a bad DATABASE_URL.
+      - name: Wait for the new deployment to answer healthy
+        # A deploy is done when the NEW process answers healthy, not when any
+        # process does. This step used to accept the first healthy response,
+        # and the old deployment is healthy by definition: on 2026-09-29, with
+        # Railway's API degraded, it reported success 0.4s after `railway up`
+        # returned while staging was still serving the previous commit.
+        #
+        # The commit field cannot tell them apart for an upload deploy —
+        # `railway up` sets no RAILWAY_GIT_COMMIT_SHA, so it reads "unknown" —
+        # but uptime can: a process younger than this deploy started after it.
+        # /api/health also verifies database connectivity, so this still
+        # catches a bad DATABASE_URL. Builds take four to five minutes, hence
+        # ten minutes of patience.
         run: |
-          for attempt in $(seq 1 30); do
+          for attempt in $(seq 1 60); do
             if curl -fsS --max-time 10 https://staging.uselumina.app/api/health > /tmp/health.json; then
-              echo "Responded on attempt ${attempt}:"
-              cat /tmp/health.json
-              if grep -q '"status":"healthy"' /tmp/health.json; then
+              status=$(jq -r .status /tmp/health.json)
+              uptime=$(jq -r '.uptime | floor' /tmp/health.json)
+              since_deploy=$(( $(date +%s) - DEPLOY_STARTED ))
+              if [ "$status" = "healthy" ] && [ "$uptime" -lt "$since_deploy" ]; then
+                echo "New deployment healthy on attempt ${attempt}:"
+                cat /tmp/health.json
                 exit 0
               fi
-              echo "::warning::Up but not healthy — see payload above."
+              echo "Attempt ${attempt}: status=${status}, uptime ${uptime}s, deploy started ${since_deploy}s ago — still the previous process."
             fi
             sleep 10
           done
-          echo "::error::staging did not become healthy within 5 minutes."
+          echo "::error::No new deployment answered healthy within 10 minutes. The previous one may still be serving:"
+          cat /tmp/health.json || true
           exit 1
 
   production:
