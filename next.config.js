@@ -50,11 +50,15 @@ const nextConfig = {
   // warned was misconfigured. Restore this only alongside a start command
   // that runs the standalone server.
 
-  // Image optimization configuration
+  // The image optimizer is off. GHSA-2xp9-vwfh-vxw4 is unauthenticated remote
+  // code execution in it when an AVIF file is optimized, and 14.x has no
+  // patch — the fix is 15.5.24. The endpoint is public (middleware excludes
+  // /_next/image) and fetches from any allowed host on request, so while it
+  // is on, the whole server is exposed. Two components render <Image>; with
+  // this set they emit the source URL directly and the browser fetches it.
+  // Restore optimization only on a patched Next.js.
   images: {
-    domains: ['localhost', 'lumina-staging.up.railway.app', 'uselumina.app'],
-    formats: ['image/webp', 'image/avif'],
-    minimumCacheTTL: 60,
+    unoptimized: true,
   },
 
   // Environment variables that should be available on the client
