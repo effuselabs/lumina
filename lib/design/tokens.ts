@@ -176,6 +176,105 @@ export const email = {
   },
 } as const;
 
+/**
+ * Tint and shade steps behind Tailwind's `deep-teal-50`, `sage-green-700` and
+ * the like. Each palette's base step is a CSS variable in tailwind.config.ts;
+ * these are the rest, moved here unchanged. The status steps 700 and 800 are
+ * shades of the status colours as they were before #29 changed them, so they
+ * no longer step from `status` — reconciling that is a visible change.
+ */
+export const scales = {
+  deepTeal: {
+    50: '#F0F9FA',
+    100: '#D9F0F2',
+    200: '#B3E1E5',
+    300: '#8DD2D8',
+    400: '#67C3CB',
+    500: '#41B4BE',
+    600: '#2E8A95',
+    700: '#1B5F6C',
+    900: '#081F26',
+  },
+  clarityBlue: {
+    50: '#F0F9FF',
+    100: '#E0F2FE',
+    200: '#BAE6FD',
+    300: '#7DD3FC',
+    400: '#38BDF8',
+    600: '#0284C7',
+    700: '#0369A1',
+  },
+  softPeach: {
+    50: '#FFFBEB',
+    100: '#FEF3C7',
+    200: '#FED7AA',
+    300: '#FDBA74',
+    400: '#FB923C',
+    600: '#EA580C',
+    700: '#C2410C',
+  },
+  sageGreen: {
+    50: '#F6F8F3',
+    100: '#EDF1E7',
+    200: '#DBE3CF',
+    300: '#C9D5B7',
+    400: '#B7C79F',
+    600: '#6C8755',
+    700: '#516540',
+    800: '#36432A',
+    900: '#1B2115',
+  },
+  warmGray: {
+    50: '#F9F8F7',
+    100: '#F3F1EF',
+    200: '#E7E3DF',
+    300: '#DBD5CF',
+    400: '#CFC7BF',
+    600: '#6F6B66',
+    700: '#53504D',
+    800: '#373533',
+    900: '#1B1A1A',
+  },
+  lavenderMist: {
+    50: '#FAF8FB',
+    100: '#F5F1F7',
+    200: '#EBE3EF',
+    300: '#E1D5E7',
+    400: '#D7C7DF',
+    600: '#A091A7',
+    700: '#786D7D',
+    800: '#504853',
+    900: '#282429',
+  },
+  cream: {
+    50: '#FEFEFE',
+    100: '#FDFDFC',
+    300: '#F1EDE6',
+    400: '#EBE5DC',
+    500: '#E5DDD2',
+    600: '#B7B1A8',
+    700: '#89857E',
+    800: '#5B5854',
+    900: '#2D2C2A',
+  },
+  success: {
+    700: '#138B75',
+    800: '#0F7B6C',
+  },
+  warning: {
+    700: '#CC9400',
+    800: '#B38300',
+  },
+  error: {
+    700: '#C12B2C',
+    800: '#AC2627',
+  },
+  info: {
+    700: '#4A8BC2',
+    800: '#397BAF',
+  },
+} as const;
+
 /** Gradients. The radiant gradient is the single strongest brand signal. */
 export const gradients = {
   radiant: `linear-gradient(135deg, ${brand.gold} 0%, ${brand.coral} 100%)`,
@@ -363,6 +462,7 @@ export const tokens = {
   themeSurface,
   stripeAppearance,
   email,
+  scales,
   gradients,
   typography,
   spacing,
