@@ -29,7 +29,7 @@ const spinnerVariants = cva(
   }
 );
 
-export interface SpinnerProps
+interface SpinnerProps
   extends
     React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof spinnerVariants> {
@@ -109,4 +109,4 @@ const Spinner = React.memo(
 );
 Spinner.displayName = 'Spinner';
 
-export { Spinner, spinnerVariants };
+export { Spinner };

@@ -18,7 +18,7 @@ const formFieldVariants = cva('space-y-2', {
   },
 });
 
-export interface FormFieldProps
+interface FormFieldProps
   extends
     React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof formFieldVariants> {
@@ -134,4 +134,4 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
 );
 FormField.displayName = 'FormField';
 
-export { FormField, formFieldVariants };
+export { FormField };

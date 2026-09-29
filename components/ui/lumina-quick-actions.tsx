@@ -86,4 +86,3 @@ const LuminaQuickActions = forwardRef<HTMLDivElement, LuminaQuickActionsProps>(
 LuminaQuickActions.displayName = 'LuminaQuickActions';
 
 export { LuminaQuickActions };
-export type { LuminaQuickActionsProps, QuickActionLink };

@@ -320,4 +320,3 @@ const StatCard = memo(
 StatCard.displayName = 'StatCard';
 
 export { StatCard };
-export type { StatCardProps };

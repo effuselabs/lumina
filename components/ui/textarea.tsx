@@ -55,7 +55,7 @@ const textareaVariants = cva(
   }
 );
 
-export interface TextareaProps
+interface TextareaProps
   extends
     React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     VariantProps<typeof textareaVariants> {
@@ -106,4 +106,4 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 );
 Textarea.displayName = 'Textarea';
 
-export { Textarea, textareaVariants };
+export { Textarea };

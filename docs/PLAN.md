@@ -209,6 +209,13 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      second copy; the GDPR helpers were aliases of the service methods the
      routes call. `DataProtectionService.encrypt` is never called — no field
      is encrypted at the application level — but nothing claims otherwise.
+   - `components/ui/` (46): done, 216 lines. Six components and props
+     types nothing rendered are deleted (`FilterChips`, `LoadingTable`,
+     `LoadingList`, `ThemeIndicator`, `ThemeStatus`, …); the rest lose an
+     `export`. The shadcn/Radix wrappers (`alert-dialog`, `dialog`,
+     `dropdown-menu`, `select`, `table`) keep their full surface —
+     `DialogClose` or `SelectGroup` unused today is a vendored kit, not dead
+     code — and `knip.json` says so through `ignoreIssues`.
 
 ---
 
