@@ -127,14 +127,20 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          `#808285` against `neutral[600]` `#525252`, `#22C58B` against
          `status.success` `#16A34A`, and so on. Choosing one changes what
          people see, so it goes page by page with screenshots.
-   - [ ] **3c — `status` colours fail AA as text.** The design-system page
-         now computes contrast instead of claiming it, and on white:
-         `success` 3.30:1, `warning` 3.19:1, `info` 4.10:1 — all below 4.5
-         for body text. The page had claimed 7.2, 5.1 and 8.1. Fix the tokens
-         (or restrict them to large text and icons), then add the pairs to
-         `contrastPairs` so the test holds them. Same class of defect, found
-         in 3d's screenshots: service titles on the services page are gold on
-         white, 1.44:1.
+   - [x] **3c — `status` colours meet AA as text.** success `#15803D` and
+         warning `#B45309` (both 5.02:1 on white, and white on them), were
+         3.30 and 3.19. `status.info` is now `#2563EB`, what `text-info`
+         actually rendered — `tokens.ts` said `#0284C7` while the CSS said
+         otherwise, and `__tests__/design/css-token-parity.test.ts` now fails
+         if `globals.css` and `tokens.ts` disagree. Every status colour is in
+         `contrastPairs`, both ways round. Screenshots: only status-coloured
+         text changed (the home page's trend lines, analytics, the
+         design-system swatches).
+   - [ ] **3c′ — brand gold as text.** `.text-lumina-primary` in
+         `globals.css` renders gold, 1.44:1 on white, and 51 elements use it:
+         service titles, client and staff dialogs, analytics. It changes how
+         the brand colour is used, so it is Jeremy's call — see the decision
+         raised on 2026-09-29.
    - [x] **3d — the Button's injected stylesheet is gone**, and the
          variants carry what it had been papering over. Primary text is deep
          teal on the gradient (5.81:1 at the coral end, where white was 2.57:1)
