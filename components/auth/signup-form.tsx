@@ -330,7 +330,7 @@ export function SignUpForm() {
         </span>
         <a
           href="/auth/signin"
-          className="font-medium text-lumina-coral hover:text-deep-teal"
+          className="font-medium text-lumina-coral hover:text-ink-brand"
         >
           Sign in
         </a>

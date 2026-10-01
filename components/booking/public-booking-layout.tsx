@@ -29,7 +29,7 @@ export function PublicBookingLayout({
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100"
+      className="min-h-screen bg-gradient-to-br from-surface-muted to-surface-sunken"
       style={
         {
           '--brand-primary': brandColors.primary,
@@ -125,7 +125,7 @@ export function PublicBookingLayout({
             </p>
             <p className="mt-1">
               Powered by{' '}
-              <span className="font-medium text-deep-teal">Lumina</span>
+              <span className="font-medium text-ink-brand">Lumina</span>
             </p>
           </div>
         </div>

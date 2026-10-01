@@ -265,7 +265,7 @@ export function SignInForm() {
         <span className="text-ink-soft">Don&apos;t have an account? </span>
         <a
           href="/auth/signup"
-          className="font-medium text-lumina-coral hover:text-deep-teal"
+          className="font-medium text-lumina-coral hover:text-ink-brand"
         >
           Sign up
         </a>

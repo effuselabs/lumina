@@ -22,7 +22,7 @@ const buttonVariants = cva(
           'bg-lumina-radiant text-primary-foreground font-semibold shadow-md',
           'hover:bg-lumina-radiant-hover hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200',
           'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed disabled:hover:bg-neutral-400',
+          'disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed disabled:hover:bg-neutral-400 dark:disabled:hover:bg-neutral-600',
           // High contrast mode support
           'contrast-more:border-2 contrast-more:border-white',
           // Performance optimizations
@@ -33,7 +33,7 @@ const buttonVariants = cva(
           'bg-secondary text-secondary-foreground shadow-md',
           'hover:bg-secondary/90 hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200',
           'focus-visible:ring-secondary focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:bg-neutral-400 disabled:text-neutral-500 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
+          'disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:text-neutral-500 dark:disabled:text-neutral-400 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
           // High contrast mode support
           'contrast-more:border-2 contrast-more:border-white',
           // Performance optimizations
@@ -62,7 +62,7 @@ const buttonVariants = cva(
           'bg-destructive text-destructive-foreground shadow-md',
           'hover:bg-destructive/90 hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200',
           'focus-visible:ring-destructive focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:bg-neutral-400 disabled:text-neutral-500 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
+          'disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:text-neutral-500 dark:disabled:text-neutral-400 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
           // High contrast mode support
           'contrast-more:border-2 contrast-more:border-white',
           // Performance optimizations
@@ -94,7 +94,7 @@ const buttonVariants = cva(
           'bg-lumina-radiant text-primary-foreground shadow-lg border-0',
           'hover:shadow-xl hover:scale-105 active:scale-95',
           'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:bg-neutral-400 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
+          'disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:shadow-none disabled:scale-100 disabled:cursor-not-allowed',
           // Performance optimizations
           'gpu-accelerated optimize-repaint transition-all-smooth',
           // Theme-aware glow effects (handled by CSS classes)
@@ -102,7 +102,7 @@ const buttonVariants = cva(
         ],
         // Premium Floating - Elevated floating effect
         'premium-floating': [
-          'bg-surface text-deep-teal shadow-xl border border-white/20',
+          'bg-surface text-ink-brand shadow-xl border border-white/20',
           'dark:bg-neutral-900 dark:text-white dark:border-neutral-700',
           'hover:shadow-2xl hover:scale-105 active:scale-95',
           'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',

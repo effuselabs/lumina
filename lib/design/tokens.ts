@@ -164,6 +164,12 @@ export const themed = {
   'surface-dim': { light: '#D1D5DB', dark: '#3F3F46' },
   'ink-strong': { light: '#111827', dark: neutral[50] },
   'ink-deep': { light: '#1F2937', dark: '#F4F4F5' },
+  /**
+   * Brand text: deep teal in light (3c′). Deep teal is 1.3:1 on the dark
+   * surfaces, so dark mode takes the teal ramp's 300 step
+   * (`scales.deepTeal[300]`), keeping the hue.
+   */
+  'ink-brand': { light: brand.deepTeal, dark: '#8DD2D8' },
   ink: { light: '#374151', dark: '#E4E4E7' },
   'ink-soft': { light: '#4B5563', dark: themeSurface.darkForegroundSecondary },
   'ink-muted': { light: '#6B7280', dark: themeSurface.darkForegroundMuted },

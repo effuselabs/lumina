@@ -239,7 +239,7 @@ const AnimatedCounter = React.forwardRef<HTMLDivElement, AnimatedCounterProps>(
     // Variant classes
     const variantClasses = {
       default: 'text-foreground',
-      primary: 'text-deep-teal',
+      primary: 'text-ink-brand',
       success: 'text-success',
       warning: 'text-warning',
       error: 'text-error',

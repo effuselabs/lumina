@@ -3,9 +3,10 @@ import { join, relative } from 'path';
 
 /**
  * Hardcoded light surfaces, text and borders — `bg-white`, `text-gray-900`,
- * `border-gray-200` — stay light in dark mode. Use their themed replacements
- * from `lib/design/tokens.ts` instead: `bg-surface`, `text-ink-strong`,
- * `border-line` and the rest render identically in light and switch in dark.
+ * `border-gray-200`, `text-deep-teal` — stay light in dark mode. Use their
+ * themed replacements from `lib/design/tokens.ts` instead: `bg-surface`,
+ * `text-ink-strong`, `border-line`, `text-ink-brand` and the rest render
+ * identically in light and switch in dark.
  *
  * 506 of these were swept onto the themed names with no change in light mode
  * (docs/PLAN.md, 3f part 3). A class scoped to dark mode (`dark:bg-gray-800`)
@@ -23,7 +24,7 @@ const ALLOWED: Record<string, { classes: string[]; why: string }> = {
 };
 
 const HARDCODED =
-  /(?<![\w:/-])((?:[a-z0-9-]+:)*)(bg-white|bg-gray-\d+|text-gray-\d+|border-gray-\d+|divide-gray-\d+)(?![\w/-])/g;
+  /(?<![\w:/-])((?:[a-z0-9-]+:)*)(bg-white|bg-gray-\d+|text-gray-\d+|border-gray-\d+|divide-gray-\d+|(?:from|via|to)-gray-\d+|text-deep-teal|text-brand-deepTeal)(?![\w/-])/g;
 
 function tsx(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap(entry => {

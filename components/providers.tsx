@@ -1,6 +1,7 @@
 'use client';
 
 import { SessionProvider } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 import { ThemeProvider } from './theme-provider';
@@ -10,26 +11,25 @@ interface ProvidersProps {
 }
 
 /**
- * Light only, deliberately.
+ * The theme follows the OS until someone picks one with the toggle in the
+ * dashboard header; the choice is kept in localStorage under `lumina-theme`.
  *
- * The theme tokens do flip for dark mode — `.dark` redefines --color-surface
- * to #171717 and --color-foreground to #fafafa — but the components do not.
- * Headings are hardcoded Deep Teal (#0B2B33) and panels are hardcoded
- * bg-surface, so under `defaultTheme="system"` a visitor whose OS is in dark
- * mode got a #171717 card with a #0B2B33 heading on it (about 1.2:1) and
- * white-on-white panels. The public booking page was unreadable for exactly
- * the visitors whose settings we do not control.
- *
- * There is also no theme toggle in the UI, so "system" was never a choice
- * anyone made — it was inherited from the OS and could not be escaped.
- *
- * Restore "system" in Phase 5, once colours come from lib/design/tokens.ts
- * instead of raw hex literals in .tsx, and a contrast gate covers the rendered
- * page in both schemes rather than only the token pairs.
+ * This was light-only, deliberately, while components hardcoded light
+ * colours: under "system" a dark-OS visitor got dark cards with deep-teal
+ * headings on them (about 1.2:1). docs/PLAN.md 3f moved every component onto
+ * theme-aware colours first, and `__tests__/design/` holds them there.
  */
 export function Providers({ children }: ProvidersProps) {
+  // The marketing home page is designed light-only — photographic and
+  // gradient sections that do not change with the theme — so it stays light
+  // until it gets a dark design of its own.
+  const forcedTheme = usePathname() === '/' ? 'light' : undefined;
   return (
-    <ThemeProvider defaultTheme="light" storageKey="lumina-theme">
+    <ThemeProvider
+      defaultTheme="system"
+      storageKey="lumina-theme"
+      forcedTheme={forcedTheme}
+    >
       <SessionProvider
         basePath="/api/auth"
         refetchInterval={5 * 60} // Refetch session every 5 minutes

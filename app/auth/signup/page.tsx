@@ -38,11 +38,11 @@ export default async function SignUpPage() {
              */
             <div className="space-y-4 text-center">
               <h1 className="text-xl font-semibold">Registration is closed</h1>
-              <p className="text-sm text-neutral-600">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 This Lumina instance does not accept public sign-ups. If you
                 work at a salon that uses it, ask an owner to invite you.
               </p>
-              <p className="text-sm text-neutral-600">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 Running your own copy?{' '}
                 <a
                   className="text-lumina-coral underline"

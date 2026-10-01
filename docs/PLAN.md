@@ -196,7 +196,7 @@ gates decide, and `npm run db:seed` runs by hand on anything near
        every element's computed colours matched.
      - `prisma/seed.ts`, the last one, takes the demo salon's colour from
        `brand.gold`. Nothing in the application writes a hex of its own.
-   - [ ] **3f — dark mode, done properly.** Decided by Jeremy on
+   - [x] **3f — dark mode, done properly.** Decided by Jeremy on
          2026-10-01: dark mode is a requirement, not an extra, and
          "light-only by design" (3d) no longer holds. Three pull requests.
      - [x] **1 — the dark theme applies, and passes AA.** Three faults:
@@ -247,14 +247,26 @@ gates decide, and `npm run db:seed` runs by hand on anything near
            19 pages pixel-identical, analytics within its noise.
            `hardcoded-light-classes.test.ts` now fails on any hardcoded light
            gray outside two named exceptions.
-     - [ ] **3.2 — what the gray sweep did not reach**, seen in dark
-           screenshots of all 19 pages: `text-deep-teal` (39, near-invisible on
-           dark — "Select Your Services", "Filters:"), `text-/bg-/border-neutral-*`
-           without a `dark:` pair, gray gradient stops (the booking page
-           background), pastel status fills (`bg-green-50` and friends, 31 — the
-           calendar's header row), and the analytics Refresh button. Then a
-           theme switcher in the dashboard header and `defaultTheme="system"`.
-           Until then no one reaches dark mode.
+     - [x] **3.2 — the rest, and the switch.** Found in dark screenshots
+           of all 19 pages after 3.1:
+       - Deep-teal text (39 classes, 3 inline styles, and
+         `.text-lumina-secondary`) is `ink-brand`: deep teal in light, the
+         teal ramp's 300 step `#8DD2D8` in dark (7.0–11:1).
+         `hardcoded-light-classes.test.ts` now also fails on
+         `text-deep-teal` and gray gradient stops.
+       - 57 `neutral-*` classes with no `dark:` partner got a mirrored one;
+         the booking page's gray gradient takes the surface names; the week
+         view's busyness tints are translucent in dark.
+       - A light/dark toggle in the dashboard header, and
+         `defaultTheme="system"`: dark mode is now reachable.
+       - The marketing home page is forced light (`forcedTheme` on
+         `ThemeProvider`): its photographic and gradient sections are
+         light-only by design, and need a dark design of their own.
+         Light mode: identical except the new toggle. Remaining for the
+         design review: pastel status boxes (`bg-*-50`) stay light in dark,
+         readable but bright; tenant brand colours used as text (the booking
+         sidebar's phone and email) are unreadable on dark with the default
+         deep-teal accent; and the home page's dark design.
    - [x] **3g — peach renders.** `--lumina-peach` was never defined, so
          `bg-lumina-peach` painted nothing — and its opacity variants
          (`/10`, `/20`, `/30`) were never generated at all, because Tailwind

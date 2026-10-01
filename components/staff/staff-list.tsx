@@ -527,7 +527,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                     'font-medium',
                     member.isActive
                       ? 'bg-green-500 text-white hover:bg-green-500'
-                      : 'bg-neutral-400 text-white hover:bg-neutral-400'
+                      : 'bg-neutral-400 text-white hover:bg-neutral-400 dark:bg-neutral-600 dark:hover:bg-neutral-600'
                   )}
                 >
                   {member.isActive ? 'Active' : 'Inactive'}

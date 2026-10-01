@@ -26,6 +26,11 @@ interface ThemeProviderProps {
   defaultTheme?: Theme;
   storageKey?: string;
   enableTransitions?: boolean;
+  /**
+   * Render this theme whatever the setting, without changing the setting.
+   * For pages designed for one theme only.
+   */
+  forcedTheme?: ResolvedTheme;
 }
 
 export function ThemeProvider({
@@ -33,6 +38,7 @@ export function ThemeProvider({
   defaultTheme = 'system',
   storageKey = 'lumina-theme',
   enableTransitions = true,
+  forcedTheme,
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>('light');
@@ -57,7 +63,8 @@ export function ThemeProvider({
 
   // Apply theme to document with smooth transitions
   const applyTheme = useCallback(
-    (resolvedTheme: ResolvedTheme, withTransition = true) => {
+    (requested: ResolvedTheme, withTransition = true) => {
+      const resolvedTheme = forcedTheme ?? requested;
       const root = document.documentElement;
 
       // Start transition if enabled
@@ -94,7 +101,7 @@ export function ThemeProvider({
         }, 200);
       }
     },
-    [enableTransitions, mounted]
+    [enableTransitions, mounted, forcedTheme]
   );
 
   // Set theme with persistence and validation
@@ -157,6 +164,11 @@ export function ThemeProvider({
     initializeTheme();
     setMounted(true);
   }, [defaultTheme, storageKey, applyTheme, resolveTheme]);
+
+  // Entering or leaving a page with a forced theme re-applies the theme.
+  useEffect(() => {
+    if (mounted) applyTheme(resolvedTheme, false);
+  }, [forcedTheme, mounted, resolvedTheme, applyTheme]);
 
   // Listen for system theme changes with improved handling
   useEffect(() => {

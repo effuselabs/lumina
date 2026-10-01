@@ -164,7 +164,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
           <button
             onClick={handleRefresh}
             className="inline-flex h-10 items-center justify-center rounded-md border border-line-strong bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-            style={{ color: brand.deepTeal }}
+            style={{ color: 'var(--ui-ink-brand)' }}
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh

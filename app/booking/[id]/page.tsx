@@ -11,7 +11,7 @@ export default function BookingManagementPage() {
   const bookingId = params.id as string;
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
       <div className="mx-auto max-w-4xl space-y-8 px-4 py-8">
         <PageHeader
           title="Booking Details"

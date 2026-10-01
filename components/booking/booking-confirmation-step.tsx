@@ -256,9 +256,9 @@ export function BookingConfirmationStep({
         </Card>
 
         {/* Confirmation Details */}
-        <Card className="border-neutral-200 shadow-sm">
+        <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
           <CardHeader>
-            <CardTitle className="text-deep-teal">
+            <CardTitle className="text-ink-brand">
               Appointment Details
             </CardTitle>
             <CardDescription>
@@ -415,9 +415,9 @@ export function BookingConfirmationStep({
         </Card>
 
         {/* Email Confirmation Status */}
-        <Card className="border-neutral-200 shadow-sm">
+        <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
           <CardHeader>
-            <CardTitle className="text-deep-teal">What's Next?</CardTitle>
+            <CardTitle className="text-ink-brand">What's Next?</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
@@ -546,9 +546,9 @@ export function BookingConfirmationStep({
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <NetworkStatusIndicator />
-      <Card className="border-neutral-200 shadow-sm">
+      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
         <CardHeader>
-          <CardTitle className="text-deep-teal">Review Your Booking</CardTitle>
+          <CardTitle className="text-ink-brand">Review Your Booking</CardTitle>
           <CardDescription>
             Please review your appointment details before confirming
           </CardDescription>
