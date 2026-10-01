@@ -395,6 +395,11 @@ export const contrastPairs: ReadonlyArray<{
     background: brand.coral,
   },
   {
+    name: 'deep teal on white',
+    foreground: brand.deepTeal,
+    background: '#FFFFFF',
+  },
+  {
     name: 'deep teal on cream',
     foreground: brand.deepTeal,
     background: brand.cream,

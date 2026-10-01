@@ -125,12 +125,7 @@ export function PublicBookingLayout({
             </p>
             <p className="mt-1">
               Powered by{' '}
-              <span
-                className="font-medium"
-                style={{ color: brandColors.primary }}
-              >
-                Lumina
-              </span>
+              <span className="font-medium text-deep-teal">Lumina</span>
             </p>
           </div>
         </div>
