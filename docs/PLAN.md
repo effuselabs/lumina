@@ -224,12 +224,23 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          analytics differs only in a seeded figure. Dark mode, measured on four
          pages: background, text, muted, status and brand text all resolve
          to their dark values.
-     - [ ] **2 — semantic Tailwind colours** (surface, text, muted, border,
-           status tints) whose light values equal today's, so components can
-           stop hardcoding light classes. Defines the `--color-*-background`
-           properties `success-50` and friends point at, which are undefined.
-     - [ ] **3 — the sweep**: about 355 hardcoded light classes (`bg-white`
-           51, `text-gray-900` 95, `text-gray-600` 124, …) and inline chart
+     - [x] **2 — themed colour names.** `themed` in `tokens.ts` gives each
+           surface, text and line role a light and a dark value, generated into
+           `app/tokens.css` as `--ui-*` (`:root`, then `.dark`) and exposed to
+           Tailwind as `bg-surface{,-muted,-sunken,-strong}`,
+           `text-ink{-strong,,-soft,-muted,-faint}` and
+           `border-line{,-strong,-soft}`. Each light value is the Tailwind gray it
+           replaces, which `semantic-colours.test.ts` asserts, so moving a
+           component across changes nothing in light mode. Dark pairs are in
+           `contrastPairs` wherever the light pair already passed: muted text
+           was already 4.39:1 on gray-100 and 3.90:1 on gray-200 in light, and is
+           held only on the two lightest surfaces. The input, textarea, select
+           and dialog primitives moved first. `hardcoded-light-classes.test.ts`
+           is a ratchet: 508 hardcoded light classes today, and the count may
+           only fall. The `--color-*-background` properties that `success-50`
+           and friends point at are undefined, but nothing uses those classes.
+     - [ ] **3 — the sweep**: 508 hardcoded light classes (`bg-white`
+           60, `text-gray-900` 95, `text-gray-600` 130, …) and inline chart
            colours, page by page with light and dark screenshots; then a theme
            switcher in the dashboard and `defaultTheme="system"`. Until then no
            one reaches dark mode: the only switcher is on a design-system page.

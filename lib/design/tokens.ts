@@ -144,6 +144,52 @@ export const themeSurface = {
 } as const;
 
 /**
+ * Theme-aware surfaces, text and lines: one name, a light and a dark value.
+ * Generated into `app/tokens.css` as `--ui-*` under `:root` and `.dark`, and
+ * exposed to Tailwind as `bg-surface-*`, `text-ink-*` and `border-line-*`, so
+ * a component writes `text-ink-strong` once instead of
+ * `text-gray-900 dark:text-…`.
+ *
+ * Each light value is the Tailwind gray it replaces — `ink-strong` is
+ * `gray-900`, `surface-muted` is `gray-50` — so moving a component onto these
+ * names changes nothing in light mode. `semantic-colours.test.ts` holds them
+ * to Tailwind's palette.
+ */
+export const themed = {
+  surface: { light: base.white, dark: neutral[900] },
+  'surface-muted': { light: '#F9FAFB', dark: themeSurface.darkBorderMuted },
+  'surface-sunken': { light: '#F3F4F6', dark: themeSurface.darkBorder },
+  'surface-strong': { light: '#E5E7EB', dark: '#323238' },
+  'ink-strong': { light: '#111827', dark: neutral[50] },
+  ink: { light: '#374151', dark: '#E4E4E7' },
+  'ink-soft': { light: '#4B5563', dark: themeSurface.darkForegroundSecondary },
+  'ink-muted': { light: '#6B7280', dark: themeSurface.darkForegroundMuted },
+  /** Placeholders and decoration only: 2.5:1 in light, as gray-400 was. */
+  'ink-faint': { light: '#9CA3AF', dark: '#71717A' },
+  line: { light: '#E5E7EB', dark: themeSurface.darkBorder },
+  'line-strong': { light: '#D1D5DB', dark: '#3F3F46' },
+  'line-soft': { light: '#F3F4F6', dark: themeSurface.darkBorderMuted },
+} as const;
+
+type Themed = keyof typeof themed;
+
+/**
+ * `themed` as Tailwind colours: `surface-muted` becomes `surface.muted`, and
+ * a bare `ink` becomes `ink.DEFAULT`, each pointing at its `--ui-*` property.
+ */
+export function themedTailwindColours(): Record<
+  string,
+  Record<string, string>
+> {
+  const colours: Record<string, Record<string, string>> = {};
+  for (const name of Object.keys(themed)) {
+    const [group, step = 'DEFAULT'] = name.split('-');
+    colours[group] = { ...colours[group], [step]: `var(--ui-${name})` };
+  }
+  return colours;
+}
+
+/**
  * Stripe Elements appearance. Stripe renders card fields in its own iframe and
  * accepts only literal colours, so these cannot be CSS variables.
  */
@@ -451,6 +497,31 @@ export const contrastPairs: ReadonlyArray<{
       })
     ),
   ]),
+  // Themed text on themed surfaces, in both themes. Muted text is held only
+  // on the two lightest surfaces: on gray-100 and gray-200 it was already
+  // below 4.5:1 in light (4.39 and 3.90), and the light values must not move.
+  ...(['light', 'dark'] as const).flatMap(theme =>
+    (
+      [
+        ...(['ink-strong', 'ink', 'ink-soft'] as const).flatMap(ink =>
+          (
+            [
+              'surface',
+              'surface-muted',
+              'surface-sunken',
+              'surface-strong',
+            ] as const
+          ).map((surface): [Themed, Themed] => [ink, surface])
+        ),
+        ['ink-muted', 'surface'],
+        ['ink-muted', 'surface-muted'],
+      ] as Array<[Themed, Themed]>
+    ).map(([ink, surface]) => ({
+      name: `${theme}: ${ink} on ${surface}`,
+      foreground: themed[ink][theme],
+      background: themed[surface][theme],
+    }))
+  ),
   ...(Object.entries(statusOnDark) as Array<[string, string]>).map(
     ([name, value]) => ({
       name: `dark text on dark-mode ${name} fill`,
@@ -530,6 +601,17 @@ export function cssVariablesBlock(selector = ':root'): string {
   return `${selector} {\n${body}\n}`;
 }
 
+/**
+ * The `--ui-*` properties for one theme. The `.dark` block follows `:root`
+ * in the same unlayered file, which is what lets it win.
+ */
+export function themedVariablesBlock(theme: 'light' | 'dark'): string {
+  const body = Object.entries(themed)
+    .map(([name, value]) => `  --ui-${name}: ${value[theme].toLowerCase()};`)
+    .join('\n');
+  return `${theme === 'light' ? ':root' : '.dark'} {\n${body}\n}`;
+}
+
 export const tokens = {
   brand,
   accent,
@@ -540,6 +622,7 @@ export const tokens = {
   statusTint,
   chart,
   themeSurface,
+  themed,
   stripeAppearance,
   email,
   scales,

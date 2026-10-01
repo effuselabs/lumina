@@ -5,7 +5,13 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 // legacy values inherited from four competing sources; they migrate onto
 // `tokens` in the design-system phase, once an end-to-end test exists to
 // catch regressions.
-import { accent, brand, scales, status } from './lib/design/tokens';
+import {
+  accent,
+  brand,
+  scales,
+  status,
+  themedTailwindColours,
+} from './lib/design/tokens';
 
 const config: Config = {
   // `dark:` follows the `.dark` class ThemeProvider sets on <html>, not the
@@ -138,6 +144,9 @@ const config: Config = {
         'lumina-gold': 'var(--lumina-gold)',
         'lumina-coral': 'var(--lumina-coral)',
         'lumina-peach': brand.peach,
+        // Theme-aware: light and dark values from `themed` in tokens.ts.
+        // `bg-surface-muted`, `text-ink-strong`, `border-line`, …
+        ...themedTailwindColours(),
         'lumina-radiant': 'var(--lumina-radiant-gradient)',
         // Secondary Brand Color using CSS Variables
         'deep-teal': {

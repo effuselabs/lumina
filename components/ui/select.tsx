@@ -20,7 +20,7 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       'flex h-10 w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-all duration-200',
-      'bg-white dark:bg-neutral-900',
+      'bg-surface',
       'text-neutral-900 dark:text-neutral-100',
       'placeholder:text-neutral-500 dark:placeholder:text-neutral-400',
       'focus:outline-none focus:ring-2 focus:ring-offset-2',
@@ -89,7 +89,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       className={cn(
         'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border shadow-lg',
-        'bg-white dark:bg-neutral-900',
+        'bg-surface',
         'border-neutral-300 dark:border-neutral-700',
         'text-neutral-900 dark:text-neutral-100',
         'data-[state=open]:animate-in data-[state=closed]:animate-out',
