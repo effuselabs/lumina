@@ -815,7 +815,7 @@ function DesignSystemContent() {
                   <strong>Note:</strong> Visit the{' '}
                   <a
                     href="/design-system/stat-cards"
-                    className="text-primary hover:underline"
+                    className="text-deep-teal hover:underline"
                   >
                     StatCard showcase page
                   </a>{' '}

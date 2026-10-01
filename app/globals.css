@@ -3635,8 +3635,11 @@
   }
 
   /* Lumina brand text colors */
+  /* Brand text is deep teal. Gold on white is 1.44:1, and this class was on
+     113 elements across the dashboard, all on light surfaces. Gold stays the
+     colour of fills and accents (docs/PLAN.md, 3c′). */
   .text-lumina-primary {
-    color: var(--lumina-gold);
+    color: var(--deep-teal);
   }
 
   .text-lumina-coral {

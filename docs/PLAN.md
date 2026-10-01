@@ -137,14 +137,27 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          `contrastPairs`, both ways round. Screenshots: only status-coloured
          text changed (the home page's trend lines, analytics, the
          design-system swatches).
-   - [ ] **3c′ — brand gold as text.** `.text-lumina-primary` in
-         `globals.css` renders gold, 1.44:1 on white, and 51 elements use it:
-         service titles, client and staff dialogs, analytics. It changes how
-         the brand colour is used, so it is Jeremy's call — see the decision
-         raised on 2026-09-29.
-     - **Decided (Jeremy, 2026-10-01): deep teal for text, gold for fills
-       and accents.** A full design-system review follows once the code is
-       clean.
+   - [x] **3c′ — brand text is deep teal; gold is for fills and accents.**
+         Decided by Jeremy on 2026-10-01. Measured in the browser first:
+         115 text elements across 21 pages were gold on a light surface, all
+         at 1.44:1, and none on a dark one — so nothing needed to stay gold.
+         113 came through `.text-lumina-primary`, now `var(--deep-teal)`; the
+         rest were a `select` focus and checked state, an animated-counter
+         variant, two auth-link hovers, a design-system link, and "Powered by
+         Lumina" on the booking page, which was coloured with the _tenant's_
+         brand colour. After: one gold text element — none. The most visible
+         change is the sidebar wordmark, gold to teal beside its gradient
+         mark. `__tests__/design/brand-text-colour.test.ts` fails on gold
+         text outside `dark:` (two decorative uses named), and deep teal on
+         white (14.9:1) is in `contrastPairs`.
+     - **Coral as text fails the same way** — 2.57:1 on white — and is on
+       21 elements, a mix of decorative icons and a few links on the auth
+       pages. Not changed: the decision was about gold. For the design
+       review.
+     - **Tenant colours are used as text.** The public booking page sets
+       text in the business's configured `accent` colour (deep teal by
+       default, but any colour a salon picks). A tenant colour used as text
+       needs a contrast floor; for the design review.
    - [x] **3d — the Button's injected stylesheet is gone**, and the
          variants carry what it had been papering over. Primary text is deep
          teal on the gradient (5.81:1 at the coral end, where white was 2.57:1)
