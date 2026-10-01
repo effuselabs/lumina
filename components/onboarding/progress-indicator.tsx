@@ -35,7 +35,7 @@ export function ProgressIndicator({
                         'border-orange-600 bg-orange-600 text-white': isCurrent,
                         'border-green-600 bg-green-600 text-white':
                           isCompleted || isPast,
-                        'border-gray-300 bg-white text-gray-500':
+                        'border-line-strong bg-surface text-ink-muted':
                           !isCurrent && !isCompleted && !isPast,
                       }
                     )}
@@ -51,7 +51,7 @@ export function ProgressIndicator({
                     <div
                       className={cn('ml-5 h-0.5 w-16', {
                         'bg-green-600': isPast,
-                        'bg-gray-300': !isPast,
+                        'bg-surface-dim': !isPast,
                       })}
                     />
                   )}

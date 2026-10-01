@@ -19,10 +19,10 @@ export default function StatCardsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold text-gray-900">
+        <h1 className="mb-2 text-3xl font-bold text-ink-strong">
           Enhanced StatCard Component Showcase
         </h1>
-        <p className="text-gray-600">
+        <p className="text-ink-soft">
           Optimized StatCard component with size variants, enhanced visual
           design, scroll-triggered animations, count-up effects, and
           accessibility features.
@@ -31,13 +31,13 @@ export default function StatCardsPage() {
 
       {/* Size Variants */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Size Variants
         </h2>
 
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           <div>
-            <h3 className="mb-4 text-lg font-medium text-gray-700">
+            <h3 className="mb-4 text-lg font-medium text-ink">
               Compact (20% smaller)
             </h3>
             <StatCard
@@ -51,7 +51,7 @@ export default function StatCardsPage() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-medium text-gray-700">Default</h3>
+            <h3 className="mb-4 text-lg font-medium text-ink">Default</h3>
             <StatCard
               title="Total Revenue"
               value={25000}
@@ -63,7 +63,7 @@ export default function StatCardsPage() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-medium text-gray-700">Large</h3>
+            <h3 className="mb-4 text-lg font-medium text-ink">Large</h3>
             <StatCard
               title="Total Revenue"
               value={25000}
@@ -78,7 +78,7 @@ export default function StatCardsPage() {
 
       {/* Change Indicators */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Change Indicators
         </h2>
 
@@ -111,7 +111,7 @@ export default function StatCardsPage() {
 
       {/* Different Value Types */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Value Types
         </h2>
 
@@ -152,7 +152,7 @@ export default function StatCardsPage() {
 
       {/* Without Actions */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Without Action Links
         </h2>
 
@@ -184,7 +184,7 @@ export default function StatCardsPage() {
 
       {/* Loading States */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Loading States
         </h2>
 
@@ -217,7 +217,7 @@ export default function StatCardsPage() {
 
       {/* Real-world Examples */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Real-world Dashboard Example
         </h2>
 
@@ -262,15 +262,15 @@ export default function StatCardsPage() {
 
       {/* Accessibility Features */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Accessibility Features
         </h2>
 
-        <div className="rounded-lg bg-gray-50 p-6">
-          <h3 className="mb-4 text-lg font-medium text-gray-900">
+        <div className="rounded-lg bg-surface-muted p-6">
+          <h3 className="mb-4 text-lg font-medium text-ink-strong">
             Built-in Accessibility
           </h3>
-          <ul className="space-y-2 text-gray-700">
+          <ul className="space-y-2 text-ink">
             <li>• Semantic HTML with proper ARIA labels</li>
             <li>• Screen reader friendly with descriptive text</li>
             <li>• Keyboard navigation support</li>
@@ -290,10 +290,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Scroll-Triggered Animations */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Scroll-Triggered Animations
         </h2>
-        <p className="mb-6 text-gray-600">
+        <p className="mb-6 text-ink-soft">
           StatCards animate into view when scrolled into the viewport. Scroll
           down to see the effect.
         </p>
@@ -339,10 +339,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Count-Up Animations */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Count-Up Animations
         </h2>
-        <p className="mb-6 text-gray-600">
+        <p className="mb-6 text-ink-soft">
           Numeric values animate with smooth count-up effects when they come
           into view.
         </p>
@@ -404,10 +404,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Staggered Animation Grid */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Staggered Animation Grid
         </h2>
-        <p className="mb-6 text-gray-600">
+        <p className="mb-6 text-ink-soft">
           Multiple StatCards with automatic staggered delays for a smooth
           cascade effect.
         </p>
@@ -494,10 +494,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Compact Size with Animations */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Compact Size with Animations
         </h2>
-        <p className="mb-6 text-gray-600">
+        <p className="mb-6 text-ink-soft">
           Compact StatCards with count-up animations for dashboard widgets.
         </p>
 
@@ -561,15 +561,15 @@ export default function StatCardsPage() {
 
       {/* Performance Features */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Performance Features
         </h2>
 
         <div className="rounded-lg bg-blue-50 p-6">
-          <h3 className="mb-4 text-lg font-medium text-gray-900">
+          <h3 className="mb-4 text-lg font-medium text-ink-strong">
             Optimizations
           </h3>
-          <ul className="space-y-2 text-gray-700">
+          <ul className="space-y-2 text-ink">
             <li>• CSS transform-based animations for 60fps performance</li>
             <li>• Smooth transitions under 300ms for UI feedback</li>
             <li>• Optimized skeleton loading states</li>
@@ -586,15 +586,15 @@ export default function StatCardsPage() {
 
       {/* NEW: Animation Features */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
           Animation Features
         </h2>
 
         <div className="rounded-lg bg-green-50 p-6">
-          <h3 className="mb-4 text-lg font-medium text-gray-900">
+          <h3 className="mb-4 text-lg font-medium text-ink-strong">
             Enhanced Animations
           </h3>
-          <ul className="space-y-2 text-gray-700">
+          <ul className="space-y-2 text-ink">
             <li>• Scroll-triggered animations with Intersection Observer</li>
             <li>• Smooth count-up effects for numeric values</li>
             <li>• Staggered animation delays for multiple cards</li>
@@ -611,7 +611,7 @@ export default function StatCardsPage() {
 
       {/* Spacer for scroll testing */}
       <div className="flex h-96 items-center justify-center">
-        <p className="text-center text-gray-500">
+        <p className="text-center text-ink-muted">
           Scroll back up to see the animations trigger again
           <br />
           (if you refresh the page)

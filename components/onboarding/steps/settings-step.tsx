@@ -54,12 +54,12 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
               control={form.control}
               name="bookingEnabled"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-white p-4">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-surface p-4">
                   <div className="flex-1 space-y-0.5">
                     <FormLabel className="cursor-pointer text-base font-medium">
                       Enable Booking System
                     </FormLabel>
-                    <FormDescription className="text-sm text-gray-600">
+                    <FormDescription className="text-sm text-ink-soft">
                       Allow clients to book appointments through your system
                     </FormDescription>
                   </div>
@@ -80,12 +80,12 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
               control={form.control}
               name="onlineBooking"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-white p-4">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-surface p-4">
                   <div className="flex-1 space-y-0.5">
                     <FormLabel className="cursor-pointer text-base font-medium">
                       Online Booking
                     </FormLabel>
-                    <FormDescription className="text-sm text-gray-600">
+                    <FormDescription className="text-sm text-ink-soft">
                       Allow clients to book appointments online 24/7
                     </FormDescription>
                   </div>
@@ -106,12 +106,12 @@ export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
               control={form.control}
               name="requireDeposit"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-white p-4">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-surface p-4">
                   <div className="flex-1 space-y-0.5">
                     <FormLabel className="cursor-pointer text-base font-medium">
                       Require Deposit
                     </FormLabel>
-                    <FormDescription className="text-sm text-gray-600">
+                    <FormDescription className="text-sm text-ink-soft">
                       Require clients to pay a deposit when booking
                     </FormDescription>
                   </div>

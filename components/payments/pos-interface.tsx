@@ -196,7 +196,7 @@ export default function POSInterface({
         <CardContent className="pt-6">
           <div className="text-center">
             <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
-            <p className="text-gray-600">Loading appointment details...</p>
+            <p className="text-ink-soft">Loading appointment details...</p>
           </div>
         </CardContent>
       </Card>
@@ -225,7 +225,7 @@ export default function POSInterface({
             <h3 className="mb-2 text-lg font-semibold text-green-700">
               Payment Completed!
             </h3>
-            <p className="mb-4 text-gray-600">
+            <p className="mb-4 text-ink-soft">
               Payment of {formatCurrency(calculateTotal())} has been processed
               successfully.
             </p>
@@ -284,7 +284,7 @@ export default function POSInterface({
               <div key={index} className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">{service.serviceName}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-ink-muted">
                     {service.duration} minutes
                   </p>
                 </div>
@@ -302,7 +302,7 @@ export default function POSInterface({
             </div>
 
             {commission > 0 && (
-              <div className="flex items-center justify-between text-sm text-gray-600">
+              <div className="flex items-center justify-between text-sm text-ink-soft">
                 <span>Commission ({appointment.staff.commissionRate}%)</span>
                 <span>{formatCurrency(commission)}</span>
               </div>
@@ -399,7 +399,7 @@ export default function POSInterface({
               </div>
 
               {tipAmount > 0 && (
-                <div className="flex items-center justify-between text-sm text-gray-600">
+                <div className="flex items-center justify-between text-sm text-ink-soft">
                   <span>Includes tip: {formatCurrency(tipAmount)}</span>
                 </div>
               )}
@@ -431,7 +431,7 @@ export default function POSInterface({
             />
           ) : (
             <div className="space-y-4">
-              <div className="rounded-lg bg-gray-50 p-4">
+              <div className="rounded-lg bg-surface-muted p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-medium">Cash Payment</span>
                   <span className="text-2xl font-bold">

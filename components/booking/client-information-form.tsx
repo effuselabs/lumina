@@ -263,7 +263,7 @@ export default function ClientInformationForm({
                 disabled={isLoading || isLookingUp}
               />
               {isLookingUp && watchedEmail && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-ink-soft">
                   <Loader2 className="h-3 w-3 animate-spin" />
                   Checking for existing account...
                 </div>
@@ -292,7 +292,7 @@ export default function ClientInformationForm({
                 disabled={isLoading || isLookingUp}
               />
               {isLookingUp && watchedPhone && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-ink-soft">
                   <Loader2 className="h-3 w-3 animate-spin" />
                   Checking for existing account...
                 </div>
@@ -327,7 +327,7 @@ export default function ClientInformationForm({
                 {errors.notes.message}
               </p>
             )}
-            <p className="text-xs text-gray-500">Maximum 500 characters</p>
+            <p className="text-xs text-ink-muted">Maximum 500 characters</p>
           </div>
 
           {/* Marketing Opt-in */}

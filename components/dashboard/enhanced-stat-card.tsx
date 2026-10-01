@@ -98,13 +98,13 @@ function StatCardSkeleton() {
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1 space-y-2">
-            <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
-            <div className="h-8 w-16 animate-pulse rounded bg-gray-200" />
-            <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+            <div className="h-4 w-24 animate-pulse rounded bg-surface-strong" />
+            <div className="h-8 w-16 animate-pulse rounded bg-surface-strong" />
+            <div className="h-4 w-20 animate-pulse rounded bg-surface-strong" />
           </div>
           <div className="flex flex-col items-end space-y-2">
-            <div className="h-8 w-8 animate-pulse rounded bg-gray-200" />
-            <div className="w-15 h-5 animate-pulse rounded bg-gray-200" />
+            <div className="h-8 w-8 animate-pulse rounded bg-surface-strong" />
+            <div className="w-15 h-5 animate-pulse rounded bg-surface-strong" />
           </div>
         </div>
       </CardContent>

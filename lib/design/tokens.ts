@@ -160,7 +160,10 @@ export const themed = {
   'surface-muted': { light: '#F9FAFB', dark: themeSurface.darkBorderMuted },
   'surface-sunken': { light: '#F3F4F6', dark: themeSurface.darkBorder },
   'surface-strong': { light: '#E5E7EB', dark: '#323238' },
+  /** Skeleton bars and inactive dots. */
+  'surface-dim': { light: '#D1D5DB', dark: '#3F3F46' },
   'ink-strong': { light: '#111827', dark: neutral[50] },
+  'ink-deep': { light: '#1F2937', dark: '#F4F4F5' },
   ink: { light: '#374151', dark: '#E4E4E7' },
   'ink-soft': { light: '#4B5563', dark: themeSurface.darkForegroundSecondary },
   'ink-muted': { light: '#6B7280', dark: themeSurface.darkForegroundMuted },
@@ -503,15 +506,16 @@ export const contrastPairs: ReadonlyArray<{
   ...(['light', 'dark'] as const).flatMap(theme =>
     (
       [
-        ...(['ink-strong', 'ink', 'ink-soft'] as const).flatMap(ink =>
-          (
-            [
-              'surface',
-              'surface-muted',
-              'surface-sunken',
-              'surface-strong',
-            ] as const
-          ).map((surface): [Themed, Themed] => [ink, surface])
+        ...(['ink-strong', 'ink-deep', 'ink', 'ink-soft'] as const).flatMap(
+          ink =>
+            (
+              [
+                'surface',
+                'surface-muted',
+                'surface-sunken',
+                'surface-strong',
+              ] as const
+            ).map((surface): [Themed, Themed] => [ink, surface])
         ),
         ['ink-muted', 'surface'],
         ['ink-muted', 'surface-muted'],

@@ -286,7 +286,7 @@ export function SignUpForm() {
           <span className="border-neutral-light-grey w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="text-neutral-medium-grey bg-white px-2">
+          <span className="text-neutral-medium-grey bg-surface px-2">
             Or continue with
           </span>
         </div>

@@ -42,14 +42,14 @@ function RevenueChartSkeleton() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <div className="mb-2 h-6 w-32 animate-pulse rounded bg-gray-200" />
-            <div className="h-4 w-48 animate-pulse rounded bg-gray-200" />
+            <div className="mb-2 h-6 w-32 animate-pulse rounded bg-surface-strong" />
+            <div className="h-4 w-48 animate-pulse rounded bg-surface-strong" />
           </div>
-          <div className="h-8 w-8 animate-pulse rounded bg-gray-200" />
+          <div className="h-8 w-8 animate-pulse rounded bg-surface-strong" />
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-80 animate-pulse rounded bg-gray-100" />
+        <div className="h-80 animate-pulse rounded bg-surface-sunken" />
       </CardContent>
     </Card>
   );
@@ -101,8 +101,8 @@ export function RevenueChart({
   }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
-          <p className="mb-2 font-medium text-gray-900">
+        <div className="rounded-lg border border-line bg-surface p-3 shadow-lg">
+          <p className="mb-2 font-medium text-ink-strong">
             {formatDate(label || '')}
           </p>
           {payload.map(
@@ -115,8 +115,8 @@ export function RevenueChart({
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: entry.color }}
                 />
-                <span className="text-sm text-gray-600">{entry.name}:</span>
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm text-ink-soft">{entry.name}:</span>
+                <span className="text-sm font-medium text-ink-strong">
                   {formatCurrency(entry.value)}
                 </span>
               </div>
@@ -156,7 +156,7 @@ export function RevenueChart({
                   ? 'text-green-600'
                   : growth < 0
                     ? 'text-red-600'
-                    : 'text-gray-600'
+                    : 'text-ink-soft'
               }`}
             >
               <TrendingUp className="h-3 w-3" />

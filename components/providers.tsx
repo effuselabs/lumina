@@ -15,7 +15,7 @@ interface ProvidersProps {
  * The theme tokens do flip for dark mode — `.dark` redefines --color-surface
  * to #171717 and --color-foreground to #fafafa — but the components do not.
  * Headings are hardcoded Deep Teal (#0B2B33) and panels are hardcoded
- * bg-white, so under `defaultTheme="system"` a visitor whose OS is in dark
+ * bg-surface, so under `defaultTheme="system"` a visitor whose OS is in dark
  * mode got a #171717 card with a #0B2B33 heading on it (about 1.2:1) and
  * white-on-white panels. The public booking page was unreadable for exactly
  * the visitors whose settings we do not control.

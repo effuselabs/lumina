@@ -141,11 +141,11 @@ function BookingErrorDisplay({
           </div>
         </div>
 
-        <h2 className="mb-2 text-xl font-semibold text-gray-900">
+        <h2 className="mb-2 text-xl font-semibold text-ink-strong">
           {errorContent.title}
         </h2>
 
-        <p className="mb-6 text-gray-600">{errorContent.message}</p>
+        <p className="mb-6 text-ink-soft">{errorContent.message}</p>
 
         {/* Suggestions */}
         {errorContent.suggestions && errorContent.suggestions.length > 0 && (
@@ -176,7 +176,7 @@ function BookingErrorDisplay({
 
           {errorContent.showContact && (businessPhone || businessEmail) && (
             <div className="space-y-2">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-ink-soft">
                 Or contact {businessName || 'the business'} directly:
               </p>
               <div className="flex gap-2">
@@ -208,7 +208,7 @@ function BookingErrorDisplay({
         </div>
 
         {/* Footer */}
-        <div className="mt-8 border-t pt-6 text-xs text-gray-500">
+        <div className="mt-8 border-t pt-6 text-xs text-ink-muted">
           <p>
             Powered by{' '}
             <span className="font-medium text-[var(--brand-primary)]">

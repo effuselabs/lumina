@@ -323,7 +323,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       {/* Filters */}
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-ink-faint" />
           <Input
             placeholder="Search staff members..."
             value={searchTerm}
@@ -359,7 +359,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       {/* Pending Invitations */}
       {pendingInvitations.length > 0 && (
         <div className="mb-8">
-          <h3 className="mb-4 text-lg font-semibold text-gray-900">
+          <h3 className="mb-4 text-lg font-semibold text-ink-strong">
             Pending Invitations ({pendingInvitations.length})
           </h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -373,14 +373,14 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                     <div className="flex-1">
                       <div className="mb-2 flex items-center gap-2">
                         <Mail className="h-4 w-4 text-orange-600" />
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-ink-strong">
                           {invitation.staffData?.displayName || 'Staff Member'}
                         </span>
                       </div>
-                      <p className="mb-1 text-sm text-gray-700">
+                      <p className="mb-1 text-sm text-ink">
                         {invitation.email}
                       </p>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-ink-soft">
                         Role: {invitation.role} • Sent:{' '}
                         {new Date(invitation.createdAt).toLocaleDateString()}
                       </p>
@@ -430,11 +430,11 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <CardTitle className="text-xl font-bold text-gray-900">
+                    <CardTitle className="text-xl font-bold text-ink-strong">
                       {member.displayName}
                     </CardTitle>
                     {member.title && (
-                      <p className="mt-1 text-sm font-medium text-gray-600">
+                      <p className="mt-1 text-sm font-medium text-ink-soft">
                         {member.title}
                       </p>
                     )}
@@ -487,42 +487,40 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                 >
                   {member.employmentType.replace('_', ' ')}
                 </Badge>
-                <p className="text-base font-semibold text-gray-800">
+                <p className="text-base font-semibold text-ink-deep">
                   {getEmploymentDisplay(member)}
                 </p>
               </div>
 
               {/* Performance Metrics */}
-              <div className="grid grid-cols-2 gap-6 border-t border-gray-100 pt-4">
+              <div className="grid grid-cols-2 gap-6 border-t border-line-soft pt-4">
                 <div className="text-center">
-                  <div className="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-gray-700">
+                  <div className="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-ink">
                     <Calendar className="h-4 w-4 text-blue-500" />
                     Appointments
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-2xl font-bold text-ink-strong">
                     {member._count.appointments}
                   </p>
-                  <p className="mt-1 text-xs text-gray-500">Last 30 days</p>
+                  <p className="mt-1 text-xs text-ink-muted">Last 30 days</p>
                 </div>
                 <div className="text-center">
-                  <div className="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-gray-700">
+                  <div className="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-ink">
                     <TrendingUp className="h-4 w-4 text-green-500" />
                     Performance
                   </div>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-2xl font-bold text-ink-strong">
                     {member.paymentCalculations.length > 0 ? 'Active' : 'New'}
                   </p>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-ink-muted">
                     {member.paymentCalculations.length} periods
                   </p>
                 </div>
               </div>
 
               {/* Status */}
-              <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                <span className="text-sm font-medium text-gray-700">
-                  Status
-                </span>
+              <div className="flex items-center justify-between border-t border-line-soft pt-4">
+                <span className="text-sm font-medium text-ink">Status</span>
                 <Badge
                   variant={member.isActive ? 'default' : 'secondary'}
                   className={cn(
@@ -543,11 +541,11 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       {filteredStaff.length === 0 && !loading && (
         <Card>
           <CardContent className="py-12 text-center">
-            <UserPlus className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">
+            <UserPlus className="mx-auto mb-4 h-12 w-12 text-ink-faint" />
+            <h3 className="mb-2 text-lg font-semibold text-ink-strong">
               No staff members found
             </h3>
-            <p className="mb-4 text-gray-600">
+            <p className="mb-4 text-ink-soft">
               {searchTerm || employmentFilter !== 'ALL'
                 ? 'Try adjusting your search or filters'
                 : 'Get started by inviting your first team member'}

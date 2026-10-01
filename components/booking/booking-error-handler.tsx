@@ -290,7 +290,7 @@ export function BookingErrorHandler({
                     variant="outline"
                     size="sm"
                     onClick={() => onAlternativeSlotSelect(slot)}
-                    className="flex flex-col items-start gap-1 border-green-300 bg-white p-3 text-left hover:bg-green-100"
+                    className="flex flex-col items-start gap-1 border-green-300 bg-surface p-3 text-left hover:bg-green-100"
                   >
                     <div className="flex items-center gap-2 text-sm font-medium">
                       <Calendar className="h-3 w-3" />
@@ -317,14 +317,14 @@ export function BookingErrorHandler({
 
       {/* Contact Information */}
       {errorContent.showContact && (businessPhone || businessEmail) && (
-        <Card className="border-gray-200 bg-gray-50">
+        <Card className="border-line bg-surface-muted">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm text-gray-900">
+            <CardTitle className="text-sm text-ink-strong">
               Need immediate assistance?
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="mb-3 text-sm text-gray-700">
+            <p className="mb-3 text-sm text-ink">
               Contact {businessName || 'the business'} directly:
             </p>
             <div className="flex gap-2">

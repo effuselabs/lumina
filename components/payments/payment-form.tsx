@@ -149,7 +149,7 @@ function PaymentFormInner({
             <h3 className="mb-2 text-lg font-semibold text-green-700">
               Payment Successful!
             </h3>
-            <p className="text-gray-600">
+            <p className="text-ink-soft">
               Your payment of {formatCurrency(amount)} has been processed
               successfully.
             </p>
@@ -173,12 +173,12 @@ function PaymentFormInner({
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Payment Amount Display */}
-          <div className="rounded-lg bg-gray-50 p-4">
+          <div className="rounded-lg bg-surface-muted p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-ink">
                 Total Amount:
               </span>
-              <span className="text-lg font-bold text-gray-900">
+              <span className="text-lg font-bold text-ink-strong">
                 {formatCurrency(amount)}
               </span>
             </div>
@@ -186,10 +186,10 @@ function PaymentFormInner({
 
           {/* Card Element */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
+            <label className="text-sm font-medium text-ink">
               Card Information
             </label>
-            <div className="rounded-md border border-gray-300 bg-white p-3">
+            <div className="rounded-md border border-line-strong bg-surface p-3">
               <CardElement options={CARD_ELEMENT_OPTIONS} />
             </div>
           </div>
@@ -222,7 +222,7 @@ function PaymentFormInner({
           </Button>
 
           {/* Security Notice */}
-          <div className="text-center text-xs text-gray-500">
+          <div className="text-center text-xs text-ink-muted">
             <p>🔒 Your payment information is secure and encrypted.</p>
             <p>Powered by Stripe</p>
           </div>
@@ -289,7 +289,7 @@ export default function PaymentForm(props: PaymentFormProps) {
         <CardContent className="pt-6">
           <div className="text-center">
             <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
-            <p className="text-gray-600">Initializing payment...</p>
+            <p className="text-ink-soft">Initializing payment...</p>
           </div>
         </CardContent>
       </Card>

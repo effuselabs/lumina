@@ -57,13 +57,13 @@ export function AppointmentBlock({
       case AppointmentStatus.IN_PROGRESS:
         return 'bg-lumina-radiant/20 border-lumina-coral text-lumina-coral';
       case AppointmentStatus.COMPLETED:
-        return 'bg-gray-100 border-gray-300 text-gray-600';
+        return 'bg-surface-sunken border-line-strong text-ink-soft';
       case AppointmentStatus.CANCELLED:
         return 'bg-red-100 border-red-300 text-red-800';
       case AppointmentStatus.NO_SHOW:
         return 'bg-orange-100 border-orange-300 text-orange-800';
       default:
-        return 'bg-gray-100 border-gray-300 text-gray-600';
+        return 'bg-surface-sunken border-line-strong text-ink-soft';
     }
   };
 

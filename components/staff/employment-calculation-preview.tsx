@@ -88,7 +88,7 @@ export function EmploymentCalculationPreview({
     return (
       <Card className={cn('border-dashed', className)}>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-gray-700">
+          <CardTitle className="flex items-center gap-2 text-ink">
             <CalculatorIcon className="h-5 w-5" />
             Calculation Preview
           </CardTitle>
@@ -145,7 +145,7 @@ export function EmploymentCalculationPreview({
           <TrendingUpIcon className="h-5 w-5 text-green-600" />
           Earnings Preview
         </CardTitle>
-        <CardDescription className="font-medium text-gray-700">
+        <CardDescription className="font-medium text-ink">
           Projected earnings for different revenue scenarios
         </CardDescription>
       </CardHeader>
@@ -154,14 +154,14 @@ export function EmploymentCalculationPreview({
         <div className="flex flex-wrap gap-2">
           <Badge
             variant="outline"
-            className="border-gray-300 bg-white font-semibold text-gray-900"
+            className="border-line-strong bg-surface font-semibold text-ink-strong"
           >
             {typeInfo?.title}
           </Badge>
           {config.commissionRate && (
             <Badge
               variant="outline"
-              className="border-gray-300 bg-white font-semibold text-gray-900"
+              className="border-line-strong bg-surface font-semibold text-ink-strong"
             >
               {formatPercentage(config.commissionRate)} Commission
             </Badge>
@@ -169,7 +169,7 @@ export function EmploymentCalculationPreview({
           {config.chairRentalAmount && config.chairRentalPeriod && (
             <Badge
               variant="outline"
-              className="border-gray-300 bg-white font-semibold text-gray-900"
+              className="border-line-strong bg-surface font-semibold text-ink-strong"
             >
               {formatCurrency(config.chairRentalAmount)}{' '}
               {config.chairRentalPeriod.toLowerCase()}
@@ -178,7 +178,7 @@ export function EmploymentCalculationPreview({
           {config.baseSalary && (
             <Badge
               variant="outline"
-              className="border-gray-300 bg-white font-semibold text-gray-900"
+              className="border-line-strong bg-surface font-semibold text-ink-strong"
             >
               {formatCurrency(config.baseSalary)} Base
             </Badge>
@@ -190,16 +190,16 @@ export function EmploymentCalculationPreview({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-green-200">
-                <th className="py-2 text-left font-semibold text-gray-900">
+                <th className="py-2 text-left font-semibold text-ink-strong">
                   Revenue
                 </th>
-                <th className="py-2 text-right font-semibold text-gray-900">
+                <th className="py-2 text-right font-semibold text-ink-strong">
                   Staff Earnings
                 </th>
-                <th className="py-2 text-right font-semibold text-gray-900">
+                <th className="py-2 text-right font-semibold text-ink-strong">
                   Business Retention
                 </th>
-                <th className="py-2 text-right font-semibold text-gray-900">
+                <th className="py-2 text-right font-semibold text-ink-strong">
                   Staff %
                 </th>
               </tr>
@@ -207,16 +207,16 @@ export function EmploymentCalculationPreview({
             <tbody>
               {calculations.preview?.map(({ revenue, result }, index) => (
                 <tr key={index} className="border-b border-green-100">
-                  <td className="py-2 font-semibold text-gray-900">
+                  <td className="py-2 font-semibold text-ink-strong">
                     {formatCurrency(revenue)}
                   </td>
                   <td className="py-2 text-right font-semibold text-green-700">
                     {formatCurrency(result.netEarnings)}
                   </td>
-                  <td className="py-2 text-right font-semibold text-gray-900">
+                  <td className="py-2 text-right font-semibold text-ink-strong">
                     {formatCurrency(result.businessRetention)}
                   </td>
-                  <td className="py-2 text-right text-sm font-medium text-gray-600">
+                  <td className="py-2 text-right text-sm font-medium text-ink-soft">
                     {formatPercentage((result.netEarnings / revenue) * 100)}
                   </td>
                 </tr>
@@ -227,8 +227,8 @@ export function EmploymentCalculationPreview({
 
         {/* Detailed Breakdown for First Scenario */}
         {calculations.preview && calculations.preview.length > 0 && (
-          <div className="mt-4 rounded-lg border border-green-200 bg-white p-3">
-            <h4 className="mb-2 flex items-center gap-2 text-base font-semibold text-gray-900">
+          <div className="mt-4 rounded-lg border border-green-200 bg-surface p-3">
+            <h4 className="mb-2 flex items-center gap-2 text-base font-semibold text-ink-strong">
               <DollarSignIcon className="h-4 w-4 text-green-600" />
               Breakdown for{' '}
               {formatCurrency(calculations.preview[1]?.revenue || 1000)}
@@ -243,16 +243,16 @@ export function EmploymentCalculationPreview({
                 return (
                   <>
                     <div>
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-ink">
                         Gross Revenue:
                       </span>
-                      <span className="float-right font-medium text-gray-900">
+                      <span className="float-right font-medium text-ink-strong">
                         {formatCurrency(result.grossRevenue)}
                       </span>
                     </div>
                     {result.commissionEarnings > 0 && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-ink">
                           Commission:
                         </span>
                         <span className="float-right font-medium text-green-600">
@@ -262,7 +262,7 @@ export function EmploymentCalculationPreview({
                     )}
                     {result.chairRentalDue > 0 && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-ink">
                           Rental Due:
                         </span>
                         <span className="float-right font-medium text-orange-600">
@@ -272,7 +272,7 @@ export function EmploymentCalculationPreview({
                     )}
                     {result.baseSalaryAmount > 0 && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-ink">
                           Base Salary:
                         </span>
                         <span className="float-right font-medium text-blue-600">
@@ -281,13 +281,13 @@ export function EmploymentCalculationPreview({
                       </div>
                     )}
                     <div className="col-span-2 mt-2 border-t pt-2">
-                      <div className="flex justify-between font-semibold text-gray-900">
+                      <div className="flex justify-between font-semibold text-ink-strong">
                         <span>Net Staff Earnings:</span>
                         <span className="text-green-700">
                           {formatCurrency(result.netEarnings)}
                         </span>
                       </div>
-                      <div className="flex justify-between text-sm font-medium text-gray-700">
+                      <div className="flex justify-between text-sm font-medium text-ink">
                         <span>Business Retention:</span>
                         <span>{formatCurrency(result.businessRetention)}</span>
                       </div>

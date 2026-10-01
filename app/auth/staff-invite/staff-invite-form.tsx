@@ -184,7 +184,7 @@ export function StaffInviteForm() {
       case 'HYBRID':
         return 'bg-purple-100 text-purple-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-surface-sunken text-ink-deep';
     }
   };
 
@@ -201,10 +201,10 @@ export function StaffInviteForm() {
       <Card>
         <CardContent className="py-12 text-center">
           <XCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+          <h3 className="mb-2 text-lg font-semibold text-ink-strong">
             Invalid Invitation
           </h3>
-          <p className="mb-4 text-gray-600">{error}</p>
+          <p className="mb-4 text-ink-soft">{error}</p>
           <Button onClick={() => router.push('/auth/signin')}>
             Go to Sign In
           </Button>
@@ -218,10 +218,10 @@ export function StaffInviteForm() {
       <Card>
         <CardContent className="py-12 text-center">
           <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-500" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+          <h3 className="mb-2 text-lg font-semibold text-ink-strong">
             Welcome to the Team!
           </h3>
-          <p className="mb-4 text-gray-600">
+          <p className="mb-4 text-ink-soft">
             Your account has been created successfully. You&apos;ll be
             redirected to sign in shortly.
           </p>
@@ -238,10 +238,10 @@ export function StaffInviteForm() {
       <Card>
         <CardContent className="py-12 text-center">
           <XCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+          <h3 className="mb-2 text-lg font-semibold text-ink-strong">
             Invitation Not Found
           </h3>
-          <p className="text-gray-600">
+          <p className="text-ink-soft">
             This invitation may have expired or been used already.
           </p>
         </CardContent>
@@ -265,18 +265,18 @@ export function StaffInviteForm() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="text-sm font-medium text-gray-700">Position</h4>
+              <h4 className="text-sm font-medium text-ink">Position</h4>
               <p className="font-semibold">
                 {invitation.staffData.displayName}
               </p>
               {invitation.staffData.title && (
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-ink-soft">
                   {invitation.staffData.title}
                 </p>
               )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-gray-700">Employment</h4>
+              <h4 className="text-sm font-medium text-ink">Employment</h4>
               <Badge
                 className={getEmploymentBadgeColor(
                   invitation.staffData.employmentType
@@ -284,7 +284,7 @@ export function StaffInviteForm() {
               >
                 {invitation.staffData.employmentType.replace('_', ' ')}
               </Badge>
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-ink-soft">
                 {getEmploymentDisplay(invitation.staffData)}
               </p>
             </div>
@@ -301,7 +301,7 @@ export function StaffInviteForm() {
             </div>
           )}
 
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-ink-muted">
             Invitation expires:{' '}
             {new Date(invitation.expiresAt).toLocaleDateString()}
           </div>

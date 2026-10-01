@@ -147,7 +147,7 @@ export function WeekView({
       case 'very-high':
         return 'bg-red-100';
       default:
-        return 'bg-gray-50';
+        return 'bg-surface-muted';
     }
   };
 
