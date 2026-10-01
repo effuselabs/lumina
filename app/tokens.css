@@ -13,6 +13,10 @@
   --semantic-warning: #b45309;
   --semantic-error: #dc2626;
   --semantic-info: #2563eb;
+  --semantic-success-on-dark: #4ade80;
+  --semantic-warning-on-dark: #fbbf24;
+  --semantic-error-on-dark: #f87171;
+  --semantic-info-on-dark: #60a5fa;
   --neutral-50: #fafafa;
   --neutral-100: #f5f5f5;
   --neutral-200: #e5e5e5;
@@ -34,7 +38,7 @@
   --theme-secondary-hover: #0f3a44;
   --theme-dark-background: #0a0a0a;
   --theme-dark-foreground-secondary: #a1a1aa;
-  --theme-dark-foreground-muted: #71717a;
+  --theme-dark-foreground-muted: #94949c;
   --theme-dark-border: #27272a;
   --theme-dark-border-muted: #1f1f23;
   --theme-dark-text-disabled: #3f3f46;

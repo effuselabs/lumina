@@ -196,17 +196,43 @@ gates decide, and `npm run db:seed` runs by hand on anything near
        every element's computed colours matched.
      - `prisma/seed.ts`, the last one, takes the demo salon's colour from
        `brand.gold`. Nothing in the application writes a hex of its own.
-   - [ ] **3f — dark mode does not work, and would fail AA if it did.**
-     - The `.dark` overrides never apply. `:root` in `globals.css` is
-       unlayered and `.dark` sits in `@layer base`; the theme switcher puts
-       `dark` on `<html>`, the element `:root` matches, and unlayered
-       declarations beat layered ones whatever their specificity. Measured:
-       with `.dark` on `<html>`, `--color-background` stays `#ffffff`.
-     - Dark mode reuses the light `--semantic-*` values, which on the dark
-       surface `#171717` reach 3.47–3.71:1 (info lowest).
-     - **Decided (Jeremy, 2026-10-01): fix it properly.** Dark mode is a
-       requirement, not an extra; "light-only by design" (3d) no longer
-       holds.
+   - [ ] **3f — dark mode, done properly.** Decided by Jeremy on
+         2026-10-01: dark mode is a requirement, not an extra, and
+         "light-only by design" (3d) no longer holds. Three pull requests.
+     - [x] **1 — the dark theme applies, and passes AA.** Three faults:
+       - **Cascade.** Tailwind 3's `@layer base` is not a CSS cascade layer;
+         Tailwind moves its rules up to `@tailwind base`, the top of the
+         file. `.dark` lived there, so in the built CSS it came _before_ the
+         plain `:root` that sets the same properties, at equal specificity,
+         and `:root` won on source order. (This entry first blamed layered
+         versus unlayered precedence; the built CSS showed otherwise.)
+         `.dark` now sits outside any layer, after `:root`.
+       - **Two providers.** `dashboard-layout.tsx` wrapped the dashboard in
+         a second `ThemeProvider` with `defaultTheme="system"` and its own
+         storage key. It won the class on `<html>`, so the dashboard
+         followed the OS — dark-OS users already got a half-dark dashboard,
+         despite `providers.tsx` choosing light. It is gone. The
+         root provider also force-set four properties as inline styles,
+         which hid the cascade bug; that is gone too.
+       - **Contrast.** Dark reused light `status` colours (3.5–4.1:1 on dark)
+         and a muted grey at 3.71:1. `tokens.statusOnDark` and muted
+         `#94949C` clear 4.5:1 on all three dark surfaces, status fills
+         carry dark text, and brand text (`.text-lumina-primary`) is gold in
+         dark, where deep teal is 1.3:1. All in `contrastPairs`.
+       - `__tests__/design/dark-theme-cascade.test.ts` fails on any of the
+         three structural faults. Light mode: 18 of 19 pages identical,
+         analytics differs only in a seeded figure. Dark mode, measured on four
+         pages: background, text, muted, status and brand text all resolve
+         to their dark values.
+     - [ ] **2 — semantic Tailwind colours** (surface, text, muted, border,
+           status tints) whose light values equal today's, so components can
+           stop hardcoding light classes. Defines the `--color-*-background`
+           properties `success-50` and friends point at, which are undefined.
+     - [ ] **3 — the sweep**: about 355 hardcoded light classes (`bg-white`
+           51, `text-gray-900` 95, `text-gray-600` 124, …) and inline chart
+           colours, page by page with light and dark screenshots; then a theme
+           switcher in the dashboard and `defaultTheme="system"`. Until then no
+           one reaches dark mode: the only switcher is on a design-system page.
    - [x] **3g — peach renders.** `--lumina-peach` was never defined, so
          `bg-lumina-peach` painted nothing — and its opacity variants
          (`/10`, `/20`, `/30`) were never generated at all, because Tailwind
