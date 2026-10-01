@@ -313,8 +313,8 @@ export function OptimizedBookingInterface({
         const { selectedSlot, clientInfo, selectedServices } = bookingState;
         if (!selectedSlot || !clientInfo || selectedServices.length === 0) {
           return (
-            <div className="rounded-lg border border-gray-200 p-6 text-center">
-              <p className="text-sm text-gray-700">
+            <div className="rounded-lg border border-line p-6 text-center">
+              <p className="text-sm text-ink">
                 We lost track of your booking details. Please start again.
               </p>
               <button
@@ -400,7 +400,7 @@ export function OptimizedBookingInterface({
         <div className="mx-auto max-w-4xl">
           {/* Progress indicator */}
           <div className="mb-8">
-            <div className="flex items-center justify-between text-sm text-gray-600">
+            <div className="flex items-center justify-between text-sm text-ink-soft">
               <span>
                 Step {bookingState.currentStep + 1} of {BOOKING_STEPS.length}
               </span>
@@ -411,7 +411,7 @@ export function OptimizedBookingInterface({
                 %
               </span>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-200">
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-strong">
               <div
                 className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300"
                 style={{
@@ -447,7 +447,7 @@ export function OptimizedBookingInterface({
                   <button
                     onClick={handleBack}
                     disabled={bookingState.isLoading}
-                    className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-lg border border-line-strong px-4 py-2 text-sm font-medium text-ink hover:bg-surface-muted disabled:opacity-50"
                   >
                     ← Back
                   </button>

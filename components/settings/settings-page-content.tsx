@@ -186,8 +186,8 @@ export function SettingsPageContent({
             <Card className="cursor-pointer transition-shadow hover:shadow-md">
               <CardHeader>
                 <div className="flex items-center space-x-3">
-                  <div className="rounded-lg bg-gray-100 p-2">
-                    <Settings className="h-5 w-5 text-gray-600" />
+                  <div className="rounded-lg bg-surface-sunken p-2">
+                    <Settings className="h-5 w-5 text-ink-soft" />
                   </div>
                   <div>
                     <CardTitle className="text-lg">System Settings</CardTitle>

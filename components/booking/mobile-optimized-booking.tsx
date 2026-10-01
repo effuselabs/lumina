@@ -113,7 +113,7 @@ export function MobileOptimizedBooking({
   return (
     <div
       className={cn(
-        'flex min-h-screen flex-col bg-gray-50',
+        'flex min-h-screen flex-col bg-surface-muted',
         'touch-pan-y', // Allow vertical scrolling
         className
       )}
@@ -122,7 +122,7 @@ export function MobileOptimizedBooking({
       onTouchEnd={handleTouchEnd}
     >
       {/* Mobile Header with Progress */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm">
+      <header className="sticky top-0 z-50 bg-surface shadow-sm">
         {/* Network Status Indicator */}
         {shouldShowOfflineMessage() && (
           <div className="bg-red-50 px-4 py-2 text-center">
@@ -152,13 +152,13 @@ export function MobileOptimizedBooking({
         <div className="px-4 py-3">
           {/* Progress Bar */}
           <div className="mb-3">
-            <div className="flex items-center justify-between text-sm text-gray-600">
+            <div className="flex items-center justify-between text-sm text-ink-soft">
               <span>
                 Step {currentStepNumber} of {totalSteps}
               </span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>
-            <div className="mt-1 h-2 overflow-hidden rounded-full bg-gray-200">
+            <div className="mt-1 h-2 overflow-hidden rounded-full bg-surface-strong">
               <div
                 className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out"
                 style={{ width: `${progressPercentage}%` }}
@@ -177,7 +177,7 @@ export function MobileOptimizedBooking({
            * keep: full-width, thumb-height, and where a phone user
            * looks for the primary action.
            */}
-          <div className="text-center text-sm font-medium text-gray-900">
+          <div className="text-center text-sm font-medium text-ink-strong">
             Booking Appointment
           </div>
         </div>
@@ -201,7 +201,7 @@ export function MobileOptimizedBooking({
        * Confirm button, so the tap landed on the bar instead.
        */}
       {(onBack || onNext) && (
-        <footer className="safe-area-pb sticky bottom-0 border-t bg-white p-4">
+        <footer className="safe-area-pb sticky bottom-0 border-t bg-surface p-4">
           <div className="flex gap-3">
             {onBack && (
               <Button
@@ -236,7 +236,7 @@ export function MobileOptimizedBooking({
 
           {/* Swipe Hint for First-Time Users */}
           {currentStepNumber === 1 && (
-            <div className="mt-2 text-center text-xs text-gray-500">
+            <div className="mt-2 text-center text-xs text-ink-muted">
               Swipe up to continue or use the buttons above
             </div>
           )}

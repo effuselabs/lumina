@@ -297,7 +297,7 @@ const AnimatedCounter = React.forwardRef<HTMLDivElement, AnimatedCounterProps>(
       if (!showProgress) return null;
 
       return (
-        <div className="animated-counter-progress mt-2 h-1 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+        <div className="animated-counter-progress mt-2 h-1 w-full rounded-full bg-surface-strong dark:bg-gray-700">
           <div
             className={cn(
               'h-1 rounded-full transition-all duration-300 ease-out',

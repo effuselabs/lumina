@@ -31,7 +31,7 @@ export function ScheduleItem({
       case 'completed':
         return 'bg-gradient-to-r from-emerald-50 to-emerald-25 border-emerald-200';
       default:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-surface-muted border-line';
     }
   };
 

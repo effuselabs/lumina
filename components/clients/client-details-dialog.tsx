@@ -168,7 +168,7 @@ export function ClientDetailsDialog({
 
         <div className="space-y-6">
           {/* Client Header */}
-          <div className="flex items-center space-x-4 rounded-lg bg-gray-50 p-4">
+          <div className="flex items-center space-x-4 rounded-lg bg-surface-muted p-4">
             <Avatar className="h-16 w-16">
               <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-lg text-white">
                 {getInitials(client.firstName, client.lastName)}
@@ -260,7 +260,7 @@ export function ClientDetailsDialog({
             {client.notes && (
               <div className="space-y-2">
                 <p className="text-lumina-secondary text-sm">Notes</p>
-                <div className="rounded-lg bg-gray-50 p-3">
+                <div className="rounded-lg bg-surface-muted p-3">
                   <p className="text-lumina-primary whitespace-pre-wrap">
                     {client.notes}
                   </p>
@@ -275,7 +275,7 @@ export function ClientDetailsDialog({
               Appointment History
             </h4>
             {isLoading ? (
-              <div className="rounded-lg bg-gray-50 p-4">
+              <div className="rounded-lg bg-surface-muted p-4">
                 <p className="text-lumina-secondary">Loading appointments...</p>
               </div>
             ) : appointments.length > 0 ? (
@@ -283,7 +283,7 @@ export function ClientDetailsDialog({
                 {appointments.map(appointment => (
                   <div
                     key={appointment.id}
-                    className="rounded-lg bg-gray-50 p-4"
+                    className="rounded-lg bg-surface-muted p-4"
                   >
                     <div className="mb-2 flex items-center justify-between">
                       <div className="flex items-center space-x-2">
@@ -347,7 +347,7 @@ export function ClientDetailsDialog({
                 ))}
               </div>
             ) : (
-              <div className="rounded-lg bg-gray-50 p-4">
+              <div className="rounded-lg bg-surface-muted p-4">
                 <p className="text-lumina-secondary">
                   No appointments found for this client.
                 </p>

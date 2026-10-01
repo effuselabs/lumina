@@ -187,9 +187,9 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       case 'CANCELLED':
         return 'bg-red-100 text-red-800';
       case 'COMPLETED':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-surface-sunken text-ink-deep';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-surface-sunken text-ink-deep';
     }
   };
 
@@ -242,7 +242,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
   if (!booking) {
     return (
       <div className="mx-auto max-w-2xl py-8 text-center">
-        <p className="text-gray-600">Booking not found</p>
+        <p className="text-ink-soft">Booking not found</p>
       </div>
     );
   }
@@ -255,8 +255,10 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Booking Details</h1>
-          <p className="text-gray-600">Confirmation ID: {booking.id}</p>
+          <h1 className="text-2xl font-bold text-ink-strong">
+            Booking Details
+          </h1>
+          <p className="text-ink-soft">Confirmation ID: {booking.id}</p>
         </div>
         <Badge className={getStatusColor(booking.status)}>
           {booking.status}
@@ -280,7 +282,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label className="text-sm font-medium text-gray-600">
+              <Label className="text-sm font-medium text-ink-soft">
                 Service
               </Label>
               <p className="font-medium">{booking.service.name}</p>
@@ -299,7 +301,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-gray-600">
+              <Label className="text-sm font-medium text-ink-soft">
                 Staff Member
               </Label>
               <p className="flex items-center space-x-2 font-medium">
@@ -309,7 +311,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-gray-600">Date</Label>
+              <Label className="text-sm font-medium text-ink-soft">Date</Label>
               <p className="flex items-center space-x-2 font-medium">
                 <Calendar className="h-4 w-4" />
                 <span>{date}</span>
@@ -317,7 +319,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-gray-600">Time</Label>
+              <Label className="text-sm font-medium text-ink-soft">Time</Label>
               <p className="flex items-center space-x-2 font-medium">
                 <Clock className="h-4 w-4" />
                 <span>
@@ -329,8 +331,8 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
 
           {booking.notes && (
             <div>
-              <Label className="text-sm font-medium text-gray-600">Notes</Label>
-              <p className="text-gray-800">{booking.notes}</p>
+              <Label className="text-sm font-medium text-ink-soft">Notes</Label>
+              <p className="text-ink-deep">{booking.notes}</p>
             </div>
           )}
         </CardContent>
@@ -343,14 +345,14 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <Label className="text-sm font-medium text-gray-600">Name</Label>
+            <Label className="text-sm font-medium text-ink-soft">Name</Label>
             <p className="font-medium">
               {booking.client.firstName} {booking.client.lastName}
             </p>
           </div>
 
           <div>
-            <Label className="text-sm font-medium text-gray-600">Email</Label>
+            <Label className="text-sm font-medium text-ink-soft">Email</Label>
             <p className="flex items-center space-x-2">
               <Mail className="h-4 w-4" />
               <span>{booking.client.email}</span>
@@ -359,7 +361,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
 
           {booking.client.phone && (
             <div>
-              <Label className="text-sm font-medium text-gray-600">Phone</Label>
+              <Label className="text-sm font-medium text-ink-soft">Phone</Label>
               <p className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
                 <span>{booking.client.phone}</span>
@@ -376,7 +378,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <Label className="text-sm font-medium text-gray-600">
+            <Label className="text-sm font-medium text-ink-soft">
               Business Name
             </Label>
             <p className="font-medium">{booking.business.name}</p>
@@ -384,7 +386,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
 
           {booking.business.address && (
             <div>
-              <Label className="text-sm font-medium text-gray-600">
+              <Label className="text-sm font-medium text-ink-soft">
                 Address
               </Label>
               <p>{booking.business.address}</p>
@@ -393,7 +395,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
 
           {booking.business.phone && (
             <div>
-              <Label className="text-sm font-medium text-gray-600">Phone</Label>
+              <Label className="text-sm font-medium text-ink-soft">Phone</Label>
               <p className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
                 <span>{booking.business.phone}</span>
@@ -403,7 +405,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
 
           {booking.business.email && (
             <div>
-              <Label className="text-sm font-medium text-gray-600">Email</Label>
+              <Label className="text-sm font-medium text-ink-soft">Email</Label>
               <p className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
                 <span>{booking.business.email}</span>

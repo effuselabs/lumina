@@ -393,7 +393,7 @@ export function ServiceSelection({
       {Object.entries(filteredServicesByCategory).map(
         ([category, categoryServices]) => (
           <div key={category} className="space-y-4">
-            <h3 className="border-b pb-2 text-lg font-semibold text-gray-800">
+            <h3 className="border-b pb-2 text-lg font-semibold text-ink-deep">
               {category}
             </h3>
 
@@ -568,7 +568,7 @@ export function ServiceSelection({
       {/* No services found */}
       {Object.keys(filteredServicesByCategory).length === 0 && (
         <div className="py-8 text-center">
-          <p className="text-gray-600">
+          <p className="text-ink-soft">
             {searchQuery || selectedCategory !== 'all'
               ? 'No services match your current filters.'
               : 'No services available for online booking.'}

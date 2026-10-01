@@ -57,10 +57,10 @@ export function OperatingHoursStep({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900">
+            <h3 className="text-lg font-medium text-ink-strong">
               Set Your Operating Hours
             </h3>
-            <p className="text-gray-600">
+            <p className="text-ink-soft">
               Configure when your business is open for appointments. You can
               always change these later.
             </p>
@@ -131,7 +131,7 @@ export function OperatingHoursStep({
                   )}
 
                   {!dayHours?.isOpen && (
-                    <p className="text-sm text-gray-500">Closed</p>
+                    <p className="text-sm text-ink-muted">Closed</p>
                   )}
                 </div>
               );

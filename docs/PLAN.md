@@ -239,11 +239,22 @@ gates decide, and `npm run db:seed` runs by hand on anything near
            is a ratchet: 508 hardcoded light classes today, and the count may
            only fall. The `--color-*-background` properties that `success-50`
            and friends point at are undefined, but nothing uses those classes.
-     - [ ] **3 — the sweep**: 508 hardcoded light classes (`bg-white`
-           60, `text-gray-900` 95, `text-gray-600` 130, …) and inline chart
-           colours, page by page with light and dark screenshots; then a theme
-           switcher in the dashboard and `defaultTheme="system"`. Until then no
-           one reaches dark mode: the only switcher is on a design-system page.
+     - [x] **3.1 — the gray sweep.** 506 hardcoded light classes across 50
+           files (`bg-white` → `bg-surface`, `text-gray-900` →
+           `text-ink-strong`, `border-gray-200` → `border-line`, and so on, with
+           `hover:` and other prefixes kept) moved onto the themed names, plus
+           `ink-deep` (gray-800) and `surface-dim` (gray-300). Light mode: 18 of
+           19 pages pixel-identical, analytics within its noise.
+           `hardcoded-light-classes.test.ts` now fails on any hardcoded light
+           gray outside two named exceptions.
+     - [ ] **3.2 — what the gray sweep did not reach**, seen in dark
+           screenshots of all 19 pages: `text-deep-teal` (39, near-invisible on
+           dark — "Select Your Services", "Filters:"), `text-/bg-/border-neutral-*`
+           without a `dark:` pair, gray gradient stops (the booking page
+           background), pastel status fills (`bg-green-50` and friends, 31 — the
+           calendar's header row), and the analytics Refresh button. Then a
+           theme switcher in the dashboard header and `defaultTheme="system"`.
+           Until then no one reaches dark mode.
    - [x] **3g — peach renders.** `--lumina-peach` was never defined, so
          `bg-lumina-peach` painted nothing — and its opacity variants
          (`/10`, `/20`, `/30`) were never generated at all, because Tailwind

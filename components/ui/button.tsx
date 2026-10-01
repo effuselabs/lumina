@@ -102,7 +102,7 @@ const buttonVariants = cva(
         ],
         // Premium Floating - Elevated floating effect
         'premium-floating': [
-          'bg-white text-deep-teal shadow-xl border border-white/20',
+          'bg-surface text-deep-teal shadow-xl border border-white/20',
           'dark:bg-neutral-900 dark:text-white dark:border-neutral-700',
           'hover:shadow-2xl hover:scale-105 active:scale-95',
           'focus-visible:ring-lumina-gold focus-visible:ring-2 focus-visible:ring-offset-2',

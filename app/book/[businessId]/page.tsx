@@ -37,18 +37,18 @@ function BookingLoadingSkeleton() {
     <div className="space-y-6">
       {/* Progress skeleton */}
       <div className="space-y-3">
-        <div className="h-2 animate-pulse rounded-full bg-gray-200" />
-        <div className="h-4 w-1/3 animate-pulse rounded bg-gray-200" />
+        <div className="h-2 animate-pulse rounded-full bg-surface-strong" />
+        <div className="h-4 w-1/3 animate-pulse rounded bg-surface-strong" />
       </div>
 
       {/* Content skeleton */}
       <div className="space-y-4">
-        <div className="h-8 w-1/2 animate-pulse rounded bg-gray-200" />
+        <div className="h-8 w-1/2 animate-pulse rounded bg-surface-strong" />
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
             <div
               key={i}
-              className="h-16 animate-pulse rounded-lg bg-gray-200"
+              className="h-16 animate-pulse rounded-lg bg-surface-strong"
             />
           ))}
         </div>
@@ -56,7 +56,7 @@ function BookingLoadingSkeleton() {
 
       {/* Button skeleton */}
       <div className="flex justify-end">
-        <div className="h-10 w-24 animate-pulse rounded bg-gray-200" />
+        <div className="h-10 w-24 animate-pulse rounded bg-surface-strong" />
       </div>
     </div>
   );

@@ -1064,8 +1064,8 @@ function DesignSystemContent() {
                   Enhanced Contrast (if default is too light)
                 </Label>
                 <div className="space-y-2">
-                  <div className="h-4 w-[250px] animate-pulse rounded bg-gray-300 dark:bg-gray-600"></div>
-                  <div className="h-4 w-[200px] animate-pulse rounded bg-gray-300 dark:bg-gray-600"></div>
+                  <div className="h-4 w-[250px] animate-pulse rounded bg-surface-dim dark:bg-gray-600"></div>
+                  <div className="h-4 w-[200px] animate-pulse rounded bg-surface-dim dark:bg-gray-600"></div>
                 </div>
               </div>
             </CardContent>

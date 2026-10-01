@@ -160,11 +160,11 @@ function OfflineMessage({ onRetry, className }: OfflineMessageProps) {
       )}
     >
       <Card className="max-w-md p-6 text-center">
-        <WifiOff className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-4 text-lg font-semibold text-gray-900">
+        <WifiOff className="mx-auto h-12 w-12 text-ink-faint" />
+        <h3 className="mt-4 text-lg font-semibold text-ink-strong">
           No Internet Connection
         </h3>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-ink-soft">
           Please check your internet connection and try again. Your booking
           progress has been saved and will be restored when you reconnect.
         </p>
@@ -219,8 +219,8 @@ function OfflineModeWrapper({
           />
         ) : (
           <div className="py-8 text-center">
-            <AlertCircle className="mx-auto h-8 w-8 text-gray-400" />
-            <p className="mt-2 text-sm text-gray-600">
+            <AlertCircle className="mx-auto h-8 w-8 text-ink-faint" />
+            <p className="mt-2 text-sm text-ink-soft">
               No offline data available. Please connect to the internet to
               continue.
             </p>
@@ -263,7 +263,7 @@ function OfflineBookingInterface({
         <span className="font-medium">Offline Mode Active</span>
       </div>
 
-      <p className="mb-6 text-sm text-gray-600">
+      <p className="mb-6 text-sm text-ink-soft">
         You can continue browsing services and preparing your booking. Your
         selections will be saved and processed when you reconnect.
       </p>
@@ -271,7 +271,7 @@ function OfflineBookingInterface({
       {/* Simplified offline booking form */}
       <div className="space-y-4">
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
+          <label className="mb-2 block text-sm font-medium text-ink">
             Service Selection
           </label>
           <div className="space-y-2">
@@ -280,7 +280,7 @@ function OfflineBookingInterface({
                 <input
                   type="checkbox"
                   id={service.id}
-                  className="rounded border-gray-300"
+                  className="rounded border-line-strong"
                   onChange={e => {
                     setFormData((prev: any) => ({
                       ...prev,
@@ -301,12 +301,12 @@ function OfflineBookingInterface({
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
+          <label className="mb-2 block text-sm font-medium text-ink">
             Preferred Date & Time
           </label>
           <input
             type="datetime-local"
-            className="w-full rounded-md border border-gray-300 px-3 py-2"
+            className="w-full rounded-md border border-line-strong px-3 py-2"
             onChange={e => {
               setFormData((prev: any) => ({
                 ...prev,
@@ -317,11 +317,11 @@ function OfflineBookingInterface({
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
+          <label className="mb-2 block text-sm font-medium text-ink">
             Notes
           </label>
           <textarea
-            className="w-full rounded-md border border-gray-300 px-3 py-2"
+            className="w-full rounded-md border border-line-strong px-3 py-2"
             rows={3}
             placeholder="Any special requests or notes..."
             onChange={e => {

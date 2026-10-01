@@ -67,7 +67,7 @@ export function EmploymentTypeSelector({
       case 'HYBRID':
         return 'border-purple-200 hover:border-purple-300 bg-purple-50/50';
       default:
-        return 'border-gray-200 hover:border-gray-300 bg-gray-50/50';
+        return 'border-line hover:border-line-strong bg-gray-50/50';
     }
   };
 
@@ -107,13 +107,13 @@ export function EmploymentTypeSelector({
                     <CheckCircleIcon className="h-5 w-5 text-orange-500" />
                   )}
                 </CardTitle>
-                <CardDescription className="text-sm font-medium text-gray-700">
+                <CardDescription className="text-sm font-medium text-ink">
                   {info.description}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="space-y-2">
-                  <p className="rounded bg-gray-50 p-2 text-sm font-semibold text-gray-800">
+                  <p className="rounded bg-surface-muted p-2 text-sm font-semibold text-ink-deep">
                     {info.example}
                   </p>
 
@@ -155,7 +155,7 @@ export function EmploymentTypeSelector({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-sm font-medium text-gray-800">
+            <p className="text-sm font-medium text-ink-deep">
               {displayedInfo.description}
             </p>
 
@@ -191,8 +191,8 @@ export function EmploymentTypeSelector({
 
             <Alert className="border-blue-200 bg-blue-50">
               <InfoIcon className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-gray-800">
-                <strong className="text-gray-900">Example:</strong>{' '}
+              <AlertDescription className="text-ink-deep">
+                <strong className="text-ink-strong">Example:</strong>{' '}
                 {displayedInfo.example}
               </AlertDescription>
             </Alert>
@@ -202,7 +202,7 @@ export function EmploymentTypeSelector({
 
       {/* Selection Confirmation */}
       {currentValue && (
-        <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-700">
+        <div className="flex items-center justify-center gap-2 text-sm font-medium text-ink">
           <CheckCircleIcon className="h-4 w-4 text-green-500" />
           Selected: {employmentTypeDescriptions[currentValue].title}
         </div>

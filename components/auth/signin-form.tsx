@@ -43,8 +43,8 @@ export function SignInForm() {
     return (
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-          <p className="mt-2 text-gray-600">Sign in to your Lumina account</p>
+          <h1 className="text-2xl font-bold text-ink-strong">Welcome back</h1>
+          <p className="mt-2 text-ink-soft">Sign in to your Lumina account</p>
         </div>
         <div className="flex justify-center py-8">
           <Loader2 className="h-6 w-6 animate-spin text-lumina-coral" />
@@ -142,8 +142,8 @@ export function SignInForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-        <p className="mt-2 text-gray-600">Sign in to your Lumina account</p>
+        <h1 className="text-2xl font-bold text-ink-strong">Welcome back</h1>
+        <p className="mt-2 text-ink-soft">Sign in to your Lumina account</p>
       </div>
 
       {generalError && (
@@ -191,7 +191,7 @@ export function SignInForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink-strong"
               disabled={isLoading}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -220,10 +220,12 @@ export function SignInForm() {
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-gray-200" />
+          <span className="w-full border-t border-line" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-gray-500">Or continue with</span>
+          <span className="bg-surface px-2 text-ink-muted">
+            Or continue with
+          </span>
         </div>
       </div>
 
@@ -260,7 +262,7 @@ export function SignInForm() {
       </Button>
 
       <div className="text-center text-sm">
-        <span className="text-gray-600">Don&apos;t have an account? </span>
+        <span className="text-ink-soft">Don&apos;t have an account? </span>
         <a
           href="/auth/signup"
           className="font-medium text-lumina-coral hover:text-deep-teal"
@@ -272,7 +274,7 @@ export function SignInForm() {
       <div className="text-center">
         <a
           href="/auth/forgot-password"
-          className="text-sm text-gray-600 hover:text-gray-900"
+          className="text-sm text-ink-soft hover:text-ink-strong"
         >
           Forgot your password?
         </a>

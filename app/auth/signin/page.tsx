@@ -9,17 +9,17 @@ export const metadata = {
 
 export default function SignInPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-surface-muted px-4">
       <div className="w-full max-w-md">
-        <div className="rounded-lg bg-white p-8 shadow-lg">
+        <div className="rounded-lg bg-surface p-8 shadow-lg">
           <ClientOnly
             fallback={
               <div className="space-y-6">
                 <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="text-2xl font-bold text-ink-strong">
                     Welcome back
                   </h1>
-                  <p className="mt-2 text-gray-600">
+                  <p className="mt-2 text-ink-soft">
                     Sign in to your Lumina account
                   </p>
                 </div>

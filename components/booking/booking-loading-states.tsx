@@ -94,19 +94,21 @@ export function BookingLoadingState({
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
           {content.icon}
         </div>
-        <h3 className="text-lg font-semibold text-gray-900">{content.title}</h3>
-        <p className="mt-1 text-sm text-gray-600">{content.description}</p>
+        <h3 className="text-lg font-semibold text-ink-strong">
+          {content.title}
+        </h3>
+        <p className="mt-1 text-sm text-ink-soft">{content.description}</p>
 
         {/* Progress Bar */}
         {showProgress && progress !== undefined && (
           <div className="mx-auto mt-4 max-w-xs">
             <Progress value={progress} className="h-2" />
-            <p className="mt-1 text-xs text-gray-500">{progress}% complete</p>
+            <p className="mt-1 text-xs text-ink-muted">{progress}% complete</p>
           </div>
         )}
 
         {/* Time Indicators */}
-        <div className="mt-3 flex items-center justify-center gap-4 text-xs text-gray-500">
+        <div className="mt-3 flex items-center justify-center gap-4 text-xs text-ink-muted">
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
             {elapsedTime}s elapsed
@@ -197,7 +199,7 @@ function AvailabilitySkeleton() {
           <div className="space-y-4">
             <div className="flex items-center justify-center py-4">
               <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-              <span className="ml-2 text-sm text-gray-600">
+              <span className="ml-2 text-sm text-ink-soft">
                 Calculating availability...
               </span>
             </div>
@@ -227,10 +229,10 @@ function BookingCreationSkeleton() {
         <div className="flex items-center justify-center py-8">
           <div className="text-center">
             <Loader2 className="mx-auto h-8 w-8 animate-spin text-blue-500" />
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-ink-soft">
               Processing your appointment...
             </p>
-            <div className="mt-4 space-y-2 text-xs text-gray-500">
+            <div className="mt-4 space-y-2 text-xs text-ink-muted">
               <div className="flex items-center justify-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-green-500"></div>
                 <span>Validating time slot</span>
@@ -240,7 +242,7 @@ function BookingCreationSkeleton() {
                 <span>Creating appointment</span>
               </div>
               <div className="flex items-center justify-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-gray-300"></div>
+                <div className="h-2 w-2 rounded-full bg-surface-dim"></div>
                 <span>Sending confirmation</span>
               </div>
             </div>
@@ -364,7 +366,7 @@ export function MultiStepProgress({
                   ? 'bg-blue-100 text-blue-700'
                   : step.status === 'error'
                     ? 'bg-red-100 text-red-700'
-                    : 'bg-gray-100 text-gray-500'
+                    : 'bg-surface-sunken text-ink-muted'
             }`}
           >
             {step.status === 'completed' ? (
@@ -378,12 +380,12 @@ export function MultiStepProgress({
           <span
             className={`text-sm ${
               step.status === 'active'
-                ? 'font-medium text-gray-900'
+                ? 'font-medium text-ink-strong'
                 : step.status === 'completed'
-                  ? 'text-gray-700'
+                  ? 'text-ink'
                   : step.status === 'error'
                     ? 'text-red-600'
-                    : 'text-gray-500'
+                    : 'text-ink-muted'
             }`}
           >
             {step.title}
