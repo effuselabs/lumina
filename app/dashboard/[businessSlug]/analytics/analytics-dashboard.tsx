@@ -23,7 +23,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useState } from 'react';
-import { brand, gradients, legacy } from '@/lib/design/tokens';
+import { brand, gradients, neutral } from '@/lib/design/tokens';
 
 interface AnalyticsDashboardProps {
   business: {
@@ -144,7 +144,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="lumina-heading-2">Analytics & Reports</h1>
-          <p className="lumina-body-large" style={{ color: legacy.textMuted }}>
+          <p className="lumina-body-large" style={{ color: neutral[500] }}>
             Comprehensive business insights and performance analytics
           </p>
         </div>
@@ -177,7 +177,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
               background: gradients.radiant,
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = `linear-gradient(135deg, ${legacy.radiantPressedFrom} 0%, ${legacy.radiantPressedTo} 100%)`;
+              e.currentTarget.style.background = gradients.radiantPressed;
             }}
             onMouseLeave={e => {
               e.currentTarget.style.background = gradients.radiant;
@@ -236,7 +236,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             <div
               className={`mt-1 flex items-center gap-1 text-sm ${revenueGrowth > 0 ? 'text-green-600' : revenueGrowth < 0 ? 'text-red-600' : ''}`}
               style={{
-                color: revenueGrowth === 0 ? legacy.textMuted : undefined,
+                color: revenueGrowth === 0 ? neutral[500] : undefined,
               }}
             >
               {revenueGrowth > 0 ? '+' : ''}
@@ -256,7 +256,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             <div className="text-lumina-primary text-2xl font-bold">
               {totalAppointments}
             </div>
-            <div className="mt-1 text-sm" style={{ color: legacy.textMuted }}>
+            <div className="mt-1 text-sm" style={{ color: neutral[500] }}>
               {completionRate}% completion rate
             </div>
           </CardContent>
@@ -273,7 +273,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             <div className="text-lumina-primary text-2xl font-bold">
               {topPerformer?.name || 'N/A'}
             </div>
-            <div className="mt-1 text-sm" style={{ color: legacy.textMuted }}>
+            <div className="mt-1 text-sm" style={{ color: neutral[500] }}>
               ${topPerformer?.revenue.toLocaleString() || 0} revenue
             </div>
           </CardContent>
@@ -290,7 +290,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
             <div className="text-lumina-primary text-2xl font-bold">
               {averageUtilization}%
             </div>
-            <div className="mt-1 text-sm" style={{ color: legacy.textMuted }}>
+            <div className="mt-1 text-sm" style={{ color: neutral[500] }}>
               Staff efficiency
             </div>
           </CardContent>

@@ -18,7 +18,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { brand, legacy } from '@/lib/design/tokens';
+import { brand, neutral, status } from '@/lib/design/tokens';
 
 interface RevenueData {
   date: string;
@@ -176,29 +176,25 @@ export function RevenueChart({
               <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor={legacy.positive}
+                  stopColor={status.success}
                   stopOpacity={0.3}
                 />
-                <stop
-                  offset="95%"
-                  stopColor={legacy.positive}
-                  stopOpacity={0}
-                />
+                <stop offset="95%" stopColor={status.success} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={brand.gold} stopOpacity={0.3} />
                 <stop offset="95%" stopColor={brand.gold} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke={legacy.gridline} />
+            <CartesianGrid strokeDasharray="3 3" stroke={neutral[200]} />
             <XAxis
               dataKey="date"
-              stroke={legacy.textMuted}
+              stroke={neutral[500]}
               fontSize={12}
               tickFormatter={formatDate}
             />
             <YAxis
-              stroke={legacy.textMuted}
+              stroke={neutral[500]}
               fontSize={12}
               tickFormatter={formatCurrency}
             />
@@ -206,7 +202,7 @@ export function RevenueChart({
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke={legacy.positive}
+              stroke={status.success}
               strokeWidth={3}
               fill="url(#revenueGradient)"
               name="Revenue"

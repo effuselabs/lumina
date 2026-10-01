@@ -120,14 +120,17 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          Done at identical values: 9 of 11 pages pixel-identical before and
          after, the analytics chart within its run-to-run noise, and the
          design-system page changed only where it had been wrong (below).
-   - [ ] **3b — reconcile the second palette.** Approved to proceed
-         (2026-10-01). Its values sit in
-         `tokens.legacy` — `#808285` against `neutral[600]` `#525252`,
-         `#22C58B` against `status.success`, and so on — copied into
-         components from `app/design-tokens/colors.css`. That file turned out
-         never to have been loaded (see 3e), so this is now purely a question
-         of which value each component should show. Choosing changes what
-         people see, so it goes page by page with screenshots.
+   - [x] **3b — the second palette is gone.** `tokens.legacy` is deleted;
+         its values had been copied into components from a `colors.css` that
+         was never loaded (see 3e). Each use now takes the main palette's
+         nearest role: muted text `#808285` (3.85:1) → `neutral[500]`
+         (4.74:1); positive `#22C58B` (2.23:1) → `status.success` (5.02:1);
+         negative → `status.error` (4.83:1); strong text → `brand.deepTeal`;
+         gridlines → `neutral[200]`; the success card's surface and border →
+         `statusTint`; the analytics hover gradient → `gradients.radiantPressed`.
+         Screenshots: 14 of 19 pages identical; the other five changed only in
+         page subtitles (slightly darker grey), chart lines and axes, and
+         stat-card trend colours.
    - [x] **3c — `status` colours meet AA as text.** success `#15803D` and
          warning `#B45309` (both 5.02:1 on white, and white on them), were
          3.30 and 3.19. `status.info` is now `#2563EB`, what `text-info`

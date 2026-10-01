@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { endOfDay, format, startOfDay, subDays } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
-import { chart, legacy } from '@/lib/design/tokens';
+import { chart, status } from '@/lib/design/tokens';
 
 export interface ChartData {
   revenue: Array<{
@@ -147,11 +147,11 @@ async function generateServiceData(businessId: string) {
   });
 
   const colors = [
-    legacy.positive,
+    status.success,
     chart.blue,
     chart.violet,
     chart.amber,
-    legacy.negative,
+    status.error,
     chart.cyan,
   ];
 

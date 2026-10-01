@@ -22,7 +22,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { brand, chart, legacy } from '@/lib/design/tokens';
+import { brand, chart, neutral, status } from '@/lib/design/tokens';
 
 interface StaffPerformanceData {
   name: string;
@@ -95,7 +95,7 @@ export function StaffPerformanceChart({
   const getEmploymentTypeColor = (type: string) => {
     switch (type) {
       case 'COMMISSION':
-        return legacy.positive;
+        return status.success;
       case 'CHAIR_RENTAL':
         return chart.blue;
       case 'HYBRID':
@@ -197,24 +197,24 @@ export function StaffPerformanceChart({
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               layout="horizontal"
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={legacy.gridline} />
+              <CartesianGrid strokeDasharray="3 3" stroke={neutral[200]} />
               <XAxis
                 type="number"
-                stroke={legacy.textMuted}
+                stroke={neutral[500]}
                 fontSize={12}
                 tickFormatter={formatCurrency}
               />
               <YAxis
                 type="category"
                 dataKey="name"
-                stroke={legacy.textMuted}
+                stroke={neutral[500]}
                 fontSize={12}
                 width={80}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar
                 dataKey="revenue"
-                fill={legacy.positive}
+                fill={status.success}
                 radius={[0, 4, 4, 0]}
               />
             </BarChart>
@@ -252,15 +252,15 @@ export function StaffPerformanceChart({
         <CardContent>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
-              <PolarGrid stroke={legacy.gridline} />
+              <PolarGrid stroke={neutral[200]} />
               <PolarAngleAxis
                 dataKey="metric"
-                tick={{ fontSize: 12, fill: legacy.textMuted }}
+                tick={{ fontSize: 12, fill: neutral[500] }}
               />
               <PolarRadiusAxis
                 angle={90}
                 domain={[0, 100]}
-                tick={{ fontSize: 10, fill: legacy.textMuted }}
+                tick={{ fontSize: 10, fill: neutral[500] }}
               />
               <Radar
                 name="Performance"
