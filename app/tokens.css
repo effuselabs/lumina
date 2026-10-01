@@ -45,3 +45,33 @@
   --theme-skeleton-base: #f0f0f0;
   --theme-skeleton-highlight: #e0e0e0;
 }
+
+:root {
+  --ui-surface: #ffffff;
+  --ui-surface-muted: #f9fafb;
+  --ui-surface-sunken: #f3f4f6;
+  --ui-surface-strong: #e5e7eb;
+  --ui-ink-strong: #111827;
+  --ui-ink: #374151;
+  --ui-ink-soft: #4b5563;
+  --ui-ink-muted: #6b7280;
+  --ui-ink-faint: #9ca3af;
+  --ui-line: #e5e7eb;
+  --ui-line-strong: #d1d5db;
+  --ui-line-soft: #f3f4f6;
+}
+
+.dark {
+  --ui-surface: #171717;
+  --ui-surface-muted: #1f1f23;
+  --ui-surface-sunken: #27272a;
+  --ui-surface-strong: #323238;
+  --ui-ink-strong: #fafafa;
+  --ui-ink: #e4e4e7;
+  --ui-ink-soft: #a1a1aa;
+  --ui-ink-muted: #94949c;
+  --ui-ink-faint: #71717a;
+  --ui-line: #27272a;
+  --ui-line-strong: #3f3f46;
+  --ui-line-soft: #1f1f23;
+}

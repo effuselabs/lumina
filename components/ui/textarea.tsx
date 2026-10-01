@@ -18,7 +18,7 @@ const textareaVariants = cva(
     variants: {
       variant: {
         default: [
-          'bg-white dark:bg-neutral-900',
+          'bg-surface',
           'text-neutral-900 dark:text-neutral-100',
           'border-neutral-300 dark:border-neutral-700',
           'hover:border-neutral-400 dark:hover:border-neutral-600',
@@ -26,7 +26,7 @@ const textareaVariants = cva(
           'disabled:bg-neutral-100 dark:disabled:bg-neutral-800',
         ],
         error: [
-          'bg-white dark:bg-neutral-900',
+          'bg-surface',
           'text-neutral-900 dark:text-neutral-100',
           'border-red-500 dark:border-red-400',
           'hover:border-red-600 dark:hover:border-red-300',
@@ -34,7 +34,7 @@ const textareaVariants = cva(
           'disabled:bg-neutral-100 dark:disabled:bg-neutral-800',
         ],
         success: [
-          'bg-white dark:bg-neutral-900',
+          'bg-surface',
           'text-neutral-900 dark:text-neutral-100',
           'border-green-500 dark:border-green-400',
           'hover:border-green-600 dark:hover:border-green-300',
