@@ -120,7 +120,8 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          Done at identical values: 9 of 11 pages pixel-identical before and
          after, the analytics chart within its run-to-run noise, and the
          design-system page changed only where it had been wrong (below).
-   - [ ] **3b — reconcile the second palette.** Its values sit in
+   - [ ] **3b — reconcile the second palette.** Approved to proceed
+         (2026-10-01). Its values sit in
          `tokens.legacy` — `#808285` against `neutral[600]` `#525252`,
          `#22C58B` against `status.success`, and so on — copied into
          components from `app/design-tokens/colors.css`. That file turned out
@@ -141,6 +142,9 @@ gates decide, and `npm run db:seed` runs by hand on anything near
          service titles, client and staff dialogs, analytics. It changes how
          the brand colour is used, so it is Jeremy's call — see the decision
          raised on 2026-09-29.
+     - **Decided (Jeremy, 2026-10-01): deep teal for text, gold for fills
+       and accents.** A full design-system review follows once the code is
+       clean.
    - [x] **3d — the Button's injected stylesheet is gone**, and the
          variants carry what it had been papering over. Primary text is deep
          teal on the gradient (5.81:1 at the coral end, where white was 2.57:1)
@@ -184,12 +188,17 @@ gates decide, and `npm run db:seed` runs by hand on anything near
        with `.dark` on `<html>`, `--color-background` stays `#ffffff`.
      - Dark mode reuses the light `--semantic-*` values, which on the dark
        surface `#171717` reach 3.47–3.71:1 (info lowest).
-     - The app is light-only by design (see 3d), so the question is whether
-       to fix dark mode or delete it — a product call, not a refactor.
-   - [ ] **3g — `--lumina-peach` has never been defined.** `bg-lumina-peach`
-         and three other references resolve to nothing, so those elements
-         have no fill. Defining it paints them for the first time, so it goes
-         with screenshots.
+     - **Decided (Jeremy, 2026-10-01): fix it properly.** Dark mode is a
+       requirement, not an extra; "light-only by design" (3d) no longer
+       holds.
+   - [x] **3g — peach renders.** `--lumina-peach` was never defined, so
+         `bg-lumina-peach` painted nothing — and its opacity variants
+         (`/10`, `/20`, `/30`) were never generated at all, because Tailwind
+         cannot add alpha to a bare `var()`. Tailwind's peach colours now take
+         `brand.peach` directly, as the `brand.*` colours already did. The
+         "in progress" schedule item, its border and two hover tints paint
+         for the first time; checked in the browser, since none of them is
+         on screen in the standard screenshots, which were all identical.
 4. [x] **Unused exports** — 334 exports and 237 exported types by `knip`,
        taken a directory at a time.
    - `lib/email/` (166): done. Its barrel `index.ts` re-exported everything

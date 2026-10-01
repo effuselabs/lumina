@@ -442,9 +442,7 @@ export const prohibitedPairs = [
  * fails if the checked-in file is stale.
  *
  * The names are the ones globals.css already used, so nothing that reads
- * them changed. `--lumina-peach` is deliberately absent: tailwind.config.ts
- * and a few components refer to it, it has never been defined, and defining
- * it now would paint those elements for the first time — see docs/PLAN.md.
+ * them changed.
  */
 export const cssVariables: Record<string, string> = {
   '--lumina-gold': brand.gold,

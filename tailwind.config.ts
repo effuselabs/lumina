@@ -130,14 +130,14 @@ const config: Config = {
           gold: 'var(--lumina-gold)',
           coral: 'var(--lumina-coral)',
           orange: 'var(--lumina-coral)', // Alias for coral
-          peach: 'var(--lumina-peach)',
+          peach: brand.peach,
           dark: 'var(--neutral-900)',
           gray: 'var(--neutral-600)',
         },
         // Direct color mappings for easier usage
         'lumina-gold': 'var(--lumina-gold)',
         'lumina-coral': 'var(--lumina-coral)',
-        'lumina-peach': 'var(--lumina-peach)',
+        'lumina-peach': brand.peach,
         'lumina-radiant': 'var(--lumina-radiant-gradient)',
         // Secondary Brand Color using CSS Variables
         'deep-teal': {
@@ -166,13 +166,13 @@ const config: Config = {
           700: scales.clarityBlue[700],
         },
         'soft-peach': {
-          DEFAULT: 'var(--lumina-peach)',
+          DEFAULT: brand.peach,
           50: scales.softPeach[50],
           100: scales.softPeach[100],
           200: scales.softPeach[200],
           300: scales.softPeach[300],
           400: scales.softPeach[400],
-          500: 'var(--lumina-peach)',
+          500: brand.peach,
           600: scales.softPeach[600],
           700: scales.softPeach[700],
         },
