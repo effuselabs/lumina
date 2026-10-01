@@ -139,13 +139,13 @@ export function WeekView({
   const getDensityColor = (density: string) => {
     switch (density) {
       case 'low':
-        return 'bg-green-100';
+        return 'bg-green-100 dark:bg-green-500/15';
       case 'medium':
-        return 'bg-yellow-100';
+        return 'bg-yellow-100 dark:bg-yellow-500/15';
       case 'high':
-        return 'bg-orange-100';
+        return 'bg-orange-100 dark:bg-orange-500/15';
       case 'very-high':
-        return 'bg-red-100';
+        return 'bg-red-100 dark:bg-red-500/15';
       default:
         return 'bg-surface-muted';
     }

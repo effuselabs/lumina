@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { AppointmentSummary } from '../../../types/dashboard';
-import { brand, neutral, status, statusTint } from '@/lib/design/tokens';
+import { neutral, status, statusTint } from '@/lib/design/tokens';
 
 interface BusinessDashboardProps {
   business: {
@@ -341,7 +341,7 @@ function DashboardContent({
               <h3
                 className="lumina-body-small"
                 style={{
-                  color: brand.deepTeal,
+                  color: 'var(--ui-ink-brand)',
                   fontSize: '14px',
                   fontWeight: '400',
                 }}
@@ -351,7 +351,7 @@ function DashboardContent({
               <p
                 className="lumina-body-small"
                 style={{
-                  color: brand.deepTeal,
+                  color: 'var(--ui-ink-brand)',
                   fontSize: '14px',
                   fontWeight: '400',
                 }}

@@ -54,6 +54,7 @@
   --ui-surface-dim: #d1d5db;
   --ui-ink-strong: #111827;
   --ui-ink-deep: #1f2937;
+  --ui-ink-brand: #0b2b33;
   --ui-ink: #374151;
   --ui-ink-soft: #4b5563;
   --ui-ink-muted: #6b7280;
@@ -71,6 +72,7 @@
   --ui-surface-dim: #3f3f46;
   --ui-ink-strong: #fafafa;
   --ui-ink-deep: #f4f4f5;
+  --ui-ink-brand: #8dd2d8;
   --ui-ink: #e4e4e7;
   --ui-ink-soft: #a1a1aa;
   --ui-ink-muted: #94949c;

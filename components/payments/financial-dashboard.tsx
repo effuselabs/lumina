@@ -566,7 +566,7 @@ export default function FinancialDashboard({
                           className={
                             transaction.status === 'COMPLETED'
                               ? 'bg-green-500 text-white hover:bg-green-500'
-                              : 'bg-neutral-400 text-white hover:bg-neutral-400'
+                              : 'bg-neutral-400 text-white hover:bg-neutral-400 dark:bg-neutral-600 dark:hover:bg-neutral-600'
                           }
                         >
                           {transaction.status}

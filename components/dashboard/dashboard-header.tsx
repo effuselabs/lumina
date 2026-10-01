@@ -9,7 +9,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Bell, Building2, HelpCircle, Search } from 'lucide-react';
+import { useThemeSwitcher } from '@/hooks/use-theme-switcher';
+import { Bell, Building2, HelpCircle, Moon, Search, Sun } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { MobileMenuButton } from './sidebar-navigation';
 
@@ -74,6 +75,8 @@ export function DashboardHeader({
           <span className="sr-only">Search</span>
         </button>
 
+        <ThemeToggle />
+
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -130,5 +133,23 @@ export function DashboardHeader({
         </button>
       </div>
     </header>
+  );
+}
+
+/** Light/dark toggle. Until it is used, the theme follows the OS. */
+function ThemeToggle() {
+  const { isDark, isTransitioning, toggleTheme } = useThemeSwitcher();
+  const label = `Switch to ${isDark ? 'light' : 'dark'} theme`;
+  return (
+    <button
+      type="button"
+      className="header-action-button"
+      onClick={toggleTheme}
+      disabled={isTransitioning}
+      aria-label={label}
+      title={label}
+    >
+      {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+    </button>
   );
 }

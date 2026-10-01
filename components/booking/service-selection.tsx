@@ -258,11 +258,13 @@ export function ServiceSelection({
       <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-brand-deepTeal">
+        <h2 className="text-3xl font-bold tracking-tight text-ink-brand">
           Select Your Services
         </h2>
-        <p className="text-xl text-neutral-600">at {business?.name}</p>
-        <p className="mx-auto max-w-2xl text-neutral-500">
+        <p className="text-xl text-neutral-600 dark:text-neutral-400">
+          at {business?.name}
+        </p>
+        <p className="mx-auto max-w-2xl text-neutral-500 dark:text-neutral-400">
           Choose the services you&apos;d like to book. You can select multiple
           services for your appointment.
         </p>
@@ -271,7 +273,7 @@ export function ServiceSelection({
       {/* Search and Filter Bar */}
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-neutral-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-neutral-400 dark:text-neutral-500" />
           <Input
             placeholder="Search services..."
             value={searchQuery}
@@ -296,7 +298,7 @@ export function ServiceSelection({
               variant="ghost"
               size="sm"
               onClick={() => onServicesSelect([])}
-              className="flex items-center gap-2 text-neutral-600"
+              className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400"
             >
               <X className="h-4 w-4" />
               Clear All
@@ -307,7 +309,7 @@ export function ServiceSelection({
 
       {/* Category Filter */}
       {showFilters && (
-        <div className="flex flex-wrap gap-2 rounded-lg bg-neutral-50 p-4">
+        <div className="flex flex-wrap gap-2 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-900">
           {categories.map(category => (
             <Button
               key={category}
@@ -340,7 +342,7 @@ export function ServiceSelection({
                 >
                   <div className="flex-1">
                     <span className="font-medium">{service.name}</span>
-                    <div className="flex items-center gap-4 text-sm text-neutral-600">
+                    <div className="flex items-center gap-4 text-sm text-neutral-600 dark:text-neutral-400">
                       <span className="flex items-center gap-1">
                         <DollarSign className="h-3 w-3" />
                         {formatPrice(service.price)}
@@ -447,7 +449,7 @@ export function ServiceSelection({
                                   setSelectedServiceForDetails(service);
                                 }}
                               >
-                                <Info className="h-4 w-4 text-neutral-500" />
+                                <Info className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                               </Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-md">
@@ -464,7 +466,7 @@ export function ServiceSelection({
                                     <h4 className="mb-2 font-medium">
                                       Description
                                     </h4>
-                                    <p className="text-sm text-neutral-600">
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
                                       {service.description}
                                     </p>
                                   </div>
@@ -475,7 +477,7 @@ export function ServiceSelection({
                                     <h4 className="mb-2 font-medium">
                                       Prerequisites
                                     </h4>
-                                    <p className="text-sm text-neutral-600">
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
                                       {service.prerequisites}
                                     </p>
                                   </div>
@@ -486,7 +488,7 @@ export function ServiceSelection({
                                     <h4 className="mb-2 font-medium">
                                       Recommendations
                                     </h4>
-                                    <p className="text-sm text-neutral-600">
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
                                       {service.recommendations}
                                     </p>
                                   </div>

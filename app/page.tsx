@@ -68,7 +68,7 @@ export default async function HomePage() {
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-deep-teal">
+                <span className="text-xl font-bold tracking-tight text-ink-brand">
                   Lumina
                 </span>
                 <span className="text-foreground-muted text-xs font-medium">
@@ -139,7 +139,7 @@ export default async function HomePage() {
             <div className="animate-lumina-fade-in animate-delay-100 mb-8">
               <h1
                 id="hero-title"
-                className="mb-4 text-5xl font-bold tracking-tight text-deep-teal lg:text-7xl"
+                className="mb-4 text-5xl font-bold tracking-tight text-ink-brand lg:text-7xl"
               >
                 Lumina
               </h1>
@@ -221,7 +221,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 lg:px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
+              <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
                 Stop managing your business. Start building your passion.
               </h2>
               <p className="text-foreground-muted mb-8 text-lg leading-relaxed">
@@ -274,7 +274,7 @@ export default async function HomePage() {
               <Zap className="mr-2 h-4 w-4" />
               Simple Process
             </Badge>
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
               Get started in minutes, not months
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -286,7 +286,7 @@ export default async function HomePage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
                 <span className="text-xl font-bold text-white">1</span>
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-deep-teal">
+              <h3 className="mb-4 text-xl font-semibold text-ink-brand">
                 Sign Up & Setup
               </h3>
               <p className="text-foreground-muted">
@@ -298,7 +298,7 @@ export default async function HomePage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
                 <span className="text-xl font-bold text-white">2</span>
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-deep-teal">
+              <h3 className="mb-4 text-xl font-semibold text-ink-brand">
                 Import Your Data
               </h3>
               <p className="text-foreground-muted">
@@ -310,7 +310,7 @@ export default async function HomePage() {
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
                 <span className="text-xl font-bold text-white">3</span>
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-deep-teal">
+              <h3 className="mb-4 text-xl font-semibold text-ink-brand">
                 Start Growing
               </h3>
               <p className="text-foreground-muted">
@@ -335,7 +335,7 @@ export default async function HomePage() {
             </Badge>
             <h2
               id="features-title"
-              className="mb-6 text-4xl font-bold tracking-tight text-deep-teal lg:text-5xl"
+              className="mb-6 text-4xl font-bold tracking-tight text-ink-brand lg:text-5xl"
             >
               Everything you need to grow your business
             </h2>
@@ -362,7 +362,7 @@ export default async function HomePage() {
                   </div>
                   <CardTitle
                     id="booking-title"
-                    className="mb-3 text-xl font-bold text-deep-teal"
+                    className="mb-3 text-xl font-bold text-ink-brand"
                   >
                     Smart Booking System
                   </CardTitle>
@@ -418,7 +418,7 @@ export default async function HomePage() {
                   </div>
                   <CardTitle
                     id="client-title"
-                    className="mb-3 text-xl font-bold text-deep-teal"
+                    className="mb-3 text-xl font-bold text-ink-brand"
                   >
                     Client Management
                   </CardTitle>
@@ -474,7 +474,7 @@ export default async function HomePage() {
                   </div>
                   <CardTitle
                     id="insights-title"
-                    className="mb-3 text-xl font-bold text-deep-teal"
+                    className="mb-3 text-xl font-bold text-ink-brand"
                   >
                     AI-Powered Insights
                   </CardTitle>
@@ -525,7 +525,7 @@ export default async function HomePage() {
               <Star className="mr-2 h-4 w-4" />
               Proven Results
             </Badge>
-            <h3 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
+            <h3 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
               See the impact in action
             </h3>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -592,7 +592,7 @@ export default async function HomePage() {
                   <Users className="h-6 w-6 text-lumina-coral" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-deep-teal">Sarah Chen</div>
+                  <div className="font-semibold text-ink-brand">Sarah Chen</div>
                   <div className="text-foreground-muted text-sm">
                     Owner, Bloom Beauty Salon
                   </div>
@@ -611,7 +611,7 @@ export default async function HomePage() {
               <TrendingUp className="mr-2 h-4 w-4" />
               Simple Pricing
             </Badge>
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
               Simple, transparent pricing
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -625,7 +625,7 @@ export default async function HomePage() {
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
                   <Sparkles className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="mb-2 text-2xl font-bold text-deep-teal">
+                <h3 className="mb-2 text-2xl font-bold text-ink-brand">
                   Early Access
                 </h3>
                 <p className="text-foreground-muted">
@@ -692,7 +692,7 @@ export default async function HomePage() {
                 <Zap className="mr-2 h-4 w-4" />
                 Early Access Available
               </Badge>
-              <CardTitle className="mb-4 text-2xl font-bold text-deep-teal lg:text-3xl">
+              <CardTitle className="mb-4 text-2xl font-bold text-ink-brand lg:text-3xl">
                 🎯 Be Part of Something Revolutionary
               </CardTitle>
               <CardDescription className="text-foreground-muted text-lg leading-relaxed lg:text-xl">
@@ -764,7 +764,7 @@ export default async function HomePage() {
               <Shield className="mr-2 h-4 w-4" />
               Frequently Asked
             </Badge>
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-deep-teal lg:text-4xl">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
               Questions & Answers
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -775,7 +775,7 @@ export default async function HomePage() {
 
           <div className="mx-auto max-w-3xl space-y-6">
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
                 Is Lumina really free during early access?
               </h3>
               <p className="text-foreground-muted">
@@ -787,7 +787,7 @@ export default async function HomePage() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
                 How do I migrate my existing client data?
               </h3>
               <p className="text-foreground-muted">
@@ -799,7 +799,7 @@ export default async function HomePage() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
                 What happens when Lumina officially launches?
               </h3>
               <p className="text-foreground-muted">
@@ -811,7 +811,7 @@ export default async function HomePage() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-deep-teal">
+              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
                 Do you offer training and support?
               </h3>
               <p className="text-foreground-muted">

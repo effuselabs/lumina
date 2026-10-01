@@ -422,13 +422,13 @@ export function StaffTimeSelection({
       <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-brand-deepTeal">
+        <h2 className="text-3xl font-bold tracking-tight text-ink-brand">
           Choose Date & Time
         </h2>
-        <p className="text-xl text-neutral-600">
+        <p className="text-xl text-neutral-600 dark:text-neutral-400">
           Select your preferred appointment slot
         </p>
-        <div className="mx-auto flex max-w-md items-center justify-center gap-4 text-sm text-neutral-500">
+        <div className="mx-auto flex max-w-md items-center justify-center gap-4 text-sm text-neutral-500 dark:text-neutral-400">
           <span className="flex items-center gap-1">
             <Users className="h-4 w-4" />
             {totalServices} service{totalServices !== 1 ? 's' : ''}
@@ -487,7 +487,10 @@ export function StaffTimeSelection({
             <div className="grid grid-cols-7 gap-1 text-center text-sm">
               {/* Day headers */}
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="p-2 font-medium text-neutral-500">
+                <div
+                  key={day}
+                  className="p-2 font-medium text-neutral-500 dark:text-neutral-400"
+                >
                   {day}
                 </div>
               ))}
@@ -515,11 +518,11 @@ export function StaffTimeSelection({
             </div>
 
             {/* Selected date display */}
-            <div className="mt-4 rounded-lg bg-neutral-50 p-3 text-center">
-              <p className="text-sm font-medium text-neutral-700">
+            <div className="mt-4 rounded-lg bg-neutral-50 p-3 text-center dark:bg-neutral-900">
+              <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Selected Date
               </p>
-              <p className="text-lg font-semibold text-brand-deepTeal">
+              <p className="text-lg font-semibold text-ink-brand">
                 {formatDate(selectedDate)}
               </p>
             </div>
@@ -620,12 +623,12 @@ export function StaffTimeSelection({
               <div className="space-y-4">
                 {Object.keys(slotsByStaff).length === 0 ? (
                   <div className="py-8 text-center">
-                    <p className="mb-2 text-neutral-600">
+                    <p className="mb-2 text-neutral-600 dark:text-neutral-400">
                       No available times for {formatDate(selectedDate)}
                     </p>
                     {nextAvailableDate && (
                       <div className="space-y-2">
-                        <p className="text-sm text-neutral-500">
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400">
                           Next available date:
                         </p>
                         <Button
@@ -650,7 +653,7 @@ export function StaffTimeSelection({
                 ) : (
                   <>
                     {timezoneLabel() && (
-                      <p className="text-sm text-neutral-500">
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
                         Times shown in the salon&rsquo;s local time (
                         {timezoneLabel()}).
                       </p>
@@ -658,7 +661,7 @@ export function StaffTimeSelection({
                     {Object.entries(slotsByStaff).map(
                       ([staffId, { staff, slots }]) => (
                         <div key={staffId} className="space-y-2">
-                          <h4 className="font-medium text-neutral-700">
+                          <h4 className="font-medium text-neutral-700 dark:text-neutral-300">
                             {staff.name}
                           </h4>
                           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -680,7 +683,7 @@ export function StaffTimeSelection({
                                 <span className="font-medium">
                                   {formatSlotTime(slot.startTime)}
                                 </span>
-                                <span className="text-xs text-neutral-500">
+                                <span className="text-xs text-neutral-500 dark:text-neutral-400">
                                   {formatDuration(slot.totalDuration)}
                                 </span>
                               </Button>
@@ -696,7 +699,7 @@ export function StaffTimeSelection({
 
             {/* Real-time update indicator */}
             {!loading && availableSlots.length > 0 && (
-              <div className="text-center text-xs text-neutral-500">
+              <div className="text-center text-xs text-neutral-500 dark:text-neutral-400">
                 Last updated: {formatViewerTime(lastUpdateTime)}
                 <br />
                 Times update automatically every 30 seconds
@@ -718,7 +721,7 @@ export function StaffTimeSelection({
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <p className="text-sm font-medium text-neutral-700">
+                <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Date & Time
                 </p>
                 <p className="text-lg font-semibold">
@@ -730,7 +733,7 @@ export function StaffTimeSelection({
                 </p>
               </div>
               <div>
-                <p className="text-sm font-medium text-neutral-700">
+                <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Staff Member
                 </p>
                 <p className="text-lg font-semibold">
@@ -742,7 +745,9 @@ export function StaffTimeSelection({
             <Separator />
 
             <div className="space-y-2">
-              <p className="text-sm font-medium text-neutral-700">Services</p>
+              <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                Services
+              </p>
               {selectedServices.map(service => (
                 <div
                   key={service.id}

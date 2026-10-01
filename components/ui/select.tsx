@@ -143,7 +143,7 @@ const SelectItem = React.forwardRef<
       'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors duration-150',
       'text-neutral-900 dark:text-neutral-100',
       'hover:bg-neutral-100 dark:hover:bg-neutral-800',
-      'focus:bg-lumina-gold/10 dark:focus:bg-lumina-gold/20 focus:text-deep-teal dark:focus:text-lumina-gold',
+      'focus:bg-lumina-gold/10 dark:focus:bg-lumina-gold/20 focus:text-ink-brand dark:focus:text-lumina-gold',
       'data-[state=checked]:bg-lumina-gold/10 dark:data-[state=checked]:bg-lumina-gold/20 data-[state=checked]:text-deep-teal dark:data-[state=checked]:text-lumina-gold',
       'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       'motion-reduce:transition-none',
@@ -153,7 +153,7 @@ const SelectItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4 text-deep-teal dark:text-lumina-gold" />
+        <Check className="h-4 w-4 text-ink-brand dark:text-lumina-gold" />
       </SelectPrimitive.ItemIndicator>
     </span>
 

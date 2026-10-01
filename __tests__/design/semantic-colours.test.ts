@@ -20,6 +20,7 @@ const REPLACES: Record<keyof typeof themed, string> = {
   'surface-dim': colors.gray[300],
   'ink-strong': colors.gray[900],
   'ink-deep': colors.gray[800],
+  'ink-brand': '#0B2B33', // brand.deepTeal, what text-deep-teal rendered
   ink: colors.gray[700],
   'ink-soft': colors.gray[600],
   'ink-muted': colors.gray[500],

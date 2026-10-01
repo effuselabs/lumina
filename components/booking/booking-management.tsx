@@ -198,25 +198,28 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
-            <div className="h-8 w-48 animate-pulse rounded bg-neutral-200" />
-            <div className="h-4 w-32 animate-pulse rounded bg-neutral-200" />
+            <div className="h-8 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-4 w-32 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700" />
           </div>
-          <div className="h-6 w-20 animate-pulse rounded-full bg-neutral-200" />
+          <div className="h-6 w-20 animate-pulse rounded-full bg-neutral-200 dark:bg-neutral-700" />
         </div>
 
         {[1, 2, 3].map(i => (
-          <Card key={i} className="animate-pulse border-neutral-200 shadow-sm">
+          <Card
+            key={i}
+            className="animate-pulse border-neutral-200 shadow-sm dark:border-neutral-700"
+          >
             <CardHeader>
-              <div className="h-6 w-1/2 rounded bg-neutral-200" />
-              <div className="h-4 w-1/3 rounded bg-neutral-200" />
+              <div className="h-6 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-4 w-1/3 rounded bg-neutral-200 dark:bg-neutral-700" />
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   {[1, 2, 3, 4].map(j => (
                     <div key={j} className="space-y-2">
-                      <div className="h-3 w-1/3 rounded bg-neutral-200" />
-                      <div className="h-4 w-2/3 rounded bg-neutral-200" />
+                      <div className="h-3 w-1/3 rounded bg-neutral-200 dark:bg-neutral-700" />
+                      <div className="h-4 w-2/3 rounded bg-neutral-200 dark:bg-neutral-700" />
                     </div>
                   ))}
                 </div>
@@ -273,9 +276,9 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       )}
 
       {/* Appointment Details */}
-      <Card className="border-neutral-200 shadow-sm">
+      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
         <CardHeader>
-          <CardTitle className="text-deep-teal">
+          <CardTitle className="text-ink-brand">
             Appointment Information
           </CardTitle>
         </CardHeader>
@@ -339,9 +342,9 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       </Card>
 
       {/* Client Information */}
-      <Card className="border-neutral-200 shadow-sm">
+      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
         <CardHeader>
-          <CardTitle className="text-deep-teal">Client Information</CardTitle>
+          <CardTitle className="text-ink-brand">Client Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
@@ -372,9 +375,9 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       </Card>
 
       {/* Business Information */}
-      <Card className="border-neutral-200 shadow-sm">
+      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
         <CardHeader>
-          <CardTitle className="text-deep-teal">Business Information</CardTitle>
+          <CardTitle className="text-ink-brand">Business Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
@@ -417,9 +420,9 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
 
       {/* Actions */}
       {booking.status !== 'CANCELLED' && booking.status !== 'COMPLETED' && (
-        <Card className="border-neutral-200 shadow-sm">
+        <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
           <CardHeader>
-            <CardTitle className="text-deep-teal">Manage Booking</CardTitle>
+            <CardTitle className="text-ink-brand">Manage Booking</CardTitle>
             <CardDescription>
               You can modify or cancel your appointment
             </CardDescription>
