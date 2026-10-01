@@ -93,6 +93,48 @@
     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* ===== DARK THEME VARIABLES =====
+ * Deliberately outside @layer. Tailwind 3 hoists `@layer base` rules up to
+ * `@tailwind base`, above the `:root` block, and `.dark` and `:root` have the
+ * same specificity, so a `.dark` inside a layer lost to `:root` on source
+ * order and dark mode never applied. This block must follow `:root`;
+ * __tests__/design/dark-theme-cascade.test.ts fails if it does not.
+ */
+.dark {
+  color-scheme: dark;
+
+  --color-background: var(--theme-dark-background);
+  --color-foreground: var(--neutral-50);
+  --color-foreground-secondary: var(--theme-dark-foreground-secondary);
+  --color-foreground-muted: var(--theme-dark-foreground-muted);
+  --color-surface: var(--neutral-900);
+  --color-border: var(--theme-dark-border);
+  --color-border-muted: var(--theme-dark-border-muted);
+  --color-background-muted: var(--neutral-900);
+
+  /* Deep teal is near-invisible on dark surfaces (1.3:1), so the brand's
+     text and secondary roles move to gold and a lighter fill. */
+  --color-secondary: var(--theme-secondary-hover);
+
+  /* `status` is tuned for white; these clear AA on every dark surface, and
+     fills carry dark text instead of white. */
+  --color-success: var(--semantic-success-on-dark);
+  --color-warning: var(--semantic-warning-on-dark);
+  --color-error: var(--semantic-error-on-dark);
+  --color-info: var(--semantic-info-on-dark);
+  --color-success-foreground: var(--theme-dark-background);
+  --color-warning-foreground: var(--theme-dark-background);
+  --color-error-foreground: var(--theme-dark-background);
+  --color-info-foreground: var(--theme-dark-background);
+
+  --color-text-disabled: var(--theme-dark-text-disabled);
+  --color-text-inverse: var(--theme-dark-background);
+}
+
+.dark .text-lumina-primary {
+  color: var(--lumina-gold);
+}
+
 /* ===== NEXT.JS FONT OPTIMIZATION ===== */
 @layer base {
   /* Inter font with Next.js optimization patterns */
@@ -158,60 +200,6 @@
     ascent-override: 90%;
     descent-override: 22%;
     line-gap-override: 0%;
-  }
-}
-
-/* ===== DARK THEME VARIABLES ===== */
-@layer base {
-  /* Dark theme color variables */
-  .dark {
-    /* Dark theme specific colors */
-    --color-background: var(--theme-dark-background);
-    --color-foreground: var(--neutral-50);
-    --color-foreground-secondary: var(--theme-dark-foreground-secondary);
-    --color-foreground-muted: var(--theme-dark-foreground-muted);
-    --color-surface: var(--neutral-900);
-    --color-border: var(--theme-dark-border);
-    --color-border-muted: var(--theme-dark-border-muted);
-    --color-background-muted: var(--neutral-900);
-
-    /* Primary and Secondary Colors (same in dark) */
-    --color-primary: var(--lumina-gold);
-    --color-secondary: var(--deep-teal);
-
-    /* Semantic Color Mappings (same in dark) */
-    --color-success: var(--semantic-success);
-    --color-warning: var(--semantic-warning);
-    --color-error: var(--semantic-error);
-    --color-info: var(--semantic-info);
-
-    /* Interactive Colors */
-    --color-interactive-focus: var(--lumina-gold);
-
-    /* Foreground Colors - Dark Theme Optimized */
-    --color-primary-foreground: var(
-      --deep-teal
-    ); /* Dark text on bright gold (same in dark) */
-    --color-secondary-foreground: var(
-      --white
-    ); /* White text on dark teal (same in dark) */
-    --color-success-foreground: var(--white);
-    --color-warning-foreground: var(
-      --deep-teal
-    ); /* Dark text on bright warning (same in dark) */
-    --color-info-foreground: var(--white);
-    --color-destructive-foreground: var(--white);
-
-    /* Secondary Color System */
-    --color-secondary: var(--deep-teal);
-    --color-secondary-hover: var(--theme-secondary-hover);
-
-    /* Text Colors */
-    --color-text-primary: var(--color-foreground);
-    --color-text-secondary: var(--color-foreground-secondary);
-    --color-text-muted: var(--color-foreground-muted);
-    --color-text-disabled: var(--theme-dark-text-disabled);
-    --color-text-inverse: var(--theme-dark-background);
   }
 }
 
@@ -3348,11 +3336,6 @@
 
 /* ===== DARK MODE SUPPORT ===== */
 @layer base {
-  /* Dark mode will be handled by CSS custom properties in design-tokens */
-  .dark {
-    color-scheme: dark;
-  }
-
   .light {
     color-scheme: light;
   }

@@ -83,6 +83,19 @@ export const status = {
   info: '#2563EB',
 } as const;
 
+/**
+ * Status colours for dark mode. `status` is tuned for white and falls to
+ * 3.5–4.1:1 on the dark surfaces, so dark mode swaps these in: each clears
+ * 5.3:1 as text on every dark surface, and fills carry dark text rather than
+ * white — `contrastPairs` holds both.
+ */
+export const statusOnDark = {
+  success: '#4ADE80',
+  warning: '#FBBF24',
+  error: '#F87171',
+  info: '#60A5FA',
+} as const;
+
 /** Pure white and black, for the places a named neutral would be a lie. */
 export const base = {
   white: '#FFFFFF',
@@ -120,7 +133,8 @@ export const themeSurface = {
   secondaryHover: '#0F3A44',
   darkBackground: '#0A0A0A',
   darkForegroundSecondary: '#A1A1AA',
-  darkForegroundMuted: '#71717A',
+  /** Was #71717A: 3.71:1 on a dark card. This clears 4.5:1 on all three. */
+  darkForegroundMuted: '#94949C',
   darkBorder: '#27272A',
   darkBorderMuted: '#1F1F23',
   darkTextDisabled: '#3F3F46',
@@ -402,6 +416,48 @@ export const contrastPairs: ReadonlyArray<{
       },
     ]
   ),
+  // Dark mode: text on the page background, on cards (neutral[900]), and on
+  // borders-as-surfaces (darkBorder), where dark mode puts hover rows.
+  ...[
+    themeSurface.darkBackground,
+    neutral[900],
+    themeSurface.darkBorder,
+  ].flatMap(surface => [
+    {
+      name: `light text on ${surface}`,
+      foreground: neutral[50],
+      background: surface,
+    },
+    {
+      name: `secondary text on ${surface}`,
+      foreground: themeSurface.darkForegroundSecondary,
+      background: surface,
+    },
+    {
+      name: `muted text on ${surface}`,
+      foreground: themeSurface.darkForegroundMuted,
+      background: surface,
+    },
+    {
+      name: `gold text on ${surface}`,
+      foreground: brand.gold,
+      background: surface,
+    },
+    ...(Object.entries(statusOnDark) as Array<[string, string]>).map(
+      ([name, value]) => ({
+        name: `${name} text on ${surface}`,
+        foreground: value,
+        background: surface,
+      })
+    ),
+  ]),
+  ...(Object.entries(statusOnDark) as Array<[string, string]>).map(
+    ([name, value]) => ({
+      name: `dark text on dark-mode ${name} fill`,
+      foreground: themeSurface.darkBackground,
+      background: value,
+    })
+  ),
 ];
 
 /**
@@ -444,6 +500,12 @@ export const cssVariables: Record<string, string> = {
     Object.entries(status).map(([name, value]) => [`--semantic-${name}`, value])
   ),
   ...Object.fromEntries(
+    Object.entries(statusOnDark).map(([name, value]) => [
+      `--semantic-${name}-on-dark`,
+      value,
+    ])
+  ),
+  ...Object.fromEntries(
     Object.entries(neutral).map(([step, value]) => [`--neutral-${step}`, value])
   ),
   '--neutral-950': themeSurface.darkBackground,
@@ -474,6 +536,7 @@ export const tokens = {
   neutral,
   status,
   base,
+  statusOnDark,
   statusTint,
   chart,
   themeSurface,

@@ -49,7 +49,8 @@ describe('no gold text in light mode', () => {
 
   it('keeps .text-lumina-primary off gold', () => {
     const css = readFileSync(join(process.cwd(), 'app/globals.css'), 'utf8');
-    const rule = css.match(/\.text-lumina-primary\s*\{([^}]*)\}/);
-    expect(rule?.[1]).not.toMatch(/lumina-gold/);
+    // The light rule, not `.dark .text-lumina-primary`, which is gold.
+    const rule = css.match(/(?<!\.dark\s+)\.text-lumina-primary\s*\{([^}]*)\}/);
+    expect(rule?.[1]).toMatch(/deep-teal/);
   });
 });

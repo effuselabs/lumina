@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { base, brand, neutral, themeSurface } from '@/lib/design/tokens';
+import { brand, themeSurface } from '@/lib/design/tokens';
 
 type Theme = 'light' | 'dark' | 'system';
 type ResolvedTheme = 'light' | 'dark';
@@ -76,22 +76,6 @@ export function ThemeProvider({
 
       // Update color-scheme for better browser integration
       root.style.colorScheme = resolvedTheme;
-
-      // Force CSS custom properties update
-      if (resolvedTheme === 'dark') {
-        root.style.setProperty(
-          '--color-background',
-          themeSurface.darkBackground
-        );
-        root.style.setProperty('--color-foreground', neutral[50]);
-        root.style.setProperty('--color-surface', neutral[900]);
-        root.style.setProperty('--color-border', themeSurface.darkBorder);
-      } else {
-        root.style.setProperty('--color-background', base.white);
-        root.style.setProperty('--color-foreground', brand.deepTeal);
-        root.style.setProperty('--color-surface', base.white);
-        root.style.setProperty('--color-border', themeSurface.lightBorder);
-      }
 
       // Update meta theme-color for mobile browsers
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
