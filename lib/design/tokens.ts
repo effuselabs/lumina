@@ -90,33 +90,12 @@ export const base = {
 } as const;
 
 /**
- * The second palette, as components use it today.
- *
- * The deleted `app/design-tokens/colors.css` defined its own neutral ramp
- * and semantic colours. Nothing ever loaded that file, but components had
- * copied its values in directly: `#808285` for muted text in a dozen places,
- * `#22C58B` for positive trends where `status` says otherwise. They are recorded here at their exact values so that moving
- * every hex into this file changes nothing anyone can see. Reconciling them
- * with `neutral` and `status` does change what people see, so it is a design
- * decision with its own screenshots, tracked in docs/PLAN.md — not something
- * to fold in silently.
+ * Tinted surfaces for status messages: a pale fill and its border, paired with
+ * `status` text on top.
  */
-export const legacy = {
-  /** Secondary text and chart axes. Was colors.css `--neutral-600`. */
-  textMuted: '#808285',
-  /** Body text on light surfaces. Was colors.css `--neutral-900`. */
-  textStrong: '#1D2D35',
-  /** Chart gridlines. Was colors.css `--neutral-300`. */
-  gridline: '#E4E6E7',
-  /** Positive trends and revenue. Was colors.css `--semantic-success`. */
-  positive: '#22C58B',
-  positiveSurface: '#ECFDF5',
-  positiveBorder: '#A7F3D0',
-  /** Negative trends. Was colors.css `--semantic-error`. */
-  negative: '#E5484D',
-  /** The pressed radiant gradient on the analytics page. */
-  radiantPressedFrom: '#FFCD47',
-  radiantPressedTo: '#FF6B47',
+export const statusTint = {
+  successSurface: '#ECFDF5',
+  successBorder: '#A7F3D0',
 } as const;
 
 /** Chart series beyond the brand colours. */
@@ -294,6 +273,8 @@ export const scales = {
 export const gradients = {
   radiant: `linear-gradient(135deg, ${brand.gold} 0%, ${brand.coral} 100%)`,
   radiantReverse: `linear-gradient(135deg, ${brand.coral} 0%, ${brand.gold} 100%)`,
+  /** The radiant gradient a shade deeper, for a pressed or hovered control. */
+  radiantPressed: 'linear-gradient(135deg, #FFCD47 0%, #FF6B47 100%)',
 } as const;
 
 /** Typography. Inter for everything; IBM Plex Mono for numerals and code. */
@@ -493,7 +474,7 @@ export const tokens = {
   neutral,
   status,
   base,
-  legacy,
+  statusTint,
   chart,
   themeSurface,
   stripeAppearance,

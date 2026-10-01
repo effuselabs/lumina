@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { AppointmentSummary } from '../../../types/dashboard';
-import { legacy } from '@/lib/design/tokens';
+import { brand, neutral, status, statusTint } from '@/lib/design/tokens';
 
 interface BusinessDashboardProps {
   business: {
@@ -163,7 +163,7 @@ function DashboardContent({
       {/* Welcome Section */}
       <div>
         <h1 className="lumina-heading-2">Dashboard Overview</h1>
-        <p className="lumina-body-large" style={{ color: legacy.textMuted }}>
+        <p className="lumina-body-large" style={{ color: neutral[500] }}>
           Here&apos;s what&apos;s happening with your business today.
         </p>
       </div>
@@ -323,8 +323,8 @@ function DashboardContent({
       {/* System Status */}
       <Card
         style={{
-          borderColor: legacy.positiveBorder,
-          backgroundColor: legacy.positiveSurface,
+          borderColor: statusTint.successBorder,
+          backgroundColor: statusTint.successSurface,
         }}
       >
         <CardContent className="p-6">
@@ -332,7 +332,7 @@ function DashboardContent({
             <div className="flex-shrink-0">
               <div
                 className="flex h-8 w-8 items-center justify-center rounded-full"
-                style={{ backgroundColor: legacy.positive }}
+                style={{ backgroundColor: status.success }}
               >
                 <span className="text-sm font-bold text-white">✓</span>
               </div>
@@ -341,7 +341,7 @@ function DashboardContent({
               <h3
                 className="lumina-body-small"
                 style={{
-                  color: legacy.textStrong,
+                  color: brand.deepTeal,
                   fontSize: '14px',
                   fontWeight: '400',
                 }}
@@ -351,7 +351,7 @@ function DashboardContent({
               <p
                 className="lumina-body-small"
                 style={{
-                  color: legacy.textStrong,
+                  color: brand.deepTeal,
                   fontSize: '14px',
                   fontWeight: '400',
                 }}

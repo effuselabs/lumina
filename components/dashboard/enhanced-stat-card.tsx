@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-import { legacy } from '@/lib/design/tokens';
+import { neutral, status } from '@/lib/design/tokens';
 
 interface EnhancedStatCardProps {
   title: string;
@@ -160,10 +160,10 @@ export function EnhancedStatCard({
                 style={{
                   color:
                     change.type === 'increase'
-                      ? legacy.positive
+                      ? status.success
                       : change.type === 'decrease'
-                        ? legacy.negative
-                        : legacy.textMuted,
+                        ? status.error
+                        : neutral[500],
                 }}
               >
                 {change.type === 'increase'
