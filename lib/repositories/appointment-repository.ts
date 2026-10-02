@@ -2,6 +2,18 @@ import { prisma } from '@/lib/prisma';
 import { AppointmentWithRelations } from '@/types/database';
 import { AppointmentStatus, Prisma } from '@prisma/client';
 import { multiServiceAppointmentService } from '../services/multi-service-appointment';
+import {
+  hasOverlappingAppointment,
+  lockStaffSchedule,
+} from '../services/staff-schedule-lock';
+
+/** The staff member already has an appointment overlapping this one. */
+export class SlotTakenError extends Error {
+  constructor() {
+    super('The staff member already has an appointment at this time');
+    this.name = 'SlotTakenError';
+  }
+}
 
 // ============================================================================
 // INTERFACES AND TYPES
@@ -115,56 +127,72 @@ export class AppointmentRepository {
     }
 
     try {
-      const appointment = await prisma.appointment.create({
-        data: {
-          businessId: request.businessId,
-          clientId: request.clientId,
-          staffId: request.staffId,
-          userId: request.userId,
-          startTime: request.startTime,
-          endTime: request.endTime,
-          totalDuration: request.totalDuration,
-          totalPrice: request.totalPrice,
-          clientName: request.clientName,
-          clientEmail: request.clientEmail,
-          clientPhone: request.clientPhone,
-          notes: request.notes,
-          internalNotes: request.internalNotes,
-          depositAmount: request.depositAmount,
-          depositPaid: request.depositPaid || false,
-          services: {
-            create: request.services.map((service, index) => ({
-              serviceId: service.serviceId,
-              serviceName: service.serviceName,
-              price: service.price,
-              duration: service.duration,
-              serviceOrder: service.serviceOrder || index + 1,
-              startOffset: service.startOffset || 0,
-              assignedStaffId: service.assignedStaffId,
-            })),
-          },
-        },
-        include: {
-          client: true,
-          staff: {
-            include: {
-              user: true,
+      // Checked and written under the staff member's lock, so two requests
+      // for one slot cannot both pass the check before either inserts.
+      const appointment = await prisma.$transaction(async tx => {
+        await lockStaffSchedule(tx, request.staffId);
+        if (
+          await hasOverlappingAppointment(tx, {
+            businessId: request.businessId,
+            staffId: request.staffId,
+            startTime: request.startTime,
+            endTime: request.endTime,
+          })
+        ) {
+          throw new SlotTakenError();
+        }
+        return tx.appointment.create({
+          data: {
+            businessId: request.businessId,
+            clientId: request.clientId,
+            staffId: request.staffId,
+            userId: request.userId,
+            startTime: request.startTime,
+            endTime: request.endTime,
+            totalDuration: request.totalDuration,
+            totalPrice: request.totalPrice,
+            clientName: request.clientName,
+            clientEmail: request.clientEmail,
+            clientPhone: request.clientPhone,
+            notes: request.notes,
+            internalNotes: request.internalNotes,
+            depositAmount: request.depositAmount,
+            depositPaid: request.depositPaid || false,
+            services: {
+              create: request.services.map((service, index) => ({
+                serviceId: service.serviceId,
+                serviceName: service.serviceName,
+                price: service.price,
+                duration: service.duration,
+                serviceOrder: service.serviceOrder || index + 1,
+                startOffset: service.startOffset || 0,
+                assignedStaffId: service.assignedStaffId,
+              })),
             },
           },
-          services: {
-            include: {
-              service: true,
+          include: {
+            client: true,
+            staff: {
+              include: {
+                user: true,
+              },
             },
-            orderBy: {
-              serviceOrder: 'asc',
+            services: {
+              include: {
+                service: true,
+              },
+              orderBy: {
+                serviceOrder: 'asc',
+              },
             },
+            transactions: true,
           },
-          transactions: true,
-        },
+        });
       });
 
       return appointment;
     } catch (error) {
+      if (error instanceof SlotTakenError) throw error;
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new Error(

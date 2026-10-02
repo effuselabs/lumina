@@ -678,14 +678,27 @@ time, after the booking loop works.
   measurement to check itself against. `Appointment.findMany` is still issued
   per slot and is the largest remaining item.
 
-- **The booking write re-checks conflicts outside its transaction.**
-  `book/route.ts:297` queries for conflicting appointments, then opens a
-  transaction at `:442` to create the appointment. Two clients booking the same
-  slot at the same time can both pass the check before either writes. Not
-  reachable by the e2e spec, which books alone; the fix is either to move the
-  check inside the transaction or to add a unique constraint on (staffId,
-  startTime) and handle the violation. Worth doing before real customers, not
-  before the loop works.
+- ~~**The booking write re-checks conflicts outside its transaction.**~~
+  **Fixed** for both ways an appointment is created: the public booking
+  route and `AppointmentRepository.create` (the dashboard). The clash check
+  and the insert now share a transaction holding a Postgres advisory lock on
+  the staff member (`lib/services/staff-schedule-lock.ts`), so concurrent
+  bookings for one person queue and bookings for different people do not.
+  Before the fix, four concurrent requests for one slot were all booked into
+  the same chair; `e2e/booking-loop.spec.ts` ("concurrent bookings of one
+  slot book it once") now gates it. The unique constraint on
+  (staffId, startTime) suggested here was rejected: it misses overlaps that
+  start at different minutes.
+
+- **Rescheduling still checks for a clash outside its write.**
+  `PATCH /api/booking/[id]` (`app/api/booking/[id]/route.ts`) and
+  `AppointmentService.rescheduleAppointment` look for an overlapping
+  appointment, then update — the race the create paths had. Take the same
+  lock in the same transaction as the update. A Postgres exclusion constraint
+  (`btree_gist`, `EXCLUDE USING gist (staff_id WITH =, tstzrange(...) WITH &&)`)
+  would cover every write path at once, but the migration fails on any
+  database that already holds overlapping appointments, staging included, so
+  it needs a data check first.
 
 - ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
   service has since migrated to Infrastructure as Code entirely. The service's
