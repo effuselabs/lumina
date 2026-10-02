@@ -18,16 +18,28 @@ interface BulkSelectionContextType {
   ) => DashboardAppointment[];
 }
 
-const BulkSelectionContext = createContext<
-  BulkSelectionContextType | undefined
->(undefined);
+/**
+ * Selection off. No screen offers bulk selection yet, so no provider is
+ * rendered — and the hook threw without one, which crashed the calendar the
+ * first time it showed a real appointment. Until a screen opts in by providing
+ * a value, every block reads this.
+ */
+const SELECTION_OFF: BulkSelectionContextType = {
+  selectedAppointments: new Set(),
+  isSelectionMode: false,
+  selectAppointment: () => {},
+  deselectAppointment: () => {},
+  toggleAppointment: () => {},
+  selectAll: () => {},
+  clearSelection: () => {},
+  enterSelectionMode: () => {},
+  exitSelectionMode: () => {},
+  getSelectedAppointments: () => [],
+};
+
+const BulkSelectionContext =
+  createContext<BulkSelectionContextType>(SELECTION_OFF);
 
 export function useBulkSelection() {
-  const context = useContext(BulkSelectionContext);
-  if (!context) {
-    throw new Error(
-      'useBulkSelection must be used within a BulkSelectionProvider'
-    );
-  }
-  return context;
+  return useContext(BulkSelectionContext);
 }
