@@ -721,14 +721,25 @@ time, after the booking loop works.
   returns `nextAvailableDate` in the same response. Honour it — land on the
   next open day, and say so. Found because the e2e spec hit the same dead end.
 
-- **Prisma is bundled into the browser on the booking page.**
-  `components/booking/staff-time-selection.tsx` is a `'use client'` component
-  and imports `AlternativeSlotsService` (line 15), which imports
-  `@/lib/prisma` at module scope. Every run of the e2e suite logs
-  `PrismaClient is unable to run in this browser environment`, caught and
-  swallowed — so the "here are some other times" feature has never worked, and
-  the failure is invisible to anyone not reading the console. Ships the Prisma
-  client into the page bundle as well. Move the call behind an API route.
+- ~~**Prisma is bundled into the browser on the booking page.**~~ **Fixed.**
+  `staff-time-selection.tsx` called `AlternativeSlotsService` from the
+  browser, so "here are some other times" never worked. The availability
+  route now computes alternatives when a day is empty and returns them in
+  the same response; the page renders them in the salon's timezone. Three
+  defects were behind the first one, each hidden by it:
+  - The search started a day early: the route passed `new Date(date)`, UTC
+    midnight, which in Los Angeles is the evening before. It now passes the
+    salon's own midnight.
+  - The service read opening hours from the legacy `Business.operatingHours`
+    JSON (through an `as any`), which disagreed with the `BusinessHours`
+    table everything else reads: it offered Sunday slots for a salon the page
+    showed as closed.
+  - The page only rendered alternatives inside its error panel, never for an
+    empty day, and in the browser's timezone.
+    `e2e/booking-loop.spec.ts` asks for a closed day and checks every
+    alternative falls on a later salon day; it fails on each of the first two.
+    Left: the dashboard calendar page still ships Prisma's browser stub (not
+    the client) through a transitive import.
 
 - The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
   resolves a business by cuid, not by slug or any friendly name, so no static

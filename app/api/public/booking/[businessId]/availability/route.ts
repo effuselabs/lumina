@@ -6,6 +6,8 @@ import {
   publicBookingSecurityHeaders,
   withPublicBookingRateLimit,
 } from '../../../../../../lib/security/public-booking-rate-limiter';
+import { AlternativeSlotsService } from '../../../../../../lib/services/alternative-slots-service';
+import { businessTimeToInstant } from '../../../../../../lib/services/business-time';
 import { RealTimeAvailabilityService } from '../../../../../../lib/services/real-time-availability-service';
 
 // Using dedicated public booking rate limiters
@@ -178,8 +180,31 @@ export async function GET(
         duration: validatedQuery.duration,
       });
 
+    // An empty day comes with other times to offer. This ran in the browser
+    // once, where it imports Prisma and could never work.
+    const alternatives =
+      availabilityResult.slots.length === 0
+        ? (
+            await AlternativeSlotsService.findAlternativeSlots({
+              businessId: params.businessId,
+              serviceIds: validatedQuery.serviceIds,
+              // The salon's midnight on the requested day. `new Date(date)`
+              // is UTC midnight, which west of Greenwich is the evening
+              // before — and the search started a day early.
+              originalStartTime: businessTimeToInstant(
+                validatedQuery.date,
+                '00:00',
+                business.timezone
+              ),
+              staffId: validatedQuery.staffId,
+              maxAlternatives: 6,
+            })
+          ).alternatives
+        : [];
+
     const response = {
       availableSlots: availabilityResult.slots,
+      alternatives,
       nextAvailableDate: availabilityResult.nextAvailableDate,
       requestedDate: validatedQuery.date,
       // Slot instants are absolute; rendering them without this shows the

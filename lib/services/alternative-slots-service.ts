@@ -347,23 +347,17 @@ export class AlternativeSlotsService {
   /**
    * Get business hours for a specific day
    */
+  /**
+   * The salon's hours for a weekday, from the `BusinessHours` table the
+   * availability calculator and the booking page read. This used to read the
+   * legacy `Business.operatingHours` JSON, which disagreed with the table —
+   * it offered Sunday slots for a salon the booking page showed as closed.
+   */
   private static async getBusinessHours(businessId: string, dayOfWeek: number) {
-    try {
-      const business = await prisma.business.findUnique({
-        where: { id: businessId },
-        select: { operatingHours: true },
-      });
-
-      if (!business?.operatingHours) return null;
-
-      const hours = business.operatingHours as any;
-      const dayKey = this.getDayKey(dayOfWeek);
-
-      return hours[dayKey] || null;
-    } catch (error) {
-      console.error('Error getting business hours:', error);
-      return null;
-    }
+    return prisma.businessHours.findUnique({
+      where: { businessId_dayOfWeek: { businessId, dayOfWeek } },
+      select: { openTime: true, closeTime: true, isClosed: true },
+    });
   }
 
   /**
@@ -403,7 +397,7 @@ export class AlternativeSlotsService {
     dateKey: string;
     timezone: string;
     duration: number;
-    businessHours: { openTime?: string; closeTime?: string };
+    businessHours: { openTime: string | null; closeTime: string | null };
     qualifiedStaffIds: string[];
     originalStartTime?: Date;
   }) {
@@ -490,21 +484,5 @@ export class AlternativeSlotsService {
     }
 
     return slots;
-  }
-
-  /**
-   * Convert day of week number to key
-   */
-  private static getDayKey(dayOfWeek: number): string {
-    const days = [
-      'sunday',
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-      'saturday',
-    ];
-    return days[dayOfWeek];
   }
 }

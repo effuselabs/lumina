@@ -12,7 +12,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useNetworkResilience } from '@/hooks/use-network-resilience';
 import { PublicBookingError } from '@/lib/errors/public-booking-error';
-import { AlternativeSlotsService } from '@/lib/services/alternative-slots-service';
 import { Service } from '@/types/service-selection';
 import {
   Calendar,
@@ -76,6 +75,8 @@ export interface StaffTimeSelectionProps {
 
 interface AvailabilityResponse {
   availableSlots: TimeSlot[];
+  /** Other times, sent only when the requested day has none. */
+  alternatives?: TimeSlot[];
   nextAvailableDate?: string;
   requestedDate: string;
   timezone: string;
@@ -274,22 +275,14 @@ export function StaffTimeSelection({
       setNextAvailableDate(data.nextAvailableDate || null);
       setLastUpdateTime(new Date());
 
-      // If no slots available, fetch alternatives
-      if (data.availableSlots.length === 0) {
-        try {
-          const alternatives =
-            await AlternativeSlotsService.findAlternativeSlots({
-              businessId,
-              serviceIds,
-              originalStartTime: selectedDate,
-              staffId: selectedStaffId !== 'any' ? selectedStaffId : undefined,
-              maxAlternatives: 6,
-            });
-          setAlternativeSlots(alternatives.alternatives as TimeSlot[]);
-        } catch (altError) {
-          console.error('Failed to fetch alternative slots:', altError);
-        }
-      }
+      // The server sends other times when the day is empty.
+      setAlternativeSlots(
+        (data.alternatives ?? []).map(slot => ({
+          ...slot,
+          startTime: new Date(slot.startTime),
+          endTime: new Date(slot.endTime),
+        }))
+      );
     } catch (err) {
       if (err instanceof PublicBookingError) {
         setError(err);
@@ -647,6 +640,36 @@ export function StaffTimeSelection({
                             }
                           )}
                         </Button>
+                      </div>
+                    )}
+                    {alternativeSlots.length > 0 && (
+                      <div className="mt-6 space-y-2 text-left">
+                        <p className="text-sm font-medium text-ink">
+                          Other times that are free:
+                        </p>
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          {alternativeSlots.map(slot => (
+                            <Button
+                              key={`${slot.staffId}-${slot.startTime.getTime()}`}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedDate(slot.startTime);
+                                setSelectedStaffId(slot.staffId);
+                                handleSlotSelect(slot);
+                              }}
+                              className="flex flex-col items-start p-2 text-xs"
+                            >
+                              <span className="font-medium">
+                                {formatSlotDate(slot.startTime)}
+                              </span>
+                              <span className="text-ink-muted">
+                                {formatSlotTime(slot.startTime)} with{' '}
+                                {slot.staffName}
+                              </span>
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
