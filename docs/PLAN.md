@@ -539,19 +539,32 @@ time, after the booking loop works.
   replacing it, 13 of its 19 tests failing, and its `getBusinessTimeZone` a
   stub returning a hardcoded `'America/New_York'`.
 
-- **An appointment outside business hours is invisible on the calendar.**
-  `components/appointments/week-view.tsx:95-108` bounds the grid to the
-  earliest `openTime` and latest `closeTime` across the week, so anything
-  before opening or after closing has nowhere to render. Found on staging: a
-  booking taken at 8:30 for a salon opening at 09:00 confirmed successfully,
-  holds a real slot, and does not appear on the owner's calendar.
+- ~~**An appointment outside business hours is invisible on the calendar.**~~
+  **Fixed — and the calendar showed no appointments at all.** The real cause
+  was one layer down: `appointment-calendar-page-content.tsx` rendered
+  `mockAppointments = []` and invented Mon–Fri 9–5 hours, so no booking had
+  ever reached the owner's calendar, including the one the milestone's
+  definition of done says must land there. Now:
+  - The page reads the salon's `BusinessHours` and the calendar fetches
+    `/api/appointments` for its visible window (day, week or six-week month),
+    paging past the API's 100 limit, through a Zod-validated mapper
+    (`lib/calendar/calendar-appointments.ts`).
+  - Day and week grids span business hours _union_ the appointments present
+    (`lib/calendar/visible-range.ts`), mark those cells as outside hours, and
+    say so above the grid.
+  - Two latent crashes surfaced on the first real appointment and are fixed:
+    `AppointmentBlock` required a `BulkSelectionProvider` that 4d's unused
+    export sweep had deleted (nothing rendered it), and the page passed
+    Prisma `Decimal` prices into a client component.
+  - `types/dashboard-appointments.ts` mirrors `AppointmentStatus` instead of
+    importing `@prisma/client`, which is what shipped Prisma's browser stub to
+    the calendar page; a test keeps the mirror identical to Prisma's enum.
+  - `e2e/booking-loop.spec.ts` now ends with the owner finding the booking on
+    the calendar; against the old calendar it fails.
 
-  The timezone bug is what puts appointments there, so fixing that removes the
-  common cause — but not the class. A manually created appointment, a
-  rescheduled one, or an owner shortening their hours after a booking all
-  reproduce it, and in every case the salon silently loses sight of a client
-  who will still turn up. The grid should span business hours _union the
-  appointments actually present_, and say so when it extends.
+  Still true: the calendar lays its grid out in the _browser's_ timezone, not
+  the salon's, as availability once did. An owner viewing from another zone
+  sees shifted times. Worth fixing with the same `business-time.ts` helpers.
 
 - **Business metrics should bucket by the salon's day, not UTC.**
   `business-metrics-tracker.ts` bucketed by the _server's_ day, so two hosts in

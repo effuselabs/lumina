@@ -3,8 +3,6 @@
  * Enhanced appointment types for dashboard management
  */
 
-import { AppointmentStatus } from '@prisma/client';
-
 // StaffMember interface (duplicated to avoid circular dependency)
 interface StaffMember {
   id: string;
@@ -18,8 +16,22 @@ interface StaffMember {
   role?: string;
 }
 
-// Re-export for components
-export { AppointmentStatus };
+/**
+ * Prisma's `AppointmentStatus`, mirrored rather than imported: client
+ * components read this file, and importing `@prisma/client` shipped Prisma's
+ * browser stub to the calendar page. `appointment-status.test.ts` keeps the
+ * two identical.
+ */
+export const AppointmentStatus = {
+  SCHEDULED: 'SCHEDULED',
+  CONFIRMED: 'CONFIRMED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  NO_SHOW: 'NO_SHOW',
+} as const;
+export type AppointmentStatus =
+  (typeof AppointmentStatus)[keyof typeof AppointmentStatus];
 
 // Calendar view types
 export type CalendarView = 'day' | 'week' | 'month';

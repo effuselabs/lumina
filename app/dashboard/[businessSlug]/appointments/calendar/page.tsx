@@ -29,7 +29,7 @@ export default async function AppointmentCalendarPage(
   } = await requireBusinessAccess(params.businessSlug);
 
   // Scoped by the business the check just proved access to.
-  const [staff, services] = await Promise.all([
+  const [staff, services, businessHours] = await Promise.all([
     prisma.staff.findMany({
       where: { businessId: accessible.id },
       select: {
@@ -45,12 +45,31 @@ export default async function AppointmentCalendarPage(
       where: { businessId: accessible.id },
       select: { id: true, name: true, duration: true, price: true },
     }),
+    // The real hours. The calendar used to invent Mon–Fri 9–5.
+    prisma.businessHours.findMany({
+      where: { businessId: accessible.id },
+      select: {
+        dayOfWeek: true,
+        openTime: true,
+        closeTime: true,
+        isClosed: true,
+      },
+    }),
   ]);
-  const business = { ...accessible, staff, services };
+  // Prisma Decimals cannot cross into a client component; send numbers.
+  const business = {
+    ...accessible,
+    staff,
+    services: services.map(service => ({
+      ...service,
+      price: Number(service.price),
+    })),
+  };
 
   return (
     <AppointmentCalendarPageContent
       business={business}
+      businessHours={businessHours}
       userRole={userRole}
       userName={user.name || user.email || 'User'}
       businessSlug={params.businessSlug}

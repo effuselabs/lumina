@@ -14,6 +14,7 @@ import {
 } from '../../types/dashboard-appointments';
 import { CalendarHeader } from './calendar-header';
 import { CalendarView } from './calendar-view';
+import { useCalendarAppointments } from '@/hooks/use-calendar-appointments';
 import { brand } from '@/lib/design/tokens';
 
 interface Staff {
@@ -31,7 +32,7 @@ interface Service {
   id: string;
   name: string;
   duration: number;
-  price: any; // Prisma Decimal type
+  price: number;
 }
 
 interface AppointmentCalendarPageContentProps {
@@ -41,6 +42,7 @@ interface AppointmentCalendarPageContentProps {
     staff: Staff[];
     services: Service[];
   };
+  businessHours: BusinessHoursEntry[];
   userRole: string;
   userName: string;
   businessSlug: string;
@@ -60,6 +62,7 @@ interface AppointmentCalendarPageContentProps {
  */
 export function AppointmentCalendarPageContent({
   business,
+  businessHours,
   userRole,
   userName,
   businessSlug,
@@ -82,19 +85,18 @@ export function AppointmentCalendarPageContent({
   );
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Mock data - will be replaced with real data from API
-  const mockAppointments: DashboardAppointment[] = [];
-  const mockBusinessHours: BusinessHoursEntry[] = [
-    { dayOfWeek: 1, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Monday
-    { dayOfWeek: 2, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Tuesday
-    { dayOfWeek: 3, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Wednesday
-    { dayOfWeek: 4, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Thursday
-    { dayOfWeek: 5, openTime: '09:00', closeTime: '17:00', isClosed: false }, // Friday
-    { dayOfWeek: 6, openTime: '10:00', closeTime: '16:00', isClosed: false }, // Saturday
-    { dayOfWeek: 0, openTime: '09:00', closeTime: '17:00', isClosed: true }, // Sunday
-  ];
+  const {
+    appointments,
+    loading: appointmentsLoading,
+    error: appointmentsError,
+  } = useCalendarAppointments(
+    business.id,
+    currentView,
+    currentDate,
+    brand.coral
+  );
 
-  const mockStaffMembers = business.staff.map(staff => ({
+  const staffMembers = business.staff.map(staff => ({
     id: staff.id,
     firstName: staff.firstName,
     lastName: staff.lastName,
@@ -222,13 +224,25 @@ export function AppointmentCalendarPageContent({
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
+              {(appointmentsLoading || appointmentsError) && (
+                <p
+                  role={appointmentsError ? 'alert' : 'status'}
+                  className={
+                    appointmentsError
+                      ? 'px-4 py-2 text-sm text-error'
+                      : 'px-4 py-2 text-sm text-ink-muted'
+                  }
+                >
+                  {appointmentsError ?? 'Loading appointments…'}
+                </p>
+              )}
               <div className="h-[600px]">
                 <CalendarView
                   view={currentView}
                   currentDate={currentDate}
-                  appointments={mockAppointments}
-                  staffMembers={mockStaffMembers}
-                  businessHours={mockBusinessHours}
+                  appointments={appointments}
+                  staffMembers={staffMembers}
+                  businessHours={businessHours}
                   onAppointmentClick={handleAppointmentClick}
                   onTimeSlotClick={handleTimeSlotClick}
                 />

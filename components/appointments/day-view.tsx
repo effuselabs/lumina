@@ -1,5 +1,6 @@
 'use client';
 
+import { parseClock, rangeCovering } from '@/lib/calendar/visible-range';
 import { cn } from '@/lib/utils';
 import {
   CalendarSlot,
@@ -35,38 +36,39 @@ export function DayView({
   const activeStaff = staffMembers.filter(s => s.isActive);
   const dragState = useDragDropState();
 
-  // Generate hourly time slots for the day
+  // 30-minute slots across business hours, widened to any appointment outside
+  // them so a booking before opening or after closing still appears.
   const generateTimeSlots = () => {
     const dayOfWeek = currentDate.getDay();
     const todayHours = businessHours.find(
       (h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek
     );
+    const open =
+      todayHours &&
+      !todayHours.isClosed &&
+      todayHours.openTime &&
+      todayHours.closeTime
+        ? {
+            start: parseClock(todayHours.openTime),
+            end: parseClock(todayHours.closeTime),
+          }
+        : null;
 
-    if (
-      !todayHours ||
-      todayHours.isClosed ||
-      !todayHours.openTime ||
-      !todayHours.closeTime
-    ) {
-      return [];
-    }
+    const { range, extended } = rangeCovering(
+      open,
+      appointments.filter(
+        apt => apt.startTime.toDateString() === currentDate.toDateString()
+      ),
+      30
+    );
+    if (!range) return { slots: [], extended };
 
     const slots = [];
-    const [openHour, openMinute] = todayHours.openTime.split(':').map(Number);
-    const [closeHour, closeMinute] = todayHours.closeTime
-      .split(':')
-      .map(Number);
-
-    // Start from business open time
-    const startTime = new Date(currentDate);
-    startTime.setHours(openHour, openMinute, 0, 0);
-
+    const current = new Date(currentDate);
+    current.setHours(0, range.start, 0, 0);
     const endTime = new Date(currentDate);
-    endTime.setHours(closeHour, closeMinute, 0, 0);
+    endTime.setHours(0, range.end, 0, 0);
 
-    const current = new Date(startTime);
-
-    // Generate 30-minute time slots
     while (current < endTime) {
       const slotEnd = new Date(current);
       slotEnd.setMinutes(current.getMinutes() + 30);
@@ -84,10 +86,11 @@ export function DayView({
       current.setMinutes(current.getMinutes() + 30);
     }
 
-    return slots;
+    return { slots, extended };
   };
 
-  const baseTimeSlots = generateTimeSlots();
+  const { slots: baseTimeSlots, extended: showsClosedHours } =
+    generateTimeSlots();
 
   // Get appointments for each staff member and time slot
   const getStaffAppointmentsForSlot = (
@@ -236,6 +239,13 @@ export function DayView({
         ))}
       </div>
 
+      {showsClosedHours && (
+        <p className="border-color-border border-b px-3 py-2 text-xs text-ink-muted">
+          Showing time outside business hours: some appointments today fall
+          there.
+        </p>
+      )}
+
       {/* Time Slots Grid */}
       <div className="flex-1 overflow-y-auto">
         {baseTimeSlots.map((slot, slotIndex) => {
@@ -358,7 +368,7 @@ export function DayView({
                       )}
 
                       {/* Availability Indicator */}
-                      {!isBusinessHours && (
+                      {!isBusinessHours && staffAppointments.length === 0 && (
                         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                           <div className="text-color-foreground-muted text-xs opacity-50">
                             Closed

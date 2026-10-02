@@ -469,7 +469,10 @@ test.describe('booking loop', () => {
     }
   });
 
-  test('a client can book an appointment end to end', async ({ page }) => {
+  test('a client can book an appointment end to end', async ({
+    page,
+    browser,
+  }) => {
     // Four steps, four page transitions, an availability computation and a
     // booking write. It runs in roughly 20s locally, which leaves no headroom
     // under the 30s default on a cold CI runner.
@@ -652,6 +655,48 @@ test.describe('booking loop', () => {
     ).toBeGreaterThan(0);
     expect(appointment!.totalDuration, 'has a duration').toBeGreaterThan(0);
     expect(appointment!.client?.email).toBe(client.email);
+
+    /*
+     * And it is on the owner's calendar — the last clause of the milestone's
+     * definition of done, and the one nothing checked. The calendar rendered
+     * a hardcoded empty list until 2026-10-02, so every booking this spec made
+     * was invisible to the salon while the spec passed.
+     */
+    const ownerContext = await browser.newContext({
+      baseURL: test.info().project.use.baseURL,
+    });
+    try {
+      const owner = await ownerContext.newPage();
+      await owner.goto('/auth/signin');
+      await owner.locator('#email').fill('owner@lumina-demo.com');
+      await owner.locator('#password').fill('demo123');
+      await owner.getByRole('button', { name: /^sign in$/i }).click();
+      await owner.waitForURL(/\/dashboard/, { timeout: 30_000 });
+      await owner.goto(`/dashboard/${business.slug}/appointments/calendar`);
+
+      // The calendar opens on this week in the browser's zone; count the
+      // weeks to the booking in that same zone.
+      const weeksAhead = await owner.evaluate(startIso => {
+        const sunday = (d: Date) =>
+          new Date(d.getFullYear(), d.getMonth(), d.getDate() - d.getDay());
+        const ms =
+          sunday(new Date(startIso)).getTime() - sunday(new Date()).getTime();
+        return Math.round(ms / (7 * 24 * 60 * 60 * 1000));
+      }, appointment!.startTime.toISOString());
+
+      const today = owner.getByRole('button', { name: 'Today' });
+      await expect(today).toBeVisible({ timeout: STEP_TRANSITION_TIMEOUT });
+      for (let week = 0; week < weeksAhead; week += 1) {
+        await owner.locator('button:right-of(:text("Today"))').first().click();
+      }
+
+      await expect(
+        owner.getByText(`${client.firstName} ${client.lastName}`).first(),
+        "the booking appears on the owner's calendar"
+      ).toBeVisible({ timeout: 30_000 });
+    } finally {
+      await ownerContext.close();
+    }
 
     /*
      * Remove what this run created.
