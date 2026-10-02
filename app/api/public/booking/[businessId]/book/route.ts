@@ -14,6 +14,10 @@ import { z } from 'zod';
 import { emailService } from '../../../../../../lib/email/email-service';
 import { AvailabilityCacheInvalidation } from '../../../../../../lib/services/availability-cache-invalidation';
 import { ClientService } from '../../../../../../lib/services/client-service';
+import {
+  hasOverlappingAppointment,
+  lockStaffSchedule,
+} from '../../../../../../lib/services/staff-schedule-lock';
 
 // Using dedicated public booking rate limiters
 
@@ -82,6 +86,8 @@ class BookingError extends Error {
     this.name = 'BookingError';
   }
 }
+
+type BookedService = CreatedAppointment['services'][number];
 
 interface CreatedAppointment {
   id: string;
@@ -286,86 +292,68 @@ async function validateServicesAndCalculateTotals(
   };
 }
 
-// Validate time slot availability
+/**
+ * The error a client sees when their slot has been taken, with nearby times
+ * to choose from instead.
+ */
+async function slotTakenError(
+  businessId: string,
+  staffId: string,
+  startTime: Date,
+  serviceIds: string[]
+): Promise<BookingError> {
+  let alternativeSlots: any[] = [];
+  try {
+    const { AlternativeSlotsService } =
+      await import('../../../../../../lib/services/alternative-slots-service');
+    alternativeSlots = await AlternativeSlotsService.findNearbyAlternatives({
+      businessId,
+      serviceIds,
+      originalStartTime: startTime,
+      staffId,
+      maxAlternatives: 6,
+      timeWindowHours: 4,
+    });
+  } catch (altError) {
+    console.error('Failed to fetch alternative slots:', altError);
+  }
+
+  return new BookingError(
+    BookingErrorType.BOOKING_CONFLICT,
+    'Time slot is no longer available',
+    'The selected time slot has been booked by another client.',
+    [
+      'Please select a different time slot',
+      'Refresh the page to see updated availability',
+    ],
+    alternativeSlots
+  );
+}
+
+/**
+ * Reject a slot that is already taken or too soon to book.
+ *
+ * The clash check here is the fast path, so a slot that is plainly taken
+ * fails before a client record is written. It cannot be the guarantee: two
+ * requests can both pass it before either inserts. That is
+ * `createAppointmentWithServices`'s job.
+ */
 async function validateTimeSlotAvailability(
   businessId: string,
   staffId: string,
   startTime: Date,
   endTime: Date,
-  serviceIds?: string[]
+  serviceIds: string[]
 ) {
-  // Check for existing appointments that conflict
-  const conflictingAppointments = await prisma.appointment.findMany({
-    where: {
+  if (
+    await hasOverlappingAppointment(prisma, {
       businessId,
       staffId,
-      status: {
-        in: ['SCHEDULED', 'CONFIRMED', 'IN_PROGRESS'],
-      },
-      OR: [
-        {
-          // Appointment starts during our slot
-          startTime: {
-            gte: startTime,
-            lt: endTime,
-          },
-        },
-        {
-          // Appointment ends during our slot
-          endTime: {
-            gt: startTime,
-            lte: endTime,
-          },
-        },
-        {
-          // Appointment encompasses our slot
-          startTime: {
-            lte: startTime,
-          },
-          endTime: {
-            gte: endTime,
-          },
-        },
-      ],
-    },
-    select: {
-      id: true,
-      startTime: true,
-      endTime: true,
-    },
-  });
-
-  if (conflictingAppointments.length > 0) {
-    // Find alternative slots when there's a conflict
-    let alternativeSlots: any[] = [];
-    try {
-      const { AlternativeSlotsService } =
-        await import('../../../../../../lib/services/alternative-slots-service');
-      const alternatives = await AlternativeSlotsService.findNearbyAlternatives(
-        {
-          businessId,
-          serviceIds: serviceIds || [],
-          originalStartTime: startTime,
-          staffId,
-          maxAlternatives: 6,
-          timeWindowHours: 4,
-        }
-      );
-      alternativeSlots = alternatives;
-    } catch (altError) {
-      console.error('Failed to fetch alternative slots:', altError);
-    }
-
-    throw new BookingError(
-      BookingErrorType.BOOKING_CONFLICT,
-      'Time slot is no longer available',
-      'The selected time slot has been booked by another client.',
-      [
-        'Please select a different time slot',
-        'Refresh the page to see updated availability',
-      ],
-      alternativeSlots
-    );
+      startTime,
+      endTime,
+    })
+  ) {
+    throw await slotTakenError(businessId, staffId, startTime, serviceIds);
   }
 
   // Validate the time slot is not in the past
@@ -431,15 +419,29 @@ async function createAppointmentWithServices(
   staffId: string,
   startTime: Date,
   endTime: Date,
-  services: any[],
+  services: BookedService[],
   totalDuration: number,
   totalPrice: number,
   notes?: string
 ) {
   const confirmationNumber = generateConfirmationNumber();
 
-  // Create appointment in a transaction
-  return await prisma.$transaction(async tx => {
+  // The clash check and the insert share a transaction and the staff
+  // member's lock, so of several concurrent requests for one slot exactly one
+  // is booked and the rest see the slot taken.
+  const created = await prisma.$transaction(async tx => {
+    await lockStaffSchedule(tx, staffId);
+    if (
+      await hasOverlappingAppointment(tx, {
+        businessId,
+        staffId,
+        startTime,
+        endTime,
+      })
+    ) {
+      return null;
+    }
+
     // Create the appointment
     const appointment = await tx.appointment.create({
       data: {
@@ -479,6 +481,17 @@ async function createAppointmentWithServices(
 
     return { ...appointment, confirmationNumber };
   });
+
+  // Alternatives are searched after the transaction, not holding the lock.
+  if (!created) {
+    throw await slotTakenError(
+      businessId,
+      staffId,
+      startTime,
+      services.map(service => service.id)
+    );
+  }
+  return created;
 }
 
 /**

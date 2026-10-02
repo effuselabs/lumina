@@ -1,6 +1,11 @@
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
   prisma: {
+    // An interactive transaction runs its callback against the same client.
+    $transaction: jest.fn((run: (tx: unknown) => unknown) =>
+      run(jest.requireMock('@/lib/prisma').prisma)
+    ),
+    $executeRaw: jest.fn(),
     appointment: {
       create: jest.fn(),
       findFirst: jest.fn(),
@@ -34,7 +39,10 @@ jest.mock('@/lib/prisma', () => ({
 }));
 
 import { prisma } from '@/lib/prisma';
-import { AppointmentRepository } from '@/lib/repositories/appointment-repository';
+import {
+  AppointmentRepository,
+  SlotTakenError,
+} from '@/lib/repositories/appointment-repository';
 import { asMock } from '@/__tests__/utils/prisma-mock-helpers';
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
@@ -143,6 +151,56 @@ describe('AppointmentRepository', () => {
         },
       });
       expect(result).toEqual(mockCreatedAppointment);
+    });
+
+    it('locks the staff member and re-checks for a clash before inserting', async () => {
+      asMock(mockPrisma.staff.findFirst).mockResolvedValue({
+        id: mockStaffId,
+      } as any);
+      asMock(mockPrisma.client.findFirst).mockResolvedValue({
+        id: mockClientId,
+      } as any);
+      asMock(mockPrisma.appointment.findFirst).mockResolvedValue(null);
+      asMock(mockPrisma.appointment.create).mockResolvedValue(
+        mockCreatedAppointment as any
+      );
+
+      await repository.create(mockAppointmentData);
+
+      const [lock] = asMock(mockPrisma.$executeRaw).mock.invocationCallOrder;
+      const [check] = asMock(mockPrisma.appointment.findFirst).mock
+        .invocationCallOrder;
+      const [insert] = asMock(mockPrisma.appointment.create).mock
+        .invocationCallOrder;
+      expect(lock).toBeLessThan(check);
+      expect(check).toBeLessThan(insert);
+      expect(mockPrisma.appointment.findFirst).toHaveBeenCalledWith({
+        where: {
+          businessId: mockBusinessId,
+          staffId: mockStaffId,
+          status: { in: ['SCHEDULED', 'CONFIRMED', 'IN_PROGRESS'] },
+          startTime: { lt: mockAppointmentData.endTime },
+          endTime: { gt: mockAppointmentData.startTime },
+        },
+        select: { id: true },
+      });
+    });
+
+    it('refuses a slot the staff member is already booked in', async () => {
+      asMock(mockPrisma.staff.findFirst).mockResolvedValue({
+        id: mockStaffId,
+      } as any);
+      asMock(mockPrisma.client.findFirst).mockResolvedValue({
+        id: mockClientId,
+      } as any);
+      asMock(mockPrisma.appointment.findFirst).mockResolvedValue({
+        id: 'taken',
+      } as any);
+
+      await expect(repository.create(mockAppointmentData)).rejects.toThrow(
+        SlotTakenError
+      );
+      expect(mockPrisma.appointment.create).not.toHaveBeenCalled();
     });
   });
 

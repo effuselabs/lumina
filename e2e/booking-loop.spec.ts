@@ -469,6 +469,138 @@ test.describe('booking loop', () => {
     }
   });
 
+  /**
+   * Two clients pressing "Book" on the same slot at the same moment.
+   *
+   * The write checked for conflicts, then validated services, created the
+   * client, and only then opened the transaction that inserts the appointment.
+   * Every request in that gap passed the check, so all of them were booked
+   * into one chair. Each request here has its own cookie jar and user agent,
+   * so each is a separate client to the CSRF check and the rate limiter.
+   */
+  test('concurrent bookings of one slot book it once', async ({
+    playwright,
+    request,
+  }) => {
+    test.setTimeout(60_000);
+    const business = await seededBusiness();
+
+    // Open days no other test books on: the UI test takes the project's own
+    // offset, so this one steps past every project's. Each run keeps the slot
+    // it books, so a day earlier runs have filled moves on to the next.
+    const projectCount = test.info().config.projects.length;
+    type Slot = { startTime: string; endTime: string; staffId: string };
+    let found: {
+      slot: Slot;
+      service: { id: string; duration: number };
+    } | null = null;
+    for (let step = 1; step <= 4 && !found; step += 1) {
+      const date = await nextOpenDate(
+        business.id,
+        step * projectCount + projectDayOffset()
+      );
+      const candidate = await bookableServiceOn(
+        business.id,
+        new Date(`${date}T00:00:00Z`).getUTCDay()
+      );
+      const availability = await request.get(
+        `/api/public/booking/${business.id}/availability` +
+          `?date=${date}&serviceIds=${candidate.id}&duration=${candidate.duration}`,
+        { timeout: 30_000 }
+      );
+      expect(availability.ok(), `availability on ${date}`).toBe(true);
+      const slots: Slot[] = (await availability.json()).availableSlots ?? [];
+      if (slots.length > 0) found = { slot: slots[0], service: candidate };
+    }
+    if (!found) throw new Error('No bookable slot on any unshared open day');
+    const { slot, service } = found;
+
+    const staffService = await prisma.staffService.findFirst({
+      where: { staffId: slot.staffId, serviceId: service.id },
+      select: { customPrice: true, service: { select: { price: true } } },
+    });
+    const price = Number(
+      staffService?.customPrice ?? staffService?.service.price
+    );
+
+    const CLIENTS = 4;
+    const stamp = Date.now();
+    const contexts = await Promise.all(
+      Array.from({ length: CLIENTS }, (_, n) =>
+        playwright.request.newContext({
+          baseURL: test.info().project.use.baseURL,
+          userAgent: `concurrent-booking-${stamp}-${n}`,
+        })
+      )
+    );
+
+    try {
+      const tokens = await Promise.all(
+        contexts.map(async context => {
+          const response = await context.get(
+            `/api/public/booking/${business.id}/csrf-token`
+          );
+          expect(response.ok()).toBe(true);
+          return response.headers()['x-csrf-token'];
+        })
+      );
+
+      const responses = await Promise.all(
+        contexts.map((context, n) =>
+          context.post(`/api/public/booking/${business.id}/book`, {
+            headers: { 'x-csrf-token': tokens[n] },
+            timeout: 30_000,
+            data: {
+              services: [service.id],
+              timeSlot: {
+                startTime: slot.startTime,
+                endTime: slot.endTime,
+                staffId: slot.staffId,
+                totalDuration: service.duration,
+                totalPrice: price,
+              },
+              client: {
+                firstName: 'Concurrent',
+                lastName: 'Booking',
+                email: `concurrent-${stamp}-${n}@example.test`,
+                // Unique per client: `Client` is unique on (businessId, phone).
+                phone: `556${String(stamp).slice(-6)}${n}`,
+                isNewClient: true,
+                marketingOptIn: false,
+              },
+            },
+          })
+        )
+      );
+
+      const outcomes = await Promise.all(
+        responses.map(async response => ({
+          status: response.status(),
+          type: (await response.json()).error?.type as string | undefined,
+        }))
+      );
+      expect(
+        outcomes.filter(outcome => outcome.status === 201),
+        JSON.stringify(outcomes)
+      ).toHaveLength(1);
+      for (const outcome of outcomes.filter(o => o.status !== 201)) {
+        expect(outcome).toEqual({ status: 400, type: 'BOOKING_CONFLICT' });
+      }
+
+      const booked = await prisma.appointment.count({
+        where: {
+          businessId: business.id,
+          staffId: slot.staffId,
+          startTime: new Date(slot.startTime),
+          status: { in: ['SCHEDULED', 'CONFIRMED', 'IN_PROGRESS'] },
+        },
+      });
+      expect(booked, 'appointments in the slot').toBe(1);
+    } finally {
+      await Promise.all(contexts.map(context => context.dispose()));
+    }
+  });
+
   test('a client can book an appointment end to end', async ({
     page,
     browser,
