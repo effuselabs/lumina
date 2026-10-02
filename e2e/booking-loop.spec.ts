@@ -33,7 +33,7 @@ const prisma = new PrismaClient();
 async function seededBusiness() {
   const business = await prisma.business.findFirst({
     where: { isActive: true },
-    select: { id: true, name: true, slug: true },
+    select: { id: true, name: true, slug: true, timezone: true },
   });
 
   if (!business) {
@@ -394,6 +394,79 @@ test.describe('booking loop', () => {
       endTime: expect.any(String),
       staffId: expect.any(String),
     });
+  });
+
+  /**
+   * "Here are some other times" never worked: the booking page called
+   * AlternativeSlotsService from the browser, which imports Prisma, and the
+   * error was caught and swallowed on every run. The server now answers it in
+   * the same response.
+   */
+  test('a closed day offers alternative times on open days', async ({
+    request,
+  }) => {
+    const business = await seededBusiness();
+    const hours = await prisma.businessHours.findMany({
+      where: { businessId: business.id },
+      select: { dayOfWeek: true, isClosed: true },
+    });
+    const open = new Set(
+      hours.filter(day => !day.isClosed).map(day => day.dayOfWeek)
+    );
+    const closed = [0, 1, 2, 3, 4, 5, 6].filter(day => !open.has(day));
+    test.skip(closed.length === 0, 'the seeded salon is open every day');
+
+    // A week out, then forward to the first closed day.
+    const target = new Date();
+    target.setUTCDate(target.getUTCDate() + 7);
+    while (open.has(target.getUTCDay())) {
+      target.setUTCDate(target.getUTCDate() + 1);
+    }
+    const dateString = target.toISOString().slice(0, 10);
+
+    // A service someone performs on the next open day, so there is something
+    // to offer.
+    const nextOpen = new Date(target);
+    do nextOpen.setUTCDate(nextOpen.getUTCDate() + 1);
+    while (!open.has(nextOpen.getUTCDay()));
+    const service = await bookableServiceOn(business.id, nextOpen.getUTCDay());
+
+    const response = await request.get(
+      `/api/public/booking/${business.id}/availability` +
+        `?date=${dateString}&serviceIds=${service.id}&duration=${service.duration}`,
+      { timeout: 30_000 }
+    );
+    expect(response.ok(), `availability returned ${response.status()}`).toBe(
+      true
+    );
+    const body = await response.json();
+
+    expect(body.availableSlots, `${dateString} is a closed day`).toEqual([]);
+    const alternatives: Array<{
+      startTime: string;
+      endTime: string;
+      staffId: string;
+    }> = body.alternatives ?? [];
+    expect(
+      alternatives.length,
+      'a closed day comes with alternatives'
+    ).toBeGreaterThan(0);
+
+    for (const slot of alternatives) {
+      expect(slot).toMatchObject({
+        startTime: expect.any(String),
+        endTime: expect.any(String),
+        staffId: expect.any(String),
+      });
+      // The salon's calendar day, not the runner's: a day-early search
+      // (UTC midnight read west of Greenwich) is the bug this guards.
+      const salonDay = new Intl.DateTimeFormat('en-CA', {
+        timeZone: business.timezone,
+      }).format(new Date(slot.startTime));
+      expect(salonDay > dateString, `${salonDay} is after ${dateString}`).toBe(
+        true
+      );
+    }
   });
 
   test('a client can book an appointment end to end', async ({ page }) => {
