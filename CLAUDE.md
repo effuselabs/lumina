@@ -162,6 +162,15 @@ recursion`, `docs/add-plan`, `test/tenant-isolation`. Branch from the current
   against a moving `main`, and no feedback until the end — which is how this
   project stalled the first time. Small batches beat big ones.
 - Conventional commits. Never commit to `main` directly; CI gates it.
+- **Every piece of work has a GitHub issue.** Recording a finding in
+  `docs/PLAN.md` means opening an issue for it too, linked beside the entry;
+  a pull request says `Closes #N`. Label it `enhancement` (New),
+  `improvement` (Improved) or `bug` (Fixed), and milestone it by phase.
+  Write titles in plain language — what a salon owner would notice.
+- Releases follow `docs/PLAN.md` → "Releases": notes under Highlights, What's
+  changed (New / Improved / Fixed) and Upgrading, each line linked to its
+  issue or PR, plus an image at `ghcr.io/effuselabs/lumina`. Write PR titles
+  and descriptions so they can become a release-note line.
 - Prisma: camelCase fields, snake_case tables via `@@map`. Index foreign keys
   and common composite query paths.
 - Prefer functional, declarative code. Reuse what exists — check
