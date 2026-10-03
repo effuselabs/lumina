@@ -162,6 +162,10 @@ recursion`, `docs/add-plan`, `test/tenant-isolation`. Branch from the current
   against a moving `main`, and no feedback until the end — which is how this
   project stalled the first time. Small batches beat big ones.
 - Conventional commits. Never commit to `main` directly; CI gates it.
+- Releases follow `docs/PLAN.md` → "Releases": notes under Highlights, What's
+  changed (New / Improved / Fixed) and Upgrading, each line linked to its
+  issue or PR, plus an image at `ghcr.io/effuselabs/lumina`. Write PR titles
+  and descriptions so they can become a release-note line.
 - Prisma: camelCase fields, snake_case tables via `@@map`. Index foreign keys
   and common composite query paths.
 - Prefer functional, declarative code. Reuse what exists — check
