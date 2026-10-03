@@ -232,7 +232,7 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
     const endDate = options?.endDate || now;
 
     // Apply seasonal variations
-    let targetDate = this.generateDateInRange(startDate, endDate);
+    const targetDate = this.generateDateInRange(startDate, endDate);
 
     // Bias towards peak days (Thursday, Friday, Saturday)
     const dayOfWeek = targetDate.getDay();
@@ -264,7 +264,6 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
     const staffSchedule = staff.workingHours?.[dayName];
 
     let startHour: number;
-    let startMinute: number;
 
     if (staffSchedule && staffSchedule.startTime && staffSchedule.endTime) {
       // Use staff's actual working hours
@@ -296,7 +295,7 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
     }
 
     // Generate realistic appointment times (on the hour, half hour, or quarter hour)
-    startMinute = faker.helpers.arrayElement([0, 15, 30, 45]);
+    const startMinute = faker.helpers.arrayElement([0, 15, 30, 45]);
 
     const startTime = new Date(date);
     startTime.setHours(startHour, startMinute, 0, 0);
