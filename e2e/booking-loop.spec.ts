@@ -601,6 +601,103 @@ test.describe('booking loop', () => {
     }
   });
 
+  /**
+   * Two appointments moved into the same free hour at the same moment.
+   *
+   * `PUT /api/booking/[id]` checked for a clash, then updated in a separate
+   * statement, so both moves passed the check and the stylist ended up with
+   * two clients at once — the race the booking write had, on the reschedule
+   * path. The appointments are written directly, far enough out that nothing
+   * else books there, and removed afterwards.
+   */
+  test('concurrent reschedules into one slot move only one', async ({
+    browser,
+  }) => {
+    test.setTimeout(60_000);
+    const business = await seededBusiness();
+    const staff = await prisma.staff.findFirst({
+      where: { businessId: business.id, isActive: true },
+      select: { id: true },
+    });
+    expect(staff, 'an active staff member').toBeTruthy();
+    // Every real appointment has a service, and the route reads the first.
+    const service = await prisma.service.findFirst({
+      where: { businessId: business.id, isActive: true },
+      select: { id: true, name: true },
+    });
+    expect(service, 'an active service').toBeTruthy();
+
+    // A day per project, a year out: clear of every other test's bookings.
+    const day = new Date();
+    day.setUTCDate(day.getUTCDate() + 365 + projectDayOffset());
+    const at = (hour: number) =>
+      new Date(`${day.toISOString().slice(0, 10)}T${hour}:00:00.000Z`);
+
+    const created = await Promise.all(
+      [10, 11].map(hour =>
+        prisma.appointment.create({
+          data: {
+            businessId: business.id,
+            staffId: staff!.id,
+            startTime: at(hour),
+            endTime: at(hour + 1),
+            totalDuration: 60,
+            totalPrice: 50,
+            clientName: 'Concurrent Reschedule',
+            services: {
+              create: {
+                serviceId: service!.id,
+                serviceName: service!.name,
+                price: 50,
+                duration: 60,
+              },
+            },
+          },
+          select: { id: true },
+        })
+      )
+    );
+
+    const ownerContext = await browser.newContext({
+      baseURL: test.info().project.use.baseURL,
+    });
+    try {
+      const owner = await ownerContext.newPage();
+      await owner.goto('/auth/signin');
+      await owner.locator('#email').fill('owner@lumina-demo.com');
+      await owner.locator('#password').fill('demo123');
+      await owner.getByRole('button', { name: /^sign in$/i }).click();
+      await owner.waitForURL(/\/dashboard/, { timeout: 30_000 });
+
+      const responses = await Promise.all(
+        created.map(({ id }) =>
+          ownerContext.request.put(`/api/booking/${id}`, {
+            data: {
+              startTime: at(14).toISOString(),
+              endTime: at(15).toISOString(),
+            },
+          })
+        )
+      );
+
+      const statuses = responses.map(response => response.status()).sort();
+      expect(
+        statuses,
+        'one move succeeds, the other finds the slot taken'
+      ).toEqual([200, 409]);
+
+      const inSlot = await prisma.appointment.count({
+        where: { id: { in: created.map(({ id }) => id) }, startTime: at(14) },
+      });
+      expect(inSlot, 'appointments moved into the slot').toBe(1);
+    } finally {
+      await ownerContext.close();
+      await prisma.appointment.deleteMany({
+        where: { id: { in: created.map(({ id }) => id) } },
+      });
+    }
+  });
+
   test('a client can book an appointment end to end', async ({
     page,
     browser,

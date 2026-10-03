@@ -15,8 +15,8 @@ import { emailService } from '../../../../../../lib/email/email-service';
 import { AvailabilityCacheInvalidation } from '../../../../../../lib/services/availability-cache-invalidation';
 import { ClientService } from '../../../../../../lib/services/client-service';
 import {
+  claimSlot,
   hasOverlappingAppointment,
-  lockStaffSchedule,
 } from '../../../../../../lib/services/staff-schedule-lock';
 
 // Using dedicated public booking rate limiters
@@ -430,15 +430,7 @@ async function createAppointmentWithServices(
   // member's lock, so of several concurrent requests for one slot exactly one
   // is booked and the rest see the slot taken.
   const created = await prisma.$transaction(async tx => {
-    await lockStaffSchedule(tx, staffId);
-    if (
-      await hasOverlappingAppointment(tx, {
-        businessId,
-        staffId,
-        startTime,
-        endTime,
-      })
-    ) {
+    if (!(await claimSlot(tx, { businessId, staffId, startTime, endTime }))) {
       return null;
     }
 

@@ -3,17 +3,12 @@ import { AppointmentWithRelations } from '@/types/database';
 import { AppointmentStatus, Prisma } from '@prisma/client';
 import { multiServiceAppointmentService } from '../services/multi-service-appointment';
 import {
-  hasOverlappingAppointment,
-  lockStaffSchedule,
+  SlotTakenError,
+  claimSlot,
+  holdsSlot,
 } from '../services/staff-schedule-lock';
 
-/** The staff member already has an appointment overlapping this one. */
-export class SlotTakenError extends Error {
-  constructor() {
-    super('The staff member already has an appointment at this time');
-    this.name = 'SlotTakenError';
-  }
-}
+export { SlotTakenError };
 
 // ============================================================================
 // INTERFACES AND TYPES
@@ -130,17 +125,13 @@ export class AppointmentRepository {
       // Checked and written under the staff member's lock, so two requests
       // for one slot cannot both pass the check before either inserts.
       const appointment = await prisma.$transaction(async tx => {
-        await lockStaffSchedule(tx, request.staffId);
-        if (
-          await hasOverlappingAppointment(tx, {
-            businessId: request.businessId,
-            staffId: request.staffId,
-            startTime: request.startTime,
-            endTime: request.endTime,
-          })
-        ) {
-          throw new SlotTakenError();
-        }
+        const free = await claimSlot(tx, {
+          businessId: request.businessId,
+          staffId: request.staffId,
+          startTime: request.startTime,
+          endTime: request.endTime,
+        });
+        if (!free) throw new SlotTakenError();
         return tx.appointment.create({
           data: {
             businessId: request.businessId,
@@ -345,30 +336,59 @@ export class AppointmentRepository {
     }
 
     try {
-      const appointment = await prisma.appointment.update({
-        where: { id },
-        data: updates,
-        include: {
-          client: true,
-          staff: {
-            include: {
-              user: true,
+      // A move is checked and written under the staff member's lock, like a
+      // booking: two moves into one slot cannot both pass the check. The row
+      // is re-read under the lock so the check sees its current times.
+      const appointment = await prisma.$transaction(async tx => {
+        if (updates.startTime || updates.endTime) {
+          const current = await tx.appointment.findFirst({
+            where: { id, businessId },
+            select: {
+              staffId: true,
+              startTime: true,
+              endTime: true,
+              status: true,
             },
+          });
+          if (!current)
+            throw new Error('Appointment not found or access denied');
+          if (holdsSlot(current.status)) {
+            const free = await claimSlot(tx, {
+              businessId,
+              staffId: current.staffId,
+              startTime: updates.startTime ?? current.startTime,
+              endTime: updates.endTime ?? current.endTime,
+              excludeId: id,
+            });
+            if (!free) throw new SlotTakenError();
+          }
+        }
+        return tx.appointment.update({
+          where: { id },
+          data: updates,
+          include: {
+            client: true,
+            staff: {
+              include: {
+                user: true,
+              },
+            },
+            services: {
+              include: {
+                service: true,
+              },
+              orderBy: {
+                serviceOrder: 'asc',
+              },
+            },
+            transactions: true,
           },
-          services: {
-            include: {
-              service: true,
-            },
-            orderBy: {
-              serviceOrder: 'asc',
-            },
-          },
-          transactions: true,
-        },
+        });
       });
 
       return appointment;
     } catch (error) {
+      if (error instanceof SlotTakenError) throw error;
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
           throw new Error('Appointment not found');

@@ -422,6 +422,13 @@ drifted from 2 to 5 high/critical between 2026-09-06 and 2026-09-29 without
 any change on our side, and nothing noticed, so the trigger is now a workflow
 rather than a sentence. `next@16` itself remains Phase 7 work.
 
+**Build-time packages belong in `devDependencies`**, or the production audit
+counts them. On 2026-10-03 GHSA-vfj7-8cjw-p6xm (`braces`, no fix available)
+turned every pull request red through `tailwindcss-animate`, a Tailwind plugin
+read only by `tailwind.config.ts` but listed as a runtime dependency — which
+pulled all of Tailwind's tree into the production count. Moving it to
+`devDependencies` took the count to zero with no version change.
+
 **Do not upgrade to a release candidate.** The Prisma CLI currently advertises
 `8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
 three majors, and taking it mid-rebuild trades a working stack for an
@@ -690,15 +697,41 @@ time, after the booking loop works.
   (staffId, startTime) suggested here was rejected: it misses overlaps that
   start at different minutes.
 
-- **Rescheduling still checks for a clash outside its write.**
-  `PATCH /api/booking/[id]` (`app/api/booking/[id]/route.ts`) and
-  `AppointmentService.rescheduleAppointment` look for an overlapping
-  appointment, then update — the race the create paths had. Take the same
-  lock in the same transaction as the update. A Postgres exclusion constraint
-  (`btree_gist`, `EXCLUDE USING gist (staff_id WITH =, tstzrange(...) WITH &&)`)
-  would cover every write path at once, but the migration fails on any
-  database that already holds overlapping appointments, staging included, so
-  it needs a data check first.
+- ~~**Rescheduling still checks for a clash outside its write.**~~ **Fixed.**
+  Every path that puts an appointment into a slot now goes through
+  `claimSlot` (`lib/services/staff-schedule-lock.ts`) inside the transaction
+  that writes it: booking, `AppointmentRepository.update` (every dashboard
+  move, including `rescheduleAppointment`), `PUT /api/booking/[id]`, and
+  reinstating a cancelled or no-show appointment in
+  `AppointmentStatusManager`. Reinstating had no clash check at all, racy or
+  otherwise. Before the fix, two concurrent moves into one free hour both
+  returned 200; "concurrent reschedules into one slot move only one" gates
+  it. An exclusion constraint would cover writes that bypass these paths, but
+  its migration fails on any database already holding overlaps, so it needs a
+  data check first.
+
+- ~~**`/api/booking/[id]` had no tenant check.**~~ **Fixed** in the same
+  change. Middleware required a session; nothing checked the session belonged
+  to the appointment's business, so any signed-in user of any salon could
+  read, reschedule or cancel any other salon's appointment by id. The
+  tenant-isolation gate missed it because it only inspected routes whose
+  source mentions `businessId`; it now also inspects every authenticated
+  route that reads the database, and this was the only one it had missed.
+  Appointment ids are cuids, not guessable, and there are no real customers
+  yet, so no data is known to have been exposed.
+
+- **Clients cannot manage their own booking.** `/booking/[id]` is a public
+  page ("View and manage your appointment booking") whose API,
+  `/api/booking/[id]`, has always required a staff session — so for a client
+  it has never worked. Making it work needs a capability the client holds,
+  such as a signed link in the confirmation email (the pattern
+  `/api/notifications/preferences` already uses), not a session. A feature,
+  not a fix; build it when client self-service is on the roadmap.
+
+- **The reschedule email from `PUT /api/booking/[id]` formats times in the
+  server's zone** (`date-fns` `format`), the bug the booking write fixed with
+  `inBusinessZone`. It also sends the booking _confirmation_ template for a
+  reschedule. Fix both when that route's emails are next touched.
 
 - ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
   service has since migrated to Infrastructure as Code entirely. The service's

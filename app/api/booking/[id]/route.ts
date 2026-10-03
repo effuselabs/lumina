@@ -1,15 +1,69 @@
+import { authorizeBusinessAccess } from '@/lib/auth/business-access';
 import { emailService } from '@/lib/email/email-service';
 import { prisma } from '@/lib/prisma';
+import {
+  SlotTakenError,
+  claimSlot,
+  holdsSlot,
+} from '@/lib/services/staff-schedule-lock';
+import { Prisma } from '@prisma/client';
 import { format } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-const updateBookingSchema = z.object({
-  startTime: z.string().optional(),
-  endTime: z.string().optional(),
-  notes: z.string().optional(),
-  status: z.enum(['SCHEDULED', 'CONFIRMED', 'CANCELLED']).optional(),
-});
+const updateBookingSchema = z
+  .object({
+    startTime: z.string().datetime().optional(),
+    endTime: z.string().datetime().optional(),
+    notes: z.string().max(500).optional(),
+    status: z.enum(['SCHEDULED', 'CONFIRMED', 'CANCELLED']).optional(),
+  })
+  .refine(body => Boolean(body.startTime) === Boolean(body.endTime), {
+    message: 'startTime and endTime are changed together',
+  })
+  .refine(
+    body =>
+      !body.startTime ||
+      !body.endTime ||
+      new Date(body.startTime) < new Date(body.endTime),
+    { message: 'endTime must be after startTime' }
+  );
+
+class AppointmentGoneError extends Error {}
+
+const NOT_FOUND = () =>
+  NextResponse.json({ error: 'Appointment not found' }, { status: 404 });
+
+/**
+ * The appointment, if the caller works for its business.
+ *
+ * This route takes an appointment id, not a businessId, and checked neither:
+ * middleware proved the caller was signed in, and nothing proved they were
+ * signed in *here*. Any user of any salon could read, reschedule or cancel
+ * any other salon's appointment. A caller from another business gets the
+ * same 404 as a missing id, so the route cannot be used to probe which ids
+ * exist.
+ */
+async function authorizeAppointment(
+  id: string
+): Promise<
+  { ok: true; businessId: string } | { ok: false; response: NextResponse }
+> {
+  const appointment = await prisma.appointment.findUnique({
+    where: { id },
+    select: { businessId: true },
+  });
+  if (!appointment) return { ok: false, response: NOT_FOUND() };
+
+  const access = await authorizeBusinessAccess(appointment.businessId);
+  if (!access.ok) {
+    return {
+      ok: false,
+      response: access.response.status === 403 ? NOT_FOUND() : access.response,
+    };
+  }
+  return { ok: true, businessId: access.businessId };
+}
 
 // Get booking details
 export async function GET(
@@ -19,9 +73,11 @@ export async function GET(
   const params = await props.params;
   try {
     const bookingId = params.id;
+    const access = await authorizeAppointment(bookingId);
+    if (!access.ok) return access.response;
 
-    const appointment = await prisma.appointment.findUnique({
-      where: { id: bookingId },
+    const appointment = await prisma.appointment.findFirst({
+      where: { id: bookingId, businessId: access.businessId },
       include: {
         client: true,
         staff: {
@@ -102,8 +158,10 @@ export async function PUT(
   const params = await props.params;
   try {
     const bookingId = params.id;
-    const body = await request.json();
-    const validation = updateBookingSchema.safeParse(body);
+    const access = await authorizeAppointment(bookingId);
+    if (!access.ok) return access.response;
+
+    const validation = updateBookingSchema.safeParse(await request.json());
 
     if (!validation.success) {
       return NextResponse.json(
@@ -114,95 +172,63 @@ export async function PUT(
 
     const { startTime, endTime, notes, status } = validation.data;
 
-    // Get current appointment
-    const currentAppointment = await prisma.appointment.findUnique({
-      where: { id: bookingId },
-      include: {
-        client: true,
-        staff: true,
-        services: true,
-        business: true,
-      },
-    });
-
-    if (!currentAppointment) {
-      return NextResponse.json(
-        { error: 'Appointment not found' },
-        { status: 404 }
-      );
-    }
-
-    // Check for conflicts if rescheduling
-    if (startTime && endTime) {
-      const conflictingAppointment = await prisma.appointment.findFirst({
-        where: {
-          id: { not: bookingId },
-          staffId: currentAppointment.staffId,
-          status: {
-            in: ['SCHEDULED', 'CONFIRMED', 'IN_PROGRESS'],
-          },
-          OR: [
-            {
-              AND: [
-                { startTime: { lte: new Date(startTime) } },
-                { endTime: { gt: new Date(startTime) } },
-              ],
-            },
-            {
-              AND: [
-                { startTime: { lt: new Date(endTime) } },
-                { endTime: { gte: new Date(endTime) } },
-              ],
-            },
-            {
-              AND: [
-                { startTime: { gte: new Date(startTime) } },
-                { endTime: { lte: new Date(endTime) } },
-              ],
-            },
-          ],
-        },
-      });
-
-      if (conflictingAppointment) {
-        return NextResponse.json(
-          { error: 'Time slot is not available' },
-          { status: 409 }
-        );
-      }
-    }
-
-    // Update the appointment
-    const updateData: any = {};
+    const updateData: Prisma.AppointmentUpdateInput = {};
     if (startTime) updateData.startTime = new Date(startTime);
     if (endTime) updateData.endTime = new Date(endTime);
     if (notes !== undefined) updateData.notes = notes;
     if (status) updateData.status = status;
 
-    const updatedAppointment = await prisma.appointment.update({
-      where: { id: bookingId },
-      data: updateData,
-      include: {
-        client: true,
-        staff: {
-          include: {
-            user: {
-              select: {
-                name: true,
+    // A move, or reinstating a cancelled appointment, puts it into a slot.
+    // The clash check and the write share a transaction under the staff
+    // member's lock, so two of them cannot both take the same slot.
+    const updatedAppointment = await prisma.$transaction(async tx => {
+      const current = await tx.appointment.findFirst({
+        where: { id: bookingId, businessId: access.businessId },
+        select: { staffId: true, startTime: true, endTime: true, status: true },
+      });
+      // Authorized above; gone only if deleted in between.
+      if (!current) throw new AppointmentGoneError();
+
+      const moving = Boolean(startTime);
+      const nextStatus = status ?? current.status;
+      const reinstating = !holdsSlot(current.status) && holdsSlot(nextStatus);
+      const holdsAfter = holdsSlot(nextStatus);
+      if (holdsAfter && (moving || reinstating)) {
+        const free = await claimSlot(tx, {
+          businessId: access.businessId,
+          staffId: current.staffId,
+          startTime: startTime ? new Date(startTime) : current.startTime,
+          endTime: endTime ? new Date(endTime) : current.endTime,
+          excludeId: bookingId,
+        });
+        if (!free) throw new SlotTakenError();
+      }
+
+      return tx.appointment.update({
+        where: { id: bookingId },
+        data: updateData,
+        include: {
+          client: true,
+          staff: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                },
               },
             },
           },
-        },
-        services: true,
-        business: {
-          select: {
-            name: true,
-            email: true,
-            phone: true,
-            address: true,
+          services: true,
+          business: {
+            select: {
+              name: true,
+              email: true,
+              phone: true,
+              address: true,
+            },
           },
         },
-      },
+      });
     });
 
     // Send notification email for significant changes
@@ -285,6 +311,13 @@ export async function PUT(
       },
     });
   } catch (error) {
+    if (error instanceof SlotTakenError) {
+      return NextResponse.json(
+        { error: 'Time slot is not available' },
+        { status: 409 }
+      );
+    }
+    if (error instanceof AppointmentGoneError) return NOT_FOUND();
     console.error('Error updating appointment:', error);
     return NextResponse.json(
       { error: 'Failed to update appointment' },
@@ -301,10 +334,12 @@ export async function DELETE(
   const params = await props.params;
   try {
     const bookingId = params.id;
+    const access = await authorizeAppointment(bookingId);
+    if (!access.ok) return access.response;
 
     // Get appointment details before cancellation
-    const appointment = await prisma.appointment.findUnique({
-      where: { id: bookingId },
+    const appointment = await prisma.appointment.findFirst({
+      where: { id: bookingId, businessId: access.businessId },
       include: {
         client: true,
         staff: {
