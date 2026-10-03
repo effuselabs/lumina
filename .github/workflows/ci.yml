@@ -22,10 +22,15 @@ on:
   pull_request:
     branches: [main]
 
-# A newer push to the same branch cancels the older run.
+# On a pull request, a newer push cancels the older run: only the latest
+# commit matters. On main, every commit gets its own group, so no run is ever
+# cancelled or left queued. A cancelled run on main reads to Railway as a
+# failed check suite, and it skips that commit's deploy without saying so
+# (#61). Turning cancel-in-progress off alone is not enough: a group holds
+# one pending run, so a third merge would still cancel the second's.
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   NODE_VERSION: '22'
