@@ -700,15 +700,17 @@ time, after the booking loop works.
   Wait about 20 minutes after CI before treating a deploy as stuck, and check
   Railway's deployment list rather than inferring from `/api/health` alone.
 
-- **Merging two pull requests within seconds of each other skips a deploy.** ([#61](https://github.com/effuselabs/lumina/issues/61))
-  The CI workflow sets `cancel-in-progress: true` on a concurrency group keyed
-  by ref, so a second merge cancels the first merge's run — and Railway reads a
-  cancelled check suite as failed and skips that deployment
-  (`skippedReason: "CI check suite failed"`). Observed on 2026-09-06 with #108
-  and #109: harmless there because the second commit contained the first's
-  code, but merging in the other order would have skipped the deploy of the
-  code that mattered, with no failure anywhere to notice. Space merges out, or
-  wait for each to go green.
+- ~~**Merging two pull requests within seconds of each other skips a
+  deploy.**~~ **Fixed** ([#61](https://github.com/effuselabs/lumina/issues/61)).
+  `ci.yml` cancelled an older run when a newer one started on the same ref; on
+  `main`, Railway reads the cancelled run as a failed check suite and skips
+  that commit's deploy (`skippedReason: "CI check suite failed"`), with no
+  failure anywhere to notice. It happened on 2026-09-06 (#108, #109, before
+  the repository was rebuilt) and again on 2026-10-01, when #45's run on
+  `main` was cancelled — harmless both times, because the next commit
+  contained the code. Each commit on `main` now gets its own concurrency
+  group, so its run is never cancelled or left queued; pull requests still
+  cancel superseded runs.
 
 - **What a first `knip` run found**, recorded as input to 4d rather than as a
   task in itself. 112 unused files, 10 unused dependencies and 8 unused
