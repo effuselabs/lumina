@@ -422,6 +422,13 @@ drifted from 2 to 5 high/critical between 2026-09-06 and 2026-09-29 without
 any change on our side, and nothing noticed, so the trigger is now a workflow
 rather than a sentence. `next@16` itself remains Phase 7 work.
 
+**Build-time packages belong in `devDependencies`**, or the production audit
+counts them. On 2026-10-03 GHSA-vfj7-8cjw-p6xm (`braces`, no fix available)
+turned every pull request red through `tailwindcss-animate`, a Tailwind plugin
+read only by `tailwind.config.ts` but listed as a runtime dependency — which
+pulled all of Tailwind's tree into the production count. Moving it to
+`devDependencies` took the count to zero with no version change.
+
 **Do not upgrade to a release candidate.** The Prisma CLI currently advertises
 `8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
 three majors, and taking it mid-rebuild trades a working stack for an
