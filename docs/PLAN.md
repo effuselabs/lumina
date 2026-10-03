@@ -530,11 +530,14 @@ time, after the booking loop works.
 
 ## Known, unaddressed
 
-- **`npm run lint` does not reach `hooks/`, `prisma/`, or root config.** ([#56](https://github.com/effuselabs/lumina/issues/56))
-  `next lint` checks `app/`, `components/`, `lib/`, `pages/` and `src/` unless
-  `eslint.dirs` says otherwise, so a rule can be at zero in the gate while
-  `hooks/use-theme-switcher.ts` and `prisma/factories/` carry errors
-  `npx eslint .` reports. Widening the gate means fixing those first.
+- ~~**`npm run lint` does not reach `hooks/`, `prisma/`, or root config.**~~
+  **Fixed** ([#56](https://github.com/effuselabs/lumina/issues/56)).
+  `eslint.dirs` in `next.config.js` is now the whole repository, for both
+  `next lint` and the lint step inside `next build`, with generated output
+  named in `ignorePatterns`. Widening it found four errors the gate had never
+  seen: two `prefer-const` in `prisma/factories/appointment-factory.ts`, an
+  import-order error in a test, and the generated `next-env.d.ts`, now
+  ignored. The seed still generates its 500 appointments.
 
 - ~~**The booking loop spec fails about one local run in twenty.**~~
   **Fixed.** This entry said it failed "rather than a slow render", and that

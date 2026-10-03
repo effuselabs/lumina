@@ -9,15 +9,15 @@ import {
   BusinessContextMissingError,
   CacheFailureError,
   ErrorSeverity,
-  getErrorSeverity,
   InsufficientDurationError,
   InvalidTimeSlotError,
-  isAvailabilityError,
-  isBusinessClosedError,
-  isStaffUnavailableError,
   SchedulingConflictError,
   StaffUnavailableError,
   TimeOffConflictError,
+  getErrorSeverity,
+  isAvailabilityError,
+  isBusinessClosedError,
+  isStaffUnavailableError,
 } from '@/lib/errors/availability-errors';
 
 describe('AvailabilityError', () => {

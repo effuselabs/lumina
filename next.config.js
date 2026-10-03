@@ -7,6 +7,15 @@ const nextConfig = {
   // ignoreDuringBuilds was set to true, which meant lint failures could never
   // block anything. See the RATCHET note in .eslintrc.json for why several
   // rules are currently "warn" rather than "error".
+  //
+  // `dirs` is the whole repository. Next's default is only app/, components/,
+  // lib/, pages/ and src/, so hooks/, prisma/, the tests and root files such
+  // as middleware.ts were never linted and a rule could read zero while code
+  // outside those folders broke it (#56). Generated output is excluded by
+  // ignorePatterns in .eslintrc.json.
+  eslint: {
+    dirs: ['.'],
+  },
 
   // Experimental features
   experimental: {

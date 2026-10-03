@@ -1,4 +1,12 @@
 {
+  // Generated or third-party output: `next lint` covers the whole repository
+  // (eslint.dirs in next.config.js), so these must be named.
+  "ignorePatterns": [
+    "next-env.d.ts",
+    "playwright-report/",
+    "test-results/",
+    "coverage/"
+  ],
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
