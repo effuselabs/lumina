@@ -3,7 +3,8 @@ import { readFileSync, readdirSync } from 'fs';
 import { join, relative, sep } from 'path';
 
 /**
- * Every route that takes a businessId must prove the caller belongs to it.
+ * Every route that takes a businessId, or reads tenant data at all, must
+ * prove the caller belongs to the business.
  *
  * This is a structural test, and deliberately so. The behaviour of the guard
  * is covered by business-access.test.ts; what this catches is the failure that
@@ -97,9 +98,16 @@ describe('tenant isolation', () => {
     expect(routes.length).toBeGreaterThan(50);
   });
 
+  /*
+   * A route needs a guard if it names a business or reads the database.
+   * Keying on `businessId` alone missed `/api/booking/[id]`, which loads an
+   * appointment by its own id: any signed-in user of any salon could read,
+   * reschedule or cancel any other salon's appointment.
+   */
   const needsGuard = routes.filter(
     route =>
-      !isPublicRoute(route.pathname) && route.source.includes('businessId')
+      !isPublicRoute(route.pathname) &&
+      (route.source.includes('businessId') || route.source.includes('prisma.'))
   );
 
   it('has authenticated routes that take a businessId', () => {

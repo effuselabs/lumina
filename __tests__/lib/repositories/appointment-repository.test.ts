@@ -270,6 +270,73 @@ describe('AppointmentRepository', () => {
       businessId: mockBusinessId,
     };
 
+    describe('moving an appointment', () => {
+      const current = {
+        id: 'appointment-123',
+        businessId: mockBusinessId,
+        staffId: mockStaffId,
+        startTime: new Date('2026-11-02T10:00:00Z'),
+        endTime: new Date('2026-11-02T11:00:00Z'),
+        status: 'SCHEDULED',
+      };
+      const move = {
+        startTime: new Date('2026-11-02T14:00:00Z'),
+        endTime: new Date('2026-11-02T15:00:00Z'),
+      };
+
+      it('locks the staff member and checks the new slot, ignoring itself', async () => {
+        // findById, the re-read under the lock, then the clash check.
+        asMock(mockPrisma.appointment.findFirst)
+          .mockResolvedValueOnce(current as any)
+          .mockResolvedValueOnce(current as any)
+          .mockResolvedValueOnce(null);
+        asMock(mockPrisma.appointment.update).mockResolvedValue(current as any);
+
+        await repository.update('appointment-123', mockBusinessId, move);
+
+        const [lock] = asMock(mockPrisma.$executeRaw).mock.invocationCallOrder;
+        const [update] = asMock(mockPrisma.appointment.update).mock
+          .invocationCallOrder;
+        expect(lock).toBeLessThan(update);
+        expect(mockPrisma.appointment.findFirst).toHaveBeenLastCalledWith({
+          where: {
+            businessId: mockBusinessId,
+            staffId: mockStaffId,
+            status: { in: ['SCHEDULED', 'CONFIRMED', 'IN_PROGRESS'] },
+            startTime: { lt: move.endTime },
+            endTime: { gt: move.startTime },
+            id: { not: 'appointment-123' },
+          },
+          select: { id: true },
+        });
+      });
+
+      it('refuses a slot the staff member is already booked in', async () => {
+        asMock(mockPrisma.appointment.findFirst)
+          .mockResolvedValueOnce(current as any)
+          .mockResolvedValueOnce(current as any)
+          .mockResolvedValueOnce({ id: 'taken' } as any);
+
+        await expect(
+          repository.update('appointment-123', mockBusinessId, move)
+        ).rejects.toThrow(SlotTakenError);
+        expect(mockPrisma.appointment.update).not.toHaveBeenCalled();
+      });
+
+      it('takes no lock for a change that does not move it', async () => {
+        asMock(mockPrisma.appointment.findFirst).mockResolvedValue(
+          current as any
+        );
+        asMock(mockPrisma.appointment.update).mockResolvedValue(current as any);
+
+        await repository.update('appointment-123', mockBusinessId, {
+          notes: 'Prefers the window seat',
+        });
+
+        expect(mockPrisma.$executeRaw).not.toHaveBeenCalled();
+      });
+    });
+
     it('should update appointment with business validation', async () => {
       // Mock findById for validation
       asMock(mockPrisma.appointment.findFirst).mockResolvedValue({

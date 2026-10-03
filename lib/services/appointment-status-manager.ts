@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { AppointmentStatus, Prisma } from '@prisma/client';
+import { SlotTakenError, claimSlot, holdsSlot } from './staff-schedule-lock';
 
 /**
  * Result of a status update operation
@@ -97,6 +98,9 @@ export class AppointmentStatusManager {
         select: {
           id: true,
           status: true,
+          staffId: true,
+          startTime: true,
+          endTime: true,
           confirmedAt: true,
           startedAt: true,
           completedAt: true,
@@ -134,6 +138,21 @@ export class AppointmentStatusManager {
 
       // Use transaction to ensure atomicity
       const result = await prisma.$transaction(async tx => {
+        // Reinstating a cancelled or no-show appointment puts it back in its
+        // old slot, which may have been booked since. Checked under the
+        // staff member's lock like any other booking — and not skippable,
+        // because a double-booked chair is not a validation preference.
+        if (!holdsSlot(currentStatus) && holdsSlot(newStatus)) {
+          const free = await claimSlot(tx, {
+            businessId,
+            staffId: currentAppointment.staffId,
+            startTime: currentAppointment.startTime,
+            endTime: currentAppointment.endTime,
+            excludeId: appointmentId,
+          });
+          if (!free) throw new SlotTakenError();
+        }
+
         // Update appointment status and timestamps
         const updatedAppointment = await tx.appointment.update({
           where: { id: appointmentId },
@@ -184,6 +203,13 @@ export class AppointmentStatusManager {
         appointment: result,
       };
     } catch (error) {
+      if (error instanceof SlotTakenError) {
+        return {
+          success: false,
+          error:
+            'That time has been booked since; reschedule this appointment instead',
+        };
+      }
       console.error('Error updating appointment status:', error);
       return {
         success: false,
