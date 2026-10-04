@@ -689,11 +689,18 @@ time, after the booking loop works.
   tokens in the component, and `e2e/dashboard-layout.spec.ts` fails if the
   content and sidebar stop meeting.
 
-- **The dashboard shows made-up numbers and notifications**
-  ([#102](https://github.com/effuselabs/lumina/issues/102)): a bell always at
-  3 with three invented events under real-looking names, sidebar badges
-  fixed at 3 and 2, and the appointments page's 8 / 42 / 3.2% with invented
-  trends. Found in #98.
+- ~~**The dashboard shows made-up numbers and notifications.**~~ **Fixed**
+  ([#102](https://github.com/effuselabs/lumina/issues/102)). The appointments
+  page's 8 / 42 / 3.2% (with invented trends) are now read from the business's
+  appointments in the salon's own calendar (`lib/services/appointment-stats.ts`).
+  What could not be made real was removed rather than kept as decoration: the
+  bell's three invented events under real-looking names, the sidebar badges
+  fixed at 3 and 2, a header search box and Help button that did nothing, a
+  development roadmap shown to owners, and Search and Filter buttons with no
+  handlers. A test fails if hardcoded counts, trends or the invented names
+  return. Real notifications ([#104](https://github.com/effuselabs/lumina/issues/104))
+  and search ([#105](https://github.com/effuselabs/lumina/issues/105)) are
+  their own work.
 
 - ~~**There is no `error.tsx` anywhere in `app/`.**~~ **Fixed**
   ([#57](https://github.com/effuselabs/lumina/issues/57)). A failing page now
