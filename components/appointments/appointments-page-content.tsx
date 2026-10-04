@@ -5,16 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageHeader } from '@/components/ui/page-header';
 import { StatCard } from '@/components/ui/stat-card';
+import type { AppointmentStats } from '@/lib/services/appointment-stats';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import {
-  Calendar,
-  CalendarDays,
-  Clock,
-  Filter,
-  Plus,
-  Search,
-  Users,
-} from 'lucide-react';
+import { Calendar, CalendarDays, Clock, Plus, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -23,6 +16,8 @@ interface AppointmentsPageContentProps {
     id: string;
     name: string;
   };
+  /** Read from the business's appointments on the server. */
+  stats: AppointmentStats;
   userRole: string;
   userName: string;
   businessSlug: string;
@@ -40,6 +35,7 @@ interface AppointmentsPageContentProps {
  */
 export function AppointmentsPageContent({
   business,
+  stats,
   userRole,
   userName,
   businessSlug,
@@ -86,36 +82,25 @@ export function AppointmentsPageContent({
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <StatCard
               title="Today's Appointments"
-              value={8}
-              change={{
-                value: 25,
-                type: 'increase',
-                period: 'from yesterday',
-              }}
+              value={stats.today}
               icon={Calendar}
               size="compact"
             />
 
             <StatCard
               title="This Week"
-              value={42}
-              change={{
-                value: 12,
-                type: 'increase',
-                period: 'from last week',
-              }}
+              value={stats.thisWeek}
               icon={Clock}
               size="compact"
             />
 
             <StatCard
-              title="No-Show Rate"
-              value="3.2%"
-              change={{
-                value: 0.8,
-                type: 'decrease',
-                period: 'from last month',
-              }}
+              title="No-Show Rate (30 days)"
+              value={
+                stats.noShowRate === null
+                  ? '—'
+                  : `${(stats.noShowRate * 100).toFixed(1)}%`
+              }
               icon={Users}
               size="compact"
             />
@@ -184,27 +169,13 @@ export function AppointmentsPageContent({
               <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div>
                   <CardTitle className="text-color-secondary">
-                    Recent Appointments
+                    Your schedule
                   </CardTitle>
                   <p className="text-color-foreground-muted">
-                    View and manage your recent appointment activity
+                    Every booking, by day, week or month
                   </p>
                 </div>
                 <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    icon={<Search className="h-4 w-4" />}
-                  >
-                    Search
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    icon={<Filter className="h-4 w-4" />}
-                  >
-                    Filter
-                  </Button>
                   <Button
                     variant="primary"
                     size="sm"
@@ -219,22 +190,25 @@ export function AppointmentsPageContent({
               </div>
             </CardHeader>
             <CardContent>
+              {/* This card showed a development roadmap promising the calendar
+                  "next", with Search and Filter buttons that
+                  did nothing (#102). The calendar is where appointments are. */}
               <div className="py-12 text-center">
-                <Calendar className="text-color-foreground-muted mx-auto mb-4 h-12 w-12" />
-                <h3 className="mb-2 text-lg font-semibold">
-                  Appointment Management Dashboard
-                </h3>
-                <p className="text-color-foreground-muted mb-4">
-                  This is the foundation for your appointment management system.
+                <Calendar
+                  className="mx-auto mb-4 h-12 w-12 text-ink-muted"
+                  aria-hidden="true"
+                />
+                <p className="mb-6 text-ink-soft">
+                  Appointments, including ones clients book online, are on the
+                  calendar.
                 </p>
-                <div className="text-color-foreground-muted space-y-2 text-sm">
-                  <p>✓ Dashboard layout and navigation integrated</p>
-                  <p>✓ Responsive design for desktop and mobile</p>
-                  <p>✓ Quick access to calendar views and booking</p>
-                  <p>• Calendar components will be implemented next</p>
-                  <p>• Real-time updates and drag-and-drop scheduling</p>
-                  <p>• Advanced search and filtering capabilities</p>
-                </div>
+                <Button variant="outline" asChild>
+                  <Link
+                    href={`/dashboard/${businessSlug}/appointments/calendar`}
+                  >
+                    Open the calendar
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

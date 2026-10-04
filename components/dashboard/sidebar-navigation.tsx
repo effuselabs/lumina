@@ -55,10 +55,6 @@ export function SidebarNavigation({
 }: SidebarNavigationProps) {
   const pathname = usePathname();
 
-  // TODO: Replace with real data from API
-  const upcomingAppointments = 3;
-  const pendingPayments = 2;
-
   const navigationItems: NavigationItem[] = [
     {
       id: 'dashboard',
@@ -71,7 +67,6 @@ export function SidebarNavigation({
       label: 'Appointments',
       href: `/dashboard/${businessSlug}/appointments`,
       icon: Calendar,
-      badge: upcomingAppointments,
       children: [
         {
           id: 'calendar',
@@ -110,7 +105,6 @@ export function SidebarNavigation({
       label: 'Payments & Finance',
       href: `/dashboard/${businessSlug}/payments`,
       icon: Wallet,
-      badge: pendingPayments,
       children: [
         {
           id: 'transactions',
