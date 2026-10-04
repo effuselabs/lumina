@@ -1,5 +1,6 @@
 'use client';
 
+import { useCalendarNow } from './calendar-clock';
 import { parseClock, rangeCovering } from '@/lib/calendar/visible-range';
 import { cn } from '@/lib/utils';
 import {
@@ -33,6 +34,7 @@ export function DayView({
   onAppointmentDrop,
   onTimeSlotClick,
 }: Omit<CalendarViewProps, 'view'>) {
+  const now = useCalendarNow();
   const activeStaff = staffMembers.filter(s => s.isActive);
   const dragState = useDragDropState();
 
@@ -391,12 +393,12 @@ export function DayView({
 
       {/* Current Time Indicator */}
       {(() => {
-        const now = new Date();
-        const isToday = now.toDateString() === currentDate.toDateString();
+        const current = now();
+        const isToday = current.toDateString() === currentDate.toDateString();
 
         if (!isToday) return null;
 
-        const dayOfWeek = now.getDay();
+        const dayOfWeek = current.getDay();
         const todayHours = businessHours.find(
           (h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek
         );
@@ -416,13 +418,15 @@ export function DayView({
         const closeTime = new Date(currentDate);
         closeTime.setHours(closeHour, closeMinute, 0, 0);
 
-        if (now < openTime || now > closeTime) return null;
+        if (current < openTime || current > closeTime) return null;
 
         // Calculate position based on time
         const totalMinutes =
           closeHour * 60 + closeMinute - (openHour * 60 + openMinute);
         const currentMinutes =
-          now.getHours() * 60 + now.getMinutes() - (openHour * 60 + openMinute);
+          current.getHours() * 60 +
+          current.getMinutes() -
+          (openHour * 60 + openMinute);
         const percentage = (currentMinutes / totalMinutes) * 100;
 
         return (
@@ -433,7 +437,7 @@ export function DayView({
             <div className="flex items-center">
               <div className="w-24 flex-shrink-0 pr-2 text-right">
                 <div className="inline-block rounded-full bg-lumina-coral px-2 py-1 text-xs font-medium text-white">
-                  {formatTime(now)}
+                  {formatTime(current)}
                 </div>
               </div>
               <div className="h-0.5 flex-1 bg-lumina-coral shadow-sm" />
