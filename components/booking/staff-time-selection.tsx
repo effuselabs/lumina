@@ -23,20 +23,13 @@ import {
   User,
   Users,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { fromDateParam, toDateParam } from '@/lib/booking/date-param';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BookingErrorHandler } from './booking-error-handler';
 import {
   BookingLoadingState,
   NetworkStatusIndicator,
 } from './booking-loading-states';
-
-/** A calendar cell as `YYYY-MM-DD`, read in the zone it was built in. */
-function toDateParam(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${date.getFullYear()}-${month}-${day}`;
-}
 
 export interface TimeSlot {
   startTime: Date;
@@ -109,6 +102,10 @@ export function StaffTimeSelection({
     null
   );
   const [alternativeSlots, setAlternativeSlots] = useState<TimeSlot[]>([]);
+  // The day the page opened on, when it had no times and the page moved on
+  // to the next one that does. Cleared as soon as the visitor picks a day.
+  const [movedFrom, setMovedFrom] = useState<Date | null>(null);
+  const landed = useRef(false);
   // The salon's zone, from the availability response. Null until the first
   // one lands, which is also before any slot exists to render.
   const [businessTimezone, setBusinessTimezone] = useState<string | null>(null);
@@ -258,6 +255,23 @@ export function StaffTimeSelection({
         `availability-${businessId}-${selectedDate.toDateString()}-${serviceIds.join('-')}`
       );
 
+      // Arriving on a day with no times — the salon is closed, or full —
+      // shows an empty list and leaves the visitor to guess. The response
+      // already names the next day with times, so open that instead, once.
+      if (!landed.current) {
+        landed.current = true;
+        if (
+          (data.availableSlots ?? []).length === 0 &&
+          data.nextAvailableDate
+        ) {
+          const next = fromDateParam(data.nextAvailableDate);
+          setMovedFrom(selectedDate);
+          setSelectedDate(next);
+          setCurrentMonth(next);
+          return;
+        }
+      }
+
       // The API is JSON, so startTime/endTime arrive as ISO STRINGS even
       // though TimeSlot types them as Date. Passing a string to
       // Intl.DateTimeFormat throws `RangeError: Invalid time value`, which
@@ -367,6 +381,7 @@ export function StaffTimeSelection({
 
   const handleDateSelect = (date: Date) => {
     if (isDateSelectable(date)) {
+      setMovedFrom(null);
       setSelectedDate(date);
     }
   };
@@ -518,6 +533,12 @@ export function StaffTimeSelection({
               <p className="text-lg font-semibold text-ink-brand">
                 {formatDate(selectedDate)}
               </p>
+              {movedFrom && (
+                <p role="status" className="mt-2 text-sm text-ink-soft">
+                  No times on {formatDate(movedFrom)}. Showing{' '}
+                  {formatDate(selectedDate)}, the next day with free times.
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -628,10 +649,10 @@ export function StaffTimeSelection({
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            setSelectedDate(new Date(nextAvailableDate))
+                            handleDateSelect(fromDateParam(nextAvailableDate))
                           }
                         >
-                          {new Date(nextAvailableDate).toLocaleDateString(
+                          {fromDateParam(nextAvailableDate).toLocaleDateString(
                             'en-US',
                             {
                               weekday: 'long',
