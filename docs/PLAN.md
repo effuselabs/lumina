@@ -682,11 +682,21 @@ time, after the booking loop works.
   stacks, at 1280px ([#98](https://github.com/effuselabs/lumina/issues/98)).
   Found in #97's screenshots; predates it.
 
-- **There is no `error.tsx` anywhere in `app/`.** ([#57](https://github.com/effuselabs/lumina/issues/57)) A server error in a page
-  shows Next's default error screen. The dashboard pages used to catch
-  everything and redirect to `/onboarding` instead, which hid outages as
-  "you have no business"; that is gone, and a branded error boundary for
-  `/dashboard` is the proper replacement.
+- ~~**There is no `error.tsx` anywhere in `app/`.**~~ **Fixed**
+  ([#57](https://github.com/effuselabs/lumina/issues/57)). A failing page now
+  shows a branded message with "Try again", a way back, and the error's
+  digest as a reference — the identifier Next writes beside it in the server
+  log. Boundaries in `app/dashboard/[businessSlug]/` (back to that salon's
+  dashboard), `app/` and `app/global-error.tsx`; checked end to end by making
+  a dashboard page throw in a production build.
+
+- **Sentry is installed but not running**
+  ([#100](https://github.com/effuselabs/lumina/issues/100)). Sentry 10 only
+  initialises from `instrumentation.ts`, which does not exist, so
+  `sentry.server.config.js` never runs; the browser config reads a DSN that
+  is never sent to the browser; and `withSentryConfig` applies only when
+  `SENTRY_DSN` is set at build. No error reaches Sentry. Whether there is a
+  Sentry project, and who it alerts, is Jeremy's call.
 
 - **No `Strict-Transport-Security` or `Content-Security-Policy` header.** ([#70](https://github.com/effuselabs/lumina/issues/70))
   `next.config.js` sets `X-Frame-Options`, `X-Content-Type-Options`,
