@@ -1,7 +1,7 @@
 'use client';
 
 // Removed design-system-error-handling imports as they were causing interference
-import { Slot } from '@radix-ui/react-slot';
+import { Slot, Slottable } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 import { shallowEqual } from '../../lib/performance-utils';
@@ -257,7 +257,21 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-loading={loading}
         {...props}
       >
-        {loading ? (
+        {asChild ? (
+          // Slot merges these props into its one child. Wrapped in a
+          // fragment, the child was the fragment, which cannot take a
+          // className, so every link styled as a button rendered as plain
+          // text (#97). The children reach Slot as an array, with Slottable
+          // marking the real child; the icon renders inside it.
+          [
+            icon && (
+              <span key="icon" className="flex-shrink-0" aria-hidden="true">
+                {icon}
+              </span>
+            ),
+            <Slottable key="child">{children}</Slottable>,
+          ]
+        ) : loading ? (
           <>
             <Spinner
               size={

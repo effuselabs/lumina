@@ -670,6 +670,18 @@ time, after the booking loop works.
   job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
   is live.
 
+- ~~Link buttons render as plain unstyled links.~~ **Fixed**
+  ([#97](https://github.com/effuselabs/lumina/issues/97)). `<Button asChild>`
+  handed Radix `Slot` a fragment rather than the link, and a fragment cannot
+  take a `className`, so every link styled as a button — page-header and
+  empty-state actions, "New Appointment", the calendar and schedule-card
+  links — rendered as plain text. The children now reach `Slot` as an array
+  with `Slottable` marking the link, so the icon renders inside it.
+
+- Dashboard content starts about 300px right of the sidebar, and the header
+  stacks, at 1280px ([#98](https://github.com/effuselabs/lumina/issues/98)).
+  Found in #97's screenshots; predates it.
+
 - **There is no `error.tsx` anywhere in `app/`.** ([#57](https://github.com/effuselabs/lumina/issues/57)) A server error in a page
   shows Next's default error screen. The dashboard pages used to catch
   everything and redirect to `/onboarding` instead, which hid outages as
