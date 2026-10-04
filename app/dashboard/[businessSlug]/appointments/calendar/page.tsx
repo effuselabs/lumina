@@ -70,6 +70,7 @@ export default async function AppointmentCalendarPage(
     <AppointmentCalendarPageContent
       business={business}
       businessHours={businessHours}
+      timezone={accessible.timezone}
       userRole={userRole}
       userName={user.name || user.email || 'User'}
       businessSlug={params.businessSlug}

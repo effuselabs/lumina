@@ -629,9 +629,17 @@ time, after the booking loop works.
   - `e2e/booking-loop.spec.ts` now ends with the owner finding the booking on
     the calendar; against the old calendar it fails.
 
-  Still true: the calendar lays its grid out in the _browser's_ timezone, not
-  the salon's, as availability once did. An owner viewing from another zone
-  sees shifted times. Worth fixing with the same `business-time.ts` helpers. ([#59](https://github.com/effuselabs/lumina/issues/59))
+  ~~Still true: the calendar lays its grid out in the _browser's_ timezone.~~
+  **Fixed** ([#59](https://github.com/effuselabs/lumina/issues/59)). The views
+  use local-time arithmetic throughout, so rather than rewrite them the
+  calendar now works in the salon's wall clock (`lib/calendar/zoned.ts`):
+  appointments are converted in at the data hook, the fetch window and "now"
+  are converted out, and the page says which zone times are in. The booking
+  e2e, whose browser runs in Sydney, now requires the owner to find the
+  booking at its salon time. Known limit: a salon time that does not exist in
+  the _viewer's_ zone (the hour skipped on the viewer's spring-forward night)
+  cannot be held by a browser `Date`, and would shift by an hour that night.
+  Removing it means replacing the views' local-time arithmetic outright.
 
 - **Business metrics should bucket by the salon's day, not UTC.** ([#87](https://github.com/effuselabs/lumina/issues/87))
   `business-metrics-tracker.ts` bucketed by the _server's_ day, so two hosts in
