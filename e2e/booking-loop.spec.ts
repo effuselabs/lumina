@@ -520,6 +520,40 @@ test.describe('booking loop', () => {
       await page.clock.setFixedTime(
         new Date(`${closed.toISOString().slice(0, 10)}T12:00:00Z`)
       );
+      // Hold back the first answer for the closed day, so it lands after the
+      // page has moved on — as a slow network, or React's development double
+      // render, delivers it. A late answer for a day the page is no longer
+      // showing must be ignored, not drawn over the new day (#92).
+      const closedParam = closed.toISOString().slice(0, 10);
+      let heldBack = false;
+      await page.route('**/availability?**', async route => {
+        const day = new URL(route.request().url()).searchParams.get('date');
+        if (day === closedParam && !heldBack) {
+          heldBack = true;
+          // While it is held, a network-status change re-runs the page's
+          // fetch for the same day, which shares the pending request: two
+          // handlers for one answer, the second drawing the closed day over
+          // the day the first moved to.
+          await page.evaluate(() => window.dispatchEvent(new Event('online')));
+          await new Promise(resolve => setTimeout(resolve, 1_500));
+        }
+        await route.continue();
+      });
+      // Record whether the empty state is ever drawn for the day the page
+      // moved to, however briefly — a later fetch can paint over it.
+      await page.addInitScript(() => {
+        const seen: string[] = [];
+        (window as unknown as { __emptyStates: string[] }).__emptyStates = seen;
+        new MutationObserver(() => {
+          const text = document.body?.innerText ?? '';
+          const match = /No available times for ([^\n]+)/.exec(text);
+          if (match && !seen.includes(match[1])) seen.push(match[1]);
+        }).observe(document, {
+          subtree: true,
+          childList: true,
+          characterData: true,
+        });
+      });
       await page.goto(`/book/${business.id}`);
 
       const serviceButton = page.getByRole('button', {
@@ -537,9 +571,30 @@ test.describe('booking loop', () => {
       await expect(
         page.getByRole('status').filter({ hasText: nextOpenWeekday })
       ).toBeVisible({ timeout: STEP_TRANSITION_TIMEOUT });
+      // Real time slots, whose names start with the time — not the
+      // closed day's "other times" tiles, which start with a date and
+      // satisfied a looser check while the page showed the wrong day (#92).
       await expect(
-        page.getByRole('button', { name: /\d{1,2}:\d{2}\s*(am|pm)/i }).first()
+        page.getByRole('button', { name: /^\d{1,2}:\d{2}\s*(am|pm)/i }).first()
       ).toBeVisible({ timeout: STEP_TRANSITION_TIMEOUT });
+      // And they stay: a late response for the closed day must not replace
+      // them with its empty list once every request has settled.
+      await page.waitForLoadState('networkidle');
+      await expect(page.getByText(/no available times/i)).toHaveCount(0);
+      const nextOpenDay = nextOpen.toLocaleDateString('en-US', {
+        weekday: 'long',
+        timeZone: 'UTC',
+      });
+      const emptyStates = await page.evaluate(
+        () => (window as unknown as { __emptyStates: string[] }).__emptyStates
+      );
+      expect(
+        emptyStates.filter(day => day.startsWith(nextOpenDay)),
+        'the day the page moved to was never shown as empty'
+      ).toEqual([]);
+      await expect(
+        page.getByRole('button', { name: /^\d{1,2}:\d{2}\s*(am|pm)/i }).first()
+      ).toBeVisible();
     } finally {
       await context.close();
     }

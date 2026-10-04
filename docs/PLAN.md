@@ -847,6 +847,20 @@ time, after the booking loop works.
   zone with the browser clock on a closed day; the project's own browser runs
   in Sydney, east of UTC, where the bug never showed.
 
+- ~~The booking page could show the closed day's empty list under the day it
+  moved to.~~ **Fixed** ([#92](https://github.com/effuselabs/lumina/issues/92)),
+  a regression from #58's fix. The page drew every availability response it
+  received, including ones for a day it was no longer showing: a fetch that
+  re-runs while its request is in flight shares that request, so one answer
+  reached two handlers — the first moved the page on, the second drew the
+  closed day over it. Separately, the loading state cleared between the hand
+  over and the next day's fetch, drawing that day as empty for a frame. Only
+  the latest request may now change the page, and loading holds through the
+  hand-over. #58's test passed regardless, because it looked for any button
+  containing a time and the "other times" tiles contain times too; it now
+  forces the shared-request case and records whether the empty state is ever
+  drawn for the new day, even briefly.
+
 - The booking page's time buttons, and its "other times" tiles, clip their
   own text at desktop width ([#90](https://github.com/effuselabs/lumina/issues/90)).
   Found while fixing #58.
