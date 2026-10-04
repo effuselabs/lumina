@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { User } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -124,5 +125,32 @@ describe('Button Component', () => {
     const link = screen.getByRole('link');
     expect(link).toHaveAttribute('href', '/test');
     expect(link).toHaveTextContent('Link button');
+  });
+
+  describe('asChild (#97)', () => {
+    it('styles its child link as the button', () => {
+      render(
+        <Button asChild variant="outline">
+          <Link href="/dashboard">Back to dashboard</Link>
+        </Button>
+      );
+
+      const link = screen.getByRole('link', { name: 'Back to dashboard' });
+      expect(link).toHaveAttribute('href', '/dashboard');
+      expect(link).toHaveClass('inline-flex', 'border-2');
+      expect(link).toHaveAttribute('data-variant', 'outline');
+    });
+
+    it('keeps its icon, inside the link', () => {
+      render(
+        <Button asChild icon={<User data-testid="icon" />}>
+          <Link href="/appointments/new">New Appointment</Link>
+        </Button>
+      );
+
+      const link = screen.getByRole('link', { name: 'New Appointment' });
+      expect(link).toContainElement(screen.getByTestId('icon'));
+      expect(link).toHaveClass('inline-flex');
+    });
   });
 });
