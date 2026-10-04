@@ -106,6 +106,11 @@ export function StaffTimeSelection({
   // to the next one that does. Cleared as soon as the visitor picks a day.
   const [movedFrom, setMovedFrom] = useState<Date | null>(null);
   const landed = useRef(false);
+  // Only the latest availability request may change what is shown. An older
+  // one can still answer — over a slow network, or as a second handler for a
+  // shared in-flight request when the fetch re-runs — and drawing it would
+  // show one day's times under another day's heading (#92).
+  const latestRequest = useRef(0);
   // The salon's zone, from the availability response. Null until the first
   // one lands, which is also before any slot exists to render.
   const [businessTimezone, setBusinessTimezone] = useState<string | null>(null);
@@ -223,6 +228,12 @@ export function StaffTimeSelection({
   // Fetch available time slots
   const fetchAvailableSlots = useCallback(async () => {
     if (selectedServices.length === 0) return;
+    const request = ++latestRequest.current;
+    const isCurrent = () => request === latestRequest.current;
+    // Set when this request hands over to a fetch for another day, which
+    // keeps the loading state: clearing it in between would draw the new
+    // day as empty for a frame before its own fetch starts.
+    let handedOver = false;
 
     setLoading(true);
     setError(null);
@@ -254,6 +265,7 @@ export function StaffTimeSelection({
         {},
         `availability-${businessId}-${selectedDate.toDateString()}-${serviceIds.join('-')}`
       );
+      if (!isCurrent()) return;
 
       // Arriving on a day with no times — the salon is closed, or full —
       // shows an empty list and leaves the visitor to guess. The response
@@ -268,6 +280,7 @@ export function StaffTimeSelection({
           setMovedFrom(selectedDate);
           setSelectedDate(next);
           setCurrentMonth(next);
+          handedOver = true;
           return;
         }
       }
@@ -298,6 +311,7 @@ export function StaffTimeSelection({
         }))
       );
     } catch (err) {
+      if (!isCurrent()) return;
       if (err instanceof PublicBookingError) {
         setError(err);
       } else {
@@ -305,7 +319,7 @@ export function StaffTimeSelection({
       }
       setAvailableSlots([]);
     } finally {
-      setLoading(false);
+      if (isCurrent() && !handedOver) setLoading(false);
     }
   }, [
     businessId,
