@@ -90,9 +90,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     // Determine variant based on state
     const computedVariant = error ? 'error' : success ? 'success' : variant;
 
-    // Generate accessible label if needed
-    const accessibleLabel = ariaLabel || props.placeholder;
-
     return (
       <input
         type={type}
@@ -102,7 +99,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         disabled={disabled}
         aria-disabled={disabled}
-        aria-label={accessibleLabel}
+        // Never derived from the placeholder: an aria-label overrides a
+        // visible <label>, so screen readers announced "Enter your email
+        // address" where the form said "Email Address" (#63). A placeholder
+        // is an example, not a name — every input needs a real label, which
+        // __tests__/accessibility/input-labels.test.ts enforces.
+        aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}
         aria-invalid={ariaInvalid || error}
         {...props}

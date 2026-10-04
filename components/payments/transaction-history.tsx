@@ -262,6 +262,7 @@ export default function TransactionHistory({
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-ink-faint" />
               <Input
+                aria-label="Search transactions"
                 placeholder="Search transactions..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}

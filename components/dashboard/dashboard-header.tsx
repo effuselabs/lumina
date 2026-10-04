@@ -58,6 +58,7 @@ export function DashboardHeader({
         <div className="relative">
           <Search className="text-lumina-secondary absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 transform" />
           <Input
+            aria-label="Search clients, appointments, services and staff"
             placeholder="Search clients, appointments, services, staff..."
             className="focus:ring-lumina-gold/20 rounded-xl border-2 border-line bg-surface py-3 pl-12 pr-4 text-base transition-all duration-200 placeholder:text-ink-faint focus:border-lumina-gold focus:ring-2"
             style={{

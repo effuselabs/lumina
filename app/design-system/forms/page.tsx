@@ -92,19 +92,27 @@ export default function FormsPage() {
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Small
                 </h3>
-                <Input size="sm" placeholder="Small input" />
+                <Input
+                  size="sm"
+                  aria-label="Small input"
+                  placeholder="Small input"
+                />
               </div>
               <div>
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Default
                 </h3>
-                <Input placeholder="Default input" />
+                <Input aria-label="Default input" placeholder="Default input" />
               </div>
               <div>
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Large
                 </h3>
-                <Input size="lg" placeholder="Large input" />
+                <Input
+                  size="lg"
+                  aria-label="Large input"
+                  placeholder="Large input"
+                />
               </div>
             </div>
 
@@ -113,19 +121,27 @@ export default function FormsPage() {
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Default State
                 </h3>
-                <Input placeholder="Normal input" />
+                <Input aria-label="Normal input" placeholder="Normal input" />
               </div>
               <div>
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Error State
                 </h3>
-                <Input error placeholder="Error input" />
+                <Input
+                  error
+                  aria-label="Error input"
+                  placeholder="Error input"
+                />
               </div>
               <div>
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Success State
                 </h3>
-                <Input success placeholder="Success input" />
+                <Input
+                  success
+                  aria-label="Success input"
+                  placeholder="Success input"
+                />
               </div>
             </div>
 
@@ -134,19 +150,27 @@ export default function FormsPage() {
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Email
                 </h3>
-                <Input type="email" placeholder="email@example.com" />
+                <Input
+                  type="email"
+                  aria-label="Email"
+                  placeholder="email@example.com"
+                />
               </div>
               <div>
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Password
                 </h3>
-                <Input type="password" placeholder="Password" />
+                <Input
+                  type="password"
+                  aria-label="Password"
+                  placeholder="Password"
+                />
               </div>
               <div>
                 <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Number
                 </h3>
-                <Input type="number" placeholder="123" />
+                <Input type="number" aria-label="Number" placeholder="123" />
               </div>
             </div>
 
@@ -154,7 +178,11 @@ export default function FormsPage() {
               <h3 className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Disabled
               </h3>
-              <Input disabled placeholder="Disabled input" />
+              <Input
+                disabled
+                aria-label="Disabled input"
+                placeholder="Disabled input"
+              />
             </div>
           </div>
         </Card>
