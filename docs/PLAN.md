@@ -911,10 +911,14 @@ time, after the booking loop works.
 - ~~`booking-confirmation.tsx`, `public-booking-interface.tsx` and
   `simple-booking-layout.tsx` are unreferenced.~~ **Resolved**: deleted in the
   4d sweep.
-- The client form's `<Input>` sets `aria-label` from its placeholder, which
-  overrides the visible `<Label>`. Screen-reader users hear "Enter your email
-  address" where the label says "Email Address". Fix with the Phase 5 primitive
-  rebuild. ([#63](https://github.com/effuselabs/lumina/issues/63))
+- ~~The client form's `<Input>` sets `aria-label` from its placeholder, which
+  overrides the visible `<Label>`.~~ **Fixed**
+  ([#63](https://github.com/effuselabs/lumina/issues/63)). The fallback was in
+  `Input` itself, so it affected every input with a placeholder, and it was
+  hiding 17 inputs — search boxes and the design-system demos — that had no
+  label at all. Those now carry an explicit `aria-label`, `Input` never
+  derives one, and `__tests__/accessibility/input-labels.test.ts` fails on any
+  `<Input>` without a real label.
 - ~~"Confirm Booking" renders white text on the coral/gold gradient.~~
   **Fixed** in 3d, and gated by a test that reads the components, not only
   the tokens.

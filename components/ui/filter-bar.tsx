@@ -71,6 +71,7 @@ export function FilterBar({
           <div key={filter.key} className="relative min-w-[200px] flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
             <Input
+              aria-label={`Search ${filter.label.toLowerCase()}`}
               placeholder={
                 filter.placeholder || `Search ${filter.label.toLowerCase()}...`
               }
@@ -111,6 +112,7 @@ export function FilterBar({
           <div key={filter.key} className="min-w-[150px]">
             <Input
               type="date"
+              aria-label={filter.label}
               value={(value as string) || ''}
               onChange={e => onChange(filter.key, e.target.value)}
               placeholder={filter.placeholder}

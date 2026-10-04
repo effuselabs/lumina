@@ -121,4 +121,33 @@ describe('Input Component', () => {
 
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  describe('accessible name (#63)', () => {
+    it('is the visible label, not the placeholder', () => {
+      render(
+        <>
+          <label htmlFor="email">Email Address</label>
+          <Input id="email" placeholder="Enter your email address" />
+        </>
+      );
+
+      expect(
+        screen.getByRole('textbox', { name: 'Email Address' })
+      ).toBeInTheDocument();
+    });
+
+    it('never turns the placeholder into an aria-label', () => {
+      render(<Input placeholder="Enter your email address" />);
+
+      expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-label');
+    });
+
+    it('keeps an explicit aria-label', () => {
+      render(<Input aria-label="Search services" placeholder="Search..." />);
+
+      expect(
+        screen.getByRole('textbox', { name: 'Search services' })
+      ).toBeInTheDocument();
+    });
+  });
 });
