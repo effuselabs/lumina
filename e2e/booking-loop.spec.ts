@@ -1,4 +1,4 @@
-import { type Page, expect, test } from '@playwright/test';
+import { type Locator, type Page, expect, test } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
 
 /**
@@ -592,13 +592,47 @@ test.describe('booking loop', () => {
         emptyStates.filter(day => day.startsWith(nextOpenDay)),
         'the day the page moved to was never shown as empty'
       ).toEqual([]);
-      await expect(
-        page.getByRole('button', { name: /^\d{1,2}:\d{2}\s*(am|pm)/i }).first()
-      ).toBeVisible();
+      const times = page.getByRole('button', {
+        name: /^\d{1,2}:\d{2}\s*(am|pm)/i,
+      });
+      await expect(times.first()).toBeVisible();
+
+      // Every time button shows its whole label (#90): they had a fixed
+      // one-line height and two lines of text, so both lines were clipped.
+      expect(
+        await clippedButtons(times),
+        'time buttons with clipped text'
+      ).toEqual([]);
+
+      // Back to the closed day: its "other times" tiles must fit too.
+      await page
+        .getByRole('button', { name: String(closed.getUTCDate()), exact: true })
+        .click();
+      const alternatives = page.getByRole('button', { name: / with /i });
+      await expect(alternatives.first()).toBeVisible({
+        timeout: STEP_TRANSITION_TIMEOUT,
+      });
+      expect(
+        await clippedButtons(alternatives),
+        'alternative-time tiles with clipped text'
+      ).toEqual([]);
     } finally {
       await context.close();
     }
   });
+
+  /** The labels of buttons whose content overflows their own box. */
+  async function clippedButtons(buttons: Locator): Promise<string[]> {
+    return buttons.evaluateAll(elements =>
+      elements
+        .filter(
+          element =>
+            element.scrollHeight > element.clientHeight + 1 ||
+            element.scrollWidth > element.clientWidth + 1
+        )
+        .map(element => element.textContent?.trim() ?? '')
+    );
+  }
 
   /**
    * Two clients pressing "Book" on the same slot at the same moment.
