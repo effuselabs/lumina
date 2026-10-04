@@ -636,7 +636,10 @@ time, after the booking loop works.
   appointments are converted in at the data hook, the fetch window and "now"
   are converted out, and the page says which zone times are in. The booking
   e2e, whose browser runs in Sydney, now requires the owner to find the
-  booking at its salon time.
+  booking at its salon time. Known limit: a salon time that does not exist in
+  the _viewer's_ zone (the hour skipped on the viewer's spring-forward night)
+  cannot be held by a browser `Date`, and would shift by an hour that night.
+  Removing it means replacing the views' local-time arithmetic outright.
 
 - **Business metrics should bucket by the salon's day, not UTC.** ([#87](https://github.com/effuselabs/lumina/issues/87))
   `business-metrics-tracker.ts` bucketed by the _server's_ day, so two hosts in
