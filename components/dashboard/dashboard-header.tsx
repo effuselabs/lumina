@@ -37,7 +37,7 @@ export function DashboardHeader({
   };
 
   return (
-    <header className="dashboard-header">
+    <header className="flex items-center justify-between gap-4 border-b border-line bg-surface px-4 py-3 sm:px-6">
       <div className="flex items-center gap-4">
         {/* Mobile Menu Button */}
         <MobileMenuButton onClick={onMenuToggle} />
@@ -45,16 +45,21 @@ export function DashboardHeader({
         {/* Business Name */}
         <div className="hidden sm:block">
           <div className="flex items-center gap-2">
-            <div className="business-icon-container">
-              <Building2 className="business-icon h-4 w-4" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-muted">
+              <Building2
+                className="h-4 w-4 text-ink-brand"
+                aria-hidden="true"
+              />
             </div>
-            <h1 className="business-name">{businessName}</h1>
+            <h1 className="text-sm font-semibold text-ink-strong">
+              {businessName}
+            </h1>
           </div>
         </div>
       </div>
 
       {/* Enhanced Search Bar */}
-      <div className="mx-8 max-w-2xl flex-1">
+      <div className="mx-4 hidden max-w-2xl flex-1 md:block">
         <div className="relative">
           <Search className="text-lumina-secondary absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 transform" />
           <Input
@@ -69,9 +74,9 @@ export function DashboardHeader({
       </div>
 
       {/* Header Actions */}
-      <div className="header-actions">
+      <div className="flex items-center gap-1">
         {/* Search Button (Mobile) */}
-        <button className="header-action-button md:hidden">
+        <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden">
           <Search className="h-5 w-5" />
           <span className="sr-only">Search</span>
         </button>
@@ -81,10 +86,10 @@ export function DashboardHeader({
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="header-action-button">
+            <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               <Bell className="h-5 w-5" />
               {notificationCount > 0 && (
-                <span className="header-notification-badge">
+                <span className="sidebar-nav-badge absolute -right-1 -top-1 px-1.5 py-0 leading-5">
                   {notificationCount}
                 </span>
               )}
@@ -128,7 +133,7 @@ export function DashboardHeader({
         </DropdownMenu>
 
         {/* Help */}
-        <button className="header-action-button">
+        <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <HelpCircle className="h-5 w-5" />
           <span className="sr-only">Help</span>
         </button>
@@ -144,7 +149,7 @@ function ThemeToggle() {
   return (
     <button
       type="button"
-      className="header-action-button"
+      className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       onClick={toggleTheme}
       disabled={isTransitioning}
       aria-label={label}

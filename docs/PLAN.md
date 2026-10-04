@@ -678,9 +678,22 @@ time, after the booking loop works.
   links — rendered as plain text. The children now reach `Slot` as an array
   with `Slottable` marking the link, so the icon renders inside it.
 
-- Dashboard content starts about 300px right of the sidebar, and the header
-  stacks, at 1280px ([#98](https://github.com/effuselabs/lumina/issues/98)).
-  Found in #97's screenshots; predates it.
+- ~~Dashboard content starts about 300px right of the sidebar, and the header
+  stacks.~~ **Fixed** ([#98](https://github.com/effuselabs/lumina/issues/98)).
+  Two causes. From 1024px the sidebar is the grid's first column, and the
+  content column also carried a 280px margin for it — the width counted
+  twice, so content began at 560px. And the header had no layout at all:
+  `.dashboard-header` and every class inside it were defined nowhere (most
+  likely in the never-loaded design-token CSS deleted in 3e), so its groups
+  stacked as blocks. The margin is gone, the header is styled on the themed
+  tokens in the component, and `e2e/dashboard-layout.spec.ts` fails if the
+  content and sidebar stop meeting.
+
+- **The dashboard shows made-up numbers and notifications**
+  ([#102](https://github.com/effuselabs/lumina/issues/102)): a bell always at
+  3 with three invented events under real-looking names, sidebar badges
+  fixed at 3 and 2, and the appointments page's 8 / 42 / 3.2% with invented
+  trends. Found in #98.
 
 - ~~**There is no `error.tsx` anywhere in `app/`.**~~ **Fixed**
   ([#57](https://github.com/effuselabs/lumina/issues/57)). A failing page now
