@@ -470,6 +470,82 @@ test.describe('booking loop', () => {
   });
 
   /**
+   * A visitor who arrives on a day the salon is closed.
+   *
+   * The page opened on today and showed an empty list. The availability
+   * response already names the next open day, and a button offered it — but
+   * the button parsed "2026-10-12" as UTC midnight, which in Los Angeles is the
+   * evening before: it was labelled with the closed day and, clicked, selected
+   * it again. The project's browser runs in Sydney, east of UTC, where that
+   * never shows, so this test moves the browser to the salon's own zone.
+   */
+  test('a visitor arriving on a closed day lands on the next open day', async ({
+    browser,
+  }) => {
+    test.setTimeout(90_000);
+    const business = await seededBusiness();
+    const hours = await prisma.businessHours.findMany({
+      where: { businessId: business.id },
+      select: { dayOfWeek: true, isClosed: true },
+    });
+    const open = new Set(
+      hours.filter(day => !day.isClosed).map(day => day.dayOfWeek)
+    );
+    test.skip(open.size === 7, 'the seeded salon is open every day');
+
+    // A closed day a week or more out, then the open day after it.
+    const closed = new Date();
+    closed.setUTCDate(closed.getUTCDate() + 7);
+    while (open.has(closed.getUTCDay())) {
+      closed.setUTCDate(closed.getUTCDate() + 1);
+    }
+    const nextOpen = new Date(closed);
+    do nextOpen.setUTCDate(nextOpen.getUTCDate() + 1);
+    while (!open.has(nextOpen.getUTCDay()));
+    const service = await bookableServiceOn(business.id, nextOpen.getUTCDay());
+    const nextOpenWeekday = nextOpen.toLocaleDateString('en-US', {
+      weekday: 'long',
+      timeZone: 'UTC',
+    });
+
+    const context = await browser.newContext({
+      baseURL: test.info().project.use.baseURL,
+      timezoneId: business.timezone,
+    });
+    try {
+      const page = await context.newPage();
+      recordBrowserActivity(page);
+      // Midday UTC on the closed day: the same calendar day anywhere from
+      // UTC-11 to UTC+11, so the salon's own zone included.
+      await page.clock.setFixedTime(
+        new Date(`${closed.toISOString().slice(0, 10)}T12:00:00Z`)
+      );
+      await page.goto(`/book/${business.id}`);
+
+      const serviceButton = page.getByRole('button', {
+        name: `Add Service: ${service.name}`,
+        exact: true,
+      });
+      const continueButton = page.getByRole('button', { name: /^continue/i });
+      await expect(async () => {
+        if (await continueButton.isDisabled()) await serviceButton.click();
+        await expect(continueButton).toBeEnabled({ timeout: 2_000 });
+      }).toPass({ timeout: 30_000 });
+      await continueButton.click();
+
+      // No date clicked: the page should have moved on by itself, and said so.
+      await expect(
+        page.getByRole('status').filter({ hasText: nextOpenWeekday })
+      ).toBeVisible({ timeout: STEP_TRANSITION_TIMEOUT });
+      await expect(
+        page.getByRole('button', { name: /\d{1,2}:\d{2}\s*(am|pm)/i }).first()
+      ).toBeVisible({ timeout: STEP_TRANSITION_TIMEOUT });
+    } finally {
+      await context.close();
+    }
+  });
+
+  /**
    * Two clients pressing "Book" on the same slot at the same moment.
    *
    * The write checked for conflicts, then validated services, created the

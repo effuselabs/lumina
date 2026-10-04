@@ -835,11 +835,21 @@ time, after the booking loop works.
   Belongs with client CRM when that is unparked; the query wants to go
   through `appointments.some({ staffId })`. ([#85](https://github.com/effuselabs/lumina/issues/85))
 
-- The booking page opens on today and offers no way forward when the salon is
-  closed that day. A visitor arriving on a Sunday sees an empty slot list and
-  must guess to advance the calendar, even though the availability API already
-  returns `nextAvailableDate` in the same response. Honour it — land on the
-  next open day, and say so. ([#58](https://github.com/effuselabs/lumina/issues/58)) Found because the e2e spec hit the same dead end.
+- ~~The booking page opens on today and offers no way forward when the salon is
+  closed that day.~~ **Fixed** ([#58](https://github.com/effuselabs/lumina/issues/58)).
+  It was worse than recorded: a "Next available date" button did exist, but it
+  parsed the API's `2026-10-12` with `new Date()`, which is UTC midnight —
+  the evening before anywhere west of Greenwich. A Los Angeles visitor on a
+  closed Sunday was offered "Sunday, Oct 11", and clicking it selected the
+  closed day again. `lib/booking/date-param.ts` now reads and writes the API's
+  bare dates in the visitor's zone, and on first arrival the page moves to the
+  next day with times and says so. The e2e spec opens the page in the salon's
+  zone with the browser clock on a closed day; the project's own browser runs
+  in Sydney, east of UTC, where the bug never showed.
+
+- The booking page's time buttons, and its "other times" tiles, clip their
+  own text at desktop width ([#90](https://github.com/effuselabs/lumina/issues/90)).
+  Found while fixing #58.
 
 - ~~**Prisma is bundled into the browser on the booking page.**~~ **Fixed.**
   `staff-time-selection.tsx` called `AlternativeSlotsService` from the
