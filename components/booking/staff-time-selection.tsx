@@ -682,7 +682,7 @@ export function StaffTimeSelection({
                         <p className="text-sm font-medium text-ink">
                           Other times that are free:
                         </p>
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-2">
                           {alternativeSlots.map(slot => (
                             <Button
                               key={`${slot.staffId}-${slot.startTime.getTime()}`}
@@ -693,7 +693,7 @@ export function StaffTimeSelection({
                                 setSelectedStaffId(slot.staffId);
                                 handleSlotSelect(slot);
                               }}
-                              className="flex flex-col items-start p-2 text-xs"
+                              className="flex h-auto min-h-11 flex-col items-start whitespace-normal p-2 text-left text-xs"
                             >
                               <span className="font-medium">
                                 {formatSlotDate(slot.startTime)}
@@ -722,7 +722,10 @@ export function StaffTimeSelection({
                           <h4 className="font-medium text-neutral-700 dark:text-neutral-300">
                             {staff.name}
                           </h4>
-                          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                          {/* As many columns as fit, each wide enough for
+                              "12:45 PM" on one line, rather than a fixed
+                              three that squeezed the time onto two. */}
+                          <div className="grid grid-cols-[repeat(auto-fill,minmax(5rem,1fr))] gap-2">
                             {slots.map((slot, index) => (
                               <Button
                                 key={index}
@@ -736,9 +739,9 @@ export function StaffTimeSelection({
                                 }
                                 size="sm"
                                 onClick={() => handleSlotSelect(slot)}
-                                className="flex flex-col items-center p-2 text-xs"
+                                className="flex h-auto min-h-11 flex-col items-center whitespace-normal p-2 text-xs"
                               >
-                                <span className="font-medium">
+                                <span className="whitespace-nowrap font-medium">
                                   {formatSlotTime(slot.startTime)}
                                 </span>
                                 <span className="text-xs text-neutral-500 dark:text-neutral-400">

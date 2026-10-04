@@ -861,9 +861,18 @@ time, after the booking loop works.
   forces the shared-request case and records whether the empty state is ever
   drawn for the new day, even briefly.
 
-- The booking page's time buttons, and its "other times" tiles, clip their
-  own text at desktop width ([#90](https://github.com/effuselabs/lumina/issues/90)).
-  Found while fixing #58.
+- ~~The booking page's time buttons, and its "other times" tiles, clip their
+  own text.~~ **Fixed** ([#90](https://github.com/effuselabs/lumina/issues/90)).
+  Both used the Button's `sm` size, a fixed 32px height, with
+  `whitespace-nowrap` and `overflow-hidden` from its base — and two lines of
+  text. They now grow to fit (44px minimum, a comfortable touch target) and
+  their grids size columns by available width, so a time stays on one line.
+  The e2e spec fails on any time button or tile whose content overflows it.
+
+- The booking page's date-and-time step is squeezed at desktop width: two
+  ~225px cards beside the sidebar, weekday headers running together, the
+  month heading wrapping. For the design review
+  ([#94](https://github.com/effuselabs/lumina/issues/94)).
 
 - ~~**Prisma is bundled into the browser on the booking page.**~~ **Fixed.**
   `staff-time-selection.tsx` called `AlternativeSlotsService` from the
