@@ -1,5 +1,6 @@
 'use client';
 
+import { useCalendarNow } from './calendar-clock';
 import {
   BusinessHoursEntry,
   CalendarSlot,
@@ -31,6 +32,7 @@ export function WeekView({
   onAppointmentDrop,
   onTimeSlotClick,
 }: Omit<CalendarViewProps, 'view'>) {
+  const now = useCalendarNow();
   const dragState = useDragDropState();
   // Generate week dates starting from Sunday
   const generateWeekDates = () => {
@@ -188,7 +190,7 @@ export function WeekView({
           Time
         </div>
         {weekDates.map((date, index) => {
-          const isToday = date.toDateString() === new Date().toDateString();
+          const isToday = date.toDateString() === now().toDateString();
           const dayAppointments = appointments.filter(
             apt => apt.startTime.toDateString() === date.toDateString()
           );
@@ -382,14 +384,14 @@ export function WeekView({
 
       {/* Current Time Indicator for Today */}
       {(() => {
-        const now = new Date();
+        const current = now();
         const todayIndex = weekDates.findIndex(
-          date => date.toDateString() === now.toDateString()
+          date => date.toDateString() === current.toDateString()
         );
 
         if (todayIndex === -1) return null;
 
-        const dayOfWeek = now.getDay();
+        const dayOfWeek = current.getDay();
         const todayHours = businessHours.find(
           (h: { dayOfWeek: number }) => h.dayOfWeek === dayOfWeek
         );
@@ -403,19 +405,21 @@ export function WeekView({
           .closeTime!.split(':')
           .map(Number);
 
-        const openTime = new Date(now);
+        const openTime = new Date(current);
         openTime.setHours(openHour, openMinute, 0, 0);
 
-        const closeTime = new Date(now);
+        const closeTime = new Date(current);
         closeTime.setHours(closeHour, closeMinute, 0, 0);
 
-        if (now < openTime || now > closeTime) return null;
+        if (current < openTime || current > closeTime) return null;
 
         // Calculate position
         const totalMinutes =
           closeHour * 60 + closeMinute - (openHour * 60 + openMinute);
         const currentMinutes =
-          now.getHours() * 60 + now.getMinutes() - (openHour * 60 + openMinute);
+          current.getHours() * 60 +
+          current.getMinutes() -
+          (openHour * 60 + openMinute);
         const percentage = (currentMinutes / totalMinutes) * 100;
 
         const leftOffset = 16 + todayIndex * (100 / 7); // Account for time column and day position

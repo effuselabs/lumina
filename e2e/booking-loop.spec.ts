@@ -1,5 +1,6 @@
 import { type Locator, type Page, expect, test } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
+import { DateTime } from 'luxon';
 
 /**
  * THE DEFINITION OF DONE.
@@ -1068,15 +1069,20 @@ test.describe('booking loop', () => {
       await owner.waitForURL(/\/dashboard/, { timeout: 30_000 });
       await owner.goto(`/dashboard/${business.slug}/appointments/calendar`);
 
-      // The calendar opens on this week in the browser's zone; count the
-      // weeks to the booking in that same zone.
-      const weeksAhead = await owner.evaluate(startIso => {
-        const sunday = (d: Date) =>
-          new Date(d.getFullYear(), d.getMonth(), d.getDate() - d.getDay());
-        const ms =
-          sunday(new Date(startIso)).getTime() - sunday(new Date()).getTime();
-        return Math.round(ms / (7 * 24 * 60 * 60 * 1000));
-      }, appointment!.startTime.toISOString());
+      // The calendar is laid out in the salon's zone, not the browser's
+      // (Sydney here, against a Los Angeles salon), so count the weeks to the
+      // booking in the salon's calendar.
+      const salonSunday = (instant: Date) => {
+        const day = DateTime.fromJSDate(instant)
+          .setZone(business.timezone)
+          .startOf('day');
+        return day.minus({ days: day.weekday % 7 });
+      };
+      const weeksAhead = Math.round(
+        salonSunday(appointment!.startTime)
+          .diff(salonSunday(new Date()), 'weeks')
+          .as('weeks')
+      );
 
       const today = owner.getByRole('button', { name: 'Today' });
       await expect(today).toBeVisible({ timeout: STEP_TRANSITION_TIMEOUT });
@@ -1084,9 +1090,18 @@ test.describe('booking loop', () => {
         await owner.locator('button:right-of(:text("Today"))').first().click();
       }
 
+      // At the salon's time. The calendar used to lay appointments out at
+      // the viewer's hour, so from Sydney a 9 AM Los Angeles booking showed
+      // at the wrong time of the wrong day (#59).
+      const salonTime = DateTime.fromJSDate(appointment!.startTime)
+        .setZone(business.timezone)
+        .toFormat('h:mm a');
       await expect(
-        owner.getByText(`${client.firstName} ${client.lastName}`).first(),
-        "the booking appears on the owner's calendar"
+        owner
+          .locator('div', { hasText: `${client.firstName} ${client.lastName}` })
+          .filter({ hasText: salonTime })
+          .first(),
+        `the booking appears on the owner's calendar at ${salonTime}, salon time`
       ).toBeVisible({ timeout: 30_000 });
     } finally {
       await ownerContext.close();

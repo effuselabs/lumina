@@ -4,6 +4,7 @@ import {
   toDashboardAppointment,
   visibleWindow,
 } from '@/lib/calendar/calendar-appointments';
+import { fromWallClock, toWallClock } from '@/lib/calendar/zoned';
 import type { DashboardAppointment } from '@/types/dashboard-appointments';
 import { useEffect, useState } from 'react';
 
@@ -19,20 +20,25 @@ interface Page {
  * The appointments a calendar view shows, fetched for its visible window and
  * refetched when the view or date moves. A stale response — the user has
  * already navigated on — is dropped rather than shown.
+ *
+ * `date` and the returned times are in the salon's wall clock (see
+ * lib/calendar/zoned.ts): the window is converted to real instants for the
+ * query, and each appointment's times back to the salon's clock.
  */
 export function useCalendarAppointments(
   businessId: string,
   view: 'day' | 'week' | 'month',
   date: Date,
-  staffColour: string
+  staffColour: string,
+  timezone: string
 ) {
   const [appointments, setAppointments] = useState<DashboardAppointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const { start, end } = visibleWindow(view, date);
-  const startKey = start.toISOString();
-  const endKey = end.toISOString();
+  const startKey = fromWallClock(start, timezone).toISOString();
+  const endKey = fromWallClock(end, timezone).toISOString();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -60,7 +66,14 @@ export function useCalendarAppointments(
         if (!page.pagination.hasMore) break;
       }
       setAppointments(
-        rows.map(row => toDashboardAppointment(row, staffColour))
+        rows.map(row => {
+          const appointment = toDashboardAppointment(row, staffColour);
+          return {
+            ...appointment,
+            startTime: toWallClock(appointment.startTime, timezone),
+            endTime: toWallClock(appointment.endTime, timezone),
+          };
+        })
       );
     })()
       .catch((cause: unknown) => {
@@ -73,7 +86,7 @@ export function useCalendarAppointments(
       });
 
     return () => controller.abort();
-  }, [businessId, startKey, endKey, staffColour]);
+  }, [businessId, startKey, endKey, staffColour, timezone]);
 
   return { appointments, loading, error };
 }

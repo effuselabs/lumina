@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/ui/page-header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalendarDays, Filter, Plus, Search, Users } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   BusinessHoursEntry,
   DashboardAppointment,
@@ -15,6 +15,8 @@ import {
 import { CalendarHeader } from './calendar-header';
 import { CalendarView } from './calendar-view';
 import { useCalendarAppointments } from '@/hooks/use-calendar-appointments';
+import { salonNow, zoneName } from '@/lib/calendar/zoned';
+import { CalendarClockProvider } from './calendar-clock';
 import { brand } from '@/lib/design/tokens';
 
 interface Staff {
@@ -43,6 +45,8 @@ interface AppointmentCalendarPageContentProps {
     services: Service[];
   };
   businessHours: BusinessHoursEntry[];
+  /** The salon's IANA zone. The calendar is laid out in its wall clock. */
+  timezone: string;
   userRole: string;
   userName: string;
   businessSlug: string;
@@ -63,6 +67,7 @@ interface AppointmentCalendarPageContentProps {
 export function AppointmentCalendarPageContent({
   business,
   businessHours,
+  timezone,
   userRole,
   userName,
   businessSlug,
@@ -83,7 +88,9 @@ export function AppointmentCalendarPageContent({
   const [currentView, setCurrentView] = useState<'day' | 'week' | 'month'>(
     'week'
   );
-  const [currentDate, setCurrentDate] = useState(new Date());
+  // The salon's today, not the viewer's: see lib/calendar/zoned.ts (#59).
+  const now = useCallback(() => salonNow(timezone), [timezone]);
+  const [currentDate, setCurrentDate] = useState(now);
 
   const {
     appointments,
@@ -93,7 +100,8 @@ export function AppointmentCalendarPageContent({
     business.id,
     currentView,
     currentDate,
-    brand.coral
+    brand.coral,
+    timezone
   );
 
   const staffMembers = business.staff.map(staff => ({
@@ -120,7 +128,7 @@ export function AppointmentCalendarPageContent({
   };
 
   const goToToday = () => {
-    setCurrentDate(new Date());
+    setCurrentDate(now());
   };
 
   const handleAppointmentClick = (appointment: DashboardAppointment) => {
@@ -169,6 +177,10 @@ export function AppointmentCalendarPageContent({
                 onNavigate={navigateDate}
                 onToday={goToToday}
               />
+              <p className="text-sm text-ink-muted">
+                Times shown in the salon&rsquo;s time zone ({zoneName(timezone)}
+                ).
+              </p>
             </CardHeader>
           </Card>
 
@@ -237,15 +249,17 @@ export function AppointmentCalendarPageContent({
                 </p>
               )}
               <div className="h-[600px]">
-                <CalendarView
-                  view={currentView}
-                  currentDate={currentDate}
-                  appointments={appointments}
-                  staffMembers={staffMembers}
-                  businessHours={businessHours}
-                  onAppointmentClick={handleAppointmentClick}
-                  onTimeSlotClick={handleTimeSlotClick}
-                />
+                <CalendarClockProvider value={now}>
+                  <CalendarView
+                    view={currentView}
+                    currentDate={currentDate}
+                    appointments={appointments}
+                    staffMembers={staffMembers}
+                    businessHours={businessHours}
+                    onAppointmentClick={handleAppointmentClick}
+                    onTimeSlotClick={handleTimeSlotClick}
+                  />
+                </CalendarClockProvider>
               </div>
             </CardContent>
           </Card>

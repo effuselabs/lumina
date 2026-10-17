@@ -1,5 +1,6 @@
 'use client';
 
+import { useCalendarNow } from './calendar-clock';
 import { cn } from '@/lib/utils';
 import {
   CalendarSlot,
@@ -29,6 +30,7 @@ export function MonthView({
   onAppointmentDrop,
   onTimeSlotClick,
 }: Omit<CalendarViewProps, 'view'>) {
+  const now = useCalendarNow();
   const dragState = useDragDropState();
   // Generate calendar grid (6 weeks x 7 days)
   const generateCalendarDays = () => {
@@ -49,7 +51,7 @@ export function MonthView({
     for (let i = 0; i < 42; i++) {
       const date = new Date(current);
       const isCurrentMonth = date.getMonth() === month;
-      const isToday = date.toDateString() === new Date().toDateString();
+      const isToday = date.toDateString() === now().toDateString();
 
       // Get appointments for this day
       const dayAppointments = appointments.filter(
