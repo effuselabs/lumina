@@ -949,10 +949,15 @@ time, after the booking loop works.
     The dashboard calendar's Prisma browser stub went in #52: no client
     bundle contains Prisma.
 
-- The landing page links to `/book/demo` (`app/page.tsx`), which 404s. The route
-  resolves a business by cuid, not by slug or any friendly name, so no static
-  href can work. Either give `Business` a public booking slug and resolve on it,
-  or drop the link. Phase 5, with the marketing page. ([#64](https://github.com/effuselabs/lumina/issues/64))
+- ~~The landing page links to `/book/demo` (`app/page.tsx`), which 404s.~~
+  **Fixed** ([#64](https://github.com/effuselabs/lumina/issues/64)) by removing
+  the button. It read "Watch Demo" and promised a three-minute video that does
+  not exist, so pointing it at a real booking page would still have
+  misdescribed it. `e2e/homepage.spec.ts` now fails on any home-page link that
+  answers 4xx or 5xx. A real demo — a video, or a sandbox salon that sends no
+  real email — belongs with the marketing redesign
+  ([#69](https://github.com/effuselabs/lumina/issues/69)). Readable booking links
+  (`/book/<slug>`) remain a good idea for salons, separately.
 
 - The public booking page now hides services no active staff can perform. A
   salon whose only nail technician leaves will see nail services disappear from

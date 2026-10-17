@@ -31,3 +31,27 @@ test.describe('Homepage', () => {
     expect(description?.trim()).toBeTruthy();
   });
 });
+
+/*
+ * The home page offered "Watch Demo", promising a three-minute video. It
+ * linked to `/book/demo`, which was never a page — booking pages are keyed by
+ * a salon's id — so the visitor most curious about the product got a 404.
+ */
+test('every link on the home page leads somewhere', async ({ page }) => {
+  await page.goto('/');
+
+  const hrefs = await page
+    .locator('a[href^="/"]')
+    .evaluateAll(links => [
+      ...new Set(links.map(link => link.getAttribute('href') ?? '')),
+    ]);
+  expect(hrefs.length).toBeGreaterThan(0);
+
+  const broken: string[] = [];
+  for (const href of hrefs) {
+    const path = href.split('#')[0] || '/';
+    const response = await page.request.get(path);
+    if (response.status() >= 400) broken.push(`${href} → ${response.status()}`);
+  }
+  expect(broken).toEqual([]);
+});
