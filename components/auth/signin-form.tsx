@@ -4,9 +4,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { hardNavigate } from '@/lib/navigation/hard-navigate';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { signIn, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
 const signInSchema = z.object({
@@ -27,6 +28,16 @@ export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [generalError, setGeneralError] = useState('');
 
+  // Leave for the dashboard once. A successful sign-in also refreshes the
+  // session, which fires the "already signed in" effect below; navigating
+  // from both cancelled the first navigation and loaded the page twice.
+  const leaving = useRef(false);
+  const goToDashboard = useCallback(() => {
+    if (leaving.current) return;
+    leaving.current = true;
+    hardNavigate('/dashboard');
+  }, []);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -34,9 +45,9 @@ export function SignInForm() {
   // Redirect if already authenticated
   useEffect(() => {
     if (status === 'authenticated' && session) {
-      window.location.href = '/dashboard';
+      goToDashboard();
     }
-  }, [session, status]);
+  }, [session, status, goToDashboard]);
 
   // Show loading state while session is being determined
   if (status === 'loading' || !mounted) {
@@ -81,8 +92,7 @@ export function SignInForm() {
         } else if (result?.error) {
           setGeneralError('Invalid email or password. Please try again.');
         } else if (result?.ok) {
-          // Force redirect to dashboard after successful sign-in
-          window.location.href = '/dashboard';
+          goToDashboard();
         } else {
           setGeneralError('Authentication failed. Please try again.');
         }
@@ -119,7 +129,7 @@ export function SignInForm() {
         setGeneralError('Failed to sign in with Google');
         setIsLoading(false);
       } else if (result?.ok) {
-        window.location.href = '/dashboard';
+        goToDashboard();
       } else {
         setGeneralError('Failed to sign in with Google');
         setIsLoading(false);

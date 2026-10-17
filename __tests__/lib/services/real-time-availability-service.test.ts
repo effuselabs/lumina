@@ -50,7 +50,7 @@ describe('RealTimeAvailabilityService', () => {
   });
 
   describe('getAvailableSlots', () => {
-    it('should return available slots with real-time validation', async () => {
+    it('offers the slots the calculator found free, without checking each again', async () => {
       // Mock business validation
       asMock(mockPrisma.business.findUnique).mockResolvedValue({
         id: businessId,
@@ -159,12 +159,56 @@ describe('RealTimeAvailabilityService', () => {
         serviceId: 'service-1',
       });
 
-      expect(mockCalendarIntegration.checkAvailability).toHaveBeenCalledTimes(
-        2
-      );
+      // The calculator already ran the conflict engine on every slot.
+      // Running it again per slot, through CalendarIntegration — which runs
+      // the calculator again — is what cost ~460 queries a request (#62).
+      expect(mockCalendarIntegration.checkAvailability).not.toHaveBeenCalled();
     });
 
-    it('should filter out slots that fail real-time validation', async () => {
+    it('never offers a slot shorter than its services', async () => {
+      asMock(mockPrisma.business.findUnique).mockResolvedValue({
+        id: businessId,
+        bookingEnabled: true,
+        onlineBooking: true,
+      } as any);
+      asMock(mockPrisma.service.findMany).mockResolvedValue([
+        { id: 'service-1', name: 'Haircut', duration: 60, price: 50 },
+        { id: 'service-2', name: 'Styling', duration: 30, price: 25 },
+      ] as any);
+      asMock(mockPrisma.staff.findMany).mockResolvedValue([
+        {
+          id: staffId,
+          displayName: 'John Doe',
+          services: [{ serviceId: 'service-1' }, { serviceId: 'service-2' }],
+        },
+      ] as any);
+      mockAvailabilityCalculator.calculateAvailability.mockResolvedValue({
+        slots: [],
+        metadata: {
+          totalSlots: 0,
+          availableSlots: 0,
+          conflictedSlots: 0,
+          cacheHit: false,
+          calculationTime: 1,
+          timezone: 'UTC',
+        },
+      });
+
+      await RealTimeAvailabilityService.getAvailableSlots({
+        businessId,
+        serviceIds,
+        date: testDate,
+        staffId,
+        duration: 30,
+        includeNextAvailableDate: false,
+      });
+
+      expect(
+        mockAvailabilityCalculator.calculateAvailability
+      ).toHaveBeenCalledWith(expect.objectContaining({ duration: 90 }));
+    });
+
+    it('leaves out slots the calculator found taken', async () => {
       // Mock business validation
       asMock(mockPrisma.business.findUnique).mockResolvedValue({
         id: businessId,
@@ -206,48 +250,19 @@ describe('RealTimeAvailabilityService', () => {
             endTime: new Date('2024-01-15T12:00:00Z'),
             staffId,
             staffName: 'John Doe',
-            isAvailable: true,
+            isAvailable: false,
+            conflicts: ['Overlaps with existing appointment'],
           },
         ],
         metadata: {
           totalSlots: 2,
-          availableSlots: 2,
-          conflictedSlots: 0,
+          availableSlots: 1,
+          conflictedSlots: 1,
           cacheHit: false,
           calculationTime: 150,
           timezone: 'UTC',
         },
       });
-
-      // Mock real-time validation - first slot available, second has conflict
-      mockCalendarIntegration.checkAvailability
-        .mockResolvedValueOnce({
-          isAvailable: true,
-          conflicts: [],
-          warnings: [],
-          metadata: {
-            calculationTime: 50,
-            cacheHit: false,
-            validationResults: [],
-          },
-        })
-        .mockResolvedValueOnce({
-          isAvailable: false,
-          conflicts: [
-            {
-              type: 'OVERLAPPING_APPOINTMENT' as any,
-              severity: 'ERROR' as any,
-              message: 'Slot conflicts with existing appointment',
-              details: {},
-            },
-          ],
-          warnings: [],
-          metadata: {
-            calculationTime: 50,
-            cacheHit: false,
-            validationResults: [],
-          },
-        });
 
       const result = await RealTimeAvailabilityService.getAvailableSlots({
         businessId,
@@ -256,7 +271,7 @@ describe('RealTimeAvailabilityService', () => {
         staffId,
       });
 
-      // Should only return the first slot that passed validation
+      // Only the free slot is offered
       expect(result.slots).toHaveLength(1);
       expect(result.slots[0].startTime).toEqual(
         new Date('2024-01-15T09:00:00Z')
@@ -297,88 +312,6 @@ describe('RealTimeAvailabilityService', () => {
       ).rejects.toThrow(
         'One or more services are not available for online booking'
       );
-    });
-  });
-
-  describe('validateSlotRealTime', () => {
-    it('should validate slot availability in real-time', async () => {
-      const startTime = new Date('2024-01-15T09:00:00Z');
-      const endTime = new Date('2024-01-15T10:00:00Z');
-
-      mockCalendarIntegration.checkAvailability.mockResolvedValue({
-        isAvailable: true,
-        conflicts: [],
-        warnings: [
-          {
-            type: 'BUSINESS_HOURS_VIOLATION' as any,
-            severity: 'WARNING' as any,
-            message: 'Close to business closing time',
-            details: {},
-          },
-        ],
-        metadata: {
-          calculationTime: 75,
-          cacheHit: false,
-          validationResults: [],
-        },
-      });
-
-      const result = await RealTimeAvailabilityService.validateSlotRealTime({
-        businessId,
-        staffId,
-        startTime,
-        endTime,
-        serviceIds,
-      });
-
-      expect(result).toMatchObject({
-        isAvailable: true,
-        conflicts: [],
-        warnings: ['Close to business closing time'],
-      });
-
-      // >= 0, not > 0. validationTime is `Date.now() - startTime`, and a fast
-      // path legitimately completes inside the same millisecond. Asserting
-      // strictly positive made this depend on the machine being slow — it
-      // began failing the moment the service got faster, with nothing broken.
-      expect(result.validationTime).toBeGreaterThanOrEqual(0);
-
-      expect(mockCalendarIntegration.checkAvailability).toHaveBeenCalledWith({
-        businessId,
-        staffId,
-        startTime,
-        endTime,
-        serviceIds,
-      });
-    });
-
-    it('should handle validation errors gracefully', async () => {
-      const startTime = new Date('2024-01-15T09:00:00Z');
-      const endTime = new Date('2024-01-15T10:00:00Z');
-
-      mockCalendarIntegration.checkAvailability.mockRejectedValue(
-        new Error('Calendar service unavailable')
-      );
-
-      const result = await RealTimeAvailabilityService.validateSlotRealTime({
-        businessId,
-        staffId,
-        startTime,
-        endTime,
-        serviceIds,
-      });
-
-      expect(result).toMatchObject({
-        isAvailable: false,
-        conflicts: ['Validation failed: Calendar service unavailable'],
-        warnings: [],
-      });
-
-      // >= 0, not > 0. validationTime is `Date.now() - startTime`, and a fast
-      // path legitimately completes inside the same millisecond. Asserting
-      // strictly positive made this depend on the machine being slow — it
-      // began failing the moment the service got faster, with nothing broken.
-      expect(result.validationTime).toBeGreaterThanOrEqual(0);
     });
   });
 

@@ -781,7 +781,16 @@ time, after the booking loop works.
   `lint-staged` (which it simultaneously reports as used by the pre-commit
   hook). Verify against the gates, in small batches.
 
-- **Availability re-validates every slot two or three times over.** ([#62](https://github.com/effuselabs/lumina/issues/62)) Measured:
+- ~~**Availability re-validates every slot two or three times over.**~~
+  **Fixed** ([#62](https://github.com/effuselabs/lumina/issues/62)). The listing
+  no longer re-checks each slot through `CalendarIntegration`; the calculator's
+  own conflict check is the answer, and the booking write's staff lock is the
+  guarantee. Measured on the seeded salon, one service, every qualified staff
+  member, cold caches (both the in-process schedule cache and the
+  `availability_cache` table cleared), Postgres `log_statement = all`:
+  **561 → 172 statements, 1.41 s → 0.48 s**, the same 50 slots. Slots are now
+  never shorter than their services' total, which the removed layer used to
+  enforce. History, kept for the measurement:
   one request issued **1,318 database queries**, reading the day's opening
   hours 180 times. The calculator checks each slot it generates through the
   conflict engine; the real-time service then re-checks each survivor through
