@@ -840,10 +840,15 @@ time, after the booking loop works.
   `/api/notifications/preferences` already uses), not a session. A feature,
   not a fix; build it when client self-service is on the roadmap.
 
-- **The reschedule email from `PUT /api/booking/[id]` formats times in the
-  server's zone** (`date-fns` `format`), the bug the booking write fixed with
-  `inBusinessZone`. It also sends the booking _confirmation_ template for a
-  reschedule. Fix both when that route's emails are next touched. ([#60](https://github.com/effuselabs/lumina/issues/60))
+- ~~**The reschedule email from `PUT /api/booking/[id]` formats times in the
+  server's zone**~~ **Fixed** ([#60](https://github.com/effuselabs/lumina/issues/60)).
+  It also sent the booking _confirmation_ for a reschedule — and for a
+  cancellation, so a cancelled client read "Appointment Confirmed!" — while
+  `DELETE` sent nothing and left a TODO. Every client email about an
+  appointment now formats through `lib/email/appointment-time.ts`, in the
+  salon's zone, and says what happened: confirmed, moved (with where it was),
+  or cancelled. `__tests__/api/booking-change-emails.test.ts` runs a Los
+  Angeles salon on a UTC server.
 
 - ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
   service has since migrated to Infrastructure as Code entirely. The service's

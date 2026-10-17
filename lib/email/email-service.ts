@@ -1,11 +1,13 @@
 import { randomUUID } from 'crypto';
 import { render } from '@react-email/render';
 import { ResendEmailProvider } from './resend-provider';
-import BookingConfirmationEmail from './templates/booking-confirmation-email';
-import type { EmailMessage, EmailProvider } from './types';
+import BookingConfirmationEmail, {
+  type AppointmentNotice,
+} from './templates/booking-confirmation-email';
+import type { EmailMessage, EmailProvider, EmailTemplateType } from './types';
 
 /**
- * Booking confirmation email.
+ * Client emails about one appointment: confirmed, moved, or cancelled.
  *
  * This used to be a second, independent email stack built on nodemailer/SMTP,
  * running alongside the Resend one in notification-service.ts. It now delegates
@@ -20,6 +22,24 @@ import type { EmailMessage, EmailProvider } from './types';
  * touching. `previewUrl` is retained in the return type and is always
  * undefined: it existed only for nodemailer's Ethereal test inbox.
  */
+
+/** When the appointment was, before a move — already in salon time. */
+interface PreviousTime {
+  appointmentDate: string;
+  appointmentTime: string;
+}
+
+const SUBJECT: Record<AppointmentNotice['kind'], string> = {
+  confirmed: 'Appointment Confirmed',
+  moved: 'Appointment Moved',
+  cancelled: 'Appointment Cancelled',
+};
+
+const TEMPLATE: Record<AppointmentNotice['kind'], EmailTemplateType> = {
+  confirmed: 'booking_confirmation',
+  moved: 'modification_notification',
+  cancelled: 'cancellation_notification',
+};
 
 interface BookingEmailData {
   customerName: string;
@@ -69,22 +89,43 @@ class EmailService {
     return this.lazyProvider;
   }
 
-  async sendBookingConfirmation(
+  sendBookingConfirmation(
     data: BookingEmailData
   ): Promise<SendBookingConfirmationResult> {
+    return this.send(data, { kind: 'confirmed' });
+  }
+
+  /** The appointment moved. `previous` is where it was, in salon time. */
+  sendAppointmentMoved(
+    data: BookingEmailData,
+    previous: PreviousTime
+  ): Promise<SendBookingConfirmationResult> {
+    return this.send(data, { kind: 'moved', previous });
+  }
+
+  sendAppointmentCancelled(
+    data: BookingEmailData
+  ): Promise<SendBookingConfirmationResult> {
+    return this.send(data, { kind: 'cancelled' });
+  }
+
+  private async send(
+    data: BookingEmailData,
+    notice: AppointmentNotice
+  ): Promise<SendBookingConfirmationResult> {
     try {
-      const html = await render(BookingConfirmationEmail(data));
-      const text = this.renderPlainText(data);
+      const html = await render(BookingConfirmationEmail({ ...data, notice }));
+      const text = this.renderPlainText(data, notice);
 
       const message: EmailMessage = {
         id: randomUUID(),
         businessId: data.businessId ?? '',
         to: data.customerEmail,
         from: process.env.EMAIL_FROM || 'noreply@mail.uselumina.app',
-        subject: `Appointment Confirmed - ${data.businessName}`,
+        subject: `${SUBJECT[notice.kind]} - ${data.businessName}`,
         html,
         text,
-        templateType: 'booking_confirmation',
+        templateType: TEMPLATE[notice.kind],
         metadata: {
           appointmentId: data.appointmentId,
           businessName: data.businessName,
@@ -107,7 +148,7 @@ class EmailService {
 
       return { success: true, messageId: result.messageId };
     } catch (error) {
-      console.error('Failed to send booking confirmation email:', error);
+      console.error(`Failed to send ${TEMPLATE[notice.kind]} email:`, error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -115,17 +156,36 @@ class EmailService {
     }
   }
 
-  private renderPlainText(data: BookingEmailData): string {
-    return `
-Appointment Confirmed!
+  private renderPlainText(
+    data: BookingEmailData,
+    notice: AppointmentNotice
+  ): string {
+    const opening = {
+      confirmed: `Appointment Confirmed!\n\nYour booking at ${data.businessName} has been successfully scheduled.`,
+      moved: `Appointment Moved\n\n${data.businessName} has moved your appointment to a new time.`,
+      cancelled: `Appointment Cancelled\n\nYour appointment at ${data.businessName} has been cancelled.`,
+    }[notice.kind];
+    const was =
+      notice.kind === 'moved'
+        ? `- Was: ${notice.previous.appointmentDate}, ${notice.previous.appointmentTime}\n`
+        : '';
+    const closing =
+      notice.kind === 'cancelled'
+        ? `To book again, contact ${data.businessName} or visit their booking page.`
+        : `Important Information:
+• Please arrive 5-10 minutes early for your appointment
+• If you need to reschedule or cancel, please contact us as soon as possible
+• Bring a valid ID and any relevant medical information if applicable
 
-Your booking at ${data.businessName} has been successfully scheduled.
+Thank you for choosing ${data.businessName}! We look forward to seeing you.`;
+    return `
+${opening}
 
 Appointment Details:
 - Confirmation ID: ${data.appointmentId}
 - Service: ${data.serviceName}
 - Staff Member: ${data.staffName}
-- Date: ${data.appointmentDate}
+${was}- Date: ${data.appointmentDate}
 - Time: ${data.appointmentTime}
 - Duration: ${this.formatDuration(data.duration)}
 - Price: ${this.formatPrice(data.price)}
@@ -137,12 +197,7 @@ ${data.businessAddress || ''}
 ${data.businessPhone ? `Phone: ${data.businessPhone}` : ''}
 ${data.businessEmail ? `Email: ${data.businessEmail}` : ''}
 
-Important Information:
-• Please arrive 5-10 minutes early for your appointment
-• If you need to reschedule or cancel, please contact us as soon as possible
-• Bring a valid ID and any relevant medical information if applicable
-
-Thank you for choosing ${data.businessName}! We look forward to seeing you.
+${closing}
       `.trim();
   }
 

@@ -1,4 +1,5 @@
 import { authorizeBusinessAccess } from '@/lib/auth/business-access';
+import { appointmentWhen } from '@/lib/email/appointment-time';
 import { emailService } from '@/lib/email/email-service';
 import { prisma } from '@/lib/prisma';
 import {
@@ -7,7 +8,6 @@ import {
   holdsSlot,
 } from '@/lib/services/staff-schedule-lock';
 import { Prisma } from '@prisma/client';
-import { format } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -30,6 +30,53 @@ const updateBookingSchema = z
   );
 
 class AppointmentGoneError extends Error {}
+
+/** What a client email about this appointment needs to say. */
+const CLIENT_EMAIL_INCLUDE = {
+  client: true,
+  staff: { include: { user: { select: { name: true } } } },
+  services: true,
+  business: {
+    select: {
+      name: true,
+      email: true,
+      phone: true,
+      address: true,
+      timezone: true,
+    },
+  },
+} satisfies Prisma.AppointmentInclude;
+
+type AppointmentForEmail = Prisma.AppointmentGetPayload<{
+  include: typeof CLIENT_EMAIL_INCLUDE;
+}>;
+
+/**
+ * The email about this appointment, in the salon's time — or null when the
+ * client has no email address to send it to.
+ */
+function clientEmail(appointment: AppointmentForEmail) {
+  const { client, business, staff, services } = appointment;
+  if (!client?.email) return null;
+  return {
+    customerName: `${client.firstName} ${client.lastName}`,
+    customerEmail: client.email,
+    businessName: business.name,
+    serviceName: services.map(service => service.serviceName).join(', '),
+    staffName: staff.displayName || staff.user.name || '',
+    ...appointmentWhen(appointment, business.timezone),
+    duration: services.reduce((total, service) => total + service.duration, 0),
+    price: services.reduce(
+      (total, service) => total + Number(service.price),
+      0
+    ),
+    businessAddress: business.address || undefined,
+    businessPhone: business.phone || undefined,
+    businessEmail: business.email || undefined,
+    appointmentId: appointment.id,
+    notes: appointment.notes || undefined,
+  };
+}
 
 const NOT_FOUND = () =>
   NextResponse.json({ error: 'Appointment not found' }, { status: 404 });
@@ -181,104 +228,66 @@ export async function PUT(
     // A move, or reinstating a cancelled appointment, puts it into a slot.
     // The clash check and the write share a transaction under the staff
     // member's lock, so two of them cannot both take the same slot.
-    const updatedAppointment = await prisma.$transaction(async tx => {
-      const current = await tx.appointment.findFirst({
-        where: { id: bookingId, businessId: access.businessId },
-        select: { staffId: true, startTime: true, endTime: true, status: true },
-      });
-      // Authorized above; gone only if deleted in between.
-      if (!current) throw new AppointmentGoneError();
-
-      const moving = Boolean(startTime);
-      const nextStatus = status ?? current.status;
-      const reinstating = !holdsSlot(current.status) && holdsSlot(nextStatus);
-      const holdsAfter = holdsSlot(nextStatus);
-      if (holdsAfter && (moving || reinstating)) {
-        const free = await claimSlot(tx, {
-          businessId: access.businessId,
-          staffId: current.staffId,
-          startTime: startTime ? new Date(startTime) : current.startTime,
-          endTime: endTime ? new Date(endTime) : current.endTime,
-          excludeId: bookingId,
+    const { previous, updatedAppointment } = await prisma.$transaction(
+      async tx => {
+        const current = await tx.appointment.findFirst({
+          where: { id: bookingId, businessId: access.businessId },
+          select: {
+            staffId: true,
+            startTime: true,
+            endTime: true,
+            status: true,
+          },
         });
-        if (!free) throw new SlotTakenError();
-      }
+        // Authorized above; gone only if deleted in between.
+        if (!current) throw new AppointmentGoneError();
 
-      return tx.appointment.update({
-        where: { id: bookingId },
-        data: updateData,
-        include: {
-          client: true,
-          staff: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-          services: true,
-          business: {
-            select: {
-              name: true,
-              email: true,
-              phone: true,
-              address: true,
-            },
-          },
-        },
-      });
-    });
-
-    // Send notification email for significant changes
-    if (startTime || status === 'CANCELLED') {
-      try {
-        const _emailSubject = '';
-        let emailType = '';
-
-        if (status === 'CANCELLED') {
-          const _emailSubject2 = 'Appointment Cancelled';
-          emailType = 'cancellation';
-        } else if (startTime) {
-          const _emailSubject = 'Appointment Rescheduled';
-          emailType = 'reschedule';
-        }
-
-        // For now, we'll use the same template but could create specific templates later
-        if (updatedAppointment.client?.email && emailType) {
-          const emailResult = await emailService.sendBookingConfirmation({
-            customerName: `${updatedAppointment.client.firstName} ${updatedAppointment.client.lastName}`,
-            customerEmail: updatedAppointment.client.email,
-            businessName: updatedAppointment.business.name,
-            serviceName: updatedAppointment.services[0].serviceName,
-            staffName:
-              updatedAppointment.staff.displayName ||
-              updatedAppointment.staff.user.name ||
-              '',
-            appointmentDate: format(
-              new Date(updatedAppointment.startTime),
-              'EEEE, MMMM d, yyyy'
-            ),
-            appointmentTime: `${format(new Date(updatedAppointment.startTime), 'h:mm a')} - ${format(new Date(updatedAppointment.endTime), 'h:mm a')}`,
-            duration: updatedAppointment.services[0].duration,
-            price: Number(updatedAppointment.services[0].price),
-            businessAddress: updatedAppointment.business.address || undefined,
-            businessPhone: updatedAppointment.business.phone || undefined,
-            businessEmail: updatedAppointment.business.email || undefined,
-            appointmentId: updatedAppointment.id,
-            notes: updatedAppointment.notes || undefined,
+        const moving = Boolean(startTime);
+        const nextStatus = status ?? current.status;
+        const reinstating = !holdsSlot(current.status) && holdsSlot(nextStatus);
+        const holdsAfter = holdsSlot(nextStatus);
+        if (holdsAfter && (moving || reinstating)) {
+          const free = await claimSlot(tx, {
+            businessId: access.businessId,
+            staffId: current.staffId,
+            startTime: startTime ? new Date(startTime) : current.startTime,
+            endTime: endTime ? new Date(endTime) : current.endTime,
+            excludeId: bookingId,
           });
-
-          if (emailResult.success) {
-            console.log(
-              `${emailType} email sent successfully:`,
-              emailResult.messageId
-            );
-          }
+          if (!free) throw new SlotTakenError();
         }
-      } catch (emailError) {
-        console.error('Error sending notification email:', emailError);
+
+        return {
+          previous: current,
+          updatedAppointment: await tx.appointment.update({
+            where: { id: bookingId },
+            data: updateData,
+            include: CLIENT_EMAIL_INCLUDE,
+          }),
+        };
+      }
+    );
+
+    // Tell the client when their appointment is cancelled or moves. A
+    // cancellation wins over a move sent in the same request.
+    const cancelled =
+      updatedAppointment.status === 'CANCELLED' &&
+      previous.status !== 'CANCELLED';
+    const moved =
+      !cancelled &&
+      previous.startTime.getTime() !== updatedAppointment.startTime.getTime();
+    if (cancelled || moved) {
+      const data = clientEmail(updatedAppointment);
+      if (data) {
+        const result = cancelled
+          ? await emailService.sendAppointmentCancelled(data)
+          : await emailService.sendAppointmentMoved(
+              data,
+              appointmentWhen(previous, updatedAppointment.business.timezone)
+            );
+        if (!result.success) {
+          console.error('Change email not sent:', result.error);
+        }
       }
     }
 
@@ -337,30 +346,9 @@ export async function DELETE(
     const access = await authorizeAppointment(bookingId);
     if (!access.ok) return access.response;
 
-    // Get appointment details before cancellation
     const appointment = await prisma.appointment.findFirst({
       where: { id: bookingId, businessId: access.businessId },
-      include: {
-        client: true,
-        staff: {
-          include: {
-            user: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-        services: true,
-        business: {
-          select: {
-            name: true,
-            email: true,
-            phone: true,
-            address: true,
-          },
-        },
-      },
+      include: CLIENT_EMAIL_INCLUDE,
     });
 
     if (!appointment) {
@@ -371,21 +359,18 @@ export async function DELETE(
     }
 
     // Update status to cancelled instead of deleting
-    const _cancelledAppointment = await prisma.appointment.update({
+    await prisma.appointment.update({
       where: { id: bookingId },
       data: { status: 'CANCELLED' },
     });
 
-    // Send cancellation email
-    if (appointment.client?.email) {
-      try {
-        // TODO: Create a specific cancellation email template
-        console.log(
-          'Appointment cancelled, should send cancellation email to:',
-          appointment.client.email
-        );
-      } catch (emailError) {
-        console.error('Error sending cancellation email:', emailError);
+    // Cancelling twice tells the client once.
+    const data =
+      appointment.status === 'CANCELLED' ? null : clientEmail(appointment);
+    if (data) {
+      const result = await emailService.sendAppointmentCancelled(data);
+      if (!result.success) {
+        console.error('Cancellation email not sent:', result.error);
       }
     }
 
