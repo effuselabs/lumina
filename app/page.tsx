@@ -170,14 +170,6 @@ export default async function HomePage() {
                   Start Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Link>
-                <Link
-                  href="/book/demo"
-                  aria-describedby="demo-description"
-                  className="btn-secondary-outline inline-flex min-w-[14rem] items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
-                >
-                  Watch Demo
-                  <Zap className="ml-2 h-5 w-5" aria-hidden="true" />
-                </Link>
               </div>
 
               {/* Enhanced Social Proof */}
@@ -207,9 +199,6 @@ export default async function HomePage() {
             <div className="sr-only">
               <p id="signup-description">
                 Start your 14-day free trial with full access to all features
-              </p>
-              <p id="demo-description">
-                Watch a 3-minute demo showcasing Lumina&apos;s key features
               </p>
             </div>
           </div>
