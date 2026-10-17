@@ -73,21 +73,6 @@ export interface PublicAvailabilityResult {
   };
 }
 
-export interface SlotValidationRequest {
-  businessId: string;
-  staffId: string;
-  startTime: Date;
-  endTime: Date;
-  serviceIds: string[];
-}
-
-export interface SlotValidationResult {
-  isAvailable: boolean;
-  conflicts: string[];
-  warnings: string[];
-  validationTime: number;
-}
-
 /**
  * Real-time Availability Service
  *
@@ -98,7 +83,6 @@ export class RealTimeAvailabilityService {
   private static readonly SLOT_INTERVAL_MINUTES = 15;
   private static readonly MAX_SLOTS_PER_DAY = 50;
   private static readonly CACHE_TTL_SECONDS = 300; // 5 minutes
-  private static readonly VALIDATION_TIMEOUT_MS = 5000; // 5 seconds
 
   /**
    * Get available time slots for public booking
@@ -123,9 +107,13 @@ export class RealTimeAvailabilityService {
         request.businessId,
         request.serviceIds
       );
-      const totalDuration =
-        request.duration ||
-        services.reduce((sum, service) => sum + service.duration, 0);
+      // A caller may ask for a longer slot than the services need, never a
+      // shorter one: the slot has to hold every service it is offered for.
+      const servicesDuration = services.reduce(
+        (sum, service) => sum + service.duration,
+        0
+      );
+      const totalDuration = Math.max(request.duration ?? 0, servicesDuration);
       const totalPrice = services.reduce(
         (sum, service) => sum + Number(service.price),
         0
@@ -177,41 +165,35 @@ export class RealTimeAvailabilityService {
             cacheHits++;
           }
 
-          // Convert and validate each slot with real-time conflict detection
+          // The calculator has already run the conflict engine on every
+          // slot it returns, so `isAvailable` is the answer. This loop used to
+          // validate each slot again through CalendarIntegration, which runs
+          // the calculator and the conflict engine a second time: 561
+          // statements for one day's listing, against 172 without it (#62).
+          // The booking write is what
+          // guarantees a slot is free, under the staff lock; a listing only
+          // has to be right when it is drawn.
           for (const slot of availabilityResult.slots) {
             if (!slot.isAvailable) continue;
-
-            // Perform real-time validation
-            const validationResult = await this.validateSlotRealTime({
-              businessId: request.businessId,
-              staffId: staff.id,
+            allSlots.push({
               startTime: slot.startTime,
               endTime: slot.endTime,
-              serviceIds: request.serviceIds,
+              staffId: staff.id,
+              staffName: staff.displayName,
+              isAvailable: true,
+              totalDuration,
+              totalPrice,
+              services: services.map(service => ({
+                id: service.id,
+                name: service.name,
+                duration: service.duration,
+                price: Number(service.price),
+              })),
+              metadata: {
+                cacheHit: availabilityResult.metadata.cacheHit,
+                conflictChecked: true,
+              },
             });
-
-            if (validationResult.isAvailable) {
-              allSlots.push({
-                startTime: slot.startTime,
-                endTime: slot.endTime,
-                staffId: staff.id,
-                staffName: staff.displayName,
-                isAvailable: true,
-                totalDuration,
-                totalPrice,
-                services: services.map(service => ({
-                  id: service.id,
-                  name: service.name,
-                  duration: service.duration,
-                  price: Number(service.price),
-                })),
-                metadata: {
-                  cacheHit: availabilityResult.metadata.cacheHit,
-                  validationTime: validationResult.validationTime,
-                  conflictChecked: true,
-                },
-              });
-            }
           }
         } catch (error) {
           console.error(
@@ -255,47 +237,6 @@ export class RealTimeAvailabilityService {
       throw new Error(
         `Availability calculation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
-    }
-  }
-
-  /**
-   * Validate a specific time slot in real-time
-   * Requirements: 6.1, 6.2, 6.3
-   */
-  static async validateSlotRealTime(
-    request: SlotValidationRequest
-  ): Promise<SlotValidationResult> {
-    const startTime = Date.now();
-
-    try {
-      // Use Calendar Integration for comprehensive validation
-      const availabilityCheck = await CalendarIntegration.checkAvailability({
-        businessId: request.businessId,
-        staffId: request.staffId,
-        startTime: request.startTime,
-        endTime: request.endTime,
-        serviceIds: request.serviceIds,
-      });
-
-      const conflicts = availabilityCheck.conflicts.map(c => c.message);
-      const warnings = availabilityCheck.warnings.map(w => w.message);
-
-      return {
-        isAvailable: availabilityCheck.isAvailable,
-        conflicts,
-        warnings,
-        validationTime: Date.now() - startTime,
-      };
-    } catch (error) {
-      console.error('Error in real-time slot validation:', error);
-      return {
-        isAvailable: false,
-        conflicts: [
-          `Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        ],
-        warnings: [],
-        validationTime: Date.now() - startTime,
-      };
     }
   }
 
