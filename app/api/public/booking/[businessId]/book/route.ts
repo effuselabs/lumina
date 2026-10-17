@@ -8,7 +8,11 @@ import {
   createSecurePublicBookingResponse,
   securePublicBookingPOST,
 } from '@/lib/security/public-booking-security-middleware';
-import { DateTime } from 'luxon';
+import {
+  DATE_FORMAT,
+  TIME_FORMAT,
+  inBusinessZone,
+} from '@/lib/email/appointment-time';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { emailService } from '../../../../../../lib/email/email-service';
@@ -485,28 +489,6 @@ async function createAppointmentWithServices(
   }
   return created;
 }
-
-/**
- * An appointment time as the salon and the client both understand it.
- *
- * `date-fns` `format` renders in the server's zone, so a Railway container in
- * UTC told a Los Angeles salon its 2 PM booking was at 9 PM. The instant in the
- * database was right; every human-readable copy of it was wrong — in the
- * confirmation email, in the staff notification, and nowhere else visible until
- * somebody missed an appointment.
- */
-function inBusinessZone(
-  instant: Date,
-  timezone: string | null,
-  format: string
-): string {
-  return DateTime.fromJSDate(instant)
-    .setZone(timezone || 'UTC')
-    .toFormat(format);
-}
-
-const DATE_FORMAT = 'cccc, LLLL d, yyyy';
-const TIME_FORMAT = 'h:mm a ZZZZ';
 
 // Send staff notification for new booking
 async function sendStaffNotification({

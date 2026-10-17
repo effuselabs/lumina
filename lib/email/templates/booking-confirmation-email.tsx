@@ -13,6 +13,44 @@ import {
 } from '@react-email/components';
 import { base, brand, email } from '@/lib/design/tokens';
 
+/**
+ * Why the client is hearing from us. A confirmation by default; a move carries
+ * where the appointment was, so the client can see what changed.
+ */
+export type AppointmentNotice =
+  | { kind: 'confirmed' }
+  | {
+      kind: 'moved';
+      previous: { appointmentDate: string; appointmentTime: string };
+    }
+  | { kind: 'cancelled' };
+
+const COPY = {
+  confirmed: {
+    preview: (business: string) =>
+      `Your appointment at ${business} is confirmed`,
+    heading: 'Appointment Confirmed!',
+    subtitle: (business: string) =>
+      `Your booking at ${business} has been successfully scheduled.`,
+    footer: 'This is an automated confirmation email.',
+  },
+  moved: {
+    preview: (business: string) => `Your appointment at ${business} has moved`,
+    heading: 'Appointment Moved',
+    subtitle: (business: string) =>
+      `${business} has moved your appointment to a new time.`,
+    footer: 'This is an automated email about a change to your booking.',
+  },
+  cancelled: {
+    preview: (business: string) =>
+      `Your appointment at ${business} is cancelled`,
+    heading: 'Appointment Cancelled',
+    subtitle: (business: string) =>
+      `Your appointment at ${business} has been cancelled.`,
+    footer: 'This is an automated email about a change to your booking.',
+  },
+} as const;
+
 interface BookingConfirmationEmailProps {
   customerName: string;
   businessName: string;
@@ -27,6 +65,7 @@ interface BookingConfirmationEmailProps {
   businessEmail?: string;
   appointmentId: string;
   notes?: string;
+  notice?: AppointmentNotice;
 }
 
 export default function BookingConfirmationEmail({
@@ -43,7 +82,10 @@ export default function BookingConfirmationEmail({
   businessEmail,
   appointmentId,
   notes,
+  notice = { kind: 'confirmed' },
 }: BookingConfirmationEmailProps) {
+  const copy = COPY[notice.kind];
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -67,15 +109,13 @@ export default function BookingConfirmationEmail({
   return (
     <Html>
       <Head />
-      <Preview>Your appointment at {businessName} is confirmed</Preview>
+      <Preview>{copy.preview(businessName)}</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header */}
           <Section style={header}>
-            <Heading style={h1}>Appointment Confirmed!</Heading>
-            <Text style={subtitle}>
-              Your booking at {businessName} has been successfully scheduled.
-            </Text>
+            <Heading style={h1}>{copy.heading}</Heading>
+            <Text style={subtitle}>{copy.subtitle(businessName)}</Text>
           </Section>
 
           {/* Appointment Details */}
@@ -108,6 +148,20 @@ export default function BookingConfirmationEmail({
                 <Text style={value}>{staffName}</Text>
               </Column>
             </Row>
+
+            {notice.kind === 'moved' && (
+              <Row style={detailRow}>
+                <Column style={labelColumn}>
+                  <Text style={label}>Was:</Text>
+                </Column>
+                <Column style={valueColumn}>
+                  <Text style={previousValue}>
+                    {notice.previous.appointmentDate},{' '}
+                    {notice.previous.appointmentTime}
+                  </Text>
+                </Column>
+              </Row>
+            )}
 
             <Row style={detailRow}>
               <Column style={labelColumn}>
@@ -183,31 +237,33 @@ export default function BookingConfirmationEmail({
           </Section>
 
           {/* Important Information */}
-          <Section style={importantSection}>
-            <Heading style={h2}>Important Information</Heading>
+          {notice.kind !== 'cancelled' && (
+            <Section style={importantSection}>
+              <Heading style={h2}>Important Information</Heading>
 
-            <Text style={importantText}>
-              • Please arrive 5-10 minutes early for your appointment
-            </Text>
-            <Text style={importantText}>
-              • If you need to reschedule or cancel, please contact us as soon
-              as possible
-            </Text>
-            <Text style={importantText}>
-              • Bring a valid ID and any relevant medical information if
-              applicable
-            </Text>
-          </Section>
+              <Text style={importantText}>
+                • Please arrive 5-10 minutes early for your appointment
+              </Text>
+              <Text style={importantText}>
+                • If you need to reschedule or cancel, please contact us as soon
+                as possible
+              </Text>
+              <Text style={importantText}>
+                • Bring a valid ID and any relevant medical information if
+                applicable
+              </Text>
+            </Section>
+          )}
 
           {/* Footer */}
           <Section style={footer}>
             <Text style={footerText}>
-              Thank you for choosing {businessName}! We look forward to seeing
-              you.
+              {notice.kind === 'cancelled'
+                ? `To book again, contact ${businessName} or visit their booking page.`
+                : `Thank you for choosing ${businessName}! We look forward to seeing you.`}
             </Text>
             <Text style={footerText}>
-              This is an automated confirmation email. Please do not reply to
-              this email.
+              {copy.footer} Please do not reply to this email.
             </Text>
           </Section>
         </Container>
@@ -303,6 +359,13 @@ const value = {
   fontSize: '14px',
   fontWeight: '600',
   margin: '0',
+};
+
+const previousValue = {
+  ...value,
+  color: email.textMuted,
+  fontWeight: '500',
+  textDecoration: 'line-through',
 };
 
 const businessNameStyle = {
