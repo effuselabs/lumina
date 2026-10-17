@@ -1,6 +1,7 @@
 import { type Locator, type Page, expect, test } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
 import { DateTime } from 'luxon';
+import { signInAsOwner } from './support/sign-in';
 
 /**
  * THE DEFINITION OF DONE.
@@ -829,11 +830,7 @@ test.describe('booking loop', () => {
     });
     try {
       const owner = await ownerContext.newPage();
-      await owner.goto('/auth/signin');
-      await owner.locator('#email').fill('owner@lumina-demo.com');
-      await owner.locator('#password').fill('demo123');
-      await owner.getByRole('button', { name: /^sign in$/i }).click();
-      await owner.waitForURL(/\/dashboard/, { timeout: 30_000 });
+      await signInAsOwner(owner);
 
       const responses = await Promise.all(
         created.map(({ id }) =>
@@ -1062,11 +1059,7 @@ test.describe('booking loop', () => {
     });
     try {
       const owner = await ownerContext.newPage();
-      await owner.goto('/auth/signin');
-      await owner.locator('#email').fill('owner@lumina-demo.com');
-      await owner.locator('#password').fill('demo123');
-      await owner.getByRole('button', { name: /^sign in$/i }).click();
-      await owner.waitForURL(/\/dashboard/, { timeout: 30_000 });
+      await signInAsOwner(owner);
       await owner.goto(`/dashboard/${business.slug}/appointments/calendar`);
 
       // The calendar is laid out in the salon's zone, not the browser's

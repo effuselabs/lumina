@@ -213,3 +213,118 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+
+  visual:
+    name: Pages look the way they did (visual)
+    runs-on: ubuntu-latest
+
+    # Screenshots of the main pages in both themes, compared with the baselines
+    # in e2e/__screenshots__. Pixels depend on fonts and the browser build, so
+    # this runs in the Playwright image matching package.json's version — the
+    # only place baselines are valid. A failure re-runs with the images written
+    # out, and `visual-baselines-branch` publishes them; if the change was
+    # intended, take them from there (docs/visual-tests.md).
+    container: mcr.microsoft.com/playwright:v1.62.0-noble
+    permissions:
+      contents: read
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: lumina
+          POSTGRES_PASSWORD: lumina_ci
+          POSTGRES_DB: lumina_ci
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://lumina:lumina_ci@postgres:5432/lumina_ci
+      NEXTAUTH_SECRET: e2e-placeholder-not-a-real-secret
+      NEXTAUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      E2E_SERVER_COMMAND: npm run start
+      HOME: /root
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Prepare the database
+        run: npx prisma migrate deploy && npm run db:seed
+
+      - name: Build
+        run: npm run build
+
+      # No retries: a retry would pass on the image the first attempt wrote.
+      - name: Compare screenshots
+        run: npm run test:visual -- --retries=0
+
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+      - name: Write the new screenshots
+        if: failure()
+        run: npm run test:visual -- --retries=0 --update-snapshots=all || true
+
+      - name: Upload changed screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines
+          path: e2e/__screenshots__/
+          retention-days: 7
+
+  # Puts the screenshots a failed visual run wrote on a branch,
+  # visual-baselines/<branch>, so they can be taken with `git checkout` rather
+  # than downloaded by hand. It runs none of the repository's code: it only
+  # moves the artifact the visual job uploaded, which is why it alone may push.
+  visual-baselines-branch:
+    name: Publish new screenshots (visual)
+    needs: visual
+    if: failure() && needs.visual.result == 'failure' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: visual-baselines
+          path: e2e/__screenshots__/
+
+      - name: Push to visual-baselines/<branch>
+        env:
+          SOURCE: ${{ github.head_ref || github.ref_name }}
+        run: |
+          branch="visual-baselines/${SOURCE}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "$branch"
+          git add e2e/__screenshots__
+          git commit -m "test(visual): screenshots from run ${GITHUB_RUN_ID}" || { echo 'No new screenshots'; exit 0; }
+          # A scratch branch holding only generated images; each run replaces it.
+          git push --force origin "$branch"
+          echo "::notice::New screenshots are on ${branch}. If the change was intended: git fetch origin ${branch} && git checkout FETCH_HEAD -- e2e/__screenshots__"

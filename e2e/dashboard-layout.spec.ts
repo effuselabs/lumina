@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { signInAsOwner } from './support/sign-in';
 
 /**
  * The dashboard's content sits against the sidebar, not 280px past it.
@@ -10,11 +11,7 @@ import { expect, test } from '@playwright/test';
  */
 test('dashboard content starts where the sidebar ends', async ({ page }) => {
   test.setTimeout(60_000);
-  await page.goto('/auth/signin');
-  await page.locator('#email').fill('owner@lumina-demo.com');
-  await page.locator('#password').fill('demo123');
-  await page.getByRole('button', { name: /^sign in$/i }).click();
-  await page.waitForURL(/\/dashboard\/[^/]+/, { timeout: 30_000 });
+  await signInAsOwner(page);
 
   const main = page.locator('.dashboard-main');
   await expect(main).toBeVisible({ timeout: 20_000 });
