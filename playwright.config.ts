@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const VISUAL_SPECS = /visual\.spec\.ts$/;
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -71,16 +73,34 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: VISUAL_SPECS,
     },
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
+      testIgnore: VISUAL_SPECS,
+    },
+    /*
+     * Screenshots, compared pixel for pixel against committed baselines
+     * (docs/visual-tests.md). Run on their own — `npm run test:visual` — and
+     * only inside the pinned Playwright image, because fonts and the browser
+     * build change pixels. Baselines have no platform suffix for that reason:
+     * there is one platform they are valid on.
+     */
+    {
+      name: 'visual',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: VISUAL_SPECS,
+      snapshotPathTemplate:
+        '{testDir}/__screenshots__/{testFileName}/{arg}{ext}',
     },
   ],
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run dev',
+    // The visual job serves a production build (`next start`): the dev server
+    // draws its own indicator over the page, and compiles routes on demand.
+    command: process.env.E2E_SERVER_COMMAND ?? 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
@@ -109,6 +129,10 @@ export default defineConfig({
   /* Expect timeout */
   expect: {
     timeout: 5 * 1000,
+    toHaveScreenshot: {
+      animations: 'disabled',
+      caret: 'hide',
+    },
   },
 
   /* Output directory for test results */

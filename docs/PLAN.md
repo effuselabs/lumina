@@ -662,6 +662,12 @@ time, after the booking loop works.
   two further type errors. Five npm scripts pointed at it. Visual regression
   needs a design system to regress against, so it comes back in Phase 5, built
   against `lib/design/tokens.ts` rather than restored. ([#65](https://github.com/effuselabs/lumina/issues/65))
+  **Back**, as `npm run test:visual` and CI's `visual` job
+  (`docs/visual-tests.md`). It covers the home, sign-in, sign-up and design
+  system pages in both themes at desktop and phone width, and runs inside the
+  pinned Playwright image, the only place its baselines are valid. The
+  booking page and dashboard follow once the seed is reproducible
+  ([#112](https://github.com/effuselabs/lumina/issues/112)).
 
 - ~~**`npm run format:check` fails on 772 files.**~~ **Resolved.** The
   repository was formatted in one pass and `format:check` is a CI gate, so it
