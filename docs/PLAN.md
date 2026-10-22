@@ -887,6 +887,33 @@ time, after the booking loop works.
   or cancelled. `__tests__/api/booking-change-emails.test.ts` runs a Los
   Angeles salon on a UTC server.
 
+- **Railway security incident, 2026-10-21.** Railway reported that a third
+  party may have read customers' environment variables, some decrypted
+  ([notice](https://blog.railway.com/p/security-disclosure-wednesday-october-21st),
+  [status](https://status.railway.com)). Railway invalidated every API token
+  and paused builds; Hobby workspaces, ours included, were still paused on
+  2026-10-22. Lumina has no customers, and staging holds only seeded data.
+  Done on 2026-10-22:
+  - Postgres: public TCP proxy removed; password regenerated from the
+    database's Config tab (the app reads it through a variable reference).
+  - `NEXTAUTH_SECRET` rotated. The public booking CSRF falls back to it, so
+    that rotated too.
+  - Resend API key deleted. It had never sent mail: the domain never
+    verified ([#120](https://github.com/effuselabs/lumina/issues/120)).
+  - `RAILWAY_STAGING_TOKEN` in GitHub replaced with a new project token; the
+    Railway GitHub app removed from Jeremy's personal account, kept only on
+    `effuselabs/lumina`.
+  - Checked, nothing found: GitHub deploy keys, security log, branches,
+    commits and workflow runs since 2026-10-20.
+
+  Staging is down until Railway re-enables Hobby builds: the database has the
+  new password and the running app the old one. When it redeploys, confirm
+  `/api/health`, a sign-in and a booking. `CRON_SECRET` and
+  `PUBLIC_BOOKING_CSRF_SECRET` were never set on staging; both fail safe, but
+  give each its own value. Auditing the secrets turned up a CSRF helper with
+  a built-in fallback secret, unreachable today
+  ([#121](https://github.com/effuselabs/lumina/issues/121)).
+
 - ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
   service has since migrated to Infrastructure as Code entirely. The service's
   `railwayConfigFile` was null and every setting it supplied had reverted to
