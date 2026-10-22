@@ -17,10 +17,12 @@ regression.
 | `/auth/signin`   | Every owner, every day                                                  |
 | `/auth/signup`   | The start of the booking loop                                           |
 | `/design-system` | Every UI primitive, drawn from the tokens (signed in as the demo owner) |
+| `/book/<salon>`  | The first page a client sees: the seeded salon's services               |
 
-The booking page and the dashboard aren't covered yet, because the seed fills
-them with random data and they would differ on every run. Making the seed
-reproducible is [#112](https://github.com/effuselabs/lumina/issues/112).
+The booking page shows seeded data. The seed is the same salon every time it
+runs (`faker.seed` in `prisma/seed.ts`, [#112](https://github.com/effuselabs/lumina/issues/112)), so the page is the same on
+every fresh database. The dashboard follows once its overview shows true
+figures ([#115](https://github.com/effuselabs/lumina/issues/115)).
 
 ## Where baselines come from
 
