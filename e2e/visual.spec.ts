@@ -12,8 +12,8 @@ import { signInAsOwner } from './support/sign-in';
  * the baselines is documented in docs/visual-tests.md.
  *
  * The booking page is drawn from the seed, which is the same salon every time
- * it runs (#112). The dashboard follows once its overview shows true figures
- * (#115); today it mixes in the seed's total and a hardcoded utilisation.
+ * it runs (#112). The dashboard's figures depend on the day as well as the
+ * seed, so its cards are compared with the numbers masked (#115).
  */
 
 const THEMES = ['light', 'dark'] as const;
@@ -60,6 +60,29 @@ for (const theme of THEMES) {
         await expect(page).toHaveScreenshot(
           `booking-${theme}-${size.name}.png`,
           { fullPage: true }
+        );
+      });
+
+      test('dashboard', async ({ page }) => {
+        test.setTimeout(60_000);
+        await signInAsOwner(page);
+        await expect(page.locator('.dashboard-main')).toBeVisible();
+        await page.evaluate(() => document.fonts.ready);
+
+        // Element shots, not the page: today's schedule grows and shrinks with
+        // the time of day CI happens to run, and its figures with the date.
+        // The cards' layout, type and colour are what is compared; the
+        // numbers are masked, and asserted by dashboard-overview's tests.
+        const figures = [
+          page.locator('.stat-card-value'),
+          page.locator('.stat-card-change'),
+        ];
+        await expect(page.locator('.dashboard-stats-grid')).toHaveScreenshot(
+          `dashboard-figures-${theme}-${size.name}.png`,
+          { mask: figures }
+        );
+        await expect(page.locator('.quick-actions-container')).toHaveScreenshot(
+          `dashboard-actions-${theme}-${size.name}.png`
         );
       });
 

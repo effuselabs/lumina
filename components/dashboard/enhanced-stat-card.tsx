@@ -17,6 +17,8 @@ interface EnhancedStatCardProps {
   icon: React.ComponentType<{ className?: string }>;
   color: 'revenue' | 'appointments' | 'clients' | 'staff';
   trend?: number[];
+  /** A plain line under the value, for context that is not a percentage. */
+  note?: string;
   action?: {
     label: string;
     href: string;
@@ -119,6 +121,7 @@ export function EnhancedStatCard({
   icon: Icon,
   color,
   trend,
+  note,
   action,
   isLoading,
   className,
@@ -174,6 +177,8 @@ export function EnhancedStatCard({
                 {Math.abs(change.value)}% {change.period}
               </span>
             </div>
+          ) : note ? (
+            <p className="stat-card-change stat-card-change-neutral">{note}</p>
           ) : (
             <div className="stat-card-change-placeholder" />
           )}

@@ -669,10 +669,27 @@ time, after the booking loop works.
   is now reproducible ([#112](https://github.com/effuselabs/lumina/issues/112)):
   faker is seeded, so two fresh databases hold the same salon (they used to
   differ on every one of 103 compared rows), and the booking page is covered.
-  The dashboard follows its fix
-  ([#115](https://github.com/effuselabs/lumina/issues/115)): it showed the
-  all-time appointment count as "today", a hardcoded 85% utilisation, and
-  schedule times in the viewer's zone.
+  The dashboard followed its fix
+  ([#115](https://github.com/effuselabs/lumina/issues/115)).
+
+- ~~**The dashboard overview showed wrong and made-up figures.**~~ **Fixed**
+  ([#115](https://github.com/effuselabs/lumina/issues/115)). It is the first
+  page an owner sees. "Appointments today" showed the all-time count (502):
+  `/api/dashboard/metrics` counted the server's day up to the current moment,
+  usually 0, and the page fell back to the total. Revenue was completed
+  appointments × an assumed $75; utilisation a hardcoded 85% beside a TODO;
+  schedule times were in the viewer's zone, every appointment 60 minutes; a
+  "System Status: All Systems Operational" banner had no check behind it; and
+  Quick Actions and the schedule used ~30 CSS classes that never existed. The
+  overview is now read on the server in the salon's timezone
+  (`lib/services/dashboard-overview.ts`), revenue is payments less refunds
+  from real transactions, the metrics endpoint and its mocks are deleted, and
+  the components are styled from the token variables. Found on the way: net
+  revenue _added_ refunds stored negative (the seed's convention), and every
+  seeded transaction was dated the moment the seed ran — both fixed; the sign
+  convention itself is [#118](https://github.com/effuselabs/lumina/issues/118),
+  and 24 uses of undefined `lumina-heading-*`/`lumina-body-*` classes are
+  [#117](https://github.com/effuselabs/lumina/issues/117).
 
 - ~~**`npm run format:check` fails on 772 files.**~~ **Resolved.** The
   repository was formatted in one pass and `format:check` is a CI gate, so it

@@ -3185,6 +3185,289 @@
     border-top: 1px solid var(--color-border);
   }
 
+  /*
+   * Quick actions and today's schedule (GitHub issue 115).
+   *
+   * These components were committed using some thirty class names that were
+   * never defined, so the dashboard drew them as unstyled stacks of icons and
+   * text. They share the stat cards' surface, border, radius and shadow.
+   */
+  .quick-actions-container,
+  .schedule-card {
+    /* Side by side in a grid row: each keeps its own height. */
+    align-self: start;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: var(--dashboard-shadow);
+  }
+
+  .quick-actions-header,
+  .schedule-card-header {
+    margin-bottom: 1rem;
+  }
+
+  .quick-actions-header .stat-card-title,
+  .schedule-card-header .stat-card-title {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 0.75rem;
+  }
+
+  .quick-action-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition:
+      border-color 0.2s ease-in-out,
+      background-color 0.2s ease-in-out;
+  }
+
+  .quick-action-card:hover,
+  .quick-action-card:focus-visible {
+    border-color: var(--lumina-coral);
+    background-color: var(--color-background-muted);
+  }
+
+  .quick-action-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+    background-color: var(--color-background-muted);
+  }
+
+  .quick-action-card-primary .quick-action-icon-container {
+    background: var(--lumina-radiant-gradient);
+  }
+
+  .quick-action-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-foreground-secondary);
+  }
+
+  .quick-action-card-primary .quick-action-icon {
+    color: var(--color-primary-foreground);
+  }
+
+  .quick-action-content {
+    min-width: 0;
+  }
+
+  .quick-action-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+  }
+
+  .quick-action-description {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: var(--color-foreground-muted);
+  }
+
+  .quick-actions-secondary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .quick-action-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+
+  .quick-action-link:hover {
+    background-color: var(--color-background-muted);
+  }
+
+  .quick-action-link-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .quick-action-link-icon,
+  .quick-action-link-arrow {
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-foreground-muted);
+  }
+
+  .schedule-card-count-badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--color-background-muted);
+    font-size: 0.75rem;
+    color: var(--color-foreground-secondary);
+  }
+
+  .schedule-card-count-number {
+    font-weight: 700;
+    color: var(--color-foreground);
+  }
+
+  .schedule-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .schedule-item-skeleton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+  }
+
+  .schedule-item-professional {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .schedule-item-status-bar {
+    width: 0.25rem;
+    flex-shrink: 0;
+    background-color: var(--color-border);
+  }
+
+  .schedule-item-status-bar.status-upcoming {
+    background-color: var(--lumina-coral);
+  }
+
+  .schedule-item-status-bar.status-in-progress {
+    background-color: var(--lumina-gold);
+  }
+
+  .schedule-item-status-bar.status-completed {
+    background-color: var(--semantic-success);
+  }
+
+  .schedule-item-content {
+    flex: 1;
+    min-width: 0;
+    padding: 0.625rem 0.75rem;
+  }
+
+  .schedule-item-primary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .schedule-item-client {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .schedule-item-client-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+
+  .schedule-item-service,
+  .schedule-item-staff,
+  .schedule-item-duration {
+    font-size: 0.75rem;
+    color: var(--color-foreground-muted);
+  }
+
+  .schedule-item-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .schedule-item-time-block,
+  .schedule-item-staff-info {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .schedule-item-staff-info {
+    margin-top: 0.25rem;
+  }
+
+  .schedule-item-time {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-foreground);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .schedule-item-time-icon,
+  .schedule-item-staff-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    color: var(--color-foreground-muted);
+  }
+
+  .schedule-empty-state {
+    padding: 1.5rem 0;
+    text-align: center;
+  }
+
+  .schedule-empty-icon {
+    color: var(--color-foreground-muted);
+  }
+
+  .schedule-empty-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+
+  .schedule-empty-subtitle,
+  .schedule-overflow-text {
+    font-size: 0.75rem;
+    color: var(--color-foreground-muted);
+  }
+
+  .schedule-overflow {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .schedule-card-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
   .link-stat-card-action {
     display: inline-flex;
     align-items: center;
@@ -3509,10 +3792,28 @@
   }
 
   /* Dashboard Stats Grid */
+  /*
+   * Every page using this grid shows four cards. Auto-fit at 280px left the
+   * fourth alone on a second row at a 1280px window; four across there wraps
+   * the titles. So: one column on phones, two by two, then a single row once
+   * there is room for it.
+   */
   .dashboard-stats-grid {
     display: grid;
     gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 640px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
 
   .grid-dashboard-stats {

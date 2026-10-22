@@ -1,5 +1,8 @@
 import { requireBusinessAccess } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import {
+  dashboardOverview,
+  todaysSchedule,
+} from '@/lib/services/dashboard-overview';
 
 interface BusinessDashboardPageProps {
   params: Promise<{
@@ -28,27 +31,21 @@ export default async function BusinessDashboardPage(
     role: userRole,
   } = await requireBusinessAccess(params.businessSlug);
 
-  // Scoped by the business the check just proved access to.
-  const counts = await prisma.business.findUniqueOrThrow({
-    where: { id: accessible.id },
-    select: {
-      _count: {
-        select: {
-          staff: true,
-          services: true,
-          clients: true,
-          appointments: true,
-        },
-      },
-    },
-  });
-  const business = { ...accessible, ...counts };
+  // Read on the server, in the salon's timezone, scoped by the business the
+  // check just proved access to.
+  const now = new Date();
+  const [overview, schedule] = await Promise.all([
+    dashboardOverview(accessible.id, accessible.timezone, now),
+    todaysSchedule(accessible.id, accessible.timezone, now),
+  ]);
 
   const { BusinessDashboard } = await import('./business-dashboard');
 
   return (
     <BusinessDashboard
-      business={business}
+      businessName={accessible.name}
+      overview={overview}
+      schedule={schedule}
       userRole={userRole}
       userName={user.name || user.email || 'User'}
       businessSlug={params.businessSlug}

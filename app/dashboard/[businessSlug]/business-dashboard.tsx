@@ -4,14 +4,12 @@ import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { EnhancedStatCard } from '@/components/dashboard/enhanced-stat-card';
 import { ScheduleItemData } from '@/components/dashboard/schedule-item';
 import { TodaysScheduleCard } from '@/components/dashboard/todays-schedule-card';
-import { Card, CardContent } from '@/components/ui/card';
 import { LuminaQuickActionCard } from '@/components/ui/lumina-quick-action-card';
 import { LuminaQuickActions } from '@/components/ui/lumina-quick-actions';
-import {
-  useDashboardAppointments,
-  useDashboardData,
-} from '@/hooks/use-dashboard-data';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type {
+  DashboardOverview,
+  ScheduleEntry,
+} from '@/lib/services/dashboard-overview';
 import {
   BarChart3,
   Calendar,
@@ -21,252 +19,155 @@ import {
   UserCheck,
   Users,
 } from 'lucide-react';
-import { useState } from 'react';
-import { AppointmentSummary } from '../../../types/dashboard';
-import { neutral, status, statusTint } from '@/lib/design/tokens';
 
 interface BusinessDashboardProps {
-  business: {
-    id: string;
-    name: string;
-    _count: {
-      staff: number;
-      services: number;
-      clients: number;
-      appointments: number;
-    };
-  };
+  businessName: string;
+  overview: DashboardOverview;
+  schedule: ScheduleEntry[];
   userRole: string;
   userName: string;
   businessSlug: string;
 }
 
 /**
- * Enhanced Business Dashboard Client Component
- *
- * Provides:
- * - Professional dashboard layout with sidebar navigation
- * - Real-time business metrics and analytics
- * - Enhanced stat cards with trends and growth indicators
- * - Quick actions and financial overview
- * - Role-based UI elements and permissions
+ * The business dashboard: today at a glance, and the shortcuts an owner
+ * reaches for most. Its figures are read on the server, in the salon's
+ * timezone (`lib/services/dashboard-overview.ts`), and passed in.
  */
 export function BusinessDashboard({
-  business,
+  businessName,
+  overview,
+  schedule,
   userRole,
   userName,
   businessSlug,
 }: BusinessDashboardProps) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 5 * 60 * 1000, // 5 minutes
-            refetchOnWindowFocus: false,
-            retry: 3,
-          },
-        },
-      })
-  );
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <DashboardLayout
+    <DashboardLayout
+      businessSlug={businessSlug}
+      userRole={userRole}
+      userName={userName}
+      businessName={businessName}
+    >
+      <DashboardContent
         businessSlug={businessSlug}
-        userRole={userRole}
-        userName={userName}
-        businessName={business.name}
-      >
-        <DashboardContent
-          business={business}
-          businessSlug={businessSlug}
-          userRole={userRole}
-        />
-      </DashboardLayout>
-    </QueryClientProvider>
+        overview={overview}
+        schedule={schedule}
+      />
+    </DashboardLayout>
   );
 }
 
-interface DashboardContentProps {
-  business: {
-    id: string;
-    name: string;
-    _count: {
-      staff: number;
-      services: number;
-      clients: number;
-      appointments: number;
-    };
+/** Percentage change, or none when there is nothing to compare against. */
+function change(current: number, previous: number) {
+  if (previous <= 0) return undefined;
+  const value = Math.round(((current - previous) / previous) * 100);
+  return {
+    value,
+    type:
+      value > 0
+        ? ('increase' as const)
+        : value < 0
+          ? ('decrease' as const)
+          : ('neutral' as const),
+    period: 'vs previous 30 days',
   };
-  businessSlug: string;
-  userRole: string;
+}
+
+function scheduleStatus(
+  status: ScheduleEntry['status']
+): ScheduleItemData['status'] {
+  if (status === 'IN_PROGRESS') return 'in-progress';
+  if (status === 'COMPLETED' || status === 'NO_SHOW') return 'completed';
+  return 'upcoming';
 }
 
 function DashboardContent({
-  business,
   businessSlug,
-  userRole: _userRole,
-}: DashboardContentProps) {
-  const {
-    data: metrics,
-    isLoading,
-    error: _error,
-  } = useDashboardData({
-    businessId: business.id,
-  });
+  overview,
+  schedule,
+}: {
+  businessSlug: string;
+  overview: DashboardOverview;
+  schedule: ScheduleEntry[];
+}) {
+  const { revenue, appointments, clients, staff } = overview;
 
-  const { data: appointmentsData, isLoading: appointmentsLoading } =
-    useDashboardAppointments(
-      business.id,
-      10 // Get up to 10 appointments for today
-    );
-
-  // Transform appointments data to match ScheduleItemData interface
-  const transformedAppointments: ScheduleItemData[] =
-    appointmentsData?.map((apt: AppointmentSummary) => ({
-      id: apt.id,
-      clientName: apt.clientName,
-      service: apt.serviceName,
-      time: new Date(apt.startTime).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      }),
-      staffMember: apt.staffName,
-      status:
-        apt.status === 'CONFIRMED'
-          ? 'upcoming'
-          : apt.status === 'IN_PROGRESS'
-            ? 'in-progress'
-            : apt.status === 'COMPLETED'
-              ? 'completed'
-              : 'upcoming',
-      duration: 60, // Default duration, could be enhanced to get from service data
-    })) || [];
-
-  // Remove duplicates based on unique combination of client, service, time, and staff
-  const todaysAppointments = transformedAppointments.filter(
-    (appointment, index, self) =>
-      index ===
-      self.findIndex(
-        apt =>
-          apt.clientName === appointment.clientName &&
-          apt.service === appointment.service &&
-          apt.time === appointment.time &&
-          apt.staffMember === appointment.staffMember
-      )
-  );
+  const todaysAppointments: ScheduleItemData[] = schedule.map(entry => ({
+    id: entry.id,
+    clientName: entry.clientName,
+    service: entry.services,
+    time: entry.time,
+    staffMember: entry.staffName,
+    status: scheduleStatus(entry.status),
+    duration: entry.durationMinutes,
+  }));
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
       <div>
-        <h1 className="lumina-heading-2">Dashboard Overview</h1>
-        <p className="lumina-body-large" style={{ color: neutral[500] }}>
+        <h1 className="text-2xl font-semibold text-ink-strong">
+          Dashboard Overview
+        </h1>
+        <p className="mt-1 text-base text-ink-soft">
           Here&apos;s what&apos;s happening with your business today.
         </p>
       </div>
 
-      {/* Key Metrics Grid */}
       <div className="dashboard-stats-grid">
         <EnhancedStatCard
-          title="Total Revenue"
-          value={metrics?.revenue.thisMonth || 0}
-          change={
-            metrics?.revenue.growth.monthly
-              ? {
-                  value: metrics.revenue.growth.monthly,
-                  type:
-                    metrics.revenue.growth.monthly > 0
-                      ? 'increase'
-                      : metrics.revenue.growth.monthly < 0
-                        ? 'decrease'
-                        : 'neutral',
-                  period: 'this month',
-                }
-              : undefined
-          }
+          title="Revenue, last 30 days"
+          value={revenue.last30Days}
+          change={change(revenue.last30Days, revenue.previous30Days)}
           icon={DollarSign}
           color="revenue"
-          trend={metrics?.revenue.trend}
           action={{
             label: 'View Financial Reports',
             href: `/dashboard/${businessSlug}/payments/reports`,
           }}
-          isLoading={isLoading}
         />
 
         <EnhancedStatCard
-          title="Appointments Today"
-          value={metrics?.appointments.today || business._count.appointments}
-          change={
-            metrics?.appointments.completionRate
-              ? {
-                  value: metrics.appointments.completionRate,
-                  type: 'neutral',
-                  period: 'completion rate',
-                }
-              : undefined
+          title="Appointments today"
+          value={appointments.today}
+          note={
+            appointments.stillToCome === 0
+              ? 'None still to come'
+              : `${appointments.stillToCome} still to come`
           }
           icon={Calendar}
           color="appointments"
-          trend={metrics?.appointments.trend}
           action={{
             label: 'View Calendar',
-            href: `/dashboard/${businessSlug}/appointments`,
+            href: `/dashboard/${businessSlug}/appointments/calendar`,
           }}
-          isLoading={isLoading}
         />
 
         <EnhancedStatCard
-          title="Total Clients"
-          value={metrics?.clients.total || business._count.clients}
-          change={
-            metrics?.clients.retentionRate
-              ? {
-                  value: metrics.clients.retentionRate,
-                  type: 'neutral',
-                  period: 'retention rate',
-                }
-              : undefined
-          }
+          title="Clients"
+          value={clients.total}
+          note={`${clients.visitedLast30Days} visited in the last 30 days`}
           icon={Users}
           color="clients"
-          trend={metrics?.clients.trend}
           action={{
             label: 'Manage Clients',
             href: `/dashboard/${businessSlug}/clients`,
           }}
-          isLoading={isLoading}
         />
 
         <EnhancedStatCard
-          title="Active Staff"
-          value={metrics?.staff.active || business._count.staff}
-          change={
-            metrics?.staff.utilization
-              ? {
-                  value: metrics.staff.utilization,
-                  type: 'neutral',
-                  period: 'utilization',
-                }
-              : undefined
-          }
+          title="Active staff"
+          value={staff.active}
           icon={UserCheck}
           color="staff"
-          trend={metrics?.staff.trend}
           action={{
             label: 'Manage Staff',
             href: `/dashboard/${businessSlug}/staff`,
           }}
-          isLoading={isLoading}
         />
       </div>
 
-      {/* Quick Actions & Recent Activity */}
       <div className="dashboard-charts-grid">
-        {/* Enhanced Quick Actions */}
         <LuminaQuickActions>
           <LuminaQuickActionCard
             title="Book Appointment"
@@ -275,35 +176,30 @@ function DashboardContent({
             icon={Calendar}
             variant="primary"
           />
-
           <LuminaQuickActionCard
             title="Process Payment"
             description="Handle transactions"
             href={`/dashboard/${businessSlug}/payments/pos`}
             icon={CreditCard}
           />
-
           <LuminaQuickActionCard
             title="Add Client"
             description="Register new client"
             href={`/dashboard/${businessSlug}/clients?action=add`}
             icon={Users}
           />
-
           <LuminaQuickActionCard
             title="Add Service"
             description="Create new service"
             href={`/dashboard/${businessSlug}/services?action=add`}
             icon={UserCheck}
           />
-
           <LuminaQuickActionCard
             title="View Analytics"
             description="Business insights & reports"
             href={`/dashboard/${businessSlug}/analytics`}
             icon={BarChart3}
           />
-
           <LuminaQuickActionCard
             title="Financial Reports"
             description="Revenue & payment reports"
@@ -312,57 +208,11 @@ function DashboardContent({
           />
         </LuminaQuickActions>
 
-        {/* Today's Schedule */}
         <TodaysScheduleCard
           businessSlug={businessSlug}
           appointments={todaysAppointments}
-          isLoading={appointmentsLoading}
         />
       </div>
-
-      {/* System Status */}
-      <Card
-        style={{
-          borderColor: statusTint.successBorder,
-          backgroundColor: statusTint.successSurface,
-        }}
-      >
-        <CardContent className="p-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-full"
-                style={{ backgroundColor: status.success }}
-              >
-                <span className="text-sm font-bold text-white">✓</span>
-              </div>
-            </div>
-            <div className="ml-4">
-              <h3
-                className="lumina-body-small"
-                style={{
-                  color: 'var(--ui-ink-brand)',
-                  fontSize: '14px',
-                  fontWeight: '400',
-                }}
-              >
-                System Status: All Systems Operational
-              </h3>
-              <p
-                className="lumina-body-small"
-                style={{
-                  color: 'var(--ui-ink-brand)',
-                  fontSize: '14px',
-                  fontWeight: '400',
-                }}
-              >
-                Multi-tenant security active • Business data isolated •
-                Real-time sync enabled • ID: {businessSlug}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
