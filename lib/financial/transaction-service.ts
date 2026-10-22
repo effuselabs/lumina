@@ -568,7 +568,13 @@ export async function calculateBusinessRevenue(
     (sum, t) => sum + t.amount.toNumber(),
     0
   );
-  const totalRefunds = refunds.reduce((sum, t) => sum + t.amount.toNumber(), 0);
+  // Refunds are stored negative by the seed and its validator, positive by
+  // createRefund. Summing magnitudes is right under either convention;
+  // summing raw amounts let a negative refund *add* to revenue.
+  const totalRefunds = refunds.reduce(
+    (sum, t) => sum + Math.abs(t.amount.toNumber()),
+    0
+  );
   const netRevenue = totalRevenue - totalRefunds;
   const transactionCount = payments.length;
   const averageTransactionAmount =

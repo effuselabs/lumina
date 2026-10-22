@@ -34,6 +34,12 @@ export interface TransactionProfile {
   chairRentalApplicable: boolean;
   description?: string;
   metadata?: any;
+  /**
+   * When the money moved. Without it every transaction was stamped with the
+   * moment the seed ran, so "revenue in the last 30 days" was every seeded
+   * payment, whatever the date of the appointment it paid for (#115).
+   */
+  occurredAt?: Date;
 }
 
 export interface TransactionFactoryOptions {
@@ -318,6 +324,7 @@ export class TransactionFactory extends BaseFactory<Transaction> {
 
     return {
       appointmentId: appointment.id,
+      occurredAt: appointment.startTime,
       staffId: appointment.staffId,
       type: 'PAYMENT',
       status: 'COMPLETED',
@@ -375,6 +382,7 @@ export class TransactionFactory extends BaseFactory<Transaction> {
 
     return {
       appointmentId: appointment.id,
+      occurredAt: appointment.startTime,
       staffId: appointment.staffId,
       type: 'TIP',
       status: 'COMPLETED',
@@ -425,6 +433,7 @@ export class TransactionFactory extends BaseFactory<Transaction> {
 
     return {
       appointmentId: appointment.id,
+      occurredAt: appointment.startTime,
       staffId: appointment.staffId,
       type: 'REFUND',
       status: 'COMPLETED',
@@ -579,6 +588,7 @@ export class TransactionFactory extends BaseFactory<Transaction> {
 
     return {
       appointmentId: appointment.id,
+      occurredAt: appointment.startTime,
       staffId: appointment.staffId,
       type: 'DEPOSIT',
       status: 'COMPLETED',
@@ -687,6 +697,7 @@ export class TransactionFactory extends BaseFactory<Transaction> {
       chairRentalApplicable: profile.chairRentalApplicable,
       description: profile.description,
       metadata: profile.metadata,
+      createdAt: profile.occurredAt,
     };
   }
 

@@ -82,7 +82,9 @@ export function ScheduleItem({
               <span className="schedule-item-time">{item.time}</span>
             </div>
             {item.duration && (
-              <span className="schedule-item-duration">{item.duration}min</span>
+              <span className="schedule-item-duration">
+                {item.duration} min
+              </span>
             )}
           </div>
         </div>

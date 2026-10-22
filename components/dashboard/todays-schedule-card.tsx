@@ -66,7 +66,7 @@ export function TodaysScheduleCard({
   return (
     <Card className={cn('schedule-card h-fit', className)}>
       <div className="schedule-card-header">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4" style={{ color: brand.coral }} />
             <h3 className="stat-card-title">Today&apos;s Schedule</h3>
@@ -86,7 +86,7 @@ export function TodaysScheduleCard({
               asChild
               className="h-6 w-6 p-0 hover:bg-lumina-peach/20"
             >
-              <Link href={`/dashboard/${businessSlug}/appointments/new`}>
+              <Link href={`/dashboard/${businessSlug}/appointments/book`}>
                 <Plus className="h-3 w-3" />
                 <span className="sr-only">Add appointment</span>
               </Link>
@@ -98,10 +98,7 @@ export function TodaysScheduleCard({
       <div className="schedule-card-content">
         {displayAppointments.length === 0 ? (
           <div className="schedule-empty-state">
-            <Calendar
-              className="mx-auto mb-2 h-8 w-8"
-              style={{ color: 'rgba(128, 130, 133, 0.4)' }}
-            />
+            <Calendar className="schedule-empty-icon mx-auto mb-2 h-8 w-8" />
             <p className="schedule-empty-title">No appointments</p>
             <p className="schedule-empty-subtitle">Schedule is clear today</p>
           </div>
