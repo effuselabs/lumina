@@ -346,8 +346,22 @@ export class InputSanitizer {
 
 // CSRF protection utilities
 export class CSRFProtection {
-  private static readonly SECRET =
-    process.env.CSRF_SECRET || 'default-csrf-secret';
+  /**
+   * Resolved on first use, never at import: reading it when the module loaded
+   * fell back to a constant published in this repository, so anyone could
+   * mint a token. Same order as the public booking CSRF: its own secret,
+   * then NEXTAUTH_SECRET; in production, neither is an error.
+   */
+  private static get SECRET(): string {
+    const secret = process.env.CSRF_SECRET || process.env.NEXTAUTH_SECRET;
+    if (secret) return secret;
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'CSRF_SECRET (or NEXTAUTH_SECRET) must be set in production'
+      );
+    }
+    return 'lumina-development-csrf';
+  }
 
   // Generate CSRF token
   static generateToken(sessionId: string): string {
