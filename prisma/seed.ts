@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
 import { brand } from '../lib/design/tokens';
@@ -9,8 +10,21 @@ import {
 
 const prisma = new PrismaClient();
 
+/**
+ * The demo salon is the same salon every time it is seeded.
+ *
+ * Every random draw in the seed goes through faker, and faker was never
+ * seeded, so each run invented different staff, services, prices and clients.
+ * Screenshots of seeded pages could not be compared from one run to the next
+ * (#112), and a bug seen on one database could not be reproduced on another.
+ * Set SEED_FAKER to a different number for a different, equally reproducible,
+ * salon.
+ */
+const DEMO_SEED = Number(process.env.SEED_FAKER ?? 20260601);
+
 async function main() {
   console.log('🌱 Starting enhanced database seed...');
+  faker.seed(DEMO_SEED);
 
   const startTime = Date.now();
 

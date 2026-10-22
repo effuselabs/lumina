@@ -1,4 +1,5 @@
 import { type Page, expect, test } from '@playwright/test';
+import { seededBusiness } from './support/seeded-business';
 import { signInAsOwner } from './support/sign-in';
 
 /*
@@ -10,9 +11,9 @@ import { signInAsOwner } from './support/sign-in';
  * reaches, and a diff with no token edit behind it is a regression. Updating
  * the baselines is documented in docs/visual-tests.md.
  *
- * Only pages whose content does not come from the seed are covered. The seed
- * draws staff, services and prices at random, so a booking page or dashboard
- * would differ on every run; they follow once the seed is deterministic (#112).
+ * The booking page is drawn from the seed, which is the same salon every time
+ * it runs (#112). The dashboard follows once its overview shows true figures
+ * (#115); today it mixes in the seed's total and a hardcoded utilisation.
  */
 
 const THEMES = ['light', 'dark'] as const;
@@ -52,6 +53,15 @@ for (const theme of THEMES) {
           );
         });
       }
+
+      test('booking', async ({ page }) => {
+        const business = await seededBusiness();
+        await settle(page, `/book/${business.id}`);
+        await expect(page).toHaveScreenshot(
+          `booking-${theme}-${size.name}.png`,
+          { fullPage: true }
+        );
+      });
 
       test('design system', async ({ page }) => {
         test.setTimeout(60_000);

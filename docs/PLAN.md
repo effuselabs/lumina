@@ -665,9 +665,14 @@ time, after the booking loop works.
   **Back**, as `npm run test:visual` and CI's `visual` job
   (`docs/visual-tests.md`). It covers the home, sign-in, sign-up and design
   system pages in both themes at desktop and phone width, and runs inside the
-  pinned Playwright image, the only place its baselines are valid. The
-  booking page and dashboard follow once the seed is reproducible
-  ([#112](https://github.com/effuselabs/lumina/issues/112)).
+  pinned Playwright image, the only place its baselines are valid. The seed
+  is now reproducible ([#112](https://github.com/effuselabs/lumina/issues/112)):
+  faker is seeded, so two fresh databases hold the same salon (they used to
+  differ on every one of 103 compared rows), and the booking page is covered.
+  The dashboard follows its fix
+  ([#115](https://github.com/effuselabs/lumina/issues/115)): it showed the
+  all-time appointment count as "today", a hardcoded 85% utilisation, and
+  schedule times in the viewer's zone.
 
 - ~~**`npm run format:check` fails on 772 files.**~~ **Resolved.** The
   repository was formatted in one pass and `format:check` is a CI gate, so it

@@ -1,6 +1,7 @@
 import { type Locator, type Page, expect, test } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
 import { DateTime } from 'luxon';
+import { seededBusiness } from './support/seeded-business';
 import { signInAsOwner } from './support/sign-in';
 
 /**
@@ -30,22 +31,6 @@ import { signInAsOwner } from './support/sign-in';
  */
 
 const prisma = new PrismaClient();
-
-/** The seeded salon. Resolved once, so a reseed with new IDs does not break this. */
-async function seededBusiness() {
-  const business = await prisma.business.findFirst({
-    where: { isActive: true },
-    select: { id: true, name: true, slug: true, timezone: true },
-  });
-
-  if (!business) {
-    throw new Error(
-      'No active business found. Run `npm run db:seed` before the E2E suite.'
-    );
-  }
-
-  return business;
-}
 
 /**
  * Record what the browser saw, and attach it to the report if the test fails.
