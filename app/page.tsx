@@ -7,11 +7,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Grid, GridItem } from '@/components/ui/grid';
-import { StatCard } from '@/components/ui/stat-card';
 import {
   ArrowRight,
   Calendar,
+  CalendarCheck,
   Check,
+  Clock,
   Shield,
   Sparkles,
   Star,
@@ -221,23 +222,28 @@ export default async function HomePage() {
               <ul className="space-y-4">
                 <li className="flex items-center gap-3">
                   <div className="bg-success-subtle flex h-6 w-6 items-center justify-center rounded-full">
-                    <TrendingUp className="h-4 w-4 text-success" />
+                    <CalendarCheck className="h-4 w-4 text-success" />
                   </div>
                   <span className="font-medium">
-                    24% average revenue increase
+                    Clients book online, from your own booking page
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="bg-info-subtle flex h-6 w-6 items-center justify-center rounded-full">
-                    <Calendar className="h-4 w-4 text-info" />
+                    <Clock className="h-4 w-4 text-info" />
                   </div>
-                  <span className="font-medium">8.5 hours saved weekly</span>
+                  <span className="font-medium">
+                    Only times your staff are really free are offered
+                  </span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="bg-warning-subtle flex h-6 w-6 items-center justify-center rounded-full">
-                    <Users className="h-4 w-4 text-warning" />
+                    <Calendar className="h-4 w-4 text-warning" />
                   </div>
-                  <span className="font-medium">89% client retention rate</span>
+                  <span className="font-medium">
+                    Every booking lands on your calendar, in your salon&apos;s
+                    time
+                  </span>
                 </li>
               </ul>
             </div>
@@ -503,92 +509,6 @@ export default async function HomePage() {
               </Card>
             </GridItem>
           </Grid>
-        </div>
-      </section>
-
-      {/* Social Proof & Stats Section */}
-      <section className="section-py-lg section-bg-gradient-gold theme-transitioning">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="mb-16 text-center">
-            <Badge variant="secondary" className="badge-deep-teal mb-6">
-              <Star className="mr-2 h-4 w-4" />
-              Proven Results
-            </Badge>
-            <h3 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
-              See the impact in action
-            </h3>
-            <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
-              Real results from salon and barbershop owners who transformed
-              their business with Lumina
-            </p>
-          </div>
-
-          <Grid variant="dashboard-stats" gap="lg" className="mb-16">
-            <GridItem>
-              <StatCard
-                title="Average Revenue Increase"
-                value="24%"
-                change={{
-                  value: 12.5,
-                  type: 'increase',
-                  period: 'vs manual management',
-                }}
-                icon="trending-up"
-                size="default"
-                className="hover-lumina-lift-subtle bg-success-subtle border-2"
-              />
-            </GridItem>
-            <GridItem>
-              <StatCard
-                title="Time Saved Weekly"
-                value="8.5hrs"
-                change={{
-                  value: 15,
-                  type: 'increase',
-                  period: 'on administrative tasks',
-                }}
-                icon="calendar"
-                size="default"
-                className="hover-lumina-lift-subtle bg-info-subtle border-2"
-              />
-            </GridItem>
-            <GridItem>
-              <StatCard
-                title="Client Retention Rate"
-                value="89%"
-                change={{
-                  value: 23,
-                  type: 'increase',
-                  period: 'with automated follow-ups',
-                }}
-                icon="users"
-                size="default"
-                className="hover-lumina-lift-subtle bg-warning-subtle border-2"
-              />
-            </GridItem>
-          </Grid>
-
-          {/* Customer Success Quote */}
-          <div className="text-center">
-            <blockquote className="mx-auto max-w-3xl">
-              <p className="text-foreground-muted mb-6 text-xl font-medium italic">
-                " &ldquo;Lumina transformed how we run our salon. We&apos;re
-                booking 40% more appointments and our clients love the seamless
-                experience.&rdquo;"
-              </p>
-              <footer className="flex items-center justify-center gap-4">
-                <div className="bg-lumina-section flex h-12 w-12 items-center justify-center rounded-full">
-                  <Users className="h-6 w-6 text-lumina-coral" />
-                </div>
-                <div className="text-left">
-                  <div className="font-semibold text-ink-brand">Sarah Chen</div>
-                  <div className="text-foreground-muted text-sm">
-                    Owner, Bloom Beauty Salon
-                  </div>
-                </div>
-              </footer>
-            </blockquote>
-          </div>
         </div>
       </section>
 
