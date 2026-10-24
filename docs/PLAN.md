@@ -536,7 +536,20 @@ why the history starts where it does. The key was revoked regardless.
   one on day one costs a bot and a file; retrofitting it can be impossible.
   **Decided by Jeremy on 2026-10-24: yes, now.** It reverses
   `CONTRIBUTING.md`'s "we will ask contributors then"; the agreement's text
-  is a licensing document, so it merges on his approval.
+  is a licensing document, so it merges on his approval. Settled the same
+  day: there is no legal entity yet, so the agreement names Jeremy and lets
+  the rights pass to a company later; Lumina stays open source, and the
+  agreement says so (contributions stay available under the AGPL or another
+  OSI licence). Money comes from hosting and running it, not from selling
+  the software, and a CLA still serves that: the copyright holder can run a
+  hosted Lumina with private operational changes, which the AGPL would
+  otherwise require publishing once outside code is in it. Next:
+  1. Jeremy sets up CLA Assistant (cla-assistant.io) on `effuselabs/lumina`,
+     linked to a gist of the approved text, `dependabot[bot]` allow-listed.
+  2. A pull request adds `CLA.md` and changes `CONTRIBUTING.md`, and shows
+     the bot asking and passing. CLA Assistant Lite, the usual GitHub
+     Action, was archived in March 2026, and an unmaintained action does not
+     get a workflow with write access.
 - **Self-hosting instructions.** ([#76](https://github.com/effuselabs/lumina/issues/76)) `docs/environments.md` documents _our_ Railway
   staging, not a stranger's deployment. Registration is closed by default now
   (`ALLOW_PUBLIC_SIGNUP`), with a first-account bootstrap so a fresh install is
@@ -1237,14 +1250,18 @@ time, after the booking loop works.
     it does not scope by business. The check stops a stranger asking; it does
     not yet make the answer theirs. Scoping the report is real work with no
     consumer today, since nothing calls the endpoint. ([#73](https://github.com/effuselabs/lumina/issues/73))
-  - There is no admin role. Several endpoints are application-wide by nature
-    and are currently open to any authenticated user. Worth a decision before
-    real customers. ([#72](https://github.com/effuselabs/lumina/issues/72))
-    Clarified 2026-10-24: a platform administrator runs a whole deployment,
-    one salon or many, and is not a salon role. First proposed as an
-    allow-list of email addresses in the environment, and withdrawn: nothing
-    verifies an email address, so whoever registers a listed address first
-    would become an administrator. Proposed instead: a flag on the user,
-    granted only from the command line, guarding `/api/monitoring/alerts` and
-    `/api/notifications/health` (system-wide queue health, open to any
-    signed-in user). Waiting on Jeremy.
+  - ~~There is no admin role. Several endpoints are application-wide by
+    nature and are currently open to any authenticated user.~~ **Fixed**
+    ([#72](https://github.com/effuselabs/lumina/issues/72)), decided by Jeremy
+    on 2026-10-24. A platform administrator runs a whole deployment, one
+    salon or many, and is not a salon role. An allow-list of email addresses
+    was proposed first and withdrawn — nothing verifies an address, so
+    whoever registered a listed one first would have become admin. Instead
+    the role is `UserRole.SUPER_ADMIN`, which existed unused, granted only
+    from the command line (`npm run admin:grant`, `docs/environments.md`).
+    `authorizePlatformAdmin` reads it from the database on every request, so
+    revoking is immediate. `/api/monitoring/alerts` and
+    `/api/notifications/health` answer only an administrator. The tenant
+    isolation gate missed both because it looked only at routes naming a
+    business or reading Prisma, and these read in-memory monitors; it now
+    requires a guard on every route behind sign-in.

@@ -335,3 +335,26 @@ answers "is this a returning client" with a boolean and nothing more.
 
 The staff-invite routes must be reachable without a session: a new staff member
 has no account until they accept, so requiring one would deadlock the flow.
+
+## Platform administrators
+
+A platform administrator runs a deployment, one salon or many. The role opens
+only the endpoints that report on the system itself — `/api/monitoring/alerts`
+and `/api/notifications/health` — and gives no access to any salon's data.
+Everyone else signed in gets 403 from them.
+
+It is granted from the command line, never in the app: nothing verifies an
+email address, so an allow-list of addresses would make admin whoever
+registered a listed one first. The account must exist; sign up first.
+
+```bash
+npm run admin:grant -- you@example.com
+npm run admin:revoke -- you@example.com
+npm run admin:list
+```
+
+On Railway, run these where the app runs (`railway ssh` into the service), or
+in the database's **Data** tab:
+`UPDATE users SET role = 'SUPER_ADMIN' WHERE email = 'you@example.com';`.
+Revoking takes effect on the next request, because the guard reads the role
+from the database rather than the session.
