@@ -536,7 +536,20 @@ why the history starts where it does. The key was revoked regardless.
   one on day one costs a bot and a file; retrofitting it can be impossible.
   **Decided by Jeremy on 2026-10-24: yes, now.** It reverses
   `CONTRIBUTING.md`'s "we will ask contributors then"; the agreement's text
-  is a licensing document, so it merges on his approval.
+  is a licensing document, so it merges on his approval. Settled the same
+  day: there is no legal entity yet, so the agreement names Jeremy and lets
+  the rights pass to a company later; Lumina stays open source, and the
+  agreement says so (contributions stay available under the AGPL or another
+  OSI licence). Money comes from hosting and running it, not from selling
+  the software, and a CLA still serves that: the copyright holder can run a
+  hosted Lumina with private operational changes, which the AGPL would
+  otherwise require publishing once outside code is in it. Next:
+  1. Jeremy sets up CLA Assistant (cla-assistant.io) on `effuselabs/lumina`,
+     linked to a gist of the approved text, `dependabot[bot]` allow-listed.
+  2. A pull request adds `CLA.md` and changes `CONTRIBUTING.md`, and shows
+     the bot asking and passing. CLA Assistant Lite, the usual GitHub
+     Action, was archived in March 2026, and an unmaintained action does not
+     get a workflow with write access.
 - **Self-hosting instructions.** ([#76](https://github.com/effuselabs/lumina/issues/76)) `docs/environments.md` documents _our_ Railway
   staging, not a stranger's deployment. Registration is closed by default now
   (`ALLOW_PUBLIC_SIGNUP`), with a first-account bootstrap so a fresh install is
