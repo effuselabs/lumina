@@ -200,7 +200,7 @@ async function parseCSV(csvContent: string, mapping?: Record<string, string>) {
       if (validationResult.success) {
         validData.push(validationResult.data);
       } else {
-        validationResult.error.errors.forEach(err => {
+        validationResult.error.issues.forEach(err => {
           errors.push({
             row: rowNumber,
             field: err.path.join('.'),

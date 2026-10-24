@@ -29,7 +29,7 @@ export const businessAddressSchema = z.object({
 
 export const businessFinancialModelSchema = z.object({
   financialModel: z.enum(['COMMISSION', 'CHAIR_RENTAL', 'HOURLY', 'HYBRID'], {
-    required_error: 'Please select a financial model',
+    error: 'Please select a financial model',
   }),
   currency: z.string().default('USD'),
 });
@@ -46,6 +46,7 @@ export const businessSettingsSchema = z.object({
 export const businessOperatingHoursSchema = z.object({
   operatingHours: z
     .record(
+      z.string(),
       z.object({
         isOpen: z.boolean(),
         openTime: z.string().optional(),

@@ -242,7 +242,7 @@ export async function POST(
               'Verify your email address format',
               'Ensure phone number is complete',
             ],
-            details: error.errors,
+            details: error.issues,
           },
         },
         {

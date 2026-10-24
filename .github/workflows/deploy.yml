@@ -15,7 +15,7 @@ name: Deploy
 #   1. Re-deploying staging by hand (rollback, or a stuck deploy).
 #   2. Promoting to production, which must never be automatic.
 #
-# Production does not exist yet; it is stood up in Phase 6. Until then the
+# Production does not exist yet; it is stood up in Phase 7. Until then the
 # production job refuses to run rather than half-deploying somewhere.
 
 on:
@@ -123,7 +123,7 @@ jobs:
       - name: Confirm production is provisioned
         run: |
           if [ -z "${{ secrets.RAILWAY_PRODUCTION_TOKEN }}" ]; then
-            echo "::error::Production is not provisioned yet (Phase 6)."
+            echo "::error::Production is not provisioned yet (Phase 7)."
             echo "Set RAILWAY_PRODUCTION_TOKEN and RAILWAY_PRODUCTION_SERVICE first."
             exit 1
           fi

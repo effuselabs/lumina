@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map(e => ({
+          details: error.issues.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),

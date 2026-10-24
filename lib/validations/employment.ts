@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 // Employment type enums
 const employmentTypeSchema = z.enum(['COMMISSION', 'CHAIR_RENTAL', 'HYBRID'], {
-  required_error: 'Please select an employment type',
+  error: 'Please select an employment type',
 });
 
 const rentalPeriodSchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY'], {
-  required_error: 'Please select a rental period',
+  error: 'Please select a rental period',
 });
 
 // Base employment configuration schema

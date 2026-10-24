@@ -29,7 +29,7 @@ const testEmailSchema = z.object({
     'staff_cancellation_alert',
     'daily_booking_summary',
   ]),
-  testData: z.record(z.any()).optional(),
+  testData: z.record(z.string(), z.any()).optional(),
 });
 
 /**
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map(e => ({
+          details: error.issues.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),

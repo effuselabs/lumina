@@ -22,6 +22,7 @@ import {
   financialModelDescriptions,
 } from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { z } from 'zod';
 import { useForm } from 'react-hook-form';
 
 interface FinancialModelStepProps {
@@ -35,7 +36,11 @@ export function FinancialModelStep({
   onNext,
   onPrevious,
 }: FinancialModelStepProps) {
-  const form = useForm<BusinessFinancialModel>({
+  const form = useForm<
+    z.input<typeof businessFinancialModelSchema>,
+    unknown,
+    BusinessFinancialModel
+  >({
     resolver: zodResolver(businessFinancialModelSchema),
     defaultValues: {
       financialModel: data.financialModel || 'COMMISSION',

@@ -144,7 +144,7 @@ Purpose: real salons, real client data.
 
 Deploys **only** via `workflow_dispatch` with `environment: production`. The
 GitHub `production` environment should have a required reviewer, so a human
-approves every release. Production is not provisioned until Phase 6; until then
+approves every release. Production is not provisioned until Phase 7; until then
 the job exits with a clear error rather than half-deploying.
 
 Before the first production deploy:
@@ -158,7 +158,7 @@ Before the first production deploy:
 
 ## Provisioning a deployed environment
 
-Run once per environment. Written for staging; production in Phase 6 is the
+Run once per environment. Written for staging; production in Phase 7 is the
 same list with production values.
 
 ### 1. Railway

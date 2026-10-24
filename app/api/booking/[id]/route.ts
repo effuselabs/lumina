@@ -212,7 +212,7 @@ export async function PUT(
 
     if (!validation.success) {
       return NextResponse.json(
-        { error: 'Invalid update data', details: validation.error.errors },
+        { error: 'Invalid update data', details: validation.error.issues },
         { status: 400 }
       );
     }

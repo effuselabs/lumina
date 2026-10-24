@@ -9,7 +9,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 
 // Validation schemas for existing JSON data
-const OperatingHoursSchema = z.record(
+const OperatingHoursSchema = z.partialRecord(
   z.enum([
     'monday',
     'tuesday',
@@ -26,7 +26,7 @@ const OperatingHoursSchema = z.record(
   })
 );
 
-const WorkingHoursSchema = z.record(
+const WorkingHoursSchema = z.partialRecord(
   z.enum([
     'monday',
     'tuesday',

@@ -205,7 +205,7 @@ export async function PUT(request: NextRequest) {
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid configuration data', details: error.errors },
+        { error: 'Invalid configuration data', details: error.issues },
         { status: 400 }
       );
     }
