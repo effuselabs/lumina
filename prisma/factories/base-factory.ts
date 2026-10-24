@@ -161,25 +161,6 @@ export abstract class BaseFactory<T> {
     return items[items.length - 1];
   }
 
-  /**
-   * Generate business hours aware time
-   */
-  protected generateBusinessHoursTime(
-    date: Date,
-    openHour: number = 9,
-    closeHour: number = 18
-  ): Date {
-    const hour = faker.number.int({ min: openHour, max: closeHour - 1 });
-    const minute = faker.helpers.arrayElement([0, 15, 30, 45]);
-
-    const result = new Date(date);
-    result.setHours(hour, minute, 0, 0);
-    return result;
-  }
-
-  /**
-   * Utility delay function
-   */
   protected delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
