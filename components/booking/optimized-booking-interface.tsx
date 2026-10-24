@@ -64,7 +64,6 @@ interface BookingClientInfo {
   email: string;
   phone: string;
   notes?: string;
-  isNewClient: boolean;
   marketingOptIn: boolean;
 }
 

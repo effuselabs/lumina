@@ -180,7 +180,6 @@ class BookingPerformanceMonitor {
     if (url.includes('/api/public/booking')) {
       if (url.includes('/availability')) return 'availability';
       if (url.includes('/book')) return 'book';
-      if (url.includes('/client-lookup')) return 'client-lookup';
       return 'booking-info';
     }
     return 'unknown';

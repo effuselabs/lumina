@@ -43,7 +43,6 @@ const clientDataSchema = z.object({
     .string()
     .max(500, 'Notes must be less than 500 characters')
     .optional(),
-  isNewClient: z.boolean().default(true),
   marketingOptIn: z.boolean().default(false),
 });
 
@@ -386,13 +385,19 @@ async function validateTimeSlotAvailability(
   }
 }
 
-// Create or find client using ClientService
-async function createOrFindClient(
-  businessId: string,
+/** The client's details exactly as the person booking typed them. */
+type BookedDetails = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  notes?: string;
+};
+
+function bookedDetails(
   clientData: z.infer<typeof clientDataSchema>
-) {
-  // Sanitize client data
-  const sanitizedData = {
+): BookedDetails {
+  return {
     firstName: InputSanitizer.sanitizeString(clientData.firstName),
     lastName: InputSanitizer.sanitizeString(clientData.lastName),
     email: clientData.email.toLowerCase().trim(),
@@ -400,20 +405,7 @@ async function createOrFindClient(
     notes: clientData.notes
       ? InputSanitizer.sanitizeNotes(clientData.notes)
       : undefined,
-    marketingOptIn: clientData.marketingOptIn,
   };
-
-  // Use ClientService to create or update client
-  return await ClientService.createClient({
-    businessId,
-    firstName: sanitizedData.firstName,
-    lastName: sanitizedData.lastName,
-    email: sanitizedData.email,
-    phone: sanitizedData.phone,
-    notes: sanitizedData.notes,
-    marketingOptIn: sanitizedData.marketingOptIn,
-    source: 'public_booking',
-  });
 }
 
 // Create appointment with services
@@ -426,7 +418,7 @@ async function createAppointmentWithServices(
   services: BookedService[],
   totalDuration: number,
   totalPrice: number,
-  notes?: string
+  booked: BookedDetails
 ) {
   const confirmationNumber = generateConfirmationNumber();
 
@@ -449,7 +441,13 @@ async function createAppointmentWithServices(
         status: 'SCHEDULED',
         totalDuration,
         totalPrice,
-        notes,
+        notes: booked.notes,
+        // As typed, beside the client record a booking never edits, so
+        // staff can see when someone booked under an existing client's
+        // email or phone with different details.
+        clientName: `${booked.firstName} ${booked.lastName}`,
+        clientEmail: booked.email,
+        clientPhone: booked.phone,
         // Add confirmation number as internal note for now
         internalNotes: `Confirmation: ${confirmationNumber}`,
       },
@@ -589,11 +587,15 @@ export async function POST(
         validatedData.timeSlot.totalPrice
       );
 
-    // Create or find client
-    const client = await createOrFindClient(
-      params.businessId,
-      validatedData.client
-    );
+    // A booking attaches to an existing client but never edits their record;
+    // everything said back to the person booking uses what they typed.
+    const booked = bookedDetails(validatedData.client);
+    const { client, created: isNewClient } =
+      await ClientService.findOrCreateForBooking({
+        businessId: params.businessId,
+        ...booked,
+        marketingOptIn: validatedData.client.marketingOptIn,
+      });
 
     // Create appointment
     const appointment = await createAppointmentWithServices(
@@ -605,7 +607,7 @@ export async function POST(
       services,
       actualDuration,
       actualPrice,
-      validatedData.client.notes
+      booked
     );
 
     // Invalidate availability cache for real-time updates
@@ -643,10 +645,10 @@ export async function POST(
         title: staff.title || undefined,
       },
       client: {
-        firstName: client.firstName,
-        lastName: client.lastName,
-        email: client.email || '',
-        phone: client.phone || '',
+        firstName: booked.firstName,
+        lastName: booked.lastName,
+        email: booked.email,
+        phone: booked.phone,
       },
       totalDuration: actualDuration,
       totalPrice: actualPrice,
@@ -663,8 +665,8 @@ export async function POST(
     let confirmationSent = false;
     try {
       const emailResult = await emailService.sendBookingConfirmation({
-        customerName: `${client.firstName} ${client.lastName}`,
-        customerEmail: client.email || '',
+        customerName: `${booked.firstName} ${booked.lastName}`,
+        customerEmail: booked.email,
         businessName: business.name,
         serviceName: services.map(s => s.name).join(', '),
         staffName: staff.displayName,
@@ -728,7 +730,7 @@ export async function POST(
           serviceIds: validatedData.services,
           staffId: validatedData.timeSlot.staffId,
           totalAmount: actualPrice,
-          isNewClient: validatedData.client.isNewClient,
+          isNewClient,
         },
         responseTime
       );

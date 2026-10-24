@@ -52,7 +52,6 @@ export interface ClientFormData {
   phone: string;
   notes?: string;
   marketingOptIn: boolean;
-  isNewClient: boolean;
 }
 
 interface BookingConfirmationStepProps {
@@ -181,7 +180,6 @@ export function BookingConfirmationStep({
           email: clientData.email,
           phone: clientData.phone,
           notes: clientData.notes,
-          isNewClient: clientData.isNewClient,
           marketingOptIn: clientData.marketingOptIn,
         },
       };
