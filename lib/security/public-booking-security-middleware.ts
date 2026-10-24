@@ -36,8 +36,7 @@ interface SecurityValidationResult {
 // Security middleware configuration
 interface SecurityMiddlewareConfig {
   requireCSRF: boolean;
-  rateLimiter:
-    'general' | 'availability' | 'clientLookup' | 'bookingCreation' | 'strict';
+  rateLimiter: 'general' | 'availability' | 'bookingCreation' | 'strict';
   sanitizeInput: boolean;
   validateBusiness: boolean;
   auditEvent: PublicBookingAuditEvent;
@@ -479,9 +478,6 @@ class PublicBookingSecurityMiddleware {
       if (pathname.includes('/book')) {
         // Booking request sanitization
         sanitizationResult = sanitizeBookingRequestData(body);
-      } else if (pathname.includes('/client-lookup')) {
-        // Client lookup sanitization
-        sanitizationResult = sanitizeClientBookingData(body);
       } else {
         // Generic sanitization
         sanitizationResult = sanitizeClientBookingData(body);

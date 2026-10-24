@@ -155,7 +155,6 @@ function getApiThreshold(apiName: string): number {
   const thresholds: Record<string, number> = {
     availability: 500,
     book: 1000,
-    'client-lookup': 300,
     'booking-info': 800,
   };
 

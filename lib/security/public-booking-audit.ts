@@ -189,29 +189,6 @@ class PublicBookingAuditLogger {
   }
 
   /**
-   * Log client lookup
-   */
-  async logClientLookup(
-    businessId: string,
-    req: NextRequest,
-    eventData: {
-      lookupType: 'email' | 'phone';
-      clientFound: boolean;
-      clientId?: string;
-    },
-    responseTime?: number
-  ): Promise<void> {
-    await this.logEvent({
-      event: PublicBookingAuditEvent.CLIENT_LOOKUP_PERFORMED,
-      businessId,
-      clientId: eventData.clientId,
-      ...this.extractRequestContext(req),
-      eventData,
-      responseTime,
-    });
-  }
-
-  /**
    * Log booking completion
    */
   async logBookingCompleted(
@@ -661,19 +638,6 @@ export const auditPublicBooking = {
     responseTime?: number
   ) =>
     publicBookingAuditLogger.logAvailabilityCheck(
-      businessId,
-      req,
-      eventData,
-      responseTime
-    ),
-
-  clientLookup: (
-    businessId: string,
-    req: NextRequest,
-    eventData: any,
-    responseTime?: number
-  ) =>
-    publicBookingAuditLogger.logClientLookup(
       businessId,
       req,
       eventData,

@@ -147,14 +147,6 @@ export const publicBookingRateLimiters = {
     message: 'Too many availability requests. Please wait a moment.',
   }),
 
-  // Client lookup (moderate restrictions)
-  clientLookup: new PublicBookingRateLimiter({
-    windowMs: 5 * 60 * 1000, // 5 minutes
-    maxRequests: 20, // 20 requests per 5 minutes per IP
-    message:
-      'Too many client lookup requests. Please wait before trying again.',
-  }),
-
   // Booking creation (most restrictive)
   bookingCreation: new PublicBookingRateLimiter({
     windowMs: 5 * 60 * 1000, // 5 minutes

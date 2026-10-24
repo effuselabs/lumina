@@ -330,8 +330,11 @@ carries its own check and must keep it:
 `POST /api/public/booking/[businessId]/book` cannot require a session — the
 person booking is a stranger. It is guarded by a double-submit CSRF token
 issued by `GET .../csrf-token`, signed with `PUBLIC_BOOKING_CSRF_SECRET`, plus
-per-IP rate limiting. Public booking routes return no client PII: a lookup
-answers "is this a returning client" with a boolean and nothing more.
+per-IP rate limiting. Public booking routes return no client PII and say
+nothing about who is a client. A booking attaches to an existing client
+matched by email or phone without changing that client's record; what the
+person typed is kept on the appointment (`clientName`, `clientEmail`,
+`clientPhone`) and is all the response and confirmation email repeat.
 
 The staff-invite routes must be reachable without a session: a new staff member
 has no account until they accept, so requiring one would deadlock the flow.

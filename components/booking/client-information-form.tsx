@@ -1,6 +1,5 @@
 'use client';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,15 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  AlertCircle,
-  Loader2,
-  Mail,
-  MessageSquare,
-  Phone,
-  User,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Loader2, Mail, MessageSquare, Phone, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -67,25 +58,19 @@ export type ClientFormData = z.infer<typeof clientFormSchema>;
 
 interface ClientInformationFormProps {
   businessId: string;
-  onSubmit: (data: ClientFormData & { isNewClient: boolean }) => void;
+  onSubmit: (data: ClientFormData) => void;
   onBack: () => void;
   isLoading?: boolean;
   initialData?: Partial<ClientFormData>;
 }
 
 /*
- * The lookup reports existence only.
- *
- * It used to return the matched client's name, email and phone, and this form
- * wrote them over whatever the person was typing. Two people who share a phone
- * number — a household, a couple — therefore booked as each other, and the
- * confirmation went to the wrong inbox. It also meant the public booking page
- * would tell anyone who typed a phone number whose it was.
+ * Nothing here asks the server whether the person typing is already a client.
+ * A lookup used to, debounced on email and phone, and greeted returning
+ * clients — which told anyone who typed a phone number whether its owner used
+ * this salon. The booking is matched to an existing client on the server, which
+ * never changes that client's record (ClientService.findOrCreateForBooking).
  */
-interface ClientLookupResponse {
-  clientExists: boolean;
-}
-
 export default function ClientInformationForm({
   businessId,
   onSubmit,
@@ -93,16 +78,10 @@ export default function ClientInformationForm({
   isLoading = false,
   initialData,
 }: ClientInformationFormProps) {
-  const [isLookingUp, setIsLookingUp] = useState(false);
-  const [lookupError, setLookupError] = useState<string | null>(null);
-  const [isNewClient, setIsNewClient] = useState(true);
-  const [lookupPerformed, setLookupPerformed] = useState(false);
-
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
   } = useForm<z.input<typeof clientFormSchema>, unknown, ClientFormData>({
     resolver: zodResolver(clientFormSchema),
     mode: 'onChange',
@@ -116,69 +95,7 @@ export default function ClientInformationForm({
     },
   });
 
-  const watchedEmail = watch('email');
-  const watchedPhone = watch('phone');
-
-  // Debounced client lookup
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if ((watchedEmail || watchedPhone) && !lookupPerformed) {
-        performClientLookup();
-      }
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [watchedEmail, watchedPhone]);
-
-  const performClientLookup = async () => {
-    if ((!watchedEmail && !watchedPhone) || isLookingUp) return;
-
-    setIsLookingUp(true);
-    setLookupError(null);
-
-    try {
-      const response = await fetch(
-        `/api/public/booking/${businessId}/client-lookup`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: watchedEmail || undefined,
-            phone: watchedPhone || undefined,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to lookup client information');
-      }
-
-      const data: ClientLookupResponse = await response.json();
-
-      // Recognition only — the client's own details stay as they typed
-      // them. Their existing record is matched again server-side when the
-      // booking is created.
-      setIsNewClient(!data.clientExists);
-      setLookupPerformed(true);
-    } catch (error) {
-      console.error('Client lookup error:', error);
-      setLookupError(
-        'Unable to check client information. Please continue with your details.'
-      );
-      setIsNewClient(true);
-    } finally {
-      setIsLookingUp(false);
-    }
-  };
-
-  const onFormSubmit = (data: ClientFormData) => {
-    onSubmit({
-      ...data,
-      isNewClient,
-    });
-  };
+  const onFormSubmit = (data: ClientFormData) => onSubmit(data);
 
   return (
     <Card className="mx-auto w-full max-w-2xl">
@@ -187,20 +104,6 @@ export default function ClientInformationForm({
           <User className="h-5 w-5" />
           Your Information
         </CardTitle>
-        {!isNewClient && (
-          <Alert>
-            <User className="h-4 w-4" />
-            <AlertDescription>
-              Welcome back! We recognise you — just confirm your details below.
-            </AlertDescription>
-          </Alert>
-        )}
-        {lookupError && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{lookupError}</AlertDescription>
-          </Alert>
-        )}
       </CardHeader>
 
       <CardContent>
@@ -260,14 +163,8 @@ export default function ClientInformationForm({
                 {...register('email')}
                 placeholder="Enter your email address"
                 className={errors.email ? 'border-red-500' : ''}
-                disabled={isLoading || isLookingUp}
+                disabled={isLoading}
               />
-              {isLookingUp && watchedEmail && (
-                <div className="flex items-center gap-2 text-sm text-ink-soft">
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                  Checking for existing account...
-                </div>
-              )}
               {errors.email && (
                 <p className="text-sm text-red-600" role="alert">
                   {errors.email.message}
@@ -289,14 +186,8 @@ export default function ClientInformationForm({
                 {...register('phone')}
                 placeholder="Enter your phone number"
                 className={errors.phone ? 'border-red-500' : ''}
-                disabled={isLoading || isLookingUp}
+                disabled={isLoading}
               />
-              {isLookingUp && watchedPhone && (
-                <div className="flex items-center gap-2 text-sm text-ink-soft">
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                  Checking for existing account...
-                </div>
-              )}
               {errors.phone && (
                 <p className="text-sm text-red-600" role="alert">
                   {errors.phone.message}
@@ -361,7 +252,7 @@ export default function ClientInformationForm({
             <div className="flex flex-1 gap-3">
               <Button
                 type="submit"
-                disabled={!isValid || isLoading || isLookingUp}
+                disabled={!isValid || isLoading}
                 className="w-full sm:flex-1"
               >
                 {isLoading ? (
