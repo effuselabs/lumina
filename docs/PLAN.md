@@ -850,6 +850,17 @@ time, after the booking loop works.
   and search ([#105](https://github.com/effuselabs/lumina/issues/105)) are
   their own work.
 
+- ~~**The home page reported results and quoted a customer, neither real.**~~
+  **Fixed** ([#128](https://github.com/effuselabs/lumina/issues/128)),
+  decided by Jeremy on 2026-10-24. "24% average revenue increase", "8.5 hours
+  saved weekly" and "89% client retention rate", shown twice, and a quote
+  from "Sarah Chen, Owner, Bloom Beauty Salon" — with no customers yet. The
+  "See the impact in action" section is gone; where the figures first
+  appeared, the page now says what Lumina does today.
+  `__tests__/app/home-page-claims.test.ts` fails if a percentage, an hours
+  figure, a stat card or a quotation returns. The rest of the page's copy is
+  [#127](https://github.com/effuselabs/lumina/issues/127)'s.
+
 - ~~**There is no `error.tsx` anywhere in `app/`.**~~ **Fixed**
   ([#57](https://github.com/effuselabs/lumina/issues/57)). A failing page now
   shows a branded message with "Try again", a way back, and the error's
