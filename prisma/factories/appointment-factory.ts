@@ -6,6 +6,7 @@ import { faker } from '@faker-js/faker';
 import { Appointment, AppointmentStatus, PrismaClient } from '@prisma/client';
 import { BaseFactory } from './base-factory';
 import { BookingPatterns, BookingSource, ValidationResult } from './types';
+import { DateTime } from 'luxon';
 
 export interface AppointmentProfile {
   clientId: string;
@@ -60,6 +61,12 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
     category: string | null;
   }> = [];
   private patterns: BookingPatterns;
+  /**
+   * The salon's zone. Appointment times are its wall clock: `setHours` used
+   * the server's, so on a UTC server a 9-to-6 day was written as 2 to 11 AM
+   * in Los Angeles (#134).
+   */
+  private timezone = 'UTC';
 
   constructor(
     prisma: PrismaClient,
@@ -75,6 +82,12 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
    */
   async initialize(): Promise<void> {
     console.log('🔧 Initializing AppointmentFactory...');
+
+    const business = await this.prisma.business.findUnique({
+      where: { id: this.businessId },
+      select: { timezone: true },
+    });
+    this.timezone = business?.timezone || 'UTC';
 
     // Load clients
     const clientsData = await this.prisma.client.findMany({
@@ -260,7 +273,11 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
     date: Date,
     staff: { id: string; displayName: string; workingHours: any }
   ): { startTime: Date; endTime: Date } {
-    const dayName = this.getDayName(date.getDay());
+    // The calendar day `date` names, read the way generateAppointmentDate
+    // built it (the process's local calendar), then placed on the salon's
+    // clock below.
+    const day = DateTime.fromJSDate(date);
+    const dayName = this.getDayName(day.weekday % 7);
     const staffSchedule = staff.workingHours?.[dayName];
 
     let startHour: number;
@@ -297,8 +314,16 @@ export class AppointmentFactory extends BaseFactory<Appointment> {
     // Generate realistic appointment times (on the hour, half hour, or quarter hour)
     const startMinute = faker.helpers.arrayElement([0, 15, 30, 45]);
 
-    const startTime = new Date(date);
-    startTime.setHours(startHour, startMinute, 0, 0);
+    const startTime = DateTime.fromObject(
+      {
+        year: day.year,
+        month: day.month,
+        day: day.day,
+        hour: startHour,
+        minute: startMinute,
+      },
+      { zone: this.timezone }
+    ).toJSDate();
 
     // Calculate end time based on service duration (will be updated after service selection)
     const endTime = new Date(startTime);

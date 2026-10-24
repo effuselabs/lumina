@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
+import { DateTime } from 'luxon';
 import { brand } from '../lib/design/tokens';
 import {
   initializeSeedSystem,
@@ -524,18 +525,21 @@ async function main() {
   // Create a few future appointments for demo purposes
   console.log('📅 Creating future appointments for demo...');
 
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const nextWeek = new Date(now);
-  nextWeek.setDate(nextWeek.getDate() + 7);
+  // On the salon's clock: `setHours` used the server's, and a UTC server put
+  // "tomorrow at 10" at 3 AM in Los Angeles (#134).
+  const salonTime = (daysAhead: number, hour: number) =>
+    DateTime.fromJSDate(now)
+      .setZone(demoBusiness.timezone)
+      .plus({ days: daysAhead })
+      .set({ hour, minute: 0, second: 0, millisecond: 0 })
+      .toJSDate();
 
   const futureAppointments = [
     {
       clientId: createdClients[0]!.id,
       staffId: staff1!.id,
-      startTime: new Date(tomorrow.setHours(10, 0, 0, 0)),
-      endTime: new Date(tomorrow.setHours(11, 0, 0, 0)),
+      startTime: salonTime(1, 10),
+      endTime: salonTime(1, 11),
       totalDuration: 60,
       totalPrice: 85.0,
       status: 'SCHEDULED' as const,
@@ -544,8 +548,8 @@ async function main() {
     {
       clientId: createdClients[1]!.id,
       staffId: staff2!.id,
-      startTime: new Date(nextWeek.setHours(14, 0, 0, 0)),
-      endTime: new Date(nextWeek.setHours(15, 0, 0, 0)),
+      startTime: salonTime(7, 14),
+      endTime: salonTime(7, 15),
       totalDuration: 60,
       totalPrice: 45.0,
       status: 'SCHEDULED' as const,
