@@ -36,9 +36,13 @@ env:
   NODE_VERSION: '22'
 
 jobs:
+  # Every job has a timeout. GitHub's default is six hours, and on 2026-10-24
+  # a browser install hung for 27 minutes until it was cancelled by hand.
+  # Each limit is about five times the job's usual length.
   verify:
     name: Type-check, lint, test, build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -92,6 +96,7 @@ jobs:
   migrations:
     name: Migrations apply cleanly and match the schema
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     services:
       postgres:
@@ -148,6 +153,7 @@ jobs:
   e2e:
     name: Booking loop (end to end)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     # The definition of done for the current milestone: a stranger opens the
     # public booking page, picks a service and a slot, enters their details, and
@@ -193,6 +199,7 @@ jobs:
         run: npx prisma migrate deploy && npm run db:seed
 
       - name: Install Playwright browsers
+        timeout-minutes: 10
         # Only the two projects the config declares. --with-deps pulls the
         # system libraries WebKit needs on a bare runner.
         run: npx playwright install --with-deps chromium webkit
@@ -217,6 +224,7 @@ jobs:
   visual:
     name: Pages look the way they did (visual)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     # Screenshots of the main pages in both themes, compared with the baselines
     # in e2e/__screenshots__. Pixels depend on fonts and the browser build, so
@@ -303,6 +311,7 @@ jobs:
     needs: visual
     if: failure() && needs.visual.result == 'failure' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
