@@ -1,7 +1,7 @@
 'use client';
 
 import { useThemeSwitcher } from '@/hooks/use-theme-switcher';
-import { Building2, Moon, Sun } from 'lucide-react';
+import { Building2, LogOut, Moon, Sun } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { MobileMenuButton } from './sidebar-navigation';
 
@@ -20,10 +20,6 @@ export function DashboardHeader({
   businessSlug: _businessSlug,
   onMenuToggle,
 }: DashboardHeaderProps) {
-  const _handleSignOut = () => {
-    signOut({ callbackUrl: '/auth/signin' });
-  };
-
   return (
     <header className="flex items-center justify-between gap-4 border-b border-line bg-surface px-4 py-3 sm:px-6">
       <div className="flex items-center gap-4">
@@ -49,6 +45,7 @@ export function DashboardHeader({
       {/* Header Actions */}
       <div className="flex items-center gap-1">
         <ThemeToggle />
+        <SignOutButton />
       </div>
     </header>
   );
@@ -68,6 +65,24 @@ function ThemeToggle() {
       title={label}
     >
       {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+    </button>
+  );
+}
+
+/**
+ * Ends the session. The handler existed and nothing rendered it, so there was
+ * no way to sign out of a shared salon device (#136). Icon-only on a phone,
+ * where the header is narrow; the accessible name is the same everywhere.
+ */
+function SignOutButton() {
+  return (
+    <button
+      type="button"
+      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg px-2.5 text-sm font-medium text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+    >
+      <LogOut className="h-5 w-5" aria-hidden="true" />
+      <span className="sr-only sm:not-sr-only">Sign out</span>
     </button>
   );
 }
