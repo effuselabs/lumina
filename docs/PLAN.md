@@ -880,6 +880,24 @@ time, after the booking loop works.
   and sets the DSN on Railway, and a deliberate error on staging proves
   events arrive.
 
+  **The code side is done.** `instrumentation.ts` initialises the server and
+  edge SDKs from `SENTRY_DSN` at runtime and reports uncaught request errors;
+  the browser gets the same DSN inlined at build and loads the SDK lazily, so
+  a build without one ships none of it (first-load JS unchanged); the error
+  screens report what their boundary caught, except server errors, which were
+  reported where they happened. Errors only, `sendDefaultPii: false`. The
+  old `sentry.*.config.js` files are deleted: never loaded, and the browser
+  one called `new Sentry.Replay`, a Sentry 7 API that would have thrown.
+  Checked against a local listener standing in for Sentry: a thrown route
+  handler and a failed client render each arrived once, tagged with
+  `SENTRY_ENVIRONMENT`, with no user or IP.
+
+  **Still to do, and the larger part:** 56 route handlers catch their own
+  errors and answer 500 with a `console.error`, so Sentry never sees them —
+  uncaught errors are the minority. They need one shared way to report a
+  caught failure. A Content-Security-Policy (#70) will need Sentry's ingest
+  host in `connect-src`.
+
 - **No `Strict-Transport-Security` or `Content-Security-Policy` header.** ([#70](https://github.com/effuselabs/lumina/issues/70))
   `next.config.js` sets `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy` and `Permissions-Policy`, and staging serves them; it sets

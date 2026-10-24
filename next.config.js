@@ -79,6 +79,11 @@ const nextConfig = {
     NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    // The browser reports to the same Sentry project as the server, from one
+    // variable (#100). A DSN is public by design: it only accepts events.
+    NEXT_PUBLIC_SENTRY_DSN: process.env.SENTRY_DSN || '',
+    NEXT_PUBLIC_SENTRY_ENVIRONMENT:
+      process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || '',
   },
 
   // Security headers
@@ -159,27 +164,17 @@ const nextConfig = {
   },
 };
 
-// Sentry configuration options
-const sentryWebpackPluginOptions = {
-  // Additional config options for the Sentry Webpack plugin
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-
-  // Only upload source maps in production
-  silent: process.env.NODE_ENV !== 'production',
-
-  // Upload source maps during build
-  widenClientFileUpload: true,
-
-  // Automatically tree-shake Sentry logger statements
-  hideSourceMaps: true,
-
-  // Disable source map upload in development
-  disableLogger: process.env.NODE_ENV === 'development',
-};
-
-// Export the configuration with Sentry
-module.exports = process.env.SENTRY_DSN
-  ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
-  : nextConfig;
+// Sentry's build plugin uploads source maps, so a reported stack trace names
+// our files and lines rather than minified chunks. It needs an auth token;
+// error reporting itself does not (instrumentation.ts), so without one the
+// build is left alone.
+module.exports =
+  process.env.SENTRY_DSN && process.env.SENTRY_AUTH_TOKEN
+    ? withSentryConfig(nextConfig, {
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        silent: true,
+        widenClientFileUpload: true,
+      })
+    : nextConfig;
