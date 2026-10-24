@@ -38,16 +38,20 @@ how "MVP 86% complete" and 0% coverage coexisted for months.
 
 ## Status
 
-| Phase                                            | State                                  |
-| ------------------------------------------------ | -------------------------------------- |
-| 0 — Ground truth                                 | Done                                   |
-| 1 — Unblock and demolish                         | Done                                   |
-| 2 — Foundation (`CLAUDE.md`, auth, tokens, lint) | Done                                   |
-| 3 — Environments and pipeline                    | Done — `staging.uselumina.app` healthy |
-| 4 — Make the booking loop work                   | Done                                   |
-| **5 — Design system collapse**                   | **Next**                               |
-| 6 — Brand assets, releases, production launch    | Not started — see Releases             |
-| 7 — Ratchet and expand                           | Not started                            |
+| Phase                                            | State                                      |
+| ------------------------------------------------ | ------------------------------------------ |
+| 0 — Ground truth                                 | Done                                       |
+| 1 — Unblock and demolish                         | Done                                       |
+| 2 — Foundation (`CLAUDE.md`, auth, tokens, lint) | Done                                       |
+| 3 — Environments and pipeline                    | Done — `staging.uselumina.app` healthy     |
+| 4 — Make the booking loop work                   | Done                                       |
+| 5 — Design system collapse                       | Collapse done; its open bugs remain        |
+| **6 — UI/UX rebuild**                            | **Next** — added 2026-10-24                |
+| 7 — Brand assets, releases, production launch    | Not started — see Releases and brand voice |
+| 8 — Ratchet and expand                           | Not started                                |
+
+Phase 6 was inserted on 2026-10-24, and what had been 6 and 7 moved down
+one; GitHub's milestones were renamed to match.
 
 ### Phase 4 — done
 
@@ -70,7 +74,7 @@ staff member and client.
       **495 tests, 35 suites**, and tenant isolation went from untested to
       enforced by a gate that fails the build for any new unguarded route
 
-### Phase 5 — the demolition is done; the collapse is next
+### Phase 5 — the collapse is done
 
 Deleting 133 test files removed the only importer many components had, and
 what that exposed was larger than the phase originally assumed: 85 of 187
@@ -337,11 +341,97 @@ gates decide, and `npm run db:seed` runs by hand on anything near
      product decision; it returns with its own spec (see _Parked_).
    - knip reports nothing.
 
+What remains in the Phase 5 milestone is bugs and features that are not
+design work: [#118](https://github.com/effuselabs/lumina/issues/118),
+[#120](https://github.com/effuselabs/lumina/issues/120),
+[#123](https://github.com/effuselabs/lumina/issues/123),
+[#124](https://github.com/effuselabs/lumina/issues/124),
+[#104](https://github.com/effuselabs/lumina/issues/104) and
+[#105](https://github.com/effuselabs/lumina/issues/105). The design reviews
+it raised moved to Phase 6.
+
+### Phase 6 — UI/UX rebuild
+
+Decided by Jeremy on 2026-10-24 ([#126](https://github.com/effuselabs/lumina/issues/126)):
+tear the interface down and rebuild it — tokens, components, colour use and
+motion — so that it feels modern and works on every device, from a phone at
+the front desk to a wide monitor. The reference he named is
+[Arcane](https://getarcane.app), a Docker manager.
+
+**Why rebuild rather than keep fixing.** Phase 5 carried every value across at
+its old value, on purpose: it made the design system one thing without
+redesigning it. The reviews it surfaced share one cause — a palette and
+components drawn for a light marketing page, stretched over a dense app and
+then a dark theme. Coral that fails as text
+([#66](https://github.com/effuselabs/lumina/issues/66)), a salon's colour
+that vanishes on dark ([#67](https://github.com/effuselabs/lumina/issues/67)),
+pastel boxes that glare ([#68](https://github.com/effuselabs/lumina/issues/68)),
+a home page with no dark design ([#69](https://github.com/effuselabs/lumina/issues/69)),
+a booking step squeezed at desktop width
+([#94](https://github.com/effuselabs/lumina/issues/94)), heading classes
+never defined ([#117](https://github.com/effuselabs/lumina/issues/117)), a
+sidebar that stops partway down ([#125](https://github.com/effuselabs/lumina/issues/125)).
+Each could be patched; together they say the design itself needs doing.
+
+**What Phase 5 leaves it:** one token source generating the CSS and Tailwind
+config, contrast gates, 37 primitives in a fully reachable tree, a dark theme
+that works, and screenshot tests in both themes. The rebuild changes what the
+tokens say, not where they live; every rule in `CLAUDE.md` still holds.
+
+**Decisions it starts from** (Jeremy, 2026-10-24):
+
+- Dark mode is required, and may become the default.
+- Whether salons pick colours at all is open: a logo upload may serve a
+  salon's brand better than its colour applied to text (#67).
+- Coral as text is fixed in the new palette, not patched first (#66).
+- Booking takes the fewest clicks with the richest options — a rethink of the
+  flow, not a re-layout of today's steps (#94).
+
+**Steps**, each its own pull requests:
+
+1. **Direction.** Screenshots of every screen as it stands, both themes,
+   phone to desktop; a study of the reference; then one direction — type
+   scale, colour roles, density, spacing, radius, elevation, motion — with
+   Jeremy's calls named. Jeremy suggested reviewing it from several angles at
+   once (UX, front end, system design, security); the output is one direction
+   with screenshots of key screens, not four reports.
+2. **Tokens.** The new values in `lib/design/tokens.ts`, with `contrastPairs`
+   for every text role in both themes.
+3. **Primitives.** The 37 rebuilt against them, catalogued on the
+   design-system page and under visual test.
+4. **The app shell** — navigation, header, sidebar — from 360px up.
+5. **Screens**, one at a time, busiest first: public booking, dashboard,
+   calendar, clients, staff, services, settings, onboarding, sign-in. The home
+   page last, with Phase 7's voice work, since its words need redoing as much
+   as its layout.
+6. **Motion** throughout: brief, purposeful, and off under
+   `prefers-reduced-motion`.
+
+Pale tints (#68) and the heading classes (#117) are fixed in the components
+that carry them, as each is rebuilt, rather than patched first and replaced
+later.
+
+**Done when** every screen is rebuilt with its baselines re-approved, AA holds
+in both themes, nothing scrolls sideways from 360px to 1920px, and the booking
+loop is green. A new dependency — an animation library, say — is Jeremy's
+call under `CLAUDE.md`, so the direction says which, if any, it needs.
+
+### Phase 7 — brand voice
+
+Releases and the image are under _Releases_ below. Added 2026-10-24: a
+**brand voice and writing style** ([#127](https://github.com/effuselabs/lumina/issues/127))
+— how Lumina speaks in its marketing and product copy, and whether the guide
+is shared with Effuse Labs, in which case it defines the company and its
+products alike. The brand guide's visual half is generated from `tokens.ts`;
+this is the half that is not. The home page is its first test: it still
+promises a 14-day free trial, "AI-powered" insights, priority support and
+launch pricing, none of which exist.
+
 ---
 
 ## Releases — build before the first one is cut
 
-**When:** Phase 6, after the clean-up and once features work end to end — not
+**When:** Phase 7, after the clean-up and once features work end to end — not
 before. There is nothing worth versioning until a salon could use it. But the
 first release should go out through this pipeline rather than by hand, so it
 is built ahead of that release, not after.
@@ -444,12 +534,20 @@ why the history starts where it does. The key was revoked regardless.
   Without one, every contributor holds copyright in their own work under AGPL,
   and relicensing later means tracking each of them down individually. Adding
   one on day one costs a bot and a file; retrofitting it can be impossible.
+  **Decided by Jeremy on 2026-10-24: yes, now.** It reverses
+  `CONTRIBUTING.md`'s "we will ask contributors then"; the agreement's text
+  is a licensing document, so it merges on his approval.
 - **Self-hosting instructions.** ([#76](https://github.com/effuselabs/lumina/issues/76)) `docs/environments.md` documents _our_ Railway
   staging, not a stranger's deployment. Registration is closed by default now
   (`ALLOW_PUBLIC_SIGNUP`), with a first-account bootstrap so a fresh install is
   usable — that behaviour needs writing down where a self-hoster will find it.
-- **A statement of what is free and what is paid**, so the boundary is not
-  something people have to infer. ([#78](https://github.com/effuselabs/lumina/issues/78))
+- ~~**A statement of what is free and what is paid**, so the boundary is not
+  something people have to infer.~~ **Done**
+  ([#78](https://github.com/effuselabs/lumina/issues/78)), approved by Jeremy
+  on 2026-10-24. The README now says: "Lumina is free to self-host under the
+  AGPL. We plan to offer paid managed hosting and support for salons that
+  would rather not run it themselves." It used to say managed hosting was
+  already offered.
 - An organisation profile README for `effuselabs`. ([#79](https://github.com/effuselabs/lumina/issues/79))
 
 **AGPL's obligations reach across the network**, and that applies to us: our
@@ -464,7 +562,7 @@ Two triggers, and only two:
 1. **A CVE affecting production.** Pull it forward immediately, whatever phase
    we are in. The number that matters is prod high/critical CVEs — 16 at the
    start, 2 now (1 direct) — not whether a newer version exists.
-2. **Phase 7**, where a full review happens deliberately: majors surveyed,
+2. **Phase 8**, where a full review happens deliberately: majors surveyed,
    upgraded in small reviewable PRs, each verified by the five gates.
 
 Everything else waits. A version bump has no observable outcome — the booking
@@ -477,7 +575,7 @@ smallest line that fixed them. The lesson is in the first trigger's wording —
 the count that matters is the one `npm audit --omit=dev` prints _today_. It
 drifted from 2 to 5 high/critical between 2026-09-06 and 2026-09-29 without
 any change on our side, and nothing noticed, so the trigger is now a workflow
-rather than a sentence. `next@16` itself remains Phase 7 work. ([#83](https://github.com/effuselabs/lumina/issues/83))
+rather than a sentence. `next@16` itself remains Phase 8 work. ([#83](https://github.com/effuselabs/lumina/issues/83))
 
 **Build-time packages belong in `devDependencies`**, or the production audit
 counts them. On 2026-10-03 GHSA-vfj7-8cjw-p6xm (`braces`, no fix available)
@@ -489,7 +587,7 @@ pulled all of Tailwind's tree into the production count. Moving it to
 **Do not upgrade to a release candidate.** The Prisma CLI currently advertises
 `8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
 three majors, and taking it mid-rebuild trades a working stack for an
-unsupported one. Revisit when 8.x is stable, in Phase 7.
+unsupported one. Revisit when 8.x is stable, in Phase 8.
 
 ## Tooling: when to add plugins
 
@@ -497,11 +595,11 @@ Three plugins are available and none are enabled. Deliberately — capability
 arriving ahead of the work it serves is how this project accumulated 335
 documents.
 
-| Plugin        | When                        | Why                                                                                                                                                                                                                                                 |
-| ------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `design`      | **Phase 5**                 | `/design:ux-copy` for empty states, errors and confirmation copy; `/design:critique` on the booking flow once it works. Skip `/design:handoff` (needs Figma files we don't have) and `/design:research-synthesis` (needs research we haven't done). |
-| `brand-voice` | **Phase 6**, if needed      | Only for the voice-and-tone section of the brand guide — the one part not generated from `lib/design/tokens.ts`.                                                                                                                                    |
-| `marketing`   | **After production launch** | SEO, campaigns and competitor analysis all presume customers and content. Neither exists yet.                                                                                                                                                       |
+| Plugin        | When                        | Why                                                                                                                                                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `design`      | **Phase 6**                 | `/design:ux-copy` for empty states, errors and confirmation copy; `/design:critique` on each rebuilt screen, the booking flow first. Skip `/design:handoff` (needs Figma files we don't have) and `/design:research-synthesis` (needs research we haven't done). |
+| `brand-voice` | **Phase 7**                 | Wanted ([#127](https://github.com/effuselabs/lumina/issues/127)) for the voice-and-tone guide — the one part not generated from `lib/design/tokens.ts`.                                                                                                          |
+| `marketing`   | **After production launch** | SEO, campaigns and competitor analysis all presume customers and content. Neither exists yet.                                                                                                                                                                    |
 
 **The rule that makes these safe:** any audit output must become a test or a
 lint rule, never a document. `/design:accessibility` produces a _report_; our
@@ -751,13 +849,16 @@ time, after the booking loop works.
   initialises from `instrumentation.ts`, which does not exist, so
   `sentry.server.config.js` never runs; the browser config reads a DSN that
   is never sent to the browser; and `withSentryConfig` applies only when
-  `SENTRY_DSN` is set at build. No error reaches Sentry. Whether there is a
-  Sentry project, and who it alerts, is Jeremy's call.
+  `SENTRY_DSN` is set at build. No error reaches Sentry. Decided by Jeremy on
+  2026-10-24: yes, for error tracking; no account exists yet. The code side
+  comes first and stays inert without a DSN; then Jeremy creates the project
+  and sets the DSN on Railway, and a deliberate error on staging proves
+  events arrive.
 
 - **No `Strict-Transport-Security` or `Content-Security-Policy` header.** ([#70](https://github.com/effuselabs/lumina/issues/70))
   `next.config.js` sets `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy` and `Permissions-Policy`, and staging serves them; it sets
-  neither HSTS nor a CSP. Worth adding before production (Phase 6) — a CSP in
+  neither HSTS nor a CSP. Worth adding before production (Phase 7) — a CSP in
   report-only mode first, since inline styles are in use.
 
 - ~~**`npm run db:seed` is not idempotent.**~~ **Fixed.** A second run
@@ -906,13 +1007,16 @@ time, after the booking loop works.
   - Checked, nothing found: GitHub deploy keys, security log, branches,
     commits and workflow runs since 2026-10-20.
 
-  Staging is down until Railway re-enables Hobby builds: the database has the
-  new password and the running app the old one. When it redeploys, confirm
-  `/api/health`, a sign-in and a booking. `CRON_SECRET` and
-  `PUBLIC_BOOKING_CSRF_SECRET` were never set on staging; both fail safe, but
-  give each its own value. Auditing the secrets turned up a CSRF helper with
-  a built-in fallback secret, unreachable today
-  ([#121](https://github.com/effuselabs/lumina/issues/121)).
+  Staging was down until Railway re-enabled Hobby builds, and resuming them
+  did not redeploy it; `deploy.yml`, dispatched by hand on 2026-10-23, did.
+  Checked then: `/api/health` healthy, an owner sign-in, the rebuilt
+  dashboard, a public booking (201), and a booking without its CSRF token
+  refused (403). That paused build is also why #114 and #116 had not
+  deployed. Health reports `commit: "unknown"` after a CLI deploy.
+  `CRON_SECRET` and `PUBLIC_BOOKING_CSRF_SECRET` were never set on staging;
+  both fail safe, but give each its own value. Auditing the secrets turned up
+  a CSRF helper with a built-in fallback secret, unreachable
+  ([#121](https://github.com/effuselabs/lumina/issues/121), fixed in #122).
 
 - ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
   service has since migrated to Infrastructure as Code entirely. The service's
@@ -1093,3 +1197,7 @@ time, after the booking loop works.
   - There is no admin role. Several endpoints are application-wide by nature
     and are currently open to any authenticated user. Worth a decision before
     real customers. ([#72](https://github.com/effuselabs/lumina/issues/72))
+    Clarified 2026-10-24: a platform administrator runs a whole deployment,
+    one salon or many, and is not a salon role. Proposed: a
+    `PLATFORM_ADMIN_EMAILS` allow-list checked by one guard, starting with
+    `/api/monitoring/alerts`, and a real role when there is an admin screen.

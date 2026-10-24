@@ -7,9 +7,8 @@ salon's public booking page, picks a service and a time that is genuinely
 available, books, and the appointment lands on the owner's calendar with both
 parties emailed. Every business's data is isolated from every other's.
 
-Self-hosting is free and always will be. If you would rather not run it
-yourself, [Effuse Labs](https://effuse.io) offers managed hosting and
-support — that is where the money comes from, not from restricting the code.
+Lumina is free to self-host under the AGPL. We plan to offer paid managed
+hosting and support for salons that would rather not run it themselves.
 
 ---
 
