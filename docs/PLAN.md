@@ -1241,6 +1241,10 @@ time, after the booking loop works.
     and are currently open to any authenticated user. Worth a decision before
     real customers. ([#72](https://github.com/effuselabs/lumina/issues/72))
     Clarified 2026-10-24: a platform administrator runs a whole deployment,
-    one salon or many, and is not a salon role. Proposed: a
-    `PLATFORM_ADMIN_EMAILS` allow-list checked by one guard, starting with
-    `/api/monitoring/alerts`, and a real role when there is an admin screen.
+    one salon or many, and is not a salon role. First proposed as an
+    allow-list of email addresses in the environment, and withdrawn: nothing
+    verifies an email address, so whoever registers a listed address first
+    would become an administrator. Proposed instead: a flag on the user,
+    granted only from the command line, guarding `/api/monitoring/alerts` and
+    `/api/notifications/health` (system-wide queue health, open to any
+    signed-in user). Waiting on Jeremy.
