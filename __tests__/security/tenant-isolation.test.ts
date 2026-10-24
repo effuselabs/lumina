@@ -18,9 +18,14 @@ import { join, relative, sep } from 'path';
 
 const API_ROOT = join(process.cwd(), 'app', 'api');
 
-/** Every mechanism that establishes the caller belongs to the business. */
+/**
+ * Every mechanism that establishes the caller may see what a route returns:
+ * that they belong to the business, or — for the few routes about the system
+ * rather than any one salon — that they run the platform (#72).
+ */
 const GUARDS = [
   'authorizeBusinessAccess', // the one new routes should use
+  'authorizePlatformAdmin', // application-wide routes only
   'requireBusinessAccess',
   'requireBusinessOwner',
   'requireBusinessManager',
@@ -99,16 +104,15 @@ describe('tenant isolation', () => {
   });
 
   /*
-   * A route needs a guard if it names a business or reads the database.
-   * Keying on `businessId` alone missed `/api/booking/[id]`, which loads an
-   * appointment by its own id: any signed-in user of any salon could read,
-   * reschedule or cancel any other salon's appointment.
+   * Every route behind sign-in needs a guard. Keying on `businessId` missed
+   * `/api/booking/[id]`, which loads an appointment by its own id: any
+   * signed-in user of any salon could read, reschedule or cancel any other
+   * salon's appointment. Keying on `businessId` or `prisma.` then missed
+   * `/api/monitoring/alerts` and `/api/notifications/health`, which read
+   * in-memory monitors and showed every salon's alerts to anyone signed in
+   * (#72). A session proves someone is signed in, never what they may see.
    */
-  const needsGuard = routes.filter(
-    route =>
-      !isPublicRoute(route.pathname) &&
-      (route.source.includes('businessId') || route.source.includes('prisma.'))
-  );
+  const needsGuard = routes.filter(route => !isPublicRoute(route.pathname));
 
   it('has authenticated routes that take a businessId', () => {
     expect(needsGuard.length).toBeGreaterThan(0);
@@ -122,7 +126,7 @@ describe('tenant isolation', () => {
   );
 
   it.each(mustBeGuarded.map(r => [r.pathname, r] as const))(
-    '%s verifies the caller belongs to the business',
+    '%s verifies the caller may see what it returns',
     (_pathname, route) => {
       const guarded = GUARDS.some(guard => route.source.includes(guard));
 

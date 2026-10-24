@@ -1237,14 +1237,18 @@ time, after the booking loop works.
     it does not scope by business. The check stops a stranger asking; it does
     not yet make the answer theirs. Scoping the report is real work with no
     consumer today, since nothing calls the endpoint. ([#73](https://github.com/effuselabs/lumina/issues/73))
-  - There is no admin role. Several endpoints are application-wide by nature
-    and are currently open to any authenticated user. Worth a decision before
-    real customers. ([#72](https://github.com/effuselabs/lumina/issues/72))
-    Clarified 2026-10-24: a platform administrator runs a whole deployment,
-    one salon or many, and is not a salon role. First proposed as an
-    allow-list of email addresses in the environment, and withdrawn: nothing
-    verifies an email address, so whoever registers a listed address first
-    would become an administrator. Proposed instead: a flag on the user,
-    granted only from the command line, guarding `/api/monitoring/alerts` and
-    `/api/notifications/health` (system-wide queue health, open to any
-    signed-in user). Waiting on Jeremy.
+  - ~~There is no admin role. Several endpoints are application-wide by
+    nature and are currently open to any authenticated user.~~ **Fixed**
+    ([#72](https://github.com/effuselabs/lumina/issues/72)), decided by Jeremy
+    on 2026-10-24. A platform administrator runs a whole deployment, one
+    salon or many, and is not a salon role. An allow-list of email addresses
+    was proposed first and withdrawn — nothing verifies an address, so
+    whoever registered a listed one first would have become admin. Instead
+    the role is `UserRole.SUPER_ADMIN`, which existed unused, granted only
+    from the command line (`npm run admin:grant`, `docs/environments.md`).
+    `authorizePlatformAdmin` reads it from the database on every request, so
+    revoking is immediate. `/api/monitoring/alerts` and
+    `/api/notifications/health` answer only an administrator. The tenant
+    isolation gate missed both because it looked only at routes naming a
+    business or reading Prisma, and these read in-memory monitors; it now
+    requires a guard on every route behind sign-in.

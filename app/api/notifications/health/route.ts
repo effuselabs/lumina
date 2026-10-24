@@ -9,16 +9,23 @@
  * - Active alerts
  */
 
-import { NextResponse } from 'next/server';
+import { authorizePlatformAdmin } from '@/lib/auth/platform-admin';
 import { emailQueueMonitor } from '@/lib/email/monitoring';
+import { NextResponse } from 'next/server';
 
 /**
  * GET /api/notifications/health
- * Get notification system health status
- * Public endpoint for monitoring systems
+ *
+ * The email queue across every salon on this deployment, so it answers only
+ * a platform administrator (#72). It was described as a public endpoint for
+ * monitoring systems, but middleware never listed it as public, so it served
+ * any signed-in user of any salon. An uptime monitor wants `/api/health`.
  */
 export async function GET() {
   try {
+    const access = await authorizePlatformAdmin();
+    if (!access.ok) return access.response;
+
     // Get health summary
     const healthSummary = await emailQueueMonitor.getHealthSummary();
 
