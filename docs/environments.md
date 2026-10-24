@@ -239,6 +239,16 @@ you set a `Reply-To` of `@uselumina.app` later.
 Create a project (platform: Next.js) and copy its DSN. Only staging and
 production set `SENTRY_DSN`; local leaves it blank, which disables Sentry.
 
+- The server reads `SENTRY_DSN` at runtime (`instrumentation.ts`). The browser
+  gets the same value inlined at build (`next.config.js`), so redeploy after
+  setting it.
+- Set `SENTRY_ENVIRONMENT=staging` on staging. Railway's environment there is
+  called `production`, and `NODE_ENV` is too, so without it staging's errors
+  are tagged production.
+- Errors only: no performance tracing, no session replay.
+- Optional: `SENTRY_AUTH_TOKEN` and `SENTRY_ORG` upload source maps at build,
+  so stack traces name source files rather than minified chunks.
+
 ### 5. GitHub
 
 Repository **Settings → Secrets and variables → Actions**:

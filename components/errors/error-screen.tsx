@@ -1,8 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { reportCaughtError } from '@/lib/monitoring/client-error-reporting';
 import { AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 interface ErrorScreenProps {
   /** From Next's error boundary. `digest` is set for server errors. */
@@ -20,8 +22,13 @@ interface ErrorScreenProps {
  * server log, so a reported reference finds the log line. The message itself
  * is never shown: a server error's message is replaced in production, and a
  * client error's can carry details a visitor should not see.
+ *
+ * A boundary that catches an error also stops it reaching the browser's
+ * global handlers, so it is reported from here.
  */
 export function ErrorScreen({ error, reset, home }: ErrorScreenProps) {
+  useEffect(() => reportCaughtError(error), [error]);
+
   return (
     <main className="flex min-h-[60vh] items-center justify-center px-4 py-16">
       <div role="alert" className="max-w-md text-center">
