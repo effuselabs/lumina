@@ -783,7 +783,7 @@ export async function POST(
               'Verify all required fields are filled',
               'Refresh the page and try again',
             ],
-            details: error.errors,
+            details: error.issues,
           },
         },
         request,

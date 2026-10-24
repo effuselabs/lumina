@@ -39,7 +39,7 @@ interface StaffAvailabilityResult {
 }
 
 // Validation schemas for JSON data
-const OperatingHoursSchema = z.record(
+const OperatingHoursSchema = z.partialRecord(
   z.enum([
     'monday',
     'tuesday',
@@ -56,7 +56,7 @@ const OperatingHoursSchema = z.record(
   })
 );
 
-const WorkingHoursSchema = z.record(
+const WorkingHoursSchema = z.partialRecord(
   z.enum([
     'monday',
     'tuesday',

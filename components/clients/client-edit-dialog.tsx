@@ -88,7 +88,11 @@ export function ClientEditDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [staff, setStaff] = useState<Staff[]>([]);
 
-  const form = useForm<EditClientFormData>({
+  const form = useForm<
+    z.input<typeof editClientSchema>,
+    unknown,
+    EditClientFormData
+  >({
     resolver: zodResolver(editClientSchema),
     defaultValues: {
       firstName: '',

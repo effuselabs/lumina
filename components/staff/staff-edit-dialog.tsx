@@ -108,7 +108,11 @@ export function StaffEditDialog({
 }: StaffEditDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<EditStaffFormData>({
+  const form = useForm<
+    z.input<typeof editStaffSchema>,
+    unknown,
+    EditStaffFormData
+  >({
     resolver: zodResolver(editStaffSchema),
     defaultValues: {
       displayName: staff?.displayName || '',

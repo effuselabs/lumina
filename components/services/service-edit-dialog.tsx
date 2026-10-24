@@ -66,7 +66,11 @@ export function ServiceEditDialog({
 }: ServiceEditDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<EditServiceFormData>({
+  const form = useForm<
+    z.input<typeof editServiceSchema>,
+    unknown,
+    EditServiceFormData
+  >({
     resolver: zodResolver(editServiceSchema),
     defaultValues: {
       name: '',

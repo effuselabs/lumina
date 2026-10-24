@@ -404,7 +404,7 @@ export class ValidationMiddleware {
 
   // Format Zod validation errors
   private static formatZodErrors(error: ZodError): ValidationError[] {
-    return error.errors.map(err => ({
+    return error.issues.map(err => ({
       field: err.path.join('.'),
       message: err.message,
       code: err.code,

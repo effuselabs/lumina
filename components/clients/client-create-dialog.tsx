@@ -70,7 +70,11 @@ export function ClientCreateDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [staff, setStaff] = useState<Staff[]>([]);
 
-  const form = useForm<CreateClientFormData>({
+  const form = useForm<
+    z.input<typeof createClientSchema>,
+    unknown,
+    CreateClientFormData
+  >({
     resolver: zodResolver(createClientSchema),
     defaultValues: {
       firstName: '',

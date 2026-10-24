@@ -103,7 +103,7 @@ export default function ClientInformationForm({
     handleSubmit,
     formState: { errors, isValid },
     watch,
-  } = useForm<ClientFormData>({
+  } = useForm<z.input<typeof clientFormSchema>, unknown, ClientFormData>({
     resolver: zodResolver(clientFormSchema),
     mode: 'onChange',
     defaultValues: {

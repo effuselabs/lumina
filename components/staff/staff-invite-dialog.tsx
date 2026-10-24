@@ -103,7 +103,7 @@ export function StaffInviteDialog({
     'details'
   );
 
-  const form = useForm<InviteFormData>({
+  const form = useForm<z.input<typeof inviteSchema>, unknown, InviteFormData>({
     resolver: zodResolver(inviteSchema),
     defaultValues: {
       email: '',

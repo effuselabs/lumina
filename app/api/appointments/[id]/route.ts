@@ -196,7 +196,7 @@ export async function PUT(
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map(e => ({
+          details: error.issues.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),
@@ -318,7 +318,7 @@ export async function DELETE(
       return NextResponse.json(
         {
           error: 'Validation error',
-          details: error.errors.map(e => ({
+          details: error.issues.map(e => ({
             field: e.path.join('.'),
             message: e.message,
           })),

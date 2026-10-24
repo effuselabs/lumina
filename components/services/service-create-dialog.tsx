@@ -56,7 +56,11 @@ export function ServiceCreateDialog({
 }: ServiceCreateDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<CreateServiceFormData>({
+  const form = useForm<
+    z.input<typeof createServiceSchema>,
+    unknown,
+    CreateServiceFormData
+  >({
     resolver: zodResolver(createServiceSchema),
     defaultValues: {
       name: '',

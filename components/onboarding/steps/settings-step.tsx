@@ -17,6 +17,7 @@ import {
   businessSettingsSchema,
 } from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { brand } from '@/lib/design/tokens';
 
@@ -27,7 +28,11 @@ interface SettingsStepProps {
 }
 
 export function SettingsStep({ data, onNext, onPrevious }: SettingsStepProps) {
-  const form = useForm<BusinessSettings>({
+  const form = useForm<
+    z.input<typeof businessSettingsSchema>,
+    unknown,
+    BusinessSettings
+  >({
     resolver: zodResolver(businessSettingsSchema),
     defaultValues: {
       bookingEnabled: data.bookingEnabled ?? true,

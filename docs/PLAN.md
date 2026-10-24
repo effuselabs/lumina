@@ -577,6 +577,20 @@ drifted from 2 to 5 high/critical between 2026-09-06 and 2026-09-29 without
 any change on our side, and nothing noticed, so the trigger is now a workflow
 rather than a sentence. `next@16` itself remains Phase 8 work. ([#83](https://github.com/effuselabs/lumina/issues/83))
 
+The workflow earned its place on 2026-10-24
+([#130](https://github.com/effuselabs/lumina/issues/130)): five advisories
+published around 2026-10-23 — `@sentry/nextjs` and `dompurify` critical,
+`undici` and `zod` high, `fast-uri` moderate — turned every pull request red
+overnight. Four had fixes inside their major. Zod's memory-exhaustion fix
+exists only in Zod 4, so the first trigger took Zod from 3 to 4 and
+`@hookform/resolvers` from 3 to 5 with it, ahead of Phase 8. What changed in
+the code, beyond `ZodError.errors` becoming `.issues`: a single-argument
+`z.record()` needs its key schema, `required_error` is `error`, the two
+weekday-keyed hours schemas are `z.partialRecord` (a record keyed by an enum
+is exhaustive in Zod 4, and those were partial), and the ten forms give
+`useForm` their schema's input type as well as its output, since a
+`.default()` makes the two differ.
+
 **Build-time packages belong in `devDependencies`**, or the production audit
 counts them. On 2026-10-03 GHSA-vfj7-8cjw-p6xm (`braces`, no fix available)
 turned every pull request red through `tailwindcss-animate`, a Tailwind plugin

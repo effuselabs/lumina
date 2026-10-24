@@ -7,7 +7,7 @@ const PerformanceMetricSchema = z.object({
   name: z.string(),
   value: z.number(),
   timestamp: z.number(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 const PerformanceDataSchema = z.object({
@@ -19,7 +19,7 @@ const PerformanceDataSchema = z.object({
     firstContentfulPaint: z.number(),
     largestContentfulPaint: z.number(),
     cumulativeLayoutShift: z.number(),
-    apiResponseTimes: z.record(z.number()),
+    apiResponseTimes: z.record(z.string(), z.number()),
     userInteractions: z.array(
       z.object({
         type: z.string(),
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid performance data format', details: error.errors },
+        { error: 'Invalid performance data format', details: error.issues },
         { status: 400 }
       );
     }

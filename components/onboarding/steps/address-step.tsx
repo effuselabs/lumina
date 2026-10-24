@@ -15,6 +15,7 @@ import {
   businessAddressSchema,
 } from '@/lib/validations/business';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { z } from 'zod';
 import {
   Select,
   SelectContent,
@@ -58,7 +59,11 @@ interface AddressStepProps {
 }
 
 export function AddressStep({ data, onNext, onPrevious }: AddressStepProps) {
-  const form = useForm<BusinessAddress>({
+  const form = useForm<
+    z.input<typeof businessAddressSchema>,
+    unknown,
+    BusinessAddress
+  >({
     resolver: zodResolver(businessAddressSchema),
     defaultValues: {
       address: data.address || '',

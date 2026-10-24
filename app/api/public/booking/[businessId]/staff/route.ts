@@ -273,7 +273,7 @@ export async function GET(
               'Verify the selected services',
               'Refresh the page and try again',
             ],
-            details: error.errors,
+            details: error.issues,
           },
         },
         {
