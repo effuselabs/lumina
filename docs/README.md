@@ -21,6 +21,9 @@ is added back until it describes something verified.
   on purpose. Updated in place; it is the only status document
 - [History](history.md) — how the project stalled, what the audit found, and
   why the conventions look the way they do
+- [Visual language](visual-language.md) — the spec for Phase 6's materials,
+  light, type and motion. Once `tokens.ts` carries it, the generated design
+  system page replaces it
 
 ## Running it somewhere
 

@@ -387,6 +387,40 @@ tokens say, not where they live; every rule in `CLAUDE.md` still holds.
 - Booking takes the fewest clicks with the richest options — a rethink of the
   flow, not a re-layout of today's steps (#94).
 
+**The direction, approved** (Jeremy, 2026-10-24, every recommendation;
+record on [#126](https://github.com/effuselabs/lumina/issues/126)):
+
+- **Scope (P1):** the look _and_ the front desk. One booking engine serves the
+  public page and a staff booking sheet; an appointment panel adds check-in,
+  rebook and move; "Today" for owners, "My day" for stylists; Settings for
+  hours, booking link and branding. Clients, analytics and payments stay
+  parked.
+- **Colour (P2):** gold on ink. Ink neutrals at hue 220, gold the only accent;
+  coral and the gold-to-coral gradient leave the interface.
+- **Theme (P3):** the dashboard opens dark; `/book` follows the client's phone;
+  each device remembers its own choice.
+- **Salon branding (P4):** a logo upload plus one of eight tested preset
+  accents, on the booking page's header band and email header only. No free
+  colour picker.
+- **Booking (P5):** three screens, six taps for a new client, four for a
+  returning one, with a test that fails if the count creeps up. The "welcome
+  back" lookup is gone (S1, [#138](https://github.com/effuselabs/lumina/issues/138)).
+- **Shared devices (P6):** a device marked shared masks phone numbers and
+  surnames, hides revenue, covers the screen after 2 minutes idle and signs
+  out after 30 minutes, with a warning. No staff PIN.
+- **Dependencies (P7):** five more Radix packages (popover, tooltip,
+  toggle-group, radio-group, collapsible), `cmdk`, `sharp` made direct, and,
+  dev-only, `@axe-core/playwright` and `knip`. The Inter font file is
+  committed. No animation library, no Tailwind 4 until Phase 8, no shadcn CLI.
+- **Revenue for stylists (P8):** off by default; the owner can turn it on.
+
+**The visual language on top**, proposed 2026-10-25 after Jeremy found the
+direction's preview still bland: materials by role (glass only for chrome),
+one gold ambient light, a metallic gold button, Fraunces for a few moments,
+a motion system of three springs, and three signature moments — the gold
+now-line, the booking time that travels into a ticket, and check-in. Spec and
+the four calls left for Jeremy in [`visual-language.md`](visual-language.md).
+
 **Steps**, each its own pull requests:
 
 1. **Direction.** Screenshots of every screen as it stands, both themes,
@@ -394,7 +428,8 @@ tokens say, not where they live; every rule in `CLAUDE.md` still holds.
    scale, colour roles, density, spacing, radius, elevation, motion — with
    Jeremy's calls named. Jeremy suggested reviewing it from several angles at
    once (UX, front end, system design, security); the output is one direction
-   with screenshots of key screens, not four reports.
+   with screenshots of key screens, not four reports. **Done 2026-10-24**
+   (above); the visual language followed on 2026-10-25.
 2. **Tokens.** The new values in `lib/design/tokens.ts`, with `contrastPairs`
    for every text role in both themes.
 3. **Primitives.** The 37 rebuilt against them, catalogued on the
