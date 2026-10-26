@@ -8,12 +8,8 @@ import {
   CalendarDays,
   LayoutDashboard,
   Menu,
-  Plus,
-  Receipt,
   Scissors,
   Settings,
-  ShoppingCart,
-  TrendingUp,
   UserCheck,
   Users,
   Wallet,
@@ -74,12 +70,6 @@ export function SidebarNavigation({
           href: `/dashboard/${businessSlug}/appointments/calendar`,
           icon: CalendarDays,
         },
-        {
-          id: 'book',
-          label: 'Book Appointment',
-          href: `/dashboard/${businessSlug}/appointments/book`,
-          icon: Plus,
-        },
       ],
     },
     {
@@ -105,26 +95,6 @@ export function SidebarNavigation({
       label: 'Payments & Finance',
       href: `/dashboard/${businessSlug}/payments`,
       icon: Wallet,
-      children: [
-        {
-          id: 'transactions',
-          label: 'Transactions',
-          href: `/dashboard/${businessSlug}/payments/transactions`,
-          icon: Receipt,
-        },
-        {
-          id: 'reports',
-          label: 'Financial Reports',
-          href: `/dashboard/${businessSlug}/payments/reports`,
-          icon: TrendingUp,
-        },
-        {
-          id: 'pos',
-          label: 'POS System',
-          href: `/dashboard/${businessSlug}/payments/pos`,
-          icon: ShoppingCart,
-        },
-      ],
     },
     {
       id: 'analytics',
@@ -132,13 +102,6 @@ export function SidebarNavigation({
       href: `/dashboard/${businessSlug}/analytics`,
       icon: BarChart3,
       roles: ['OWNER', 'MANAGER'],
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      href: `/dashboard/${businessSlug}/settings`,
-      icon: Settings,
-      roles: ['OWNER'],
     },
   ];
 

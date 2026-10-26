@@ -217,9 +217,7 @@ export function AppointmentCalendarPageContent({
                 icon={<Plus className="h-4 w-4" />}
                 asChild
               >
-                <Link href={`/dashboard/${businessSlug}/appointments/book`}>
-                  New Appointment
-                </Link>
+                <Link href={`/book/${business.id}`}>New Appointment</Link>
               </Button>
             </div>
           </div>

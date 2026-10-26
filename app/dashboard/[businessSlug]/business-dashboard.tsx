@@ -13,7 +13,6 @@ import type {
 import {
   BarChart3,
   Calendar,
-  CreditCard,
   DollarSign,
   TrendingUp,
   UserCheck,
@@ -170,19 +169,6 @@ function DashboardContent({
       <div className="dashboard-charts-grid">
         <LuminaQuickActions>
           <LuminaQuickActionCard
-            title="Book Appointment"
-            description="Schedule new client visit"
-            href={`/dashboard/${businessSlug}/appointments/book`}
-            icon={Calendar}
-            variant="primary"
-          />
-          <LuminaQuickActionCard
-            title="Process Payment"
-            description="Handle transactions"
-            href={`/dashboard/${businessSlug}/payments/pos`}
-            icon={CreditCard}
-          />
-          <LuminaQuickActionCard
             title="Add Client"
             description="Register new client"
             href={`/dashboard/${businessSlug}/clients?action=add`}
@@ -203,7 +189,7 @@ function DashboardContent({
           <LuminaQuickActionCard
             title="Financial Reports"
             description="Revenue & payment reports"
-            href={`/dashboard/${businessSlug}/payments/reports`}
+            href={`/dashboard/${businessSlug}/payments`}
             icon={TrendingUp}
           />
         </LuminaQuickActions>

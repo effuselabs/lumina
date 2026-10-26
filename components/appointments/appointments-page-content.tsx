@@ -144,7 +144,7 @@ export function AppointmentsPageContent({
               </Card>
             </Link>
 
-            <Link href={`/dashboard/${businessSlug}/appointments/book`}>
+            <Link href={`/book/${business.id}`}>
               <Card className="border-color-border cursor-pointer shadow-sm transition-colors hover:border-lumina-coral">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
@@ -182,9 +182,7 @@ export function AppointmentsPageContent({
                     icon={<Plus className="h-4 w-4" />}
                     asChild
                   >
-                    <Link href={`/dashboard/${businessSlug}/appointments/book`}>
-                      New Appointment
-                    </Link>
+                    <Link href={`/book/${business.id}`}>New Appointment</Link>
                   </Button>
                 </div>
               </div>

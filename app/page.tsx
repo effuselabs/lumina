@@ -80,12 +80,6 @@ export default async function HomePage() {
 
             {/* Enhanced Navigation */}
             <div className="hidden items-center gap-2 md:flex">
-              <Link href="/features" className="nav-link">
-                Features
-              </Link>
-              <Link href="/pricing" className="nav-link">
-                Pricing
-              </Link>
               <Link href="/design-system" className="nav-link">
                 Design System
               </Link>
@@ -731,17 +725,6 @@ export default async function HomePage() {
               </p>
             </Card>
           </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-foreground-muted mb-6">Still have questions?</p>
-            <Link
-              href="/contact"
-              className="btn-contact-prominent inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
-            >
-              Contact Our Team
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -775,12 +758,6 @@ export default async function HomePage() {
                 >
                   Start Free Trial
                 </Link>
-                <Link
-                  href="/contact"
-                  className="btn-footer-ghost inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300"
-                >
-                  Contact Sales
-                </Link>
               </div>
             </div>
 
@@ -788,26 +765,6 @@ export default async function HomePage() {
             <div>
               <h4 className="mb-6 text-lg font-semibold">Product</h4>
               <ul className="footer-text-muted space-y-3">
-                <li>
-                  <Link href="/features" className="footer-link">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/pricing" className="footer-link">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/integrations" className="footer-link">
-                    Integrations
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/api" className="footer-link">
-                    API
-                  </Link>
-                </li>
                 <li>
                   <Link href="/design-system" className="footer-link">
                     Design System
