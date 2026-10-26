@@ -418,8 +418,10 @@ record on [#126](https://github.com/effuselabs/lumina/issues/126)):
 direction's preview still bland: materials by role (glass only for chrome),
 one gold ambient light, a metallic gold button, Fraunces for a few moments,
 a motion system of three springs, and three signature moments — the gold
-now-line, the booking time that travels into a ticket, and check-in. Spec and
-the four calls left for Jeremy in [`visual-language.md`](visual-language.md).
+now-line, the booking time that travels into a ticket, and check-in. Jeremy
+approved it on 2026-10-26, with its four calls (Fraunces; test on his own
+2019 iPad and Samsung tablet; the `/book` footer credit; `qrcode`). Spec in
+[`visual-language.md`](visual-language.md).
 
 **Steps**, each its own pull requests:
 
@@ -434,7 +436,11 @@ the four calls left for Jeremy in [`visual-language.md`](visual-language.md).
    for every text role in both themes.
 3. **Primitives.** The 37 rebuilt against them, catalogued on the
    design-system page and under visual test.
-4. **The app shell** — navigation, header, sidebar — from 360px up.
+4. **The app shell** — navigation, header, sidebar — from 360px up, carrying
+   a redrawn logo. Today's mark is a coral-to-gold gradient tile with an "L"
+   and no source file; it goes with the coral. Concepts in gold on ink, and
+   Jeremy picks one, since a logo is a brand call
+   ([#144](https://github.com/effuselabs/lumina/issues/144)).
 5. **Screens**, one at a time, busiest first: public booking, dashboard,
    calendar, clients, staff, services, settings, onboarding, sign-in. The home
    page last, with Phase 7's voice work, since its words need redoing as much

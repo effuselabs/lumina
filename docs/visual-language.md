@@ -1,8 +1,9 @@
 # Visual language
 
-**Status: proposed, 2026-10-25.** Four of its calls are Jeremy's (listed at
-the end); everything else is settled. When he answers, this file loses this
-paragraph and becomes the spec for Phase 6 stages 2–6 in [`PLAN.md`](PLAN.md).
+**Status: approved, 2026-10-26.** Jeremy answered its four calls (at the
+end), so this is the spec for Phase 6 stages 2–5 in [`PLAN.md`](PLAN.md). Once
+`tokens.ts` carries these values, the generated design-system page replaces
+this file.
 
 Why it exists: the approved direction (gold on ink, structure from type) fixed
 the plumbing and the palette, but on review it still read as bland. This is
@@ -153,17 +154,17 @@ after 2 s, nothing over 240 ms; at most one gold-filled element per view
 plus the now-line; Lighthouse CI on `/book` (LCP ≤ 2.5 s and within 100 ms
 of the solid build, CLS < .05, INP ≤ 200 ms); material CSS ≤ 2 KB gzipped.
 
-## Decisions for Jeremy
+## Decided (Jeremy, 2026-10-26)
 
-1. **Fraunces** as a second, display-only face (free, OFL, ≤ 20 KB).
-   Recommend yes.
-2. **Two test devices**, a used 2018 iPad and a mid-range Android phone,
-   about $250. Lab throttling can't measure GPU cost of blur. Recommend yes.
+1. **Fraunces** is the second, display-only face (free, OFL, ≤ 20 KB).
+2. **Test devices:** Jeremy's 2019 iPad (the older-GPU front-desk case) and a
+   current Samsung tablet. Nothing is bought. The mid-range-phone case for
+   clients on `/book` stays covered by Lighthouse CI with CPU and network
+   throttling.
 3. **Footer credit on `/book`:** "Booking by Lumina · Source" at 11px,
    removable by self-hosters; the Source link also serves AGPL §13.
-   Recommend yes (licensing-adjacent, so yours).
 4. **`qrcode`** (server-only, MIT) for the printable counter card in the brand
-   try-on. Adds no client JavaScript. Recommend yes.
+   try-on. Adds no client JavaScript.
 
 Settled without a decision: no cover photo on `/book` at launch (Phase 8);
 no animation library; ink button on `/book`.
