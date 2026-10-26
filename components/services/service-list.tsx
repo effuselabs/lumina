@@ -26,6 +26,7 @@ import {
   Search,
   Trash2,
 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { ServiceCreateDialog } from './service-create-dialog';
 import { ServiceEditDialog } from './service-edit-dialog';
@@ -60,7 +61,11 @@ export function ServiceList({ businessId }: ServiceListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  // The dashboard's "Add Service" shortcut links here with ?action=add.
+  const searchParams = useSearchParams();
+  const [createDialogOpen, setCreateDialogOpen] = useState(
+    searchParams.get('action') === 'add'
+  );
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
 

@@ -33,7 +33,8 @@ const all = pages(DASHBOARD);
 
 describe('dashboard pages authorize through requireBusinessAccess', () => {
   it('finds the dashboard pages (so the rest cannot pass vacuously)', () => {
-    expect(all.length).toBeGreaterThanOrEqual(13);
+    // Five "Coming Soon" pages were removed in #147, leaving eight.
+    expect(all.length).toBeGreaterThanOrEqual(8);
   });
 
   describe.each(all.map(path => [relative(process.cwd(), path), path]))(

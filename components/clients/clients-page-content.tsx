@@ -2,6 +2,7 @@
 
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { ClientCreateDialog } from './client-create-dialog';
 import { ClientDetailsDialog } from './client-details-dialog';
@@ -57,7 +58,11 @@ export function ClientsPageContent({
       })
   );
 
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  // The dashboard's "Add Client" shortcut links here with ?action=add.
+  const searchParams = useSearchParams();
+  const [createDialogOpen, setCreateDialogOpen] = useState(
+    searchParams.get('action') === 'add'
+  );
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);

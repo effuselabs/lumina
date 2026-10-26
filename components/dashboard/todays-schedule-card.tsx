@@ -1,7 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { ArrowRight, Calendar, Clock, Plus } from 'lucide-react';
+import { ArrowRight, Calendar, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { ScheduleItem, ScheduleItemData } from './schedule-item';
 import { brand } from '@/lib/design/tokens';
@@ -80,17 +79,6 @@ export function TodaysScheduleCard({
                 {appointments.length === 1 ? 'appointment' : 'appointments'}
               </span>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="h-6 w-6 p-0 hover:bg-lumina-peach/20"
-            >
-              <Link href={`/dashboard/${businessSlug}/appointments/book`}>
-                <Plus className="h-3 w-3" />
-                <span className="sr-only">Add appointment</span>
-              </Link>
-            </Button>
           </div>
         </div>
       </div>
