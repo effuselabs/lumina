@@ -427,32 +427,33 @@
     color: var(--color-destructive-foreground);
   }
 
-  /* Badge Shadow Colors for Sophisticated Hover Effects */
-  .hover\:shadow-primary\/25:hover {
+  /* Badge hover glows. Named as plain classes: a hand-written `hover:shadow-x/25`
+     is not a valid utility name in Tailwind 4. */
+  .badge-glow-primary:hover {
     box-shadow: 0 4px 12px rgba(255, 210, 90, 0.25);
   }
 
-  .hover\:shadow-secondary\/25:hover {
+  .badge-glow-secondary:hover {
     box-shadow: 0 4px 12px rgba(11, 43, 51, 0.25);
   }
 
-  .hover\:shadow-success\/25:hover {
+  .badge-glow-success:hover {
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
   }
 
-  .hover\:shadow-warning\/25:hover {
+  .badge-glow-warning:hover {
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
   }
 
-  .hover\:shadow-info\/25:hover {
+  .badge-glow-info:hover {
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
   }
 
-  .hover\:shadow-destructive\/25:hover {
+  .badge-glow-destructive:hover {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
   }
 
-  .hover\:shadow-lumina-coral\/25:hover {
+  .badge-glow-lumina-coral:hover {
     box-shadow: 0 4px 12px rgba(255, 122, 90, 0.25);
   }
 
