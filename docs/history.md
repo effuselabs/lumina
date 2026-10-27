@@ -47,20 +47,20 @@ number of rules that exist because their absence caused the failure:
 - **One living plan**, [docs/PLAN.md](PLAN.md), updated in place. Not a second
   plan, not a per-phase plan, not a status report.
 - **If a correction comes up twice, it becomes a lint rule or a test.**
-  Enforcement beats documentation, which is why this file is short.
+  Enforcement beats documentation.
 
 ## Where that has got to
 
-| Check                           | Before                                 | Now                       |
-| ------------------------------- | -------------------------------------- | ------------------------- |
-| `npm run build`                 | fails                                  | passes, 80 pages          |
-| `npm run db:seed`               | fails                                  | works                     |
-| `npm run type-check`            | 686 errors                             | 0                         |
-| `npm run lint`                  | 180 errors, not run at build           | 0, and it gates the build |
-| Jest                            | 101 of 114 suites failing, 0% coverage | curated suite green in CI |
-| Deployment                      | never happened                         | auto-deploys on green CI  |
-| Booking loop                    | never completed once                   | green end to end          |
-| Production CVEs (high/critical) | 16                                     | 2                         |
+| Check                           | Before                                 | 2026-10-27                 |
+| ------------------------------- | -------------------------------------- | -------------------------- |
+| `npm run build`                 | fails                                  | passes, 62 static pages    |
+| `npm run db:seed`               | fails                                  | works, and is reproducible |
+| `npm run type-check`            | 686 errors                             | 0                          |
+| `npm run lint`                  | 180 errors, not run at build           | 0, and it gates the build  |
+| Jest                            | 101 of 114 suites failing, 0% coverage | 1,020 tests, 68 suites     |
+| Deployment                      | never happened                         | auto-deploys on green CI   |
+| Booking loop                    | never completed once                   | green end to end           |
+| Production CVEs (high/critical) | 16                                     | 0                          |
 
 The habit that came out of it, and the one most worth stealing: fix things by
 measuring them. "The booking page feels slow" is not a diagnosis. "One
@@ -93,6 +93,948 @@ first attempt is not here. It is archived offline.
 
 The lesson worth keeping: a scan is cheap and a rewrite is only cheap before
 anyone has cloned you.
+
+## The rebuild log
+
+Moved here from `docs/PLAN.md` on 2026-10-27, when the plan went back to being
+only the map. These are the write-ups of finished work, kept because the
+lessons in them are the reason several rules exist. Issue and pull request
+links point at the full story.
+
+### Phase 4: the booking loop works
+
+`e2e/booking-loop.spec.ts` is the definition of done: a stranger opens a
+salon's public booking page, picks a service and a time, enters their details,
+books — and the appointment lands in the database against the right business,
+staff member and client.
+
+- [x] **4a** Write the failing spec; trim Playwright from 7 browser projects to 2
+- [x] **4b** Availability returns real slots — 43 slots in 1.24s cold, 0.61s warm
+- [x] **4c** Walk the remaining layers until the spec passes — **all four tests
+      green**, and the E2E job now gates `main`
+- [x] **4d.1** Delete the legacy suite — 133 files, and the whole of Jest is
+      the gate again: **32 suites, 427 tests, green in 7.7s**, down from 117 of
+      159 suites failing
+- [x] **4d.2** Make the E2E suite runnable — legacy specs deleted, the suite
+      collects and passes for the first time: **18 tests, 22s**, and CI runs
+      `npm run test:e2e` rather than one named file
+- [x] **4d.3** Rebuild the missing tests, starting with tenant isolation —
+      **495 tests, 35 suites**, and tenant isolation went from untested to
+      enforced by a gate that fails the build for any new unguarded route
+
+### Phase 5: the design system collapse
+
+Deleting 133 test files removed the only importer many components had, and
+what that exposed was larger than the phase originally assumed: 85 of 187
+components rendered nowhere. Five batches later:
+
+|                                   | Before 4d                             | After the sweep |
+| --------------------------------- | ------------------------------------- | --------------- |
+| Unused files                      | 112 reported, 181 once the tests went | **0**           |
+| `components/`                     | 187 files                             | **106**         |
+| `components/ui` primitives        | 57                                    | 37              |
+| Lines removed across five batches | —                                     | **~49,000**     |
+
+Nothing reported unused now. The eleven that knip still flagged were all
+legitimate — the Railway IaC file, `public/sw.js` registered at runtime by
+`offline-support.tsx`, and the resolver script itself — so `knip.json` records
+them as entry points rather than leaving a report everyone learns to ignore.
+
+**What the sweep taught, kept because the next sweep will need it.** Grep is
+not a dependency graph: matching importers by basename made
+`lib/availability/availability-calculator` look alive because a different
+directory holds a file of the same name, and matching only same-directory
+relative imports missed `../lib/theme-validation`. Both are now handled by
+`scripts/maintenance/find-importers.js`, which resolves specifiers to files.
+It still is not the authority — knip proposes, the script narrows, the five
+gates decide, and `npm run db:seed` runs by hand on anything near
+`prisma/factories`.
+
+**Next, in order:**
+
+1. ~~**28 unused dependencies**~~ **Done** — 26 removed, 120 packages out of
+   `node_modules`. `husky` and `railway` are recorded in `knip.json` as used,
+   and `glob` is gone from `scripts/migrate-calendar-data.ts` rather than
+   declared. knip now reports no unused dependencies, unlisted dependencies or
+   files.
+2. ~~**Next.js 15.5.24**~~ **Done** — on 15.5.26 and React 19, and
+   `npm audit` reports nothing, dev dependencies included. Taken ahead of the
+   collapse because it was a security fix under the dependency policy's first
+   trigger, and because the collapse rewrites the same components React 19
+   touches. `.github/workflows/dependency-audit.yml` now fails any pull
+   request, and a daily run, on a high or critical production advisory.
+3. **The collapse itself**, against 37 primitives instead of 57 and a
+   component tree that is entirely reachable.
+   - [x] **3a — every colour in a `.tsx` comes from `lib/design/tokens.ts`.**
+         162 raw hex across 23 files (224 across 31 before the sweep deleted
+         the rest), now **0**, and the lint rule is an **error** that
+         matches hex anywhere in a string — the old form saw 93 of the 162.
+         Done at identical values: 9 of 11 pages pixel-identical before and
+         after, the analytics chart within its run-to-run noise, and the
+         design-system page changed only where it had been wrong (below).
+   - [x] **3b — the second palette is gone.** `tokens.legacy` is deleted;
+         its values had been copied into components from a `colors.css` that
+         was never loaded (see 3e). Each use now takes the main palette's
+         nearest role: muted text `#808285` (3.85:1) → `neutral[500]`
+         (4.74:1); positive `#22C58B` (2.23:1) → `status.success` (5.02:1);
+         negative → `status.error` (4.83:1); strong text → `brand.deepTeal`;
+         gridlines → `neutral[200]`; the success card's surface and border →
+         `statusTint`; the analytics hover gradient → `gradients.radiantPressed`.
+         Screenshots: 14 of 19 pages identical; the other five changed only in
+         page subtitles (slightly darker grey), chart lines and axes, and
+         stat-card trend colours.
+   - [x] **3c — `status` colours meet AA as text.** success `#15803D` and
+         warning `#B45309` (both 5.02:1 on white, and white on them), were
+         3.30 and 3.19. `status.info` is now `#2563EB`, what `text-info`
+         actually rendered — `tokens.ts` said `#0284C7` while the CSS said
+         otherwise, and `__tests__/design/css-token-parity.test.ts` now fails
+         if `globals.css` and `tokens.ts` disagree. Every status colour is in
+         `contrastPairs`, both ways round. Screenshots: only status-coloured
+         text changed (the home page's trend lines, analytics, the
+         design-system swatches).
+   - [x] **3c′ — brand text is deep teal; gold is for fills and accents.**
+         Decided by Jeremy on 2026-10-01. Measured in the browser first:
+         115 text elements across 21 pages were gold on a light surface, all
+         at 1.44:1, and none on a dark one — so nothing needed to stay gold.
+         113 came through `.text-lumina-primary`, now `var(--deep-teal)`; the
+         rest were a `select` focus and checked state, an animated-counter
+         variant, two auth-link hovers, a design-system link, and "Powered by
+         Lumina" on the booking page, which was coloured with the _tenant's_
+         brand colour. After: one gold text element — none. The most visible
+         change is the sidebar wordmark, gold to teal beside its gradient
+         mark. `__tests__/design/brand-text-colour.test.ts` fails on gold
+         text outside `dark:` (two decorative uses named), and deep teal on
+         white (14.9:1) is in `contrastPairs`.
+     - **Coral as text fails the same way** — 2.57:1 on white — and is on
+       21 elements, a mix of decorative icons and a few links on the auth
+       pages. Not changed: the decision was about gold. For the design
+       review. ([#66](https://github.com/effuselabs/lumina/issues/66))
+     - **Tenant colours are used as text.** The public booking page sets
+       text in the business's configured `accent` colour (deep teal by
+       default, but any colour a salon picks). A tenant colour used as text
+       needs a contrast floor; for the design review. ([#67](https://github.com/effuselabs/lumina/issues/67))
+   - [x] **3d — the Button's injected stylesheet is gone**, and the
+         variants carry what it had been papering over. Primary text is deep
+         teal on the gradient (5.81:1 at the coral end, where white was 2.57:1)
+         — "Confirm Booking" included, and four call sites that set white text
+         themselves. Outline borders are full `foreground` (its `/30` was about
+         1.9:1, under the 3:1 UI minimum); links are deep teal, gold in dark.
+         `__tests__/design/gradient-text.test.ts` fails on white text on the
+         gradient anywhere in `app/` or `components/`.
+     - It also found that `dark:` utilities followed the OS, not the theme.
+       Tailwind defaulted to `darkMode: 'media'` while the app is light-only
+       by design, so a dark-OS visitor got dark styles on the light page — the
+       booking page's search box turned black. It is `class` now; the same
+       page went from 76,570 px different between OS settings to 0.
+
+   - [x] **3e — hex outside `.tsx`.** No stylesheet, config or `.ts`
+         under the lint gate writes a colour of its own; `tokens.ts` is the
+         one place a value lives.
+     - `app/design-tokens/` is gone: ten CSS files, 2,210 lines, that
+       nothing imported. `knip.json` had ignored it on the belief that it
+       was reached through `@import`, which is why no report flagged it.
+     - `.ts`: the email templates and every other module import tokens, and
+       the hex lint rule covers `.ts`. All 60 email renders hashed the same.
+       `lib/theme-accessibility.ts` had its own drifted palette and now
+       grades what renders, which surfaced 3f.
+     - `tailwind.config.ts`: a dead safelist (87 rules, 11 KB, for the
+       Button override 3d removed) is gone and its 67 tint steps live in
+       `tokens.scales`; the CSS was byte-identical after the move.
+     - CSS: `app/tokens.css` is generated from `tokens.ts`
+       (`npm run tokens:css`), and `globals.css` and `booking-mobile.css`
+       refer to its properties. `__tests__/design/tokens-css.test.ts` fails
+       if the file is stale or either stylesheet gains a hex. Every existing
+       custom property resolved the same on six pages, light and `.dark`, and
+       every element's computed colours matched.
+     - `prisma/seed.ts`, the last one, takes the demo salon's colour from
+       `brand.gold`. Nothing in the application writes a hex of its own.
+   - [x] **3f — dark mode, done properly.** Decided by Jeremy on
+         2026-10-01: dark mode is a requirement, not an extra, and
+         "light-only by design" (3d) no longer holds. Three pull requests.
+     - [x] **1 — the dark theme applies, and passes AA.** Three faults:
+       - **Cascade.** Tailwind 3's `@layer base` is not a CSS cascade layer;
+         Tailwind moves its rules up to `@tailwind base`, the top of the
+         file. `.dark` lived there, so in the built CSS it came _before_ the
+         plain `:root` that sets the same properties, at equal specificity,
+         and `:root` won on source order. (This entry first blamed layered
+         versus unlayered precedence; the built CSS showed otherwise.)
+         `.dark` now sits outside any layer, after `:root`.
+       - **Two providers.** `dashboard-layout.tsx` wrapped the dashboard in
+         a second `ThemeProvider` with `defaultTheme="system"` and its own
+         storage key. It won the class on `<html>`, so the dashboard
+         followed the OS — dark-OS users already got a half-dark dashboard,
+         despite `providers.tsx` choosing light. It is gone. The
+         root provider also force-set four properties as inline styles,
+         which hid the cascade bug; that is gone too.
+       - **Contrast.** Dark reused light `status` colours (3.5–4.1:1 on dark)
+         and a muted grey at 3.71:1. `tokens.statusOnDark` and muted
+         `#94949C` clear 4.5:1 on all three dark surfaces, status fills
+         carry dark text, and brand text (`.text-lumina-primary`) is gold in
+         dark, where deep teal is 1.3:1. All in `contrastPairs`.
+       - `__tests__/design/dark-theme-cascade.test.ts` fails on any of the
+         three structural faults. Light mode: 18 of 19 pages identical,
+         analytics differs only in a seeded figure. Dark mode, measured on four
+         pages: background, text, muted, status and brand text all resolve
+         to their dark values.
+     - [x] **2 — themed colour names.** `themed` in `tokens.ts` gives each
+           surface, text and line role a light and a dark value, generated into
+           `app/tokens.css` as `--ui-*` (`:root`, then `.dark`) and exposed to
+           Tailwind as `bg-surface{,-muted,-sunken,-strong}`,
+           `text-ink{-strong,,-soft,-muted,-faint}` and
+           `border-line{,-strong,-soft}`. Each light value is the Tailwind gray it
+           replaces, which `semantic-colours.test.ts` asserts, so moving a
+           component across changes nothing in light mode. Dark pairs are in
+           `contrastPairs` wherever the light pair already passed: muted text
+           was already 4.39:1 on gray-100 and 3.90:1 on gray-200 in light, and is
+           held only on the two lightest surfaces. The input, textarea, select
+           and dialog primitives moved first. `hardcoded-light-classes.test.ts`
+           is a ratchet: 508 hardcoded light classes today, and the count may
+           only fall. The `--color-*-background` properties that `success-50`
+           and friends point at are undefined, but nothing uses those classes.
+     - [x] **3.1 — the gray sweep.** 506 hardcoded light classes across 50
+           files (`bg-white` → `bg-surface`, `text-gray-900` →
+           `text-ink-strong`, `border-gray-200` → `border-line`, and so on, with
+           `hover:` and other prefixes kept) moved onto the themed names, plus
+           `ink-deep` (gray-800) and `surface-dim` (gray-300). Light mode: 18 of
+           19 pages pixel-identical, analytics within its noise.
+           `hardcoded-light-classes.test.ts` now fails on any hardcoded light
+           gray outside two named exceptions.
+     - [x] **3.2 — the rest, and the switch.** Found in dark screenshots
+           of all 19 pages after 3.1:
+       - Deep-teal text (39 classes, 3 inline styles, and
+         `.text-lumina-secondary`) is `ink-brand`: deep teal in light, the
+         teal ramp's 300 step `#8DD2D8` in dark (7.0–11:1).
+         `hardcoded-light-classes.test.ts` now also fails on
+         `text-deep-teal` and gray gradient stops.
+       - 57 `neutral-*` classes with no `dark:` partner got a mirrored one;
+         the booking page's gray gradient takes the surface names; the week
+         view's busyness tints are translucent in dark.
+       - A light/dark toggle in the dashboard header, and
+         `defaultTheme="system"`: dark mode is now reachable.
+       - The marketing home page is forced light (`forcedTheme` on
+         `ThemeProvider`): its photographic and gradient sections are
+         light-only by design, and need a dark design of their own.
+         Light mode: identical except the new toggle. Remaining for the
+         design review: pastel status boxes (`bg-*-50`) stay light in dark,
+         readable but bright ([#68](https://github.com/effuselabs/lumina/issues/68)); tenant brand colours used as text (the booking
+         sidebar's phone and email) are unreadable on dark with the default
+         deep-teal accent; and the home page's dark design ([#69](https://github.com/effuselabs/lumina/issues/69)).
+   - [x] **3g — peach renders.** `--lumina-peach` was never defined, so
+         `bg-lumina-peach` painted nothing — and its opacity variants
+         (`/10`, `/20`, `/30`) were never generated at all, because Tailwind
+         cannot add alpha to a bare `var()`. Tailwind's peach colours now take
+         `brand.peach` directly, as the `brand.*` colours already did. The
+         "in progress" schedule item, its border and two hover tints paint
+         for the first time; checked in the browser, since none of them is
+         on screen in the standard screenshots, which were all identical.
+4. [x] **Unused exports** — 334 exports and 237 exported types by `knip`,
+       taken a directory at a time.
+   - `lib/email/` (166): done. Its barrel `index.ts` re-exported everything
+     and had one consumer, which now imports `notification-service` directly;
+     with the barrel gone, `business-branding.ts`, `retry-logic.ts` and
+     `template-repository.ts` (965 lines) had no importer at all and
+     were deleted. The rest lost only an `export` keyword.
+   - `prisma/factories/` (59): done, 1,458 lines. Five of the six validator
+     classes (`BusinessLogicValidator` and the four it composed) were reached
+     only through the barrel, as were two seeding helpers and 21 interfaces;
+     `DataIntegrityValidator`, which `data-reset-manager` uses, stays. The
+     seed runs as before.
+   - `lib/security/` (47): done, 408 lines. Read before deleting, because
+     an unused security module can mean an unapplied protection. None was:
+     the public booking POST requires CSRF, rate-limits and checks for abuse
+     through `securePublicBookingPOST`; security headers come from
+     `next.config.js` (live on staging), so `generateSecurityHeaders` was a
+     second copy; the GDPR helpers were aliases of the service methods the
+     routes call. `DataProtectionService.encrypt` is never called — no field
+     is encrypted at the application level — but nothing claims otherwise.
+   - `components/ui/` (46): done, 216 lines. Six components and props
+     types nothing rendered are deleted (`FilterChips`, `LoadingTable`,
+     `LoadingList`, `ThemeIndicator`, `ThemeStatus`, …); the rest lose an
+     `export`. The shadcn/Radix wrappers (`alert-dialog`, `dialog`,
+     `dropdown-menu`, `select`, `table`) keep their full surface —
+     `DialogClose` or `SelectGroup` unused today is a vendored kit, not dead
+     code — and `knip.json` says so through `ignoreIssues`.
+   - `types/` (about 70): done, 675 lines net — 66 type declarations
+     nothing referenced. Type-only, so type-check is the whole proof.
+   - `lib/validations/` (24): done — 16 schemas and request types nothing
+     parsed with. `lib/auth/public-routes.ts` keeps its route lists, now
+     unexported: `middleware.ts` reaches them through `isPublicRoute`.
+   - `lib/auth.ts`: done, by adoption rather than deletion. All 13
+     `/dashboard/[businessSlug]` pages had hand-written the membership check
+     while `requireBusinessAccess` — the helper `CLAUDE.md` names — had no
+     callers, took an id the pages did not have, and sent non-members to a
+     `/unauthorized` page that does not exist. It now takes the slug, returns
+     the business and role, and every page calls it;
+     `__tests__/security/dashboard-page-access.test.ts` fails on a page that
+     does not, or that calls it inside a `try`. That last rule is from a real
+     bug: the dashboard and analytics pages wrapped their check in a `try`
+     whose `catch` redirected to `/onboarding`, so staff opening analytics
+     were sent to onboarding instead of back to the dashboard, and a
+     database failure looked like having no business.
+   - The remainder (components, hooks, monitoring, performance, theme,
+     utils, errors, services): done — 85 declarations nothing referenced,
+     among them `lib/theme-utils.ts`'s own theme engine (the switcher uses
+     `hooks/use-theme-switcher.ts`), six unused formatters in `lib/utils.ts`
+     and two error classes nothing threw. New unused locals were checked
+     against a baseline from `main`: only the seven orphaned imports were
+     new, and they are removed.
+   - Closed with `knip.json` `ignoreIssues` entries, each for a reason that
+     is not "dead": the vendored shadcn/Radix kit; `lib/design/tokens.ts`,
+     the design system's surface; and payments (`lib/stripe.ts`,
+     `lib/financial/`, `components/payments/`), which is **parked**, not
+     unused. The server side is live — payment intents, refunds and the
+     webhook — while `POSInterface`, `TransactionHistory` and `PaymentForm`
+     (1,281 lines) are built but wired to nothing, behind "Coming Soon" POS,
+     transactions and reports pages. Deleting parked feature work is a
+     product decision; it returns with its own spec (see _Parked_).
+   - knip reports nothing.
+
+### Dependency upgrades taken early
+
+`next@16` was parked on these grounds, and that stopped being the right call
+once two criticals landed with no 14.x patch; the upgrade went to 15.5.26, the
+smallest line that fixed them. The lesson is in the first trigger's wording —
+the count that matters is the one `npm audit --omit=dev` prints _today_. It
+drifted from 2 to 5 high/critical between 2026-09-06 and 2026-09-29 without
+any change on our side, and nothing noticed, so the trigger is now a workflow
+rather than a sentence. `next@16` itself remains Phase 8 work. ([#83](https://github.com/effuselabs/lumina/issues/83))
+
+The workflow earned its place on 2026-10-24
+([#130](https://github.com/effuselabs/lumina/issues/130)): five advisories
+published around 2026-10-23 — `@sentry/nextjs` and `dompurify` critical,
+`undici` and `zod` high, `fast-uri` moderate — turned every pull request red
+overnight. Four had fixes inside their major. Zod's memory-exhaustion fix
+exists only in Zod 4, so the first trigger took Zod from 3 to 4 and
+`@hookform/resolvers` from 3 to 5 with it, ahead of Phase 8. What changed in
+the code, beyond `ZodError.errors` becoming `.issues`: a single-argument
+`z.record()` needs its key schema, `required_error` is `error`, the two
+weekday-keyed hours schemas are `z.partialRecord` (a record keyed by an enum
+is exhaustive in Zod 4, and those were partial), and the ten forms give
+`useForm` their schema's input type as well as its output, since a
+`.default()` makes the two differ.
+
+**Build-time packages belong in `devDependencies`**, or the production audit
+counts them. On 2026-10-03 GHSA-vfj7-8cjw-p6xm (`braces`, no fix available)
+turned every pull request red through `tailwindcss-animate`, a Tailwind plugin
+read only by `tailwind.config.ts` but listed as a runtime dependency — which
+pulled all of Tailwind's tree into the production count. Moving it to
+`devDependencies` took the count to zero with no version change.
+
+### Problems found and fixed along the way
+
+Entries struck through were fixed; the rest are open and tracked in
+the linked issues, and listed in the plan.
+
+- ~~**`npm run lint` does not reach `hooks/`, `prisma/`, or root config.**~~
+  **Fixed** ([#56](https://github.com/effuselabs/lumina/issues/56)).
+  `eslint.dirs` in `next.config.js` is now the whole repository, for both
+  `next lint` and the lint step inside `next build`, with generated output
+  named in `ignorePatterns`. Widening it found four errors the gate had never
+  seen: two `prefer-const` in `prisma/factories/appointment-factory.ts`, an
+  import-order error in a test, and the generated `next-env.d.ts`, now
+  ignored. The seed still generates its 500 appointments.
+
+- ~~**The booking loop spec fails about one local run in twenty.**~~
+  **Fixed.** This entry said it failed "rather than a slow render", and that
+  was wrong: the failure context shows step 1 still on its `<Suspense>`
+  fallback ("Loading Services", 4s elapsed) when the heading assertion's
+  default 5s ran out. Steps 2–4 already waited `STEP_TRANSITION_TIMEOUT` for
+  exactly this — a lazy chunk the dev server compiles on first request — and
+  step 1 had been missed. Under load it was far worse than one in twenty:
+  `--repeat-each=3` at two workers failed two runs in three on `main`. With
+  the step timeout, and one worker as CI runs it, `--repeat-each=5` is 20 of 20.
+
+  Still true at two workers, and worth knowing before reading a local run:
+  two copies of the _same_ project (which `--repeat-each` creates and a normal
+  run does not) book the same day's first slot and can hold availability past
+  15s while the dev server compiles for the other. Two projects book different
+  days (`projectDayOffset`), so the suite as configured does not do this.
+
+- ~~**The booking test can pick a service nobody is rostered to perform that
+  day.**~~ **Fixed.** It clicked the first service card; about 4% of seeded
+  services have nobody working on a given weekday, and which card is first is
+  stable for a seed, so it failed on every retry. The spec now resolves the
+  date first and books a service with staff rostered that weekday, through
+  the same helper the availability test uses. The card is found by its
+  accessible name, `Add Service: <name>` — every card's button used to read
+  just "Add Service", which is the same defect for a screen-reader user as for
+  the test, so fixing the name fixed both. The remove button in the selected
+  list had no accessible name at all and now has one.
+
+- ~~**Availability times are timezone-wrong.**~~ **Fixed** in
+  `fix/availability-business-timezone`. The API emitted naive local times
+  tagged as UTC — a salon open 09:00 Los Angeles returned
+  `2026-09-14T09:00:00.000Z` — so a 9-to-6 salon showed 4:00 AM slots to a
+  UTC-3 visitor and asking for Wednesday returned Tuesday's slots.
+
+  `AvailabilityCalculator` now resolves the timezone from the business row
+  itself rather than trusting a caller to pass one, and computes with
+  `TimeZoneHandler.localToUTC`. Fixed alongside it: the booking page sent
+  `toISOString()` of a browser-local midnight and rendered slots with no
+  `timeZone`; `book/route.ts` formatted confirmation emails and staff
+  notifications with the server's clock; `alternative-slots-service.ts` had the
+  same `setHours` defect in the fallback path.
+
+  The gate is `__tests__/lib/services/availability-calculator-timezone.test.ts`
+  in `test:ci`, asserting absolute instants so it fails in UTC too — a test
+  that only failed under `TZ=America/Halifax` would gate nothing on a UTC
+  runner. `playwright.config.ts` now runs three distinct zones: salon in Los
+  Angeles, server in Halifax (`webServer.env.TZ`), browser in Sydney
+  (`timezoneId`). Both halves are needed; `timezoneId` alone moves only the
+  browser while every conversion at issue happens in Node.
+
+  **What the fix actually taught.** The availability calculator and the
+  conflict engine that re-validates its output were wrong in the same
+  direction, so they agreed, and the bug hid in the agreement — fixing one and
+  not the other turned a wrong answer into no answer at all, and the public
+  endpoint returned zero slots for a day the salon was open. Both now share
+  `lib/services/business-time.ts`, which holds the only conversions between a
+  salon's wall clock and an instant. Two more silent failures surfaced the same
+  way, both fixed: `AvailabilityCache` is a Postgres table whose key had no
+  timezone, so every row computed by the old code would have kept being served
+  after deploy; and `getAvailableStaff` filtered on a relation named
+  `staffServices` where the schema declares `services`, so Prisma rejected the
+  query and the surrounding catch turned that into an empty staff list.
+
+  `timezone-aware-availability.ts` is gone, along with the test that was its
+  last remaining reference — dead, wrapping the broken calculator rather than
+  replacing it, 13 of its 19 tests failing, and its `getBusinessTimeZone` a
+  stub returning a hardcoded `'America/New_York'`.
+
+- ~~**An appointment outside business hours is invisible on the calendar.**~~
+  **Fixed — and the calendar showed no appointments at all.** The real cause
+  was one layer down: `appointment-calendar-page-content.tsx` rendered
+  `mockAppointments = []` and invented Mon–Fri 9–5 hours, so no booking had
+  ever reached the owner's calendar, including the one the milestone's
+  definition of done says must land there. Now:
+  - The page reads the salon's `BusinessHours` and the calendar fetches
+    `/api/appointments` for its visible window (day, week or six-week month),
+    paging past the API's 100 limit, through a Zod-validated mapper
+    (`lib/calendar/calendar-appointments.ts`).
+  - Day and week grids span business hours _union_ the appointments present
+    (`lib/calendar/visible-range.ts`), mark those cells as outside hours, and
+    say so above the grid.
+  - Two latent crashes surfaced on the first real appointment and are fixed:
+    `AppointmentBlock` required a `BulkSelectionProvider` that 4d's unused
+    export sweep had deleted (nothing rendered it), and the page passed
+    Prisma `Decimal` prices into a client component.
+  - `types/dashboard-appointments.ts` mirrors `AppointmentStatus` instead of
+    importing `@prisma/client`, which is what shipped Prisma's browser stub to
+    the calendar page; a test keeps the mirror identical to Prisma's enum.
+  - `e2e/booking-loop.spec.ts` now ends with the owner finding the booking on
+    the calendar; against the old calendar it fails.
+
+  ~~Still true: the calendar lays its grid out in the _browser's_ timezone.~~
+  **Fixed** ([#59](https://github.com/effuselabs/lumina/issues/59)). The views
+  use local-time arithmetic throughout, so rather than rewrite them the
+  calendar now works in the salon's wall clock (`lib/calendar/zoned.ts`):
+  appointments are converted in at the data hook, the fetch window and "now"
+  are converted out, and the page says which zone times are in. The booking
+  e2e, whose browser runs in Sydney, now requires the owner to find the
+  booking at its salon time. Known limit: a salon time that does not exist in
+  the _viewer's_ zone (the hour skipped on the viewer's spring-forward night)
+  cannot be held by a browser `Date`, and would shift by an hour that night.
+  Removing it means replacing the views' local-time arithmetic outright.
+
+- **Business metrics should bucket by the salon's day, not UTC.** ([#87](https://github.com/effuselabs/lumina/issues/87))
+  `business-metrics-tracker.ts` bucketed by the _server's_ day, so two hosts in
+  different zones wrote two rows for the same date and neither could find the
+  other's — the upsert key is (businessId, date, type). Pinned to UTC in
+  `fix/availability-business-timezone`, because production runs in UTC and every
+  row already written uses UTC midnight, so that keeps them all reachable. But
+  UTC is not what a salon owner means by "Tuesday's bookings", and the
+  peak-hours histogram is a chart of the wrong hours. Bucketing by business
+  timezone changes what the numbers mean and needs a migration for the existing
+  rows; it belongs with the analytics work, not behind a bug fix.
+
+  Worth noting how it was found: `npm run test:ci` was **red on `main`** for
+  anyone outside UTC, and had been. CI never saw it. The three-zone Playwright
+  config now closes that hole for the booking path; nothing yet closes it for
+  the rest of the suite.
+
+- ~~**`npm run test:visual` has never run.**~~ **Deleted.** The config could
+  not load — it resolved `./e2e/global-setup` from inside `e2e/` — and carried
+  two further type errors. Five npm scripts pointed at it. Visual regression
+  needs a design system to regress against, so it comes back in Phase 5, built
+  against `lib/design/tokens.ts` rather than restored. ([#65](https://github.com/effuselabs/lumina/issues/65))
+  **Back**, as `npm run test:visual` and CI's `visual` job
+  (`docs/visual-tests.md`). It covers the home, sign-in, sign-up and design
+  system pages in both themes at desktop and phone width, and runs inside the
+  pinned Playwright image, the only place its baselines are valid. The seed
+  is now reproducible ([#112](https://github.com/effuselabs/lumina/issues/112)):
+  faker is seeded, so two fresh databases hold the same salon (they used to
+  differ on every one of 103 compared rows), and the booking page is covered.
+  The dashboard followed its fix
+  ([#115](https://github.com/effuselabs/lumina/issues/115)).
+
+- ~~**The dashboard overview showed wrong and made-up figures.**~~ **Fixed**
+  ([#115](https://github.com/effuselabs/lumina/issues/115)). It is the first
+  page an owner sees. "Appointments today" showed the all-time count (502):
+  `/api/dashboard/metrics` counted the server's day up to the current moment,
+  usually 0, and the page fell back to the total. Revenue was completed
+  appointments × an assumed $75; utilisation a hardcoded 85% beside a TODO;
+  schedule times were in the viewer's zone, every appointment 60 minutes; a
+  "System Status: All Systems Operational" banner had no check behind it; and
+  Quick Actions and the schedule used ~30 CSS classes that never existed. The
+  overview is now read on the server in the salon's timezone
+  (`lib/services/dashboard-overview.ts`), revenue is payments less refunds
+  from real transactions, the metrics endpoint and its mocks are deleted, and
+  the components are styled from the token variables. Found on the way: net
+  revenue _added_ refunds stored negative (the seed's convention), and every
+  seeded transaction was dated the moment the seed ran — both fixed; the sign
+  convention itself is [#118](https://github.com/effuselabs/lumina/issues/118),
+  and 24 uses of undefined `lumina-heading-*`/`lumina-body-*` classes are
+  [#117](https://github.com/effuselabs/lumina/issues/117).
+
+- ~~**`npm run format:check` fails on 772 files.**~~ **Resolved.** The
+  repository was formatted in one pass and `format:check` is a CI gate, so it
+  cannot drift back.
+
+- **The manual staging deploy reported success against the old deployment.**
+  `deploy.yml`'s wait step accepted the first `healthy` response, and the
+  running deployment is healthy by definition. On 2026-09-29, during a Railway
+  incident ("API degradation causing slow or stuck deployments", from 15:29
+  UTC), Railway created no deployment for #26's merge and the manual
+  `railway up` was never promoted — and the job went green 0.4s after
+  uploading, while staging still served the previous commit. The step now
+  requires a process younger than the deploy. The wider lesson: a green deploy
+  job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
+  is live.
+
+- ~~Link buttons render as plain unstyled links.~~ **Fixed**
+  ([#97](https://github.com/effuselabs/lumina/issues/97)). `<Button asChild>`
+  handed Radix `Slot` a fragment rather than the link, and a fragment cannot
+  take a `className`, so every link styled as a button — page-header and
+  empty-state actions, "New Appointment", the calendar and schedule-card
+  links — rendered as plain text. The children now reach `Slot` as an array
+  with `Slottable` marking the link, so the icon renders inside it.
+
+- ~~Dashboard content starts about 300px right of the sidebar, and the header
+  stacks.~~ **Fixed** ([#98](https://github.com/effuselabs/lumina/issues/98)).
+  Two causes. From 1024px the sidebar is the grid's first column, and the
+  content column also carried a 280px margin for it — the width counted
+  twice, so content began at 560px. And the header had no layout at all:
+  `.dashboard-header` and every class inside it were defined nowhere (most
+  likely in the never-loaded design-token CSS deleted in 3e), so its groups
+  stacked as blocks. The margin is gone, the header is styled on the themed
+  tokens in the component, and `e2e/dashboard-layout.spec.ts` fails if the
+  content and sidebar stop meeting.
+
+- ~~**The dashboard shows made-up numbers and notifications.**~~ **Fixed**
+  ([#102](https://github.com/effuselabs/lumina/issues/102)). The appointments
+  page's 8 / 42 / 3.2% (with invented trends) are now read from the business's
+  appointments in the salon's own calendar (`lib/services/appointment-stats.ts`).
+  What could not be made real was removed rather than kept as decoration: the
+  bell's three invented events under real-looking names, the sidebar badges
+  fixed at 3 and 2, a header search box and Help button that did nothing, a
+  development roadmap shown to owners, and Search and Filter buttons with no
+  handlers. A test fails if hardcoded counts, trends or the invented names
+  return. Real notifications ([#104](https://github.com/effuselabs/lumina/issues/104))
+  and search ([#105](https://github.com/effuselabs/lumina/issues/105)) are
+  their own work.
+
+- ~~**The home page reported results and quoted a customer, neither real.**~~
+  **Fixed** ([#128](https://github.com/effuselabs/lumina/issues/128)),
+  decided by Jeremy on 2026-10-24. "24% average revenue increase", "8.5 hours
+  saved weekly" and "89% client retention rate", shown twice, and a quote
+  from "Sarah Chen, Owner, Bloom Beauty Salon" — with no customers yet. The
+  "See the impact in action" section is gone; where the figures first
+  appeared, the page now says what Lumina does today.
+  `__tests__/app/home-page-claims.test.ts` fails if a percentage, an hours
+  figure, a stat card or a quotation returns. The rest of the page's copy is
+  [#127](https://github.com/effuselabs/lumina/issues/127)'s.
+
+- ~~**There is no `error.tsx` anywhere in `app/`.**~~ **Fixed**
+  ([#57](https://github.com/effuselabs/lumina/issues/57)). A failing page now
+  shows a branded message with "Try again", a way back, and the error's
+  digest as a reference — the identifier Next writes beside it in the server
+  log. Boundaries in `app/dashboard/[businessSlug]/` (back to that salon's
+  dashboard), `app/` and `app/global-error.tsx`; checked end to end by making
+  a dashboard page throw in a production build.
+
+- **Sentry is installed but not running**
+  ([#100](https://github.com/effuselabs/lumina/issues/100)). Sentry 10 only
+  initialises from `instrumentation.ts`, which does not exist, so
+  `sentry.server.config.js` never runs; the browser config reads a DSN that
+  is never sent to the browser; and `withSentryConfig` applies only when
+  `SENTRY_DSN` is set at build. No error reaches Sentry. Decided by Jeremy on
+  2026-10-24: yes, for error tracking; no account exists yet. The code side
+  comes first and stays inert without a DSN; then Jeremy creates the project
+  and sets the DSN on Railway, and a deliberate error on staging proves
+  events arrive.
+
+  **The code side is done.** `instrumentation.ts` initialises the server and
+  edge SDKs from `SENTRY_DSN` at runtime and reports uncaught request errors;
+  the browser gets the same DSN inlined at build and loads the SDK lazily, so
+  a build without one ships none of it (first-load JS unchanged); the error
+  screens report what their boundary caught, except server errors, which were
+  reported where they happened. Errors only, `sendDefaultPii: false`. The
+  old `sentry.*.config.js` files are deleted: never loaded, and the browser
+  one called `new Sentry.Replay`, a Sentry 7 API that would have thrown.
+  Checked against a local listener standing in for Sentry: a thrown route
+  handler and a failed client render each arrived once, tagged with
+  `SENTRY_ENVIRONMENT`, with no user or IP.
+
+  **Still to do, and the larger part:** 56 route handlers catch their own
+  errors and answer 500 with a `console.error`, so Sentry never sees them —
+  uncaught errors are the minority. They need one shared way to report a
+  caught failure. A Content-Security-Policy (#70) will need Sentry's ingest
+  host in `connect-src`.
+
+- **No `Strict-Transport-Security` or `Content-Security-Policy` header.** ([#70](https://github.com/effuselabs/lumina/issues/70))
+  `next.config.js` sets `X-Frame-Options`, `X-Content-Type-Options`,
+  `Referrer-Policy` and `Permissions-Policy`, and staging serves them; it sets
+  neither HSTS nor a CSP. Worth adding before production (Phase 7) — a CSP in
+  report-only mode first, since inline styles are in use.
+
+- ~~**`npm run db:seed` is not idempotent.**~~ **Fixed.** A second run
+  appended another copy of the catalogue — six local runs left 264 services,
+  each name six times, and the booking e2e failed for want of a uniquely named
+  one. The seed now stops after its upserts when the demo salon already has
+  staff, and says so; `npm run db:seed:refresh` (reset the demo salon, then
+  seed) is the way to a fresh dataset. This entry first said
+  `prisma migrate reset` was the recovery, which destroys every table:
+  `db:seed:refresh` already existed and deletes one row.
+
+- **Railway's native deploy can lag CI by a quarter of an hour.** After #32
+  merged, main CI finished at 20:28 and the deployment went live at 20:42 —
+  #30 and #31 had taken 8–9 minutes, #33 about 7. At 20:43 a manual
+  `deploy.yml` run was dispatched as if the deploy had been skipped, and
+  duplicated one that had gone live a minute earlier; its upload then
+  replaced the native deployment with the same code under commit `unknown`.
+  Wait about 20 minutes after CI before treating a deploy as stuck, and check
+  Railway's deployment list rather than inferring from `/api/health` alone.
+
+- ~~**Merging two pull requests within seconds of each other skips a
+  deploy.**~~ **Fixed** ([#61](https://github.com/effuselabs/lumina/issues/61)).
+  `ci.yml` cancelled an older run when a newer one started on the same ref; on
+  `main`, Railway reads the cancelled run as a failed check suite and skips
+  that commit's deploy (`skippedReason: "CI check suite failed"`), with no
+  failure anywhere to notice. It happened on 2026-09-06 (#108, #109, before
+  the repository was rebuilt) and again on 2026-10-01, when #45's run on
+  `main` was cancelled — harmless both times, because the next commit
+  contained the code. Each commit on `main` now gets its own concurrency
+  group, so its run is never cancelled or left queued; pull requests still
+  cancel superseded runs.
+
+- **What a first `knip` run found**, recorded as input to 4d rather than as a
+  task in itself. 112 unused files, 10 unused dependencies and 8 unused
+  devDependencies, 25 unlisted dependencies, 363 unused exports — and, most
+  usefully, **13 unresolved imports**: test files importing modules that do not
+  exist (`lib/daily-status-blocker-tracker`, `lib/documentation-audit`,
+  `@/components/appointments/appointment-dashboard`,
+  `@/test-utils/appointment-mocks`, `@/lib/services/booking-api`,
+  `@/lib/framework-integration`). Those suites cannot pass under any
+  circumstances. `__tests__/agent-hooks/` is the same category: tests for the
+  previous era's process tooling, not for this application.
+
+  Treat the output as candidates, not a delete list — it flags `public/sw.js`
+  (a service worker, loaded at runtime), the `app/design-tokens/*.css` files
+  (believed reachable via CSS `@import` — wrong, as it turned out: nothing
+  imported them, knip had been right, and they were deleted in 3e), and
+  `husky` and
+  `lint-staged` (which it simultaneously reports as used by the pre-commit
+  hook). Verify against the gates, in small batches.
+
+- ~~**Availability re-validates every slot two or three times over.**~~
+  **Fixed** ([#62](https://github.com/effuselabs/lumina/issues/62)). The listing
+  no longer re-checks each slot through `CalendarIntegration`; the calculator's
+  own conflict check is the answer, and the booking write's staff lock is the
+  guarantee. Measured on the seeded salon, one service, every qualified staff
+  member, cold caches (both the in-process schedule cache and the
+  `availability_cache` table cleared), Postgres `log_statement = all`:
+  **561 → 172 statements, 1.41 s → 0.48 s**, the same 50 slots. Slots are now
+  never shorter than their services' total, which the removed layer used to
+  enforce. History, kept for the measurement:
+  one request issued **1,318 database queries**, reading the day's opening
+  hours 180 times. The calculator checks each slot it generates through the
+  conflict engine; the real-time service then re-checks each survivor through
+  `CalendarIntegration`, which calls the calculator again. Each layer keeps its
+  own copy of the same queries.
+
+  `schedule-cache.ts` brought that to **391 queries / 312ms**, which is enough:
+  the booking page aborts its own request after 8 seconds
+  (`use-network-resilience.ts:174`), and it was exceeding that on CI while
+  returning correct answers. But memoising reads treats the symptom. Removing a
+  validation layer is the fix, and it is not a tidy-up — it touches the booking
+  write path, so it wants its own PR, its own failing test, and this
+  measurement to check itself against. `Appointment.findMany` is still issued
+  per slot and is the largest remaining item.
+
+- ~~**The booking write re-checks conflicts outside its transaction.**~~
+  **Fixed** for both ways an appointment is created: the public booking
+  route and `AppointmentRepository.create` (the dashboard). The clash check
+  and the insert now share a transaction holding a Postgres advisory lock on
+  the staff member (`lib/services/staff-schedule-lock.ts`), so concurrent
+  bookings for one person queue and bookings for different people do not.
+  Before the fix, four concurrent requests for one slot were all booked into
+  the same chair; `e2e/booking-loop.spec.ts` ("concurrent bookings of one
+  slot book it once") now gates it. The unique constraint on
+  (staffId, startTime) suggested here was rejected: it misses overlaps that
+  start at different minutes.
+
+- ~~**Rescheduling still checks for a clash outside its write.**~~ **Fixed.**
+  Every path that puts an appointment into a slot now goes through
+  `claimSlot` (`lib/services/staff-schedule-lock.ts`) inside the transaction
+  that writes it: booking, `AppointmentRepository.update` (every dashboard
+  move, including `rescheduleAppointment`), `PUT /api/booking/[id]`, and
+  reinstating a cancelled or no-show appointment in
+  `AppointmentStatusManager`. Reinstating had no clash check at all, racy or
+  otherwise. Before the fix, two concurrent moves into one free hour both
+  returned 200; "concurrent reschedules into one slot move only one" gates
+  it. An exclusion constraint would cover writes that bypass these paths, but
+  its migration fails on any database already holding overlaps, so it needs a
+  data check first.
+
+- ~~**`/api/booking/[id]` had no tenant check.**~~ **Fixed** in the same
+  change. Middleware required a session; nothing checked the session belonged
+  to the appointment's business, so any signed-in user of any salon could
+  read, reschedule or cancel any other salon's appointment by id. The
+  tenant-isolation gate missed it because it only inspected routes whose
+  source mentions `businessId`; it now also inspects every authenticated
+  route that reads the database, and this was the only one it had missed.
+  Appointment ids are cuids, not guessable, and there are no real customers
+  yet, so no data is known to have been exposed.
+
+- **Clients cannot manage their own booking.** ([#84](https://github.com/effuselabs/lumina/issues/84)) `/booking/[id]` is a public
+  page ("View and manage your appointment booking") whose API,
+  `/api/booking/[id]`, has always required a staff session — so for a client
+  it has never worked. Making it work needs a capability the client holds,
+  such as a signed link in the confirmation email (the pattern
+  `/api/notifications/preferences` already uses), not a session. A feature,
+  not a fix; build it when client self-service is on the roadmap.
+
+- ~~**The reschedule email from `PUT /api/booking/[id]` formats times in the
+  server's zone**~~ **Fixed** ([#60](https://github.com/effuselabs/lumina/issues/60)).
+  It also sent the booking _confirmation_ for a reschedule — and for a
+  cancellation, so a cancelled client read "Appointment Confirmed!" — while
+  `DELETE` sent nothing and left a TODO. Every client email about an
+  appointment now formats through `lib/email/appointment-time.ts`, in the
+  salon's zone, and says what happened: confirmed, moved (with where it was),
+  or cancelled. `__tests__/api/booking-change-emails.test.ts` runs a Los
+  Angeles salon on a UTC server.
+
+- **Railway security incident, 2026-10-21.** Railway reported that a third
+  party may have read customers' environment variables, some decrypted
+  ([notice](https://blog.railway.com/p/security-disclosure-wednesday-october-21st),
+  [status](https://status.railway.com)). Railway invalidated every API token
+  and paused builds; Hobby workspaces, ours included, were still paused on
+  2026-10-22. Lumina has no customers, and staging holds only seeded data.
+  Done on 2026-10-22:
+  - Postgres: public TCP proxy removed; password regenerated from the
+    database's Config tab (the app reads it through a variable reference).
+  - `NEXTAUTH_SECRET` rotated. The public booking CSRF falls back to it, so
+    that rotated too.
+  - Resend API key deleted. It had never sent mail: the domain never
+    verified ([#120](https://github.com/effuselabs/lumina/issues/120)).
+  - `RAILWAY_STAGING_TOKEN` in GitHub replaced with a new project token; the
+    Railway GitHub app removed from Jeremy's personal account, kept only on
+    `effuselabs/lumina`.
+  - Checked, nothing found: GitHub deploy keys, security log, branches,
+    commits and workflow runs since 2026-10-20.
+
+  Staging was down until Railway re-enabled Hobby builds, and resuming them
+  did not redeploy it; `deploy.yml`, dispatched by hand on 2026-10-23, did.
+  Checked then: `/api/health` healthy, an owner sign-in, the rebuilt
+  dashboard, a public booking (201), and a booking without its CSRF token
+  refused (403). That paused build is also why #114 and #116 had not
+  deployed. Health reports `commit: "unknown"` after a CLI deploy.
+  `CRON_SECRET` and `PUBLIC_BOOKING_CSRF_SECRET` were never set on staging;
+  both fail safe, but give each its own value. Auditing the secrets turned up
+  a CSRF helper with a built-in fallback secret, unreachable
+  ([#121](https://github.com/effuselabs/lumina/issues/121), fixed in #122).
+
+- ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
+  service has since migrated to Infrastructure as Code entirely. The service's
+  `railwayConfigFile` was null and every setting it supplied had reverted to
+  defaults — no `healthcheckPath`, no `preDeployCommand`, `RAILPACK` instead of
+  `NIXPACKS`. So the guarantee `deploy.yml` documents ("Railway aborts the
+  release if the pre-deploy command fails, so new code can never go live
+  against an un-migrated schema") was not true. Restored to `/railway.json`
+  with its six settings on 2026-09-06.
+
+  Cause: a `railway config` run created `.railway/railway.ts` and switched the
+  service to Infrastructure-as-Code, but that file was never committed and its
+  `builder` and `preDeployCommand` are commented out. Config as Code stops
+  working 2026-12-01; **done** — `.railway/railway.ts` is now the complete
+  configuration (builder, pre-deploy migration, health check), committed.
+
+  Separately: a deploy is skipped, not failed, when CI is red — `skippedReason:
+"CI check suite failed"`. Staging silently ran week-old code. Worth knowing
+  that a red `main` is invisible from the staging URL.
+
+- ~~**`npm run test:e2e` cannot pass — two spec files fail to load at all.**~~
+  **Resolved in 4d.2.** `cross-browser-responsive.spec.ts` and
+  `public-booking-e2e.spec.ts` called `test.use({ browserName })` inside a
+  `test.describe`, which Playwright rejects at collection — so the command
+  could not start, whatever you passed it. They and the rest of the
+  deleted-tests-era specs are gone; three remain, and all 18 tests pass in 22s
+  across both browser projects. CI runs the suite rather than one named file.
+
+  One real defect surfaced on the way: `health-check.spec.ts` asserted
+  `checks.memory === 'healthy'`, but the route downgrades to `'warning'` above
+  a 512MB heap and still returns 200 by design. The test passed alone and
+  failed inside the full suite — an assertion on how busy the machine was.
+
+- The Clients page's staff filter matches `Client.preferredStaff`
+  (`app/api/clients/route.ts:108`), not the staff a client has actually
+  booked with. A client who books through the public page never has that
+  field set, so filtering by the staff member they just booked with is
+  guaranteed to hide them. Found on staging looking for a real booking.
+  Belongs with client CRM when that is unparked; the query wants to go
+  through `appointments.some({ staffId })`. ([#85](https://github.com/effuselabs/lumina/issues/85))
+
+- ~~The booking page opens on today and offers no way forward when the salon is
+  closed that day.~~ **Fixed** ([#58](https://github.com/effuselabs/lumina/issues/58)).
+  It was worse than recorded: a "Next available date" button did exist, but it
+  parsed the API's `2026-10-12` with `new Date()`, which is UTC midnight —
+  the evening before anywhere west of Greenwich. A Los Angeles visitor on a
+  closed Sunday was offered "Sunday, Oct 11", and clicking it selected the
+  closed day again. `lib/booking/date-param.ts` now reads and writes the API's
+  bare dates in the visitor's zone, and on first arrival the page moves to the
+  next day with times and says so. The e2e spec opens the page in the salon's
+  zone with the browser clock on a closed day; the project's own browser runs
+  in Sydney, east of UTC, where the bug never showed.
+
+- ~~The booking page could show the closed day's empty list under the day it
+  moved to.~~ **Fixed** ([#92](https://github.com/effuselabs/lumina/issues/92)),
+  a regression from #58's fix. The page drew every availability response it
+  received, including ones for a day it was no longer showing: a fetch that
+  re-runs while its request is in flight shares that request, so one answer
+  reached two handlers — the first moved the page on, the second drew the
+  closed day over it. Separately, the loading state cleared between the hand
+  over and the next day's fetch, drawing that day as empty for a frame. Only
+  the latest request may now change the page, and loading holds through the
+  hand-over. #58's test passed regardless, because it looked for any button
+  containing a time and the "other times" tiles contain times too; it now
+  forces the shared-request case and records whether the empty state is ever
+  drawn for the new day, even briefly.
+
+- ~~The booking page's time buttons, and its "other times" tiles, clip their
+  own text.~~ **Fixed** ([#90](https://github.com/effuselabs/lumina/issues/90)).
+  Both used the Button's `sm` size, a fixed 32px height, with
+  `whitespace-nowrap` and `overflow-hidden` from its base — and two lines of
+  text. They now grow to fit (44px minimum, a comfortable touch target) and
+  their grids size columns by available width, so a time stays on one line.
+  The e2e spec fails on any time button or tile whose content overflows it.
+
+- The booking page's date-and-time step is squeezed at desktop width: two
+  ~225px cards beside the sidebar, weekday headers running together, the
+  month heading wrapping. For the design review
+  ([#94](https://github.com/effuselabs/lumina/issues/94)).
+
+- ~~**Prisma is bundled into the browser on the booking page.**~~ **Fixed.**
+  `staff-time-selection.tsx` called `AlternativeSlotsService` from the
+  browser, so "here are some other times" never worked. The availability
+  route now computes alternatives when a day is empty and returns them in
+  the same response; the page renders them in the salon's timezone. Three
+  defects were behind the first one, each hidden by it:
+  - The search started a day early: the route passed `new Date(date)`, UTC
+    midnight, which in Los Angeles is the evening before. It now passes the
+    salon's own midnight.
+  - The service read opening hours from the legacy `Business.operatingHours`
+    JSON (through an `as any`), which disagreed with the `BusinessHours`
+    table everything else reads: it offered Sunday slots for a salon the page
+    showed as closed.
+  - The page only rendered alternatives inside its error panel, never for an
+    empty day, and in the browser's timezone.
+    `e2e/booking-loop.spec.ts` asks for a closed day and checks every
+    alternative falls on a later salon day; it fails on each of the first two.
+    The dashboard calendar's Prisma browser stub went in #52: no client
+    bundle contains Prisma.
+
+- ~~The landing page links to `/book/demo` (`app/page.tsx`), which 404s.~~
+  **Fixed** ([#64](https://github.com/effuselabs/lumina/issues/64)) by removing
+  the button. It read "Watch Demo" and promised a three-minute video that does
+  not exist, so pointing it at a real booking page would still have
+  misdescribed it. `e2e/homepage.spec.ts` now fails on any home-page link that
+  answers 4xx or 5xx. A real demo — a video, or a sandbox salon that sends no
+  real email — belongs with the marketing redesign
+  ([#69](https://github.com/effuselabs/lumina/issues/69)). Readable booking links
+  (`/book/<slug>`) remain a good idea for salons, separately.
+
+- The public booking page now hides services no active staff can perform. A
+  salon whose only nail technician leaves will see nail services disappear from
+  their booking page with no notice. Better than the dead end it replaces — the
+  service was listed, selectable, and unbookable — but the owner should be told.
+  Belongs with staff management, when that is unparked. ([#86](https://github.com/effuselabs/lumina/issues/86))
+
+- ~~`app/api/booking/*` duplicates the public booking API.~~ **Resolved** in
+  4d: only `/api/booking/[id]` remains (tenant-checked since #54), and
+  `offline-support.tsx` no longer fetches a missing endpoint.
+- ~~`booking-confirmation.tsx`, `public-booking-interface.tsx` and
+  `simple-booking-layout.tsx` are unreferenced.~~ **Resolved**: deleted in the
+  4d sweep.
+- ~~The client form's `<Input>` sets `aria-label` from its placeholder, which
+  overrides the visible `<Label>`.~~ **Fixed**
+  ([#63](https://github.com/effuselabs/lumina/issues/63)). The fallback was in
+  `Input` itself, so it affected every input with a placeholder, and it was
+  hiding 17 inputs — search boxes and the design-system demos — that had no
+  label at all. Those now carry an explicit `aria-label`, `Input` never
+  derives one, and `__tests__/accessibility/input-labels.test.ts` fails on any
+  `<Input>` without a real label.
+- ~~"Confirm Booking" renders white text on the coral/gold gradient.~~
+  **Fixed** in 3d, and gated by a test that reads the components, not only
+  the tokens.
+- ~~**Sign-in reports a database outage as a wrong password.**~~ **Fixed.**
+  `authorize` caught every error, returned `null`, and logged nothing, so a
+  stopped database read as "Invalid email or password". It now lives in
+  `lib/auth/authorize-credentials.ts`: `null` only for malformed input, an
+  unknown email or a wrong password; anything else is logged and thrown as a
+  `CredentialsSignin` with `code: 'service_unavailable'`, which the form shows
+  as an outage. Checked against a real server with Postgres stopped.
+- `optimized-booking-interface.tsx` is the **live** booking UI.
+  `public-booking-interface.tsx` and `simple-booking-layout.tsx` have zero
+  importers. An earlier demolition list had this backwards — do not delete the
+  wrong one.
+- ~~**`next@14.2.35` carried 23 advisories, two of them critical RCE, with
+  no 14.x patch.**~~ **Fixed** by the upgrade to 15.5.26. GHSA-2xp9-vwfh-vxw4
+  (Image Optimization API, AVIF) had reached us: `/_next/image` is excluded
+  from auth in `middleware.ts` and fetched from allowed hosts on request. It
+  was mitigated first with `images.unoptimized` — measured on a production
+  build, the endpoint went from fetching on request to 404 — and the
+  optimizer stays off after the fix, for the reasons in `next.config.js`.
+  `postcss`, pinned inside `next` at a vulnerable 8.4.31, is redirected to the
+  root copy with an npm `overrides` entry; remove it when `next` stops pinning. ([#80](https://github.com/effuselabs/lumina/issues/80))
+
+- Before real customers: `/api/gdpr/export` and `/delete` are untested while
+  handling PII, and there is no privacy policy or terms. ([#71](https://github.com/effuselabs/lumina/issues/71))
+- ~~Tenant isolation has no test coverage.~~ **Done.** Thirty authenticated
+  routes took a `businessId` from the caller and never checked it. The cause
+  was that `CLAUDE.md` mandated `requireBusinessAccess`, which calls
+  `redirect()` and so cannot work in a route handler — a rule nobody could
+  follow, hand-rolled six ways instead. `authorizeBusinessAccess` in
+  `lib/auth/business-access.ts` is the one that works, and
+  `__tests__/security/tenant-isolation.test.ts` fails the build for any new
+  route that skips it.
+
+  Ten routes were fixed; fifteen were deleted as dead (`/api/availability/*`
+  in full, three `/api/booking/*` duplicates, three telemetry routes whose
+  only caller had no importers); five turned out to authorize correctly by a
+  mechanism the detector could not see, and are recorded as such.
+
+  Two things the sweep found and did not fix:
+
+  - `/api/monitoring/performance` now checks membership, but
+    `appointmentPerformanceMonitor.generateReport` takes only a time window —
+    it does not scope by business. The check stops a stranger asking; it does
+    not yet make the answer theirs. Scoping the report is real work with no
+    consumer today, since nothing calls the endpoint. ([#73](https://github.com/effuselabs/lumina/issues/73))
+  - ~~There is no admin role. Several endpoints are application-wide by
+    nature and are currently open to any authenticated user.~~ **Fixed**
+    ([#72](https://github.com/effuselabs/lumina/issues/72)), decided by Jeremy
+    on 2026-10-24. A platform administrator runs a whole deployment, one
+    salon or many, and is not a salon role. An allow-list of email addresses
+    was proposed first and withdrawn — nothing verifies an address, so
+    whoever registered a listed one first would have become admin. Instead
+    the role is `UserRole.SUPER_ADMIN`, which existed unused, granted only
+    from the command line (`npm run admin:grant`, `docs/environments.md`).
+    `authorizePlatformAdmin` reads it from the database on every request, so
+    revoking is immediate. `/api/monitoring/alerts` and
+    `/api/notifications/health` answer only an administrator. The tenant
+    isolation gate missed both because it looked only at routes naming a
+    business or reading Prisma, and these read in-memory monitors; it now
+    requires a guard on every route behind sign-in.
 
 ## A note on this file
 

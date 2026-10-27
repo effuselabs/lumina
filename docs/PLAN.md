@@ -1,1308 +1,380 @@
-# Lumina rebuild plan
+# Lumina plan
 
-Living document. Update it in place as things land — do not create a second
-plan, a per-phase plan, or a status report. This project already failed once by
+Living document. Update it in place as things land. Do not create a second
+plan, a per-phase plan, or a status report: this project already failed once by
 accumulating 335 documents and 85 spec files describing work that did not run.
 
-**Detail lives where it is enforced, not here.** Rules are in `CLAUDE.md`,
-environment mechanics in `docs/environments.md`, why a change was made in its
-commit message, and the definition of done in `e2e/booking-loop.spec.ts`. This
-file is only the map: where we are, what is next, and what is deliberately
-parked.
+**This file is the map: where we are, what is next, why that order, and what is
+parked.** Detail lives where it is enforced or recorded:
+
+| What                                | Where                                                                                      |
+| ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| Status of any piece of work         | Its GitHub issue. Phases are [milestones](https://github.com/effuselabs/lumina/milestones) |
+| The rules, and who decides what     | `CLAUDE.md`                                                                                |
+| The look, materials and motion      | [`visual-language.md`](visual-language.md)                                                 |
+| Environments, deploys, secrets      | [`environments.md`](environments.md)                                                       |
+| Finished work and the lessons in it | [`history.md`](history.md) (the rebuild log)                                               |
+| Why a change was made               | Its commit message and pull request                                                        |
+| Whether the product works           | `e2e/booking-loop.spec.ts`, and the five gates in `CLAUDE.md`                              |
+
+**How work is tracked.** Each phase is a milestone. Phase 6 is one epic,
+[#126](https://github.com/effuselabs/lumina/issues/126), with a sub-issue per
+stage; each stage holds the older issues it will close, so the epic's progress
+bar is the rebuild's. The launch is [#167](https://github.com/effuselabs/lumina/issues/167),
+built the same way. An issue without a milestone is parked, and carries the
+`parked` label.
 
 ---
 
-## Why this rebuild exists
+## Where things stand — 2026-10-27
 
-Development stalled after ~118 commits across several AI tools. The cause was
-not lack of code — it was building without a feedback loop. Measured at the
-start:
+| Check                 | Now                                                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Build                 | Passes; 62 static pages                                                                                          |
+| Type-check, lint      | 0 errors                                                                                                         |
+| Jest                  | 1,020 tests in 68 suites, green                                                                                  |
+| End to end            | 19 tests, Chromium and Mobile Safari, green in CI                                                                |
+| Screenshots           | Home, sign-in, sign-up, booking, dashboard, design system; both themes                                           |
+| Staging               | `staging.uselumina.app`, auto-deploys on green `main`, healthy                                                   |
+| Production advisories | 0 high or critical (4 moderate, build-time only, [#149](https://github.com/effuselabs/lumina/issues/149))        |
+| Unused code (`knip`)  | 6 small findings: it drifted because CI doesn't run it ([#152](https://github.com/effuselabs/lumina/issues/152)) |
 
-| Check                   | Before                                 | Now                       |
-| ----------------------- | -------------------------------------- | ------------------------- |
-| `npm run build`         | fails                                  | passes, 80/80 pages       |
-| `npm run db:seed`       | fails                                  | exits 0                   |
-| `npm run type-check`    | 686 errors                             | 0                         |
-| `npm run lint`          | 180 errors, not run at build           | 0 errors, gates the build |
-| Jest                    | 101 of 114 suites failing, 0% coverage | 495 tests green in CI     |
-| Deployment              | never happened                         | auto-deploys on green CI  |
-| Booking loop            | never completed once                   | green in CI, end to end   |
-| Prod high/critical CVEs | 16 (6 direct)                          | 0, gated daily and per PR |
+**What works for a salon today:** a client can book through the salon's public
+page, in the salon's timezone, without double-booking a chair, and the owner
+sees the booking on the calendar and in real dashboard figures.
 
-The mechanical root cause was a seed factory that computed required fields and
-never returned them. No seed data meant no working local app, which meant no
-end-to-end test was possible, which meant nothing was ever verified. That is
-how "MVP 86% complete" and 0% coverage coexisted for months.
+**What does not, yet:** no email has ever been delivered
+([#120](https://github.com/effuselabs/lumina/issues/120)); there is no password
+reset, no staff booking, no check-in, and no Settings page; and the interface
+is the old coral design, which Phase 6 replaces.
+
+**One correction to the record.** Phase 4 was marked done when
+`e2e/booking-loop.spec.ts` passed. `CLAUDE.md`'s definition of done is longer:
+an owner signs up and sets up, a client books, _both are emailed_, and the
+booking is on the calendar. The spec runs on seeded data and does not assert
+email, so the sign-up and email halves have never been proven.
+[#165](https://github.com/effuselabs/lumina/issues/165) closes that gap, and is
+a launch gate.
+
+## Phases
+
+| Phase                                    | State                                      | Milestone                                                        |
+| ---------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------- |
+| 0 — Ground truth                         | Done                                       |                                                                  |
+| 1 — Unblock and demolish                 | Done                                       |                                                                  |
+| 2 — Foundation (`CLAUDE.md`, auth, lint) | Done                                       |                                                                  |
+| 3 — Environments and pipeline            | Done                                       |                                                                  |
+| 4 — Make the booking loop work           | Done, as tested (see the correction above) |                                                                  |
+| 5 — Design system collapse               | Done; milestone closed 2026-10-27          | [1](https://github.com/effuselabs/lumina/milestone/1)            |
+| **6 — UI/UX rebuild**                    | **In progress: stage 0**                   | [4](https://github.com/effuselabs/lumina/milestone/4), epic #126 |
+| 7 — Brand, releases, production launch   | Not started; checklist proposed            | [2](https://github.com/effuselabs/lumina/milestone/2), #167      |
+| 8 — Ratchet and expand                   | Not started                                | [3](https://github.com/effuselabs/lumina/milestone/3)            |
+
+Phase 5 closed with six issues that were not design work; each moved to where
+its work now lives (#104, #105, #118, #123 and #124 into Phase 6, #120 into the
+launch).
+
+## Now, next, and waiting
+
+**Now — Phase 6, stage 0**, groundwork that changes nothing a salon sees:
+retire the dormant offline mode ([#150](https://github.com/effuselabs/lumina/issues/150)),
+allow-list what public booking responses contain ([#151](https://github.com/effuselabs/lumina/issues/151)),
+the redesign's guardrail checks ([#152](https://github.com/effuselabs/lumina/issues/152)),
+and analytics' made-up figures ([#123](https://github.com/effuselabs/lumina/issues/123):
+computed honestly, or taken out of the navigation until they are). The truth
+pass that removed every dead link and "Coming Soon" page is done
+([#147](https://github.com/effuselabs/lumina/issues/147)).
+
+**Next — stage 1, plumbing** ([#153](https://github.com/effuselabs/lumina/issues/153)),
+then the Tailwind 4 upgrade if approved
+([#154](https://github.com/effuselabs/lumina/issues/154)), then **stage 2, the
+look** ([#155](https://github.com/effuselabs/lumina/issues/155)) — the first
+pull request that visibly changes staging.
+
+**Waiting on Jeremy**, each with what it unblocks:
+
+| Decision or action                                                          | Unblocks                                | Issue                                                   |
+| --------------------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------- |
+| Tailwind 4 now, dropping iPhones stuck on iOS 15 or older                   | Stage 1; clears #149                    | [#154](https://github.com/effuselabs/lumina/issues/154) |
+| Does `/book` also open dark, or follow the client's phone (as P3 recorded)? | Stage 2's theme defaults, stage 5a      | [#126](https://github.com/effuselabs/lumina/issues/126) |
+| Move DNS to Cloudflare, verify the domain in Resend, set the key on Railway | Every email, password reset, the launch | [#120](https://github.com/effuselabs/lumina/issues/120) |
+| Create the Sentry project, set `SENTRY_DSN` on Railway                      | Error reporting                         | [#100](https://github.com/effuselabs/lumina/issues/100) |
+| Set up CLA Assistant with the approved text                                 | The CLA pull request                    | [#77](https://github.com/effuselabs/lumina/issues/77)   |
+| Agree the first-release checklist                                           | Phase 7's definition of done            | [#167](https://github.com/effuselabs/lumina/issues/167) |
+
+None blocks stage 0, and only the first two touch Phase 6 at all.
 
 ---
 
-## Status
+## Phase 6 — UI/UX rebuild
 
-| Phase                                            | State                                      |
-| ------------------------------------------------ | ------------------------------------------ |
-| 0 — Ground truth                                 | Done                                       |
-| 1 — Unblock and demolish                         | Done                                       |
-| 2 — Foundation (`CLAUDE.md`, auth, tokens, lint) | Done                                       |
-| 3 — Environments and pipeline                    | Done — `staging.uselumina.app` healthy     |
-| 4 — Make the booking loop work                   | Done                                       |
-| 5 — Design system collapse                       | Collapse done; its open bugs remain        |
-| **6 — UI/UX rebuild**                            | **Next** — added 2026-10-24                |
-| 7 — Brand assets, releases, production launch    | Not started — see Releases and brand voice |
-| 8 — Ratchet and expand                           | Not started                                |
+**Why.** Phase 5 made the design system one thing without redesigning it, on
+purpose: every value carried across unchanged. What it surfaced shares one
+cause — a palette and components drawn for a light marketing page, stretched
+over a dense app and then a dark theme. Patching each finding would have kept
+the cause. Decided by Jeremy on 2026-10-24
+([#126](https://github.com/effuselabs/lumina/issues/126)), with
+[Arcane](https://getarcane.app) as the reference he named.
 
-Phase 6 was inserted on 2026-10-24, and what had been 6 and 7 moved down
-one; GitHub's milestones were renamed to match.
-
-### Phase 4 — done
-
-`e2e/booking-loop.spec.ts` is the definition of done: a stranger opens a
-salon's public booking page, picks a service and a time, enters their details,
-books — and the appointment lands in the database against the right business,
-staff member and client.
-
-- [x] **4a** Write the failing spec; trim Playwright from 7 browser projects to 2
-- [x] **4b** Availability returns real slots — 43 slots in 1.24s cold, 0.61s warm
-- [x] **4c** Walk the remaining layers until the spec passes — **all four tests
-      green**, and the E2E job now gates `main`
-- [x] **4d.1** Delete the legacy suite — 133 files, and the whole of Jest is
-      the gate again: **32 suites, 427 tests, green in 7.7s**, down from 117 of
-      159 suites failing
-- [x] **4d.2** Make the E2E suite runnable — legacy specs deleted, the suite
-      collects and passes for the first time: **18 tests, 22s**, and CI runs
-      `npm run test:e2e` rather than one named file
-- [x] **4d.3** Rebuild the missing tests, starting with tenant isolation —
-      **495 tests, 35 suites**, and tenant isolation went from untested to
-      enforced by a gate that fails the build for any new unguarded route
-
-### Phase 5 — the collapse is done
-
-Deleting 133 test files removed the only importer many components had, and
-what that exposed was larger than the phase originally assumed: 85 of 187
-components rendered nowhere. Five batches later:
-
-|                                   | Before 4d                             | After the sweep |
-| --------------------------------- | ------------------------------------- | --------------- |
-| Unused files                      | 112 reported, 181 once the tests went | **0**           |
-| `components/`                     | 187 files                             | **106**         |
-| `components/ui` primitives        | 57                                    | 37              |
-| Lines removed across five batches | —                                     | **~49,000**     |
-
-Nothing reported unused now. The eleven that knip still flagged were all
-legitimate — the Railway IaC file, `public/sw.js` registered at runtime by
-`offline-support.tsx`, and the resolver script itself — so `knip.json` records
-them as entry points rather than leaving a report everyone learns to ignore.
-
-**What the sweep taught, kept because the next sweep will need it.** Grep is
-not a dependency graph: matching importers by basename made
-`lib/availability/availability-calculator` look alive because a different
-directory holds a file of the same name, and matching only same-directory
-relative imports missed `../lib/theme-validation`. Both are now handled by
-`scripts/maintenance/find-importers.js`, which resolves specifiers to files.
-It still is not the authority — knip proposes, the script narrows, the five
-gates decide, and `npm run db:seed` runs by hand on anything near
-`prisma/factories`.
-
-**Next, in order:**
-
-1. ~~**28 unused dependencies**~~ **Done** — 26 removed, 120 packages out of
-   `node_modules`. `husky` and `railway` are recorded in `knip.json` as used,
-   and `glob` is gone from `scripts/migrate-calendar-data.ts` rather than
-   declared. knip now reports no unused dependencies, unlisted dependencies or
-   files.
-2. ~~**Next.js 15.5.24**~~ **Done** — on 15.5.26 and React 19, and
-   `npm audit` reports nothing, dev dependencies included. Taken ahead of the
-   collapse because it was a security fix under the dependency policy's first
-   trigger, and because the collapse rewrites the same components React 19
-   touches. `.github/workflows/dependency-audit.yml` now fails any pull
-   request, and a daily run, on a high or critical production advisory.
-3. **The collapse itself**, against 37 primitives instead of 57 and a
-   component tree that is entirely reachable.
-   - [x] **3a — every colour in a `.tsx` comes from `lib/design/tokens.ts`.**
-         162 raw hex across 23 files (224 across 31 before the sweep deleted
-         the rest), now **0**, and the lint rule is an **error** that
-         matches hex anywhere in a string — the old form saw 93 of the 162.
-         Done at identical values: 9 of 11 pages pixel-identical before and
-         after, the analytics chart within its run-to-run noise, and the
-         design-system page changed only where it had been wrong (below).
-   - [x] **3b — the second palette is gone.** `tokens.legacy` is deleted;
-         its values had been copied into components from a `colors.css` that
-         was never loaded (see 3e). Each use now takes the main palette's
-         nearest role: muted text `#808285` (3.85:1) → `neutral[500]`
-         (4.74:1); positive `#22C58B` (2.23:1) → `status.success` (5.02:1);
-         negative → `status.error` (4.83:1); strong text → `brand.deepTeal`;
-         gridlines → `neutral[200]`; the success card's surface and border →
-         `statusTint`; the analytics hover gradient → `gradients.radiantPressed`.
-         Screenshots: 14 of 19 pages identical; the other five changed only in
-         page subtitles (slightly darker grey), chart lines and axes, and
-         stat-card trend colours.
-   - [x] **3c — `status` colours meet AA as text.** success `#15803D` and
-         warning `#B45309` (both 5.02:1 on white, and white on them), were
-         3.30 and 3.19. `status.info` is now `#2563EB`, what `text-info`
-         actually rendered — `tokens.ts` said `#0284C7` while the CSS said
-         otherwise, and `__tests__/design/css-token-parity.test.ts` now fails
-         if `globals.css` and `tokens.ts` disagree. Every status colour is in
-         `contrastPairs`, both ways round. Screenshots: only status-coloured
-         text changed (the home page's trend lines, analytics, the
-         design-system swatches).
-   - [x] **3c′ — brand text is deep teal; gold is for fills and accents.**
-         Decided by Jeremy on 2026-10-01. Measured in the browser first:
-         115 text elements across 21 pages were gold on a light surface, all
-         at 1.44:1, and none on a dark one — so nothing needed to stay gold.
-         113 came through `.text-lumina-primary`, now `var(--deep-teal)`; the
-         rest were a `select` focus and checked state, an animated-counter
-         variant, two auth-link hovers, a design-system link, and "Powered by
-         Lumina" on the booking page, which was coloured with the _tenant's_
-         brand colour. After: one gold text element — none. The most visible
-         change is the sidebar wordmark, gold to teal beside its gradient
-         mark. `__tests__/design/brand-text-colour.test.ts` fails on gold
-         text outside `dark:` (two decorative uses named), and deep teal on
-         white (14.9:1) is in `contrastPairs`.
-     - **Coral as text fails the same way** — 2.57:1 on white — and is on
-       21 elements, a mix of decorative icons and a few links on the auth
-       pages. Not changed: the decision was about gold. For the design
-       review. ([#66](https://github.com/effuselabs/lumina/issues/66))
-     - **Tenant colours are used as text.** The public booking page sets
-       text in the business's configured `accent` colour (deep teal by
-       default, but any colour a salon picks). A tenant colour used as text
-       needs a contrast floor; for the design review. ([#67](https://github.com/effuselabs/lumina/issues/67))
-   - [x] **3d — the Button's injected stylesheet is gone**, and the
-         variants carry what it had been papering over. Primary text is deep
-         teal on the gradient (5.81:1 at the coral end, where white was 2.57:1)
-         — "Confirm Booking" included, and four call sites that set white text
-         themselves. Outline borders are full `foreground` (its `/30` was about
-         1.9:1, under the 3:1 UI minimum); links are deep teal, gold in dark.
-         `__tests__/design/gradient-text.test.ts` fails on white text on the
-         gradient anywhere in `app/` or `components/`.
-     - It also found that `dark:` utilities followed the OS, not the theme.
-       Tailwind defaulted to `darkMode: 'media'` while the app is light-only
-       by design, so a dark-OS visitor got dark styles on the light page — the
-       booking page's search box turned black. It is `class` now; the same
-       page went from 76,570 px different between OS settings to 0.
-
-   - [x] **3e — hex outside `.tsx`.** No stylesheet, config or `.ts`
-         under the lint gate writes a colour of its own; `tokens.ts` is the
-         one place a value lives.
-     - `app/design-tokens/` is gone: ten CSS files, 2,210 lines, that
-       nothing imported. `knip.json` had ignored it on the belief that it
-       was reached through `@import`, which is why no report flagged it.
-     - `.ts`: the email templates and every other module import tokens, and
-       the hex lint rule covers `.ts`. All 60 email renders hashed the same.
-       `lib/theme-accessibility.ts` had its own drifted palette and now
-       grades what renders, which surfaced 3f.
-     - `tailwind.config.ts`: a dead safelist (87 rules, 11 KB, for the
-       Button override 3d removed) is gone and its 67 tint steps live in
-       `tokens.scales`; the CSS was byte-identical after the move.
-     - CSS: `app/tokens.css` is generated from `tokens.ts`
-       (`npm run tokens:css`), and `globals.css` and `booking-mobile.css`
-       refer to its properties. `__tests__/design/tokens-css.test.ts` fails
-       if the file is stale or either stylesheet gains a hex. Every existing
-       custom property resolved the same on six pages, light and `.dark`, and
-       every element's computed colours matched.
-     - `prisma/seed.ts`, the last one, takes the demo salon's colour from
-       `brand.gold`. Nothing in the application writes a hex of its own.
-   - [x] **3f — dark mode, done properly.** Decided by Jeremy on
-         2026-10-01: dark mode is a requirement, not an extra, and
-         "light-only by design" (3d) no longer holds. Three pull requests.
-     - [x] **1 — the dark theme applies, and passes AA.** Three faults:
-       - **Cascade.** Tailwind 3's `@layer base` is not a CSS cascade layer;
-         Tailwind moves its rules up to `@tailwind base`, the top of the
-         file. `.dark` lived there, so in the built CSS it came _before_ the
-         plain `:root` that sets the same properties, at equal specificity,
-         and `:root` won on source order. (This entry first blamed layered
-         versus unlayered precedence; the built CSS showed otherwise.)
-         `.dark` now sits outside any layer, after `:root`.
-       - **Two providers.** `dashboard-layout.tsx` wrapped the dashboard in
-         a second `ThemeProvider` with `defaultTheme="system"` and its own
-         storage key. It won the class on `<html>`, so the dashboard
-         followed the OS — dark-OS users already got a half-dark dashboard,
-         despite `providers.tsx` choosing light. It is gone. The
-         root provider also force-set four properties as inline styles,
-         which hid the cascade bug; that is gone too.
-       - **Contrast.** Dark reused light `status` colours (3.5–4.1:1 on dark)
-         and a muted grey at 3.71:1. `tokens.statusOnDark` and muted
-         `#94949C` clear 4.5:1 on all three dark surfaces, status fills
-         carry dark text, and brand text (`.text-lumina-primary`) is gold in
-         dark, where deep teal is 1.3:1. All in `contrastPairs`.
-       - `__tests__/design/dark-theme-cascade.test.ts` fails on any of the
-         three structural faults. Light mode: 18 of 19 pages identical,
-         analytics differs only in a seeded figure. Dark mode, measured on four
-         pages: background, text, muted, status and brand text all resolve
-         to their dark values.
-     - [x] **2 — themed colour names.** `themed` in `tokens.ts` gives each
-           surface, text and line role a light and a dark value, generated into
-           `app/tokens.css` as `--ui-*` (`:root`, then `.dark`) and exposed to
-           Tailwind as `bg-surface{,-muted,-sunken,-strong}`,
-           `text-ink{-strong,,-soft,-muted,-faint}` and
-           `border-line{,-strong,-soft}`. Each light value is the Tailwind gray it
-           replaces, which `semantic-colours.test.ts` asserts, so moving a
-           component across changes nothing in light mode. Dark pairs are in
-           `contrastPairs` wherever the light pair already passed: muted text
-           was already 4.39:1 on gray-100 and 3.90:1 on gray-200 in light, and is
-           held only on the two lightest surfaces. The input, textarea, select
-           and dialog primitives moved first. `hardcoded-light-classes.test.ts`
-           is a ratchet: 508 hardcoded light classes today, and the count may
-           only fall. The `--color-*-background` properties that `success-50`
-           and friends point at are undefined, but nothing uses those classes.
-     - [x] **3.1 — the gray sweep.** 506 hardcoded light classes across 50
-           files (`bg-white` → `bg-surface`, `text-gray-900` →
-           `text-ink-strong`, `border-gray-200` → `border-line`, and so on, with
-           `hover:` and other prefixes kept) moved onto the themed names, plus
-           `ink-deep` (gray-800) and `surface-dim` (gray-300). Light mode: 18 of
-           19 pages pixel-identical, analytics within its noise.
-           `hardcoded-light-classes.test.ts` now fails on any hardcoded light
-           gray outside two named exceptions.
-     - [x] **3.2 — the rest, and the switch.** Found in dark screenshots
-           of all 19 pages after 3.1:
-       - Deep-teal text (39 classes, 3 inline styles, and
-         `.text-lumina-secondary`) is `ink-brand`: deep teal in light, the
-         teal ramp's 300 step `#8DD2D8` in dark (7.0–11:1).
-         `hardcoded-light-classes.test.ts` now also fails on
-         `text-deep-teal` and gray gradient stops.
-       - 57 `neutral-*` classes with no `dark:` partner got a mirrored one;
-         the booking page's gray gradient takes the surface names; the week
-         view's busyness tints are translucent in dark.
-       - A light/dark toggle in the dashboard header, and
-         `defaultTheme="system"`: dark mode is now reachable.
-       - The marketing home page is forced light (`forcedTheme` on
-         `ThemeProvider`): its photographic and gradient sections are
-         light-only by design, and need a dark design of their own.
-         Light mode: identical except the new toggle. Remaining for the
-         design review: pastel status boxes (`bg-*-50`) stay light in dark,
-         readable but bright ([#68](https://github.com/effuselabs/lumina/issues/68)); tenant brand colours used as text (the booking
-         sidebar's phone and email) are unreadable on dark with the default
-         deep-teal accent; and the home page's dark design ([#69](https://github.com/effuselabs/lumina/issues/69)).
-   - [x] **3g — peach renders.** `--lumina-peach` was never defined, so
-         `bg-lumina-peach` painted nothing — and its opacity variants
-         (`/10`, `/20`, `/30`) were never generated at all, because Tailwind
-         cannot add alpha to a bare `var()`. Tailwind's peach colours now take
-         `brand.peach` directly, as the `brand.*` colours already did. The
-         "in progress" schedule item, its border and two hover tints paint
-         for the first time; checked in the browser, since none of them is
-         on screen in the standard screenshots, which were all identical.
-4. [x] **Unused exports** — 334 exports and 237 exported types by `knip`,
-       taken a directory at a time.
-   - `lib/email/` (166): done. Its barrel `index.ts` re-exported everything
-     and had one consumer, which now imports `notification-service` directly;
-     with the barrel gone, `business-branding.ts`, `retry-logic.ts` and
-     `template-repository.ts` (965 lines) had no importer at all and
-     were deleted. The rest lost only an `export` keyword.
-   - `prisma/factories/` (59): done, 1,458 lines. Five of the six validator
-     classes (`BusinessLogicValidator` and the four it composed) were reached
-     only through the barrel, as were two seeding helpers and 21 interfaces;
-     `DataIntegrityValidator`, which `data-reset-manager` uses, stays. The
-     seed runs as before.
-   - `lib/security/` (47): done, 408 lines. Read before deleting, because
-     an unused security module can mean an unapplied protection. None was:
-     the public booking POST requires CSRF, rate-limits and checks for abuse
-     through `securePublicBookingPOST`; security headers come from
-     `next.config.js` (live on staging), so `generateSecurityHeaders` was a
-     second copy; the GDPR helpers were aliases of the service methods the
-     routes call. `DataProtectionService.encrypt` is never called — no field
-     is encrypted at the application level — but nothing claims otherwise.
-   - `components/ui/` (46): done, 216 lines. Six components and props
-     types nothing rendered are deleted (`FilterChips`, `LoadingTable`,
-     `LoadingList`, `ThemeIndicator`, `ThemeStatus`, …); the rest lose an
-     `export`. The shadcn/Radix wrappers (`alert-dialog`, `dialog`,
-     `dropdown-menu`, `select`, `table`) keep their full surface —
-     `DialogClose` or `SelectGroup` unused today is a vendored kit, not dead
-     code — and `knip.json` says so through `ignoreIssues`.
-   - `types/` (about 70): done, 675 lines net — 66 type declarations
-     nothing referenced. Type-only, so type-check is the whole proof.
-   - `lib/validations/` (24): done — 16 schemas and request types nothing
-     parsed with. `lib/auth/public-routes.ts` keeps its route lists, now
-     unexported: `middleware.ts` reaches them through `isPublicRoute`.
-   - `lib/auth.ts`: done, by adoption rather than deletion. All 13
-     `/dashboard/[businessSlug]` pages had hand-written the membership check
-     while `requireBusinessAccess` — the helper `CLAUDE.md` names — had no
-     callers, took an id the pages did not have, and sent non-members to a
-     `/unauthorized` page that does not exist. It now takes the slug, returns
-     the business and role, and every page calls it;
-     `__tests__/security/dashboard-page-access.test.ts` fails on a page that
-     does not, or that calls it inside a `try`. That last rule is from a real
-     bug: the dashboard and analytics pages wrapped their check in a `try`
-     whose `catch` redirected to `/onboarding`, so staff opening analytics
-     were sent to onboarding instead of back to the dashboard, and a
-     database failure looked like having no business.
-   - The remainder (components, hooks, monitoring, performance, theme,
-     utils, errors, services): done — 85 declarations nothing referenced,
-     among them `lib/theme-utils.ts`'s own theme engine (the switcher uses
-     `hooks/use-theme-switcher.ts`), six unused formatters in `lib/utils.ts`
-     and two error classes nothing threw. New unused locals were checked
-     against a baseline from `main`: only the seven orphaned imports were
-     new, and they are removed.
-   - Closed with `knip.json` `ignoreIssues` entries, each for a reason that
-     is not "dead": the vendored shadcn/Radix kit; `lib/design/tokens.ts`,
-     the design system's surface; and payments (`lib/stripe.ts`,
-     `lib/financial/`, `components/payments/`), which is **parked**, not
-     unused. The server side is live — payment intents, refunds and the
-     webhook — while `POSInterface`, `TransactionHistory` and `PaymentForm`
-     (1,281 lines) are built but wired to nothing, behind "Coming Soon" POS,
-     transactions and reports pages. Deleting parked feature work is a
-     product decision; it returns with its own spec (see _Parked_).
-   - knip reports nothing.
-
-What remains in the Phase 5 milestone is bugs and features that are not
-design work: [#118](https://github.com/effuselabs/lumina/issues/118),
-[#120](https://github.com/effuselabs/lumina/issues/120),
-[#123](https://github.com/effuselabs/lumina/issues/123),
-[#124](https://github.com/effuselabs/lumina/issues/124),
-[#104](https://github.com/effuselabs/lumina/issues/104) and
-[#105](https://github.com/effuselabs/lumina/issues/105). The design reviews
-it raised moved to Phase 6.
-
-### Phase 6 — UI/UX rebuild
-
-Decided by Jeremy on 2026-10-24 ([#126](https://github.com/effuselabs/lumina/issues/126)):
-tear the interface down and rebuild it — tokens, components, colour use and
-motion — so that it feels modern and works on every device, from a phone at
-the front desk to a wide monitor. The reference he named is
-[Arcane](https://getarcane.app), a Docker manager.
-
-**Why rebuild rather than keep fixing.** Phase 5 carried every value across at
-its old value, on purpose: it made the design system one thing without
-redesigning it. The reviews it surfaced share one cause — a palette and
-components drawn for a light marketing page, stretched over a dense app and
-then a dark theme. Coral that fails as text
-([#66](https://github.com/effuselabs/lumina/issues/66)), a salon's colour
-that vanishes on dark ([#67](https://github.com/effuselabs/lumina/issues/67)),
-pastel boxes that glare ([#68](https://github.com/effuselabs/lumina/issues/68)),
-a home page with no dark design ([#69](https://github.com/effuselabs/lumina/issues/69)),
-a booking step squeezed at desktop width
-([#94](https://github.com/effuselabs/lumina/issues/94)), heading classes
-never defined ([#117](https://github.com/effuselabs/lumina/issues/117)), a
-sidebar that stops partway down ([#125](https://github.com/effuselabs/lumina/issues/125)).
-Each could be patched; together they say the design itself needs doing.
-
-**What Phase 5 leaves it:** one token source generating the CSS and Tailwind
+**What it starts from:** one token source generating CSS and the Tailwind
 config, contrast gates, 37 primitives in a fully reachable tree, a dark theme
-that works, and screenshot tests in both themes. The rebuild changes what the
-tokens say, not where they live; every rule in `CLAUDE.md` still holds.
+that works, screenshot tests in both themes, and no dead links (a test fails
+on one). Every rule in `CLAUDE.md` still holds.
 
-**Decisions it starts from** (Jeremy, 2026-10-24):
+**The direction** (approved by Jeremy on 2026-10-24, and confirmed point by
+point on 2026-10-27):
 
-- Dark mode is required, and may become the default.
-- Whether salons pick colours at all is open: a logo upload may serve a
-  salon's brand better than its colour applied to text (#67).
-- Coral as text is fixed in the new palette, not patched first (#66).
-- Booking takes the fewest clicks with the richest options — a rethink of the
-  flow, not a re-layout of today's steps (#94).
-
-**The direction, approved** (Jeremy, 2026-10-24, every recommendation;
-record on [#126](https://github.com/effuselabs/lumina/issues/126)):
-
-- **Scope (P1):** the look _and_ the front desk. One booking engine serves the
-  public page and a staff booking sheet; an appointment panel adds check-in,
-  rebook and move; "Today" for owners, "My day" for stylists; Settings for
-  hours, booking link and branding. Clients, analytics and payments stay
+- **P1 — Scope:** the look _and_ the front desk. One booking engine for the
+  public page and a staff booking sheet; an appointment panel with check-in,
+  rebook and move; "Today" for owners and "My day" for stylists; Settings for
+  hours, booking link and branding. Client CRM, analytics and payments stay
   parked.
-- **Colour (P2):** gold on ink. Ink neutrals at hue 220, gold the only accent;
+- **P2 — Colour:** gold on ink. Ink neutrals at hue 220, gold the only accent;
   coral and the gold-to-coral gradient leave the interface.
-- **Theme (P3):** the dashboard opens dark; `/book` follows the client's phone;
-  each device remembers its own choice.
-- **Salon branding (P4):** a logo upload plus one of eight tested preset
-  accents, on the booking page's header band and email header only. No free
-  colour picker.
-- **Booking (P5):** three screens, six taps for a new client, four for a
-  returning one, with a test that fails if the count creeps up. The "welcome
-  back" lookup is gone (S1, [#138](https://github.com/effuselabs/lumina/issues/138)).
-- **Shared devices (P6):** a device marked shared masks phone numbers and
-  surnames, hides revenue, covers the screen after 2 minutes idle and signs
-  out after 30 minutes, with a warning. No staff PIN.
-- **Dependencies (P7):** five more Radix packages (popover, tooltip,
-  toggle-group, radio-group, collapsible), `cmdk`, `sharp` made direct, and,
-  dev-only, `@axe-core/playwright` and `knip`. The Inter font file is
-  committed. No animation library, no Tailwind 4 until Phase 8, no shadcn CLI.
-- **Revenue for stylists (P8):** off by default; the owner can turn it on.
+- **P3 — Theme:** dark by default; light for anyone who chooses it, remembered
+  per device. Whether `/book` also opens dark is open (above).
+- **P4 — Salon branding:** a logo upload and one of eight tested preset
+  accents, on the booking page's band and the email header only.
+- **P5 — Booking:** three screens; six taps for a new client, four for a
+  returning one, held by a test. The "welcome back" lookup is gone (S1,
+  [#138](https://github.com/effuselabs/lumina/issues/138)).
+- **P6 — Shared devices:** masked phone numbers and surnames, hidden revenue,
+  a privacy screen after 2 minutes idle, sign-out after 30.
+- **P7 — Dependencies:** five more Radix packages, `cmdk`, `sharp` made
+  direct; dev-only `@axe-core/playwright` and `knip`; Inter committed. No
+  animation library, no shadcn CLI. Tailwind 4 was "Phase 8"; now proposed
+  for stage 1 (#154).
+- **P8 — Stylists' revenue:** hidden by default; the owner can show it.
 
-**The visual language on top**, proposed 2026-10-25 after Jeremy found the
-direction's preview still bland: materials by role (glass only for chrome),
-one gold ambient light, a metallic gold button, Fraunces for a few moments,
-a motion system of three springs, and three signature moments — the gold
-now-line, the booking time that travels into a ticket, and check-in. Jeremy
-approved it on 2026-10-26, with its four calls (Fraunces; test on his own
-2019 iPad and Samsung tablet; the `/book` footer credit; `qrcode`). Spec in
-[`visual-language.md`](visual-language.md).
+**The visual language** on top, approved 2026-10-26 after the direction's
+preview read as bland: materials by role (glass only for chrome), one gold
+ambient light, a metallic gold button, Fraunces for a few moments, three
+springs, and three signature moments — the gold now-line, the booking time
+that becomes a ticket, and check-in. Spec in
+[`visual-language.md`](visual-language.md); clickable prototype on the canvas
+linked from #126.
 
-**Steps**, each its own pull requests:
+**The logo** is First Light (concept B: a gold sun rising over a line), chosen
+by Jeremy on 2026-10-27 ([#144](https://github.com/effuselabs/lumina/issues/144)).
+It brings one deliberate brand moment: on sign-in, the sun rises as the page
+loads — once, under about 800 ms, never in the way of the form, and simply
+present under reduced motion. That is the only animation allowed past the
+spec's 240 ms ceiling, and the spec says so.
 
-1. **Direction.** Screenshots of every screen as it stands, both themes,
-   phone to desktop; a study of the reference; then one direction — type
-   scale, colour roles, density, spacing, radius, elevation, motion — with
-   Jeremy's calls named. Jeremy suggested reviewing it from several angles at
-   once (UX, front end, system design, security); the output is one direction
-   with screenshots of key screens, not four reports. **Done 2026-10-24**
-   (above); the visual language followed on 2026-10-25.
-2. **Tokens.** The new values in `lib/design/tokens.ts`, with `contrastPairs`
-   for every text role in both themes.
-3. **Primitives.** The 37 rebuilt against them, catalogued on the
-   design-system page and under visual test.
-4. **The app shell** — navigation, header, sidebar — from 360px up, carrying
-   a redrawn logo. Today's mark is a coral-to-gold gradient tile with an "L"
-   and no source file; it goes with the coral. Concepts in gold on ink, and
-   Jeremy picks one, since a logo is a brand call
-   ([#144](https://github.com/effuselabs/lumina/issues/144)).
-5. **Screens**, one at a time, busiest first: public booking, dashboard,
-   calendar, clients, staff, services, settings, onboarding, sign-in. The home
-   page last, with Phase 7's voice work, since its words need redoing as much
-   as its layout.
-6. **Motion** throughout: brief, purposeful, and off under
-   `prefers-reduced-motion`.
+**Stages.** Each pull request is either pixel-identical or a deliberate visual
+change, never both, so every screenshot difference has one cause. Plumbing
+goes before paint.
 
-Pale tints (#68) and the heading classes (#117) are fixed in the components
-that carry them, as each is rebuilt, rather than patched first and replaced
-later.
+| Stage                | Issue                                                                                                            | What changes on staging                                             |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 0 — Groundwork       | #147 ✓, #150, #151, #152, #123                                                                                   | Dead ends gone (done); otherwise nothing visible                    |
+| 1 — Plumbing         | [#153](https://github.com/effuselabs/lumina/issues/153), [#154](https://github.com/effuselabs/lumina/issues/154) | Corners round, hovers and headings work. Tailwind 4 pixel-identical |
+| 2 — The look         | [#155](https://github.com/effuselabs/lumina/issues/155)                                                          | **Everything turns gold on ink, dark by default**                   |
+| 3 — Components       | [#156](https://github.com/effuselabs/lumina/issues/156)                                                          | New buttons, inputs, sheets, menus, toasts, ⌘K                      |
+| 4 — Shell and logo   | [#157](https://github.com/effuselabs/lumina/issues/157)                                                          | Glass header, phone tab bar, First Light, the sign-in sunrise       |
+| 5a — Public booking  | [#158](https://github.com/effuselabs/lumina/issues/158)                                                          | Three screens, the salon's band, the ticket                         |
+| 5b — Staff booking   | [#159](https://github.com/effuselabs/lumina/issues/159)                                                          | Book a phone-in client from the calendar                            |
+| 5c — Calendar        | [#160](https://github.com/effuselabs/lumina/issues/160)                                                          | Day view, appointment panel, check-in, drag to move                 |
+| 5d — Today, My day   | [#161](https://github.com/effuselabs/lumina/issues/161)                                                          | The new overview; stylists' own day; real notifications             |
+| 5e — Settings        | [#162](https://github.com/effuselabs/lumina/issues/162)                                                          | Hours, booking link, logo and preset, the brand try-on              |
+| 5f — Shared devices  | [#163](https://github.com/effuselabs/lumina/issues/163)                                                          | Front-desk privacy                                                  |
+| 5g — Everything else | [#164](https://github.com/effuselabs/lumina/issues/164)                                                          | Clients, staff, services, onboarding, sign-in; the home page last   |
 
-**Done when** every screen is rebuilt with its baselines re-approved, AA holds
-in both themes, nothing scrolls sideways from 360px to 1920px, and the booking
-loop is green. A new dependency — an animation library, say — is Jeremy's
-call under `CLAUDE.md`, so the direction says which, if any, it needs.
+**When it is testable as a first iteration:** after 5a, 5c and 5d are on
+staging — book as a client, check them in, see the day — which is what Jeremy
+asked to test on 2026-10-26. Stages 2–4 should already make it feel like a
+different product.
 
-### Phase 7 — brand voice
+**Done when** every screen is rebuilt with its baselines re-approved; AA holds
+in both themes, glass included; nothing scrolls sideways from 360px to
+1920px; the booking loop and the tap budget are green; `/book` stays under
+100 KB of first-load JavaScript with LCP of 2.5 s or better under throttling;
+and Jeremy's 2019 iPad passes a manual check.
 
-Releases and the image are under _Releases_ below. Added 2026-10-24: a
-**brand voice and writing style** ([#127](https://github.com/effuselabs/lumina/issues/127))
-— how Lumina speaks in its marketing and product copy, and whether the guide
-is shared with Effuse Labs, in which case it defines the company and its
-products alike. The brand guide's visual half is generated from `tokens.ts`;
-this is the half that is not. The home page is its first test: it still
-promises a 14-day free trial, "AI-powered" insights, priority support and
-launch pricing, none of which exist.
+## Phase 7 — brand, releases, production launch
+
+The launch is [#167](https://github.com/effuselabs/lumina/issues/167): a
+proposed checklist, for Jeremy to agree, of everything true before a real salon
+is invited, each item its own issue under it:
+
+- Phase 6 done, and the whole loop proven, emails included
+  ([#165](https://github.com/effuselabs/lumina/issues/165)), on a verified
+  sending domain ([#120](https://github.com/effuselabs/lumina/issues/120))
+- Password reset ([#166](https://github.com/effuselabs/lumina/issues/166))
+- Error reporting live, caught 500s included
+  ([#100](https://github.com/effuselabs/lumina/issues/100): the code is done
+  and inert without a DSN; 56 route handlers still swallow their own errors)
+- HSTS and a Content-Security-Policy, report-only first
+  ([#70](https://github.com/effuselabs/lumina/issues/70)); Sentry's ingest host
+  goes in `connect-src`
+- A privacy policy and terms, and GDPR export and delete under test
+  ([#71](https://github.com/effuselabs/lumina/issues/71))
+- Release notes ([#74](https://github.com/effuselabs/lumina/issues/74)), a
+  container image ([#75](https://github.com/effuselabs/lumina/issues/75)),
+  self-hosting instructions ([#76](https://github.com/effuselabs/lumina/issues/76))
+- The CLA, before the first outside contribution
+  ([#77](https://github.com/effuselabs/lumina/issues/77))
+- A production environment on its own database, backups confirmed, one
+  restore rehearsed
+
+Alongside: **a brand voice and writing style**
+([#127](https://github.com/effuselabs/lumina/issues/127)) — how Lumina speaks,
+and whether the guide is shared with Effuse Labs. The home page is its first
+test: it still promises a 14-day free trial, "AI-powered" insights, priority
+support and launch pricing, none of which exist. Also the `effuselabs`
+organisation profile ([#79](https://github.com/effuselabs/lumina/issues/79))
+and scoping the performance report to one business
+([#73](https://github.com/effuselabs/lumina/issues/73)).
+
+### Releases
+
+**Model them on LatestArr**, which already does this
+([v0.11.0](https://github.com/jshields-ca/LatestArr/releases/tag/v0.11.0)):
+copy its `.github/workflows`, `.github/release-highlights/` and templates and
+adapt them, rather than designing from scratch. Built ahead of the first
+release, so that release goes out through the pipeline and not by hand.
+
+- **Notes**, generated by GitHub Actions: _Highlights_ (a short paragraph);
+  _What's changed_ under **New**, **Improved** and **Fixed** from the
+  `enhancement`, `improvement` and `bug` labels, one plain-language line per
+  change, each linked to its issue or pull request; _Upgrading_ (image tag,
+  any migration or configuration step, the compare link).
+- **A container image** at `ghcr.io/effuselabs/lumina`, tagged `vX.Y.Z` and
+  `latest`. It needs a Dockerfile (none exists), standalone output (prefer
+  Railway deploying the same image, so staging runs what a release ships),
+  `prisma migrate deploy` on start, and a self-hosting compose file. The
+  package is public, as the repository is.
+- **Versions** are semantic, from `package.json`'s `0.1.0`, `0.x` until
+  production launch. A release is a tag; the workflow builds the notes, image
+  and GitHub release from it.
+
+## Phase 8 — ratchet and expand
+
+- **Majors, reviewed deliberately:** Next.js 16 and Prisma
+  ([#83](https://github.com/effuselabs/lumina/issues/83)) — Next 16 also
+  brings `<ViewTransition>` without experimental React, replacing the hook
+  stage 3 builds; Tailwind 4 unless it moves to stage 1 (#154, #149); the
+  `postcss` override, once Next stops pinning it
+  ([#80](https://github.com/effuselabs/lumina/issues/80)).
+- **Ratchets:** lint rules from warning to error as their counts reach zero —
+  41 of 60 route handlers still import Prisma directly
+  ([#81](https://github.com/effuselabs/lumina/issues/81)); a marker or test for
+  database models nothing uses ([#82](https://github.com/effuselabs/lumina/issues/82)).
+- **Parked features return**, one at a time, each with its own end-to-end spec.
+
+## Parked, not forgotten
+
+Deferred deliberately; each returns with its own spec.
+
+- **Client CRM**, including the staff filter that reads "preferred staff"
+  ([#85](https://github.com/effuselabs/lumina/issues/85))
+- **Payments and POS.** The server side is live (payment intents, refunds, the
+  webhook); `POSInterface`, `TransactionHistory` and `PaymentForm` are built
+  and wired to nothing, and their "Coming Soon" pages are gone (#147).
+  Deleting parked feature work is a product decision.
+- **Analytics** beyond honest figures (#123), including bucketing by the
+  salon's day ([#87](https://github.com/effuselabs/lumina/issues/87))
+- **Clients managing their own booking** through a signed link
+  ([#84](https://github.com/effuselabs/lumina/issues/84)); until then the
+  confirmation says to call the salon
+- **Telling owners when a service drops off their booking page** for want of
+  staff ([#86](https://github.com/effuselabs/lumina/issues/86))
+- Database models with no code path: roughly 20 of 53. There is no `PARKED`
+  marker; check for a repository, service or route that reads a model before
+  building on it (#82)
+- Playwright projects beyond Chromium and Mobile Safari
 
 ---
 
-## Releases — build before the first one is cut
+## Decisions
 
-**When:** Phase 7, after the clean-up and once features work end to end — not
-before. There is nothing worth versioning until a salon could use it. But the
-first release should go out through this pipeline rather than by hand, so it
-is built ahead of that release, not after.
+Dated, newest last; the issue holds the discussion.
 
-**Model it on LatestArr**, which already does this
-([v0.11.0](https://github.com/jshields-ca/LatestArr/releases/tag/v0.11.0)).
-Copy its `.github/workflows`, `.github/release-highlights/` and templates
-across and adapt them, rather than designing from scratch.
-
-**Release notes** ([#74](https://github.com/effuselabs/lumina/issues/74)), generated by GitHub Actions, with three sections:
-
-- **Highlights**: a short paragraph on what matters most in this release.
-- **What's changed**: grouped under **New**, **Improved** and **Fixed**, taken
-  from the `enhancement`, `improvement` and `bug` labels. One plain-language
-  line per change, describing what a salon owner or client would notice
-  rather than what the code does. Every line links to the issue or pull
-  request it came from.
-- **Upgrading**: the image tag to pull, any migration or configuration step,
-  and the full-changelog compare link (`vX...vY`).
-
-**Issues per PLAN item — started 2026-10-03.** Every open item in this
-document has a GitHub issue, linked beside it here, and labelled and
-milestoned by phase. See the working agreement for how they are kept in step.
-
-**A container image with every release** ([#75](https://github.com/effuselabs/lumina/issues/75)), published to
-`ghcr.io/effuselabs/lumina`, tagged `vX.Y.Z` and `latest`, so a self-hoster
-can run `docker compose pull` against a compose file in the repository. What
-building it involves:
-
-- **A Dockerfile.** None exists: local development deliberately runs
-  `npm run dev` against containerised Postgres and Redis (`docker-compose.yml`).
-- **Standalone output.** A small image wants Next's `output: 'standalone'`,
-  which `next.config.js` removed on purpose because Railway starts the app
-  with `npm start`. Either Railway deploys the same image — so staging runs
-  exactly what a release ships — or the Dockerfile enables standalone for its
-  own build. Prefer the first; decide when the Dockerfile exists.
-- **Migrations on start.** The image runs `prisma migrate deploy` before the
-  server, the guarantee Railway's pre-deploy command gives staging today.
-- **A self-hosting compose file**: app, Postgres, required environment
-  variables. Pairs with the self-hosting instructions listed under Open source
-  positioning, including the first-account bootstrap.
-- **Package visibility follows the repository**, which is already public, so
-  the image is public from its first push.
-
-**Versioning.** Semantic versions starting from `package.json`'s `0.1.0`,
-`0.x` until production launch. A release is a tag; the workflow builds notes,
-image and GitHub release from it.
+| Date       | Decision                                                                                                         | Record          |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- | --------------- |
+| 2026-09-06 | AGPL-3.0; free to self-host, revenue from managed hosting and support                                            | below           |
+| 2026-10-01 | Dark mode is a requirement; brand text deep teal, gold for fills (superseded by P2)                              | history         |
+| 2026-10-24 | Insert Phase 6, a full rebuild; dark may become the default                                                      | #126            |
+| 2026-10-24 | Remove the home page's invented figures; platform admin as a CLI-granted role; free/paid statement in the README | #128, #72, #78  |
+| 2026-10-24 | A CLA now, naming Jeremy, keeping the project open source; Sentry for error tracking; DNS to Cloudflare later    | #77, #100, #120 |
+| 2026-10-24 | S1: public bookings never edit saved clients; the lookup goes                                                    | #138            |
+| 2026-10-24 | The direction, P1–P8 (confirmed point by point 2026-10-27)                                                       | #126            |
+| 2026-10-26 | The visual language; Fraunces; test on Jeremy's 2019 iPad and Samsung tablet; `/book` footer credit; `qrcode`    | #145            |
+| 2026-10-27 | First Light logo; a sunrise on sign-in; dark by default with light by choice                                     | #144            |
 
 ## Working agreement
 
 - **Decision rights are in `CLAUDE.md`.** The lead developer decides how the
-  work is structured — pull requests, branches, debugging order, what gets
-  fixed now versus recorded here. The owner decides direction, licensing, and
-  anything irreversible or outward-facing.
-
-- **One branch per PR**, named for the change. Never per phase.
-- **Every piece of work has an issue.** This document holds the reasoning;
-  the issue holds the status. A new finding gets an issue when it is recorded
-  here, linked beside its entry. A pull request says `Closes #N` for what it
-  finishes, so the issue closes on merge and release notes can link to it.
-  When an entry is resolved, strike it through here and say what fixed it.
-  Work merged before 2026-10-03 links to its pull request instead.
+  work is structured; the owner decides direction, licensing, and anything
+  irreversible or outward-facing.
+- **One branch per pull request**, named for the change; never per phase.
+- **Every piece of work has an issue**, labelled `enhancement`, `improvement`
+  or `bug`, milestoned by phase, and under its stage or launch parent where it
+  has one. The issue holds the status; this file holds the order and the why.
+  A pull request says `Closes #N`. A finished entry leaves this file; its
+  write-up, if it taught something, goes to the rebuild log in `history.md`.
 - Failing test first, then make it pass.
-- `type-check && lint && test:ci && build` green locally before every commit.
+- The five gates green locally before every pull request:
+  `type-check && lint && test && build && test:e2e`.
 - Verify, then claim. Run the thing; do not infer from the code.
-- Merging to `main` deploys staging automatically. `/api/health` must report
-  `healthy` — a database failure returns 503 and Railway refuses to promote.
-
----
-
-## Open source positioning
-
-**Done.** The repository is public at `github.com/effuselabs/lumina` under
-AGPL-3.0, self-hosting free, revenue intended from managed hosting and support.
-
-The licence decision, made 2026-09-06: the requirement — free to self-host,
-revenue from running it for people — is the case AGPL-3.0 exists for. It is
-OSI-approved open source while making it unattractive for someone else to offer
-Lumina as a closed hosted service. The alternatives were permissive
-(MIT/Apache-2.0, friendlier to contributors, but nothing stops a competitor
-hosting it) or source-available (BSL/SSPL, which are not open source and would
-contradict the positioning).
-
-Everything that blocked publication is closed: `LICENSE` and the matching
-`package.json` field (`AGPL-3.0-only`), a gitleaks scan over the full history
-running as a CI workflow, the Railway token rotated, `CONTRIBUTING.md`, and a
-README that leads with what Lumina is rather than with rebuild status.
-
-The history rewrite deserves recording, because the obvious approach does not
-work. A Kiro MCP configuration containing an API key was found in the history.
-Rewriting with `git filter-repo` and force-pushing is **not sufficient**:
-GitHub keeps the original commits of every pull request at `refs/pull/N/head`
-indefinitely, and they stay reachable by SHA. The repository was rebuilt from
-scratch under the `effuselabs` organisation and the original archived, which is
-why the history starts where it does. The key was revoked regardless.
-
-**Still open, and worth doing before the first outside contribution:**
-
-- **A CLA**, if selling a proprietary licence is ever to stay an option. ([#77](https://github.com/effuselabs/lumina/issues/77))
-  Without one, every contributor holds copyright in their own work under AGPL,
-  and relicensing later means tracking each of them down individually. Adding
-  one on day one costs a bot and a file; retrofitting it can be impossible.
-  **Decided by Jeremy on 2026-10-24: yes, now.** It reverses
-  `CONTRIBUTING.md`'s "we will ask contributors then"; the agreement's text
-  is a licensing document, so it merges on his approval. Settled the same
-  day: there is no legal entity yet, so the agreement names Jeremy and lets
-  the rights pass to a company later; Lumina stays open source, and the
-  agreement says so (contributions stay available under the AGPL or another
-  OSI licence). Money comes from hosting and running it, not from selling
-  the software, and a CLA still serves that: the copyright holder can run a
-  hosted Lumina with private operational changes, which the AGPL would
-  otherwise require publishing once outside code is in it. Next:
-  1. Jeremy sets up CLA Assistant (cla-assistant.io) on `effuselabs/lumina`,
-     linked to a gist of the approved text, `dependabot[bot]` allow-listed.
-  2. A pull request adds `CLA.md` and changes `CONTRIBUTING.md`, and shows
-     the bot asking and passing. CLA Assistant Lite, the usual GitHub
-     Action, was archived in March 2026, and an unmaintained action does not
-     get a workflow with write access.
-- **Self-hosting instructions.** ([#76](https://github.com/effuselabs/lumina/issues/76)) `docs/environments.md` documents _our_ Railway
-  staging, not a stranger's deployment. Registration is closed by default now
-  (`ALLOW_PUBLIC_SIGNUP`), with a first-account bootstrap so a fresh install is
-  usable — that behaviour needs writing down where a self-hoster will find it.
-- ~~**A statement of what is free and what is paid**, so the boundary is not
-  something people have to infer.~~ **Done**
-  ([#78](https://github.com/effuselabs/lumina/issues/78)), approved by Jeremy
-  on 2026-10-24. The README now says: "Lumina is free to self-host under the
-  AGPL. We plan to offer paid managed hosting and support for salons that
-  would rather not run it themselves." It used to say managed hosting was
-  already offered.
-- An organisation profile README for `effuselabs`. ([#79](https://github.com/effuselabs/lumina/issues/79))
-
-**AGPL's obligations reach across the network**, and that applies to us: our
-own deployment is unmodified upstream, so the obligation is satisfied by the
-public repository — but that stops being true the moment staging or production
-carries a patch that is not pushed.
+- Merging to `main` deploys staging. Confirm `/api/health` reports `healthy`
+  on the new commit; a green CI job is not a deploy.
+- **Update this file when a stage starts or finishes, a decision is made, or
+  the order changes** — not for each pull request.
 
 ## Dependency policy
 
 Two triggers, and only two:
 
-1. **A CVE affecting production.** Pull it forward immediately, whatever phase
-   we are in. The number that matters is prod high/critical CVEs — 16 at the
-   start, 2 now (1 direct) — not whether a newer version exists.
-2. **Phase 8**, where a full review happens deliberately: majors surveyed,
-   upgraded in small reviewable PRs, each verified by the five gates.
+1. **A production advisory, high or critical.** Taken immediately, whatever
+   the phase. `.github/workflows/dependency-audit.yml` fails a pull request,
+   and a daily run, on one; it has earned its place twice (Next 14's criticals
+   on 2026-09-29, and five advisories overnight on 2026-10-23, which took Zod
+   to 4 early — see the rebuild log).
+2. **Phase 8**, where majors are surveyed and upgraded in small pull requests,
+   each verified by the five gates.
 
-Everything else waits. A version bump has no observable outcome — the booking
-loop cannot tell you it worked — so it is precisely the kind of work that
-consumed this project the first time while nothing shipped.
-
-`next@16` was parked on these grounds, and that stopped being the right call
-once two criticals landed with no 14.x patch; the upgrade went to 15.5.26, the
-smallest line that fixed them. The lesson is in the first trigger's wording —
-the count that matters is the one `npm audit --omit=dev` prints _today_. It
-drifted from 2 to 5 high/critical between 2026-09-06 and 2026-09-29 without
-any change on our side, and nothing noticed, so the trigger is now a workflow
-rather than a sentence. `next@16` itself remains Phase 8 work. ([#83](https://github.com/effuselabs/lumina/issues/83))
-
-The workflow earned its place on 2026-10-24
-([#130](https://github.com/effuselabs/lumina/issues/130)): five advisories
-published around 2026-10-23 — `@sentry/nextjs` and `dompurify` critical,
-`undici` and `zod` high, `fast-uri` moderate — turned every pull request red
-overnight. Four had fixes inside their major. Zod's memory-exhaustion fix
-exists only in Zod 4, so the first trigger took Zod from 3 to 4 and
-`@hookform/resolvers` from 3 to 5 with it, ahead of Phase 8. What changed in
-the code, beyond `ZodError.errors` becoming `.issues`: a single-argument
-`z.record()` needs its key schema, `required_error` is `error`, the two
-weekday-keyed hours schemas are `z.partialRecord` (a record keyed by an enum
-is exhaustive in Zod 4, and those were partial), and the ten forms give
-`useForm` their schema's input type as well as its output, since a
-`.default()` makes the two differ.
-
-**Build-time packages belong in `devDependencies`**, or the production audit
-counts them. On 2026-10-03 GHSA-vfj7-8cjw-p6xm (`braces`, no fix available)
-turned every pull request red through `tailwindcss-animate`, a Tailwind plugin
-read only by `tailwind.config.ts` but listed as a runtime dependency — which
-pulled all of Tailwind's tree into the production count. Moving it to
-`devDependencies` took the count to zero with no version change.
-
-**Do not upgrade to a release candidate.** The Prisma CLI currently advertises
-`8.0.0-rc.13` from `5.22.0` in its update banner. That is a pre-release across
-three majors, and taking it mid-rebuild trades a working stack for an
-unsupported one. Revisit when 8.x is stable, in Phase 8.
+Everything else waits: a version bump has no observable outcome, which is
+exactly the kind of work that consumed this project the first time. The one
+proposed exception is Tailwind 4 (#154), argued on rework rather than on the
+version. Build-time packages belong in `devDependencies`, or the production
+audit counts them. No release candidates: Prisma's CLI advertises `8.0.0-rc`,
+which waits for stable, in Phase 8.
 
 ## Tooling: when to add plugins
 
-Three plugins are available and none are enabled. Deliberately — capability
+Three plugins are available and none are enabled, deliberately — capability
 arriving ahead of the work it serves is how this project accumulated 335
 documents.
 
 | Plugin        | When                        | Why                                                                                                                                                                                                                                                              |
 | ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `design`      | **Phase 6**                 | `/design:ux-copy` for empty states, errors and confirmation copy; `/design:critique` on each rebuilt screen, the booking flow first. Skip `/design:handoff` (needs Figma files we don't have) and `/design:research-synthesis` (needs research we haven't done). |
-| `brand-voice` | **Phase 7**                 | Wanted ([#127](https://github.com/effuselabs/lumina/issues/127)) for the voice-and-tone guide — the one part not generated from `lib/design/tokens.ts`.                                                                                                          |
-| `marketing`   | **After production launch** | SEO, campaigns and competitor analysis all presume customers and content. Neither exists yet.                                                                                                                                                                    |
+| `brand-voice` | **Phase 7**                 | For the voice-and-tone guide ([#127](https://github.com/effuselabs/lumina/issues/127)), the one part not generated from `lib/design/tokens.ts`.                                                                                                                  |
+| `marketing`   | **After production launch** | SEO, campaigns and competitor analysis presume customers and content. Neither exists yet.                                                                                                                                                                        |
 
-**The rule that makes these safe:** any audit output must become a test or a
-lint rule, never a document. `/design:accessibility` produces a _report_; our
-contrast check produces a _gate_ that fails CI. Reports were what the 29
-archived design-system documents each were, at the time. Run an audit once for
-discovery, then encode every finding — or it will rot the same way.
+**Any audit output must become a test or a lint rule, never a document.** Run
+an audit once for discovery, then encode every finding, or it rots the way the
+29 archived design-system documents did.
 
-## Parked, not forgotten
+## Open source positioning
 
-Deferred deliberately. Each returns with its own end-to-end spec, one at a
-time, after the booking loop works.
+The repository is public at `github.com/effuselabs/lumina` under AGPL-3.0:
+free to self-host, revenue intended from managed hosting and support. AGPL is
+the licence for exactly that requirement — open source, and unattractive to
+anyone wanting to offer Lumina as a closed hosted service. Permissive licences
+would let a competitor host it; source-available ones (BSL, SSPL) are not open
+source. Why the history starts where it does is in `history.md`.
 
-- Client CRM, staff management, analytics dashboards
-- Stripe payments and POS
-- Prisma models with no active code path — roughly 20 of the 53 in
-  `schema.prisma`. Tables still exist, nothing is lost. **There is no `PARKED`
-  marker**, despite this document and `CLAUDE.md` both having claimed one:
-  check for a repository, service or route that reads a model before building
-  on it. A marker, or a test asserting no application code imports a parked
-  model, would make the rule real — worth doing when the models are next
-  touched ([#82](https://github.com/effuselabs/lumina/issues/82))
-- Playwright browser projects beyond Chromium and Mobile Safari
-- Raising lint rules from `warn` to `error` as their counts reach zero:
-  **43** of 63 routes importing Prisma directly (was 56; fifteen dead routes
-  were deleted in 4d). Raw hex in `.tsx` reached zero and is an error. ([#81](https://github.com/effuselabs/lumina/issues/81))
+**AGPL's obligations reach across the network**, and that applies to us: our
+deployment is unmodified upstream, so the public repository satisfies them —
+until staging or production carries a patch that is not pushed. The `/book`
+footer's "Source" link is the visible half of that.
 
-## Known, unaddressed
-
-- ~~**`npm run lint` does not reach `hooks/`, `prisma/`, or root config.**~~
-  **Fixed** ([#56](https://github.com/effuselabs/lumina/issues/56)).
-  `eslint.dirs` in `next.config.js` is now the whole repository, for both
-  `next lint` and the lint step inside `next build`, with generated output
-  named in `ignorePatterns`. Widening it found four errors the gate had never
-  seen: two `prefer-const` in `prisma/factories/appointment-factory.ts`, an
-  import-order error in a test, and the generated `next-env.d.ts`, now
-  ignored. The seed still generates its 500 appointments.
-
-- ~~**The booking loop spec fails about one local run in twenty.**~~
-  **Fixed.** This entry said it failed "rather than a slow render", and that
-  was wrong: the failure context shows step 1 still on its `<Suspense>`
-  fallback ("Loading Services", 4s elapsed) when the heading assertion's
-  default 5s ran out. Steps 2–4 already waited `STEP_TRANSITION_TIMEOUT` for
-  exactly this — a lazy chunk the dev server compiles on first request — and
-  step 1 had been missed. Under load it was far worse than one in twenty:
-  `--repeat-each=3` at two workers failed two runs in three on `main`. With
-  the step timeout, and one worker as CI runs it, `--repeat-each=5` is 20 of 20.
-
-  Still true at two workers, and worth knowing before reading a local run:
-  two copies of the _same_ project (which `--repeat-each` creates and a normal
-  run does not) book the same day's first slot and can hold availability past
-  15s while the dev server compiles for the other. Two projects book different
-  days (`projectDayOffset`), so the suite as configured does not do this.
-
-- ~~**The booking test can pick a service nobody is rostered to perform that
-  day.**~~ **Fixed.** It clicked the first service card; about 4% of seeded
-  services have nobody working on a given weekday, and which card is first is
-  stable for a seed, so it failed on every retry. The spec now resolves the
-  date first and books a service with staff rostered that weekday, through
-  the same helper the availability test uses. The card is found by its
-  accessible name, `Add Service: <name>` — every card's button used to read
-  just "Add Service", which is the same defect for a screen-reader user as for
-  the test, so fixing the name fixed both. The remove button in the selected
-  list had no accessible name at all and now has one.
-
-- ~~**Availability times are timezone-wrong.**~~ **Fixed** in
-  `fix/availability-business-timezone`. The API emitted naive local times
-  tagged as UTC — a salon open 09:00 Los Angeles returned
-  `2026-09-14T09:00:00.000Z` — so a 9-to-6 salon showed 4:00 AM slots to a
-  UTC-3 visitor and asking for Wednesday returned Tuesday's slots.
-
-  `AvailabilityCalculator` now resolves the timezone from the business row
-  itself rather than trusting a caller to pass one, and computes with
-  `TimeZoneHandler.localToUTC`. Fixed alongside it: the booking page sent
-  `toISOString()` of a browser-local midnight and rendered slots with no
-  `timeZone`; `book/route.ts` formatted confirmation emails and staff
-  notifications with the server's clock; `alternative-slots-service.ts` had the
-  same `setHours` defect in the fallback path.
-
-  The gate is `__tests__/lib/services/availability-calculator-timezone.test.ts`
-  in `test:ci`, asserting absolute instants so it fails in UTC too — a test
-  that only failed under `TZ=America/Halifax` would gate nothing on a UTC
-  runner. `playwright.config.ts` now runs three distinct zones: salon in Los
-  Angeles, server in Halifax (`webServer.env.TZ`), browser in Sydney
-  (`timezoneId`). Both halves are needed; `timezoneId` alone moves only the
-  browser while every conversion at issue happens in Node.
-
-  **What the fix actually taught.** The availability calculator and the
-  conflict engine that re-validates its output were wrong in the same
-  direction, so they agreed, and the bug hid in the agreement — fixing one and
-  not the other turned a wrong answer into no answer at all, and the public
-  endpoint returned zero slots for a day the salon was open. Both now share
-  `lib/services/business-time.ts`, which holds the only conversions between a
-  salon's wall clock and an instant. Two more silent failures surfaced the same
-  way, both fixed: `AvailabilityCache` is a Postgres table whose key had no
-  timezone, so every row computed by the old code would have kept being served
-  after deploy; and `getAvailableStaff` filtered on a relation named
-  `staffServices` where the schema declares `services`, so Prisma rejected the
-  query and the surrounding catch turned that into an empty staff list.
-
-  `timezone-aware-availability.ts` is gone, along with the test that was its
-  last remaining reference — dead, wrapping the broken calculator rather than
-  replacing it, 13 of its 19 tests failing, and its `getBusinessTimeZone` a
-  stub returning a hardcoded `'America/New_York'`.
-
-- ~~**An appointment outside business hours is invisible on the calendar.**~~
-  **Fixed — and the calendar showed no appointments at all.** The real cause
-  was one layer down: `appointment-calendar-page-content.tsx` rendered
-  `mockAppointments = []` and invented Mon–Fri 9–5 hours, so no booking had
-  ever reached the owner's calendar, including the one the milestone's
-  definition of done says must land there. Now:
-  - The page reads the salon's `BusinessHours` and the calendar fetches
-    `/api/appointments` for its visible window (day, week or six-week month),
-    paging past the API's 100 limit, through a Zod-validated mapper
-    (`lib/calendar/calendar-appointments.ts`).
-  - Day and week grids span business hours _union_ the appointments present
-    (`lib/calendar/visible-range.ts`), mark those cells as outside hours, and
-    say so above the grid.
-  - Two latent crashes surfaced on the first real appointment and are fixed:
-    `AppointmentBlock` required a `BulkSelectionProvider` that 4d's unused
-    export sweep had deleted (nothing rendered it), and the page passed
-    Prisma `Decimal` prices into a client component.
-  - `types/dashboard-appointments.ts` mirrors `AppointmentStatus` instead of
-    importing `@prisma/client`, which is what shipped Prisma's browser stub to
-    the calendar page; a test keeps the mirror identical to Prisma's enum.
-  - `e2e/booking-loop.spec.ts` now ends with the owner finding the booking on
-    the calendar; against the old calendar it fails.
-
-  ~~Still true: the calendar lays its grid out in the _browser's_ timezone.~~
-  **Fixed** ([#59](https://github.com/effuselabs/lumina/issues/59)). The views
-  use local-time arithmetic throughout, so rather than rewrite them the
-  calendar now works in the salon's wall clock (`lib/calendar/zoned.ts`):
-  appointments are converted in at the data hook, the fetch window and "now"
-  are converted out, and the page says which zone times are in. The booking
-  e2e, whose browser runs in Sydney, now requires the owner to find the
-  booking at its salon time. Known limit: a salon time that does not exist in
-  the _viewer's_ zone (the hour skipped on the viewer's spring-forward night)
-  cannot be held by a browser `Date`, and would shift by an hour that night.
-  Removing it means replacing the views' local-time arithmetic outright.
-
-- **Business metrics should bucket by the salon's day, not UTC.** ([#87](https://github.com/effuselabs/lumina/issues/87))
-  `business-metrics-tracker.ts` bucketed by the _server's_ day, so two hosts in
-  different zones wrote two rows for the same date and neither could find the
-  other's — the upsert key is (businessId, date, type). Pinned to UTC in
-  `fix/availability-business-timezone`, because production runs in UTC and every
-  row already written uses UTC midnight, so that keeps them all reachable. But
-  UTC is not what a salon owner means by "Tuesday's bookings", and the
-  peak-hours histogram is a chart of the wrong hours. Bucketing by business
-  timezone changes what the numbers mean and needs a migration for the existing
-  rows; it belongs with the analytics work, not behind a bug fix.
-
-  Worth noting how it was found: `npm run test:ci` was **red on `main`** for
-  anyone outside UTC, and had been. CI never saw it. The three-zone Playwright
-  config now closes that hole for the booking path; nothing yet closes it for
-  the rest of the suite.
-
-- ~~**`npm run test:visual` has never run.**~~ **Deleted.** The config could
-  not load — it resolved `./e2e/global-setup` from inside `e2e/` — and carried
-  two further type errors. Five npm scripts pointed at it. Visual regression
-  needs a design system to regress against, so it comes back in Phase 5, built
-  against `lib/design/tokens.ts` rather than restored. ([#65](https://github.com/effuselabs/lumina/issues/65))
-  **Back**, as `npm run test:visual` and CI's `visual` job
-  (`docs/visual-tests.md`). It covers the home, sign-in, sign-up and design
-  system pages in both themes at desktop and phone width, and runs inside the
-  pinned Playwright image, the only place its baselines are valid. The seed
-  is now reproducible ([#112](https://github.com/effuselabs/lumina/issues/112)):
-  faker is seeded, so two fresh databases hold the same salon (they used to
-  differ on every one of 103 compared rows), and the booking page is covered.
-  The dashboard followed its fix
-  ([#115](https://github.com/effuselabs/lumina/issues/115)).
-
-- ~~**The dashboard overview showed wrong and made-up figures.**~~ **Fixed**
-  ([#115](https://github.com/effuselabs/lumina/issues/115)). It is the first
-  page an owner sees. "Appointments today" showed the all-time count (502):
-  `/api/dashboard/metrics` counted the server's day up to the current moment,
-  usually 0, and the page fell back to the total. Revenue was completed
-  appointments × an assumed $75; utilisation a hardcoded 85% beside a TODO;
-  schedule times were in the viewer's zone, every appointment 60 minutes; a
-  "System Status: All Systems Operational" banner had no check behind it; and
-  Quick Actions and the schedule used ~30 CSS classes that never existed. The
-  overview is now read on the server in the salon's timezone
-  (`lib/services/dashboard-overview.ts`), revenue is payments less refunds
-  from real transactions, the metrics endpoint and its mocks are deleted, and
-  the components are styled from the token variables. Found on the way: net
-  revenue _added_ refunds stored negative (the seed's convention), and every
-  seeded transaction was dated the moment the seed ran — both fixed; the sign
-  convention itself is [#118](https://github.com/effuselabs/lumina/issues/118),
-  and 24 uses of undefined `lumina-heading-*`/`lumina-body-*` classes are
-  [#117](https://github.com/effuselabs/lumina/issues/117).
-
-- ~~**`npm run format:check` fails on 772 files.**~~ **Resolved.** The
-  repository was formatted in one pass and `format:check` is a CI gate, so it
-  cannot drift back.
-
-- **The manual staging deploy reported success against the old deployment.**
-  `deploy.yml`'s wait step accepted the first `healthy` response, and the
-  running deployment is healthy by definition. On 2026-09-29, during a Railway
-  incident ("API degradation causing slow or stuck deployments", from 15:29
-  UTC), Railway created no deployment for #26's merge and the manual
-  `railway up` was never promoted — and the job went green 0.4s after
-  uploading, while staging still served the previous commit. The step now
-  requires a process younger than the deploy. The wider lesson: a green deploy
-  job is not a deploy; `/api/health`'s `commit` and `uptime` are what say what
-  is live.
-
-- ~~Link buttons render as plain unstyled links.~~ **Fixed**
-  ([#97](https://github.com/effuselabs/lumina/issues/97)). `<Button asChild>`
-  handed Radix `Slot` a fragment rather than the link, and a fragment cannot
-  take a `className`, so every link styled as a button — page-header and
-  empty-state actions, "New Appointment", the calendar and schedule-card
-  links — rendered as plain text. The children now reach `Slot` as an array
-  with `Slottable` marking the link, so the icon renders inside it.
-
-- ~~Dashboard content starts about 300px right of the sidebar, and the header
-  stacks.~~ **Fixed** ([#98](https://github.com/effuselabs/lumina/issues/98)).
-  Two causes. From 1024px the sidebar is the grid's first column, and the
-  content column also carried a 280px margin for it — the width counted
-  twice, so content began at 560px. And the header had no layout at all:
-  `.dashboard-header` and every class inside it were defined nowhere (most
-  likely in the never-loaded design-token CSS deleted in 3e), so its groups
-  stacked as blocks. The margin is gone, the header is styled on the themed
-  tokens in the component, and `e2e/dashboard-layout.spec.ts` fails if the
-  content and sidebar stop meeting.
-
-- ~~**The dashboard shows made-up numbers and notifications.**~~ **Fixed**
-  ([#102](https://github.com/effuselabs/lumina/issues/102)). The appointments
-  page's 8 / 42 / 3.2% (with invented trends) are now read from the business's
-  appointments in the salon's own calendar (`lib/services/appointment-stats.ts`).
-  What could not be made real was removed rather than kept as decoration: the
-  bell's three invented events under real-looking names, the sidebar badges
-  fixed at 3 and 2, a header search box and Help button that did nothing, a
-  development roadmap shown to owners, and Search and Filter buttons with no
-  handlers. A test fails if hardcoded counts, trends or the invented names
-  return. Real notifications ([#104](https://github.com/effuselabs/lumina/issues/104))
-  and search ([#105](https://github.com/effuselabs/lumina/issues/105)) are
-  their own work.
-
-- ~~**The home page reported results and quoted a customer, neither real.**~~
-  **Fixed** ([#128](https://github.com/effuselabs/lumina/issues/128)),
-  decided by Jeremy on 2026-10-24. "24% average revenue increase", "8.5 hours
-  saved weekly" and "89% client retention rate", shown twice, and a quote
-  from "Sarah Chen, Owner, Bloom Beauty Salon" — with no customers yet. The
-  "See the impact in action" section is gone; where the figures first
-  appeared, the page now says what Lumina does today.
-  `__tests__/app/home-page-claims.test.ts` fails if a percentage, an hours
-  figure, a stat card or a quotation returns. The rest of the page's copy is
-  [#127](https://github.com/effuselabs/lumina/issues/127)'s.
-
-- ~~**There is no `error.tsx` anywhere in `app/`.**~~ **Fixed**
-  ([#57](https://github.com/effuselabs/lumina/issues/57)). A failing page now
-  shows a branded message with "Try again", a way back, and the error's
-  digest as a reference — the identifier Next writes beside it in the server
-  log. Boundaries in `app/dashboard/[businessSlug]/` (back to that salon's
-  dashboard), `app/` and `app/global-error.tsx`; checked end to end by making
-  a dashboard page throw in a production build.
-
-- **Sentry is installed but not running**
-  ([#100](https://github.com/effuselabs/lumina/issues/100)). Sentry 10 only
-  initialises from `instrumentation.ts`, which does not exist, so
-  `sentry.server.config.js` never runs; the browser config reads a DSN that
-  is never sent to the browser; and `withSentryConfig` applies only when
-  `SENTRY_DSN` is set at build. No error reaches Sentry. Decided by Jeremy on
-  2026-10-24: yes, for error tracking; no account exists yet. The code side
-  comes first and stays inert without a DSN; then Jeremy creates the project
-  and sets the DSN on Railway, and a deliberate error on staging proves
-  events arrive.
-
-  **The code side is done.** `instrumentation.ts` initialises the server and
-  edge SDKs from `SENTRY_DSN` at runtime and reports uncaught request errors;
-  the browser gets the same DSN inlined at build and loads the SDK lazily, so
-  a build without one ships none of it (first-load JS unchanged); the error
-  screens report what their boundary caught, except server errors, which were
-  reported where they happened. Errors only, `sendDefaultPii: false`. The
-  old `sentry.*.config.js` files are deleted: never loaded, and the browser
-  one called `new Sentry.Replay`, a Sentry 7 API that would have thrown.
-  Checked against a local listener standing in for Sentry: a thrown route
-  handler and a failed client render each arrived once, tagged with
-  `SENTRY_ENVIRONMENT`, with no user or IP.
-
-  **Still to do, and the larger part:** 56 route handlers catch their own
-  errors and answer 500 with a `console.error`, so Sentry never sees them —
-  uncaught errors are the minority. They need one shared way to report a
-  caught failure. A Content-Security-Policy (#70) will need Sentry's ingest
-  host in `connect-src`.
-
-- **No `Strict-Transport-Security` or `Content-Security-Policy` header.** ([#70](https://github.com/effuselabs/lumina/issues/70))
-  `next.config.js` sets `X-Frame-Options`, `X-Content-Type-Options`,
-  `Referrer-Policy` and `Permissions-Policy`, and staging serves them; it sets
-  neither HSTS nor a CSP. Worth adding before production (Phase 7) — a CSP in
-  report-only mode first, since inline styles are in use.
-
-- ~~**`npm run db:seed` is not idempotent.**~~ **Fixed.** A second run
-  appended another copy of the catalogue — six local runs left 264 services,
-  each name six times, and the booking e2e failed for want of a uniquely named
-  one. The seed now stops after its upserts when the demo salon already has
-  staff, and says so; `npm run db:seed:refresh` (reset the demo salon, then
-  seed) is the way to a fresh dataset. This entry first said
-  `prisma migrate reset` was the recovery, which destroys every table:
-  `db:seed:refresh` already existed and deletes one row.
-
-- **Railway's native deploy can lag CI by a quarter of an hour.** After #32
-  merged, main CI finished at 20:28 and the deployment went live at 20:42 —
-  #30 and #31 had taken 8–9 minutes, #33 about 7. At 20:43 a manual
-  `deploy.yml` run was dispatched as if the deploy had been skipped, and
-  duplicated one that had gone live a minute earlier; its upload then
-  replaced the native deployment with the same code under commit `unknown`.
-  Wait about 20 minutes after CI before treating a deploy as stuck, and check
-  Railway's deployment list rather than inferring from `/api/health` alone.
-
-- ~~**Merging two pull requests within seconds of each other skips a
-  deploy.**~~ **Fixed** ([#61](https://github.com/effuselabs/lumina/issues/61)).
-  `ci.yml` cancelled an older run when a newer one started on the same ref; on
-  `main`, Railway reads the cancelled run as a failed check suite and skips
-  that commit's deploy (`skippedReason: "CI check suite failed"`), with no
-  failure anywhere to notice. It happened on 2026-09-06 (#108, #109, before
-  the repository was rebuilt) and again on 2026-10-01, when #45's run on
-  `main` was cancelled — harmless both times, because the next commit
-  contained the code. Each commit on `main` now gets its own concurrency
-  group, so its run is never cancelled or left queued; pull requests still
-  cancel superseded runs.
-
-- **What a first `knip` run found**, recorded as input to 4d rather than as a
-  task in itself. 112 unused files, 10 unused dependencies and 8 unused
-  devDependencies, 25 unlisted dependencies, 363 unused exports — and, most
-  usefully, **13 unresolved imports**: test files importing modules that do not
-  exist (`lib/daily-status-blocker-tracker`, `lib/documentation-audit`,
-  `@/components/appointments/appointment-dashboard`,
-  `@/test-utils/appointment-mocks`, `@/lib/services/booking-api`,
-  `@/lib/framework-integration`). Those suites cannot pass under any
-  circumstances. `__tests__/agent-hooks/` is the same category: tests for the
-  previous era's process tooling, not for this application.
-
-  Treat the output as candidates, not a delete list — it flags `public/sw.js`
-  (a service worker, loaded at runtime), the `app/design-tokens/*.css` files
-  (believed reachable via CSS `@import` — wrong, as it turned out: nothing
-  imported them, knip had been right, and they were deleted in 3e), and
-  `husky` and
-  `lint-staged` (which it simultaneously reports as used by the pre-commit
-  hook). Verify against the gates, in small batches.
-
-- ~~**Availability re-validates every slot two or three times over.**~~
-  **Fixed** ([#62](https://github.com/effuselabs/lumina/issues/62)). The listing
-  no longer re-checks each slot through `CalendarIntegration`; the calculator's
-  own conflict check is the answer, and the booking write's staff lock is the
-  guarantee. Measured on the seeded salon, one service, every qualified staff
-  member, cold caches (both the in-process schedule cache and the
-  `availability_cache` table cleared), Postgres `log_statement = all`:
-  **561 → 172 statements, 1.41 s → 0.48 s**, the same 50 slots. Slots are now
-  never shorter than their services' total, which the removed layer used to
-  enforce. History, kept for the measurement:
-  one request issued **1,318 database queries**, reading the day's opening
-  hours 180 times. The calculator checks each slot it generates through the
-  conflict engine; the real-time service then re-checks each survivor through
-  `CalendarIntegration`, which calls the calculator again. Each layer keeps its
-  own copy of the same queries.
-
-  `schedule-cache.ts` brought that to **391 queries / 312ms**, which is enough:
-  the booking page aborts its own request after 8 seconds
-  (`use-network-resilience.ts:174`), and it was exceeding that on CI while
-  returning correct answers. But memoising reads treats the symptom. Removing a
-  validation layer is the fix, and it is not a tidy-up — it touches the booking
-  write path, so it wants its own PR, its own failing test, and this
-  measurement to check itself against. `Appointment.findMany` is still issued
-  per slot and is the largest remaining item.
-
-- ~~**The booking write re-checks conflicts outside its transaction.**~~
-  **Fixed** for both ways an appointment is created: the public booking
-  route and `AppointmentRepository.create` (the dashboard). The clash check
-  and the insert now share a transaction holding a Postgres advisory lock on
-  the staff member (`lib/services/staff-schedule-lock.ts`), so concurrent
-  bookings for one person queue and bookings for different people do not.
-  Before the fix, four concurrent requests for one slot were all booked into
-  the same chair; `e2e/booking-loop.spec.ts` ("concurrent bookings of one
-  slot book it once") now gates it. The unique constraint on
-  (staffId, startTime) suggested here was rejected: it misses overlaps that
-  start at different minutes.
-
-- ~~**Rescheduling still checks for a clash outside its write.**~~ **Fixed.**
-  Every path that puts an appointment into a slot now goes through
-  `claimSlot` (`lib/services/staff-schedule-lock.ts`) inside the transaction
-  that writes it: booking, `AppointmentRepository.update` (every dashboard
-  move, including `rescheduleAppointment`), `PUT /api/booking/[id]`, and
-  reinstating a cancelled or no-show appointment in
-  `AppointmentStatusManager`. Reinstating had no clash check at all, racy or
-  otherwise. Before the fix, two concurrent moves into one free hour both
-  returned 200; "concurrent reschedules into one slot move only one" gates
-  it. An exclusion constraint would cover writes that bypass these paths, but
-  its migration fails on any database already holding overlaps, so it needs a
-  data check first.
-
-- ~~**`/api/booking/[id]` had no tenant check.**~~ **Fixed** in the same
-  change. Middleware required a session; nothing checked the session belonged
-  to the appointment's business, so any signed-in user of any salon could
-  read, reschedule or cancel any other salon's appointment by id. The
-  tenant-isolation gate missed it because it only inspected routes whose
-  source mentions `businessId`; it now also inspects every authenticated
-  route that reads the database, and this was the only one it had missed.
-  Appointment ids are cuids, not guessable, and there are no real customers
-  yet, so no data is known to have been exposed.
-
-- **Clients cannot manage their own booking.** ([#84](https://github.com/effuselabs/lumina/issues/84)) `/booking/[id]` is a public
-  page ("View and manage your appointment booking") whose API,
-  `/api/booking/[id]`, has always required a staff session — so for a client
-  it has never worked. Making it work needs a capability the client holds,
-  such as a signed link in the confirmation email (the pattern
-  `/api/notifications/preferences` already uses), not a session. A feature,
-  not a fix; build it when client self-service is on the roadmap.
-
-- ~~**The reschedule email from `PUT /api/booking/[id]` formats times in the
-  server's zone**~~ **Fixed** ([#60](https://github.com/effuselabs/lumina/issues/60)).
-  It also sent the booking _confirmation_ for a reschedule — and for a
-  cancellation, so a cancelled client read "Appointment Confirmed!" — while
-  `DELETE` sent nothing and left a TODO. Every client email about an
-  appointment now formats through `lib/email/appointment-time.ts`, in the
-  salon's zone, and says what happened: confirmed, moved (with where it was),
-  or cancelled. `__tests__/api/booking-change-emails.test.ts` runs a Los
-  Angeles salon on a UTC server.
-
-- **Railway security incident, 2026-10-21.** Railway reported that a third
-  party may have read customers' environment variables, some decrypted
-  ([notice](https://blog.railway.com/p/security-disclosure-wednesday-october-21st),
-  [status](https://status.railway.com)). Railway invalidated every API token
-  and paused builds; Hobby workspaces, ours included, were still paused on
-  2026-10-22. Lumina has no customers, and staging holds only seeded data.
-  Done on 2026-10-22:
-  - Postgres: public TCP proxy removed; password regenerated from the
-    database's Config tab (the app reads it through a variable reference).
-  - `NEXTAUTH_SECRET` rotated. The public booking CSRF falls back to it, so
-    that rotated too.
-  - Resend API key deleted. It had never sent mail: the domain never
-    verified ([#120](https://github.com/effuselabs/lumina/issues/120)).
-  - `RAILWAY_STAGING_TOKEN` in GitHub replaced with a new project token; the
-    Railway GitHub app removed from Jeremy's personal account, kept only on
-    `effuselabs/lumina`.
-  - Checked, nothing found: GitHub deploy keys, security log, branches,
-    commits and workflow runs since 2026-10-20.
-
-  Staging was down until Railway re-enabled Hobby builds, and resuming them
-  did not redeploy it; `deploy.yml`, dispatched by hand on 2026-10-23, did.
-  Checked then: `/api/health` healthy, an owner sign-in, the rebuilt
-  dashboard, a public booking (201), and a booking without its CSRF token
-  refused (403). That paused build is also why #114 and #116 had not
-  deployed. Health reports `commit: "unknown"` after a CLI deploy.
-  `CRON_SECRET` and `PUBLIC_BOOKING_CSRF_SECRET` were never set on staging;
-  both fail safe, but give each its own value. Auditing the secrets turned up
-  a CSRF helper with a built-in fallback secret, unreachable
-  ([#121](https://github.com/effuselabs/lumina/issues/121), fixed in #122).
-
-- ~~**Railway had stopped reading `railway.json`.**~~ **Resolved**, and the
-  service has since migrated to Infrastructure as Code entirely. The service's
-  `railwayConfigFile` was null and every setting it supplied had reverted to
-  defaults — no `healthcheckPath`, no `preDeployCommand`, `RAILPACK` instead of
-  `NIXPACKS`. So the guarantee `deploy.yml` documents ("Railway aborts the
-  release if the pre-deploy command fails, so new code can never go live
-  against an un-migrated schema") was not true. Restored to `/railway.json`
-  with its six settings on 2026-09-06.
-
-  Cause: a `railway config` run created `.railway/railway.ts` and switched the
-  service to Infrastructure-as-Code, but that file was never committed and its
-  `builder` and `preDeployCommand` are commented out. Config as Code stops
-  working 2026-12-01; **done** — `.railway/railway.ts` is now the complete
-  configuration (builder, pre-deploy migration, health check), committed.
-
-  Separately: a deploy is skipped, not failed, when CI is red — `skippedReason:
-"CI check suite failed"`. Staging silently ran week-old code. Worth knowing
-  that a red `main` is invisible from the staging URL.
-
-- ~~**`npm run test:e2e` cannot pass — two spec files fail to load at all.**~~
-  **Resolved in 4d.2.** `cross-browser-responsive.spec.ts` and
-  `public-booking-e2e.spec.ts` called `test.use({ browserName })` inside a
-  `test.describe`, which Playwright rejects at collection — so the command
-  could not start, whatever you passed it. They and the rest of the
-  deleted-tests-era specs are gone; three remain, and all 18 tests pass in 22s
-  across both browser projects. CI runs the suite rather than one named file.
-
-  One real defect surfaced on the way: `health-check.spec.ts` asserted
-  `checks.memory === 'healthy'`, but the route downgrades to `'warning'` above
-  a 512MB heap and still returns 200 by design. The test passed alone and
-  failed inside the full suite — an assertion on how busy the machine was.
-
-- The Clients page's staff filter matches `Client.preferredStaff`
-  (`app/api/clients/route.ts:108`), not the staff a client has actually
-  booked with. A client who books through the public page never has that
-  field set, so filtering by the staff member they just booked with is
-  guaranteed to hide them. Found on staging looking for a real booking.
-  Belongs with client CRM when that is unparked; the query wants to go
-  through `appointments.some({ staffId })`. ([#85](https://github.com/effuselabs/lumina/issues/85))
-
-- ~~The booking page opens on today and offers no way forward when the salon is
-  closed that day.~~ **Fixed** ([#58](https://github.com/effuselabs/lumina/issues/58)).
-  It was worse than recorded: a "Next available date" button did exist, but it
-  parsed the API's `2026-10-12` with `new Date()`, which is UTC midnight —
-  the evening before anywhere west of Greenwich. A Los Angeles visitor on a
-  closed Sunday was offered "Sunday, Oct 11", and clicking it selected the
-  closed day again. `lib/booking/date-param.ts` now reads and writes the API's
-  bare dates in the visitor's zone, and on first arrival the page moves to the
-  next day with times and says so. The e2e spec opens the page in the salon's
-  zone with the browser clock on a closed day; the project's own browser runs
-  in Sydney, east of UTC, where the bug never showed.
-
-- ~~The booking page could show the closed day's empty list under the day it
-  moved to.~~ **Fixed** ([#92](https://github.com/effuselabs/lumina/issues/92)),
-  a regression from #58's fix. The page drew every availability response it
-  received, including ones for a day it was no longer showing: a fetch that
-  re-runs while its request is in flight shares that request, so one answer
-  reached two handlers — the first moved the page on, the second drew the
-  closed day over it. Separately, the loading state cleared between the hand
-  over and the next day's fetch, drawing that day as empty for a frame. Only
-  the latest request may now change the page, and loading holds through the
-  hand-over. #58's test passed regardless, because it looked for any button
-  containing a time and the "other times" tiles contain times too; it now
-  forces the shared-request case and records whether the empty state is ever
-  drawn for the new day, even briefly.
-
-- ~~The booking page's time buttons, and its "other times" tiles, clip their
-  own text.~~ **Fixed** ([#90](https://github.com/effuselabs/lumina/issues/90)).
-  Both used the Button's `sm` size, a fixed 32px height, with
-  `whitespace-nowrap` and `overflow-hidden` from its base — and two lines of
-  text. They now grow to fit (44px minimum, a comfortable touch target) and
-  their grids size columns by available width, so a time stays on one line.
-  The e2e spec fails on any time button or tile whose content overflows it.
-
-- The booking page's date-and-time step is squeezed at desktop width: two
-  ~225px cards beside the sidebar, weekday headers running together, the
-  month heading wrapping. For the design review
-  ([#94](https://github.com/effuselabs/lumina/issues/94)).
-
-- ~~**Prisma is bundled into the browser on the booking page.**~~ **Fixed.**
-  `staff-time-selection.tsx` called `AlternativeSlotsService` from the
-  browser, so "here are some other times" never worked. The availability
-  route now computes alternatives when a day is empty and returns them in
-  the same response; the page renders them in the salon's timezone. Three
-  defects were behind the first one, each hidden by it:
-  - The search started a day early: the route passed `new Date(date)`, UTC
-    midnight, which in Los Angeles is the evening before. It now passes the
-    salon's own midnight.
-  - The service read opening hours from the legacy `Business.operatingHours`
-    JSON (through an `as any`), which disagreed with the `BusinessHours`
-    table everything else reads: it offered Sunday slots for a salon the page
-    showed as closed.
-  - The page only rendered alternatives inside its error panel, never for an
-    empty day, and in the browser's timezone.
-    `e2e/booking-loop.spec.ts` asks for a closed day and checks every
-    alternative falls on a later salon day; it fails on each of the first two.
-    The dashboard calendar's Prisma browser stub went in #52: no client
-    bundle contains Prisma.
-
-- ~~The landing page links to `/book/demo` (`app/page.tsx`), which 404s.~~
-  **Fixed** ([#64](https://github.com/effuselabs/lumina/issues/64)) by removing
-  the button. It read "Watch Demo" and promised a three-minute video that does
-  not exist, so pointing it at a real booking page would still have
-  misdescribed it. `e2e/homepage.spec.ts` now fails on any home-page link that
-  answers 4xx or 5xx. A real demo — a video, or a sandbox salon that sends no
-  real email — belongs with the marketing redesign
-  ([#69](https://github.com/effuselabs/lumina/issues/69)). Readable booking links
-  (`/book/<slug>`) remain a good idea for salons, separately.
-
-- The public booking page now hides services no active staff can perform. A
-  salon whose only nail technician leaves will see nail services disappear from
-  their booking page with no notice. Better than the dead end it replaces — the
-  service was listed, selectable, and unbookable — but the owner should be told.
-  Belongs with staff management, when that is unparked. ([#86](https://github.com/effuselabs/lumina/issues/86))
-
-- ~~`app/api/booking/*` duplicates the public booking API.~~ **Resolved** in
-  4d: only `/api/booking/[id]` remains (tenant-checked since #54), and
-  `offline-support.tsx` no longer fetches a missing endpoint.
-- ~~`booking-confirmation.tsx`, `public-booking-interface.tsx` and
-  `simple-booking-layout.tsx` are unreferenced.~~ **Resolved**: deleted in the
-  4d sweep.
-- ~~The client form's `<Input>` sets `aria-label` from its placeholder, which
-  overrides the visible `<Label>`.~~ **Fixed**
-  ([#63](https://github.com/effuselabs/lumina/issues/63)). The fallback was in
-  `Input` itself, so it affected every input with a placeholder, and it was
-  hiding 17 inputs — search boxes and the design-system demos — that had no
-  label at all. Those now carry an explicit `aria-label`, `Input` never
-  derives one, and `__tests__/accessibility/input-labels.test.ts` fails on any
-  `<Input>` without a real label.
-- ~~"Confirm Booking" renders white text on the coral/gold gradient.~~
-  **Fixed** in 3d, and gated by a test that reads the components, not only
-  the tokens.
-- ~~**Sign-in reports a database outage as a wrong password.**~~ **Fixed.**
-  `authorize` caught every error, returned `null`, and logged nothing, so a
-  stopped database read as "Invalid email or password". It now lives in
-  `lib/auth/authorize-credentials.ts`: `null` only for malformed input, an
-  unknown email or a wrong password; anything else is logged and thrown as a
-  `CredentialsSignin` with `code: 'service_unavailable'`, which the form shows
-  as an outage. Checked against a real server with Postgres stopped.
-- `optimized-booking-interface.tsx` is the **live** booking UI.
-  `public-booking-interface.tsx` and `simple-booking-layout.tsx` have zero
-  importers. An earlier demolition list had this backwards — do not delete the
-  wrong one.
-- ~~**`next@14.2.35` carried 23 advisories, two of them critical RCE, with
-  no 14.x patch.**~~ **Fixed** by the upgrade to 15.5.26. GHSA-2xp9-vwfh-vxw4
-  (Image Optimization API, AVIF) had reached us: `/_next/image` is excluded
-  from auth in `middleware.ts` and fetched from allowed hosts on request. It
-  was mitigated first with `images.unoptimized` — measured on a production
-  build, the endpoint went from fetching on request to 404 — and the
-  optimizer stays off after the fix, for the reasons in `next.config.js`.
-  `postcss`, pinned inside `next` at a vulnerable 8.4.31, is redirected to the
-  root copy with an npm `overrides` entry; remove it when `next` stops pinning. ([#80](https://github.com/effuselabs/lumina/issues/80))
-
-- Before real customers: `/api/gdpr/export` and `/delete` are untested while
-  handling PII, and there is no privacy policy or terms. ([#71](https://github.com/effuselabs/lumina/issues/71))
-- ~~Tenant isolation has no test coverage.~~ **Done.** Thirty authenticated
-  routes took a `businessId` from the caller and never checked it. The cause
-  was that `CLAUDE.md` mandated `requireBusinessAccess`, which calls
-  `redirect()` and so cannot work in a route handler — a rule nobody could
-  follow, hand-rolled six ways instead. `authorizeBusinessAccess` in
-  `lib/auth/business-access.ts` is the one that works, and
-  `__tests__/security/tenant-isolation.test.ts` fails the build for any new
-  route that skips it.
-
-  Ten routes were fixed; fifteen were deleted as dead (`/api/availability/*`
-  in full, three `/api/booking/*` duplicates, three telemetry routes whose
-  only caller had no importers); five turned out to authorize correctly by a
-  mechanism the detector could not see, and are recorded as such.
-
-  Two things the sweep found and did not fix:
-
-  - `/api/monitoring/performance` now checks membership, but
-    `appointmentPerformanceMonitor.generateReport` takes only a time window —
-    it does not scope by business. The check stops a stranger asking; it does
-    not yet make the answer theirs. Scoping the report is real work with no
-    consumer today, since nothing calls the endpoint. ([#73](https://github.com/effuselabs/lumina/issues/73))
-  - ~~There is no admin role. Several endpoints are application-wide by
-    nature and are currently open to any authenticated user.~~ **Fixed**
-    ([#72](https://github.com/effuselabs/lumina/issues/72)), decided by Jeremy
-    on 2026-10-24. A platform administrator runs a whole deployment, one
-    salon or many, and is not a salon role. An allow-list of email addresses
-    was proposed first and withdrawn — nothing verifies an address, so
-    whoever registered a listed one first would have become admin. Instead
-    the role is `UserRole.SUPER_ADMIN`, which existed unused, granted only
-    from the command line (`npm run admin:grant`, `docs/environments.md`).
-    `authorizePlatformAdmin` reads it from the database on every request, so
-    revoking is immediate. `/api/monitoring/alerts` and
-    `/api/notifications/health` answer only an administrator. The tenant
-    isolation gate missed both because it looked only at routes naming a
-    business or reading Prisma, and these read in-memory monitors; it now
-    requires a guard on every route behind sign-in.
+Still open, all under the launch: the CLA (#77) — Jeremy sets up CLA
+Assistant with the approved text, then a pull request adds `CLA.md` and
+changes `CONTRIBUTING.md` and shows the bot passing (CLA Assistant Lite was
+archived in March 2026 and does not get a workflow with write access);
+self-hosting instructions (#76), including registration being closed by
+default (`ALLOW_PUBLIC_SIGNUP`) and the first-account bootstrap; and the
+organisation profile (#79).

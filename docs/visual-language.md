@@ -88,7 +88,8 @@ themes, and this system sheet was built from these values for review.
 ## Motion
 
 - **Durations:** instant 0, micro 80, fast 120, base 180, slow 240 ms.
-  Nothing over 240 ms except the undo countdown and the skeleton.
+  Nothing over 240 ms except the undo countdown, the skeleton, and the brand
+  moment below.
 - **Springs** (`linear()`, 32 stops, with a `cubic-bezier` fallback swapped in
   under `@supports`):
   |        | k/c    | Overshoot | Settles                          |
@@ -106,6 +107,26 @@ themes, and this system sheet was built from these values for review.
 - **Reduced motion:** opacity and colour only, 150 ms at most.
 - **Never:** parallax, scroll-linked motion, ambient loops, count-ups,
   `transition: all`, `hover:scale`.
+- **Buttons** carry the quality in their states, not in decoration (asked for
+  by Jeremy on 2026-10-27):
+  - hover: the fill lifts by .02 L over fast;
+  - press: scale .97 over micro, with the inset deepening, and release on
+    snappy;
+  - focus: the gold halo eases in over fast;
+  - loading: the label cross-fades to a spinner after 150 ms, the width held so
+    nothing shifts;
+  - success: a check draws over 200 ms, then the label returns.
+
+  No shine sweep and nothing that loops.
+
+- **One brand moment, on sign-in** (added 2026-10-27 with the First Light
+  logo): the sun rises from behind the horizon line as the page loads. The
+  line draws out from its centre over 240 ms, then the half-disc rises
+  through a clip on smooth over about 520 ms, and the form fades in 35 ms
+  apart from 160 ms. It plays once per page load and is finished within
+  800 ms. The form is usable from the first frame, since the animation never
+  holds focus or input. Under reduced motion the logo is simply there. It is
+  the only animation allowed past 240 ms, and the only one on sign-in.
 
 ## Signature moments
 
@@ -150,7 +171,7 @@ Class-hygiene allow-list for `backdrop-*`, `glass-*` and gradients;
 Playwright: glass area and count per route, no glass under glass, worst-case
 backdrop pixel test, reduced-transparency equals `data-surfaces=solid`,
 forced-colours screenshots, reduced motion moves nothing, no idle animation
-after 2 s, nothing over 240 ms; at most one gold-filled element per view
+after 2 s, nothing over 240 ms (the sign-in moment excepted, ≤ 800 ms); at most one gold-filled element per view
 plus the now-line; Lighthouse CI on `/book` (LCP ≤ 2.5 s and within 100 ms
 of the solid build, CLS < .05, INP ≤ 200 ms); material CSS ≤ 2 KB gzipped.
 
