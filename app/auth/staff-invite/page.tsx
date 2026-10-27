@@ -14,7 +14,7 @@ export default function StaffInvitePage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-surface px-4 py-8 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-surface px-4 py-8 shadow-sm sm:rounded-lg sm:px-10">
           <Suspense fallback={<div>Loading...</div>}>
             <StaffInviteForm />
           </Suspense>

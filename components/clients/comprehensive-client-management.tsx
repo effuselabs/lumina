@@ -336,7 +336,7 @@ export function ComprehensiveClientManagement({
       {/* Client Metrics */}
       {metrics && (
         <div className="dashboard-stats-grid">
-          <Card className="client-metrics-card border border-line bg-surface shadow-sm">
+          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 Total Clients
@@ -353,7 +353,7 @@ export function ComprehensiveClientManagement({
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border border-line bg-surface shadow-sm">
+          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 New This Month
@@ -374,7 +374,7 @@ export function ComprehensiveClientManagement({
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border border-line bg-surface shadow-sm">
+          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 Avg Lifetime Value
@@ -389,7 +389,7 @@ export function ComprehensiveClientManagement({
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border border-line bg-surface shadow-sm">
+          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 VIP Clients
@@ -444,7 +444,7 @@ export function ComprehensiveClientManagement({
               onClick={() => setViewMode('cards')}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 viewMode === 'cards'
-                  ? 'text-color-secondary bg-surface shadow-sm'
+                  ? 'text-color-secondary bg-surface shadow-xs'
                   : 'text-ink-soft'
               }`}
             >
@@ -454,7 +454,7 @@ export function ComprehensiveClientManagement({
               onClick={() => setViewMode('table')}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 viewMode === 'table'
-                  ? 'text-color-secondary bg-surface shadow-sm'
+                  ? 'text-color-secondary bg-surface shadow-xs'
                   : 'text-ink-soft'
               }`}
             >
@@ -494,7 +494,7 @@ export function ComprehensiveClientManagement({
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <div className="flex min-w-0 flex-1 items-center space-x-2">
-                    <Avatar className="h-9 w-9 flex-shrink-0">
+                    <Avatar className="h-9 w-9 shrink-0">
                       <AvatarFallback className="client-card__avatar text-xs font-medium text-white">
                         {getInitials(client.firstName, client.lastName)}
                       </AvatarFallback>
@@ -519,7 +519,7 @@ export function ComprehensiveClientManagement({
                     <DropdownMenuTrigger asChild>
                       <button
                         onClick={e => e.stopPropagation()}
-                        className="flex-shrink-0 rounded p-1 hover:bg-surface-sunken"
+                        className="shrink-0 rounded p-1 hover:bg-surface-sunken"
                       >
                         <MoreHorizontal className="text-color-foreground-muted h-4 w-4" />
                       </button>
@@ -563,13 +563,13 @@ export function ComprehensiveClientManagement({
                 <div className="space-y-1">
                   {client.email && (
                     <div className="text-color-foreground-muted flex items-center truncate text-xs">
-                      <Mail className="mr-1 h-3 w-3 flex-shrink-0" />
+                      <Mail className="mr-1 h-3 w-3 shrink-0" />
                       <span className="truncate">{client.email}</span>
                     </div>
                   )}
                   {client.phone && (
                     <div className="text-color-foreground-muted flex items-center text-xs">
-                      <Phone className="mr-1 h-3 w-3 flex-shrink-0" />
+                      <Phone className="mr-1 h-3 w-3 shrink-0" />
                       {client.phone}
                     </div>
                   )}
@@ -640,7 +640,7 @@ export function ComprehensiveClientManagement({
         </div>
       ) : (
         // Enhanced Table view with perfect alignment
-        <div className="border-color-border bg-color-surface rounded-lg border shadow-sm">
+        <div className="border-color-border bg-color-surface rounded-lg border shadow-xs">
           <div className="p-4">
             <div className="space-y-3">
               {filteredClients.map(client => (
@@ -650,7 +650,7 @@ export function ComprehensiveClientManagement({
                   onClick={() => onViewClient?.(client)}
                 >
                   <div className="flex min-w-0 flex-1 items-center space-x-3">
-                    <Avatar className="h-10 w-10 flex-shrink-0">
+                    <Avatar className="h-10 w-10 shrink-0">
                       <AvatarFallback className="client-card__avatar text-sm font-medium text-white">
                         {getInitials(client.firstName, client.lastName)}
                       </AvatarFallback>
@@ -670,14 +670,14 @@ export function ComprehensiveClientManagement({
                       </div>
                       {client.email && (
                         <div className="text-color-foreground-muted mt-1 flex items-center truncate text-sm">
-                          <Mail className="mr-1 h-3 w-3 flex-shrink-0" />
+                          <Mail className="mr-1 h-3 w-3 shrink-0" />
                           <span className="truncate">{client.email}</span>
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex flex-shrink-0 items-center gap-4">
+                  <div className="flex shrink-0 items-center gap-4">
                     <div className="text-right">
                       <div className="text-color-secondary text-sm font-medium">
                         {client.appointmentCount} visits

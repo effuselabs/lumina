@@ -181,7 +181,7 @@ export function SidebarNavigation({
                         }
                       }}
                     >
-                      <item.icon className="h-5 w-5 flex-shrink-0" />
+                      <item.icon className="h-5 w-5 shrink-0" />
                       <span className="flex-1">{item.label}</span>
                       {item.badge && item.badge > 0 && (
                         <span className="sidebar-nav-badge">{item.badge}</span>
@@ -206,7 +206,7 @@ export function SidebarNavigation({
                               }
                             }}
                           >
-                            <child.icon className="h-4 w-4 flex-shrink-0" />
+                            <child.icon className="h-4 w-4 shrink-0" />
                             <span className="flex-1">{child.label}</span>
                           </Link>
                         ))}
@@ -236,7 +236,7 @@ export function SidebarNavigation({
                       }
                     }}
                   >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    <item.icon className="h-5 w-5 shrink-0" />
                     <span className="flex-1">{item.label}</span>
                     {item.badge && item.badge > 0 && (
                       <span className="sidebar-nav-badge">{item.badge}</span>
@@ -265,7 +265,7 @@ export function SidebarNavigation({
                         }
                       }}
                     >
-                      <item.icon className="h-5 w-5 flex-shrink-0" />
+                      <item.icon className="h-5 w-5 shrink-0" />
                       <span className="flex-1">{item.label}</span>
                       {item.badge && item.badge > 0 && (
                         <span className="sidebar-nav-badge">{item.badge}</span>
@@ -290,7 +290,7 @@ export function SidebarNavigation({
                               }
                             }}
                           >
-                            <child.icon className="h-4 w-4 flex-shrink-0" />
+                            <child.icon className="h-4 w-4 shrink-0" />
                             <span className="flex-1">{child.label}</span>
                           </Link>
                         ))}

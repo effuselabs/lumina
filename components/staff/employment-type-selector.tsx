@@ -167,7 +167,7 @@ export function EmploymentTypeSelector({
                 <ul className="space-y-1 text-sm font-medium text-green-700">
                   {displayedInfo.pros.map((pro, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <CheckCircleIcon className="mt-0.5 h-3 w-3 flex-shrink-0" />
+                      <CheckCircleIcon className="mt-0.5 h-3 w-3 shrink-0" />
                       {pro}
                     </li>
                   ))}
@@ -181,7 +181,7 @@ export function EmploymentTypeSelector({
                 <ul className="space-y-1 text-sm font-medium text-orange-700">
                   {displayedInfo.cons.map((con, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <InfoIcon className="mt-0.5 h-3 w-3 flex-shrink-0" />
+                      <InfoIcon className="mt-0.5 h-3 w-3 shrink-0" />
                       {con}
                     </li>
                   ))}

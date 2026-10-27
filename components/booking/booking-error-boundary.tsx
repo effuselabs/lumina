@@ -133,7 +133,7 @@ function BookingErrorDisplay({
   const errorContent = getErrorContent();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-surface-muted to-surface-sunken p-4">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-surface-muted to-surface-sunken p-4">
       <Card className="w-full max-w-md p-6 text-center sm:p-8">
         <div className="mb-4 flex justify-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
@@ -211,7 +211,7 @@ function BookingErrorDisplay({
         <div className="mt-8 border-t pt-6 text-xs text-ink-muted">
           <p>
             Powered by{' '}
-            <span className="font-medium text-[var(--brand-primary)]">
+            <span className="font-medium text-(--brand-primary)">
               Lumina
             </span>
           </p>

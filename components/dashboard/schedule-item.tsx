@@ -25,11 +25,11 @@ export function ScheduleItem({
   const _getStatusStyles = (status: ScheduleItemData['status']) => {
     switch (status) {
       case 'upcoming':
-        return 'bg-gradient-to-r from-lumina-peach/20 to-lumina-peach/10 border-lumina-peach/30';
+        return 'bg-linear-to-r from-lumina-peach/20 to-lumina-peach/10 border-lumina-peach/30';
       case 'in-progress':
-        return 'bg-gradient-to-r from-lumina-orange/20 to-lumina-orange/10 border-lumina-orange/30';
+        return 'bg-linear-to-r from-lumina-orange/20 to-lumina-orange/10 border-lumina-orange/30';
       case 'completed':
-        return 'bg-gradient-to-r from-emerald-50 to-emerald-25 border-emerald-200';
+        return 'bg-linear-to-r from-emerald-50 to-emerald-25 border-emerald-200';
       default:
         return 'bg-surface-muted border-line';
     }

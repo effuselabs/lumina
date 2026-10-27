@@ -216,7 +216,7 @@ export function DayView({
     <div className="bg-color-background flex h-full flex-col">
       {/* Staff Headers */}
       <div className="border-color-border bg-color-background-muted sticky top-0 z-10 flex border-b-2">
-        <div className="text-color-foreground-muted border-color-border w-16 flex-shrink-0 border-r p-2 text-xs font-semibold sm:w-24 sm:p-4 sm:text-sm">
+        <div className="text-color-foreground-muted border-color-border w-16 shrink-0 border-r p-2 text-xs font-semibold sm:w-24 sm:p-4 sm:text-sm">
           Time
         </div>
         {activeStaff.map(staff => (
@@ -265,7 +265,7 @@ export function DayView({
               {/* Time Label */}
               <div
                 className={cn(
-                  'border-color-border relative w-16 flex-shrink-0 border-r p-1 text-xs sm:w-24 sm:p-3',
+                  'border-color-border relative w-16 shrink-0 border-r p-1 text-xs sm:w-24 sm:p-3',
                   {
                     'text-color-foreground font-semibold': isHourMark,
                     'text-color-foreground-muted': !isHourMark,
@@ -320,7 +320,7 @@ export function DayView({
                     showFeedback={shouldShowDropFeedback(staffSlot, staff.id)}
                     disabled={!isBusinessHours}
                     className={cn(
-                      'border-color-border relative min-h-[2.5rem] flex-1 touch-manipulation border-l transition-colors sm:min-h-[3rem]',
+                      'border-color-border relative min-h-10 flex-1 touch-manipulation border-l transition-colors sm:min-h-12',
                       {
                         'bg-color-background hover:bg-color-background-muted cursor-pointer':
                           isBusinessHours && !hasAppointments,
@@ -349,7 +349,7 @@ export function DayView({
                                   dragState.draggedAppointment?.id ===
                                   appointment.id
                                 }
-                                className={cn('flex-shrink-0', {
+                                className={cn('shrink-0', {
                                   'z-10': aptIndex === 0, // Bring first appointment to front
                                   'scale-95 transform opacity-90': aptIndex > 0, // Stack overlapping appointments
                                 })}
@@ -363,7 +363,7 @@ export function DayView({
                       {hasConflicts && (
                         <div className="absolute right-1 top-1 z-20">
                           <div
-                            className="h-3 w-3 rounded-full border-2 border-white bg-red-500 shadow-sm"
+                            className="h-3 w-3 rounded-full border-2 border-white bg-red-500 shadow-xs"
                             title="Scheduling conflict detected"
                           />
                         </div>
@@ -435,12 +435,12 @@ export function DayView({
             style={{ top: `${percentage}%` }}
           >
             <div className="flex items-center">
-              <div className="w-24 flex-shrink-0 pr-2 text-right">
+              <div className="w-24 shrink-0 pr-2 text-right">
                 <div className="inline-block rounded-full bg-lumina-coral px-2 py-1 text-xs font-medium text-white">
                   {formatTime(current)}
                 </div>
               </div>
-              <div className="h-0.5 flex-1 bg-lumina-coral shadow-sm" />
+              <div className="h-0.5 flex-1 bg-lumina-coral shadow-xs" />
             </div>
           </div>
         );

@@ -124,7 +124,7 @@ export default async function HomePage() {
             {/* Enhanced Brand Badge */}
             <Badge
               variant="secondary"
-              className="animate-lumina-fade-in badge-lumina-gold mb-8 px-4 py-2 text-sm font-semibold shadow-sm"
+              className="animate-lumina-fade-in badge-lumina-gold mb-8 px-4 py-2 text-sm font-semibold shadow-xs"
             >
               <Sparkles className="mr-2 h-4 w-4" />
               AI-Powered Business Management Platform
@@ -160,7 +160,7 @@ export default async function HomePage() {
                 <Link
                   href="/auth/signup"
                   aria-describedby="signup-description"
-                  className="btn-primary-gradient inline-flex min-w-[14rem] items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
+                  className="btn-primary-gradient inline-flex min-w-56 items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
                 >
                   Start Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
@@ -547,19 +547,19 @@ export default async function HomePage() {
 
               <ul className="mb-8 space-y-3 text-left">
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="h-5 w-5 shrink-0 text-success" />
                   <span className="text-sm">Full platform access</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="h-5 w-5 shrink-0 text-success" />
                   <span className="text-sm">Priority support</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="h-5 w-5 shrink-0 text-success" />
                   <span className="text-sm">Shape the product roadmap</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="h-5 w-5 shrink-0 text-success" />
                   <span className="text-sm">Grandfathered pricing</span>
                 </li>
               </ul>

@@ -232,13 +232,13 @@ export function MonthView({
                       {staffColors.slice(0, 4).map(([color, count], index) => (
                         <div
                           key={color}
-                          className="h-2 w-2 rounded-full border border-white shadow-sm"
+                          className="h-2 w-2 rounded-full border border-white shadow-xs"
                           style={{ backgroundColor: color }}
                           title={`${count} appointment${count > 1 ? 's' : ''}`}
                         />
                       ))}
                       {staffColors.length > 4 && (
-                        <div className="h-2 w-2 rounded-full border border-white bg-gray-400 shadow-sm" />
+                        <div className="h-2 w-2 rounded-full border border-white bg-gray-400 shadow-xs" />
                       )}
                     </div>
                   )}

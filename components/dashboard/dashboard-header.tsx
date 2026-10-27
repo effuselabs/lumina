@@ -58,7 +58,7 @@ function ThemeToggle() {
   return (
     <button
       type="button"
-      className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       onClick={toggleTheme}
       disabled={isTransitioning}
       aria-label={label}
@@ -78,7 +78,7 @@ function SignOutButton() {
   return (
     <button
       type="button"
-      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg px-2.5 text-sm font-medium text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg px-2.5 text-sm font-medium text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       onClick={() => signOut({ callbackUrl: '/auth/signin' })}
     >
       <LogOut className="h-5 w-5" aria-hidden="true" />

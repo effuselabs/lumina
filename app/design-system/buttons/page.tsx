@@ -144,7 +144,7 @@ export default function ButtonsPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* CTA Section */}
-          <div className="from-lumina-gold/10 to-lumina-coral/10 rounded-lg bg-gradient-to-r p-6">
+          <div className="from-lumina-gold/10 to-lumina-coral/10 rounded-lg bg-linear-to-r p-6">
             <h3 className="mb-2 text-lg font-semibold">
               Ready to get started?
             </h3>

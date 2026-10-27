@@ -167,7 +167,7 @@ export function AppointmentCalendarPageContent({
           />
 
           {/* Calendar Controls */}
-          <Card className="border-color-border shadow-sm">
+          <Card className="border-color-border shadow-xs">
             <CardHeader>
               <CalendarHeader
                 view={currentView}
@@ -223,7 +223,7 @@ export function AppointmentCalendarPageContent({
           </div>
 
           {/* Calendar View */}
-          <Card className="border-color-border shadow-sm">
+          <Card className="border-color-border shadow-xs">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <CalendarDays className="h-5 w-5" />
@@ -264,7 +264,7 @@ export function AppointmentCalendarPageContent({
 
           {/* Staff Overview */}
           {business.staff.length > 0 && (
-            <Card className="border-color-border shadow-sm">
+            <Card className="border-color-border shadow-xs">
               <CardHeader>
                 <CardTitle>Staff Overview</CardTitle>
                 <p className="text-color-foreground-muted text-sm">

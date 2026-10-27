@@ -367,7 +367,7 @@ export function EmploymentConfigurationForm({
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
+              className="bg-linear-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
             >
               {isLoading ? 'Saving...' : 'Save Configuration'}
             </Button>

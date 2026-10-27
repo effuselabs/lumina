@@ -207,7 +207,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
         {[1, 2, 3].map(i => (
           <Card
             key={i}
-            className="animate-pulse border-neutral-200 shadow-sm dark:border-neutral-700"
+            className="animate-pulse border-neutral-200 shadow-xs dark:border-neutral-700"
           >
             <CardHeader>
               <div className="h-6 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700" />
@@ -276,7 +276,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       )}
 
       {/* Appointment Details */}
-      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
+      <Card className="border-neutral-200 shadow-xs dark:border-neutral-700">
         <CardHeader>
           <CardTitle className="text-ink-brand">
             Appointment Information
@@ -342,7 +342,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       </Card>
 
       {/* Client Information */}
-      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
+      <Card className="border-neutral-200 shadow-xs dark:border-neutral-700">
         <CardHeader>
           <CardTitle className="text-ink-brand">Client Information</CardTitle>
         </CardHeader>
@@ -375,7 +375,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
       </Card>
 
       {/* Business Information */}
-      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
+      <Card className="border-neutral-200 shadow-xs dark:border-neutral-700">
         <CardHeader>
           <CardTitle className="text-ink-brand">Business Information</CardTitle>
         </CardHeader>
@@ -420,7 +420,7 @@ export function BookingManagement({ bookingId }: BookingManagementProps) {
 
       {/* Actions */}
       {booking.status !== 'CANCELLED' && booking.status !== 'COMPLETED' && (
-        <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
+        <Card className="border-neutral-200 shadow-xs dark:border-neutral-700">
           <CardHeader>
             <CardTitle className="text-ink-brand">Manage Booking</CardTitle>
             <CardDescription>

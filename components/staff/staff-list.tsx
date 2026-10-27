@@ -426,7 +426,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                     <AvatarImage
                       src={member.avatar || member.user.image || undefined}
                     />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 font-semibold text-white">
+                    <AvatarFallback className="bg-linear-to-br from-blue-500 to-purple-600 font-semibold text-white">
                       {getInitials(member.displayName)}
                     </AvatarFallback>
                   </Avatar>

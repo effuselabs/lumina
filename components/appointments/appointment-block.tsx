@@ -70,13 +70,13 @@ export function AppointmentBlock({
   const getBlockSize = (): string => {
     switch (view) {
       case 'day':
-        return 'min-h-[3rem] p-2'; // Larger for detailed day view
+        return 'min-h-12 p-2'; // Larger for detailed day view
       case 'week':
-        return 'min-h-[2rem] p-1.5'; // Medium for week view
+        return 'min-h-8 p-1.5'; // Medium for week view
       case 'month':
-        return 'min-h-[1.5rem] p-1'; // Compact for month view
+        return 'min-h-6 p-1'; // Compact for month view
       default:
-        return 'min-h-[2rem] p-1.5';
+        return 'min-h-8 p-1.5';
     }
   };
 
@@ -164,7 +164,7 @@ export function AppointmentBlock({
   return (
     <div
       className={cn(
-        'group relative cursor-pointer rounded border-l-4 transition-all hover:shadow-sm',
+        'group relative cursor-pointer rounded border-l-4 transition-all hover:shadow-xs',
         getStatusColor(appointment.status),
         getBlockSize(),
         {

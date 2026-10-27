@@ -772,7 +772,7 @@ export function StaffTimeSelection({
 
       {/* Selected Slot Summary */}
       {selectedSlot && (
-        <Card className="border-brand-gold/30 bg-gradient-to-r from-brand-gold/10 to-brand-coral/10">
+        <Card className="border-brand-gold/30 bg-linear-to-r from-brand-gold/10 to-brand-coral/10">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Clock className="h-5 w-5 text-green-600" />

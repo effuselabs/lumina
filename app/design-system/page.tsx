@@ -109,7 +109,7 @@ function ColorSwatch({ name, value, description, usage }: ColorSwatchProps) {
       >
         {/* Copy indicator */}
         <div className="flex h-full items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <div className="rounded-full bg-black/20 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+          <div className="rounded-full bg-black/20 px-3 py-1 text-xs font-medium text-white backdrop-blur-xs">
             {copied ? 'Copied!' : 'Click to copy'}
           </div>
         </div>
@@ -1101,7 +1101,7 @@ function DesignSystemContent() {
                       className="h-full w-full opacity-100"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-sm">
+                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-xs">
                         Gradient Mesh
                       </span>
                     </div>
@@ -1120,7 +1120,7 @@ function DesignSystemContent() {
                       className="h-full w-full opacity-100"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-sm">
+                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-xs">
                         Particle Field
                       </span>
                     </div>

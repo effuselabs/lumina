@@ -235,10 +235,10 @@ export function BookingConfirmationStep({
     return (
       <div className="mx-auto max-w-2xl space-y-6">
         {/* Success Header */}
-        <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100/50 shadow-sm">
+        <Card className="border-green-200 bg-linear-to-br from-green-50 to-green-100/50 shadow-xs">
           <CardContent className="pt-6">
             <div className="flex items-center space-x-4">
-              <div className="flex-shrink-0 rounded-full bg-green-100 p-3">
+              <div className="shrink-0 rounded-full bg-green-100 p-3">
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
               <div className="space-y-1">
@@ -254,7 +254,7 @@ export function BookingConfirmationStep({
         </Card>
 
         {/* Confirmation Details */}
-        <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
+        <Card className="border-neutral-200 shadow-xs dark:border-neutral-700">
           <CardHeader>
             <CardTitle className="text-ink-brand">
               Appointment Details
@@ -413,7 +413,7 @@ export function BookingConfirmationStep({
         </Card>
 
         {/* Email Confirmation Status */}
-        <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
+        <Card className="border-neutral-200 shadow-xs dark:border-neutral-700">
           <CardHeader>
             <CardTitle className="text-ink-brand">What's Next?</CardTitle>
           </CardHeader>
@@ -544,7 +544,7 @@ export function BookingConfirmationStep({
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <NetworkStatusIndicator />
-      <Card className="border-neutral-200 shadow-sm dark:border-neutral-700">
+      <Card className="border-neutral-200 shadow-xs dark:border-neutral-700">
         <CardHeader>
           <CardTitle className="text-ink-brand">Review Your Booking</CardTitle>
           <CardDescription>
