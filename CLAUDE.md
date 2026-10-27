@@ -47,8 +47,8 @@ than pre-clearing everything.
 
 ## Stack
 
-Next.js 14 App Router · React 18 · TypeScript strict · PostgreSQL 15+ · Prisma
-· NextAuth v5 · Tailwind · Radix UI · Resend · Jest · Playwright · Railway.
+Next.js 15 App Router · React 19 · TypeScript strict · PostgreSQL 15+ · Prisma
+· NextAuth v5 · Tailwind 3 · Radix UI · Resend · Jest · Playwright · Railway.
 **Node 22.**
 
 ## Commands
@@ -137,9 +137,11 @@ Rebuild deliberately.
 
 - Unit-test real logic (`availability-calculator`, `conflict-detection-engine`,
   `appointment-service`). Don't chase coverage on presentational components.
-- `e2e/booking-loop.spec.ts` is the definition of done for the current
-  milestone: owner signs up → creates services, staff, hours → client books at
-  `/book/[businessId]` → both parties emailed → appointment on the calendar.
+- The definition of done for the first release: owner signs up → creates
+  services, staff, hours → client books at `/book/[businessId]` → both parties
+  emailed → appointment on the calendar. `e2e/booking-loop.spec.ts` proves the
+  booking and the calendar today; sign-up, setup and the emails are #165, and
+  until it lands, don't call the loop proven.
 - Prefer a failing test first, then make it pass.
 
 ## How to know you're done

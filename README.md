@@ -14,8 +14,10 @@ hosting and support for salons that would rather not run it themselves.
 
 ## Status
 
-Pre-release, and in an honest rebuild. The booking loop works end to end and is
-gated by CI on every merge; a lot of the surrounding product is not finished.
+Pre-release, and in an honest rebuild. A client can book and the owner sees it
+on the calendar, gated by CI on every merge; booking emails are not delivered
+yet, the interface is being redesigned, and a lot of the surrounding product is
+not finished.
 See [docs/PLAN.md](docs/PLAN.md) for what is being worked on, what is parked,
 and why — it is kept current rather than aspirational.
 

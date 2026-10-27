@@ -19,8 +19,9 @@ is added back until it describes something verified.
 
 - [The plan](PLAN.md) — where the rebuild is, what is next, and what is parked
   on purpose. Updated in place; it is the only status document
-- [History](history.md) — how the project stalled, what the audit found, and
-  why the conventions look the way they do
+- [History](history.md) — how the project stalled, what the audit found, why
+  the conventions look the way they do, and the rebuild log: finished work and
+  the lessons in it
 - [Visual language](visual-language.md) — the spec for Phase 6's materials,
   light, type and motion. Once `tokens.ts` carries it, the generated design
   system page replaces it
