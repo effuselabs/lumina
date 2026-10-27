@@ -1,3 +1,4 @@
+import { PublicStaffResponse } from '@/lib/booking/public-responses';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -146,8 +147,6 @@ async function getQualifiedStaff(businessId: string, serviceIds: string[]) {
     // Transform to public-safe format
     return qualifiedStaff.map(staffMember => ({
       id: staffMember.id,
-      firstName: staffMember.firstName,
-      lastName: staffMember.lastName,
       displayName: staffMember.displayName,
       avatar: staffMember.avatar,
       specialties: staffMember.services.map(s => s.service.name),
@@ -232,14 +231,9 @@ export async function GET(
       staff: qualifiedStaff,
       totalStaff: qualifiedStaff.length,
       serviceIds: validatedQuery.serviceIds,
-      metadata: {
-        businessId: params.businessId,
-        requestTime: new Date().toISOString(),
-        cacheEnabled: true,
-      },
     };
 
-    return NextResponse.json(response, {
+    return NextResponse.json(PublicStaffResponse.parse(response), {
       headers: {
         ...publicBookingSecurityHeaders,
         ...rateLimitResult.headers,

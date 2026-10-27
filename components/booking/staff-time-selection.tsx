@@ -49,8 +49,6 @@ export interface TimeSlot {
 
 export interface StaffMember {
   id: string;
-  firstName: string;
-  lastName: string;
   displayName: string;
   avatar?: string;
   specialties: string[];
@@ -74,14 +72,6 @@ interface AvailabilityResponse {
   requestedDate: string;
   timezone: string;
   totalSlotsFound: number;
-  metadata: {
-    totalSlots: number;
-    availableSlots: number;
-    calculationTime: number;
-    cacheHitRate: number;
-    realTimeValidation: boolean;
-    servicesValidated: string[];
-  };
 }
 
 export function StaffTimeSelection({
