@@ -1,3 +1,4 @@
+import { PublicAvailabilityResponse } from '@/lib/booking/public-responses';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -211,14 +212,9 @@ export async function GET(
       // viewer's own zone, which is how a 9-to-6 salon offered 4 AM slots.
       timezone: business.timezone,
       totalSlotsFound: availabilityResult.slots.length,
-      metadata: {
-        ...availabilityResult.metadata,
-        cacheEnabled: true,
-        realTimeValidation: true,
-      },
     };
 
-    return NextResponse.json(response, {
+    return NextResponse.json(PublicAvailabilityResponse.parse(response), {
       headers: {
         ...publicBookingSecurityHeaders,
         ...rateLimitResult.headers,

@@ -1,3 +1,4 @@
+import { PublicBookingCreatedResponse } from '@/lib/booking/public-responses';
 import { prisma } from '@/lib/prisma';
 import { InputSanitizer } from '@/lib/security/rate-limiter';
 import {
@@ -739,11 +740,11 @@ export async function POST(
     }
 
     return createSecurePublicBookingResponse(
-      {
+      PublicBookingCreatedResponse.parse({
         appointment: createdAppointment,
         confirmationSent,
         message: 'Appointment booked successfully!',
-      },
+      }),
       request,
       {
         status: 201,

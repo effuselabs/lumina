@@ -1,3 +1,4 @@
+import { PublicBusinessResponse } from '@/lib/booking/public-responses';
 import { prisma } from '@/lib/prisma';
 import { InputSanitizer } from '@/lib/security/rate-limiter';
 import { NextRequest, NextResponse } from 'next/server';
@@ -68,7 +69,6 @@ async function validateBusinessContext(businessId: string) {
         requireDeposit: true,
         depositAmount: true,
         cancellationPolicy: true,
-        operatingHours: true,
         logo: true,
         primaryColor: true,
         createdAt: true,
@@ -239,8 +239,6 @@ export async function GET(
       orderBy: [{ category: 'asc' }, { name: 'asc' }],
     });
 
-    // Business hours are stored in the operatingHours JSON field
-
     // Transform services data for public consumption
     const transformedServices = services.map(service => ({
       id: service.id,
@@ -312,7 +310,6 @@ export async function GET(
           : null,
         logo: business.logo,
         primaryColor: business.primaryColor,
-        operatingHours: business.operatingHours,
       },
       services: transformedServices,
       servicesByCategory,
@@ -326,7 +323,7 @@ export async function GET(
       },
     };
 
-    return NextResponse.json(response, {
+    return NextResponse.json(PublicBusinessResponse.parse(response), {
       headers: {
         ...publicBookingSecurityHeaders,
         ...rateLimitResult.headers,
