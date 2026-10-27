@@ -18,7 +18,15 @@
  * every path starts with '/', that made `isPublicRoute` unconditionally true
  * and the middleware a no-op for every request.
  */
-const PUBLIC_EXACT_ROUTES = ['/', '/api/health'] as const;
+const PUBLIC_EXACT_ROUTES = [
+  '/',
+  '/api/health',
+  // The service worker that removes the old offline worker (#150). A browser
+  // checks for an updated worker without a session and refuses one that
+  // redirects, so behind sign-in a signed-out device could never let go of
+  // the old one. A static file with no data in it.
+  '/sw.js',
+] as const;
 
 /**
  * Route trees that are public in their entirety. Each entry must end in '/'

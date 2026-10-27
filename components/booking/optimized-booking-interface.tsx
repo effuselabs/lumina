@@ -8,7 +8,6 @@ import type { TimeSlot } from './staff-time-selection';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { BookingLoadingState } from './booking-loading-states';
 import { MobileOptimizedBooking } from './mobile-optimized-booking';
-import { OfflineSupport, registerServiceWorker } from './offline-support';
 import { ProgressiveLoading } from './progressive-loading';
 
 // Lazy load booking steps for code splitting
@@ -151,11 +150,6 @@ export function OptimizedBookingInterface({
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Register service worker for offline support
-  useEffect(() => {
-    registerServiceWorker();
   }, []);
 
   // Preload the next step's chunk. This used to preload './service-selection'
@@ -364,7 +358,7 @@ export function OptimizedBookingInterface({
   );
 
   return (
-    <OfflineSupport enableOfflineMode={true}>
+    <>
       {isMobile ? (
         <MobileOptimizedBooking
           currentStep={String(bookingState.currentStep + 1)}
@@ -466,6 +460,6 @@ export function OptimizedBookingInterface({
           )}
         </div>
       )}
-    </OfflineSupport>
+    </>
   );
 }
