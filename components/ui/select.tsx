@@ -23,7 +23,7 @@ const SelectTrigger = React.forwardRef<
       'bg-surface',
       'text-neutral-900 dark:text-neutral-100',
       'placeholder:text-neutral-500 dark:placeholder:text-neutral-400',
-      'focus:outline-none focus:ring-2 focus:ring-offset-2',
+      'focus:outline-hidden focus:ring-2 focus:ring-offset-2',
       'disabled:cursor-not-allowed disabled:opacity-50',
       'contrast-more:border-2',
       'motion-reduce:transition-none',
@@ -88,7 +88,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border shadow-lg',
+        'relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border shadow-lg',
         'bg-surface',
         'border-neutral-300 dark:border-neutral-700',
         'text-neutral-900 dark:text-neutral-100',
@@ -110,7 +110,7 @@ const SelectContent = React.forwardRef<
         className={cn(
           'p-1',
           position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
+            'h-(--radix-select-trigger-height) w-full min-w-(--radix-select-trigger-width)'
         )}
       >
         {children}
@@ -140,12 +140,12 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors duration-150',
+      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors duration-150',
       'text-neutral-900 dark:text-neutral-100',
       'hover:bg-neutral-100 dark:hover:bg-neutral-800',
       'focus:bg-lumina-gold/10 dark:focus:bg-lumina-gold/20 focus:text-ink-brand dark:focus:text-lumina-gold',
       'data-[state=checked]:bg-lumina-gold/10 dark:data-[state=checked]:bg-lumina-gold/20 data-[state=checked]:text-deep-teal dark:data-[state=checked]:text-lumina-gold',
-      'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'data-disabled:pointer-events-none data-disabled:opacity-50',
       'motion-reduce:transition-none',
       className
     )}

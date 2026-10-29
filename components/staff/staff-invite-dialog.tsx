@@ -207,7 +207,7 @@ export function StaffInviteDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto [&>button]:text-gray-700 [&>button]:hover:bg-gray-100 [&>button]:hover:text-gray-900">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto [&>button]:text-gray-700 hover:[&>button]:bg-gray-100 hover:[&>button]:text-gray-900">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
@@ -276,7 +276,7 @@ export function StaffInviteDialog({
             {/* Step 1: Basic Details */}
             {step === 'details' && (
               <div className="space-y-4">
-                <Card className="border border-line shadow-sm">
+                <Card className="border border-line shadow-xs">
                   <CardHeader className="border-b border-line bg-surface-muted">
                     <CardTitle className="flex items-center gap-2 text-ink-strong">
                       <User className="h-5 w-5 text-blue-500" />
@@ -404,7 +404,7 @@ export function StaffInviteDialog({
             {/* Step 2: Employment Configuration */}
             {step === 'employment' && (
               <div className="space-y-4">
-                <Card className="border border-line shadow-sm">
+                <Card className="border border-line shadow-xs">
                   <CardHeader className="border-b border-line bg-surface-muted">
                     <CardTitle className="flex items-center gap-2 text-ink-strong">
                       <DollarSign className="h-5 w-5 text-green-500" />

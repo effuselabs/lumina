@@ -63,7 +63,7 @@ export default function OnboardingPage() {
   ).filter(step => isStepCompleted(step, state.data));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-orange-100">
+    <div className="min-h-screen bg-linear-to-br from-orange-50 via-yellow-50 to-orange-100">
       <Toaster position="top-right" />
 
       {/* Header */}

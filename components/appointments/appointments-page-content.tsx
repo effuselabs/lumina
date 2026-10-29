@@ -109,7 +109,7 @@ export function AppointmentsPageContent({
           {/* Calendar View Navigation */}
           <div className="grid gap-4 md:grid-cols-3">
             <Link href={`/dashboard/${businessSlug}/appointments`}>
-              <Card className="border-color-border cursor-pointer shadow-sm transition-colors hover:border-lumina-coral">
+              <Card className="border-color-border cursor-pointer shadow-xs transition-colors hover:border-lumina-coral">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
@@ -127,7 +127,7 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/dashboard/${businessSlug}/appointments/calendar`}>
-              <Card className="border-color-border cursor-pointer shadow-sm transition-colors hover:border-lumina-coral">
+              <Card className="border-color-border cursor-pointer shadow-xs transition-colors hover:border-lumina-coral">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
@@ -145,7 +145,7 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/book/${business.id}`}>
-              <Card className="border-color-border cursor-pointer shadow-sm transition-colors hover:border-lumina-coral">
+              <Card className="border-color-border cursor-pointer shadow-xs transition-colors hover:border-lumina-coral">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
@@ -164,7 +164,7 @@ export function AppointmentsPageContent({
           </div>
 
           {/* Appointment Management Interface */}
-          <Card className="border-color-border shadow-sm">
+          <Card className="border-color-border shadow-xs">
             <CardHeader>
               <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div>

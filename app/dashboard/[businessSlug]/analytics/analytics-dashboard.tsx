@@ -163,7 +163,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
 
           <button
             onClick={handleRefresh}
-            className="inline-flex h-10 items-center justify-center rounded-md border border-line-strong bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex h-10 items-center justify-center rounded-md border border-line-strong bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             style={{ color: 'var(--ui-ink-brand)' }}
           >
             <RefreshCw className="mr-2 h-4 w-4" />
@@ -172,7 +172,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
 
           <button
             onClick={handleExport}
-            className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             style={{
               background: gradients.radiant,
             }}
@@ -208,7 +208,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
               </div>
               <button
                 onClick={handleRefresh}
-                className="ml-auto inline-flex h-8 items-center justify-center rounded-md px-3 py-1 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                className="ml-auto inline-flex h-8 items-center justify-center rounded-md px-3 py-1 text-sm font-medium text-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
                 style={{
                   background: gradients.radiant,
                 }}
@@ -222,7 +222,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
 
       {/* Key Metrics Overview - Dashboard Style */}
       <div className="dashboard-stats-grid">
-        <Card className="border border-line bg-surface shadow-sm">
+        <Card className="border border-line bg-surface shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
               <TrendingUp className="h-4 w-4" style={{ color: brand.coral }} />
@@ -245,7 +245,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
           </CardContent>
         </Card>
 
-        <Card className="border border-line bg-surface shadow-sm">
+        <Card className="border border-line bg-surface shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
               <Calendar className="h-4 w-4" style={{ color: brand.coral }} />
@@ -262,7 +262,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
           </CardContent>
         </Card>
 
-        <Card className="border border-line bg-surface shadow-sm">
+        <Card className="border border-line bg-surface shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
               <Users className="h-4 w-4" style={{ color: brand.coral }} />
@@ -279,7 +279,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
           </CardContent>
         </Card>
 
-        <Card className="border border-line bg-surface shadow-sm">
+        <Card className="border border-line bg-surface shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
               <BarChart3 className="h-4 w-4" style={{ color: brand.coral }} />

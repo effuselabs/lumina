@@ -186,7 +186,7 @@ export function WeekView({
     <div className="bg-color-background flex h-full flex-col">
       {/* Week Header */}
       <div className="border-color-border bg-color-background-muted sticky top-0 z-10 flex border-b-2">
-        <div className="text-color-foreground-muted w-16 flex-shrink-0 p-2 text-xs font-medium sm:w-20 sm:p-3 sm:text-sm">
+        <div className="text-color-foreground-muted w-16 shrink-0 p-2 text-xs font-medium sm:w-20 sm:p-3 sm:text-sm">
           Time
         </div>
         {weekDates.map((date, index) => {
@@ -246,10 +246,10 @@ export function WeekView({
         {timeSlots.map(hour => (
           <div
             key={hour}
-            className="border-color-border flex min-h-[2.5rem] border-b sm:min-h-[3rem]"
+            className="border-color-border flex min-h-10 border-b sm:min-h-12"
           >
             {/* Time Label */}
-            <div className="text-color-foreground-muted border-color-border w-16 flex-shrink-0 border-r p-1 text-xs sm:w-20 sm:p-2">
+            <div className="text-color-foreground-muted border-color-border w-16 shrink-0 border-r p-1 text-xs sm:w-20 sm:p-2">
               <div className="text-right">
                 {new Date(0, 0, 0, hour).toLocaleTimeString('en-US', {
                   hour: 'numeric',
@@ -284,7 +284,7 @@ export function WeekView({
                             appointment={appointment}
                             view="week"
                             onClick={onAppointmentClick}
-                            className="flex-shrink-0 text-xs"
+                            className="shrink-0 text-xs"
                           />
                         ))}
                         {hourAppointments.length > 2 && (
@@ -362,7 +362,7 @@ export function WeekView({
                             onDragStart={apt => {
                               // Handle drag start
                             }}
-                            className={cn('flex-shrink-0 text-xs', {
+                            className={cn('shrink-0 text-xs', {
                               'scale-95 opacity-90': aptIndex > 0,
                             })}
                           />
@@ -433,9 +433,9 @@ export function WeekView({
               width: `${100 / 7}%`,
             }}
           >
-            <div className="h-0.5 rounded-full bg-lumina-coral shadow-sm" />
+            <div className="h-0.5 rounded-full bg-lumina-coral shadow-xs" />
             <div className="absolute -left-2 -top-2">
-              <div className="h-4 w-4 rounded-full border-2 border-white bg-lumina-coral shadow-sm" />
+              <div className="h-4 w-4 rounded-full border-2 border-white bg-lumina-coral shadow-xs" />
             </div>
           </div>
         );

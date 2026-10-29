@@ -122,7 +122,7 @@ export function MobileOptimizedBooking({
       onTouchEnd={handleTouchEnd}
     >
       {/* Mobile Header with Progress */}
-      <header className="sticky top-0 z-50 bg-surface shadow-sm">
+      <header className="sticky top-0 z-50 bg-surface shadow-xs">
         {/* Network Status Indicator */}
         {shouldShowOfflineMessage() && (
           <div className="bg-red-50 px-4 py-2 text-center">
@@ -160,7 +160,7 @@ export function MobileOptimizedBooking({
             </div>
             <div className="mt-1 h-2 overflow-hidden rounded-full bg-surface-strong">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out"
+                className="h-full bg-linear-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -217,7 +217,7 @@ export function MobileOptimizedBooking({
               <Button
                 onClick={onNext}
                 disabled={isNextDisabled || isLoading}
-                className="h-12 flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-base font-medium hover:from-blue-600 hover:to-blue-700"
+                className="h-12 flex-1 bg-linear-to-r from-blue-500 to-blue-600 text-base font-medium hover:from-blue-600 hover:to-blue-700"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">

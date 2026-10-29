@@ -209,7 +209,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
             {/* Avatar */}
             <div
               className={cn(
-                'testimonial-avatar mr-4 flex-shrink-0',
+                'testimonial-avatar mr-4 shrink-0',
                 size === 'compact' && 'h-10 w-10',
                 size === 'default' && 'h-12 w-12',
                 size === 'large' && 'h-14 w-14'
@@ -221,12 +221,12 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
                   alt={`${author} avatar`}
                   width={48}
                   height={48}
-                  className="h-full w-full rounded-full border-2 border-background object-cover shadow-sm"
+                  className="h-full w-full rounded-full border-2 border-background object-cover shadow-xs"
                 />
               ) : (
                 <div
                   className={cn(
-                    'flex h-full w-full items-center justify-center rounded-full font-semibold text-white shadow-sm',
+                    'flex h-full w-full items-center justify-center rounded-full font-semibold text-white shadow-xs',
                     avatar || avatarPlaceholder,
                     size === 'compact' && 'text-xs',
                     size === 'default' && 'text-sm',

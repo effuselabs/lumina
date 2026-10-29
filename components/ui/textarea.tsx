@@ -7,7 +7,7 @@ const textareaVariants = cva(
     'flex w-full rounded-md border transition-all duration-200 resize-y',
     'text-sm font-normal',
     'placeholder:text-neutral-500 dark:placeholder:text-neutral-400',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+    'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2',
     'disabled:cursor-not-allowed disabled:opacity-50 disabled:resize-none',
     // High contrast mode support
     'contrast-more:border-2',

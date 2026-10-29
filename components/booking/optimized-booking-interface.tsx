@@ -406,7 +406,7 @@ export function OptimizedBookingInterface({
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-strong">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300"
+                className="h-full bg-linear-to-r from-blue-500 to-blue-600 transition-all duration-300"
                 style={{
                   width: `${((bookingState.currentStep + 1) / BOOKING_STEPS.length) * 100}%`,
                 }}

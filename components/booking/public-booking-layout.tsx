@@ -29,7 +29,7 @@ export function PublicBookingLayout({
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-surface-muted to-surface-sunken"
+      className="min-h-screen bg-linear-to-br from-surface-muted to-surface-sunken"
       style={
         {
           '--brand-primary': brandColors.primary,
@@ -39,7 +39,7 @@ export function PublicBookingLayout({
       }
     >
       {/* Header */}
-      <header className="border-b bg-surface shadow-sm">
+      <header className="border-b bg-surface shadow-xs">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between sm:h-20">
             {/* Back Button */}
@@ -159,7 +159,7 @@ function BusinessInfoSidebar({ business }: BusinessInfoSidebarProps) {
         <div className="space-y-3">
           {business.address && (
             <div className="flex items-start gap-3">
-              <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-ink-muted" />
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-ink-muted" />
               <div>
                 <p className="text-sm font-medium text-ink-strong">Address</p>
                 <p className="text-sm text-ink-soft">{business.address}</p>
@@ -169,7 +169,7 @@ function BusinessInfoSidebar({ business }: BusinessInfoSidebarProps) {
 
           {business.phone && (
             <div className="flex items-center gap-3">
-              <Phone className="h-4 w-4 flex-shrink-0 text-ink-muted" />
+              <Phone className="h-4 w-4 shrink-0 text-ink-muted" />
               <div>
                 <p className="text-sm font-medium text-ink-strong">Phone</p>
                 <a
@@ -185,7 +185,7 @@ function BusinessInfoSidebar({ business }: BusinessInfoSidebarProps) {
 
           {business.email && (
             <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4 flex-shrink-0 text-ink-muted" />
+              <Mail className="h-4 w-4 shrink-0 text-ink-muted" />
               <div>
                 <p className="text-sm font-medium text-ink-strong">Email</p>
                 <a

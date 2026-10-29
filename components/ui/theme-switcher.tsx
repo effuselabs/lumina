@@ -68,7 +68,7 @@ export function ThemeSwitcher({
         disabled={isTransitioning}
         className={cn(
           'h-8 px-3 transition-all duration-200',
-          isLight && 'bg-background shadow-sm',
+          isLight && 'bg-background shadow-xs',
           isTransitioning && 'cursor-not-allowed opacity-50'
         )}
         aria-label="Switch to light theme"
@@ -85,7 +85,7 @@ export function ThemeSwitcher({
         disabled={isTransitioning}
         className={cn(
           'h-8 px-3 transition-all duration-200',
-          isDark && 'bg-background shadow-sm',
+          isDark && 'bg-background shadow-xs',
           isTransitioning && 'cursor-not-allowed opacity-50'
         )}
         aria-label="Switch to dark theme"
@@ -102,7 +102,7 @@ export function ThemeSwitcher({
         disabled={isTransitioning}
         className={cn(
           'h-8 px-3 transition-all duration-200',
-          isSystem && 'bg-background shadow-sm',
+          isSystem && 'bg-background shadow-xs',
           isTransitioning && 'cursor-not-allowed opacity-50'
         )}
         aria-label="Use system theme"

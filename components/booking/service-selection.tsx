@@ -327,7 +327,7 @@ export function ServiceSelection({
 
       {/* Selected Services Summary */}
       {selectedServices.length > 0 && (
-        <Card className="border-brand-gold/30 bg-gradient-to-r from-brand-gold/10 to-brand-coral/10">
+        <Card className="border-brand-gold/30 bg-linear-to-r from-brand-gold/10 to-brand-coral/10">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Check className="h-5 w-5 text-green-600" />
@@ -419,10 +419,10 @@ export function ServiceSelection({
                     key={service.id}
                     className={`transition-all duration-200 hover:shadow-lg ${
                       isSelected
-                        ? 'border-brand-gold bg-gradient-to-br from-brand-gold/5 to-brand-coral/5 ring-2 ring-brand-gold'
+                        ? 'border-brand-gold bg-linear-to-br from-brand-gold/5 to-brand-coral/5 ring-2 ring-brand-gold'
                         : isAtMaxLimit
                           ? 'cursor-not-allowed opacity-50'
-                          : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-brand-gold/50'
+                          : 'cursor-pointer shadow-xs hover:scale-[1.02] hover:border-brand-gold/50'
                     }`}
                   >
                     <CardHeader className="pb-3">

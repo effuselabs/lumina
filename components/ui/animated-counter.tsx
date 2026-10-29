@@ -268,7 +268,7 @@ const AnimatedCounter = React.forwardRef<HTMLDivElement, AnimatedCounterProps>(
       return (
         <div
           className={cn(
-            'animated-counter-icon flex-shrink-0',
+            'animated-counter-icon shrink-0',
             iconSizeClasses[size],
             variantClasses[variant]
           )}

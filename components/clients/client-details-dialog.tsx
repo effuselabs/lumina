@@ -170,7 +170,7 @@ export function ClientDetailsDialog({
           {/* Client Header */}
           <div className="flex items-center space-x-4 rounded-lg bg-surface-muted p-4">
             <Avatar className="h-16 w-16">
-              <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-lg text-white">
+              <AvatarFallback className="bg-linear-to-r from-blue-500 to-purple-500 text-lg text-white">
                 {getInitials(client.firstName, client.lastName)}
               </AvatarFallback>
             </Avatar>

@@ -22,7 +22,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       ref={ref}
       className={cn(
         // Base card styles
-        'rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200',
+        'rounded-lg border bg-card text-card-foreground shadow-xs transition-all duration-200',
         // Default hover effect
         hover === 'none' && 'hover:shadow-md',
         // Variant styles

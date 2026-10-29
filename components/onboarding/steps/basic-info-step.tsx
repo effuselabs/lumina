@@ -153,7 +153,7 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
           <div className="flex justify-end">
             <Button
               type="submit"
-              className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
+              className="bg-linear-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
             >
               Continue
             </Button>
