@@ -85,6 +85,24 @@ themes, and this system sheet was built from these values for review.
   mirror), 1px `currentColor` at 14% with one gold stroke. Never isometric
   or 3D.
 
+## The mark: First Light
+
+Chosen by Jeremy on 2026-10-27 (#144): a gold half-sun rising over a horizon.
+On a 32-unit grid:
+
+- **Sun:** a half-disc of radius 7.5, centred at (16, 21), filled with a
+  vertical gold gradient (`oklch(.86 .145 88)` to `oklch(.80 .15 82)`).
+- **Horizon:** a thin line, not a stroke. A 30 × 1.4 rectangle at y 21.9,
+  its ends fading to nothing over the outer 22% of each side, in `ink-strong`.
+  It sits just under the sun.
+- **Below about 24 px** (favicon, tab icon) the fading line goes too faint, so
+  the horizon there is a solid 26 × 2 bar.
+
+The thick round-ended stroke from the first concept is retired (Jeremy,
+2026-11-20): the thin fading line, as on the social preview, reads cleaner at
+every size. Large compositions draw the same idea wider: the horizon runs off
+the frame or fades at both ends, never stopping on a rounded cap.
+
 ## Motion
 
 - **Durations:** instant 0, micro 80, fast 120, base 180, slow 240 ms.
