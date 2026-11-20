@@ -48,7 +48,7 @@ than pre-clearing everything.
 ## Stack
 
 Next.js 15 App Router · React 19 · TypeScript strict · PostgreSQL 15+ · Prisma
-· NextAuth v5 · Tailwind 3 · Radix UI · Resend · Jest · Playwright · Railway.
+· NextAuth v5 · Tailwind 4 · Radix UI · Resend · Jest · Playwright · Railway.
 **Node 22.**
 
 ## Commands
