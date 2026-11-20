@@ -920,8 +920,12 @@ export class StaffFactory extends BaseFactory<Staff> {
     const lastName = lastNameParts.join(' ');
     const email = this.generateEmail(firstName, lastName);
 
-    return await this.prisma.user.create({
-      data: {
+    // Found by email, not created: a refresh keeps user accounts, and the
+    // fixed random seed (#112) gives the same emails every run.
+    return await this.prisma.user.upsert({
+      where: { email },
+      update: {},
+      create: {
         email,
         name: profile.displayName,
         role: 'STAFF',

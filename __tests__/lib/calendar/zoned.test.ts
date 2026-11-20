@@ -1,3 +1,4 @@
+import { Settings } from 'luxon';
 import {
   fromWallClock,
   salonNow,
@@ -37,6 +38,41 @@ describe('salon wall clock', () => {
         iso
       );
     }
+  });
+
+  describe('on the night the clocks change', () => {
+    const realNow = Settings.now;
+    afterEach(() => {
+      Settings.now = realNow;
+    });
+
+    // Luxon guesses a wall time's offset from the zone's offset *now*, so the
+    // hour that happens twice resolved one way in summer and the other in
+    // winter: this suite passed in October and failed in November.
+    it.each([
+      ['in summer', '2026-07-01T12:00:00Z'],
+      ['in winter', '2026-12-01T12:00:00Z'],
+    ])('reads the hour that happens twice the same way %s', (_, now) => {
+      Settings.now = () => Date.parse(now);
+
+      // 1:30 AM on 1 November happens at 08:30Z (PDT) and again at 09:30Z
+      // (PST). The first is taken, as Temporal's "compatible" rule does.
+      expect(
+        fromWallClock(new Date(2026, 10, 1, 1, 30), LA).toISOString()
+      ).toBe('2026-11-01T08:30:00.000Z');
+    });
+
+    it.each([
+      ['in summer', '2026-07-01T12:00:00Z'],
+      ['in winter', '2026-12-01T12:00:00Z'],
+    ])('moves the hour that never happens forward %s', (_, now) => {
+      Settings.now = () => Date.parse(now);
+
+      // 2:30 AM on 8 March does not exist; it is read as 3:30 AM PDT.
+      expect(fromWallClock(new Date(2026, 2, 8, 2, 30), LA).toISOString()).toBe(
+        '2026-03-08T10:30:00.000Z'
+      );
+    });
   });
 
   it("gives the salon's now", () => {
