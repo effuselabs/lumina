@@ -1,10 +1,25 @@
-@import 'tailwindcss';
+/*
+  Tailwind's import, spelled out so that the Tailwind 3 component classes can
+  sit in the utilities layer ahead of the generated utilities (#154). See the
+  header of tailwind-3-components.css.
+*/
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+/*
+  Under Tailwind 3, webpack printed these two imports ahead of everything else
+  in this file, Tailwind's reset included, so every later rule of equal
+  specificity beat them. The front of the base layer keeps that.
+  Every colour in tokens.css is a custom property generated from
+  lib/design/tokens.ts.
+*/
+@import './tokens.css' layer(base);
+@import './booking-mobile.css' layer(base);
+@import 'tailwindcss/preflight.css' layer(base);
+@import './tailwind-3-components.css' layer(utilities);
+@import 'tailwindcss/utilities.css' layer(utilities);
 
-/* Every colour below is a custom property generated from lib/design/tokens.ts */
-@import './tokens.css' layer(utilities);
-
-/* Import mobile-specific optimizations */
-@import './booking-mobile.css' layer(utilities);
+/* Tailwind 3's space-x and space-y, generated in place of Tailwind 4's (#154). */
+@import './tailwind-3-compat.css' layer(utilities);
 
 @config '../tailwind.config.ts';
 
@@ -12,15 +27,22 @@
   Classes built at runtime, which the scanner cannot see in source. This was
   the config's \`safelist\`, which Tailwind 4 replaced with \`@source inline\`.
 */
+/* prettier-ignore */
 @source inline("bg-lumina-gradient bg-lumina-gradient-hover bg-lumina-gold bg-lumina-coral bg-lumina-peach bg-lumina-radiant bg-deep-teal bg-clarity-blue bg-soft-peach bg-sage-green bg-warm-gray bg-lavender-mist bg-cream text-lumina-gold text-lumina-coral text-clarity-blue text-sage-green text-lavender-mist text-foreground text-muted-foreground text-card-foreground bg-card bg-background border-background border-border bg-success bg-warning bg-error bg-info bg-success-600 bg-warning-600 bg-error-600 bg-info-600 bg-success-subtle bg-warning-subtle bg-info-subtle bg-error-subtle bg-primary-subtle card-glass card-gradient-border card-floating card-premium card-hover-lift card-hover-glow card-hover-scale card-animated testimonial-card testimonial-card-compact testimonial-card-default testimonial-card-large testimonial-card-content testimonial-quote-icon testimonial-quote testimonial-rating testimonial-author testimonial-avatar testimonial-author-details testimonial-author-name testimonial-author-meta text-lumina-h1 text-lumina-h2 text-lumina-h3 text-lumina-body-lg text-lumina-body-sm text-lumina-caption dark light animate-fade-in animate-slide-in animate-pulse-glow");
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* Listed in tailwind-3-compat.css, which defines them the Tailwind 3 way. */
+/* prettier-ignore */
+@source not inline("space-y-0 space-y-0.5 space-y-1 space-y-1.5 space-y-2 space-y-3 space-y-4 space-y-5 space-y-6 space-y-8 space-y-12 space-x-0.5 space-x-1 space-x-2 space-x-3 space-x-4 space-x-5 space-x-8 sm:space-x-2 sm:space-y-0 md:space-x-2 md:space-y-0 lg:space-y-0");
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+/*
+  Two Tailwind 3 defaults that Tailwind 4 changed (#154).
+
+  Borders: an element with \`border\` and no colour was gray-200 under
+  Tailwind 3 and is currentcolor under Tailwind 4. gray-200 here is
+  Tailwind 3's value, pinned in tailwind3Palette (lib/design/tokens.ts).
+
+  Cursors: Tailwind 4's reset gives buttons the browser's default arrow;
+  Tailwind 3 gave them a pointer.
 */
 @layer base {
   *,
@@ -28,56 +50,225 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: theme(colors.gray.200);
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
   }
 }
 
 /* ===== TAILWIND TYPOGRAPHY UTILITIES ===== */
 
+@utility dark {
+  --tw-sort: forced-color-adjust;
+  /* Dark theme adjustments */
+  & .hero-bg-gradient-mesh {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 210, 90, 0.2) 0%,
+      rgba(255, 122, 90, 0.15) 50%,
+      rgba(11, 43, 51, 0.25) 100%
+    );
+  }
+
+  & .hero-bg-particle-field {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 210, 90, 0.15) 0%,
+      rgba(255, 122, 90, 0.1) 100%
+    );
+  }
+
+  & .hero-bg-geometric-pattern {
+    background: linear-gradient(
+      45deg,
+      rgba(255, 210, 90, 0.005) 0%,
+      rgba(255, 122, 90, 0.01) 50%,
+      rgba(11, 43, 51, 0.02) 100%
+    );
+  }
+
+  & .hero-bg-minimal-gradient {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 210, 90, 0.03) 0%,
+      transparent 100%
+    );
+  }
+
+  /* Dark Theme Adjustments */
+  & .testimonial-author {
+    border-top-color: var(--color-border);
+  }
+
+  & .testimonial-card:hover .testimonial-avatar::after {
+    opacity: 0.3;
+  }
+
+  /* Dark theme adjustments */
+  & .animated-counter-progress {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  & .animated-counter.animating .animated-counter-value {
+    text-shadow: 0 0 12px currentColor;
+  }
+
+  /* Dark theme adjustments for glass variant */
+  & .btn-premium-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  & .btn-premium-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* Dark theme glow adjustments */
+  & .btn-premium-glow {
+    box-shadow:
+      0 4px 14px 0 rgba(255, 210, 90, 0.5),
+      0 0 25px rgba(255, 122, 90, 0.4);
+  }
+
+  & .btn-premium-glow:hover {
+    box-shadow:
+      0 8px 25px 0 rgba(255, 210, 90, 0.7),
+      0 0 35px rgba(255, 122, 90, 0.6),
+      0 0 50px rgba(255, 210, 90, 0.3);
+  }
+
+  /* Dark theme floating adjustments */
+  & .btn-premium-floating {
+    background: var(--color-surface);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  & .btn-premium-floating:hover {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(255, 210, 90, 0.2);
+  }
+
+  /* Dark theme glow animation adjustments */
+  & .btn-animation-glow:hover {
+    box-shadow:
+      0 0 25px rgba(255, 210, 90, 0.5),
+      0 0 50px rgba(255, 122, 90, 0.3),
+      0 4px 14px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Dark theme glass adjustments */
+  & .card-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Fallback for browsers that don't support border-image */
+
+  /* Dark theme gradient border adjustments */
+  & .card-gradient-border {
+    background: var(--color-surface);
+  }
+
+  /* Dark theme floating adjustments */
+  & .card-floating {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.4),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Dark theme premium adjustments */
+  & .card-premium {
+    border-color: rgba(255, 210, 90, 0.3);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 210, 90, 0.2);
+  }
+
+  & .card-hover-lift:hover {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(255, 210, 90, 0.2);
+  }
+
+  & .card-hover-glow:hover {
+    box-shadow:
+      0 8px 25px 0 rgba(255, 210, 90, 0.6),
+      0 0 30px rgba(255, 122, 90, 0.5);
+    border-color: rgba(255, 210, 90, 0.7);
+  }
+
+  & .card-hover-scale:hover {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.15);
+  }
+
+  & .card-glass.card-floating {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.4),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  & .card-premium.card-floating {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.4),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2),
+      0 0 20px rgba(255, 210, 90, 0.25);
+  }
+}
+
 @utility font-lumina-h1 {
+  --tw-sort: forced-color-adjust;
   /* Enhanced Lumina Typography Utility Classes for Tailwind */
   @apply text-lumina-h1;
 }
 
 @utility font-lumina-h2 {
+  --tw-sort: forced-color-adjust;
   @apply text-lumina-h2;
 }
 
 @utility font-lumina-h3 {
+  --tw-sort: forced-color-adjust;
   @apply text-lumina-h3;
 }
 
 @utility font-lumina-body-lg {
+  --tw-sort: forced-color-adjust;
   @apply text-lumina-body-lg;
 }
 
 @utility font-lumina-body-sm {
+  --tw-sort: forced-color-adjust;
   @apply text-lumina-body-sm;
 }
 
 @utility font-lumina-caption {
+  --tw-sort: forced-color-adjust;
   @apply text-lumina-caption;
 }
 
-@utility typography-gradient {
-  /* Premium Typography Utilities */
-  background: var(--lumina-radiant-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-weight: 700;
-}
-
-@utility typography-animated {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    transform: translateY(-1px);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-}
-
 @utility text-fluid-hero {
+  --tw-sort: forced-color-adjust;
   /* Fluid Typography Variants */
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   line-height: clamp(3rem, 9vw, 5rem);
@@ -86,6 +277,7 @@
 }
 
 @utility text-fluid-display {
+  --tw-sort: forced-color-adjust;
   font-size: clamp(2rem, 6vw, 3.5rem);
   line-height: clamp(2.5rem, 7vw, 4rem);
   font-weight: 700;
@@ -93,6 +285,7 @@
 }
 
 @utility text-fluid-title {
+  --tw-sort: forced-color-adjust;
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   line-height: clamp(2rem, 5vw, 3rem);
   font-weight: 600;
@@ -100,6 +293,7 @@
 }
 
 @utility text-fluid-subtitle {
+  --tw-sort: forced-color-adjust;
   font-size: clamp(1.125rem, 3vw, 1.5rem);
   line-height: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 500;
@@ -107,67 +301,82 @@
 }
 
 @utility text-color-foreground {
+  --tw-sort: forced-color-adjust;
   /* Text Color Utilities with Proper Inheritance */
   color: var(--color-foreground);
 }
 
 @utility text-color-foreground-secondary {
+  --tw-sort: forced-color-adjust;
   color: var(--color-foreground-secondary);
 }
 
 @utility text-color-foreground-muted {
+  --tw-sort: forced-color-adjust;
   color: var(--color-foreground-muted);
 }
 
 @utility text-color-foreground-disabled {
+  --tw-sort: forced-color-adjust;
   color: var(--color-text-disabled);
 }
 
 @utility text-color-inverse {
+  --tw-sort: forced-color-adjust;
   color: var(--color-text-inverse);
 }
 
 @utility text-high-contrast {
+  --tw-sort: forced-color-adjust;
   /* High Contrast Text for Accessibility */
   color: var(--color-foreground);
   font-weight: 600;
 }
 
 @utility text-on-primary {
+  --tw-sort: forced-color-adjust;
   /* Text on Brand Colors - Ensuring Proper Contrast */
   color: var(--color-primary-foreground);
 }
 
 @utility text-on-secondary {
+  --tw-sort: forced-color-adjust;
   color: var(--color-secondary-foreground);
 }
 
 @utility text-primary-foreground {
+  --tw-sort: forced-color-adjust;
   /* Semantic Foreground Colors for Badges and Components */
   color: var(--color-primary-foreground);
 }
 
 @utility text-secondary-foreground {
+  --tw-sort: forced-color-adjust;
   color: var(--color-secondary-foreground);
 }
 
 @utility text-success-foreground {
+  --tw-sort: forced-color-adjust;
   color: var(--color-success-foreground);
 }
 
 @utility text-warning-foreground {
+  --tw-sort: forced-color-adjust;
   color: var(--color-warning-foreground);
 }
 
 @utility text-info-foreground {
+  --tw-sort: forced-color-adjust;
   color: var(--color-info-foreground);
 }
 
 @utility text-destructive-foreground {
+  --tw-sort: forced-color-adjust;
   color: var(--color-destructive-foreground);
 }
 
 @utility badge-glow-primary {
+  --tw-sort: forced-color-adjust;
   /* Badge hover glows. Named as plain classes: a hand-written `hover:shadow-x/25`
      is not a valid utility name in Tailwind 4. */
   &:hover {
@@ -176,171 +385,89 @@
 }
 
 @utility badge-glow-secondary {
+  --tw-sort: forced-color-adjust;
   &:hover {
     box-shadow: 0 4px 12px rgba(11, 43, 51, 0.25);
   }
 }
 
 @utility badge-glow-success {
+  --tw-sort: forced-color-adjust;
   &:hover {
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
   }
 }
 
 @utility badge-glow-warning {
+  --tw-sort: forced-color-adjust;
   &:hover {
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
   }
 }
 
 @utility badge-glow-info {
+  --tw-sort: forced-color-adjust;
   &:hover {
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
   }
 }
 
 @utility badge-glow-destructive {
+  --tw-sort: forced-color-adjust;
   &:hover {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
   }
 }
 
 @utility badge-glow-lumina-coral {
+  --tw-sort: forced-color-adjust;
   &:hover {
     box-shadow: 0 4px 12px rgba(255, 122, 90, 0.25);
   }
 }
 
 @utility text-on-success {
+  --tw-sort: forced-color-adjust;
   color: var(--color-success-foreground);
 }
 
 @utility text-on-warning {
+  --tw-sort: forced-color-adjust;
   color: var(--color-warning-foreground);
 }
 
 @utility text-on-error {
+  --tw-sort: forced-color-adjust;
   color: var(--color-error-foreground);
 }
 
 @utility text-on-info {
+  --tw-sort: forced-color-adjust;
   color: var(--color-info-foreground);
 }
 
 @utility wcag-aa-compliant {
+  --tw-sort: forced-color-adjust;
   /* WCAG Contrast Validation Classes */
   /* Ensures minimum 4.5:1 contrast ratio for normal text */
   color: var(--color-foreground);
 }
 
 @utility wcag-aaa-compliant {
+  --tw-sort: forced-color-adjust;
   /* Ensures minimum 7:1 contrast ratio for enhanced accessibility */
   color: var(--color-foreground);
   font-weight: 600;
 }
 
 @utility wcag-large-text-aa {
+  --tw-sort: forced-color-adjust;
   /* Large text (18px+ or 14px+ bold) needs minimum 3:1 contrast */
   color: var(--color-foreground-secondary);
 }
 
-/* ===== COMPONENT ARCHITECTURE ===== */
-
-@utility lumina-component {
-  /* CSS Containment for component isolation */
-  contain: layout style;
-  isolation: isolate;
-}
-
-@utility btn-lumina-primary {
-  /* Button System - Framework Compatible */
-  background: var(--lumina-radiant-gradient);
-  color: var(--color-primary-foreground);
-  border: 2px solid transparent;
-  font-weight: 600;
-  transition: all 0.2s ease-in-out;
-  contain: layout style;
-
-  &:hover {
-    background: var(--lumina-radiant-gradient-reverse);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 122, 90, 0.4);
-  }
-  @media (prefers-contrast: high) {
-    border: 3px solid var(--color-primary-foreground);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:hover {
-      transform: none;
-    }
-  }
-}
-
-@utility btn-lumina-secondary {
-  background-color: var(--color-secondary);
-  color: var(--color-secondary-foreground);
-  border: 1px solid var(--color-secondary);
-  font-weight: 600;
-  transition: all 0.2s ease-in-out;
-  contain: layout style;
-
-  &:hover {
-    background-color: var(--color-secondary-hover);
-    transform: translateY(-1px);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:hover {
-      transform: none;
-    }
-  }
-}
-
-@utility lumina-card {
-  /* Card System */
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
-  box-shadow: var(--dashboard-shadow);
-  contain: layout style;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    box-shadow: var(--dashboard-shadow-lg);
-    transform: translateY(-2px);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &:hover {
-      transform: none;
-    }
-  }
-}
-
-@utility lumina-input {
-  /* Form Elements */
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-foreground);
-  border-radius: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  transition: all 0.2s ease-in-out;
-  contain: layout style;
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-interactive-focus);
-    box-shadow: 0 0 0 2px rgba(255, 210, 90, 0.2);
-  }
-
-  &:disabled {
-    background: var(--color-background-muted);
-    color: var(--color-foreground-muted);
-    cursor: not-allowed;
-  }
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-
 @utility responsive-text {
+  --tw-sort: forced-color-adjust;
   /* Mobile-first responsive utilities */
   @media (max-width: 640px) {
     font-size: 0.875rem;
@@ -359,6 +486,7 @@
 }
 
 @utility responsive-padding {
+  --tw-sort: forced-color-adjust;
   /* Mobile-first responsive utilities */
   @media (max-width: 640px) {
     padding: 1rem;
@@ -374,6 +502,7 @@
 }
 
 @utility responsive-margin {
+  --tw-sort: forced-color-adjust;
   /* Mobile-first responsive utilities */
   @media (max-width: 640px) {
     margin: 0.5rem;
@@ -388,9 +517,8 @@
   }
 }
 
-/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
-
 @utility high-contrast {
+  --tw-sort: forced-color-adjust;
   @media (prefers-contrast: high) {
     border-width: 2px;
     font-weight: 600;
@@ -398,6 +526,7 @@
 }
 
 @utility respect-motion-preference {
+  --tw-sort: forced-color-adjust;
   @media (prefers-reduced-motion: reduce) {
     animation: none;
     transition: none;
@@ -405,6 +534,7 @@
 }
 
 @utility focus-visible {
+  --tw-sort: forced-color-adjust;
   /* High contrast mode support */
 
   /* Reduced motion support */
@@ -417,6 +547,7 @@
 }
 
 @utility sr-only {
+  --tw-sort: forced-color-adjust;
   /* Screen reader only content */
   position: absolute;
   width: 1px;
@@ -429,44 +560,28 @@
   border: 0;
 }
 
-@utility contain-layout {
-  /* CSS Containment for improved rendering performance */
-  contain: layout;
-}
-
-@utility contain-style {
-  contain: style;
-}
-
-@utility contain-paint {
-  contain: paint;
-}
-
-@utility contain-size {
-  contain: size;
-}
-
-@utility contain-strict {
-  contain: strict;
-}
-
-@utility contain-content {
-  contain: content;
-}
-
+/*
+  contain-layout, contain-style, contain-paint, contain-size, contain-strict
+  and contain-content were defined here under Tailwind 3. Tailwind 4 ships
+  them as its own utilities, and a hand-written utility with the same name
+  sorts unpredictably against them (#154), so these now come from Tailwind.
+*/
 @utility gpu-accelerated {
+  --tw-sort: forced-color-adjust;
   /* GPU acceleration for animations */
   transform: translateZ(0);
   will-change: transform;
 }
 
 @utility optimize-repaint {
+  --tw-sort: forced-color-adjust;
   /* Optimize repaints and compositing */
   contain: layout style paint;
   transform: translateZ(0);
 }
 
 @utility optimize-animation {
+  --tw-sort: forced-color-adjust;
   /* Optimize for animations */
   will-change: transform, opacity;
   backface-visibility: hidden;
@@ -474,22 +589,26 @@
 }
 
 @utility optimize-animation-complete {
+  --tw-sort: forced-color-adjust;
   /* Remove will-change after animation */
   will-change: auto;
 }
 
 @utility smooth-scroll {
+  --tw-sort: forced-color-adjust;
   /* Smooth scrolling with performance consideration */
   scroll-behavior: smooth;
 }
 
 @utility prevent-layout-shift {
+  --tw-sort: forced-color-adjust;
   /* Prevent layout shifts during loading */
   contain: layout;
   min-height: 1px; /* Prevent collapse */
 }
 
 @utility optimize-font-rendering {
+  --tw-sort: forced-color-adjust;
   /* Optimize font rendering */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -501,6 +620,7 @@
 }
 
 @utility ease-lumina {
+  --tw-sort: forced-color-adjust;
   /* ===== PREMIUM ANIMATION UTILITIES ===== */
 
   /* Advanced Easing Curves */
@@ -508,22 +628,27 @@
 }
 
 @utility ease-lumina-in {
+  --tw-sort: forced-color-adjust;
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
 @utility ease-lumina-out {
+  --tw-sort: forced-color-adjust;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 @utility ease-lumina-bounce {
+  --tw-sort: forced-color-adjust;
   transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 @utility ease-lumina-spring {
+  --tw-sort: forced-color-adjust;
   transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @utility animate-fade-in-up {
+  --tw-sort: forced-color-adjust;
   /* GPU-Accelerated Fade In Up Animation */
   opacity: 0;
   transform: translateY(20px) translateZ(0);
@@ -539,6 +664,7 @@
 }
 
 @utility animate-stagger {
+  --tw-sort: forced-color-adjust;
   /* Staggered Animation Utility */
   opacity: 0;
   transform: translateY(20px) translateZ(0);
@@ -573,6 +699,7 @@
 }
 
 @utility animate-glow {
+  --tw-sort: forced-color-adjust;
   /* Theme-Aware Glow Animation */
   animation: glowPulse 2s ease-in-out infinite alternate;
   will-change: box-shadow;
@@ -584,6 +711,7 @@
 }
 
 @utility animate-float {
+  --tw-sort: forced-color-adjust;
   /* Floating Animation */
   animation: float 3s ease-in-out infinite;
   will-change: transform;
@@ -595,6 +723,7 @@
 }
 
 @utility hover-scale {
+  --tw-sort: forced-color-adjust;
   /* Scale on Hover with GPU Acceleration */
   transform: translateZ(0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -613,6 +742,7 @@
 }
 
 @utility hover-lift {
+  --tw-sort: forced-color-adjust;
   /* Lift on Hover */
   transform: translateZ(0);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -632,6 +762,7 @@
 }
 
 @utility transition-colors-theme {
+  --tw-sort: forced-color-adjust;
   /* Theme-Aware Color Transitions */
   transition:
     color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -643,6 +774,7 @@
 }
 
 @utility transition-transform-smooth {
+  --tw-sort: forced-color-adjust;
   /* Smooth Transform Transitions */
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
@@ -652,6 +784,7 @@
 }
 
 @utility transition-all-smooth {
+  --tw-sort: forced-color-adjust;
   /* All Properties Smooth Transition */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   @media (prefers-reduced-motion: reduce) {
@@ -660,39 +793,48 @@
 }
 
 @utility delay-75 {
+  --tw-sort: forced-color-adjust;
   /* Animation Delay Utilities */
   animation-delay: 75ms;
 }
 
 @utility delay-100 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 100ms;
 }
 
 @utility delay-150 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 150ms;
 }
 
 @utility delay-200 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 200ms;
 }
 
 @utility delay-300 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 300ms;
 }
 
 @utility delay-500 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 500ms;
 }
 
 @utility delay-700 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 700ms;
 }
 
 @utility delay-1000 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 1000ms;
 }
 
 @utility btn-premium-glass {
+  --tw-sort: forced-color-adjust;
   @media (prefers-reduced-motion: reduce) {
     /* Premium button reduced motion fallbacks */
     &:hover {
@@ -759,6 +901,7 @@
 }
 
 @utility btn-premium-glow {
+  --tw-sort: forced-color-adjust;
   @media (prefers-reduced-motion: reduce) {
     &:hover {
       transform: none;
@@ -808,6 +951,7 @@
 }
 
 @utility btn-premium-floating {
+  --tw-sort: forced-color-adjust;
   @media (prefers-reduced-motion: reduce) {
     &:hover {
       transform: none;
@@ -861,6 +1005,7 @@
 }
 
 @utility btn-animation-lift {
+  --tw-sort: forced-color-adjust;
   @media (prefers-reduced-motion: reduce) {
     /* Animation utility reduced motion fallbacks */
     &:hover {
@@ -906,6 +1051,7 @@
 }
 
 @utility btn-animation-scale {
+  --tw-sort: forced-color-adjust;
   @media (prefers-reduced-motion: reduce) {
     &:hover {
       transform: none;
@@ -939,6 +1085,7 @@
 }
 
 @utility btn-animation-glow {
+  --tw-sort: forced-color-adjust;
   @media (prefers-reduced-motion: reduce) {
     &:hover {
       transform: none;
@@ -988,6 +1135,7 @@
 }
 
 @utility bg-lumina-gold {
+  --tw-sort: forced-color-adjust;
   /* Reduced Motion Fallbacks */
 
   /* ===== LUMINA DESIGN SYSTEM UTILITIES ===== */
@@ -997,67 +1145,82 @@
 }
 
 @utility bg-lumina-coral {
+  --tw-sort: forced-color-adjust;
   background-color: var(--lumina-coral);
 }
 
 @utility bg-lumina-coral/80 {
+  --tw-sort: forced-color-adjust;
   /* Lumina Coral hover variant for badges */
   background-color: rgba(255, 122, 90, 0.8);
 }
 
 @utility bg-deep-teal {
+  --tw-sort: forced-color-adjust;
   background-color: var(--deep-teal);
 }
 
 @utility bg-clarity-blue {
+  --tw-sort: forced-color-adjust;
   background-color: var(--clarity-blue);
 }
 
 @utility bg-soft-peach {
+  --tw-sort: forced-color-adjust;
   background-color: var(--soft-peach);
 }
 
 @utility bg-sage-green {
+  --tw-sort: forced-color-adjust;
   background-color: var(--sage-green);
 }
 
 @utility bg-warm-gray {
+  --tw-sort: forced-color-adjust;
   background-color: var(--warm-gray);
 }
 
 @utility bg-lavender-mist {
+  --tw-sort: forced-color-adjust;
   background-color: var(--lavender-mist);
 }
 
 @utility bg-cream {
+  --tw-sort: forced-color-adjust;
   background-color: var(--cream);
 }
 
 @utility bg-lumina-gradient {
+  --tw-sort: forced-color-adjust;
   /* Gradient Backgrounds */
   background: var(--lumina-radiant-gradient);
 }
 
 @utility bg-lumina-gradient-hover {
+  --tw-sort: forced-color-adjust;
   background: var(--lumina-radiant-gradient-reverse);
 }
 
 @utility bg-lumina-radiant {
+  --tw-sort: forced-color-adjust;
   background: var(--lumina-radiant-gradient);
 }
 
 @utility text-lumina-gold {
+  --tw-sort: forced-color-adjust;
   /* Text Colors */
   color: var(--lumina-gold);
 }
 
 @utility text-lumina-coral {
+  --tw-sort: forced-color-adjust;
   color: var(--lumina-coral);
   color: var(--lumina-coral);
   color: var(--lumina-coral);
 }
 
 @utility text-deep-teal {
+  --tw-sort: forced-color-adjust;
   color: var(--deep-teal);
 
   /* Text Color Utilities */
@@ -1065,81 +1228,100 @@
 }
 
 @utility text-clarity-blue {
+  --tw-sort: forced-color-adjust;
   color: var(--clarity-blue);
 }
 
 @utility text-sage-green {
+  --tw-sort: forced-color-adjust;
   color: var(--sage-green);
 }
 
 @utility text-warm-gray {
+  --tw-sort: forced-color-adjust;
   color: var(--warm-gray);
 }
 
 @utility border-lumina-gold {
+  --tw-sort: forced-color-adjust;
   /* Border Colors */
   border-color: var(--lumina-gold);
 }
 
 @utility border-lumina-coral {
+  --tw-sort: forced-color-adjust;
   border-color: var(--lumina-coral);
 }
 
 @utility border-deep-teal {
+  --tw-sort: forced-color-adjust;
   border-color: var(--deep-teal);
 }
 
 @utility bg-success {
+  --tw-sort: forced-color-adjust;
   /* Semantic Colors */
   background-color: var(--semantic-success);
 }
 
 @utility bg-warning {
+  --tw-sort: forced-color-adjust;
   background-color: var(--semantic-warning);
 }
 
 @utility bg-error {
+  --tw-sort: forced-color-adjust;
   background-color: var(--semantic-error);
 }
 
 @utility bg-info {
+  --tw-sort: forced-color-adjust;
   background-color: var(--semantic-info);
 }
 
 @utility text-success {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-success);
 }
 
 @utility text-warning {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-warning);
 }
 
 @utility text-error {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-error);
 }
 
 @utility text-info {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-info);
 }
 
 @utility border-success {
+  --tw-sort: forced-color-adjust;
   /* Semantic Border Colors */
   border-color: var(--semantic-success);
 }
 
 @utility border-warning {
+  --tw-sort: forced-color-adjust;
   border-color: var(--semantic-warning);
 }
 
 @utility border-error {
+  --tw-sort: forced-color-adjust;
   border-color: var(--semantic-error);
 }
 
 @utility border-info {
+  --tw-sort: forced-color-adjust;
   border-color: var(--semantic-info);
 }
 
 @utility bg-success-subtle {
+  --tw-sort: forced-color-adjust;
   /* Semantic Background Variants with Opacity */
   background: linear-gradient(
     to bottom right,
@@ -1150,6 +1332,7 @@
 }
 
 @utility bg-warning-subtle {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     to bottom right,
     var(--color-surface) 0%,
@@ -1159,6 +1342,7 @@
 }
 
 @utility bg-info-subtle {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     to bottom right,
     var(--color-surface) 0%,
@@ -1168,6 +1352,7 @@
 }
 
 @utility bg-error-subtle {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     to bottom right,
     var(--color-surface) 0%,
@@ -1177,6 +1362,7 @@
 }
 
 @utility bg-primary-subtle {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     to bottom right,
     var(--color-surface) 0%,
@@ -1186,6 +1372,7 @@
 }
 
 @utility bg-lumina-section {
+  --tw-sort: forced-color-adjust;
   /* Brand Background Gradients */
   background: linear-gradient(
     to right,
@@ -1196,14 +1383,17 @@
 }
 
 @utility border-lumina-gold-subtle {
+  --tw-sort: forced-color-adjust;
   border-color: rgba(255, 210, 90, 0.3);
 }
 
 @utility bg-surface-translucent {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(255, 255, 255, 0.95);
 }
 
 @utility badge-lumina-coral {
+  --tw-sort: forced-color-adjust;
   /* Badge Variants */
   border-color: rgba(255, 122, 90, 0.3);
   background-color: rgba(255, 122, 90, 0.15);
@@ -1211,35 +1401,42 @@
 }
 
 @utility badge-lumina-gold {
+  --tw-sort: forced-color-adjust;
   border-color: rgba(255, 210, 90, 0.3);
   background-color: rgba(255, 210, 90, 0.15);
   color: var(--deep-teal);
 }
 
 @utility badge-deep-teal {
+  --tw-sort: forced-color-adjust;
   border-color: rgba(11, 43, 51, 0.2);
   background-color: rgba(11, 43, 51, 0.1);
   color: var(--deep-teal);
 }
 
 @utility text-semantic-success {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-success);
 }
 
 @utility text-semantic-warning {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-warning);
 }
 
 @utility text-semantic-info {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-info);
 }
 
 @utility bg-lumina-logo {
+  --tw-sort: forced-color-adjust;
   /* Logo Background */
   background: var(--lumina-radiant-gradient);
 }
 
 @utility hero-background {
+  --tw-sort: forced-color-adjust;
   /* ===== HERO BACKGROUND SYSTEM ===== */
 
   /* Base Hero Background Styles */
@@ -1249,6 +1446,7 @@
 }
 
 @utility hero-bg-gradient-mesh {
+  --tw-sort: forced-color-adjust;
   /* Gradient Mesh Variant */
   background: linear-gradient(
     135deg,
@@ -1271,6 +1469,7 @@
 }
 
 @utility hero-bg-gradient-mesh-content {
+  --tw-sort: forced-color-adjust;
   position: relative;
   width: 100%;
   height: 100%;
@@ -1278,6 +1477,7 @@
 }
 
 @utility hero-bg-gradient-orb {
+  --tw-sort: forced-color-adjust;
   position: absolute;
   border-radius: 50%;
   filter: blur(15px);
@@ -1299,6 +1499,7 @@
 }
 
 @utility hero-bg-gradient-orb-1 {
+  --tw-sort: forced-color-adjust;
   width: 300px;
   height: 300px;
   background: radial-gradient(circle, var(--lumina-gold) 0%, transparent 70%);
@@ -1327,6 +1528,7 @@
 }
 
 @utility hero-bg-gradient-orb-2 {
+  --tw-sort: forced-color-adjust;
   width: 400px;
   height: 400px;
   background: radial-gradient(circle, var(--lumina-coral) 0%, transparent 70%);
@@ -1354,6 +1556,7 @@
 }
 
 @utility hero-bg-gradient-orb-3 {
+  --tw-sort: forced-color-adjust;
   width: 250px;
   height: 250px;
   background: radial-gradient(circle, var(--clarity-blue) 0%, transparent 70%);
@@ -1381,6 +1584,7 @@
 }
 
 @utility hero-bg-animated {
+  --tw-sort: forced-color-adjust;
   /* Animated gradient orbs */
   & .hero-bg-gradient-orb-1 {
     animation: floatOrb1 8s ease-in-out infinite;
@@ -1525,6 +1729,7 @@
 }
 
 @utility hero-bg-particle-field {
+  --tw-sort: forced-color-adjust;
   /* Particle Field Variant */
   background: linear-gradient(
     135deg,
@@ -1545,6 +1750,7 @@
 }
 
 @utility hero-bg-particle-field-content {
+  --tw-sort: forced-color-adjust;
   position: relative !important;
   width: 100% !important;
   height: 100% !important;
@@ -1661,6 +1867,7 @@
 }
 
 @utility hero-bg-particle {
+  --tw-sort: forced-color-adjust;
   position: absolute !important;
   width: 12px !important;
   height: 12px !important;
@@ -1837,6 +2044,7 @@
 }
 
 @utility hero-bg-geometric-pattern {
+  --tw-sort: forced-color-adjust;
   /* Geometric Pattern Variant */
   background: linear-gradient(
     135deg,
@@ -1863,6 +2071,7 @@
 }
 
 @utility hero-bg-geometric-content {
+  --tw-sort: forced-color-adjust;
   position: relative;
   width: 100%;
   height: 100%;
@@ -1874,6 +2083,7 @@
 }
 
 @utility hero-bg-geometric-svg {
+  --tw-sort: forced-color-adjust;
   position: absolute;
   top: 0;
   left: 0;
@@ -1888,85 +2098,8 @@
   opacity: 0.6;
 }
 
-@utility hero-bg-geometric-shape {
-  .hero-bg-animated & {
-    animation: geometricFloat 12s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg-animated & {
-      animation: none;
-      transform: none;
-    }
-  }
-  will-change: transform;
-}
-
-@utility hero-bg-geometric-shape-1 {
-  .hero-bg-animated & {
-    animation-delay: 0s;
-  }
-
-  /* Animated geometric shapes */
-  .hero-bg-animated & {
-    animation: geometricFloat1 15s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg-animated & {
-      animation: none;
-      transform: none;
-    }
-  }
-}
-
-@utility hero-bg-geometric-shape-2 {
-  .hero-bg-animated & {
-    animation-delay: 3s;
-  }
-
-  .hero-bg-animated & {
-    animation: geometricFloat2 18s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg-animated & {
-      animation: none;
-      transform: none;
-    }
-  }
-}
-
-@utility hero-bg-geometric-shape-3 {
-  .hero-bg-animated & {
-    animation-delay: 6s;
-  }
-
-  .hero-bg-animated & {
-    animation: geometricPulse1 12s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg-animated & {
-      animation: none;
-      transform: none;
-    }
-  }
-}
-
-@utility hero-bg-geometric-shape-4 {
-  .hero-bg-animated & {
-    animation-delay: 9s;
-  }
-
-  .hero-bg-animated & {
-    animation: geometricPulse2 14s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg-animated & {
-      animation: none;
-      transform: none;
-    }
-  }
-}
-
 @utility hero-bg-minimal {
+  --tw-sort: forced-color-adjust;
   /* Minimal Variant */
   background: transparent;
 
@@ -1975,6 +2108,7 @@
 }
 
 @utility hero-bg-minimal-content {
+  --tw-sort: forced-color-adjust;
   position: relative;
   width: 100%;
   height: 100%;
@@ -1986,6 +2120,7 @@
 }
 
 @utility hero-bg-minimal-gradient {
+  --tw-sort: forced-color-adjust;
   position: absolute;
   top: 0;
   left: 0;
@@ -2028,6 +2163,7 @@
 }
 
 @utility hero-bg-intensity-subtle {
+  --tw-sort: forced-color-adjust;
   /* Intensity Variants */
   opacity: 0.6;
 
@@ -2042,6 +2178,7 @@
 }
 
 @utility hero-bg-intensity-medium {
+  --tw-sort: forced-color-adjust;
   opacity: 0.8;
 
   & .hero-bg-gradient-orb {
@@ -2054,6 +2191,7 @@
 }
 
 @utility hero-bg-intensity-strong {
+  --tw-sort: forced-color-adjust;
   opacity: 1;
 
   & .hero-bg-gradient-orb {
@@ -2065,181 +2203,91 @@
   }
 }
 
-@utility dark {
-  /* Dark theme adjustments */
-  & .hero-bg-gradient-mesh {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 210, 90, 0.2) 0%,
-      rgba(255, 122, 90, 0.15) 50%,
-      rgba(11, 43, 51, 0.25) 100%
-    );
+@utility hero-bg-geometric-shape {
+  --tw-sort: forced-color-adjust;
+  .hero-bg-animated & {
+    animation: geometricFloat 12s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-animated & {
+      animation: none;
+      transform: none;
+    }
+  }
+  will-change: transform;
+}
+
+@utility hero-bg-geometric-shape-1 {
+  --tw-sort: forced-color-adjust;
+  .hero-bg-animated & {
+    animation-delay: 0s;
   }
 
-  & .hero-bg-particle-field {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 210, 90, 0.15) 0%,
-      rgba(255, 122, 90, 0.1) 100%
-    );
+  /* Animated geometric shapes */
+  .hero-bg-animated & {
+    animation: geometricFloat1 15s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-animated & {
+      animation: none;
+      transform: none;
+    }
+  }
+}
+
+@utility hero-bg-geometric-shape-2 {
+  --tw-sort: forced-color-adjust;
+  .hero-bg-animated & {
+    animation-delay: 3s;
   }
 
-  & .hero-bg-geometric-pattern {
-    background: linear-gradient(
-      45deg,
-      rgba(255, 210, 90, 0.005) 0%,
-      rgba(255, 122, 90, 0.01) 50%,
-      rgba(11, 43, 51, 0.02) 100%
-    );
+  .hero-bg-animated & {
+    animation: geometricFloat2 18s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-animated & {
+      animation: none;
+      transform: none;
+    }
+  }
+}
+
+@utility hero-bg-geometric-shape-3 {
+  --tw-sort: forced-color-adjust;
+  .hero-bg-animated & {
+    animation-delay: 6s;
   }
 
-  & .hero-bg-minimal-gradient {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 210, 90, 0.03) 0%,
-      transparent 100%
-    );
+  .hero-bg-animated & {
+    animation: geometricPulse1 12s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-animated & {
+      animation: none;
+      transform: none;
+    }
+  }
+}
+
+@utility hero-bg-geometric-shape-4 {
+  --tw-sort: forced-color-adjust;
+  .hero-bg-animated & {
+    animation-delay: 9s;
   }
 
-  /* Dark Theme Adjustments */
-  & .testimonial-author {
-    border-top-color: var(--color-border);
+  .hero-bg-animated & {
+    animation: geometricPulse2 14s ease-in-out infinite;
   }
-
-  & .testimonial-card:hover .testimonial-avatar::after {
-    opacity: 0.3;
-  }
-
-  /* Dark theme adjustments */
-  & .animated-counter-progress {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  & .animated-counter.animating .animated-counter-value {
-    text-shadow: 0 0 12px currentColor;
-  }
-
-  /* Dark theme adjustments for glass variant */
-  & .btn-premium-glass {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  & .btn-premium-glass:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow:
-      0 12px 40px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  /* Dark theme glow adjustments */
-  & .btn-premium-glow {
-    box-shadow:
-      0 4px 14px 0 rgba(255, 210, 90, 0.5),
-      0 0 25px rgba(255, 122, 90, 0.4);
-  }
-
-  & .btn-premium-glow:hover {
-    box-shadow:
-      0 8px 25px 0 rgba(255, 210, 90, 0.7),
-      0 0 35px rgba(255, 122, 90, 0.6),
-      0 0 50px rgba(255, 210, 90, 0.3);
-  }
-
-  /* Dark theme floating adjustments */
-  & .btn-premium-floating {
-    background: var(--color-surface);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.3),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  }
-
-  & .btn-premium-floating:hover {
-    box-shadow:
-      0 25px 50px -12px rgba(0, 0, 0, 0.5),
-      0 0 40px rgba(255, 210, 90, 0.2);
-  }
-
-  /* Dark theme glow animation adjustments */
-  & .btn-animation-glow:hover {
-    box-shadow:
-      0 0 25px rgba(255, 210, 90, 0.5),
-      0 0 50px rgba(255, 122, 90, 0.3),
-      0 4px 14px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Dark theme glass adjustments */
-  & .card-glass {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  /* Fallback for browsers that don't support border-image */
-
-  /* Dark theme gradient border adjustments */
-  & .card-gradient-border {
-    background: var(--color-surface);
-  }
-
-  /* Dark theme floating adjustments */
-  & .card-floating {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Dark theme premium adjustments */
-  & .card-premium {
-    border-color: rgba(255, 210, 90, 0.3);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(255, 210, 90, 0.2);
-  }
-
-  & .card-hover-lift:hover {
-    box-shadow:
-      0 25px 50px -12px rgba(0, 0, 0, 0.5),
-      0 0 40px rgba(255, 210, 90, 0.2);
-  }
-
-  & .card-hover-glow:hover {
-    box-shadow:
-      0 8px 25px 0 rgba(255, 210, 90, 0.6),
-      0 0 30px rgba(255, 122, 90, 0.5);
-    border-color: rgba(255, 210, 90, 0.7);
-  }
-
-  & .card-hover-scale:hover {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.3),
-      0 10px 10px -5px rgba(0, 0, 0, 0.15);
-  }
-
-  & .card-glass.card-floating {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  & .card-premium.card-floating {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2),
-      0 0 20px rgba(255, 210, 90, 0.25);
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-animated & {
+      animation: none;
+      transform: none;
+    }
   }
 }
 
 @utility testimonial-card {
+  --tw-sort: forced-color-adjust;
   /* Reduced motion fallbacks */
 
   /* ===== TESTIMONIAL CARD SYSTEM ===== */
@@ -2412,6 +2460,7 @@
 }
 
 @utility testimonial-card-content {
+  --tw-sort: forced-color-adjust;
   position: relative;
 
   /* Smooth content transitions */
@@ -2429,6 +2478,7 @@
 }
 
 @utility testimonial-card-compact {
+  --tw-sort: forced-color-adjust;
   /* Size Variants */
   min-height: 200px;
 
@@ -2440,18 +2490,21 @@
 }
 
 @utility testimonial-card-default {
+  --tw-sort: forced-color-adjust;
   min-height: 250px;
   min-height: 280px;
   min-height: 280px;
 }
 
 @utility testimonial-card-large {
+  --tw-sort: forced-color-adjust;
   min-height: 300px;
   min-height: 340px;
   min-height: 340px;
 }
 
 @utility testimonial-quote-icon {
+  --tw-sort: forced-color-adjust;
   /* Quote Icon Styling */
   display: flex;
   align-items: flex-start;
@@ -2531,6 +2584,7 @@
 }
 
 @utility testimonial-quote {
+  --tw-sort: forced-color-adjust;
   /* Quote Text Styling */
   font-style: italic;
   position: relative;
@@ -2556,6 +2610,7 @@
 }
 
 @utility testimonial-rating {
+  --tw-sort: forced-color-adjust;
   /* Rating Styling */
   margin-bottom: 1rem;
 
@@ -2581,6 +2636,7 @@
 }
 
 @utility testimonial-author {
+  --tw-sort: forced-color-adjust;
   /* Author Section Styling */
   border-top: 1px solid var(--color-border);
   padding-top: 1rem;
@@ -2608,6 +2664,7 @@
 }
 
 @utility testimonial-avatar {
+  --tw-sort: forced-color-adjust;
   /* Avatar Styling */
   position: relative;
 
@@ -2697,6 +2754,7 @@
 }
 
 @utility testimonial-author-name {
+  --tw-sort: forced-color-adjust;
   /* Author Details */
   line-height: 1.2;
   margin-bottom: 0.25rem;
@@ -2736,6 +2794,7 @@
 }
 
 @utility testimonial-author-meta {
+  --tw-sort: forced-color-adjust;
   line-height: 1.3;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--color-foreground-secondary);
@@ -2751,112 +2810,8 @@
   }
 }
 
-@utility card-hover-lift {
-  /* Hover Effects for Testimonial Cards */
-  &.testimonial-card:hover {
-    transform: translateY(-4px) translateZ(0);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-  }
-
-  &.testimonial-card:hover .testimonial-quote-icon svg {
-    transform: scale(1.1);
-    color: var(--lumina-coral);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    &.testimonial-card:hover {
-      transform: none;
-      box-shadow: var(--dashboard-shadow);
-    }
-  }
-
-  /* ===== CARD HOVER EFFECTS ===== */
-
-  /* Lift Hover Effect */
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow:
-      0 25px 50px -12px rgba(0, 0, 0, 0.25),
-      0 0 40px rgba(255, 210, 90, 0.1);
-  }
-
-  .dark &:hover {
-    box-shadow:
-      0 25px 50px -12px rgba(0, 0, 0, 0.5),
-      0 0 40px rgba(255, 210, 90, 0.2);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-  }
-}
-
-@utility card-hover-glow {
-  &.testimonial-card:hover {
-    box-shadow:
-      0 8px 25px rgba(0, 0, 0, 0.1),
-      0 0 20px rgba(255, 210, 90, 0.2);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    & .testimonial-card:hover {
-      transform: none;
-      box-shadow: var(--dashboard-shadow);
-    }
-  }
-
-  /* Glow Hover Effect */
-  &:hover {
-    box-shadow:
-      0 8px 25px 0 rgba(255, 210, 90, 0.4),
-      0 0 30px rgba(255, 122, 90, 0.3);
-    border-color: rgba(255, 210, 90, 0.5);
-  }
-
-  .dark &:hover {
-    box-shadow:
-      0 8px 25px 0 rgba(255, 210, 90, 0.6),
-      0 0 30px rgba(255, 122, 90, 0.5);
-    border-color: rgba(255, 210, 90, 0.7);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-  }
-}
-
-@utility card-hover-scale {
-  &.testimonial-card:hover {
-    transform: scale(1.02) translateZ(0);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    & .testimonial-card:hover {
-      transform: none;
-      box-shadow: var(--dashboard-shadow);
-    }
-  }
-
-  /* Scale Hover Effect */
-  &:hover {
-    transform: scale(1.02);
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.15),
-      0 10px 10px -5px rgba(0, 0, 0, 0.08);
-  }
-
-  .dark &:hover {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.3),
-      0 10px 10px -5px rgba(0, 0, 0, 0.15);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-  }
-}
-
 @utility animated-counter {
+  --tw-sort: forced-color-adjust;
   /* High Contrast Mode Support */
 
   /* Reduced Motion Support */
@@ -2975,11 +2930,13 @@
 }
 
 @utility animated-counter-content {
+  --tw-sort: forced-color-adjust;
   position: relative;
   z-index: 1;
 }
 
 @utility animated-counter-value {
+  --tw-sort: forced-color-adjust;
   /* Counter Value Styling */
   font-variant-numeric: tabular-nums;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -3054,6 +3011,7 @@
 }
 
 @utility animating {
+  --tw-sort: forced-color-adjust;
   /* Animating state */
   &.animated-counter .animated-counter-value {
     text-shadow: 0 0 10px currentColor;
@@ -3111,6 +3069,7 @@
 }
 
 @utility animated-counter-icon {
+  --tw-sort: forced-color-adjust;
   /* Icon Styling */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -3141,6 +3100,7 @@
 }
 
 @utility animated-counter-label {
+  --tw-sort: forced-color-adjust;
   /* Label Styling */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
@@ -3151,6 +3111,7 @@
 }
 
 @utility animated-counter-progress {
+  --tw-sort: forced-color-adjust;
   /* Progress Bar Styling */
   position: relative;
   overflow: hidden;
@@ -3191,6 +3152,7 @@
 }
 
 @utility btn-primary-gradient {
+  --tw-sort: forced-color-adjust;
   /* Primary Button Variants */
   background: var(--lumina-radiant-gradient);
   color: white;
@@ -3207,6 +3169,7 @@
 }
 
 @utility btn-secondary-outline {
+  --tw-sort: forced-color-adjust;
   background: transparent;
   color: var(--deep-teal);
   border: 2px solid var(--deep-teal);
@@ -3222,6 +3185,7 @@
 }
 
 @utility btn-ghost-coral {
+  --tw-sort: forced-color-adjust;
   background: rgba(255, 122, 90, 0.1);
   color: var(--lumina-coral);
   border: 1px solid rgba(255, 122, 90, 0.3);
@@ -3236,6 +3200,7 @@
 }
 
 @utility btn-white-elevated {
+  --tw-sort: forced-color-adjust;
   background: white;
   color: var(--deep-teal);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -3251,6 +3216,7 @@
 }
 
 @utility btn-nav-ghost {
+  --tw-sort: forced-color-adjust;
   /* Navigation Button Variants */
   background: transparent;
   color: var(--color-foreground-secondary);
@@ -3267,6 +3233,7 @@
 }
 
 @utility btn-nav-primary {
+  --tw-sort: forced-color-adjust;
   background: var(--lumina-radiant-gradient);
   color: white;
   border: none;
@@ -3283,6 +3250,7 @@
 }
 
 @utility btn-contact-prominent {
+  --tw-sort: forced-color-adjust;
   /* Improved Contact Button for Light Backgrounds */
   background: var(--deep-teal);
   color: white;
@@ -3300,6 +3268,7 @@
 }
 
 @utility btn-footer-ghost {
+  --tw-sort: forced-color-adjust;
   /* Footer Button Variants */
   background: transparent;
   color: rgba(255, 255, 255, 0.8);
@@ -3316,6 +3285,7 @@
 }
 
 @utility btn-social {
+  --tw-sort: forced-color-adjust;
   /* Social Media Button Styles */
   background: rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -3328,19 +3298,23 @@
 }
 
 @utility footer-text-secondary {
+  --tw-sort: forced-color-adjust;
   /* Footer Text Styles */
   color: rgba(255, 255, 255, 0.7);
 }
 
 @utility footer-text-muted {
+  --tw-sort: forced-color-adjust;
   color: rgba(255, 255, 255, 0.8);
 }
 
 @utility footer-text-subtle {
+  --tw-sort: forced-color-adjust;
   color: rgba(255, 255, 255, 0.6);
 }
 
 @utility footer-link {
+  --tw-sort: forced-color-adjust;
   color: rgba(255, 255, 255, 0.8);
   transition: all 0.3s ease;
   display: inline-block;
@@ -3352,10 +3326,12 @@
 }
 
 @utility footer-border {
+  --tw-sort: forced-color-adjust;
   border-color: rgba(255, 255, 255, 0.2);
 }
 
 @utility nav-enhanced {
+  --tw-sort: forced-color-adjust;
   /* ===== ENHANCED NAVIGATION SYSTEM ===== */
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
@@ -3365,6 +3341,7 @@
 }
 
 @utility nav-link {
+  --tw-sort: forced-color-adjust;
   color: var(--color-foreground-secondary);
   font-weight: 500;
   transition: all 0.3s ease;
@@ -3395,6 +3372,7 @@
 }
 
 @utility nav-logo-enhanced {
+  --tw-sort: forced-color-adjust;
   background: var(--lumina-radiant-gradient);
   box-shadow: 0 4px 14px 0 rgba(255, 210, 90, 0.4);
   transition: all 0.3s ease;
@@ -3406,19 +3384,23 @@
 }
 
 @utility animate-delay-100 {
+  --tw-sort: forced-color-adjust;
   /* Animation Delays */
   animation-delay: 100ms;
 }
 
 @utility animate-delay-200 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 200ms;
 }
 
 @utility animate-delay-300 {
+  --tw-sort: forced-color-adjust;
   animation-delay: 300ms;
 }
 
 @utility section-py-sm {
+  --tw-sort: forced-color-adjust;
   /* ===== SECTION SPACING SYSTEM ===== */
 
   /* Vertical Section Spacing - Reduced for better flow */
@@ -3431,6 +3413,7 @@
 }
 
 @utility section-py-md {
+  --tw-sort: forced-color-adjust;
   padding-top: 3rem;
   padding-bottom: 3rem;
   @media (min-width: 1024px) {
@@ -3440,6 +3423,7 @@
 }
 
 @utility section-py-lg {
+  --tw-sort: forced-color-adjust;
   padding-top: 4rem;
   padding-bottom: 4rem;
   @media (min-width: 1024px) {
@@ -3449,6 +3433,7 @@
 }
 
 @utility section-py-xl {
+  --tw-sort: forced-color-adjust;
   padding-top: 5rem;
   padding-bottom: 5rem;
   @media (min-width: 1024px) {
@@ -3458,6 +3443,7 @@
 }
 
 @utility section-py-2xl {
+  --tw-sort: forced-color-adjust;
   padding-top: 6rem;
   padding-bottom: 6rem;
   @media (min-width: 1024px) {
@@ -3467,6 +3453,7 @@
 }
 
 @utility feature-card {
+  --tw-sort: forced-color-adjust;
   /* Responsive Section Spacing */
 
   /* Feature Card Styling */
@@ -3479,6 +3466,7 @@
 }
 
 @utility feature-icon-bg {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     to bottom right,
     rgba(255, 210, 90, 0.2) 0%,
@@ -3487,6 +3475,7 @@
 }
 
 @utility space-fluid-xs {
+  --tw-sort: forced-color-adjust;
   /* ===== ENHANCED SPACING AND LAYOUT SYSTEMS ===== */
 
   /* Fluid Spacing Utilities using Mathematical Scale (8px base) */
@@ -3494,72 +3483,89 @@
 }
 
 @utility space-fluid-sm {
+  --tw-sort: forced-color-adjust;
   padding: clamp(0.75rem, 3vw, 1rem); /* 12px to 16px */
 }
 
 @utility space-fluid-md {
+  --tw-sort: forced-color-adjust;
   padding: clamp(1rem, 4vw, 1.5rem); /* 16px to 24px */
 }
 
 @utility space-fluid-lg {
+  --tw-sort: forced-color-adjust;
   padding: clamp(1.5rem, 5vw, 2rem); /* 24px to 32px */
 }
 
 @utility space-fluid-xl {
+  --tw-sort: forced-color-adjust;
   padding: clamp(2rem, 6vw, 3rem); /* 32px to 48px */
 }
 
 @utility space-fluid-2xl {
+  --tw-sort: forced-color-adjust;
   padding: clamp(3rem, 8vw, 4rem); /* 48px to 64px */
 }
 
 @utility space-fluid-3xl {
+  --tw-sort: forced-color-adjust;
   padding: clamp(4rem, 10vw, 6rem); /* 64px to 96px */
 }
 
 @utility margin-fluid-xs {
+  --tw-sort: forced-color-adjust;
   /* Fluid Margin Utilities */
   margin: clamp(0.5rem, 2vw, 0.75rem);
 }
 
 @utility margin-fluid-sm {
+  --tw-sort: forced-color-adjust;
   margin: clamp(0.75rem, 3vw, 1rem);
 }
 
 @utility margin-fluid-md {
+  --tw-sort: forced-color-adjust;
   margin: clamp(1rem, 4vw, 1.5rem);
 }
 
 @utility margin-fluid-lg {
+  --tw-sort: forced-color-adjust;
   margin: clamp(1.5rem, 5vw, 2rem);
 }
 
 @utility margin-fluid-xl {
+  --tw-sort: forced-color-adjust;
   margin: clamp(2rem, 6vw, 3rem);
 }
 
 @utility gap-fluid-xs {
+  --tw-sort: forced-color-adjust;
   /* Fluid Gap Utilities for Flexbox and Grid */
   gap: clamp(0.5rem, 2vw, 0.75rem);
 }
 
 @utility gap-fluid-sm {
+  --tw-sort: forced-color-adjust;
   gap: clamp(0.75rem, 3vw, 1rem);
 }
 
 @utility gap-fluid-md {
+  --tw-sort: forced-color-adjust;
   gap: clamp(1rem, 4vw, 1.5rem);
 }
 
 @utility gap-fluid-lg {
+  --tw-sort: forced-color-adjust;
   gap: clamp(1.5rem, 5vw, 2rem);
 }
 
 @utility gap-fluid-xl {
+  --tw-sort: forced-color-adjust;
   gap: clamp(2rem, 6vw, 3rem);
 }
 
 @utility container-responsive {
+  --tw-sort: forced-color-adjust;
   /* Advanced Container Queries for Responsive Layouts */
   container-type: inline-size;
   width: 100%;
@@ -3595,6 +3601,7 @@
 }
 
 @utility responsive-grid {
+  --tw-sort: forced-color-adjust;
   @container (min-width: 320px) {
     .container-responsive & {
       display: grid;
@@ -3626,6 +3633,7 @@
 }
 
 @utility grid-hero {
+  --tw-sort: forced-color-adjust;
   /* Enhanced Grid Layout Patterns */
   display: grid;
   grid-template-columns: 1fr;
@@ -3639,74 +3647,88 @@
 }
 
 @utility grid-features {
+  --tw-sort: forced-color-adjust;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: clamp(1.5rem, 4vw, 2.5rem);
 }
 
 @utility grid-testimonials {
+  --tw-sort: forced-color-adjust;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: clamp(1.5rem, 4vw, 2rem);
 }
 
 @utility grid-stats {
+  --tw-sort: forced-color-adjust;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: clamp(1rem, 3vw, 2rem);
 }
 
 @utility spacing-scale-1 {
+  --tw-sort: forced-color-adjust;
   /* Mathematical Spacing Scale Consistency */
   padding: 0.125rem;
 }
 
 @utility spacing-scale-2 {
+  --tw-sort: forced-color-adjust;
   /* 2px */
   padding: 0.25rem;
 }
 
 @utility spacing-scale-3 {
+  --tw-sort: forced-color-adjust;
   /* 4px */
   padding: 0.5rem;
 }
 
 @utility spacing-scale-4 {
+  --tw-sort: forced-color-adjust;
   /* 8px - base unit */
   padding: 0.75rem;
 }
 
 @utility spacing-scale-5 {
+  --tw-sort: forced-color-adjust;
   /* 12px */
   padding: 1rem;
 }
 
 @utility spacing-scale-6 {
+  --tw-sort: forced-color-adjust;
   /* 16px */
   padding: 1.5rem;
 }
 
 @utility spacing-scale-7 {
+  --tw-sort: forced-color-adjust;
   /* 24px */
   padding: 2rem;
 }
 
 @utility spacing-scale-8 {
+  --tw-sort: forced-color-adjust;
   /* 32px */
   padding: 3rem;
 }
 
 @utility spacing-scale-9 {
+  --tw-sort: forced-color-adjust;
   /* 48px */
   padding: 4rem;
 }
 
 @utility spacing-scale-10 {
+  --tw-sort: forced-color-adjust;
   /* 64px */
   padding: 6rem;
 }
 
 @utility rhythm-tight {
+  --tw-sort: forced-color-adjust;
   /* 96px */
 
   /* Vertical Rhythm Utilities */
@@ -3715,21 +3737,25 @@
 }
 
 @utility rhythm-normal {
+  --tw-sort: forced-color-adjust;
   line-height: 1.5;
   margin-bottom: 1rem;
 }
 
 @utility rhythm-relaxed {
+  --tw-sort: forced-color-adjust;
   line-height: 1.75;
   margin-bottom: 1.5rem;
 }
 
 @utility rhythm-loose {
+  --tw-sort: forced-color-adjust;
   line-height: 2;
   margin-bottom: 2rem;
 }
 
 @utility content-width-narrow {
+  --tw-sort: forced-color-adjust;
   /* Content Width Constraints */
   max-width: 65ch; /* Optimal reading width */
   margin-left: auto;
@@ -3737,35 +3763,42 @@
 }
 
 @utility content-width-medium {
+  --tw-sort: forced-color-adjust;
   max-width: 75ch;
   margin-left: auto;
   margin-right: auto;
 }
 
 @utility content-width-wide {
+  --tw-sort: forced-color-adjust;
   max-width: 85ch;
   margin-left: auto;
   margin-right: auto;
 }
 
 @utility aspect-golden {
+  --tw-sort: forced-color-adjust;
   /* Aspect Ratio Utilities */
   aspect-ratio: 1.618 / 1; /* Golden ratio */
 }
 
 @utility aspect-video {
+  --tw-sort: forced-color-adjust;
   aspect-ratio: 16 / 9;
 }
 
 @utility aspect-square {
+  --tw-sort: forced-color-adjust;
   aspect-ratio: 1 / 1;
 }
 
 @utility aspect-portrait {
+  --tw-sort: forced-color-adjust;
   aspect-ratio: 3 / 4;
 }
 
 @utility page-bg-gradient {
+  --tw-sort: forced-color-adjust;
   /* ===== SECTION BACKGROUND SYSTEM ===== */
 
   /* Main Page Background */
@@ -3778,6 +3811,7 @@
 }
 
 @utility hero-bg-gradient {
+  --tw-sort: forced-color-adjust;
   /* Hero Section Backgrounds */
   background: linear-gradient(
     to bottom right,
@@ -3788,6 +3822,7 @@
 }
 
 @utility hero-radial-bg {
+  --tw-sort: forced-color-adjust;
   background:
     radial-gradient(
       circle at 30% 20%,
@@ -3802,35 +3837,43 @@
 }
 
 @utility section-bg-white {
+  --tw-sort: forced-color-adjust;
   /* Section Background Variations */
   background-color: var(--color-surface);
 }
 
 @utility section-bg-cream {
+  --tw-sort: forced-color-adjust;
   background-color: var(--cream);
 }
 
 @utility section-bg-soft-peach {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(255, 229, 180, 0.3);
 }
 
 @utility section-bg-clarity-blue {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(137, 207, 240, 0.1);
 }
 
 @utility section-bg-sage-green {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(135, 169, 107, 0.1);
 }
 
 @utility section-bg-lavender-mist {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(200, 181, 209, 0.1);
 }
 
 @utility section-bg-warm-gray {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(139, 134, 128, 0.05);
 }
 
 @utility section-bg-gradient-gold {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     135deg,
     rgba(255, 210, 90, 0.1) 0%,
@@ -3839,6 +3882,7 @@
 }
 
 @utility section-bg-gradient-coral {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     135deg,
     rgba(255, 122, 90, 0.1) 0%,
@@ -3847,6 +3891,7 @@
 }
 
 @utility section-bg-gradient-teal {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     135deg,
     rgba(11, 43, 51, 0.05) 0%,
@@ -3855,6 +3900,7 @@
 }
 
 @utility text-gradient-lumina {
+  --tw-sort: forced-color-adjust;
   /* Gradient Text */
   background: linear-gradient(
     to right,
@@ -3867,36 +3913,44 @@
 }
 
 @utility progress-success {
+  --tw-sort: forced-color-adjust;
   /* Progress Indicator Styles */
   background-color: rgba(22, 163, 74, 0.1);
 }
 
 @utility progress-success-icon {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(22, 163, 74, 0.2);
 }
 
 @utility progress-warning {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(217, 119, 6, 0.1);
 }
 
 @utility progress-warning-icon {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(217, 119, 6, 0.2);
 }
 
 @utility progress-info {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(37, 99, 235, 0.1);
 }
 
 @utility progress-info-icon {
+  --tw-sort: forced-color-adjust;
   background-color: rgba(37, 99, 235, 0.2);
 }
 
 @utility check-success-bg {
+  --tw-sort: forced-color-adjust;
   /* Success Check Styles */
   background-color: rgba(22, 163, 74, 0.2);
 }
 
 @utility stat-card {
+  --tw-sort: forced-color-adjust;
   /* ===== STAT CARD COMPONENT STYLES ===== */
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -3913,6 +3967,7 @@
 }
 
 @utility stat-card-header {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -3920,11 +3975,13 @@
 }
 
 @utility stat-card-content {
+  --tw-sort: forced-color-adjust;
   flex: 1;
   min-width: 0;
 }
 
 @utility stat-card-title {
+  --tw-sort: forced-color-adjust;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-foreground-muted);
@@ -3943,6 +4000,7 @@
 }
 
 @utility stat-card-value {
+  --tw-sort: forced-color-adjust;
   font-size: 2rem;
   font-weight: 700;
   color: var(--color-foreground);
@@ -3961,34 +4019,41 @@
 }
 
 @utility stat-card-change {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1rem;
 }
 
 @utility stat-card-change-indicator {
+  --tw-sort: forced-color-adjust;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
 }
 
 @utility stat-card-change-increase {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-success);
 }
 
 @utility stat-card-change-decrease {
+  --tw-sort: forced-color-adjust;
   color: var(--semantic-error);
 }
 
 @utility stat-card-change-neutral {
+  --tw-sort: forced-color-adjust;
   color: var(--color-foreground-muted);
 }
 
 @utility stat-card-change-placeholder {
+  --tw-sort: forced-color-adjust;
   height: 1rem;
 }
 
 @utility stat-card-icon-container {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4010,6 +4075,7 @@
 }
 
 @utility stat-card-icon {
+  --tw-sort: forced-color-adjust;
   width: 1.5rem;
   height: 1.5rem;
   color: var(--color-foreground-secondary);
@@ -4026,12 +4092,14 @@
 }
 
 @utility stat-card-footer {
+  --tw-sort: forced-color-adjust;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--color-border);
 }
 
 @utility quick-actions-container {
+  --tw-sort: forced-color-adjust;
   /*
    * Quick actions and today's schedule (GitHub issue 115).
    *
@@ -4049,6 +4117,7 @@
 }
 
 @utility schedule-card {
+  --tw-sort: forced-color-adjust;
   /* Side by side in a grid row: each keeps its own height. */
   align-self: start;
   background: var(--color-surface);
@@ -4059,6 +4128,7 @@
 }
 
 @utility quick-actions-header {
+  --tw-sort: forced-color-adjust;
   margin-bottom: 1rem;
 
   & .stat-card-title {
@@ -4068,6 +4138,7 @@
 }
 
 @utility schedule-card-header {
+  --tw-sort: forced-color-adjust;
   margin-bottom: 1rem;
 
   & .stat-card-title {
@@ -4077,12 +4148,14 @@
 }
 
 @utility quick-actions-grid {
+  --tw-sort: forced-color-adjust;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   gap: 0.75rem;
 }
 
 @utility quick-action-card {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -4107,6 +4180,7 @@
 }
 
 @utility quick-action-icon-container {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4122,6 +4196,7 @@
 }
 
 @utility quick-action-card-primary {
+  --tw-sort: forced-color-adjust;
   & .quick-action-icon-container {
     background: var(--lumina-radiant-gradient);
   }
@@ -4132,6 +4207,7 @@
 }
 
 @utility quick-action-icon {
+  --tw-sort: forced-color-adjust;
   width: 1.25rem;
   height: 1.25rem;
   color: var(--color-foreground-secondary);
@@ -4142,22 +4218,26 @@
 }
 
 @utility quick-action-content {
+  --tw-sort: forced-color-adjust;
   min-width: 0;
 }
 
 @utility quick-action-title {
+  --tw-sort: forced-color-adjust;
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.25rem;
 }
 
 @utility quick-action-description {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
   line-height: 1rem;
   color: var(--color-foreground-muted);
 }
 
 @utility quick-actions-secondary {
+  --tw-sort: forced-color-adjust;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -4167,6 +4247,7 @@
 }
 
 @utility quick-action-link {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4181,6 +4262,7 @@
 }
 
 @utility quick-action-link-content {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -4188,18 +4270,21 @@
 }
 
 @utility quick-action-link-icon {
+  --tw-sort: forced-color-adjust;
   width: 1rem;
   height: 1rem;
   color: var(--color-foreground-muted);
 }
 
 @utility quick-action-link-arrow {
+  --tw-sort: forced-color-adjust;
   width: 1rem;
   height: 1rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-card-count-badge {
+  --tw-sort: forced-color-adjust;
   display: inline-flex;
   align-items: baseline;
   gap: 0.25rem;
@@ -4211,17 +4296,20 @@
 }
 
 @utility schedule-card-count-number {
+  --tw-sort: forced-color-adjust;
   font-weight: 700;
   color: var(--color-foreground);
 }
 
 @utility schedule-items {
+  --tw-sort: forced-color-adjust;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
 @utility schedule-item-skeleton {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4229,6 +4317,7 @@
 }
 
 @utility schedule-item-professional {
+  --tw-sort: forced-color-adjust;
   display: flex;
   overflow: hidden;
   border: 1px solid var(--color-border);
@@ -4236,6 +4325,7 @@
 }
 
 @utility schedule-item-status-bar {
+  --tw-sort: forced-color-adjust;
   width: 0.25rem;
   flex-shrink: 0;
   background-color: var(--color-border);
@@ -4254,30 +4344,35 @@
 }
 
 @utility status-upcoming {
+  --tw-sort: forced-color-adjust;
   &.schedule-item-status-bar {
     background-color: var(--lumina-coral);
   }
 }
 
 @utility status-in-progress {
+  --tw-sort: forced-color-adjust;
   &.schedule-item-status-bar {
     background-color: var(--lumina-gold);
   }
 }
 
 @utility status-completed {
+  --tw-sort: forced-color-adjust;
   &.schedule-item-status-bar {
     background-color: var(--semantic-success);
   }
 }
 
 @utility schedule-item-content {
+  --tw-sort: forced-color-adjust;
   flex: 1;
   min-width: 0;
   padding: 0.625rem 0.75rem;
 }
 
 @utility schedule-item-primary {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -4285,33 +4380,39 @@
 }
 
 @utility schedule-item-client {
+  --tw-sort: forced-color-adjust;
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
 @utility schedule-item-client-name {
+  --tw-sort: forced-color-adjust;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-foreground);
 }
 
 @utility schedule-item-service {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-item-staff {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-item-duration {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-item-meta {
+  --tw-sort: forced-color-adjust;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -4319,12 +4420,14 @@
 }
 
 @utility schedule-item-time-block {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
 
 @utility schedule-item-staff-info {
+  --tw-sort: forced-color-adjust;
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -4332,6 +4435,7 @@
 }
 
 @utility schedule-item-time {
+  --tw-sort: forced-color-adjust;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-foreground);
@@ -4339,54 +4443,64 @@
 }
 
 @utility schedule-item-time-icon {
+  --tw-sort: forced-color-adjust;
   width: 0.875rem;
   height: 0.875rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-item-staff-icon {
+  --tw-sort: forced-color-adjust;
   width: 0.875rem;
   height: 0.875rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-empty-state {
+  --tw-sort: forced-color-adjust;
   padding: 1.5rem 0;
   text-align: center;
 }
 
 @utility schedule-empty-icon {
+  --tw-sort: forced-color-adjust;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-empty-title {
+  --tw-sort: forced-color-adjust;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-foreground);
 }
 
 @utility schedule-empty-subtitle {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-overflow-text {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
   color: var(--color-foreground-muted);
 }
 
 @utility schedule-overflow {
+  --tw-sort: forced-color-adjust;
   margin-top: 0.5rem;
   text-align: center;
 }
 
 @utility schedule-card-footer {
+  --tw-sort: forced-color-adjust;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--color-border);
 }
 
 @utility link-stat-card-action {
+  --tw-sort: forced-color-adjust;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -4402,10 +4516,12 @@
 }
 
 @utility stat-card-action-icon {
+  --tw-sort: forced-color-adjust;
   font-size: 0.75rem;
 }
 
 @utility stat-card-compact {
+  --tw-sort: forced-color-adjust;
   /* Size Variants */
   padding: 1rem;
 
@@ -4426,6 +4542,7 @@
 }
 
 @utility stat-card-large {
+  --tw-sort: forced-color-adjust;
   padding: 2rem;
 
   & .stat-card-value {
@@ -4445,11 +4562,13 @@
 }
 
 @utility stat-card-loading {
+  --tw-sort: forced-color-adjust;
   /* Loading States */
   pointer-events: none;
 }
 
 @utility stat-card-skeleton-title {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     90deg,
     var(--color-background-muted) 25%,
@@ -4465,6 +4584,7 @@
 }
 
 @utility stat-card-skeleton-value {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     90deg,
     var(--color-background-muted) 25%,
@@ -4480,6 +4600,7 @@
 }
 
 @utility stat-card-skeleton-change {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     90deg,
     var(--color-background-muted) 25%,
@@ -4494,6 +4615,7 @@
 }
 
 @utility stat-card-skeleton-icon {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     90deg,
     var(--color-background-muted) 25%,
@@ -4509,6 +4631,7 @@
 }
 
 @utility stat-card-skeleton-action {
+  --tw-sort: forced-color-adjust;
   background: linear-gradient(
     90deg,
     var(--color-background-muted) 25%,
@@ -4523,338 +4646,51 @@
 }
 
 @utility shadow-lumina {
+  --tw-sort: forced-color-adjust;
   /* Shadow utilities */
   box-shadow: var(--shadow-glow-md, 0 4px 14px 0 rgba(255, 210, 90, 0.25));
 }
 
 @utility shadow-lumina-lg {
+  --tw-sort: forced-color-adjust;
   box-shadow: var(--dashboard-shadow-lg);
 }
 
 @utility preload-font {
+  --tw-sort: forced-color-adjust;
   /* Critical resource hints */
   font-display: swap;
 }
 
 @utility optimize-image {
+  --tw-sort: forced-color-adjust;
   /* Optimize images */
   content-visibility: auto;
   contain-intrinsic-size: 300px 200px;
 }
 
 @utility lazy-load {
+  --tw-sort: forced-color-adjust;
   /* Lazy loading optimization */
   content-visibility: auto;
   contain-intrinsic-size: 1px 500px;
 }
 
 @utility reduce-paint-complexity {
+  --tw-sort: forced-color-adjust;
   /* Reduce paint complexity */
   transform: translateZ(0);
   isolation: isolate;
 }
 
-/* ===== DASHBOARD LAYOUT SYSTEM ===== */
-
-@utility dashboard-grid {
-  /* Dashboard Grid Layout */
-  display: grid;
-  grid-template-columns: auto 1fr;
-  min-height: 100vh;
-  background-color: var(--color-background);
-}
-
-@utility dashboard-sidebar {
-  /* Dashboard Sidebar */
-  width: 280px;
-  background-color: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  z-index: 40;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out;
-  overflow-y: auto;
-  contain: layout style;
-
-  &.open {
-    transform: translateX(0);
-  }
-  @media (min-width: 1024px) {
-    /* Static, the sidebar is the grid's first column, so the content
-       column needs no margin of its own: one here counted the sidebar's
-       width twice and started the content 560px in (#98). */
-    position: static;
-    transform: translateX(0);
-  }
-}
-
-@utility open {
-  &.dashboard-sidebar {
-    transform: translateX(0);
-  }
-}
-
-@utility dashboard-main {
-  /* Dashboard Main Content Area */
-  grid-column: 2;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-@utility dashboard-content {
-  /* Dashboard Content */
-  flex: 1;
-  padding: 2rem;
-  background-color: var(--color-background);
-  contain: layout style;
-}
-
-@utility sidebar-nav {
-  /* Sidebar Navigation Styles */
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 1.5rem 0;
-}
-
-@utility sidebar-nav-header {
-  padding: 0 1.5rem 1.5rem;
-  border-bottom: 1px solid var(--color-border);
-}
-
-@utility sidebar-nav-content {
-  flex: 1;
-  padding: 1.5rem 0;
-  overflow-y: auto;
-}
-
-@utility sidebar-nav-footer {
-  padding: 1.5rem;
-  border-top: 1px solid var(--color-border);
-  margin-top: auto;
-}
-
-@utility sidebar-nav-group {
-  margin-bottom: 2rem;
-}
-
-@utility sidebar-nav-section {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-foreground-muted);
-  padding: 0 1.5rem 0.75rem;
-}
-
-@utility sidebar-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  color: var(--color-foreground-secondary);
-  text-decoration: none;
-  transition: all 0.2s ease-in-out;
-  border-left: 3px solid transparent;
-  font-weight: 500;
-
-  &:hover {
-    background-color: var(--color-background-muted);
-    color: var(--color-foreground);
-    border-left-color: var(--lumina-coral);
-  }
-
-  &.active {
-    background-color: rgba(255, 122, 90, 0.1);
-    color: var(--lumina-coral);
-    border-left-color: var(--lumina-coral);
-    font-weight: 600;
-  }
-}
-
-@utility active {
-  &.sidebar-nav-item {
-    background-color: rgba(255, 122, 90, 0.1);
-    color: var(--lumina-coral);
-    border-left-color: var(--lumina-coral);
-    font-weight: 600;
-  }
-}
-
-@utility sidebar-nav-badge {
-  background-color: var(--lumina-coral);
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.125rem 0.5rem;
-  border-radius: 9999px;
-  min-width: 1.25rem;
-  text-align: center;
-}
-
-@utility sidebar-user-profile {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  background-color: var(--color-background-muted);
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background-color: var(--color-border);
-  }
-}
-
-@utility sidebar-user-avatar {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: var(--lumina-radiant-gradient);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-@utility sidebar-user-info {
-  flex: 1;
-  min-width: 0;
-}
-
-@utility sidebar-user-name {
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--color-foreground);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@utility sidebar-user-role {
-  font-size: 0.75rem;
-  color: var(--color-foreground-muted);
-  text-transform: capitalize;
-}
-
-@utility dashboard-stats-grid {
-  /* Dashboard Stats Grid */
-  /*
-   * Every page using this grid shows four cards. Auto-fit at 280px left the
-   * fourth alone on a second row at a 1280px window; four across there wraps
-   * the titles. So: one column on phones, two by two, then a single row once
-   * there is room for it.
-   */
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: minmax(0, 1fr);
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (min-width: 1536px) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@utility grid-dashboard-stats {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-@utility grid-container {
-  /* ===== GRID COMPONENT BASE STYLES ===== */
-  display: grid;
-}
-
-@utility grid-cards {
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-@utility grid-cards-compact {
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-@utility grid-cards-dense {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-@utility grid-cards-large {
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-}
-
-@utility grid-auto-fit {
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-@utility grid-auto-fill {
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-}
-
-@utility grid-list {
-  grid-template-columns: 1fr;
-}
-
-@utility gap-xs {
-  /* Gap utilities */
-  gap: 0.5rem;
-}
-
-@utility gap-sm {
-  gap: 0.75rem;
-}
-
-@utility gap-md {
-  gap: 1rem;
-}
-
-@utility gap-lg {
-  gap: 1.5rem;
-}
-
-@utility gap-xl {
-  gap: 2rem;
-}
-
-@utility gap-2xl {
-  gap: 3rem;
-}
-
-@utility grid-debug {
-  /* Debug mode */
-  & > * {
-    outline: 2px dashed rgba(255, 0, 0, 0.3);
-    outline-offset: -1px;
-  }
-}
-
-@utility dashboard-charts-grid {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: 1fr;
-
-  /* Responsive Dashboard Layout */
-  @media (min-width: 1024px) {
-    grid-template-columns: 2fr 1fr;
-  }
-}
-
-/* ===== ADDITIONAL DASHBOARD UTILITIES ===== */
-
 @utility border-sidebar-border {
+  --tw-sort: forced-color-adjust;
   /* Border utilities for sidebar */
   border-color: var(--color-border-muted);
 }
 
 @utility text-lumina-primary {
+  --tw-sort: forced-color-adjust;
   /* Lumina brand text colors */
   /* Brand text is deep teal. Gold on white is 1.44:1, and this class was on
      113 elements across the dashboard, all on light surfaces. Gold stays the
@@ -4863,323 +4699,12 @@
 }
 
 @utility text-lumina-secondary {
+  --tw-sort: forced-color-adjust;
   color: var(--ui-ink-brand);
-} /*
- ===== PREMIUM CARD SYSTEM ===== */
-
-@utility card-glass {
-  /* Glass Card Variant - Theme-aware glassmorphism */
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Dark theme glass adjustments */
-  .dark & {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  /* Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-  }
-
-  /* ===== CARD VARIANT COMBINATIONS ===== */
-
-  /* Glass + Floating combination */
-  &.card-floating {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.1),
-      0 10px 10px -5px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  .dark &.card-floating {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  /* Focus states for all card variants */
-  &:focus-visible {
-    outline: 2px solid var(--color-interactive-focus);
-    outline-offset: 2px;
-  }
-  @media (prefers-contrast: high) {
-    border: 2px solid var(--color-border);
-    background: var(--color-surface);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-}
-
-@utility card-gradient-border {
-  /* Gradient Border Card - Simplified and reliable */
-  position: relative;
-  background: var(--color-surface);
-  border: 2px solid;
-  border-image: var(--lumina-radiant-gradient) 1;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Fallback for browsers that don't support border-image */
-  @supports not (border-image: linear-gradient(to right, red, blue) 1) {
-    border: 2px solid var(--lumina-gold);
-  }
-
-  /* Dark theme gradient border adjustments */
-  .dark & {
-    background: var(--color-surface);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-  }
-  &:focus-visible {
-    outline: 2px solid var(--color-interactive-focus);
-    outline-offset: 2px;
-  }
-  @media (prefers-contrast: high) {
-    &::before {
-      background: var(--color-border);
-    }
-  }
-}
-
-@utility card-floating {
-  /* Floating Card - Enhanced elevation */
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  transform: translateY(0);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Dark theme floating adjustments */
-  .dark & {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-  }
-
-  /* ===== CARD VARIANT COMBINATIONS ===== */
-
-  /* Glass + Floating combination */
-  &.card-glass {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.1),
-      0 10px 10px -5px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  .dark &.card-glass {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  /* Premium + Floating combination */
-  &.card-premium {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.1),
-      0 10px 10px -5px rgba(0, 0, 0, 0.04),
-      0 0 20px rgba(255, 210, 90, 0.15);
-  }
-
-  .dark &.card-premium {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2),
-      0 0 20px rgba(255, 210, 90, 0.25);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--color-interactive-focus);
-    outline-offset: 2px;
-  }
-}
-
-@utility card-premium {
-  /* Premium Card - Combines multiple effects */
-  background: var(--color-surface);
-  border: 1px solid rgba(255, 210, 90, 0.2);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 0 20px rgba(255, 210, 90, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Dark theme premium adjustments */
-  .dark & {
-    border-color: rgba(255, 210, 90, 0.3);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(255, 210, 90, 0.2);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-  }
-
-  /* Premium + Floating combination */
-  &.card-floating {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.1),
-      0 10px 10px -5px rgba(0, 0, 0, 0.04),
-      0 0 20px rgba(255, 210, 90, 0.15);
-  }
-
-  .dark &.card-floating {
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2),
-      0 0 20px rgba(255, 210, 90, 0.25);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--color-interactive-focus);
-    outline-offset: 2px;
-  }
-
-  /* High contrast mode adjustments */
-  @media (prefers-contrast: high) {
-    border: 2px solid var(--color-primary);
-  }
-}
-
-@utility card-animated {
-  /* ===== CARD ANIMATIONS ===== */
-
-  /* Animated Card - Scroll-triggered animations */
-  /* Simple keyframe animation test */
-  opacity: 0;
-  transform: translateY(50px) scale(0.95);
-  transition:
-    opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform;
-  border: 3px solid red !important; /* Debug: should see red border when animated */
-
-  &.in-view {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    border: 3px solid green !important; /* Debug: should see green border when in view */
-  }
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    transform: none;
-    animation: none;
-    opacity: 1;
-  }
-  /* Base testimonial card animation styles - Fast smooth entrance */
-  opacity: 0 !important;
-  transform: translateY(100px) scale(0.8) translateZ(0) !important;
-  transition:
-    opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-  will-change: transform, opacity;
-
-  /* Animation when card comes into view - Fast smooth entrance */
-  &.in-view {
-    opacity: 1 !important;
-    transform: translateY(0) scale(1) translateZ(0) !important;
-  }
-
-  /* Staggered animation delays for multiple testimonial cards - Faster sequence */
-  &:nth-child(1) {
-    transition-delay: 0ms !important;
-  }
-
-  &:nth-child(2) {
-    transition-delay: 200ms !important;
-  }
-
-  &:nth-child(3) {
-    transition-delay: 400ms !important;
-  }
-
-  &:nth-child(4) {
-    transition-delay: 600ms !important;
-  }
-
-  &.in-view .testimonial-quote-icon {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-
-  &.in-view .testimonial-rating {
-    transform: translateY(-2px);
-  }
-
-  &.in-view .testimonial-avatar::after {
-    opacity: 0.3;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    opacity: 1;
-    transform: none;
-    transition: none;
-    border: 1px solid var(--color-border) !important;
-
-    &.in-view {
-      opacity: 1;
-      transform: none;
-      transition: none;
-      border: 1px solid var(--color-border) !important;
-    }
-  }
-  /* Base testimonial card animation styles */
-  opacity: 0;
-  transform: translateY(30px) scale(0.95) translateZ(0);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
-
-  /* Animation when card comes into view */
-  &.in-view {
-    opacity: 1;
-    transform: translateY(0) scale(1) translateZ(0);
-  }
-
-  &.in-view .testimonial-quote-icon {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-
-  &.in-view .testimonial-rating {
-    transform: translateY(-2px);
-  }
-
-  &.in-view .testimonial-avatar::after {
-    opacity: 0.3;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    opacity: 1;
-    transform: none;
-    transition: none;
-
-    &.in-view {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
 }
 
 @utility in-view {
+  --tw-sort: forced-color-adjust;
   &.card-animated {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -5240,151 +4765,256 @@
   }
 }
 
-@utility testimonial-author-details {
-  /* Enhanced author details */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
+@utility card-hover-lift {
+  --tw-sort: forced-color-adjust;
+  /* Hover Effects for Testimonial Cards */
+  &.testimonial-card:hover {
+    transform: translateY(-4px) translateZ(0);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
   }
 
-  /* Enhanced author details */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &.testimonial-card:hover .testimonial-quote-icon svg {
+    transform: scale(1.1);
+    color: var(--lumina-coral);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &.testimonial-card:hover {
+      transform: none;
+      box-shadow: var(--dashboard-shadow);
+    }
+  }
+
+  /* ===== CARD HOVER EFFECTS ===== */
+
+  /* Lift Hover Effect */
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 40px rgba(255, 210, 90, 0.1);
+  }
+
+  .dark &:hover {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(255, 210, 90, 0.2);
+  }
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+    transform: none;
+    animation: none;
   }
-} /* =
+}
+
+@utility card-hover-glow {
+  --tw-sort: forced-color-adjust;
+  &.testimonial-card:hover {
+    box-shadow:
+      0 8px 25px rgba(0, 0, 0, 0.1),
+      0 0 20px rgba(255, 210, 90, 0.2);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    & .testimonial-card:hover {
+      transform: none;
+      box-shadow: var(--dashboard-shadow);
+    }
+  }
+
+  /* Glow Hover Effect */
+  &:hover {
+    box-shadow:
+      0 8px 25px 0 rgba(255, 210, 90, 0.4),
+      0 0 30px rgba(255, 122, 90, 0.3);
+    border-color: rgba(255, 210, 90, 0.5);
+  }
+
+  .dark &:hover {
+    box-shadow:
+      0 8px 25px 0 rgba(255, 210, 90, 0.6),
+      0 0 30px rgba(255, 122, 90, 0.5);
+    border-color: rgba(255, 210, 90, 0.7);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    transform: none;
+    animation: none;
+  }
+}
+
+@utility card-hover-scale {
+  --tw-sort: forced-color-adjust;
+  &.testimonial-card:hover {
+    transform: scale(1.02) translateZ(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    & .testimonial-card:hover {
+      transform: none;
+      box-shadow: var(--dashboard-shadow);
+    }
+  }
+
+  /* Scale Hover Effect */
+  &:hover {
+    transform: scale(1.02);
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.15),
+      0 10px 10px -5px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark &:hover {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.15);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ===== COMPONENT ARCHITECTURE ===== */
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+
+/* ===== DASHBOARD LAYOUT SYSTEM ===== */
+
+/* ===== ADDITIONAL DASHBOARD UTILITIES ===== */ /*
+ ===== PREMIUM CARD SYSTEM ===== */ /* =
 ==== TESTIMONIAL CARD PREMIUM ANIMATIONS ===== */
 
-@layer utilities {
-  /* ===== LUMINA DESIGN SYSTEM COLORS ===== */
-  :root {
-    /* Brand, neutral and status primitives come from ./tokens.css */
+/* ===== LUMINA DESIGN SYSTEM COLORS ===== */
 
-    /* Brand Gradients */
-    --lumina-radiant-gradient: linear-gradient(
-      135deg,
-      var(--lumina-gold) 0%,
-      var(--lumina-coral) 100%
-    );
-    --lumina-radiant-gradient-reverse: linear-gradient(
-      135deg,
-      var(--lumina-coral) 0%,
-      var(--lumina-gold) 100%
-    );
+:root {
+  /* Brand, neutral and status primitives come from ./tokens.css */
 
-    /* Legacy compatibility - keeping for existing components */
-    --brand-primary: var(--lumina-gold);
-    --brand-secondary: var(--lumina-coral);
-    --brand-accent: var(--deep-teal);
+  /* Brand Gradients */
+  --lumina-radiant-gradient: linear-gradient(
+    135deg,
+    var(--lumina-gold) 0%,
+    var(--lumina-coral) 100%
+  );
+  --lumina-radiant-gradient-reverse: linear-gradient(
+    135deg,
+    var(--lumina-coral) 0%,
+    var(--lumina-gold) 100%
+  );
 
-    /* Common Design System Variables */
-    --color-background: var(--white);
-    --color-foreground: var(--deep-teal);
-    --color-foreground-secondary: var(--theme-light-foreground-secondary);
-    --color-foreground-muted: var(--warm-gray);
-    --color-surface: var(--white);
-    --color-border: var(--theme-light-border);
-    --color-border-muted: var(--theme-light-border-muted);
-    --color-background-muted: var(--theme-light-background-muted);
+  /* Legacy compatibility - keeping for existing components */
+  --brand-primary: var(--lumina-gold);
+  --brand-secondary: var(--lumina-coral);
+  --brand-accent: var(--deep-teal);
 
-    /* Primary and Secondary Colors */
-    --color-primary: var(--lumina-gold);
-    --color-secondary: var(--deep-teal);
+  /* Common Design System Variables */
+  --color-background: var(--white);
+  --color-foreground: var(--deep-teal);
+  --color-foreground-secondary: var(--theme-light-foreground-secondary);
+  --color-foreground-muted: var(--warm-gray);
+  --color-surface: var(--white);
+  --color-border: var(--theme-light-border);
+  --color-border-muted: var(--theme-light-border-muted);
+  --color-background-muted: var(--theme-light-background-muted);
 
-    /* Semantic Color Mappings */
-    --color-success: var(--semantic-success);
-    --color-warning: var(--semantic-warning);
-    --color-error: var(--semantic-error);
-    --color-info: var(--semantic-info);
+  /* Primary and Secondary Colors */
+  --color-primary: var(--lumina-gold);
+  --color-secondary: var(--deep-teal);
 
-    /* Interactive Colors */
-    --color-interactive-focus: var(--lumina-gold);
+  /* Semantic Color Mappings */
+  --color-success: var(--semantic-success);
+  --color-warning: var(--semantic-warning);
+  --color-error: var(--semantic-error);
+  --color-info: var(--semantic-info);
 
-    /* Foreground Colors - Optimized for Contrast */
-    --color-primary-foreground: var(
-      --deep-teal
-    ); /* Dark text on bright gold for better contrast */
-    --color-secondary-foreground: var(--white); /* White text on dark teal */
-    --color-success-foreground: var(--white);
-    --color-warning-foreground: var(
-      --deep-teal
-    ); /* Dark text on bright warning */
-    --color-info-foreground: var(--white);
-    --color-destructive-foreground: var(--white);
+  /* Interactive Colors */
+  --color-interactive-focus: var(--lumina-gold);
 
-    /* Secondary Color System */
-    --color-secondary: var(--deep-teal);
-    --color-secondary-hover: var(--theme-secondary-hover);
+  /* Foreground Colors - Optimized for Contrast */
+  --color-primary-foreground: var(
+    --deep-teal
+  ); /* Dark text on bright gold for better contrast */
+  --color-secondary-foreground: var(--white); /* White text on dark teal */
+  --color-success-foreground: var(--white);
+  --color-warning-foreground: var(
+    --deep-teal
+  ); /* Dark text on bright warning */
+  --color-info-foreground: var(--white);
+  --color-destructive-foreground: var(--white);
 
-    /* Text Colors */
-    --color-text-primary: var(--color-foreground);
-    --color-text-secondary: var(--color-foreground-secondary);
-    --color-text-muted: var(--color-foreground-muted);
-    --color-text-disabled: var(--theme-light-text-disabled);
-    --color-text-inverse: var(--white);
+  /* Secondary Color System */
+  --color-secondary: var(--deep-teal);
+  --color-secondary-hover: var(--theme-secondary-hover);
 
-    /* Semantic Foreground Colors */
-    --color-success-foreground: var(--white);
-    --color-warning-foreground: var(--white);
-    --color-error-foreground: var(--white);
-    --color-info-foreground: var(--white);
+  /* Text Colors */
+  --color-text-primary: var(--color-foreground);
+  --color-text-secondary: var(--color-foreground-secondary);
+  --color-text-muted: var(--color-foreground-muted);
+  --color-text-disabled: var(--theme-light-text-disabled);
+  --color-text-inverse: var(--white);
 
-    /* Shadows */
-    --dashboard-shadow:
-      0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    --dashboard-shadow-lg:
-      0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-glow-md: 0 4px 14px 0 rgba(255, 210, 90, 0.25);
+  /* Semantic Foreground Colors */
+  --color-success-foreground: var(--white);
+  --color-warning-foreground: var(--white);
+  --color-error-foreground: var(--white);
+  --color-info-foreground: var(--white);
 
-    /* Font Family */
-    --font-family-sans:
-      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
+  /* Shadows */
+  --dashboard-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --dashboard-shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow-md: 0 4px 14px 0 rgba(255, 210, 90, 0.25);
 
-  /* ===== DARK THEME VARIABLES =====
+  /* Font Family */
+  --font-family-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ===== DARK THEME VARIABLES =====
  * Deliberately outside @layer. Tailwind 3 hoists `@layer base` rules up to
  * `@tailwind base`, above the `:root` block, and `.dark` and `:root` have the
  * same specificity, so a `.dark` inside a layer lost to `:root` on source
  * order and dark mode never applied. This block must follow `:root`;
  * __tests__/design/dark-theme-cascade.test.ts fails if it does not.
  */
-  .dark {
-    color-scheme: dark;
 
-    --color-background: var(--theme-dark-background);
-    --color-foreground: var(--neutral-50);
-    --color-foreground-secondary: var(--theme-dark-foreground-secondary);
-    --color-foreground-muted: var(--theme-dark-foreground-muted);
-    --color-surface: var(--neutral-900);
-    --color-border: var(--theme-dark-border);
-    --color-border-muted: var(--theme-dark-border-muted);
-    --color-background-muted: var(--neutral-900);
+.dark {
+  color-scheme: dark;
 
-    /* Deep teal is near-invisible on dark surfaces (1.3:1), so the brand's
+  --color-background: var(--theme-dark-background);
+  --color-foreground: var(--neutral-50);
+  --color-foreground-secondary: var(--theme-dark-foreground-secondary);
+  --color-foreground-muted: var(--theme-dark-foreground-muted);
+  --color-surface: var(--neutral-900);
+  --color-border: var(--theme-dark-border);
+  --color-border-muted: var(--theme-dark-border-muted);
+  --color-background-muted: var(--neutral-900);
+
+  /* Deep teal is near-invisible on dark surfaces (1.3:1), so the brand's
      text and secondary roles move to gold and a lighter fill. */
-    --color-secondary: var(--theme-secondary-hover);
+  --color-secondary: var(--theme-secondary-hover);
 
-    /* `status` is tuned for white; these clear AA on every dark surface, and
+  /* `status` is tuned for white; these clear AA on every dark surface, and
      fills carry dark text instead of white. */
-    --color-success: var(--semantic-success-on-dark);
-    --color-warning: var(--semantic-warning-on-dark);
-    --color-error: var(--semantic-error-on-dark);
-    --color-info: var(--semantic-info-on-dark);
-    --color-success-foreground: var(--theme-dark-background);
-    --color-warning-foreground: var(--theme-dark-background);
-    --color-error-foreground: var(--theme-dark-background);
-    --color-info-foreground: var(--theme-dark-background);
+  --color-success: var(--semantic-success-on-dark);
+  --color-warning: var(--semantic-warning-on-dark);
+  --color-error: var(--semantic-error-on-dark);
+  --color-info: var(--semantic-info-on-dark);
+  --color-success-foreground: var(--theme-dark-background);
+  --color-warning-foreground: var(--theme-dark-background);
+  --color-error-foreground: var(--theme-dark-background);
+  --color-info-foreground: var(--theme-dark-background);
 
-    --color-text-disabled: var(--theme-dark-text-disabled);
-    --color-text-inverse: var(--theme-dark-background);
-  }
-
-  .dark .text-lumina-primary {
-    color: var(--lumina-gold);
-  }
-
-  /* ===== NEXT.JS FONT OPTIMIZATION ===== */
+  --color-text-disabled: var(--theme-dark-text-disabled);
+  --color-text-inverse: var(--theme-dark-background);
 }
+
+.dark .text-lumina-primary {
+  color: var(--lumina-gold);
+}
+
+/* ===== NEXT.JS FONT OPTIMIZATION ===== */
 @layer base {
   /* Inter font with Next.js optimization patterns */
   html {
@@ -5905,110 +5535,113 @@
   /* ===== TESTIMONIAL CARD ANIMATIONS ===== */
 } /* Force ove
 rride any cached debug styles */
-.testimonial-card.card-animated {
-  border: 1px solid var(--color-border) !important;
-}
 
-.testimonial-card.card-animated.in-view {
-  border: 1px solid var(--color-border) !important;
-}
-
-/* Ensure clean testimonial card appearance */
-.testimonial-card[data-testid='testimonial-card'] {
-  border: 1px solid var(--color-border) !important;
-} /* Em
+/* Ensure clean testimonial card appearance */ /* Em
 ergency override for testimonial card borders */
-.testimonial-card,
-.testimonial-card *,
-[data-testid='testimonial-card'],
-[data-testid='testimonial-card'] * {
-  border-color: var(--color-border) !important;
-}
 
-/* Reset any debug styling */
-.card-animated,
-.card-animated.in-view {
-  border-width: 1px !important;
-  border-style: solid !important;
-  border-color: var(--color-border) !important;
-} /* Fix
+/* Reset any debug styling */ /* Fix
  quotation mark overflow issue */
-.testimonial-quote-icon svg {
-  transform: none !important;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
 
-.testimonial-card:hover .testimonial-quote-icon svg {
-  transform: none !important;
-  opacity: 1 !important;
-}
-
-.card-animated.in-view .testimonial-quote-icon svg {
-  transform: none !important;
-  opacity: 0.8 !important;
-}
-
-/* Ensure quote icon container doesn't overflow */
-.testimonial-quote-icon {
-  overflow: hidden !important;
-  contain: layout !important;
-} /* Fix qu
+/* Ensure quote icon container doesn't overflow */ /* Fix qu
 ote icon positioning issue */
-.testimonial-quote-icon {
-  position: relative !important;
-  display: block !important;
-  margin-bottom: 1rem !important;
-  overflow: visible !important;
-  contain: none !important;
-}
-
-.testimonial-quote-icon svg {
-  position: relative !important;
-  display: block !important;
-  width: 2rem !important;
-  height: 2rem !important;
-  transform: none !important;
-  transition: opacity 0.3s ease !important;
-}
 
 /* Remove all transforms and positioning that might cause issues */
-.testimonial-card:hover .testimonial-quote-icon,
-.card-animated.in-view .testimonial-quote-icon,
-.testimonial-card .testimonial-quote-icon {
-  transform: none !important;
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-}
 
-/* Ensure proper layout flow */
-.testimonial-card-content {
-  position: relative !important;
-  overflow: visible !important;
-} /* Comple
-te reset for testimonial card layout */
-.testimonial-card {
-  position: relative !important;
-  overflow: visible !important;
-}
+/* Ensure proper layout flow */ /* Comple
+te reset for testimonial card layout */ /*  Rules Tailwind 3 left outside its layers, after every utility (#154). In Tailwind 4 an unlayered rule outranks every layered one, whatever its specificity, so they sit in a final utilities block instead.  */
 
-.testimonial-card * {
-  position: relative !important;
-}
+@layer utilities {
+  .testimonial-card.card-animated {
+    border: 1px solid var(--color-border) !important;
+  }
 
-.testimonial-card .testimonial-quote-icon {
-  position: static !important;
-  display: block !important;
-  width: auto !important;
-  height: auto !important;
-  margin: 0 0 1rem 0 !important;
-  padding: 0 !important;
-}
+  .testimonial-card.card-animated.in-view {
+    border: 1px solid var(--color-border) !important;
+  }
+  .testimonial-card[data-testid='testimonial-card'] {
+    border: 1px solid var(--color-border) !important;
+  }
+  .testimonial-card,
+  .testimonial-card *,
+  [data-testid='testimonial-card'],
+  [data-testid='testimonial-card'] * {
+    border-color: var(--color-border) !important;
+  }
+  .card-animated,
+  .card-animated.in-view {
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: var(--color-border) !important;
+  }
+  .testimonial-quote-icon svg {
+    transform: none !important;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
 
-.testimonial-card .testimonial-quote-icon svg {
-  position: static !important;
-  display: inline-block !important;
-  vertical-align: baseline !important;
+  .testimonial-card:hover .testimonial-quote-icon svg {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .card-animated.in-view .testimonial-quote-icon svg {
+    transform: none !important;
+    opacity: 0.8 !important;
+  }
+  .testimonial-quote-icon {
+    overflow: hidden !important;
+    contain: layout !important;
+  }
+  .testimonial-quote-icon {
+    position: relative !important;
+    display: block !important;
+    margin-bottom: 1rem !important;
+    overflow: visible !important;
+    contain: none !important;
+  }
+
+  .testimonial-quote-icon svg {
+    position: relative !important;
+    display: block !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    transform: none !important;
+    transition: opacity 0.3s ease !important;
+  }
+  .testimonial-card:hover .testimonial-quote-icon,
+  .card-animated.in-view .testimonial-quote-icon,
+  .testimonial-card .testimonial-quote-icon {
+    transform: none !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+  }
+  .testimonial-card-content {
+    position: relative !important;
+    overflow: visible !important;
+  }
+  .testimonial-card {
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  .testimonial-card * {
+    position: relative !important;
+  }
+
+  .testimonial-card .testimonial-quote-icon {
+    position: static !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+  }
+
+  .testimonial-card .testimonial-quote-icon svg {
+    position: static !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+  }
 }

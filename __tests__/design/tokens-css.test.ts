@@ -23,8 +23,16 @@ describe('app/tokens.css', () => {
   });
 });
 
-describe.each(['app/globals.css', 'app/booking-mobile.css'])('%s', path => {
+describe.each([
+  'app/globals.css',
+  'app/booking-mobile.css',
+  'app/tailwind-3-components.css',
+  'app/tailwind-3-compat.css',
+])('%s', path => {
   it('holds no hex colour of its own', () => {
-    expect(read(path).match(HEX) ?? []).toEqual([]);
+    // Comments are not colours: issue references such as (#154) look like
+    // three-digit hex.
+    const code = read(path).replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(code.match(HEX) ?? []).toEqual([]);
   });
 });

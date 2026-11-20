@@ -339,6 +339,115 @@ export const scales = {
 } as const;
 
 /** Gradients. The radiant gradient is the single strongest brand signal. */
+/**
+ * Tailwind 3's default palette, frozen at the shades the app still uses (#154).
+ *
+ * Tailwind 4 redrew its default palette in OKLCH: `red-500`, `green-600` and
+ * the rest became new, more saturated colours, and `purple-600` falls outside
+ * sRGB altogether. Left alone, the upgrade would have shifted every status
+ * badge, avatar and alert that uses them. These are the 3.4 values, so the
+ * upgrade changes nothing visible. They are not tokens to design with: new work
+ * uses the semantic colours above, and each shade goes when its last class
+ * does. `__tests__/design/tailwind-3-compat.test.ts` keeps this list equal to
+ * the shades in use, so it can only shrink.
+ */
+export const tailwind3Palette = {
+  amber: {
+    50: '#fffbeb',
+    200: '#fde68a',
+    800: '#92400e',
+  },
+  blue: {
+    50: '#eff6ff',
+    100: '#dbeafe',
+    200: '#bfdbfe',
+    300: '#93c5fd',
+    500: '#3b82f6',
+    600: '#2563eb',
+    700: '#1d4ed8',
+    800: '#1e40af',
+    900: '#1e3a8a',
+  },
+  emerald: {
+    50: '#ecfdf5',
+    200: '#a7f3d0',
+    500: '#10b981',
+  },
+  gray: {
+    50: '#f9fafb',
+    100: '#f3f4f6',
+    // Also the default border colour: see the compatibility block in globals.css.
+    200: '#e5e7eb',
+    400: '#9ca3af',
+    500: '#6b7280',
+    600: '#4b5563',
+    700: '#374151',
+    900: '#111827',
+  },
+  green: {
+    50: '#f0fdf4',
+    100: '#dcfce7',
+    200: '#bbf7d0',
+    300: '#86efac',
+    400: '#4ade80',
+    500: '#22c55e',
+    600: '#16a34a',
+    700: '#15803d',
+    800: '#166534',
+    900: '#14532d',
+  },
+  orange: {
+    50: '#fff7ed',
+    100: '#ffedd5',
+    200: '#fed7aa',
+    300: '#fdba74',
+    400: '#fb923c',
+    500: '#f97316',
+    600: '#ea580c',
+    700: '#c2410c',
+    800: '#9a3412',
+    900: '#7c2d12',
+  },
+  pink: {
+    100: '#fce7f3',
+    200: '#fbcfe8',
+    800: '#9d174d',
+  },
+  purple: {
+    50: '#faf5ff',
+    100: '#f3e8ff',
+    200: '#e9d5ff',
+    300: '#d8b4fe',
+    500: '#a855f7',
+    600: '#9333ea',
+    800: '#6b21a8',
+  },
+  red: {
+    50: '#fef2f2',
+    100: '#fee2e2',
+    200: '#fecaca',
+    300: '#fca5a5',
+    400: '#f87171',
+    500: '#ef4444',
+    600: '#dc2626',
+    700: '#b91c1c',
+    800: '#991b1b',
+  },
+  teal: {
+    50: '#f0fdfa',
+  },
+  yellow: {
+    50: '#fefce8',
+    100: '#fef9c3',
+    200: '#fef08a',
+    400: '#facc15',
+    500: '#eab308',
+    600: '#ca8a04',
+    700: '#a16207',
+    800: '#854d0e',
+  },
+} as const;
+
 export const gradients = {
   radiant: `linear-gradient(135deg, ${brand.gold} 0%, ${brand.coral} 100%)`,
   radiantReverse: `linear-gradient(135deg, ${brand.coral} 0%, ${brand.gold} 100%)`,

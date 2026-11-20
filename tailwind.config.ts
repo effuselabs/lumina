@@ -10,6 +10,7 @@ import {
   brand,
   scales,
   status,
+  tailwind3Palette,
   themedTailwindColours,
 } from './lib/design/tokens';
 
@@ -33,6 +34,9 @@ const config: Config = {
     extend: {
       // Lumina Brand Colors using CSS Custom Properties
       colors: {
+        // Tailwind 3's values for the default-palette shades still in use,
+        // so the upgrade to Tailwind 4 changes no colour (#154).
+        ...tailwind3Palette,
         // Canonical brand values, imported from lib/design/tokens.ts.
         // Use these (`bg-brand-gold`, `text-brand-deepTeal`) in new work.
         brand: {

@@ -1,10 +1,26 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import postcss, { type Rule } from 'postcss';
-import colors from 'tailwindcss/colors';
-import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '../../tailwind.config';
 import { themed } from '@/lib/design/tokens';
+
+/**
+ * Tailwind 3's grays, which the themed names were measured against. Tailwind
+ * 4 redrew its palette in OKLCH, so these are written out rather than read
+ * from \`tailwindcss/colors\`.
+ */
+const GRAY_V3 = {
+  50: '#f9fafb',
+  100: '#f3f4f6',
+  200: '#e5e7eb',
+  300: '#d1d5db',
+  400: '#9ca3af',
+  500: '#6b7280',
+  600: '#4b5563',
+  700: '#374151',
+  800: '#1f2937',
+  900: '#111827',
+} as const;
 
 /**
  * The themed names replace hardcoded Tailwind grays one component at a time.
@@ -13,21 +29,21 @@ import { themed } from '@/lib/design/tokens';
  * did on `text-gray-900`.
  */
 const REPLACES: Record<keyof typeof themed, string> = {
-  surface: '#FFFFFF', // colors.white is the shorthand #fff
-  'surface-muted': colors.gray[50],
-  'surface-sunken': colors.gray[100],
-  'surface-strong': colors.gray[200],
-  'surface-dim': colors.gray[300],
-  'ink-strong': colors.gray[900],
-  'ink-deep': colors.gray[800],
+  surface: '#FFFFFF',
+  'surface-muted': GRAY_V3[50],
+  'surface-sunken': GRAY_V3[100],
+  'surface-strong': GRAY_V3[200],
+  'surface-dim': GRAY_V3[300],
+  'ink-strong': GRAY_V3[900],
+  'ink-deep': GRAY_V3[800],
   'ink-brand': '#0B2B33', // brand.deepTeal, what text-deep-teal rendered
-  ink: colors.gray[700],
-  'ink-soft': colors.gray[600],
-  'ink-muted': colors.gray[500],
-  'ink-faint': colors.gray[400],
-  line: colors.gray[200],
-  'line-strong': colors.gray[300],
-  'line-soft': colors.gray[100],
+  ink: GRAY_V3[700],
+  'ink-soft': GRAY_V3[600],
+  'ink-muted': GRAY_V3[500],
+  'ink-faint': GRAY_V3[400],
+  line: GRAY_V3[200],
+  'line-strong': GRAY_V3[300],
+  'line-soft': GRAY_V3[100],
 };
 
 describe('themed colours', () => {
@@ -38,8 +54,11 @@ describe('themed colours', () => {
   });
 
   it('are Tailwind colours pointing at their --ui-* properties', () => {
-    const resolved = resolveConfig(tailwindConfig).theme
-      .colors as unknown as Record<string, Record<string, string>>;
+    // Tailwind 4 has no resolveConfig; the themed colours are in extend.
+    const resolved = tailwindConfig.theme?.extend?.colors as unknown as Record<
+      string,
+      Record<string, string>
+    >;
     expect(resolved.surface.muted).toBe('var(--ui-surface-muted)');
     expect(resolved.ink.DEFAULT).toBe('var(--ui-ink)');
     expect(resolved.ink.strong).toBe('var(--ui-ink-strong)');

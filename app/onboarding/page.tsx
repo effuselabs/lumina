@@ -63,11 +63,11 @@ export default function OnboardingPage() {
   ).filter(step => isStepCompleted(step, state.data));
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-orange-50 via-yellow-50 to-orange-100">
+    <div className="min-h-screen bg-linear-to-br/srgb from-orange-50 via-yellow-50 to-orange-100">
       <Toaster position="top-right" />
 
       {/* Header */}
-      <div className="border-b border-line bg-surface">
+      <div className="border-line bg-surface border-b">
         <div className="mx-auto max-w-4xl px-4 py-6">
           <PageHeader
             title="Welcome to Lumina"
@@ -88,7 +88,7 @@ export default function OnboardingPage() {
       <div className="mx-auto max-w-4xl px-4 py-8">
         {/* Step Header */}
         <div className="mb-8 text-center">
-          <h2 className="mb-2 text-2xl font-semibold text-ink-strong">
+          <h2 className="text-ink-strong mb-2 text-2xl font-semibold">
             {getStepTitle(state.currentStep)}
           </h2>
           <p className="text-ink-soft">
@@ -137,13 +137,13 @@ export default function OnboardingPage() {
 
         {/* Loading State */}
         {state.isLoading && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="rounded-lg bg-surface p-6 text-center">
+          <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+            <div className="bg-surface rounded-lg p-6 text-center">
               <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent"></div>
-              <p className="font-medium text-ink-strong">
+              <p className="text-ink-strong font-medium">
                 Creating your business profile...
               </p>
-              <p className="mt-1 text-sm text-ink-soft">
+              <p className="text-ink-soft mt-1 text-sm">
                 This will just take a moment
               </p>
             </div>
@@ -161,9 +161,9 @@ export default function OnboardingPage() {
       </div>
 
       {/* Footer */}
-      <div className="mt-12 border-t border-line bg-surface">
+      <div className="border-line bg-surface mt-12 border-t">
         <div className="mx-auto max-w-4xl px-4 py-6">
-          <div className="text-center text-sm text-ink-soft">
+          <div className="text-ink-soft text-center text-sm">
             <p>
               Need help? Contact our support team at{' '}
               <a

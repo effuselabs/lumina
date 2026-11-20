@@ -434,7 +434,7 @@ export function StaffTimeSelection({
       <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-ink-brand">
+        <h2 className="text-ink-brand text-3xl font-bold tracking-tight">
           Choose Date & Time
         </h2>
         <p className="text-xl text-neutral-600 dark:text-neutral-400">
@@ -534,11 +534,11 @@ export function StaffTimeSelection({
               <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Selected Date
               </p>
-              <p className="text-lg font-semibold text-ink-brand">
+              <p className="text-ink-brand text-lg font-semibold">
                 {formatDate(selectedDate)}
               </p>
               {movedFrom && (
-                <p role="status" className="mt-2 text-sm text-ink-soft">
+                <p role="status" className="text-ink-soft mt-2 text-sm">
                   No times on {formatDate(movedFrom)}. Showing{' '}
                   {formatDate(selectedDate)}, the next day with free times.
                 </p>
@@ -669,7 +669,7 @@ export function StaffTimeSelection({
                     )}
                     {alternativeSlots.length > 0 && (
                       <div className="mt-6 space-y-2 text-left">
-                        <p className="text-sm font-medium text-ink">
+                        <p className="text-ink text-sm font-medium">
                           Other times that are free:
                         </p>
                         <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-2">
@@ -683,7 +683,7 @@ export function StaffTimeSelection({
                                 setSelectedStaffId(slot.staffId);
                                 handleSlotSelect(slot);
                               }}
-                              className="flex h-auto min-h-11 flex-col items-start whitespace-normal p-2 text-left text-xs"
+                              className="flex h-auto min-h-11 flex-col items-start p-2 text-left text-xs whitespace-normal"
                             >
                               <span className="font-medium">
                                 {formatSlotDate(slot.startTime)}
@@ -729,9 +729,9 @@ export function StaffTimeSelection({
                                 }
                                 size="sm"
                                 onClick={() => handleSlotSelect(slot)}
-                                className="flex h-auto min-h-11 flex-col items-center whitespace-normal p-2 text-xs"
+                                className="flex h-auto min-h-11 flex-col items-center p-2 text-xs whitespace-normal"
                               >
-                                <span className="whitespace-nowrap font-medium">
+                                <span className="font-medium whitespace-nowrap">
                                   {formatSlotTime(slot.startTime)}
                                 </span>
                                 <span className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -762,7 +762,7 @@ export function StaffTimeSelection({
 
       {/* Selected Slot Summary */}
       {selectedSlot && (
-        <Card className="border-brand-gold/30 bg-linear-to-r from-brand-gold/10 to-brand-coral/10">
+        <Card className="border-brand-gold/30 from-brand-gold/10 to-brand-coral/10 bg-linear-to-r/srgb">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Clock className="h-5 w-5 text-green-600" />

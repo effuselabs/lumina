@@ -306,8 +306,8 @@ export function OptimizedBookingInterface({
         const { selectedSlot, clientInfo, selectedServices } = bookingState;
         if (!selectedSlot || !clientInfo || selectedServices.length === 0) {
           return (
-            <div className="rounded-lg border border-line p-6 text-center">
-              <p className="text-sm text-ink">
+            <div className="border-line rounded-lg border p-6 text-center">
+              <p className="text-ink text-sm">
                 We lost track of your booking details. Please start again.
               </p>
               <button
@@ -393,7 +393,7 @@ export function OptimizedBookingInterface({
         <div className="mx-auto max-w-4xl">
           {/* Progress indicator */}
           <div className="mb-8">
-            <div className="flex items-center justify-between text-sm text-ink-soft">
+            <div className="text-ink-soft flex items-center justify-between text-sm">
               <span>
                 Step {bookingState.currentStep + 1} of {BOOKING_STEPS.length}
               </span>
@@ -404,9 +404,9 @@ export function OptimizedBookingInterface({
                 %
               </span>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-strong">
+            <div className="bg-surface-strong mt-2 h-2 overflow-hidden rounded-full">
               <div
-                className="h-full bg-linear-to-r from-blue-500 to-blue-600 transition-all duration-300"
+                className="h-full bg-linear-to-r/srgb from-blue-500 to-blue-600 transition-all duration-300"
                 style={{
                   width: `${((bookingState.currentStep + 1) / BOOKING_STEPS.length) * 100}%`,
                 }}
@@ -440,7 +440,7 @@ export function OptimizedBookingInterface({
                   <button
                     onClick={handleBack}
                     disabled={bookingState.isLoading}
-                    className="flex items-center gap-2 rounded-lg border border-line-strong px-4 py-2 text-sm font-medium text-ink hover:bg-surface-muted disabled:opacity-50"
+                    className="border-line-strong text-ink hover:bg-surface-muted flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium disabled:opacity-50"
                   >
                     ← Back
                   </button>

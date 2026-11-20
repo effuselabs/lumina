@@ -235,7 +235,7 @@ export function BookingConfirmationStep({
     return (
       <div className="mx-auto max-w-2xl space-y-6">
         {/* Success Header */}
-        <Card className="border-green-200 bg-linear-to-br from-green-50 to-green-100/50 shadow-xs">
+        <Card className="border-green-200 bg-linear-to-br/srgb from-green-50 to-green-100/50 shadow-xs">
           <CardContent className="pt-6">
             <div className="flex items-center space-x-4">
               <div className="shrink-0 rounded-full bg-green-100 p-3">
@@ -267,7 +267,7 @@ export function BookingConfirmationStep({
             {/* Business and Services */}
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <div className="mb-1 flex items-center space-x-2 text-sm font-medium text-ink-soft">
+                <div className="text-ink-soft mb-1 flex items-center space-x-2 text-sm font-medium">
                   <MapPin className="h-4 w-4" />
                   <span>Business</span>
                 </div>
@@ -275,14 +275,14 @@ export function BookingConfirmationStep({
                   {createdAppointment.business.name}
                 </p>
                 {createdAppointment.business.address && (
-                  <p className="text-sm text-ink-soft">
+                  <p className="text-ink-soft text-sm">
                     {createdAppointment.business.address}
                   </p>
                 )}
               </div>
 
               <div>
-                <div className="mb-1 text-sm font-medium text-ink-soft">
+                <div className="text-ink-soft mb-1 text-sm font-medium">
                   Services
                 </div>
                 <div className="space-y-1">
@@ -311,7 +311,7 @@ export function BookingConfirmationStep({
                     </div>
                   ))}
                 </div>
-                <div className="mt-2 border-t border-line pt-2">
+                <div className="border-line mt-2 border-t pt-2">
                   <div className="flex items-center justify-between font-semibold">
                     <span>Total</span>
                     <div className="flex items-center space-x-2">
@@ -339,7 +339,7 @@ export function BookingConfirmationStep({
             {/* Date and Time */}
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <div className="mb-1 flex items-center space-x-2 text-sm font-medium text-ink-soft">
+                <div className="text-ink-soft mb-1 flex items-center space-x-2 text-sm font-medium">
                   <Calendar className="h-4 w-4" />
                   <span>Date</span>
                 </div>
@@ -349,7 +349,7 @@ export function BookingConfirmationStep({
               </div>
 
               <div>
-                <div className="mb-1 flex items-center space-x-2 text-sm font-medium text-ink-soft">
+                <div className="text-ink-soft mb-1 flex items-center space-x-2 text-sm font-medium">
                   <Clock className="h-4 w-4" />
                   <span>Time</span>
                 </div>
@@ -369,7 +369,7 @@ export function BookingConfirmationStep({
             {/* Staff and Client */}
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <div className="mb-1 flex items-center space-x-2 text-sm font-medium text-ink-soft">
+                <div className="text-ink-soft mb-1 flex items-center space-x-2 text-sm font-medium">
                   <User className="h-4 w-4" />
                   <span>Staff Member</span>
                 </div>
@@ -377,21 +377,21 @@ export function BookingConfirmationStep({
                   {createdAppointment.staff.displayName}
                 </p>
                 {createdAppointment.staff.title && (
-                  <p className="text-sm text-ink-soft">
+                  <p className="text-ink-soft text-sm">
                     {createdAppointment.staff.title}
                   </p>
                 )}
               </div>
 
               <div>
-                <div className="mb-1 text-sm font-medium text-ink-soft">
+                <div className="text-ink-soft mb-1 text-sm font-medium">
                   Client
                 </div>
                 <p className="font-semibold">
                   {createdAppointment.client.firstName}{' '}
                   {createdAppointment.client.lastName}
                 </p>
-                <div className="mt-1 flex items-center space-x-2 text-sm text-ink-soft">
+                <div className="text-ink-soft mt-1 flex items-center space-x-2 text-sm">
                   <Mail className="h-3 w-3" />
                   <span>{createdAppointment.client.email}</span>
                 </div>
@@ -401,10 +401,10 @@ export function BookingConfirmationStep({
             {/* Notes */}
             {createdAppointment.notes && (
               <div>
-                <div className="mb-1 text-sm font-medium text-ink-soft">
+                <div className="text-ink-soft mb-1 text-sm font-medium">
                   Notes
                 </div>
-                <p className="rounded-md bg-surface-muted p-3 text-sm">
+                <p className="bg-surface-muted rounded-md p-3 text-sm">
                   {createdAppointment.notes}
                 </p>
               </div>
@@ -427,7 +427,7 @@ export function BookingConfirmationStep({
                 )}
                 <div>
                   <p className="font-medium">Confirmation Email</p>
-                  <p className="text-sm text-ink-soft">
+                  <p className="text-ink-soft text-sm">
                     {confirmationSent
                       ? `A confirmation email has been sent to ${createdAppointment.client.email} with all the appointment details.`
                       : `We were unable to send a confirmation email, but your appointment is confirmed. Please save these details.`}
@@ -439,7 +439,7 @@ export function BookingConfirmationStep({
                 <Calendar className="mt-0.5 h-5 w-5 text-blue-600" />
                 <div>
                   <p className="font-medium">Add to Calendar</p>
-                  <p className="text-sm text-ink-soft">
+                  <p className="text-ink-soft text-sm">
                     Don't forget to add this appointment to your personal
                     calendar so you don't miss it.
                   </p>
@@ -450,7 +450,7 @@ export function BookingConfirmationStep({
                 <Clock className="mt-0.5 h-5 w-5 text-orange-600" />
                 <div>
                   <p className="font-medium">Arrive on Time</p>
-                  <p className="text-sm text-ink-soft">
+                  <p className="text-ink-soft text-sm">
                     Please arrive 5-10 minutes early for your appointment to
                     allow time for check-in.
                   </p>
@@ -559,11 +559,11 @@ export function BookingConfirmationStep({
               {selectedServices.map((service, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between rounded-lg bg-surface-muted p-3"
+                  className="bg-surface-muted flex items-center justify-between rounded-lg p-3"
                 >
                   <div>
                     <p className="font-medium">{service.name}</p>
-                    <p className="text-sm text-ink-soft">
+                    <p className="text-ink-soft text-sm">
                       {service.description}
                     </p>
                   </div>
@@ -571,20 +571,20 @@ export function BookingConfirmationStep({
                     <p className="font-semibold">
                       {formatPrice(service.price)}
                     </p>
-                    <p className="text-sm text-ink-soft">
+                    <p className="text-ink-soft text-sm">
                       {formatDuration(service.duration)}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
+            <div className="border-line mt-3 flex items-center justify-between border-t pt-3">
               <span className="font-semibold">Total</span>
               <div className="text-right">
                 <p className="text-lg font-semibold">
                   {formatPrice(selectedTimeSlot.totalPrice)}
                 </p>
-                <p className="text-sm text-ink-soft">
+                <p className="text-ink-soft text-sm">
                   {formatDuration(selectedTimeSlot.totalDuration)}
                 </p>
               </div>
@@ -594,22 +594,22 @@ export function BookingConfirmationStep({
           {/* Date & Time Summary */}
           <div>
             <h3 className="mb-3 font-semibold">Appointment Time</h3>
-            <div className="rounded-lg bg-surface-muted p-3">
+            <div className="bg-surface-muted rounded-lg p-3">
               <div className="mb-1 flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-ink-soft" />
+                <Calendar className="text-ink-soft h-4 w-4" />
                 <span className="font-medium">
                   {format(selectedTimeSlot.startTime, 'EEEE, MMMM d, yyyy')}
                 </span>
               </div>
               <div className="mb-1 flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-ink-soft" />
+                <Clock className="text-ink-soft h-4 w-4" />
                 <span>
                   {format(selectedTimeSlot.startTime, 'h:mm a')} -{' '}
                   {format(selectedTimeSlot.endTime, 'h:mm a')}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
-                <User className="h-4 w-4 text-ink-soft" />
+                <User className="text-ink-soft h-4 w-4" />
                 <span>with {selectedTimeSlot.staffName}</span>
               </div>
             </div>
@@ -618,7 +618,7 @@ export function BookingConfirmationStep({
           {/* Client Information Summary */}
           <div>
             <h3 className="mb-3 font-semibold">Your Information</h3>
-            <div className="space-y-2 rounded-lg bg-surface-muted p-3">
+            <div className="bg-surface-muted space-y-2 rounded-lg p-3">
               <p>
                 <span className="font-medium">Name:</span>{' '}
                 {clientData.firstName} {clientData.lastName}
