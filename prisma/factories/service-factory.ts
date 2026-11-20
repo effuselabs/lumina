@@ -528,10 +528,6 @@ export class ServiceFactory extends BaseFactory<Service> {
     seasonalService: SeasonalService,
     options?: ServiceFactoryOptions
   ): Promise<Service> {
-    const currentMonth = new Date().getMonth() + 1; // 1-based month
-    const isCurrentlyAvailable =
-      seasonalService.availableMonths.includes(currentMonth);
-
     // Apply pricing tier variation if requested
     let finalPrice = seasonalService.basePrice;
     if (options?.includePricingTiers !== false) {
@@ -550,8 +546,11 @@ export class ServiceFactory extends BaseFactory<Service> {
         category: seasonalService.category,
         price: finalPrice,
         duration: seasonalService.duration,
-        isActive: isCurrentlyAvailable,
-        isOnline: isCurrentlyAvailable,
+        // Off, for the owner to switch on in season. Deciding from today's
+        // month made the demo salon differ with the month the seed ran in
+        // (#112): November added a card to every booking-page screenshot.
+        isActive: false,
+        isOnline: false,
       },
     });
 
