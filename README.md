@@ -1,3 +1,9 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/lumina-hero-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset=".github/assets/lumina-hero-light.png">
+  <img alt="Lumina: booking, clients and staff for salons and barbershops. Open source, and free to self-host." src=".github/assets/lumina-hero-dark.png">
+</picture>
+
 # Lumina
 
 **Booking, clients, staff and financials for salons and barbershops.**
