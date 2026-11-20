@@ -44,15 +44,15 @@ export function TodaysScheduleCard({
             {[...Array(3)].map((_, i) => (
               <div key={i} className="schedule-item-skeleton animate-pulse">
                 <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-surface-dim" />
+                  <div className="bg-surface-dim h-2 w-2 rounded-full" />
                   <div>
-                    <div className="mb-1 h-3 w-20 rounded bg-surface-dim" />
-                    <div className="h-2 w-16 rounded bg-surface-dim" />
+                    <div className="bg-surface-dim mb-1 h-3 w-20 rounded" />
+                    <div className="bg-surface-dim h-2 w-16 rounded" />
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="mb-1 h-3 w-12 rounded bg-surface-dim" />
-                  <div className="h-2 w-10 rounded bg-surface-dim" />
+                  <div className="bg-surface-dim mb-1 h-3 w-12 rounded" />
+                  <div className="bg-surface-dim h-2 w-10 rounded" />
                 </div>
               </div>
             ))}

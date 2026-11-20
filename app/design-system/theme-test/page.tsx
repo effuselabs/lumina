@@ -9,7 +9,7 @@ export default function ThemeTestPage() {
   const { theme, setTheme, resolvedTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-background p-8 text-foreground">
+    <div className="bg-background text-foreground min-h-screen p-8">
       <div className="mx-auto max-w-4xl space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Theme Test Page</h1>
@@ -21,8 +21,8 @@ export default function ThemeTestPage() {
             }
             className="h-9 w-9 p-0"
           >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-4 w-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+            <Moon className="absolute h-4 w-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
             <span className="sr-only">Toggle theme</span>
           </Button>
         </div>
@@ -63,11 +63,11 @@ export default function ThemeTestPage() {
               </div>
 
               <div className="space-y-2">
-                <div className="h-4 w-full rounded bg-lumina-gold"></div>
-                <div className="h-4 w-full rounded bg-lumina-coral"></div>
-                <div className="h-4 w-full rounded bg-deep-teal"></div>
-                <div className="h-4 w-full rounded bg-primary"></div>
-                <div className="h-4 w-full rounded bg-secondary"></div>
+                <div className="bg-lumina-gold h-4 w-full rounded"></div>
+                <div className="bg-lumina-coral h-4 w-full rounded"></div>
+                <div className="bg-deep-teal h-4 w-full rounded"></div>
+                <div className="bg-primary h-4 w-full rounded"></div>
+                <div className="bg-secondary h-4 w-full rounded"></div>
               </div>
             </CardContent>
           </Card>

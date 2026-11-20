@@ -336,7 +336,7 @@ export default function FinancialDashboard({
                       <span>{formatCurrency(report.revenue.net)}</span>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm text-ink-soft">
+                  <div className="text-ink-soft flex items-center justify-between text-sm">
                     <span>Average Transaction</span>
                     <span>
                       {formatCurrency(report.revenue.averageTransaction)}
@@ -517,12 +517,12 @@ export default function FinancialDashboard({
                           {staff.employmentType.replace('_', ' ')}
                         </Badge>
                         {staff.commissionRate && (
-                          <span className="text-sm text-ink-soft">
+                          <span className="text-ink-soft text-sm">
                             {staff.commissionRate}% commission
                           </span>
                         )}
                         {staff.chairRentalAmount && (
-                          <span className="text-sm text-ink-soft">
+                          <span className="text-ink-soft text-sm">
                             {formatCurrency(staff.chairRentalAmount)}{' '}
                             {staff.chairRentalPeriod}
                           </span>
@@ -572,7 +572,7 @@ export default function FinancialDashboard({
                           {transaction.status}
                         </Badge>
                       </div>
-                      <p className="mt-1 text-sm text-ink-soft">
+                      <p className="text-ink-soft mt-1 text-sm">
                         {transaction.staffName && `${transaction.staffName} • `}
                         {format(new Date(transaction.date), 'MMM dd, HH:mm')}
                       </p>
@@ -582,7 +582,7 @@ export default function FinancialDashboard({
                         <p className="text-sm font-medium">
                           {formatCurrency(transaction.commissionAmount)}
                         </p>
-                        <p className="text-xs text-ink-muted">Commission</p>
+                        <p className="text-ink-muted text-xs">Commission</p>
                       </div>
                     )}
                   </div>

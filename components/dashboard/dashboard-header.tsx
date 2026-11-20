@@ -21,7 +21,7 @@ export function DashboardHeader({
   onMenuToggle,
 }: DashboardHeaderProps) {
   return (
-    <header className="flex items-center justify-between gap-4 border-b border-line bg-surface px-4 py-3 sm:px-6">
+    <header className="border-line bg-surface flex items-center justify-between gap-4 border-b px-4 py-3 sm:px-6">
       <div className="flex items-center gap-4">
         {/* Mobile Menu Button */}
         <MobileMenuButton onClick={onMenuToggle} />
@@ -29,13 +29,13 @@ export function DashboardHeader({
         {/* Business Name */}
         <div className="hidden sm:block">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-muted">
+            <div className="bg-surface-muted flex h-8 w-8 items-center justify-center rounded-lg">
               <Building2
-                className="h-4 w-4 text-ink-brand"
+                className="text-ink-brand h-4 w-4"
                 aria-hidden="true"
               />
             </div>
-            <h1 className="text-sm font-semibold text-ink-strong">
+            <h1 className="text-ink-strong text-sm font-semibold">
               {businessName}
             </h1>
           </div>
@@ -58,7 +58,7 @@ function ThemeToggle() {
   return (
     <button
       type="button"
-      className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+      className="text-ink-soft hover:bg-surface-muted hover:text-ink-strong focus-visible:ring-ring relative inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
       onClick={toggleTheme}
       disabled={isTransitioning}
       aria-label={label}
@@ -78,7 +78,7 @@ function SignOutButton() {
   return (
     <button
       type="button"
-      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg px-2.5 text-sm font-medium text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+      className="text-ink-soft hover:bg-surface-muted hover:text-ink-strong focus-visible:ring-ring inline-flex h-10 items-center justify-center gap-2 rounded-lg px-2.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
       onClick={() => signOut({ callbackUrl: '/auth/signin' })}
     >
       <LogOut className="h-5 w-5" aria-hidden="true" />

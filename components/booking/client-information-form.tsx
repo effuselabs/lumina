@@ -218,7 +218,7 @@ export default function ClientInformationForm({
                 {errors.notes.message}
               </p>
             )}
-            <p className="text-xs text-ink-muted">Maximum 500 characters</p>
+            <p className="text-ink-muted text-xs">Maximum 500 characters</p>
           </div>
 
           {/* Marketing Opt-in */}

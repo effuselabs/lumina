@@ -53,20 +53,20 @@ function StaffPerformanceChartSkeleton() {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <Card className="lg:col-span-2">
         <CardHeader>
-          <div className="mb-2 h-6 w-40 animate-pulse rounded bg-surface-strong" />
-          <div className="h-4 w-56 animate-pulse rounded bg-surface-strong" />
+          <div className="bg-surface-strong mb-2 h-6 w-40 animate-pulse rounded" />
+          <div className="bg-surface-strong h-4 w-56 animate-pulse rounded" />
         </CardHeader>
         <CardContent>
-          <div className="h-80 animate-pulse rounded bg-surface-sunken" />
+          <div className="bg-surface-sunken h-80 animate-pulse rounded" />
         </CardContent>
       </Card>
       <Card>
         <CardHeader>
-          <div className="mb-2 h-6 w-32 animate-pulse rounded bg-surface-strong" />
-          <div className="h-4 w-40 animate-pulse rounded bg-surface-strong" />
+          <div className="bg-surface-strong mb-2 h-6 w-32 animate-pulse rounded" />
+          <div className="bg-surface-strong h-4 w-40 animate-pulse rounded" />
         </CardHeader>
         <CardContent>
-          <div className="h-80 animate-pulse rounded bg-surface-sunken" />
+          <div className="bg-surface-sunken h-80 animate-pulse rounded" />
         </CardContent>
       </Card>
     </div>
@@ -117,31 +117,31 @@ export function StaffPerformanceChart({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="rounded-lg border border-line bg-surface p-4 shadow-lg">
-          <p className="mb-3 font-medium text-ink-strong">{label}</p>
+        <div className="border-line bg-surface rounded-lg border p-4 shadow-lg">
+          <p className="text-ink-strong mb-3 font-medium">{label}</p>
           <div className="space-y-2">
             <div className="flex justify-between gap-4">
-              <span className="text-sm text-ink-soft">Revenue:</span>
+              <span className="text-ink-soft text-sm">Revenue:</span>
               <span className="text-sm font-medium">
                 {formatCurrency(data.revenue)}
               </span>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="text-sm text-ink-soft">Appointments:</span>
+              <span className="text-ink-soft text-sm">Appointments:</span>
               <span className="text-sm font-medium">{data.appointments}</span>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="text-sm text-ink-soft">Utilization:</span>
+              <span className="text-ink-soft text-sm">Utilization:</span>
               <span className="text-sm font-medium">{data.utilization}%</span>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="text-sm text-ink-soft">Commission:</span>
+              <span className="text-ink-soft text-sm">Commission:</span>
               <span className="text-sm font-medium">
                 {formatCurrency(data.commissionEarned)}
               </span>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="text-sm text-ink-soft">Type:</span>
+              <span className="text-ink-soft text-sm">Type:</span>
               <span className="text-sm font-medium capitalize">
                 {data.employmentType.toLowerCase().replace('_', ' ')}
               </span>
@@ -224,15 +224,15 @@ export function StaffPerformanceChart({
           <div className="mt-4 flex flex-wrap justify-center gap-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-green-500" />
-              <span className="text-sm text-ink-soft">Commission</span>
+              <span className="text-ink-soft text-sm">Commission</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-blue-500" />
-              <span className="text-sm text-ink-soft">Chair Rental</span>
+              <span className="text-ink-soft text-sm">Chair Rental</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-purple-500" />
-              <span className="text-sm text-ink-soft">Hybrid</span>
+              <span className="text-ink-soft text-sm">Hybrid</span>
             </div>
           </div>
         </CardContent>
@@ -276,32 +276,32 @@ export function StaffPerformanceChart({
           {/* Top Performer Stats */}
           <div className="mt-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Revenue:</span>
+              <span className="text-ink-soft text-sm">Revenue:</span>
               <span className="text-sm font-medium">
                 {formatCurrency(topPerformer.revenue)}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Appointments:</span>
+              <span className="text-ink-soft text-sm">Appointments:</span>
               <span className="text-sm font-medium">
                 {topPerformer.appointments}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Utilization:</span>
+              <span className="text-ink-soft text-sm">Utilization:</span>
               <span className="text-sm font-medium">
                 {topPerformer.utilization}%
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Rating:</span>
+              <span className="text-ink-soft text-sm">Rating:</span>
               <span className="text-sm font-medium">
                 {topPerformer.rating.toFixed(1)} ★
               </span>
             </div>
             <div className="border-t pt-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-ink-soft">Commission:</span>
+                <span className="text-ink-soft text-sm">Commission:</span>
                 <span className="text-sm font-medium text-green-600">
                   {formatCurrency(topPerformer.commissionEarned)}
                 </span>

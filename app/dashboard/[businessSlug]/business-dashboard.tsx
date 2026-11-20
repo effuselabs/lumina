@@ -105,10 +105,10 @@ function DashboardContent({
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold text-ink-strong">
+        <h1 className="text-ink-strong text-2xl font-semibold">
           Dashboard Overview
         </h1>
-        <p className="mt-1 text-base text-ink-soft">
+        <p className="text-ink-soft mt-1 text-base">
           Here&apos;s what&apos;s happening with your business today.
         </p>
       </div>

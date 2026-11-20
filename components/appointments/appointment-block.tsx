@@ -206,14 +206,14 @@ export function AppointmentBlock({
 
         {/* Drag Handle */}
         {appointment.canReschedule && showDetails && !isSelectionMode && (
-          <div className="absolute right-1 top-1 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="absolute top-1 right-1 opacity-0 transition-opacity group-hover:opacity-100">
             <GripVertical className="text-color-foreground-muted h-3 w-3" />
           </div>
         )}
 
         {/* Selection checkbox for compact views */}
         {isSelectionMode && enableSelection && !showDetails && (
-          <div className="absolute left-1 top-1">
+          <div className="absolute top-1 left-1">
             <Checkbox
               checked={isSelected}
               onCheckedChange={() => toggleAppointment(appointment.id)}
@@ -267,21 +267,21 @@ export function AppointmentBlock({
 
       {/* Conflict indicator */}
       {appointment.isConflicted && (
-        <div className="absolute left-1 top-1">
+        <div className="absolute top-1 left-1">
           <div className="h-2 w-2 rounded-full bg-red-500" />
         </div>
       )}
 
       {/* Draggable indicator */}
       {appointment.canReschedule && !showDetails && !isSelectionMode && (
-        <div className="absolute bottom-1 right-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute right-1 bottom-1 opacity-0 transition-opacity group-hover:opacity-100">
           <GripVertical className="text-color-foreground-muted h-2 w-2" />
         </div>
       )}
 
       {/* Selection indicator */}
       {isSelected && (
-        <div className="absolute right-1 top-1 h-2 w-2 rounded-full bg-blue-600"></div>
+        <div className="absolute top-1 right-1 h-2 w-2 rounded-full bg-blue-600"></div>
       )}
     </div>
   );

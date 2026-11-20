@@ -192,14 +192,14 @@ export function ServiceList({ businessId }: ServiceListProps) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="h-8 w-48 animate-pulse rounded bg-surface-strong"></div>
-          <div className="h-10 w-32 animate-pulse rounded bg-surface-strong"></div>
+          <div className="bg-surface-strong h-8 w-48 animate-pulse rounded"></div>
+          <div className="bg-surface-strong h-10 w-32 animate-pulse rounded"></div>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="h-48 animate-pulse rounded-lg bg-surface-strong"
+              className="bg-surface-strong h-48 animate-pulse rounded-lg"
             ></div>
           ))}
         </div>
@@ -213,7 +213,7 @@ export function ServiceList({ businessId }: ServiceListProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint" />
+            <Search className="text-ink-faint absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               aria-label="Search services"
               placeholder="Search services..."
@@ -260,13 +260,13 @@ export function ServiceList({ businessId }: ServiceListProps) {
       {/* Services Grid */}
       {filteredServices.length === 0 ? (
         <div className="py-12 text-center">
-          <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-surface-sunken">
-            <DollarSign className="h-12 w-12 text-ink-faint" />
+          <div className="bg-surface-sunken mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full">
+            <DollarSign className="text-ink-faint h-12 w-12" />
           </div>
-          <h3 className="mb-2 text-lg font-semibold text-ink-strong">
+          <h3 className="text-ink-strong mb-2 text-lg font-semibold">
             No services found
           </h3>
-          <p className="mb-4 text-ink-soft">
+          <p className="text-ink-soft mb-4">
             {searchTerm || categoryFilter !== 'all' || statusFilter !== 'all'
               ? 'Try adjusting your filters to see more services.'
               : 'Get started by adding your first service.'}

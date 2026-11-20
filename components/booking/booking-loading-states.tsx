@@ -94,21 +94,21 @@ export function BookingLoadingState({
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
           {content.icon}
         </div>
-        <h3 className="text-lg font-semibold text-ink-strong">
+        <h3 className="text-ink-strong text-lg font-semibold">
           {content.title}
         </h3>
-        <p className="mt-1 text-sm text-ink-soft">{content.description}</p>
+        <p className="text-ink-soft mt-1 text-sm">{content.description}</p>
 
         {/* Progress Bar */}
         {showProgress && progress !== undefined && (
           <div className="mx-auto mt-4 max-w-xs">
             <Progress value={progress} className="h-2" />
-            <p className="mt-1 text-xs text-ink-muted">{progress}% complete</p>
+            <p className="text-ink-muted mt-1 text-xs">{progress}% complete</p>
           </div>
         )}
 
         {/* Time Indicators */}
-        <div className="mt-3 flex items-center justify-center gap-4 text-xs text-ink-muted">
+        <div className="text-ink-muted mt-3 flex items-center justify-center gap-4 text-xs">
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
             {elapsedTime}s elapsed
@@ -199,7 +199,7 @@ function AvailabilitySkeleton() {
           <div className="space-y-4">
             <div className="flex items-center justify-center py-4">
               <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-              <span className="ml-2 text-sm text-ink-soft">
+              <span className="text-ink-soft ml-2 text-sm">
                 Calculating availability...
               </span>
             </div>
@@ -229,10 +229,10 @@ function BookingCreationSkeleton() {
         <div className="flex items-center justify-center py-8">
           <div className="text-center">
             <Loader2 className="mx-auto h-8 w-8 animate-spin text-blue-500" />
-            <p className="mt-2 text-sm text-ink-soft">
+            <p className="text-ink-soft mt-2 text-sm">
               Processing your appointment...
             </p>
-            <div className="mt-4 space-y-2 text-xs text-ink-muted">
+            <div className="text-ink-muted mt-4 space-y-2 text-xs">
               <div className="flex items-center justify-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-green-500"></div>
                 <span>Validating time slot</span>
@@ -242,7 +242,7 @@ function BookingCreationSkeleton() {
                 <span>Creating appointment</span>
               </div>
               <div className="flex items-center justify-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-surface-dim"></div>
+                <div className="bg-surface-dim h-2 w-2 rounded-full"></div>
                 <span>Sending confirmation</span>
               </div>
             </div>
@@ -323,7 +323,7 @@ export function NetworkStatusIndicator() {
 
   if (!isOnline) {
     return (
-      <Badge variant="destructive" className="fixed bottom-4 right-4 z-50">
+      <Badge variant="destructive" className="fixed right-4 bottom-4 z-50">
         Offline
       </Badge>
     );
@@ -331,7 +331,7 @@ export function NetworkStatusIndicator() {
 
   if (connectionType === 'slow-2g' || connectionType === '2g') {
     return (
-      <Badge variant="secondary" className="fixed bottom-4 right-4 z-50">
+      <Badge variant="secondary" className="fixed right-4 bottom-4 z-50">
         Slow Connection
       </Badge>
     );
@@ -380,7 +380,7 @@ export function MultiStepProgress({
           <span
             className={`text-sm ${
               step.status === 'active'
-                ? 'font-medium text-ink-strong'
+                ? 'text-ink-strong font-medium'
                 : step.status === 'completed'
                   ? 'text-ink'
                   : step.status === 'error'

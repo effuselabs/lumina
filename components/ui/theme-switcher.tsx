@@ -45,9 +45,9 @@ export function ThemeSwitcher({
       >
         <div className="relative">
           {isDark ? (
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform duration-200" />
+            <Sun className="h-4 w-4 scale-100 rotate-0 transition-transform duration-200" />
           ) : (
-            <Moon className="h-4 w-4 rotate-0 scale-100 transition-transform duration-200" />
+            <Moon className="h-4 w-4 scale-100 rotate-0 transition-transform duration-200" />
           )}
         </div>
       </Button>
@@ -57,7 +57,7 @@ export function ThemeSwitcher({
   return (
     <div
       className={cn(
-        'flex items-center gap-1 rounded-lg bg-muted p-1',
+        'bg-muted flex items-center gap-1 rounded-lg p-1',
         className
       )}
     >

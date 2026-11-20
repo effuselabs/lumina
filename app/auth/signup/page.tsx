@@ -20,12 +20,12 @@ export default async function SignUpPage() {
   return (
     <div className="bg-neutral-light-grey flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="rounded-lg bg-surface p-8 shadow-lumina">
+        <div className="bg-surface shadow-lumina rounded-lg p-8">
           {decision.allowed ? (
             <ClientOnly
               fallback={
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-lumina-coral" />
+                  <Loader2 className="text-lumina-coral h-6 w-6 animate-spin" />
                 </div>
               }
             >
@@ -53,7 +53,7 @@ export default async function SignUpPage() {
                 .
               </p>
               <Link
-                className="inline-block text-sm text-lumina-coral underline"
+                className="text-lumina-coral inline-block text-sm underline"
                 href="/auth/signin"
               >
                 Sign in instead

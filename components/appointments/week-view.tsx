@@ -224,7 +224,7 @@ export function WeekView({
               {/* Appointment count indicator */}
               {dayAppointments.length > 0 && (
                 <div className="mt-1">
-                  <div className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-lumina-coral text-xs font-medium text-white sm:h-5 sm:w-5">
+                  <div className="bg-lumina-coral inline-flex h-4 w-4 items-center justify-center rounded-full text-xs font-medium text-white sm:h-5 sm:w-5">
                     {dayAppointments.length > 9 ? '9+' : dayAppointments.length}
                   </div>
                 </div>
@@ -235,7 +235,7 @@ export function WeekView({
       </div>
 
       {extended && (
-        <p className="border-color-border border-b px-3 py-2 text-xs text-ink-muted">
+        <p className="border-color-border text-ink-muted border-b px-3 py-2 text-xs">
           Showing hours outside business hours: some appointments this week fall
           there.
         </p>
@@ -433,9 +433,9 @@ export function WeekView({
               width: `${100 / 7}%`,
             }}
           >
-            <div className="h-0.5 rounded-full bg-lumina-coral shadow-xs" />
-            <div className="absolute -left-2 -top-2">
-              <div className="h-4 w-4 rounded-full border-2 border-white bg-lumina-coral shadow-xs" />
+            <div className="bg-lumina-coral h-0.5 rounded-full shadow-xs" />
+            <div className="absolute -top-2 -left-2">
+              <div className="bg-lumina-coral h-4 w-4 rounded-full border-2 border-white shadow-xs" />
             </div>
           </div>
         );

@@ -204,13 +204,13 @@ export function MonthView({
                   }}
                 >
                   {/* Day Number */}
-                  <div className="absolute left-1 top-1 z-10 sm:left-2 sm:top-2">
+                  <div className="absolute top-1 left-1 z-10 sm:top-2 sm:left-2">
                     <div
                       className={cn('text-xs font-medium sm:text-sm', {
                         'text-color-foreground-muted': !day.isCurrentMonth,
                         'text-color-secondary':
                           day.isCurrentMonth && !day.isToday,
-                        'font-semibold text-lumina-coral': day.isToday,
+                        'text-lumina-coral font-semibold': day.isToday,
                       })}
                     >
                       {day.date.getDate()}
@@ -219,8 +219,8 @@ export function MonthView({
 
                   {/* Appointment Count Indicator */}
                   {day.appointmentCount > 0 && (
-                    <div className="absolute right-1 top-1 z-10 sm:right-2 sm:top-2">
-                      <div className="flex h-4 w-4 items-center justify-center rounded-full bg-lumina-coral text-xs font-medium text-white sm:h-5 sm:w-5">
+                    <div className="absolute top-1 right-1 z-10 sm:top-2 sm:right-2">
+                      <div className="bg-lumina-coral flex h-4 w-4 items-center justify-center rounded-full text-xs font-medium text-white sm:h-5 sm:w-5">
                         {day.appointmentCount > 9 ? '9+' : day.appointmentCount}
                       </div>
                     </div>
@@ -254,11 +254,11 @@ export function MonthView({
 
                   {/* Appointment Preview (desktop only) */}
                   {day.appointments.length > 0 && (
-                    <div className="absolute bottom-6 left-1 right-1 hidden space-y-0.5 sm:block">
+                    <div className="absolute right-1 bottom-6 left-1 hidden space-y-0.5 sm:block">
                       {day.appointments.slice(0, 2).map(appointment => (
                         <div
                           key={appointment.id}
-                          className="truncate rounded p-1 text-xs transition-colors hover:bg-opacity-80"
+                          className="hover:bg-opacity-80 truncate rounded p-1 text-xs transition-colors"
                           style={{
                             backgroundColor: `${appointment.staff.color}20`,
                             borderLeft: `2px solid ${appointment.staff.color}`,
@@ -288,7 +288,7 @@ export function MonthView({
 
                   {/* Density Visualization Bar */}
                   {day.appointmentCount > 0 && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1">
+                    <div className="absolute right-0 bottom-0 left-0 h-1">
                       <div
                         className={cn('h-full transition-all', {
                           'bg-green-400': density === 'low',
@@ -305,7 +305,7 @@ export function MonthView({
 
                   {/* Today Indicator */}
                   {day.isToday && (
-                    <div className="pointer-events-none absolute -bottom-0.5 -left-0.5 -right-0.5 -top-0.5 rounded border-2 border-lumina-coral" />
+                    <div className="border-lumina-coral pointer-events-none absolute -top-0.5 -right-0.5 -bottom-0.5 -left-0.5 rounded border-2" />
                   )}
                 </div>
               );

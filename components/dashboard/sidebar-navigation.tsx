@@ -139,9 +139,9 @@ export function SidebarNavigation({
             <div className="flex items-center justify-between">
               <Link
                 href={`/dashboard/${businessSlug}`}
-                className="text-lumina-primary flex items-center gap-3 text-xl font-bold transition-colors hover:text-lumina-coral"
+                className="text-lumina-primary hover:text-lumina-coral flex items-center gap-3 text-xl font-bold transition-colors"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-lumina-radiant">
+                <div className="bg-lumina-radiant flex h-8 w-8 items-center justify-center rounded-lg">
                   <span className="text-sm font-bold text-white">L</span>
                 </div>
                 Lumina
@@ -190,7 +190,7 @@ export function SidebarNavigation({
 
                     {/* Sub-navigation */}
                     {item.children && isItemActive(item) && (
-                      <div className="border-sidebar-border ml-6 mt-1 space-y-1 border-l pl-3">
+                      <div className="border-sidebar-border mt-1 ml-6 space-y-1 border-l pl-3">
                         {item.children.map(child => (
                           <Link
                             key={child.id}
@@ -274,7 +274,7 @@ export function SidebarNavigation({
 
                     {/* Sub-navigation */}
                     {item.children && isItemActive(item) && (
-                      <div className="border-sidebar-border ml-6 mt-1 space-y-1 border-l pl-3">
+                      <div className="border-sidebar-border mt-1 ml-6 space-y-1 border-l pl-3">
                         {item.children.map(child => (
                           <Link
                             key={child.id}

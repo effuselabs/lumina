@@ -271,7 +271,7 @@ export function ComprehensiveClientManagement({
       case 'gold':
         return <Star className="h-3 w-3 fill-current text-yellow-500" />;
       case 'silver':
-        return <Star className="h-3 w-3 fill-current text-ink-faint" />;
+        return <Star className="text-ink-faint h-3 w-3 fill-current" />;
       case 'bronze':
         return <Star className="h-3 w-3 fill-current text-orange-600" />;
       default:
@@ -336,7 +336,7 @@ export function ComprehensiveClientManagement({
       {/* Client Metrics */}
       {metrics && (
         <div className="dashboard-stats-grid">
-          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
+          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 Total Clients
@@ -353,7 +353,7 @@ export function ComprehensiveClientManagement({
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
+          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 New This Month
@@ -374,7 +374,7 @@ export function ComprehensiveClientManagement({
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
+          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 Avg Lifetime Value
@@ -389,7 +389,7 @@ export function ComprehensiveClientManagement({
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border border-line bg-surface shadow-xs">
+          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-color-secondary text-sm font-medium">
                 VIP Clients
@@ -519,7 +519,7 @@ export function ComprehensiveClientManagement({
                     <DropdownMenuTrigger asChild>
                       <button
                         onClick={e => e.stopPropagation()}
-                        className="shrink-0 rounded p-1 hover:bg-surface-sunken"
+                        className="hover:bg-surface-sunken shrink-0 rounded p-1"
                       >
                         <MoreHorizontal className="text-color-foreground-muted h-4 w-4" />
                       </button>
@@ -576,7 +576,7 @@ export function ComprehensiveClientManagement({
                 </div>
 
                 {/* Stats - Compact Grid */}
-                <div className="grid grid-cols-2 gap-2 border-t border-line-soft py-2">
+                <div className="border-line-soft grid grid-cols-2 gap-2 border-t py-2">
                   <div className="text-center">
                     <div className="text-color-secondary text-sm font-medium">
                       {client.appointmentCount}
@@ -597,7 +597,7 @@ export function ComprehensiveClientManagement({
 
                 {/* Last Appointment - Compact */}
                 {client.lastAppointment && (
-                  <div className="border-t border-line-soft pt-2">
+                  <div className="border-line-soft border-t pt-2">
                     <div className="text-color-secondary text-xs">
                       {formatDistanceToNow(
                         new Date(client.lastAppointment.startTime),

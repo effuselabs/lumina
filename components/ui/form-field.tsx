@@ -65,7 +65,7 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
           <Label
             htmlFor={htmlFor || fieldId}
             className={cn(
-              'text-sm font-medium leading-none',
+              'text-sm leading-none font-medium',
               'text-neutral-900 dark:text-neutral-100',
               error && 'text-error-accessible',
               'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
@@ -117,7 +117,7 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
           <p
             id={errorId}
             className={cn(
-              'text-xs font-medium leading-relaxed',
+              'text-xs leading-relaxed font-medium',
               'text-error-accessible'
             )}
             role="alert"

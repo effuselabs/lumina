@@ -177,7 +177,7 @@ export function AppointmentCalendarPageContent({
                 onNavigate={navigateDate}
                 onToday={goToToday}
               />
-              <p className="text-sm text-ink-muted">
+              <p className="text-ink-muted text-sm">
                 Times shown in the salon&rsquo;s time zone ({zoneName(timezone)}
                 ).
               </p>
@@ -239,8 +239,8 @@ export function AppointmentCalendarPageContent({
                   role={appointmentsError ? 'alert' : 'status'}
                   className={
                     appointmentsError
-                      ? 'px-4 py-2 text-sm text-error'
-                      : 'px-4 py-2 text-sm text-ink-muted'
+                      ? 'text-error px-4 py-2 text-sm'
+                      : 'text-ink-muted px-4 py-2 text-sm'
                   }
                 >
                   {appointmentsError ?? 'Loading appointments…'}
@@ -281,7 +281,7 @@ export function AppointmentCalendarPageContent({
                         className="border-color-border flex items-center space-x-3 rounded-lg border p-3"
                       >
                         <div className="bg-lumina-radiant/10 flex h-10 w-10 items-center justify-center rounded-full">
-                          <span className="text-sm font-semibold text-lumina-coral">
+                          <span className="text-lumina-coral text-sm font-semibold">
                             {staff.firstName.charAt(0)}
                             {staff.lastName.charAt(0)}
                           </span>

@@ -109,11 +109,11 @@ export function AppointmentsPageContent({
           {/* Calendar View Navigation */}
           <div className="grid gap-4 md:grid-cols-3">
             <Link href={`/dashboard/${businessSlug}/appointments`}>
-              <Card className="border-color-border cursor-pointer shadow-xs transition-colors hover:border-lumina-coral">
+              <Card className="border-color-border hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
-                      <Calendar className="h-6 w-6 text-lumina-coral" />
+                      <Calendar className="text-lumina-coral h-6 w-6" />
                     </div>
                     <div>
                       <h3 className="font-semibold">All Appointments</h3>
@@ -127,11 +127,11 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/dashboard/${businessSlug}/appointments/calendar`}>
-              <Card className="border-color-border cursor-pointer shadow-xs transition-colors hover:border-lumina-coral">
+              <Card className="border-color-border hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
-                      <CalendarDays className="h-6 w-6 text-lumina-coral" />
+                      <CalendarDays className="text-lumina-coral h-6 w-6" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Calendar View</h3>
@@ -145,11 +145,11 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/book/${business.id}`}>
-              <Card className="border-color-border cursor-pointer shadow-xs transition-colors hover:border-lumina-coral">
+              <Card className="border-color-border hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
-                      <Plus className="h-6 w-6 text-lumina-coral" />
+                      <Plus className="text-lumina-coral h-6 w-6" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Book Appointment</h3>
@@ -175,7 +175,7 @@ export function AppointmentsPageContent({
                     Every booking, by day, week or month
                   </p>
                 </div>
-                <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
+                <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
                   <Button
                     variant="primary"
                     size="sm"
@@ -193,10 +193,10 @@ export function AppointmentsPageContent({
                   did nothing (#102). The calendar is where appointments are. */}
               <div className="py-12 text-center">
                 <Calendar
-                  className="mx-auto mb-4 h-12 w-12 text-ink-muted"
+                  className="text-ink-muted mx-auto mb-4 h-12 w-12"
                   aria-hidden="true"
                 />
-                <p className="mb-6 text-ink-soft">
+                <p className="text-ink-soft mb-6">
                   Appointments, including ones clients book online, are on the
                   calendar.
                 </p>

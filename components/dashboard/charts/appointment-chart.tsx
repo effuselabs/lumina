@@ -52,20 +52,20 @@ function AppointmentChartSkeleton() {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <div className="mb-2 h-6 w-40 animate-pulse rounded bg-surface-strong" />
-          <div className="h-4 w-56 animate-pulse rounded bg-surface-strong" />
+          <div className="bg-surface-strong mb-2 h-6 w-40 animate-pulse rounded" />
+          <div className="bg-surface-strong h-4 w-56 animate-pulse rounded" />
         </CardHeader>
         <CardContent>
-          <div className="h-64 animate-pulse rounded bg-surface-sunken" />
+          <div className="bg-surface-sunken h-64 animate-pulse rounded" />
         </CardContent>
       </Card>
       <Card>
         <CardHeader>
-          <div className="mb-2 h-6 w-36 animate-pulse rounded bg-surface-strong" />
-          <div className="h-4 w-48 animate-pulse rounded bg-surface-strong" />
+          <div className="bg-surface-strong mb-2 h-6 w-36 animate-pulse rounded" />
+          <div className="bg-surface-strong h-4 w-48 animate-pulse rounded" />
         </CardHeader>
         <CardContent>
-          <div className="h-64 animate-pulse rounded bg-surface-sunken" />
+          <div className="bg-surface-sunken h-64 animate-pulse rounded" />
         </CardContent>
       </Card>
     </div>
@@ -99,8 +99,8 @@ export function AppointmentChart({
   }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-lg border border-line bg-surface p-3 shadow-lg">
-          <p className="mb-2 font-medium text-ink-strong">
+        <div className="border-line bg-surface rounded-lg border p-3 shadow-lg">
+          <p className="text-ink-strong mb-2 font-medium">
             {formatDate(label || '')}
           </p>
           {payload.map(
@@ -113,8 +113,8 @@ export function AppointmentChart({
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: entry.color }}
                 />
-                <span className="text-sm text-ink-soft">{entry.name}:</span>
-                <span className="text-sm font-medium text-ink-strong">
+                <span className="text-ink-soft text-sm">{entry.name}:</span>
+                <span className="text-ink-strong text-sm font-medium">
                   {entry.value}
                 </span>
               </div>
@@ -136,15 +136,15 @@ export function AppointmentChart({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="rounded-lg border border-line bg-surface p-3 shadow-lg">
-          <p className="mb-2 font-medium text-ink-strong">{data.name}</p>
+        <div className="border-line bg-surface rounded-lg border p-3 shadow-lg">
+          <p className="text-ink-strong mb-2 font-medium">{data.name}</p>
           <div className="space-y-1">
             <div className="flex justify-between gap-4">
-              <span className="text-sm text-ink-soft">Appointments:</span>
+              <span className="text-ink-soft text-sm">Appointments:</span>
               <span className="text-sm font-medium">{data.count}</span>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="text-sm text-ink-soft">Revenue:</span>
+              <span className="text-ink-soft text-sm">Revenue:</span>
               <span className="text-sm font-medium">
                 ${data.revenue.toLocaleString()}
               </span>
@@ -175,7 +175,7 @@ export function AppointmentChart({
               <div className="text-2xl font-bold text-blue-600">
                 {totalAppointments}
               </div>
-              <div className="text-sm text-ink-soft">
+              <div className="text-ink-soft text-sm">
                 {completionRate}% completion rate
               </div>
             </div>
@@ -269,13 +269,13 @@ export function AppointmentChart({
                     className="h-3 w-3 rounded-full"
                     style={{ backgroundColor: service.color }}
                   />
-                  <span className="text-sm text-ink">{service.name}</span>
+                  <span className="text-ink text-sm">{service.name}</span>
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-medium">
                     {service.count} bookings
                   </div>
-                  <div className="text-xs text-ink-muted">
+                  <div className="text-ink-muted text-xs">
                     ${service.revenue.toLocaleString()}
                   </div>
                 </div>

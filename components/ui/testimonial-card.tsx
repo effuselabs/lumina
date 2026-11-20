@@ -122,7 +122,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
           className={cn(
             'h-4 w-4',
             i < rating
-              ? 'fill-current text-lumina-gold'
+              ? 'text-lumina-gold fill-current'
               : 'text-muted-foreground'
           )}
           viewBox="0 0 20 20"
@@ -170,7 +170,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
           {/* Quote Icon */}
           <div className="testimonial-quote-icon mb-4">
             <svg
-              className="h-8 w-8 text-lumina-gold opacity-60"
+              className="text-lumina-gold h-8 w-8 opacity-60"
               fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -182,7 +182,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
           {/* Quote Text */}
           <blockquote
             className={cn(
-              'testimonial-quote mb-6 text-foreground',
+              'testimonial-quote text-foreground mb-6',
               size === 'compact' && 'text-sm leading-relaxed',
               size === 'default' && 'text-base leading-relaxed',
               size === 'large' && 'text-lg leading-relaxed'
@@ -221,7 +221,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
                   alt={`${author} avatar`}
                   width={48}
                   height={48}
-                  className="h-full w-full rounded-full border-2 border-background object-cover shadow-xs"
+                  className="border-background h-full w-full rounded-full border-2 object-cover shadow-xs"
                 />
               ) : (
                 <div
@@ -242,7 +242,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
             <div className="testimonial-author-details min-w-0 flex-1">
               <div
                 className={cn(
-                  'testimonial-author-name font-semibold text-foreground',
+                  'testimonial-author-name text-foreground font-semibold',
                   size === 'compact' && 'text-sm',
                   size === 'default' && 'text-base',
                   size === 'large' && 'text-lg'

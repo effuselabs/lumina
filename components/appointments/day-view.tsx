@@ -242,7 +242,7 @@ export function DayView({
       </div>
 
       {showsClosedHours && (
-        <p className="border-color-border border-b px-3 py-2 text-xs text-ink-muted">
+        <p className="border-color-border text-ink-muted border-b px-3 py-2 text-xs">
           Showing time outside business hours: some appointments today fall
           there.
         </p>
@@ -361,7 +361,7 @@ export function DayView({
 
                       {/* Conflict Indicator */}
                       {hasConflicts && (
-                        <div className="absolute right-1 top-1 z-20">
+                        <div className="absolute top-1 right-1 z-20">
                           <div
                             className="h-3 w-3 rounded-full border-2 border-white bg-red-500 shadow-xs"
                             title="Scheduling conflict detected"
@@ -380,7 +380,7 @@ export function DayView({
 
                       {/* Hour Marker */}
                       {isHourMark && (
-                        <div className="bg-color-border absolute left-0 top-0 h-px w-full opacity-50" />
+                        <div className="bg-color-border absolute top-0 left-0 h-px w-full opacity-50" />
                       )}
                     </div>
                   </DropZone>
@@ -431,16 +431,16 @@ export function DayView({
 
         return (
           <div
-            className="pointer-events-none absolute left-0 right-0 z-30"
+            className="pointer-events-none absolute right-0 left-0 z-30"
             style={{ top: `${percentage}%` }}
           >
             <div className="flex items-center">
               <div className="w-24 shrink-0 pr-2 text-right">
-                <div className="inline-block rounded-full bg-lumina-coral px-2 py-1 text-xs font-medium text-white">
+                <div className="bg-lumina-coral inline-block rounded-full px-2 py-1 text-xs font-medium text-white">
                   {formatTime(current)}
                 </div>
               </div>
-              <div className="h-0.5 flex-1 bg-lumina-coral shadow-xs" />
+              <div className="bg-lumina-coral h-0.5 flex-1 shadow-xs" />
             </div>
           </div>
         );

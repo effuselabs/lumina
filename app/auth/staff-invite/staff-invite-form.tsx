@@ -191,7 +191,7 @@ export function StaffInviteForm() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="text-primary h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -201,10 +201,10 @@ export function StaffInviteForm() {
       <Card>
         <CardContent className="py-12 text-center">
           <XCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-          <h3 className="mb-2 text-lg font-semibold text-ink-strong">
+          <h3 className="text-ink-strong mb-2 text-lg font-semibold">
             Invalid Invitation
           </h3>
-          <p className="mb-4 text-ink-soft">{error}</p>
+          <p className="text-ink-soft mb-4">{error}</p>
           <Button onClick={() => router.push('/auth/signin')}>
             Go to Sign In
           </Button>
@@ -218,10 +218,10 @@ export function StaffInviteForm() {
       <Card>
         <CardContent className="py-12 text-center">
           <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-500" />
-          <h3 className="mb-2 text-lg font-semibold text-ink-strong">
+          <h3 className="text-ink-strong mb-2 text-lg font-semibold">
             Welcome to the Team!
           </h3>
-          <p className="mb-4 text-ink-soft">
+          <p className="text-ink-soft mb-4">
             Your account has been created successfully. You&apos;ll be
             redirected to sign in shortly.
           </p>
@@ -238,7 +238,7 @@ export function StaffInviteForm() {
       <Card>
         <CardContent className="py-12 text-center">
           <XCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-          <h3 className="mb-2 text-lg font-semibold text-ink-strong">
+          <h3 className="text-ink-strong mb-2 text-lg font-semibold">
             Invitation Not Found
           </h3>
           <p className="text-ink-soft">
@@ -265,18 +265,18 @@ export function StaffInviteForm() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="text-sm font-medium text-ink">Position</h4>
+              <h4 className="text-ink text-sm font-medium">Position</h4>
               <p className="font-semibold">
                 {invitation.staffData.displayName}
               </p>
               {invitation.staffData.title && (
-                <p className="text-sm text-ink-soft">
+                <p className="text-ink-soft text-sm">
                   {invitation.staffData.title}
                 </p>
               )}
             </div>
             <div>
-              <h4 className="text-sm font-medium text-ink">Employment</h4>
+              <h4 className="text-ink text-sm font-medium">Employment</h4>
               <Badge
                 className={getEmploymentBadgeColor(
                   invitation.staffData.employmentType
@@ -284,7 +284,7 @@ export function StaffInviteForm() {
               >
                 {invitation.staffData.employmentType.replace('_', ' ')}
               </Badge>
-              <p className="mt-1 text-sm text-ink-soft">
+              <p className="text-ink-soft mt-1 text-sm">
                 {getEmploymentDisplay(invitation.staffData)}
               </p>
             </div>
@@ -301,7 +301,7 @@ export function StaffInviteForm() {
             </div>
           )}
 
-          <div className="text-xs text-ink-muted">
+          <div className="text-ink-muted text-xs">
             Invitation expires:{' '}
             {new Date(invitation.expiresAt).toLocaleDateString()}
           </div>

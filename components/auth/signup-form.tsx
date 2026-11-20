@@ -137,7 +137,7 @@ export function SignUpForm() {
           </p>
         </div>
         <div className="flex justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-lumina-coral" />
+          <Loader2 className="text-lumina-coral h-6 w-6 animate-spin" />
         </div>
       </div>
     );
@@ -241,7 +241,7 @@ export function SignUpForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="text-neutral-medium-grey hover:text-neutral-off-black absolute right-3 top-1/2 -translate-y-1/2"
+              className="text-neutral-medium-grey hover:text-neutral-off-black absolute top-1/2 right-3 -translate-y-1/2"
               disabled={isLoading}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -257,7 +257,7 @@ export function SignUpForm() {
 
         <Button
           type="submit"
-          className="w-full bg-lumina-gradient hover:bg-lumina-gradient-hover"
+          className="bg-lumina-gradient hover:bg-lumina-gradient-hover w-full"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -277,7 +277,7 @@ export function SignUpForm() {
         </span>
         <a
           href="/auth/signin"
-          className="font-medium text-lumina-coral hover:text-ink-brand"
+          className="text-lumina-coral hover:text-ink-brand font-medium"
         >
           Sign in
         </a>

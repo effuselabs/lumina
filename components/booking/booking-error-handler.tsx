@@ -237,7 +237,7 @@ export function BookingErrorHandler({
               )}
 
               {/* Network status indicator */}
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-1 text-sm">
                 <Wifi className="h-3 w-3" />
                 <span>Connected</span>
               </div>
@@ -290,17 +290,17 @@ export function BookingErrorHandler({
                     variant="outline"
                     size="sm"
                     onClick={() => onAlternativeSlotSelect(slot)}
-                    className="flex flex-col items-start gap-1 border-green-300 bg-surface p-3 text-left hover:bg-green-100"
+                    className="bg-surface flex flex-col items-start gap-1 border-green-300 p-3 text-left hover:bg-green-100"
                   >
                     <div className="flex items-center gap-2 text-sm font-medium">
                       <Calendar className="h-3 w-3" />
                       {formatDate(slot.startTime)}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="text-muted-foreground flex items-center gap-2 text-sm">
                       <Clock className="h-3 w-3" />
                       {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-muted-foreground text-xs">
                       with {slot.staffName}
                     </div>
                   </Button>
@@ -319,12 +319,12 @@ export function BookingErrorHandler({
       {errorContent.showContact && (businessPhone || businessEmail) && (
         <Card className="border-line bg-surface-muted">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm text-ink-strong">
+            <CardTitle className="text-ink-strong text-sm">
               Need immediate assistance?
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="mb-3 text-sm text-ink">
+            <p className="text-ink mb-3 text-sm">
               Contact {businessName || 'the business'} directly:
             </p>
             <div className="flex gap-2">

@@ -248,7 +248,7 @@ export function AppointmentMoveConfirmation({
           )}
         </div>
 
-        <DialogFooter className="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
+        <DialogFooter className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
           <Button
             variant="outline"
             onClick={onCancel}
