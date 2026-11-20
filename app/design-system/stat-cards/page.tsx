@@ -19,7 +19,7 @@ export default function StatCardsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold text-ink-strong">
+        <h1 className="text-ink-strong mb-2 text-3xl font-bold">
           Enhanced StatCard Component Showcase
         </h1>
         <p className="text-ink-soft">
@@ -31,13 +31,13 @@ export default function StatCardsPage() {
 
       {/* Size Variants */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Size Variants
         </h2>
 
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           <div>
-            <h3 className="mb-4 text-lg font-medium text-ink">
+            <h3 className="text-ink mb-4 text-lg font-medium">
               Compact (20% smaller)
             </h3>
             <StatCard
@@ -51,7 +51,7 @@ export default function StatCardsPage() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-medium text-ink">Default</h3>
+            <h3 className="text-ink mb-4 text-lg font-medium">Default</h3>
             <StatCard
               title="Total Revenue"
               value={25000}
@@ -63,7 +63,7 @@ export default function StatCardsPage() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-medium text-ink">Large</h3>
+            <h3 className="text-ink mb-4 text-lg font-medium">Large</h3>
             <StatCard
               title="Total Revenue"
               value={25000}
@@ -78,7 +78,7 @@ export default function StatCardsPage() {
 
       {/* Change Indicators */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Change Indicators
         </h2>
 
@@ -111,7 +111,7 @@ export default function StatCardsPage() {
 
       {/* Different Value Types */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Value Types
         </h2>
 
@@ -152,7 +152,7 @@ export default function StatCardsPage() {
 
       {/* Without Actions */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Without Action Links
         </h2>
 
@@ -184,7 +184,7 @@ export default function StatCardsPage() {
 
       {/* Loading States */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Loading States
         </h2>
 
@@ -217,7 +217,7 @@ export default function StatCardsPage() {
 
       {/* Real-world Examples */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Real-world Dashboard Example
         </h2>
 
@@ -262,15 +262,15 @@ export default function StatCardsPage() {
 
       {/* Accessibility Features */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Accessibility Features
         </h2>
 
-        <div className="rounded-lg bg-surface-muted p-6">
-          <h3 className="mb-4 text-lg font-medium text-ink-strong">
+        <div className="bg-surface-muted rounded-lg p-6">
+          <h3 className="text-ink-strong mb-4 text-lg font-medium">
             Built-in Accessibility
           </h3>
-          <ul className="space-y-2 text-ink">
+          <ul className="text-ink space-y-2">
             <li>• Semantic HTML with proper ARIA labels</li>
             <li>• Screen reader friendly with descriptive text</li>
             <li>• Keyboard navigation support</li>
@@ -290,10 +290,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Scroll-Triggered Animations */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Scroll-Triggered Animations
         </h2>
-        <p className="mb-6 text-ink-soft">
+        <p className="text-ink-soft mb-6">
           StatCards animate into view when scrolled into the viewport. Scroll
           down to see the effect.
         </p>
@@ -339,10 +339,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Count-Up Animations */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Count-Up Animations
         </h2>
-        <p className="mb-6 text-ink-soft">
+        <p className="text-ink-soft mb-6">
           Numeric values animate with smooth count-up effects when they come
           into view.
         </p>
@@ -404,10 +404,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Staggered Animation Grid */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Staggered Animation Grid
         </h2>
-        <p className="mb-6 text-ink-soft">
+        <p className="text-ink-soft mb-6">
           Multiple StatCards with automatic staggered delays for a smooth
           cascade effect.
         </p>
@@ -494,10 +494,10 @@ export default function StatCardsPage() {
 
       {/* NEW: Compact Size with Animations */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Compact Size with Animations
         </h2>
-        <p className="mb-6 text-ink-soft">
+        <p className="text-ink-soft mb-6">
           Compact StatCards with count-up animations for dashboard widgets.
         </p>
 
@@ -561,15 +561,15 @@ export default function StatCardsPage() {
 
       {/* Performance Features */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Performance Features
         </h2>
 
         <div className="rounded-lg bg-blue-50 p-6">
-          <h3 className="mb-4 text-lg font-medium text-ink-strong">
+          <h3 className="text-ink-strong mb-4 text-lg font-medium">
             Optimizations
           </h3>
-          <ul className="space-y-2 text-ink">
+          <ul className="text-ink space-y-2">
             <li>• CSS transform-based animations for 60fps performance</li>
             <li>• Smooth transitions under 300ms for UI feedback</li>
             <li>• Optimized skeleton loading states</li>
@@ -586,15 +586,15 @@ export default function StatCardsPage() {
 
       {/* NEW: Animation Features */}
       <section className="mb-12">
-        <h2 className="mb-6 text-2xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-6 text-2xl font-semibold">
           Animation Features
         </h2>
 
         <div className="rounded-lg bg-green-50 p-6">
-          <h3 className="mb-4 text-lg font-medium text-ink-strong">
+          <h3 className="text-ink-strong mb-4 text-lg font-medium">
             Enhanced Animations
           </h3>
-          <ul className="space-y-2 text-ink">
+          <ul className="text-ink space-y-2">
             <li>• Scroll-triggered animations with Intersection Observer</li>
             <li>• Smooth count-up effects for numeric values</li>
             <li>• Staggered animation delays for multiple cards</li>
@@ -611,7 +611,7 @@ export default function StatCardsPage() {
 
       {/* Spacer for scroll testing */}
       <div className="flex h-96 items-center justify-center">
-        <p className="text-center text-ink-muted">
+        <p className="text-ink-muted text-center">
           Scroll back up to see the animations trigger again
           <br />
           (if you refresh the page)

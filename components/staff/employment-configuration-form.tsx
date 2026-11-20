@@ -161,7 +161,7 @@ export function EmploymentConfigurationForm({
                   <div className="space-y-2">
                     <p className="font-medium">{typeInfo.title}</p>
                     <p className="text-sm">{typeInfo.description}</p>
-                    <p className="text-xs italic text-muted-foreground">
+                    <p className="text-muted-foreground text-xs italic">
                       Example: {typeInfo.example}
                     </p>
                   </div>
@@ -206,7 +206,7 @@ export function EmploymentConfigurationForm({
                             }
                             className="pr-8"
                           />
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                          <span className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm">
                             %
                           </span>
                         </div>
@@ -237,7 +237,7 @@ export function EmploymentConfigurationForm({
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                            <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2 text-sm">
                               $
                             </span>
                             <Input
@@ -314,7 +314,7 @@ export function EmploymentConfigurationForm({
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                          <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2 text-sm">
                             $
                           </span>
                           <Input
@@ -367,7 +367,7 @@ export function EmploymentConfigurationForm({
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
+              className="bg-linear-to-r/srgb from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
             >
               {isLoading ? 'Saving...' : 'Save Configuration'}
             </Button>

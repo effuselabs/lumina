@@ -323,7 +323,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       {/* Filters */}
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-ink-faint" />
+          <Search className="text-ink-faint absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
           <Input
             aria-label="Search staff"
             placeholder="Search staff members..."
@@ -360,7 +360,7 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       {/* Pending Invitations */}
       {pendingInvitations.length > 0 && (
         <div className="mb-8">
-          <h3 className="mb-4 text-lg font-semibold text-ink-strong">
+          <h3 className="text-ink-strong mb-4 text-lg font-semibold">
             Pending Invitations ({pendingInvitations.length})
           </h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -374,14 +374,14 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                     <div className="flex-1">
                       <div className="mb-2 flex items-center gap-2">
                         <Mail className="h-4 w-4 text-orange-600" />
-                        <span className="font-medium text-ink-strong">
+                        <span className="text-ink-strong font-medium">
                           {invitation.staffData?.displayName || 'Staff Member'}
                         </span>
                       </div>
-                      <p className="mb-1 text-sm text-ink">
+                      <p className="text-ink mb-1 text-sm">
                         {invitation.email}
                       </p>
-                      <p className="text-xs text-ink-soft">
+                      <p className="text-ink-soft text-xs">
                         Role: {invitation.role} • Sent:{' '}
                         {new Date(invitation.createdAt).toLocaleDateString()}
                       </p>
@@ -426,16 +426,16 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
                     <AvatarImage
                       src={member.avatar || member.user.image || undefined}
                     />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 font-semibold text-white">
+                    <AvatarFallback className="bg-linear-to-br/srgb from-blue-500 to-purple-600 font-semibold text-white">
                       {getInitials(member.displayName)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <CardTitle className="text-xl font-bold text-ink-strong">
+                    <CardTitle className="text-ink-strong text-xl font-bold">
                       {member.displayName}
                     </CardTitle>
                     {member.title && (
-                      <p className="mt-1 text-sm font-medium text-ink-soft">
+                      <p className="text-ink-soft mt-1 text-sm font-medium">
                         {member.title}
                       </p>
                     )}
@@ -484,44 +484,44 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
               <div className="space-y-3">
                 <Badge
                   variant={getEmploymentBadgeVariant(member.employmentType)}
-                  className="px-3 py-1 text-xs font-medium uppercase tracking-wide"
+                  className="px-3 py-1 text-xs font-medium tracking-wide uppercase"
                 >
                   {member.employmentType.replace('_', ' ')}
                 </Badge>
-                <p className="text-base font-semibold text-ink-deep">
+                <p className="text-ink-deep text-base font-semibold">
                   {getEmploymentDisplay(member)}
                 </p>
               </div>
 
               {/* Performance Metrics */}
-              <div className="grid grid-cols-2 gap-6 border-t border-line-soft pt-4">
+              <div className="border-line-soft grid grid-cols-2 gap-6 border-t pt-4">
                 <div className="text-center">
-                  <div className="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-ink">
+                  <div className="text-ink mb-2 flex items-center justify-center gap-2 text-sm font-medium">
                     <Calendar className="h-4 w-4 text-blue-500" />
                     Appointments
                   </div>
-                  <p className="text-2xl font-bold text-ink-strong">
+                  <p className="text-ink-strong text-2xl font-bold">
                     {member._count.appointments}
                   </p>
-                  <p className="mt-1 text-xs text-ink-muted">Last 30 days</p>
+                  <p className="text-ink-muted mt-1 text-xs">Last 30 days</p>
                 </div>
                 <div className="text-center">
-                  <div className="mb-2 flex items-center justify-center gap-2 text-sm font-medium text-ink">
+                  <div className="text-ink mb-2 flex items-center justify-center gap-2 text-sm font-medium">
                     <TrendingUp className="h-4 w-4 text-green-500" />
                     Performance
                   </div>
-                  <p className="text-2xl font-bold text-ink-strong">
+                  <p className="text-ink-strong text-2xl font-bold">
                     {member.paymentCalculations.length > 0 ? 'Active' : 'New'}
                   </p>
-                  <p className="mt-1 text-xs text-ink-muted">
+                  <p className="text-ink-muted mt-1 text-xs">
                     {member.paymentCalculations.length} periods
                   </p>
                 </div>
               </div>
 
               {/* Status */}
-              <div className="flex items-center justify-between border-t border-line-soft pt-4">
-                <span className="text-sm font-medium text-ink">Status</span>
+              <div className="border-line-soft flex items-center justify-between border-t pt-4">
+                <span className="text-ink text-sm font-medium">Status</span>
                 <Badge
                   variant={member.isActive ? 'default' : 'secondary'}
                   className={cn(
@@ -542,11 +542,11 @@ export function StaffList({ businessId, onStaffUpdate }: StaffListProps) {
       {filteredStaff.length === 0 && !loading && (
         <Card>
           <CardContent className="py-12 text-center">
-            <UserPlus className="mx-auto mb-4 h-12 w-12 text-ink-faint" />
-            <h3 className="mb-2 text-lg font-semibold text-ink-strong">
+            <UserPlus className="text-ink-faint mx-auto mb-4 h-12 w-12" />
+            <h3 className="text-ink-strong mb-2 text-lg font-semibold">
               No staff members found
             </h3>
-            <p className="mb-4 text-ink-soft">
+            <p className="text-ink-soft mb-4">
               {searchTerm || employmentFilter !== 'ALL'
                 ? 'Try adjusting your search or filters'
                 : 'Get started by inviting your first team member'}

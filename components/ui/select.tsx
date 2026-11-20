@@ -23,7 +23,7 @@ const SelectTrigger = React.forwardRef<
       'bg-surface',
       'text-neutral-900 dark:text-neutral-100',
       'placeholder:text-neutral-500 dark:placeholder:text-neutral-400',
-      'focus:outline-none focus:ring-2 focus:ring-offset-2',
+      'focus:ring-2 focus:ring-offset-2 focus:outline-hidden',
       'disabled:cursor-not-allowed disabled:opacity-50',
       'contrast-more:border-2',
       'motion-reduce:transition-none',
@@ -32,7 +32,7 @@ const SelectTrigger = React.forwardRef<
         ? 'border-red-500 hover:border-red-600 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:hover:border-red-300 dark:focus:border-red-400 dark:focus:ring-red-400'
         : success
           ? 'border-green-500 hover:border-green-600 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:hover:border-green-300 dark:focus:border-green-400 dark:focus:ring-green-400'
-          : 'border-neutral-300 hover:border-neutral-400 focus:border-lumina-gold focus:ring-lumina-gold dark:border-neutral-700 dark:hover:border-neutral-600',
+          : 'focus:border-lumina-gold focus:ring-lumina-gold border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 dark:hover:border-neutral-600',
       className
     )}
     {...props}
@@ -88,7 +88,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border shadow-lg',
+        'relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border shadow-lg',
         'bg-surface',
         'border-neutral-300 dark:border-neutral-700',
         'text-neutral-900 dark:text-neutral-100',
@@ -110,7 +110,7 @@ const SelectContent = React.forwardRef<
         className={cn(
           'p-1',
           position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
+            'h-(--radix-select-trigger-height) w-full min-w-(--radix-select-trigger-width)'
         )}
       >
         {children}
@@ -127,7 +127,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn('py-1.5 pl-8 pr-2 text-sm font-semibold', className)}
+    className={cn('py-1.5 pr-2 pl-8 text-sm font-semibold', className)}
     {...props}
   />
 ));
@@ -140,12 +140,12 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors duration-150',
+      'relative flex w-full cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden transition-colors duration-150 select-none',
       'text-neutral-900 dark:text-neutral-100',
       'hover:bg-neutral-100 dark:hover:bg-neutral-800',
       'focus:bg-lumina-gold/10 dark:focus:bg-lumina-gold/20 focus:text-ink-brand dark:focus:text-lumina-gold',
       'data-[state=checked]:bg-lumina-gold/10 dark:data-[state=checked]:bg-lumina-gold/20 data-[state=checked]:text-deep-teal dark:data-[state=checked]:text-lumina-gold',
-      'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'data-disabled:pointer-events-none data-disabled:opacity-50',
       'motion-reduce:transition-none',
       className
     )}
@@ -153,7 +153,7 @@ const SelectItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4 text-ink-brand dark:text-lumina-gold" />
+        <Check className="text-ink-brand dark:text-lumina-gold h-4 w-4" />
       </SelectPrimitive.ItemIndicator>
     </span>
 
@@ -168,7 +168,7 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cn('-mx-1 my-1 h-px bg-muted', className)}
+    className={cn('bg-muted -mx-1 my-1 h-px', className)}
     {...props}
   />
 ));

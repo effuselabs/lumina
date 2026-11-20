@@ -268,7 +268,7 @@ const AnimatedCounter = React.forwardRef<HTMLDivElement, AnimatedCounterProps>(
       return (
         <div
           className={cn(
-            'animated-counter-icon flex-shrink-0',
+            'animated-counter-icon shrink-0',
             iconSizeClasses[size],
             variantClasses[variant]
           )}
@@ -284,7 +284,7 @@ const AnimatedCounter = React.forwardRef<HTMLDivElement, AnimatedCounterProps>(
       return (
         <div
           className={cn(
-            'animated-counter-label font-medium text-muted-foreground',
+            'animated-counter-label text-muted-foreground font-medium',
             labelSizeClasses[size]
           )}
         >
@@ -297,7 +297,7 @@ const AnimatedCounter = React.forwardRef<HTMLDivElement, AnimatedCounterProps>(
       if (!showProgress) return null;
 
       return (
-        <div className="animated-counter-progress mt-2 h-1 w-full rounded-full bg-surface-strong dark:bg-gray-700">
+        <div className="animated-counter-progress bg-surface-strong mt-2 h-1 w-full rounded-full dark:bg-gray-700">
           <div
             className={cn(
               'h-1 rounded-full transition-all duration-300 ease-out',

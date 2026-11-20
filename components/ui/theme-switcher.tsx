@@ -45,9 +45,9 @@ export function ThemeSwitcher({
       >
         <div className="relative">
           {isDark ? (
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform duration-200" />
+            <Sun className="h-4 w-4 scale-100 rotate-0 transition-transform duration-200" />
           ) : (
-            <Moon className="h-4 w-4 rotate-0 scale-100 transition-transform duration-200" />
+            <Moon className="h-4 w-4 scale-100 rotate-0 transition-transform duration-200" />
           )}
         </div>
       </Button>
@@ -57,7 +57,7 @@ export function ThemeSwitcher({
   return (
     <div
       className={cn(
-        'flex items-center gap-1 rounded-lg bg-muted p-1',
+        'bg-muted flex items-center gap-1 rounded-lg p-1',
         className
       )}
     >
@@ -68,7 +68,7 @@ export function ThemeSwitcher({
         disabled={isTransitioning}
         className={cn(
           'h-8 px-3 transition-all duration-200',
-          isLight && 'bg-background shadow-sm',
+          isLight && 'bg-background shadow-xs',
           isTransitioning && 'cursor-not-allowed opacity-50'
         )}
         aria-label="Switch to light theme"
@@ -85,7 +85,7 @@ export function ThemeSwitcher({
         disabled={isTransitioning}
         className={cn(
           'h-8 px-3 transition-all duration-200',
-          isDark && 'bg-background shadow-sm',
+          isDark && 'bg-background shadow-xs',
           isTransitioning && 'cursor-not-allowed opacity-50'
         )}
         aria-label="Switch to dark theme"
@@ -102,7 +102,7 @@ export function ThemeSwitcher({
         disabled={isTransitioning}
         className={cn(
           'h-8 px-3 transition-all duration-200',
-          isSystem && 'bg-background shadow-sm',
+          isSystem && 'bg-background shadow-xs',
           isTransitioning && 'cursor-not-allowed opacity-50'
         )}
         aria-label="Use system theme"

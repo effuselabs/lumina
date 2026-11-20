@@ -57,7 +57,7 @@ export function OperatingHoursStep({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-ink-strong">
+            <h3 className="text-ink-strong text-lg font-medium">
               Set Your Operating Hours
             </h3>
             <p className="text-ink-soft">
@@ -131,7 +131,7 @@ export function OperatingHoursStep({
                   )}
 
                   {!dayHours?.isOpen && (
-                    <p className="text-sm text-ink-muted">Closed</p>
+                    <p className="text-ink-muted text-sm">Closed</p>
                   )}
                 </div>
               );
@@ -145,7 +145,7 @@ export function OperatingHoursStep({
 
             <Button
               type="submit"
-              className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
+              className="bg-linear-to-r/srgb from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
             >
               Complete Setup
             </Button>

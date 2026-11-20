@@ -105,7 +105,7 @@ export function UndoNotification({
   return (
     <div
       className={cn(
-        'fixed bottom-4 right-4 z-50 max-w-md transform transition-all duration-300',
+        'fixed right-4 bottom-4 z-50 max-w-md transform transition-all duration-300',
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0',
         className
       )}
@@ -145,16 +145,16 @@ export function UndoNotification({
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="hover:bg-color-background-muted absolute right-2 top-2 rounded-full p-1 transition-colors"
+          className="hover:bg-color-background-muted absolute top-2 right-2 rounded-full p-1 transition-colors"
           aria-label="Dismiss notification"
         >
           <X className="h-4 w-4" />
         </button>
 
         {/* Progress bar */}
-        <div className="bg-color-background-muted absolute bottom-0 left-0 right-0 h-1 rounded-b">
+        <div className="bg-color-background-muted absolute right-0 bottom-0 left-0 h-1 rounded-b">
           <div
-            className="h-full rounded-b bg-lumina-coral transition-all duration-1000 ease-linear"
+            className="bg-lumina-coral h-full rounded-b transition-all duration-1000 ease-linear"
             style={{
               width: `${(timeLeft / (autoHideDelay / 1000)) * 100}%`,
             }}

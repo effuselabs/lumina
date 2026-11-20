@@ -55,7 +55,7 @@ export function EmptyState({
 
       {/* Content */}
       <div className="mb-6 space-y-2">
-        <h3 className="lumina-body-large font-medium text-foreground">
+        <h3 className="lumina-body-large text-foreground font-medium">
           {title}
         </h3>
         {description && (

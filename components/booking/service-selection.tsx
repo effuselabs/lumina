@@ -258,7 +258,7 @@ export function ServiceSelection({
       <NetworkStatusIndicator />
       {/* Header */}
       <div className="space-y-3 text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-ink-brand">
+        <h2 className="text-ink-brand text-3xl font-bold tracking-tight">
           Select Your Services
         </h2>
         <p className="text-xl text-neutral-600 dark:text-neutral-400">
@@ -273,7 +273,7 @@ export function ServiceSelection({
       {/* Search and Filter Bar */}
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-neutral-400 dark:text-neutral-500" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-neutral-400 dark:text-neutral-500" />
           <Input
             aria-label="Search services"
             placeholder="Search services..."
@@ -327,7 +327,7 @@ export function ServiceSelection({
 
       {/* Selected Services Summary */}
       {selectedServices.length > 0 && (
-        <Card className="border-brand-gold/30 bg-gradient-to-r from-brand-gold/10 to-brand-coral/10">
+        <Card className="border-brand-gold/30 from-brand-gold/10 to-brand-coral/10 bg-linear-to-r/srgb">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Check className="h-5 w-5 text-green-600" />
@@ -396,7 +396,7 @@ export function ServiceSelection({
       {Object.entries(filteredServicesByCategory).map(
         ([category, categoryServices]) => (
           <div key={category} className="space-y-4">
-            <h3 className="border-b pb-2 text-lg font-semibold text-ink-deep">
+            <h3 className="text-ink-deep border-b pb-2 text-lg font-semibold">
               {category}
             </h3>
 
@@ -419,10 +419,10 @@ export function ServiceSelection({
                     key={service.id}
                     className={`transition-all duration-200 hover:shadow-lg ${
                       isSelected
-                        ? 'border-brand-gold bg-gradient-to-br from-brand-gold/5 to-brand-coral/5 ring-2 ring-brand-gold'
+                        ? 'border-brand-gold from-brand-gold/5 to-brand-coral/5 ring-brand-gold bg-linear-to-br/srgb ring-2'
                         : isAtMaxLimit
                           ? 'cursor-not-allowed opacity-50'
-                          : 'cursor-pointer shadow-sm hover:scale-[1.02] hover:border-brand-gold/50'
+                          : 'hover:border-brand-gold/50 cursor-pointer shadow-xs hover:scale-[1.02]'
                     }`}
                   >
                     <CardHeader className="pb-3">

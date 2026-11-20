@@ -173,12 +173,12 @@ function PaymentFormInner({
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Payment Amount Display */}
-          <div className="rounded-lg bg-surface-muted p-4">
+          <div className="bg-surface-muted rounded-lg p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-ink">
+              <span className="text-ink text-sm font-medium">
                 Total Amount:
               </span>
-              <span className="text-lg font-bold text-ink-strong">
+              <span className="text-ink-strong text-lg font-bold">
                 {formatCurrency(amount)}
               </span>
             </div>
@@ -186,10 +186,10 @@ function PaymentFormInner({
 
           {/* Card Element */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-ink">
+            <label className="text-ink text-sm font-medium">
               Card Information
             </label>
-            <div className="rounded-md border border-line-strong bg-surface p-3">
+            <div className="border-line-strong bg-surface rounded-md border p-3">
               <CardElement options={CARD_ELEMENT_OPTIONS} />
             </div>
           </div>
@@ -222,7 +222,7 @@ function PaymentFormInner({
           </Button>
 
           {/* Security Notice */}
-          <div className="text-center text-xs text-ink-muted">
+          <div className="text-ink-muted text-center text-xs">
             <p>🔒 Your payment information is secure and encrypted.</p>
             <p>Powered by Stripe</p>
           </div>

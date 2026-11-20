@@ -207,7 +207,7 @@ export function StaffInviteDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto [&>button]:text-gray-700 [&>button]:hover:bg-gray-100 [&>button]:hover:text-gray-900">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto [&>button]:text-gray-700 hover:[&>button]:bg-gray-100 hover:[&>button]:text-gray-900">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
@@ -276,9 +276,9 @@ export function StaffInviteDialog({
             {/* Step 1: Basic Details */}
             {step === 'details' && (
               <div className="space-y-4">
-                <Card className="border border-line shadow-sm">
-                  <CardHeader className="border-b border-line bg-surface-muted">
-                    <CardTitle className="flex items-center gap-2 text-ink-strong">
+                <Card className="border-line border shadow-xs">
+                  <CardHeader className="border-line bg-surface-muted border-b">
+                    <CardTitle className="text-ink-strong flex items-center gap-2">
                       <User className="h-5 w-5 text-blue-500" />
                       Staff Details
                     </CardTitle>
@@ -292,7 +292,7 @@ export function StaffInviteDialog({
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-medium text-ink-strong">
+                          <FormLabel className="text-ink-strong font-medium">
                             Email Address
                           </FormLabel>
                           <FormControl>
@@ -315,7 +315,7 @@ export function StaffInviteDialog({
                       name="displayName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-medium text-ink-strong">
+                          <FormLabel className="text-ink-strong font-medium">
                             Display Name
                           </FormLabel>
                           <FormControl>
@@ -338,7 +338,7 @@ export function StaffInviteDialog({
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-medium text-ink-strong">
+                          <FormLabel className="text-ink-strong font-medium">
                             Job Title (Optional)
                           </FormLabel>
                           <FormControl>
@@ -358,7 +358,7 @@ export function StaffInviteDialog({
                       name="role"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-medium text-ink-strong">
+                          <FormLabel className="text-ink-strong font-medium">
                             Business Role
                           </FormLabel>
                           <Select
@@ -373,7 +373,7 @@ export function StaffInviteDialog({
                                 />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="border border-line bg-surface shadow-lg">
+                            <SelectContent className="border-line bg-surface border shadow-lg">
                               <SelectItem
                                 value="STAFF"
                                 className="text-ink-strong hover:bg-surface-sunken"
@@ -404,13 +404,13 @@ export function StaffInviteDialog({
             {/* Step 2: Employment Configuration */}
             {step === 'employment' && (
               <div className="space-y-4">
-                <Card className="border border-line shadow-sm">
-                  <CardHeader className="border-b border-line bg-surface-muted">
-                    <CardTitle className="flex items-center gap-2 text-ink-strong">
+                <Card className="border-line border shadow-xs">
+                  <CardHeader className="border-line bg-surface-muted border-b">
+                    <CardTitle className="text-ink-strong flex items-center gap-2">
                       <DollarSign className="h-5 w-5 text-green-500" />
                       Employment Configuration
                     </CardTitle>
-                    <CardDescription className="font-medium text-ink-soft">
+                    <CardDescription className="text-ink-soft font-medium">
                       Set up how this staff member will be compensated
                     </CardDescription>
                   </CardHeader>
@@ -420,7 +420,7 @@ export function StaffInviteDialog({
                       name="employmentType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-base font-medium text-ink-strong">
+                          <FormLabel className="text-ink-strong text-base font-medium">
                             Employment Type
                           </FormLabel>
                           <FormControl>
@@ -443,7 +443,7 @@ export function StaffInviteDialog({
                         name="commissionRate"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base font-medium text-ink-strong">
+                            <FormLabel className="text-ink-strong text-base font-medium">
                               Commission Rate (%)
                             </FormLabel>
                             <FormControl>
@@ -462,7 +462,7 @@ export function StaffInviteDialog({
                                 className="border-line-strong bg-surface text-ink-strong"
                               />
                             </FormControl>
-                            <FormDescription className="font-medium text-ink-soft">
+                            <FormDescription className="text-ink-soft font-medium">
                               Percentage of service revenue the staff member
                               earns
                             </FormDescription>
@@ -481,7 +481,7 @@ export function StaffInviteDialog({
                           name="chairRentalAmount"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-base font-medium text-ink-strong">
+                              <FormLabel className="text-ink-strong text-base font-medium">
                                 Rental Amount ($)
                               </FormLabel>
                               <FormControl>
@@ -509,7 +509,7 @@ export function StaffInviteDialog({
                           name="chairRentalPeriod"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-base font-medium text-ink-strong">
+                              <FormLabel className="text-ink-strong text-base font-medium">
                                 Rental Period
                               </FormLabel>
                               <Select
@@ -543,7 +543,7 @@ export function StaffInviteDialog({
                         name="baseSalary"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base font-medium text-ink-strong">
+                            <FormLabel className="text-ink-strong text-base font-medium">
                               Base Salary (Optional)
                             </FormLabel>
                             <FormControl>
@@ -561,7 +561,7 @@ export function StaffInviteDialog({
                                 className="border-line-strong bg-surface text-ink-strong"
                               />
                             </FormControl>
-                            <FormDescription className="font-medium text-ink-soft">
+                            <FormDescription className="text-ink-soft font-medium">
                               Guaranteed minimum earnings per pay period
                             </FormDescription>
                             <FormMessage />
@@ -596,23 +596,23 @@ export function StaffInviteDialog({
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <h4 className="text-sm font-medium text-ink">
+                        <h4 className="text-ink text-sm font-medium">
                           Staff Member
                         </h4>
                         <p className="font-semibold">
                           {watchedValues.displayName}
                         </p>
-                        <p className="text-sm text-ink-soft">
+                        <p className="text-ink-soft text-sm">
                           {watchedValues.email}
                         </p>
                         {watchedValues.title && (
-                          <p className="text-sm text-ink-soft">
+                          <p className="text-ink-soft text-sm">
                             {watchedValues.title}
                           </p>
                         )}
                       </div>
                       <div>
-                        <h4 className="text-sm font-medium text-ink">
+                        <h4 className="text-ink text-sm font-medium">
                           Role & Employment
                         </h4>
                         <Badge variant="outline" className="mb-2">
@@ -658,13 +658,13 @@ export function StaffInviteDialog({
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between border-t border-line pt-6">
+            <div className="border-line flex justify-between border-t pt-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleBack}
                 disabled={step === 'details'}
-                className="border-line-strong px-6 py-2 text-ink hover:bg-surface-muted"
+                className="border-line-strong text-ink hover:bg-surface-muted px-6 py-2"
               >
                 Back
               </Button>
@@ -674,7 +674,7 @@ export function StaffInviteDialog({
                   type="button"
                   variant="outline"
                   onClick={() => onOpenChange(false)}
-                  className="border-line-strong px-6 py-2 text-ink hover:bg-surface-muted"
+                  className="border-line-strong text-ink hover:bg-surface-muted px-6 py-2"
                 >
                   Cancel
                 </Button>

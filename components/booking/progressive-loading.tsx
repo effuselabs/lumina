@@ -99,15 +99,15 @@ export function ProgressiveLoading({
           {networkState.isOnline ? (
             <Loader2 className="mx-auto h-8 w-8 animate-spin text-blue-500" />
           ) : (
-            <WifiOff className="mx-auto h-8 w-8 text-ink-faint" />
+            <WifiOff className="text-ink-faint mx-auto h-8 w-8" />
           )}
-          <p className="mt-2 text-sm text-ink-soft">
+          <p className="text-ink-soft mt-2 text-sm">
             {networkState.isOnline
               ? loadingMessage
               : 'Offline - content unavailable'}
           </p>
           {networkState.isSlowConnection && (
-            <p className="mt-1 text-xs text-ink-muted">
+            <p className="text-ink-muted mt-1 text-xs">
               Slow connection detected - optimizing loading...
             </p>
           )}

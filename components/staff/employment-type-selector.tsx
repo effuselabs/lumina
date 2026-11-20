@@ -107,13 +107,13 @@ export function EmploymentTypeSelector({
                     <CheckCircleIcon className="h-5 w-5 text-orange-500" />
                   )}
                 </CardTitle>
-                <CardDescription className="text-sm font-medium text-ink">
+                <CardDescription className="text-ink text-sm font-medium">
                   {info.description}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="space-y-2">
-                  <p className="rounded bg-surface-muted p-2 text-sm font-semibold text-ink-deep">
+                  <p className="bg-surface-muted text-ink-deep rounded p-2 text-sm font-semibold">
                     {info.example}
                   </p>
 
@@ -155,7 +155,7 @@ export function EmploymentTypeSelector({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-sm font-medium text-ink-deep">
+            <p className="text-ink-deep text-sm font-medium">
               {displayedInfo.description}
             </p>
 
@@ -167,7 +167,7 @@ export function EmploymentTypeSelector({
                 <ul className="space-y-1 text-sm font-medium text-green-700">
                   {displayedInfo.pros.map((pro, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <CheckCircleIcon className="mt-0.5 h-3 w-3 flex-shrink-0" />
+                      <CheckCircleIcon className="mt-0.5 h-3 w-3 shrink-0" />
                       {pro}
                     </li>
                   ))}
@@ -181,7 +181,7 @@ export function EmploymentTypeSelector({
                 <ul className="space-y-1 text-sm font-medium text-orange-700">
                   {displayedInfo.cons.map((con, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <InfoIcon className="mt-0.5 h-3 w-3 flex-shrink-0" />
+                      <InfoIcon className="mt-0.5 h-3 w-3 shrink-0" />
                       {con}
                     </li>
                   ))}
@@ -202,7 +202,7 @@ export function EmploymentTypeSelector({
 
       {/* Selection Confirmation */}
       {currentValue && (
-        <div className="flex items-center justify-center gap-2 text-sm font-medium text-ink">
+        <div className="text-ink flex items-center justify-center gap-2 text-sm font-medium">
           <CheckCircleIcon className="h-4 w-4 text-green-500" />
           Selected: {employmentTypeDescriptions[currentValue].title}
         </div>

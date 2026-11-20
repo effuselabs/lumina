@@ -144,11 +144,11 @@ export default function ButtonsPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* CTA Section */}
-          <div className="from-lumina-gold/10 to-lumina-coral/10 rounded-lg bg-gradient-to-r p-6">
+          <div className="from-lumina-gold/10 to-lumina-coral/10 rounded-lg bg-linear-to-r/srgb p-6">
             <h3 className="mb-2 text-lg font-semibold">
               Ready to get started?
             </h3>
-            <p className="mb-4 text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               Join thousands of salon owners who trust Lumina to manage their
               business.
             </p>
@@ -164,7 +164,7 @@ export default function ButtonsPage() {
           <div className="flex items-center justify-between rounded-lg border p-4">
             <div>
               <h4 className="font-medium">Client Management</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Manage your client database
               </p>
             </div>

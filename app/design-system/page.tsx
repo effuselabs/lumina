@@ -53,8 +53,8 @@ function ThemeToggle() {
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       className="border-foreground/20 hover:border-foreground/40 hover:bg-foreground/5 h-9 w-9 border-2 p-0"
     >
-      <Sun className="h-4 w-4 rotate-0 scale-100 text-foreground transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 text-foreground transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className="text-foreground h-4 w-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+      <Moon className="text-foreground absolute h-4 w-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
@@ -109,7 +109,7 @@ function ColorSwatch({ name, value, description, usage }: ColorSwatchProps) {
       >
         {/* Copy indicator */}
         <div className="flex h-full items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <div className="rounded-full bg-black/20 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+          <div className="rounded-full bg-black/20 px-3 py-1 text-xs font-medium text-white backdrop-blur-xs">
             {copied ? 'Copied!' : 'Click to copy'}
           </div>
         </div>
@@ -118,18 +118,18 @@ function ColorSwatch({ name, value, description, usage }: ColorSwatchProps) {
       {/* Color Info - Always use proper contrast */}
       <CardContent className="p-4">
         <div className="mb-2 flex items-center justify-between">
-          <h4 className="font-semibold text-card-foreground">{name}</h4>
+          <h4 className="text-card-foreground font-semibold">{name}</h4>
           <button
             onClick={handleCopy}
-            className="rounded px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-card-foreground"
+            className="text-muted-foreground hover:bg-muted hover:text-card-foreground rounded px-2 py-1 font-mono text-xs transition-colors"
             aria-label={`Copy ${name} color value`}
           >
             {copied ? 'Copied!' : value}
           </button>
         </div>
-        <p className="mb-2 text-sm text-muted-foreground">{description}</p>
-        <p className="mb-2 text-xs text-muted-foreground">{usage}</p>
-        <p className="text-xs font-medium text-card-foreground">
+        <p className="text-muted-foreground mb-2 text-sm">{description}</p>
+        <p className="text-muted-foreground mb-2 text-xs">{usage}</p>
+        <p className="text-card-foreground text-xs font-medium">
           {contrastOnWhite(value)}
         </p>
       </CardContent>
@@ -160,15 +160,15 @@ function DesignSystemContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
+    <div className="bg-background min-h-screen p-8">
       <div className="mx-auto max-w-6xl space-y-12">
         {/* Header with Theme Toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground">
+            <h1 className="text-foreground text-4xl font-bold">
               Lumina Design System
             </h1>
-            <p className="mt-2 text-lg text-muted-foreground">
+            <p className="text-muted-foreground mt-2 text-lg">
               Comprehensive component library with WCAG AAA accessibility
               compliance
             </p>
@@ -178,7 +178,7 @@ function DesignSystemContent() {
 
         {/* Brand Colors Section */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Brand Colors
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -205,7 +205,7 @@ function DesignSystemContent() {
 
         {/* Tertiary Brand Colors Section */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Tertiary Brand Colors
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -226,7 +226,7 @@ function DesignSystemContent() {
 
         {/* Complementary Colors Section */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Complementary Colors
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -259,7 +259,7 @@ function DesignSystemContent() {
 
         {/* Semantic Colors Section */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Semantic Colors
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -292,7 +292,7 @@ function DesignSystemContent() {
 
         {/* Typography Section */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Typography
           </h2>
           <Card>
@@ -305,66 +305,66 @@ function DesignSystemContent() {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <h1 className="text-4xl font-bold text-card-foreground">
+                  <h1 className="text-card-foreground text-4xl font-bold">
                     Heading 1 - 36px Bold
                   </h1>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Used for page titles and main headings
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-3xl font-semibold text-card-foreground">
+                  <h2 className="text-card-foreground text-3xl font-semibold">
                     Heading 2 - 30px Semibold
                   </h2>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Used for section headings
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-semibold text-card-foreground">
+                  <h3 className="text-card-foreground text-2xl font-semibold">
                     Heading 3 - 24px Semibold
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Used for subsection headings
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-xl font-medium text-card-foreground">
+                  <h4 className="text-card-foreground text-xl font-medium">
                     Heading 4 - 20px Medium
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Used for component titles
                   </p>
                 </div>
                 <div>
-                  <p className="text-lg text-card-foreground">
+                  <p className="text-card-foreground text-lg">
                     Body Large - 18px Regular
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Used for important body text and descriptions
                   </p>
                 </div>
                 <div>
-                  <p className="text-base text-card-foreground">
+                  <p className="text-card-foreground text-base">
                     Body - 16px Regular
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Standard body text for most content
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Body Small - 14px Regular
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Secondary information and captions
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  <p className="text-muted-foreground text-xs tracking-wide uppercase">
                     Caption - 12px Uppercase
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Labels and metadata
                   </p>
                 </div>
@@ -375,7 +375,7 @@ function DesignSystemContent() {
 
         {/* Button Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">Buttons</h2>
+          <h2 className="text-foreground mb-6 text-3xl font-bold">Buttons</h2>
           <div className="space-y-8">
             {/* Button Variants */}
             <Card>
@@ -461,7 +461,7 @@ function DesignSystemContent() {
 
         {/* Form Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Form Components
           </h2>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -527,7 +527,7 @@ function DesignSystemContent() {
                     readOnly
                     className="border-success focus:border-success focus:ring-success"
                   />
-                  <p className="text-sm text-success">Email is valid</p>
+                  <p className="text-success text-sm">Email is valid</p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="error-input">Error Input</Label>
@@ -537,7 +537,7 @@ function DesignSystemContent() {
                     readOnly
                     className="border-error focus:border-error focus:ring-error"
                   />
-                  <p className="text-sm text-error">
+                  <p className="text-error text-sm">
                     Please enter a valid email address
                   </p>
                 </div>
@@ -549,7 +549,7 @@ function DesignSystemContent() {
                     readOnly
                     className="border-warning focus:border-warning focus:ring-warning"
                   />
-                  <p className="text-sm text-warning">
+                  <p className="text-warning text-sm">
                     This email domain may not receive emails
                   </p>
                 </div>
@@ -560,7 +560,7 @@ function DesignSystemContent() {
 
         {/* Badge Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">Badges</h2>
+          <h2 className="text-foreground mb-6 text-3xl font-bold">Badges</h2>
           <Card>
             <CardHeader>
               <CardTitle>Badge Variants</CardTitle>
@@ -589,7 +589,7 @@ function DesignSystemContent() {
 
         {/* Card Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">Cards</h2>
+          <h2 className="text-foreground mb-6 text-3xl font-bold">Cards</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader>
@@ -641,20 +641,20 @@ function DesignSystemContent() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-success"></div>
-                    <span className="text-sm text-muted-foreground">
+                    <div className="bg-success h-2 w-2 rounded-full"></div>
+                    <span className="text-muted-foreground text-sm">
                       Active
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-warning"></div>
-                    <span className="text-sm text-muted-foreground">
+                    <div className="bg-warning h-2 w-2 rounded-full"></div>
+                    <span className="text-muted-foreground text-sm">
                       Pending
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-error"></div>
-                    <span className="text-sm text-muted-foreground">Error</span>
+                    <div className="bg-error h-2 w-2 rounded-full"></div>
+                    <span className="text-muted-foreground text-sm">Error</span>
                   </div>
                 </div>
               </CardContent>
@@ -664,7 +664,7 @@ function DesignSystemContent() {
 
         {/* Interactive Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Interactive Components
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -708,15 +708,15 @@ function DesignSystemContent() {
                   <Label>Processing...</Label>
                   <div className="flex items-center space-x-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-muted-foreground text-sm">
                       Loading data
                     </span>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Progress Indicator</Label>
-                  <div className="h-2 w-full rounded-full bg-muted">
-                    <div className="h-2 w-3/4 rounded-full bg-primary transition-all duration-300"></div>
+                  <div className="bg-muted h-2 w-full rounded-full">
+                    <div className="bg-primary h-2 w-3/4 rounded-full transition-all duration-300"></div>
                   </div>
                 </div>
                 <Button
@@ -740,7 +740,7 @@ function DesignSystemContent() {
 
         {/* Enhanced StatCard Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Enhanced StatCard Components
           </h2>
           <div className="space-y-8">
@@ -811,7 +811,7 @@ function DesignSystemContent() {
                 </div>
               </CardContent>
               <CardFooter>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   <strong>Note:</strong> Visit the{' '}
                   <a
                     href="/design-system/stat-cards"
@@ -836,10 +836,10 @@ function DesignSystemContent() {
               <CardContent>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-card-foreground">
+                    <h4 className="text-card-foreground font-semibold">
                       Animation Features
                     </h4>
-                    <ul className="space-y-1 text-sm text-muted-foreground">
+                    <ul className="text-muted-foreground space-y-1 text-sm">
                       <li>
                         • Scroll-triggered animations with Intersection Observer
                       </li>
@@ -852,10 +852,10 @@ function DesignSystemContent() {
                     </ul>
                   </div>
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-card-foreground">
+                    <h4 className="text-card-foreground font-semibold">
                       Accessibility & Performance
                     </h4>
-                    <ul className="space-y-1 text-sm text-muted-foreground">
+                    <ul className="text-muted-foreground space-y-1 text-sm">
                       <li>• Respects prefers-reduced-motion setting</li>
                       <li>• GPU-accelerated animations for 60fps</li>
                       <li>• Proper ARIA labels during animations</li>
@@ -871,7 +871,7 @@ function DesignSystemContent() {
 
         {/* Accessibility Information */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Accessibility Compliance
           </h2>
           <Card>
@@ -884,34 +884,34 @@ function DesignSystemContent() {
             <CardContent>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">
+                  <h4 className="text-card-foreground font-semibold">
                     Color Contrast
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     All text meets WCAG AAA standards with 7:1+ contrast ratios
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">
+                  <h4 className="text-card-foreground font-semibold">
                     Keyboard Navigation
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     All interactive elements are keyboard accessible
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">
+                  <h4 className="text-card-foreground font-semibold">
                     Screen Readers
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Proper ARIA labels and semantic HTML throughout
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-card-foreground">
+                  <h4 className="text-card-foreground font-semibold">
                     Focus Management
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Clear focus indicators and logical tab order
                   </p>
                 </div>
@@ -922,7 +922,7 @@ function DesignSystemContent() {
 
         {/* Alert Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Alert Components
           </h2>
           <Card>
@@ -955,7 +955,7 @@ function DesignSystemContent() {
 
         {/* Avatar Components */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Avatar Components
           </h2>
           <Card>
@@ -1006,7 +1006,7 @@ function DesignSystemContent() {
 
         {/* Loading States */}
         <section>
-          <h2 className="mb-6 text-3xl font-bold text-foreground">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">
             Loading States
           </h2>
           <Card>
@@ -1064,8 +1064,8 @@ function DesignSystemContent() {
                   Enhanced Contrast (if default is too light)
                 </Label>
                 <div className="space-y-2">
-                  <div className="h-4 w-[250px] animate-pulse rounded bg-surface-dim dark:bg-gray-600"></div>
-                  <div className="h-4 w-[200px] animate-pulse rounded bg-surface-dim dark:bg-gray-600"></div>
+                  <div className="bg-surface-dim h-4 w-[250px] animate-pulse rounded dark:bg-gray-600"></div>
+                  <div className="bg-surface-dim h-4 w-[200px] animate-pulse rounded dark:bg-gray-600"></div>
                 </div>
               </div>
             </CardContent>
@@ -1074,7 +1074,7 @@ function DesignSystemContent() {
 
         {/* Specialized Components */}
         <section className="space-y-6">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
+          <h2 className="text-foreground text-3xl font-bold tracking-tight">
             Specialized Components
           </h2>
 
@@ -1090,10 +1090,10 @@ function DesignSystemContent() {
             <CardContent>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-foreground">
+                  <h4 className="text-foreground font-semibold">
                     Gradient Mesh
                   </h4>
-                  <div className="relative h-32 overflow-hidden rounded-lg border-2 border-border bg-background">
+                  <div className="border-border bg-background relative h-32 overflow-hidden rounded-lg border-2">
                     <HeroBackground
                       variant="gradient-mesh"
                       animation={true}
@@ -1101,7 +1101,7 @@ function DesignSystemContent() {
                       className="h-full w-full opacity-100"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-sm">
+                      <span className="bg-background/90 border-border text-foreground rounded-md border px-3 py-1 text-sm font-semibold shadow-xs">
                         Gradient Mesh
                       </span>
                     </div>
@@ -1109,10 +1109,10 @@ function DesignSystemContent() {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-foreground">
+                  <h4 className="text-foreground font-semibold">
                     Particle Field
                   </h4>
-                  <div className="relative h-32 overflow-hidden rounded-lg border-2 border-border bg-background">
+                  <div className="border-border bg-background relative h-32 overflow-hidden rounded-lg border-2">
                     <HeroBackground
                       variant="particle-field"
                       animation={true}
@@ -1120,7 +1120,7 @@ function DesignSystemContent() {
                       className="h-full w-full opacity-100"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="bg-background/90 rounded-md border border-border px-3 py-1 text-sm font-semibold text-foreground shadow-sm">
+                      <span className="bg-background/90 border-border text-foreground rounded-md border px-3 py-1 text-sm font-semibold shadow-xs">
                         Particle Field
                       </span>
                     </div>

@@ -9,7 +9,7 @@ import { cn } from '../../lib/utils';
 import { Spinner } from './spinner';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden contain-layout',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden contain-layout',
   {
     variants: {
       variant: {
@@ -41,7 +41,7 @@ const buttonVariants = cva(
         ],
         // Outline - Fixed visibility with proper contrast
         outline: [
-          'border-2 bg-transparent shadow-sm',
+          'border-2 bg-transparent shadow-xs',
           'border-foreground text-foreground',
           'hover:bg-foreground hover:text-background',
           'hover:shadow-md hover:scale-105 active:scale-95',
@@ -115,11 +115,11 @@ const buttonVariants = cva(
         ],
       },
       size: {
-        sm: 'h-8 px-3 text-xs rounded-md min-w-[2rem]',
-        default: 'h-10 px-4 text-sm rounded-md min-w-[2.5rem]',
-        lg: 'h-12 px-6 text-base rounded-lg min-w-[3rem]',
-        xl: 'h-14 px-8 text-lg rounded-lg min-w-[3.5rem]',
-        icon: 'h-10 w-10 p-0 min-w-[2.5rem]',
+        sm: 'h-8 px-3 text-xs rounded-md min-w-8',
+        default: 'h-10 px-4 text-sm rounded-md min-w-10',
+        lg: 'h-12 px-6 text-base rounded-lg min-w-12',
+        xl: 'h-14 px-8 text-lg rounded-lg min-w-14',
+        icon: 'h-10 w-10 p-0 min-w-10',
       },
     },
     defaultVariants: {
@@ -265,7 +265,7 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
           // marking the real child; the icon renders inside it.
           [
             icon && (
-              <span key="icon" className="flex-shrink-0" aria-hidden="true">
+              <span key="icon" className="shrink-0" aria-hidden="true">
                 {icon}
               </span>
             ),
@@ -298,7 +298,7 @@ const ButtonComponent = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {icon && (
-              <span className="flex-shrink-0" aria-hidden="true">
+              <span className="shrink-0" aria-hidden="true">
                 {icon}
               </span>
             )}

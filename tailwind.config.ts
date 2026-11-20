@@ -10,6 +10,7 @@ import {
   brand,
   scales,
   status,
+  tailwind3Palette,
   themedTailwindColours,
 } from './lib/design/tokens';
 
@@ -29,91 +30,13 @@ const config: Config = {
     './lib/**/*.{js,ts,jsx,tsx}',
     './hooks/**/*.{js,ts,jsx,tsx}',
   ],
-  // Optimize CSS bundle size by purging unused classes
-  safelist: [
-    // Preserve dynamic classes that might be generated at runtime
-    'bg-lumina-gradient',
-    'bg-lumina-gradient-hover',
-    'bg-lumina-gold',
-    'bg-lumina-coral',
-    'bg-lumina-peach',
-    'bg-lumina-radiant',
-    'bg-deep-teal',
-    'bg-clarity-blue',
-    'bg-soft-peach',
-    'bg-sage-green',
-    'bg-warm-gray',
-    'bg-lavender-mist',
-    'bg-cream',
-    // Text colors for Lumina design system
-    'text-lumina-gold',
-    'text-lumina-coral',
-    'text-clarity-blue',
-    'text-sage-green',
-    'text-lavender-mist',
-    // Basic semantic colors
-    'text-foreground',
-    'text-muted-foreground',
-    'text-card-foreground',
-    'bg-card',
-    'bg-background',
-    'border-background',
-    'border-border',
-    'bg-success',
-    'bg-warning',
-    'bg-error',
-    'bg-info',
-    'bg-success-600',
-    'bg-warning-600',
-    'bg-error-600',
-    'bg-info-600',
-    // Badge variants
-    'bg-success-subtle',
-    'bg-warning-subtle',
-    'bg-info-subtle',
-    'bg-error-subtle',
-    'bg-primary-subtle',
-    // Card variants
-    'card-glass',
-    'card-gradient-border',
-    'card-floating',
-    'card-premium',
-    'card-hover-lift',
-    'card-hover-glow',
-    'card-hover-scale',
-    'card-animated',
-    // Testimonial card classes
-    'testimonial-card',
-    'testimonial-card-compact',
-    'testimonial-card-default',
-    'testimonial-card-large',
-    'testimonial-card-content',
-    'testimonial-quote-icon',
-    'testimonial-quote',
-    'testimonial-rating',
-    'testimonial-author',
-    'testimonial-avatar',
-    'testimonial-author-details',
-    'testimonial-author-name',
-    'testimonial-author-meta',
-    'text-lumina-h1',
-    'text-lumina-h2',
-    'text-lumina-h3',
-    'text-lumina-body-lg',
-    'text-lumina-body-sm',
-    'text-lumina-caption',
-    // Preserve theme-related classes
-    'dark',
-    'light',
-    // Preserve animation classes
-    'animate-fade-in',
-    'animate-slide-in',
-    'animate-pulse-glow',
-  ],
   theme: {
     extend: {
       // Lumina Brand Colors using CSS Custom Properties
       colors: {
+        // Tailwind 3's values for the default-palette shades still in use,
+        // so the upgrade to Tailwind 4 changes no colour (#154).
+        ...tailwind3Palette,
         // Canonical brand values, imported from lib/design/tokens.ts.
         // Use these (`bg-brand-gold`, `text-brand-deepTeal`) in new work.
         brand: {

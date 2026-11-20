@@ -33,13 +33,13 @@ export function ErrorScreen({ error, reset, home }: ErrorScreenProps) {
     <main className="flex min-h-[60vh] items-center justify-center px-4 py-16">
       <div role="alert" className="max-w-md text-center">
         <AlertTriangle
-          className="mx-auto mb-4 h-10 w-10 text-ink-muted"
+          className="text-ink-muted mx-auto mb-4 h-10 w-10"
           aria-hidden="true"
         />
-        <h1 className="mb-2 text-xl font-semibold text-ink-strong">
+        <h1 className="text-ink-strong mb-2 text-xl font-semibold">
           Something went wrong
         </h1>
-        <p className="mb-6 text-ink-soft">
+        <p className="text-ink-soft mb-6">
           This page could not be loaded. Try again, and if it keeps happening,
           quote the reference below when you ask for help.
         </p>
@@ -50,7 +50,7 @@ export function ErrorScreen({ error, reset, home }: ErrorScreenProps) {
           </Button>
         </div>
         {error.digest && (
-          <p className="mt-6 text-sm text-ink-muted">
+          <p className="text-ink-muted mt-6 text-sm">
             Reference: <code className="font-mono">{error.digest}</code>
           </p>
         )}

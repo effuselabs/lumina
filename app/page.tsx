@@ -69,7 +69,7 @@ export default async function HomePage() {
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-ink-brand">
+                <span className="text-ink-brand text-xl font-bold tracking-tight">
                   Lumina
                 </span>
                 <span className="text-foreground-muted text-xs font-medium">
@@ -83,7 +83,7 @@ export default async function HomePage() {
               <Link href="/design-system" className="nav-link">
                 Design System
               </Link>
-              <div className="mx-2 h-6 w-px bg-border" aria-hidden="true" />
+              <div className="bg-border mx-2 h-6 w-px" aria-hidden="true" />
               <Link
                 href="/auth/signin"
                 className="btn-nav-ghost inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300"
@@ -119,12 +119,12 @@ export default async function HomePage() {
         <div className="hero-bg-gradient absolute inset-0" aria-hidden="true" />
         <div className="hero-radial-bg absolute inset-0" aria-hidden="true" />
 
-        <div className="container relative mx-auto px-4 lg:px-6">
+        <div className="relative container mx-auto px-4 lg:px-6">
           <div className="mx-auto max-w-5xl text-center">
             {/* Enhanced Brand Badge */}
             <Badge
               variant="secondary"
-              className="animate-lumina-fade-in badge-lumina-gold mb-8 px-4 py-2 text-sm font-semibold shadow-sm"
+              className="animate-lumina-fade-in badge-lumina-gold mb-8 px-4 py-2 text-sm font-semibold shadow-xs"
             >
               <Sparkles className="mr-2 h-4 w-4" />
               AI-Powered Business Management Platform
@@ -134,7 +134,7 @@ export default async function HomePage() {
             <div className="animate-lumina-fade-in animate-delay-100 mb-8">
               <h1
                 id="hero-title"
-                className="mb-4 text-5xl font-bold tracking-tight text-ink-brand lg:text-7xl"
+                className="text-ink-brand mb-4 text-5xl font-bold tracking-tight lg:text-7xl"
               >
                 Lumina
               </h1>
@@ -160,7 +160,7 @@ export default async function HomePage() {
                 <Link
                   href="/auth/signup"
                   aria-describedby="signup-description"
-                  className="btn-primary-gradient inline-flex min-w-[14rem] items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
+                  className="btn-primary-gradient inline-flex min-w-56 items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-all duration-300"
                 >
                   Start Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
@@ -177,13 +177,13 @@ export default async function HomePage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                    <Shield className="h-3 w-3 text-success" />
+                    <Shield className="text-success h-3 w-3" />
                   </div>
                   <span className="font-medium">No setup fees</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                    <Star className="h-3 w-3 text-success" />
+                    <Star className="text-success h-3 w-3" />
                   </div>
                   <span className="font-medium">Cancel anytime</span>
                 </div>
@@ -205,7 +205,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 lg:px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
+              <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
                 Stop managing your business. Start building your passion.
               </h2>
               <p className="text-foreground-muted mb-8 text-lg leading-relaxed">
@@ -216,7 +216,7 @@ export default async function HomePage() {
               <ul className="space-y-4">
                 <li className="flex items-center gap-3">
                   <div className="bg-success-subtle flex h-6 w-6 items-center justify-center rounded-full">
-                    <CalendarCheck className="h-4 w-4 text-success" />
+                    <CalendarCheck className="text-success h-4 w-4" />
                   </div>
                   <span className="font-medium">
                     Clients book online, from your own booking page
@@ -224,7 +224,7 @@ export default async function HomePage() {
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="bg-info-subtle flex h-6 w-6 items-center justify-center rounded-full">
-                    <Clock className="h-4 w-4 text-info" />
+                    <Clock className="text-info h-4 w-4" />
                   </div>
                   <span className="font-medium">
                     Only times your staff are really free are offered
@@ -232,7 +232,7 @@ export default async function HomePage() {
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="bg-warning-subtle flex h-6 w-6 items-center justify-center rounded-full">
-                    <Calendar className="h-4 w-4 text-warning" />
+                    <Calendar className="text-warning h-4 w-4" />
                   </div>
                   <span className="font-medium">
                     Every booking lands on your calendar, in your salon&apos;s
@@ -244,7 +244,7 @@ export default async function HomePage() {
             <div className="relative">
               <div className="bg-lumina-section border-lumina-gold-subtle flex aspect-video items-center justify-center rounded-2xl border-2">
                 <div className="text-center">
-                  <Sparkles className="mx-auto mb-4 h-16 w-16 text-lumina-coral" />
+                  <Sparkles className="text-lumina-coral mx-auto mb-4 h-16 w-16" />
                   <p className="text-foreground-muted font-medium">
                     Product Preview Coming Soon
                   </p>
@@ -263,7 +263,7 @@ export default async function HomePage() {
               <Zap className="mr-2 h-4 w-4" />
               Simple Process
             </Badge>
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
+            <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
               Get started in minutes, not months
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -272,10 +272,10 @@ export default async function HomePage() {
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             <div className="text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
+              <div className="bg-lumina-radiant mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full shadow-lg">
                 <span className="text-xl font-bold text-white">1</span>
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-ink-brand">
+              <h3 className="text-ink-brand mb-4 text-xl font-semibold">
                 Sign Up & Setup
               </h3>
               <p className="text-foreground-muted">
@@ -284,10 +284,10 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
+              <div className="bg-lumina-radiant mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full shadow-lg">
                 <span className="text-xl font-bold text-white">2</span>
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-ink-brand">
+              <h3 className="text-ink-brand mb-4 text-xl font-semibold">
                 Import Your Data
               </h3>
               <p className="text-foreground-muted">
@@ -296,10 +296,10 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
+              <div className="bg-lumina-radiant mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full shadow-lg">
                 <span className="text-xl font-bold text-white">3</span>
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-ink-brand">
+              <h3 className="text-ink-brand mb-4 text-xl font-semibold">
                 Start Growing
               </h3>
               <p className="text-foreground-muted">
@@ -324,7 +324,7 @@ export default async function HomePage() {
             </Badge>
             <h2
               id="features-title"
-              className="mb-6 text-4xl font-bold tracking-tight text-ink-brand lg:text-5xl"
+              className="text-ink-brand mb-6 text-4xl font-bold tracking-tight lg:text-5xl"
             >
               Everything you need to grow your business
             </h2>
@@ -347,11 +347,11 @@ export default async function HomePage() {
                     className="feature-icon-bg mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300"
                     aria-hidden="true"
                   >
-                    <Calendar className="h-7 w-7 text-lumina-coral" />
+                    <Calendar className="text-lumina-coral h-7 w-7" />
                   </div>
                   <CardTitle
                     id="booking-title"
-                    className="mb-3 text-xl font-bold text-ink-brand"
+                    className="text-ink-brand mb-3 text-xl font-bold"
                   >
                     Smart Booking System
                   </CardTitle>
@@ -365,7 +365,7 @@ export default async function HomePage() {
                   <ul className="space-y-3 text-sm">
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Online booking widget
@@ -373,7 +373,7 @@ export default async function HomePage() {
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Automated reminders
@@ -381,7 +381,7 @@ export default async function HomePage() {
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Calendar synchronization
@@ -403,11 +403,11 @@ export default async function HomePage() {
                     className="feature-icon-bg mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300"
                     aria-hidden="true"
                   >
-                    <Users className="h-7 w-7 text-lumina-coral" />
+                    <Users className="text-lumina-coral h-7 w-7" />
                   </div>
                   <CardTitle
                     id="client-title"
-                    className="mb-3 text-xl font-bold text-ink-brand"
+                    className="text-ink-brand mb-3 text-xl font-bold"
                   >
                     Client Management
                   </CardTitle>
@@ -421,7 +421,7 @@ export default async function HomePage() {
                   <ul className="space-y-3 text-sm">
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Client profiles & history
@@ -429,7 +429,7 @@ export default async function HomePage() {
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Preference tracking
@@ -437,7 +437,7 @@ export default async function HomePage() {
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Automated follow-ups
@@ -459,11 +459,11 @@ export default async function HomePage() {
                     className="feature-icon-bg mb-6 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300"
                     aria-hidden="true"
                   >
-                    <TrendingUp className="h-7 w-7 text-lumina-coral" />
+                    <TrendingUp className="text-lumina-coral h-7 w-7" />
                   </div>
                   <CardTitle
                     id="insights-title"
-                    className="mb-3 text-xl font-bold text-ink-brand"
+                    className="text-ink-brand mb-3 text-xl font-bold"
                   >
                     AI-Powered Insights
                   </CardTitle>
@@ -476,7 +476,7 @@ export default async function HomePage() {
                   <ul className="space-y-3 text-sm">
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Revenue optimization
@@ -484,7 +484,7 @@ export default async function HomePage() {
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Performance analytics
@@ -492,7 +492,7 @@ export default async function HomePage() {
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
-                        <Check className="h-3 w-3 text-success" />
+                        <Check className="text-success h-3 w-3" />
                       </div>
                       <span className="text-foreground-muted font-medium">
                         Predictive insights
@@ -514,7 +514,7 @@ export default async function HomePage() {
               <TrendingUp className="mr-2 h-4 w-4" />
               Simple Pricing
             </Badge>
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
+            <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
               Simple, transparent pricing
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -525,10 +525,10 @@ export default async function HomePage() {
           <div className="mx-auto max-w-md">
             <Card className="border-lumina-gold-subtle bg-surface-translucent border-2 p-8 text-center shadow-xl">
               <div className="mb-6">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-lumina-radiant shadow-lg">
+                <div className="bg-lumina-radiant mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full shadow-lg">
                   <Sparkles className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="mb-2 text-2xl font-bold text-ink-brand">
+                <h3 className="text-ink-brand mb-2 text-2xl font-bold">
                   Early Access
                 </h3>
                 <p className="text-foreground-muted">
@@ -547,19 +547,19 @@ export default async function HomePage() {
 
               <ul className="mb-8 space-y-3 text-left">
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="text-success h-5 w-5 shrink-0" />
                   <span className="text-sm">Full platform access</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="text-success h-5 w-5 shrink-0" />
                   <span className="text-sm">Priority support</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="text-success h-5 w-5 shrink-0" />
                   <span className="text-sm">Shape the product roadmap</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Check className="h-5 w-5 flex-shrink-0 text-success" />
+                  <Check className="text-success h-5 w-5 shrink-0" />
                   <span className="text-sm">Grandfathered pricing</span>
                 </li>
               </ul>
@@ -585,7 +585,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 lg:px-6">
           <Card className="border-lumina-gold-subtle bg-surface-translucent mx-auto max-w-3xl border-2 text-center shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl">
             <CardHeader className="pb-6">
-              <div className="mx-auto mb-6 flex h-20 w-20 animate-lumina-pulse-subtle items-center justify-center rounded-2xl bg-lumina-radiant shadow-lg">
+              <div className="animate-lumina-pulse-subtle bg-lumina-radiant mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl shadow-lg">
                 <Sparkles className="h-10 w-10 text-white" />
               </div>
               <Badge
@@ -595,7 +595,7 @@ export default async function HomePage() {
                 <Zap className="mr-2 h-4 w-4" />
                 Early Access Available
               </Badge>
-              <CardTitle className="mb-4 text-2xl font-bold text-ink-brand lg:text-3xl">
+              <CardTitle className="text-ink-brand mb-4 text-2xl font-bold lg:text-3xl">
                 🎯 Be Part of Something Revolutionary
               </CardTitle>
               <CardDescription className="text-foreground-muted text-lg leading-relaxed lg:text-xl">
@@ -667,7 +667,7 @@ export default async function HomePage() {
               <Shield className="mr-2 h-4 w-4" />
               Frequently Asked
             </Badge>
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-ink-brand lg:text-4xl">
+            <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
               Questions & Answers
             </h2>
             <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
@@ -678,7 +678,7 @@ export default async function HomePage() {
 
           <div className="mx-auto max-w-3xl space-y-6">
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
+              <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 Is Lumina really free during early access?
               </h3>
               <p className="text-foreground-muted">
@@ -690,7 +690,7 @@ export default async function HomePage() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
+              <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 How do I migrate my existing client data?
               </h3>
               <p className="text-foreground-muted">
@@ -702,7 +702,7 @@ export default async function HomePage() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
+              <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 What happens when Lumina officially launches?
               </h3>
               <p className="text-foreground-muted">
@@ -714,7 +714,7 @@ export default async function HomePage() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="mb-3 text-lg font-semibold text-ink-brand">
+              <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 Do you offer training and support?
               </h3>
               <p className="text-foreground-muted">
@@ -735,7 +735,7 @@ export default async function HomePage() {
             {/* Enhanced Brand Section */}
             <div className="lg:col-span-2">
               <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-lumina-radiant shadow-lg">
+                <div className="bg-lumina-radiant flex h-10 w-10 items-center justify-center rounded-xl shadow-lg">
                   <Sparkles className="h-6 w-6 text-white" />
                 </div>
                 <div>

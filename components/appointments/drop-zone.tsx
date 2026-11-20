@@ -177,7 +177,7 @@ export function DropZone({
         validation &&
         validation.conflicts.length > 0 &&
         showFeedback && (
-          <div className="absolute right-1 top-1 z-20">
+          <div className="absolute top-1 right-1 z-20">
             <div className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
               !
             </div>

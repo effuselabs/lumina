@@ -85,10 +85,10 @@ function ThemeAccessibilityResults({
 
       {result.overallCompliance.failedCombinations.length > 0 && (
         <div className="bg-destructive/10 rounded-lg p-4">
-          <h4 className="mb-2 font-medium text-destructive">
+          <h4 className="text-destructive mb-2 font-medium">
             Failed Combinations:
           </h4>
-          <ul className="space-y-1 text-sm text-destructive">
+          <ul className="text-destructive space-y-1 text-sm">
             {result.overallCompliance.failedCombinations.map(combo => (
               <li key={combo}>• {combo}</li>
             ))}
@@ -135,7 +135,7 @@ export default function AccessibilityTestPage() {
 
   if (!accessibilityResults) {
     return (
-      <div className="min-h-screen bg-background p-8">
+      <div className="bg-background min-h-screen p-8">
         <div className="mx-auto max-w-4xl">
           <div className="text-center">
             <h1 className="mb-4 text-2xl font-bold">
@@ -148,7 +148,7 @@ export default function AccessibilityTestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-8">
+    <div className="bg-background min-h-screen p-8">
       <div className="mx-auto max-w-6xl space-y-8">
         {/* Header */}
         <div className="text-center">
@@ -185,7 +185,7 @@ export default function AccessibilityTestPage() {
                   {accessibilityResults.summary.bothCompliant ? '✅' : '❌'}
                 </div>
                 <div className="text-sm font-medium">Overall Compliance</div>
-                <div className="text-xs text-muted-foreground">WCAG AA</div>
+                <div className="text-muted-foreground text-xs">WCAG AA</div>
               </div>
 
               <div className="rounded-lg border p-4 text-center">
@@ -195,7 +195,7 @@ export default function AccessibilityTestPage() {
                     : '❌'}
                 </div>
                 <div className="text-sm font-medium">Light Theme</div>
-                <div className="text-xs text-muted-foreground">WCAG AA</div>
+                <div className="text-muted-foreground text-xs">WCAG AA</div>
               </div>
 
               <div className="rounded-lg border p-4 text-center">
@@ -205,16 +205,16 @@ export default function AccessibilityTestPage() {
                     : '❌'}
                 </div>
                 <div className="text-sm font-medium">Dark Theme</div>
-                <div className="text-xs text-muted-foreground">WCAG AA</div>
+                <div className="text-muted-foreground text-xs">WCAG AA</div>
               </div>
             </div>
 
             {accessibilityResults.summary.issues.length > 0 && (
               <div className="bg-destructive/10 rounded-lg p-4">
-                <h3 className="mb-2 font-medium text-destructive">
+                <h3 className="text-destructive mb-2 font-medium">
                   Issues Found:
                 </h3>
-                <ul className="space-y-1 text-sm text-destructive">
+                <ul className="text-destructive space-y-1 text-sm">
                   {accessibilityResults.summary.issues.map((issue, index) => (
                     <li key={index}>• {issue}</li>
                   ))}
@@ -273,10 +273,10 @@ export default function AccessibilityTestPage() {
 
                 {keyboardTest.issues.length > 0 && (
                   <div className="bg-destructive/10 rounded-lg p-4">
-                    <h4 className="mb-2 font-medium text-destructive">
+                    <h4 className="text-destructive mb-2 font-medium">
                       Issues:
                     </h4>
-                    <ul className="space-y-1 text-sm text-destructive">
+                    <ul className="text-destructive space-y-1 text-sm">
                       {keyboardTest.issues.map((issue, index) => (
                         <li key={index}>• {issue}</li>
                       ))}
@@ -326,10 +326,10 @@ export default function AccessibilityTestPage() {
 
                 {screenReaderTest.issues.length > 0 && (
                   <div className="bg-destructive/10 rounded-lg p-4">
-                    <h4 className="mb-2 font-medium text-destructive">
+                    <h4 className="text-destructive mb-2 font-medium">
                       Issues:
                     </h4>
-                    <ul className="space-y-1 text-sm text-destructive">
+                    <ul className="text-destructive space-y-1 text-sm">
                       {screenReaderTest.issues.map((issue, index) => (
                         <li key={index}>• {issue}</li>
                       ))}
@@ -371,8 +371,8 @@ export default function AccessibilityTestPage() {
                 </Button>
               </div>
 
-              <div className="overflow-x-auto rounded-lg bg-muted p-4">
-                <pre className="whitespace-pre-wrap font-mono text-sm">
+              <div className="bg-muted overflow-x-auto rounded-lg p-4">
+                <pre className="font-mono text-sm whitespace-pre-wrap">
                   {report}
                 </pre>
               </div>

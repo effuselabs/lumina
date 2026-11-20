@@ -97,7 +97,7 @@ export function FinancialModelStep({
                 {modelInfo.title}
               </h3>
               <p className="mb-3 text-orange-800">{modelInfo.description}</p>
-              <p className="mb-3 text-sm italic text-orange-700">
+              <p className="mb-3 text-sm text-orange-700 italic">
                 {modelInfo.example}
               </p>
 
@@ -130,7 +130,7 @@ export function FinancialModelStep({
 
             <Button
               type="submit"
-              className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
+              className="bg-linear-to-r/srgb from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600"
             >
               Continue
             </Button>

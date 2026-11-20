@@ -260,7 +260,7 @@ export default function TransactionHistory({
         {showFilters && (
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-ink-faint" />
+              <Search className="text-ink-faint absolute top-3 left-3 h-4 w-4" />
               <Input
                 aria-label="Search transactions"
                 placeholder="Search transactions..."
@@ -326,7 +326,7 @@ export default function TransactionHistory({
           </div>
         ) : filteredTransactions.length === 0 ? (
           <div className="py-8 text-center">
-            <DollarSign className="mx-auto mb-4 h-12 w-12 text-ink-faint" />
+            <DollarSign className="text-ink-faint mx-auto mb-4 h-12 w-12" />
             <p className="text-ink-muted">No transactions found</p>
           </div>
         ) : (
@@ -354,7 +354,7 @@ export default function TransactionHistory({
                             new Date(transaction.createdAt),
                             'MMM dd, yyyy'
                           )}
-                          <div className="text-xs text-ink-muted">
+                          <div className="text-ink-muted text-xs">
                             {format(new Date(transaction.createdAt), 'HH:mm')}
                           </div>
                         </div>
@@ -373,7 +373,7 @@ export default function TransactionHistory({
                             {transaction.description}
                           </p>
                           {transaction.appointment?.clientName && (
-                            <p className="text-xs text-ink-muted">
+                            <p className="text-ink-muted text-xs">
                               Client: {transaction.appointment.clientName}
                             </p>
                           )}
@@ -406,7 +406,7 @@ export default function TransactionHistory({
                           <div className="text-sm">
                             {formatCurrency(transaction.commissionAmount)}
                             {transaction.commissionRate && (
-                              <div className="text-xs text-ink-muted">
+                              <div className="text-ink-muted text-xs">
                                 ({transaction.commissionRate}%)
                               </div>
                             )}
@@ -436,7 +436,7 @@ export default function TransactionHistory({
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-4 flex items-center justify-between">
-                <p className="text-sm text-ink-muted">
+                <p className="text-ink-muted text-sm">
                   Showing {(currentPage - 1) * (maxItems || 50) + 1} to{' '}
                   {Math.min(currentPage * (maxItems || 50), totalCount)} of{' '}
                   {totalCount} transactions

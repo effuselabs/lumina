@@ -85,9 +85,9 @@ computed honestly, or taken out of the navigation until they are). The truth
 pass that removed every dead link and "Coming Soon" page is done
 ([#147](https://github.com/effuselabs/lumina/issues/147)).
 
-**Next — stage 1, plumbing** ([#153](https://github.com/effuselabs/lumina/issues/153)),
-then the Tailwind 4 upgrade if approved
-([#154](https://github.com/effuselabs/lumina/issues/154)), then **stage 2, the
+**Next — stage 1, plumbing:** the Tailwind 4 upgrade
+([#154](https://github.com/effuselabs/lumina/issues/154), approved) and
+[#153](https://github.com/effuselabs/lumina/issues/153), then **stage 2, the
 look** ([#155](https://github.com/effuselabs/lumina/issues/155)) — the first
 pull request that visibly changes staging.
 
@@ -95,14 +95,14 @@ pull request that visibly changes staging.
 
 | Decision or action                                                          | Unblocks                                | Issue                                                   |
 | --------------------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------- |
-| Tailwind 4 now, dropping iPhones stuck on iOS 15 or older                   | Stage 1; clears #149                    | [#154](https://github.com/effuselabs/lumina/issues/154) |
-| Does `/book` also open dark, or follow the client's phone (as P3 recorded)? | Stage 2's theme defaults, stage 5a      | [#126](https://github.com/effuselabs/lumina/issues/126) |
 | Move DNS to Cloudflare, verify the domain in Resend, set the key on Railway | Every email, password reset, the launch | [#120](https://github.com/effuselabs/lumina/issues/120) |
 | Create the Sentry project, set `SENTRY_DSN` on Railway                      | Error reporting                         | [#100](https://github.com/effuselabs/lumina/issues/100) |
 | Set up CLA Assistant with the approved text                                 | The CLA pull request                    | [#77](https://github.com/effuselabs/lumina/issues/77)   |
 | Agree the first-release checklist                                           | Phase 7's definition of done            | [#167](https://github.com/effuselabs/lumina/issues/167) |
 
-None blocks stage 0, and only the first two touch Phase 6 at all.
+None of these touches Phase 6. Decided in October 2026: Tailwind 4 moves to
+stage 1, dropping iPhones stuck on iOS 15 or older (#154), and `/book` follows
+the client's phone rather than opening dark (#126).
 
 ---
 
@@ -132,7 +132,7 @@ point on 2026-10-27):
 - **P2 — Colour:** gold on ink. Ink neutrals at hue 220, gold the only accent;
   coral and the gold-to-coral gradient leave the interface.
 - **P3 — Theme:** dark by default; light for anyone who chooses it, remembered
-  per device. Whether `/book` also opens dark is open (above).
+  per device. `/book` follows the client's phone.
 - **P4 — Salon branding:** a logo upload and one of eight tested preset
   accents, on the booking page's band and the email header only.
 - **P5 — Booking:** three screens; six taps for a new client, four for a
@@ -142,8 +142,8 @@ point on 2026-10-27):
   a privacy screen after 2 minutes idle, sign-out after 30.
 - **P7 — Dependencies:** five more Radix packages, `cmdk`, `sharp` made
   direct; dev-only `@axe-core/playwright` and `knip`; Inter committed. No
-  animation library, no shadcn CLI. Tailwind 4 was "Phase 8"; now proposed
-  for stage 1 (#154).
+  animation library, no shadcn CLI. Tailwind 4 was "Phase 8"; moved to
+  stage 1 (#154).
 - **P8 — Stylists' revenue:** hidden by default; the owner can show it.
 
 **The visual language** on top, approved 2026-10-26 after the direction's
@@ -179,6 +179,15 @@ goes before paint.
 | 5e — Settings        | [#162](https://github.com/effuselabs/lumina/issues/162)                                                          | Hours, booking link, logo and preset, the brand try-on              |
 | 5f — Shared devices  | [#163](https://github.com/effuselabs/lumina/issues/163)                                                          | Front-desk privacy                                                  |
 | 5g — Everything else | [#164](https://github.com/effuselabs/lumina/issues/164)                                                          | Clients, staff, services, onboarding, sign-in; the home page last   |
+
+**What Tailwind 4 leaves behind** (#154): the upgrade keeps Tailwind 3's look
+with four compatibility pieces, each deleted once the screens that need it are
+rebuilt on tokens — `app/tailwind-3-components.css` (the old component
+classes), `app/tailwind-3-compat.css` (`space-x`/`space-y`), `tailwind3Palette`
+in `lib/design/tokens.ts` (the default palette's old colours) and
+`lib/design/postcss-tailwind-3-order.js` (the old order of hand-written
+utilities). `__tests__/design/tailwind-3-compat.test.ts` keeps the palette and
+spacing lists equal to what is still used, so they only shrink.
 
 **When it is testable as a first iteration:** after 5a, 5c and 5d are on
 staging — book as a client, check them in, see the day — which is what Jeremy
@@ -253,7 +262,7 @@ release, so that release goes out through the pipeline and not by hand.
 - **Majors, reviewed deliberately:** Next.js 16 and Prisma
   ([#83](https://github.com/effuselabs/lumina/issues/83)) — Next 16 also
   brings `<ViewTransition>` without experimental React, replacing the hook
-  stage 3 builds; Tailwind 4 unless it moves to stage 1 (#154, #149); the
+  stage 3 builds; the
   `postcss` override, once Next stops pinning it
   ([#80](https://github.com/effuselabs/lumina/issues/80)).
 - **Ratchets:** lint rules from warning to error as their counts reach zero —
@@ -336,8 +345,7 @@ Two triggers, and only two:
 
 Everything else waits: a version bump has no observable outcome, which is
 exactly the kind of work that consumed this project the first time. The one
-proposed exception is Tailwind 4 (#154), argued on rework rather than on the
-version. Build-time packages belong in `devDependencies`, or the production
+exception is Tailwind 4 (#154), approved on rework rather than on the version. Build-time packages belong in `devDependencies`, or the production
 audit counts them. No release candidates: Prisma's CLI advertises `8.0.0-rc`,
 which waits for stable, in Phase 8.
 

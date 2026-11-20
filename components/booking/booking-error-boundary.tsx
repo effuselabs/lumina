@@ -133,7 +133,7 @@ function BookingErrorDisplay({
   const errorContent = getErrorContent();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-surface-muted to-surface-sunken p-4">
+    <div className="from-surface-muted to-surface-sunken flex min-h-screen items-center justify-center bg-linear-to-br/srgb p-4">
       <Card className="w-full max-w-md p-6 text-center sm:p-8">
         <div className="mb-4 flex justify-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
@@ -141,11 +141,11 @@ function BookingErrorDisplay({
           </div>
         </div>
 
-        <h2 className="mb-2 text-xl font-semibold text-ink-strong">
+        <h2 className="text-ink-strong mb-2 text-xl font-semibold">
           {errorContent.title}
         </h2>
 
-        <p className="mb-6 text-ink-soft">{errorContent.message}</p>
+        <p className="text-ink-soft mb-6">{errorContent.message}</p>
 
         {/* Suggestions */}
         {errorContent.suggestions && errorContent.suggestions.length > 0 && (
@@ -176,7 +176,7 @@ function BookingErrorDisplay({
 
           {errorContent.showContact && (businessPhone || businessEmail) && (
             <div className="space-y-2">
-              <p className="text-sm text-ink-soft">
+              <p className="text-ink-soft text-sm">
                 Or contact {businessName || 'the business'} directly:
               </p>
               <div className="flex gap-2">
@@ -208,12 +208,10 @@ function BookingErrorDisplay({
         </div>
 
         {/* Footer */}
-        <div className="mt-8 border-t pt-6 text-xs text-ink-muted">
+        <div className="text-ink-muted mt-8 border-t pt-6 text-xs">
           <p>
             Powered by{' '}
-            <span className="font-medium text-[var(--brand-primary)]">
-              Lumina
-            </span>
+            <span className="font-medium text-(--brand-primary)">Lumina</span>
           </p>
         </div>
       </Card>

@@ -54,11 +54,11 @@ export function SignInForm() {
     return (
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-ink-strong">Welcome back</h1>
-          <p className="mt-2 text-ink-soft">Sign in to your Lumina account</p>
+          <h1 className="text-ink-strong text-2xl font-bold">Welcome back</h1>
+          <p className="text-ink-soft mt-2">Sign in to your Lumina account</p>
         </div>
         <div className="flex justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-lumina-coral" />
+          <Loader2 className="text-lumina-coral h-6 w-6 animate-spin" />
         </div>
       </div>
     );
@@ -128,8 +128,8 @@ export function SignInForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-ink-strong">Welcome back</h1>
-        <p className="mt-2 text-ink-soft">Sign in to your Lumina account</p>
+        <h1 className="text-ink-strong text-2xl font-bold">Welcome back</h1>
+        <p className="text-ink-soft mt-2">Sign in to your Lumina account</p>
       </div>
 
       {generalError && (
@@ -177,7 +177,7 @@ export function SignInForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink-strong"
+              className="text-ink-muted hover:text-ink-strong absolute top-1/2 right-3 -translate-y-1/2"
               disabled={isLoading}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -190,7 +190,7 @@ export function SignInForm() {
 
         <Button
           type="submit"
-          className="w-full bg-lumina-gradient hover:bg-lumina-gradient-hover"
+          className="bg-lumina-gradient hover:bg-lumina-gradient-hover w-full"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -208,7 +208,7 @@ export function SignInForm() {
         <span className="text-ink-soft">Don&apos;t have an account? </span>
         <a
           href="/auth/signup"
-          className="font-medium text-lumina-coral hover:text-ink-brand"
+          className="text-lumina-coral hover:text-ink-brand font-medium"
         >
           Sign up
         </a>
