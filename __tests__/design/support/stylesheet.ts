@@ -70,7 +70,9 @@ export function markupClasses(): Map<string, string[]> {
         // A literal compared against, returned, or used as an object key is
         // a variant name, not a class: variant === 'compact', 'no-show': …
         const before = call[1].slice(0, lit.index).trimEnd();
-        const after = call[1].slice(lit.index! + lit[0].length).trimStart();
+        const after = call[1]
+          .slice((lit.index ?? 0) + lit[0].length)
+          .trimStart();
         if (
           /(===|!==|\bcase|\breturn)$/.test(before) ||
           after.startsWith(':')

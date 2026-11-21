@@ -1,13 +1,11 @@
 /**
  * @jest-environment node
  */
-import { execSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { compile } from '@tailwindcss/node';
 import postcss from 'postcss';
 import { tailwind3Palette } from '@/lib/design/tokens';
 import tailwind3Order from '@/lib/design/postcss-tailwind-3-order';
+import { read, root, sourceTokens } from './support/stylesheet';
 
 /**
  * The upgrade to Tailwind 4 was made to change nothing anyone can see (#154).
@@ -21,20 +19,6 @@ import tailwind3Order from '@/lib/design/postcss-tailwind-3-order';
  * - no hand-written utility shares a name with one of Tailwind's, because
  *   the two then sort unpredictably against each other.
  */
-
-const root = process.cwd();
-const read = (path: string) => readFileSync(join(root, path), 'utf8');
-
-/** Every class-like token in the application's TypeScript. */
-function sourceTokens(): string[] {
-  const files = execSync(
-    "git ls-files ':(glob)app/**/*.ts' ':(glob)app/**/*.tsx' ':(glob)components/**/*.ts' ':(glob)components/**/*.tsx' ':(glob)lib/**/*.ts' ':(glob)lib/**/*.tsx' ':(glob)hooks/**/*.ts' ':(glob)hooks/**/*.tsx'",
-    { cwd: root, encoding: 'utf8' }
-  )
-    .trim()
-    .split('\n');
-  return files.flatMap(file => read(file).match(/[A-Za-z0-9_:./-]+/g) ?? []);
-}
 
 const tokens = sourceTokens();
 
