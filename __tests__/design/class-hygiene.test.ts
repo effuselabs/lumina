@@ -34,6 +34,8 @@ const RULES = {
   /** Gradients are for the gold button and the ambient light only. */
   gradient:
     /(?<![\w-])(?:[\w-]+:)*(?:bg-(?:linear|gradient|radial|conic)-|from-[a-z]|via-[a-z])/,
+  /** Gold is the only accent (P2); coral read straight from the tokens skips the theme. */
+  'brand.coral': /\bbrand\.coral\b/,
 } as const;
 
 type Rule = keyof typeof RULES;
@@ -90,6 +92,10 @@ const RATCHET: Record<Rule, string[]> = {
     'components/staff/employment-configuration-form.tsx',
     'components/staff/staff-list.tsx',
   ],
+  'brand.coral': [
+    'components/appointments/appointment-calendar-page-content.tsx',
+    'components/booking/public-booking-layout.tsx',
+  ],
 };
 
 /** Files allowed to use a rule's pattern on purpose, with the reason. */
@@ -98,6 +104,9 @@ const ALLOWED: Record<Rule, Record<string, string>> = {
   'hover:scale': {},
   'backdrop-*': {},
   gradient: {},
+  'brand.coral': {
+    'app/design-system/page.tsx': 'shows the brand token itself',
+  },
 };
 
 describe.each(Object.keys(RULES) as Rule[])('%s', rule => {

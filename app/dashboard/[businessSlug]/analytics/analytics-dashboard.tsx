@@ -23,7 +23,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useState } from 'react';
-import { brand, gradients, neutral } from '@/lib/design/tokens';
+import { gradients, neutral } from '@/lib/design/tokens';
 import { PageHeader } from '@/components/ui/page-header';
 
 interface AnalyticsDashboardProps {
@@ -224,7 +224,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border-line bg-surface border shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <TrendingUp className="h-4 w-4" style={{ color: brand.coral }} />
+              <TrendingUp className="text-ink-gold h-4 w-4" />
               Total Revenue
             </CardTitle>
           </CardHeader>
@@ -247,7 +247,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border-line bg-surface border shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <Calendar className="h-4 w-4" style={{ color: brand.coral }} />
+              <Calendar className="text-ink-gold h-4 w-4" />
               Appointments
             </CardTitle>
           </CardHeader>
@@ -264,7 +264,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border-line bg-surface border shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <Users className="h-4 w-4" style={{ color: brand.coral }} />
+              <Users className="text-ink-gold h-4 w-4" />
               Top Performer
             </CardTitle>
           </CardHeader>
@@ -281,7 +281,7 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
         <Card className="border-line bg-surface border shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="text-lumina-primary flex items-center gap-2 text-sm font-medium">
-              <BarChart3 className="h-4 w-4" style={{ color: brand.coral }} />
+              <BarChart3 className="text-ink-gold h-4 w-4" />
               Avg Utilization
             </CardTitle>
           </CardHeader>
