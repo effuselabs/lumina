@@ -69,19 +69,10 @@ export function PageHeader({
   const isCompact = variant === 'compact';
 
   return (
-    <div
-      className={cn(
-        'page-header',
-        isCompact ? 'page-header--compact' : 'page-header--default',
-        className
-      )}
-    >
+    <div className={cn(isCompact ? 'space-y-2' : 'space-y-4', className)}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav
-          className="page-header__breadcrumbs"
-          aria-label="Breadcrumb navigation"
-        >
+        <nav className="text-sm" aria-label="Breadcrumb navigation">
           <ol className="flex items-center">
             {breadcrumbs.map((crumb, index) => (
               <li key={index} className="flex items-center">
@@ -94,12 +85,12 @@ export function PageHeader({
                 {crumb.href ? (
                   <Link
                     href={crumb.href}
-                    className="page-header__breadcrumb-link"
+                    className="text-ink-soft hover:text-ink-strong transition-colors"
                   >
                     {crumb.label}
                   </Link>
                 ) : (
-                  <span className="page-header__breadcrumb-current">
+                  <span className="text-ink-strong font-medium">
                     {crumb.label}
                   </span>
                 )}
@@ -110,21 +101,30 @@ export function PageHeader({
       )}
 
       {/* Header Content */}
-      <div className="page-header__content">
-        <div className="page-header__text">
-          <div className="page-header__title-group">
-            <h1 className="page-header__title">{title}</h1>
-            {subtitle && <p className="page-header__subtitle">{subtitle}</p>}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <div>
+            <h1
+              className={cn(
+                'text-ink-strong font-semibold',
+                isCompact ? 'text-xl' : 'text-2xl'
+              )}
+            >
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-ink-soft text-sm font-medium">{subtitle}</p>
+            )}
           </div>
           {description && (
-            <p className="page-header__description">{description}</p>
+            <p className="text-ink-soft mt-1 text-base">{description}</p>
           )}
         </div>
 
         {/* Actions */}
         {actions && actions.length > 0 && (
           <div
-            className="page-header__actions"
+            className="flex flex-wrap items-center gap-2"
             role="group"
             aria-label="Page actions"
           >
@@ -136,10 +136,7 @@ export function PageHeader({
                   : action.variant || 'outline',
                 onClick: action.onClick,
                 disabled: action.disabled,
-                className: cn(
-                  'page-header__action-button touch-target',
-                  action.primary && 'page-header__action-button--primary'
-                ),
+                className: 'touch-target',
                 'aria-label': action.label,
                 'aria-describedby': action.primary
                   ? `${action.label.toLowerCase().replace(/\s+/g, '-')}-primary-action`
@@ -149,9 +146,7 @@ export function PageHeader({
               const content = (
                 <>
                   {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
-                  <span className="page-header__action-label">
-                    {action.label}
-                  </span>
+                  <span>{action.label}</span>
                   {action.primary && (
                     <span
                       id={`${action.label.toLowerCase().replace(/\s+/g, '-')}-primary-action`}
@@ -178,7 +173,7 @@ export function PageHeader({
       </div>
 
       {/* Additional Content */}
-      {children && <div className="page-header__children">{children}</div>}
+      {children && <div>{children}</div>}
     </div>
   );
 }

@@ -77,7 +77,7 @@ export function FilterBar({
               }
               value={(value as string) || ''}
               onChange={e => onChange(filter.key, e.target.value)}
-              className="lumina-form-input pl-10"
+              className="pl-10"
             />
           </div>
         );
@@ -89,7 +89,7 @@ export function FilterBar({
               value={(value as string) || ''}
               onValueChange={newValue => onChange(filter.key, newValue)}
             >
-              <SelectTrigger className="lumina-form-input">
+              <SelectTrigger>
                 <SelectValue
                   placeholder={
                     filter.placeholder || `Select ${filter.label.toLowerCase()}`
@@ -116,7 +116,6 @@ export function FilterBar({
               value={(value as string) || ''}
               onChange={e => onChange(filter.key, e.target.value)}
               placeholder={filter.placeholder}
-              className="lumina-form-input"
             />
           </div>
         );

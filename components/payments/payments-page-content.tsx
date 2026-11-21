@@ -4,7 +4,7 @@ import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { FinancialDashboard } from '@/components/payments';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-import { neutral } from '@/lib/design/tokens';
+import { PageHeader } from '@/components/ui/page-header';
 
 interface PaymentsPageContentProps {
   business: {
@@ -55,13 +55,10 @@ export function PaymentsPageContent({
       >
         <div className="space-y-8">
           {/* Page Header */}
-          <div>
-            <h1 className="lumina-heading-2">Payments & Finance</h1>
-            <p className="lumina-body-large" style={{ color: neutral[500] }}>
-              Process payments, track transactions, and manage your business
-              finances.
-            </p>
-          </div>
+          <PageHeader
+            title="Payments & Finance"
+            description="Process payments, track transactions, and manage your business finances."
+          />
 
           {/* Financial Dashboard */}
           <FinancialDashboard businessId={business.id} />

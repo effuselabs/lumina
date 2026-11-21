@@ -55,14 +55,9 @@ export function EmptyState({
 
       {/* Content */}
       <div className="mb-6 space-y-2">
-        <h3 className="lumina-body-large text-foreground font-medium">
-          {title}
-        </h3>
+        <h3 className="text-foreground text-lg font-medium">{title}</h3>
         {description && (
-          <p
-            className="lumina-body-small"
-            style={{ color: 'rgba(128, 130, 133, 0.7)' }}
-          >
+          <p className="text-sm" style={{ color: 'rgba(128, 130, 133, 0.7)' }}>
             {description}
           </p>
         )}

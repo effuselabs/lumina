@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { brand, gradients, neutral } from '@/lib/design/tokens';
+import { PageHeader } from '@/components/ui/page-header';
 
 interface AnalyticsDashboardProps {
   business: {
@@ -142,12 +143,10 @@ function AnalyticsContent({ business }: AnalyticsContentProps) {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="lumina-heading-2">Analytics & Reports</h1>
-          <p className="lumina-body-large" style={{ color: neutral[500] }}>
-            Comprehensive business insights and performance analytics
-          </p>
-        </div>
+        <PageHeader
+          title="Analytics & Reports"
+          description="Comprehensive business insights and performance analytics"
+        />
 
         <div className="flex items-center gap-3">
           <Select value={period} onValueChange={setPeriod}>

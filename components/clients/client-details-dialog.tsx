@@ -157,11 +157,11 @@ export function ClientDetailsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="lumina-dialog-title flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2">
             <User className="text-lumina-primary h-5 w-5" />
             Client Details
           </DialogTitle>
-          <DialogDescription className="lumina-dialog-description">
+          <DialogDescription>
             Complete client information and appointment history.
           </DialogDescription>
         </DialogHeader>
