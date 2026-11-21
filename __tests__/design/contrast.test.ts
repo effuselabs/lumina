@@ -1,5 +1,9 @@
 import { contrastRatio } from '@/lib/design/contrast';
-import { contrastPairs, prohibitedPairs } from '@/lib/design/tokens';
+import {
+  contrastPairs,
+  paletteContrastPairs,
+  prohibitedPairs,
+} from '@/lib/design/tokens';
 
 /**
  * WCAG 2.1 contrast enforcement.
@@ -15,7 +19,7 @@ describe('design token contrast', () => {
     expect(contrastPairs.length).toBeGreaterThan(0);
   });
 
-  describe.each(contrastPairs)(
+  describe.each([...contrastPairs, ...paletteContrastPairs()])(
     '$name',
     ({ name, foreground, background, largeText }) => {
       const required = largeText ? 3 : 4.5;

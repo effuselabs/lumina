@@ -2,55 +2,46 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import postcss, { type Rule } from 'postcss';
 import tailwindConfig from '../../tailwind.config';
-import { themed } from '@/lib/design/tokens';
+import { palette, themed } from '@/lib/design/tokens';
 
 /**
- * Tailwind 3's grays, which the themed names were measured against. Tailwind
- * 4 redrew its palette in OKLCH, so these are written out rather than read
- * from \`tailwindcss/colors\`.
+ * Stage 2 (#155) moved every themed colour onto the gold-on-ink palette.
+ * Each name has one role, and these hold the role to its palette value in
+ * both themes, so a later edit to one cannot drift from the palette.
  */
-const GRAY_V3 = {
-  50: '#f9fafb',
-  100: '#f3f4f6',
-  200: '#e5e7eb',
-  300: '#d1d5db',
-  400: '#9ca3af',
-  500: '#6b7280',
-  600: '#4b5563',
-  700: '#374151',
-  800: '#1f2937',
-  900: '#111827',
+const ROLE = {
+  canvas: 'canvas',
+  surface: 'surface',
+  'surface-muted': 'canvas',
+  'surface-sunken': 'sunken',
+  'surface-raised': 'raised',
+  'surface-strong': 'line',
+  'surface-dim': 'lineStrong',
+  'ink-strong': 'inkStrong',
+  'ink-deep': 'inkStrong',
+  'ink-brand': 'inkStrong',
+  'ink-gold': 'gold',
+  ink: 'ink',
+  'ink-soft': 'inkSoft',
+  'ink-muted': 'inkMuted',
+  'ink-faint': 'inkFaint',
+  line: 'line',
+  'line-strong': 'lineStrong',
 } as const;
 
-/**
- * The themed names replace hardcoded Tailwind grays one component at a time.
- * That is only safe if each light value is exactly the gray it replaces, so a
- * component moved onto `text-ink-strong` looks the same in light mode as it
- * did on `text-gray-900`.
- */
-const REPLACES: Record<keyof typeof themed, string> = {
-  surface: '#FFFFFF',
-  'surface-muted': GRAY_V3[50],
-  'surface-sunken': GRAY_V3[100],
-  'surface-strong': GRAY_V3[200],
-  'surface-dim': GRAY_V3[300],
-  'ink-strong': GRAY_V3[900],
-  'ink-deep': GRAY_V3[800],
-  'ink-brand': '#0B2B33', // brand.deepTeal, what text-deep-teal rendered
-  ink: GRAY_V3[700],
-  'ink-soft': GRAY_V3[600],
-  'ink-muted': GRAY_V3[500],
-  'ink-faint': GRAY_V3[400],
-  line: GRAY_V3[200],
-  'line-strong': GRAY_V3[300],
-  'line-soft': GRAY_V3[100],
-};
-
 describe('themed colours', () => {
-  it.each(Object.entries(REPLACES))('%s is %s in light mode', (name, gray) => {
-    expect(themed[name as keyof typeof themed].light.toLowerCase()).toBe(
-      gray.toLowerCase()
+  it.each(Object.entries(ROLE))("%s is the palette's %s", (name, role) => {
+    const value = themed[name as keyof typeof themed];
+    expect(value.light).toBe(palette.light[role]);
+    expect(value.dark).toBe(palette.dark[role]);
+  });
+
+  it('gives every themed name a role or a fill', () => {
+    const fills = Object.keys(themed).filter(
+      name => !(name in ROLE) && !name.startsWith('gold') && name !== 'focus'
     );
+    // line-soft is the one quiet line: sunken in light, raised in dark.
+    expect(fills).toEqual(['line-soft']);
   });
 
   it('are Tailwind colours pointing at their --ui-* properties', () => {
