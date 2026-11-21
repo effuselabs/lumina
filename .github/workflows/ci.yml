@@ -71,6 +71,11 @@ jobs:
       - name: Formatting
         run: npm run format:check
 
+      # Unused files, exports and dependencies fail here instead of piling
+      # up (#152). knip.json says what counts as an entry point.
+      - name: Unused code
+        run: npm run knip
+
       # `tsc --noEmit` on the application sources does not cover `__tests__/`
       # or `e2e/` — they have their own tsconfig, and nothing ran it. Babel
       # strips the types at test time, so a test could reference a field that
@@ -92,6 +97,11 @@ jobs:
           DATABASE_URL: postgresql://build:build@localhost:5432/build
           NEXTAUTH_SECRET: build-time-placeholder-not-a-real-secret
           NEXTAUTH_URL: http://localhost:3000
+
+      # What we ship may only shrink: first-load JavaScript per route, CSS,
+      # and inlined data URIs, against budgets.json (#152).
+      - name: Size budgets
+        run: npm run budgets
 
   migrations:
     name: Migrations apply cleanly and match the schema

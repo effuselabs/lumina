@@ -5036,8 +5036,12 @@
       'calt' 1;
     color: var(--color-foreground);
     background-color: var(--color-background);
-    /* Prevent horizontal scroll on mobile */
-    overflow-x: hidden;
+    /* Prevent horizontal scroll on mobile. clip, not hidden: hidden makes
+       the body a scroll container, and with the containment below the body
+       keeps that role instead of handing it to the viewport, so anything
+       sticky (the sidebar's navigation, #125) stuck to a box that never
+       scrolls. */
+    overflow-x: clip;
     /* Ensure consistent font rendering */
     font-family: var(--font-family-sans);
     /* Optimize rendering performance */
