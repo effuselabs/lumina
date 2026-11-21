@@ -37,9 +37,18 @@ const APP_SOURCE = [
   'hooks/**/*.tsx',
 ];
 
+/**
+ * Where Tailwind's theme is defined. Its keys name what classes may exist
+ * (`lumina-h1` makes `text-lumina-h1`); they are not classes in use.
+ */
+const THEME_DEFINITION = 'lib/design/tailwind-theme.ts';
+
 /** Every class-like token anywhere in the app's TypeScript. */
 export function sourceTokens(): string[] {
-  const tokens = sourceFiles(APP_SOURCE).flatMap(
+  const files = sourceFiles(APP_SOURCE).filter(
+    file => file !== THEME_DEFINITION
+  );
+  const tokens = files.flatMap(
     file => read(file).match(/[A-Za-z0-9_:./[\]()%#,-]+/g) ?? []
   );
   return [...new Set(tokens)];
