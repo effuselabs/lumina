@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 /** The seeded demo owner (prisma/seed.ts). */
-export const DEMO_OWNER = {
+const DEMO_OWNER = {
   email: 'owner@lumina-demo.com',
   password: 'demo123',
 } as const;

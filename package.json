@@ -67,7 +67,8 @@
     "compat:migrate-business": "tsx scripts/manage-backward-compatibility.ts migrate-business",
     "compat:migrate-staff": "tsx scripts/manage-backward-compatibility.ts migrate-staff",
     "compat:migrate-all": "tsx scripts/manage-backward-compatibility.ts migrate-all",
-    "compat:test-fallback": "tsx scripts/manage-backward-compatibility.ts test-fallback"
+    "compat:test-fallback": "tsx scripts/manage-backward-compatibility.ts test-fallback",
+    "knip": "knip"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
@@ -111,12 +112,14 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@auth/core": "0.41.3",
     "@babel/plugin-transform-class-properties": "^7.27.1",
     "@babel/plugin-transform-private-methods": "^7.27.1",
     "@babel/plugin-transform-private-property-in-object": "^7.27.1",
     "@faker-js/faker": "^10.0.0",
     "@hookform/resolvers": "^5.9.2",
     "@playwright/test": "^1.40.1",
+    "@tailwindcss/node": "4.3.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.1.5",
@@ -139,6 +142,7 @@
     "jest": "^29.7.0",
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^29.7.0",
+    "knip": "^6.45.1",
     "lint-staged": "^15.2.0",
     "postcss": "^8.4.32",
     "prettier": "^3.1.1",

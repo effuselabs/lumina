@@ -753,5 +753,3 @@ export const tokens = {
   contrastPairs,
   cssVariables,
 } as const;
-
-export default tokens;
