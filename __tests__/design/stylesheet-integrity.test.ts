@@ -30,7 +30,7 @@ const root = process.cwd();
 
 function sourceTokens(): string[] {
   const files = execSync(
-    "git ls-files 'app/**/*.ts' 'app/**/*.tsx' 'components/**/*.ts' 'components/**/*.tsx' 'lib/**/*.ts' 'lib/**/*.tsx' 'hooks/**/*.ts' 'hooks/**/*.tsx'",
+    "git ls-files ':(glob)app/**/*.ts' ':(glob)app/**/*.tsx' ':(glob)components/**/*.ts' ':(glob)components/**/*.tsx' ':(glob)lib/**/*.ts' ':(glob)lib/**/*.tsx' ':(glob)hooks/**/*.ts' ':(glob)hooks/**/*.tsx'",
     { cwd: root, encoding: 'utf8' }
   )
     .trim()
@@ -61,8 +61,13 @@ beforeAll(async () => {
   css = compiler.build(tokens);
 }, 60_000);
 
-/** Set by Radix on the element at runtime, so no stylesheet defines them. */
+/**
+ * Defined outside the stylesheet: Radix sets its two on the element at
+ * runtime, and next/font defines --font-inter in the class it puts on
+ * <html> (app/layout.tsx).
+ */
 const RUNTIME = new Set([
+  '--font-inter',
   '--radix-select-trigger-height',
   '--radix-select-trigger-width',
 ]);

@@ -28,7 +28,7 @@ const read = (path: string) => readFileSync(join(root, path), 'utf8');
 /** Every class-like token in the application's TypeScript. */
 function sourceTokens(): string[] {
   const files = execSync(
-    "git ls-files 'app/**/*.ts' 'app/**/*.tsx' 'components/**/*.ts' 'components/**/*.tsx' 'lib/**/*.ts' 'lib/**/*.tsx' 'hooks/**/*.ts' 'hooks/**/*.tsx'",
+    "git ls-files ':(glob)app/**/*.ts' ':(glob)app/**/*.tsx' ':(glob)components/**/*.ts' ':(glob)components/**/*.tsx' ':(glob)lib/**/*.ts' ':(glob)lib/**/*.tsx' ':(glob)hooks/**/*.ts' ':(glob)hooks/**/*.tsx'",
     { cwd: root, encoding: 'utf8' }
   )
     .trim()
