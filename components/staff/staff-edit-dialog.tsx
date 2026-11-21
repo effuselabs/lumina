@@ -193,11 +193,11 @@ export function StaffEditDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="lumina-dialog-title flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2">
             <User className="text-lumina-primary h-5 w-5" />
             Edit Staff Member
           </DialogTitle>
-          <DialogDescription className="lumina-dialog-description">
+          <DialogDescription>
             Update {staff.displayName}&apos;s information and employment
             details.
           </DialogDescription>
@@ -222,15 +222,9 @@ export function StaffEditDialog({
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Display Name *
-                    </FormLabel>
+                    <FormLabel>Display Name *</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter display name"
-                        className="lumina-form-input"
-                        {...field}
-                      />
+                      <Input placeholder="Enter display name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -242,15 +236,9 @@ export function StaffEditDialog({
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Job Title
-                    </FormLabel>
+                    <FormLabel>Job Title</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="e.g., Senior Stylist"
-                        className="lumina-form-input"
-                        {...field}
-                      />
+                      <Input placeholder="e.g., Senior Stylist" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -262,13 +250,13 @@ export function StaffEditDialog({
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">Role *</FormLabel>
+                    <FormLabel>Role *</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="lumina-form-input">
+                        <SelectTrigger>
                           <SelectValue placeholder="Select role" />
                         </SelectTrigger>
                       </FormControl>
@@ -295,15 +283,13 @@ export function StaffEditDialog({
                 name="employmentType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Employment Type *
-                    </FormLabel>
+                    <FormLabel>Employment Type *</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="lumina-form-input">
+                        <SelectTrigger>
                           <SelectValue placeholder="Select employment type" />
                         </SelectTrigger>
                       </FormControl>
@@ -327,9 +313,7 @@ export function StaffEditDialog({
                   name="commissionRate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">
-                        Commission Rate (%)
-                      </FormLabel>
+                      <FormLabel>Commission Rate (%)</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -337,7 +321,6 @@ export function StaffEditDialog({
                           max="100"
                           step="0.1"
                           placeholder="e.g., 50"
-                          className="lumina-form-input"
                           value={field.value?.toString() || ''}
                           onChange={e => {
                             const value = e.target.value;
@@ -361,16 +344,13 @@ export function StaffEditDialog({
                     name="chairRentalAmount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="lumina-form-label">
-                          Chair Rental Amount ($)
-                        </FormLabel>
+                        <FormLabel>Chair Rental Amount ($)</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             min="0"
                             step="0.01"
                             placeholder="e.g., 150.00"
-                            className="lumina-form-input"
                             value={field.value?.toString() || ''}
                             onChange={e => {
                               const value = e.target.value;
@@ -390,15 +370,13 @@ export function StaffEditDialog({
                     name="chairRentalPeriod"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="lumina-form-label">
-                          Rental Period
-                        </FormLabel>
+                        <FormLabel>Rental Period</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
-                            <SelectTrigger className="lumina-form-input">
+                            <SelectTrigger>
                               <SelectValue placeholder="Select rental period" />
                             </SelectTrigger>
                           </FormControl>
@@ -423,9 +401,7 @@ export function StaffEditDialog({
                     name="commissionRate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="lumina-form-label">
-                          Commission Rate (%)
-                        </FormLabel>
+                        <FormLabel>Commission Rate (%)</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
@@ -433,7 +409,6 @@ export function StaffEditDialog({
                             max="100"
                             step="0.1"
                             placeholder="e.g., 30"
-                            className="lumina-form-input"
                             value={field.value?.toString() || ''}
                             onChange={e => {
                               const value = e.target.value;
@@ -453,16 +428,13 @@ export function StaffEditDialog({
                     name="baseSalary"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="lumina-form-label">
-                          Base Salary ($)
-                        </FormLabel>
+                        <FormLabel>Base Salary ($)</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             min="0"
                             step="0.01"
                             placeholder="e.g., 2000.00"
-                            className="lumina-form-input"
                             value={field.value?.toString() || ''}
                             onChange={e => {
                               const value = e.target.value;

@@ -259,7 +259,7 @@ export function DayView({
               key={slotIndex}
               className={cn('border-color-border flex border-b', {
                 'border-b-2': isHourMark,
-                'bg-color-background-muted/30': !isBusinessHours,
+                'bg-surface-muted/30': !isBusinessHours,
               })}
             >
               {/* Time Label */}
@@ -269,7 +269,7 @@ export function DayView({
                   {
                     'text-color-foreground font-semibold': isHourMark,
                     'text-color-foreground-muted': !isHourMark,
-                    'bg-color-background-muted/50': !isBusinessHours,
+                    'bg-surface-muted/50': !isBusinessHours,
                   }
                 )}
               >
@@ -324,7 +324,7 @@ export function DayView({
                       {
                         'bg-color-background hover:bg-color-background-muted cursor-pointer':
                           isBusinessHours && !hasAppointments,
-                        'bg-color-background-muted/50': !isBusinessHours,
+                        'bg-surface-muted/50': !isBusinessHours,
                         'border-red-200 bg-red-50': hasConflicts,
                       }
                     )}

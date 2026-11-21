@@ -4,7 +4,7 @@ import { DashboardLayout } from '@/components/dashboard/dashboard-layout';
 import { ServiceList } from '@/components/services/service-list';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-import { neutral } from '@/lib/design/tokens';
+import { PageHeader } from '@/components/ui/page-header';
 
 interface ServicesPageContentProps {
   business: {
@@ -54,13 +54,10 @@ export function ServicesPageContent({
       >
         <div className="space-y-8">
           {/* Page Header */}
-          <div>
-            <h1 className="lumina-heading-2">Services Management</h1>
-            <p className="lumina-body-large" style={{ color: neutral[500] }}>
-              Manage your salon services, pricing, duration, and staff
-              assignments.
-            </p>
-          </div>
+          <PageHeader
+            title="Services Management"
+            description="Manage your salon services, pricing, duration, and staff assignments."
+          />
 
           {/* Services List */}
           <ServiceList businessId={business.id} />

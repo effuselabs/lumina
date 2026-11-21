@@ -273,7 +273,7 @@ export function WeekView({
                 return (
                   <div
                     key={dayIndex}
-                    className="border-color-border bg-color-background-muted/50 relative flex-1 border-l"
+                    className="border-color-border bg-surface-muted/50 relative flex-1 border-l"
                     title="Outside business hours"
                   >
                     <div className="absolute inset-0 p-0.5 sm:p-1">
@@ -303,7 +303,7 @@ export function WeekView({
                 return (
                   <div
                     key={dayIndex}
-                    className="border-color-border bg-color-background-muted/50 relative flex-1 border-l"
+                    className="border-color-border bg-surface-muted/50 relative flex-1 border-l"
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-color-foreground-muted text-xs opacity-50">

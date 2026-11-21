@@ -107,11 +107,11 @@ export function ServiceCreateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="lumina-dialog-title flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2">
             <Plus className="text-lumina-primary h-5 w-5" />
             Add New Service
           </DialogTitle>
-          <DialogDescription className="lumina-dialog-description">
+          <DialogDescription>
             Create a new service for your business with pricing and duration.
           </DialogDescription>
         </DialogHeader>
@@ -124,15 +124,9 @@ export function ServiceCreateDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Service Name *
-                    </FormLabel>
+                    <FormLabel>Service Name *</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="e.g., Haircut & Style"
-                        className="lumina-form-input"
-                        {...field}
-                      />
+                      <Input placeholder="e.g., Haircut & Style" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,15 +138,13 @@ export function ServiceCreateDialog({
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Category
-                    </FormLabel>
+                    <FormLabel>Category</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="lumina-form-input">
+                        <SelectTrigger>
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                       </FormControl>
@@ -175,13 +167,10 @@ export function ServiceCreateDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="lumina-form-label">
-                    Description
-                  </FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe this service..."
-                      className="lumina-form-input"
                       {...field}
                     />
                   </FormControl>
@@ -196,16 +185,13 @@ export function ServiceCreateDialog({
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Price ($) *
-                    </FormLabel>
+                    <FormLabel>Price ($) *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min="0"
                         step="0.01"
                         placeholder="e.g., 75.00"
-                        className="lumina-form-input"
                         value={field.value?.toString() || ''}
                         onChange={e => {
                           const value = e.target.value;
@@ -225,16 +211,13 @@ export function ServiceCreateDialog({
                 name="duration"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Duration (minutes) *
-                    </FormLabel>
+                    <FormLabel>Duration (minutes) *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min="1"
                         step="1"
                         placeholder="e.g., 60"
-                        className="lumina-form-input"
                         value={field.value?.toString() || ''}
                         onChange={e => {
                           const value = e.target.value;

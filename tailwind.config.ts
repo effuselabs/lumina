@@ -8,6 +8,7 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 import {
   accent,
   brand,
+  radii,
   scales,
   status,
   tailwind3Palette,
@@ -378,10 +379,13 @@ const config: Config = {
         '144': '36rem', // 576px
       },
       // Custom border radius
+      // From tokens. These were `var(--radius)` and its offsets, and
+      // --radius was never defined, so every rounded-sm/md/lg corner
+      // rendered square (#153).
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        sm: radii.sm,
+        md: radii.md,
+        lg: radii.lg,
       },
       // Animation extensions
       keyframes: {

@@ -153,6 +153,11 @@
        width twice and started the content 560px in (#98). */
     position: static;
     transform: translateX(0);
+    /* The full height of the grid row, not of the window: at 100vh its
+       background ended one screen down on long pages (#125). The
+       navigation inside stays in view instead (.sidebar-nav). */
+    height: auto;
+    overflow: visible;
   }
 }
 .dashboard-main {
@@ -175,6 +180,14 @@
   flex-direction: column;
   height: 100%;
   padding: 1.5rem 0;
+
+  @media (min-width: 1024px) {
+    /* Pinned while the page scrolls, within the full-height sidebar. */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
 }
 .sidebar-nav-header {
   padding: 0 1.5rem 1.5rem;

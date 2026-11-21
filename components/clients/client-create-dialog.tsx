@@ -168,11 +168,11 @@ export function ClientCreateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="lumina-dialog-title flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2">
             <Plus className="text-lumina-primary h-5 w-5" />
             Add New Client
           </DialogTitle>
-          <DialogDescription className="lumina-dialog-description">
+          <DialogDescription>
             Create a new client profile with contact information and
             preferences.
           </DialogDescription>
@@ -192,15 +192,9 @@ export function ClientCreateDialog({
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">
-                        First Name *
-                      </FormLabel>
+                      <FormLabel>First Name *</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Enter first name"
-                          className="lumina-form-input"
-                          {...field}
-                        />
+                        <Input placeholder="Enter first name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -212,15 +206,9 @@ export function ClientCreateDialog({
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">
-                        Last Name *
-                      </FormLabel>
+                      <FormLabel>Last Name *</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Enter last name"
-                          className="lumina-form-input"
-                          {...field}
-                        />
+                        <Input placeholder="Enter last name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -234,12 +222,11 @@ export function ClientCreateDialog({
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">Email</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
                           placeholder="client@example.com"
-                          className="lumina-form-input"
                           {...field}
                         />
                       </FormControl>
@@ -253,12 +240,11 @@ export function ClientCreateDialog({
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">Phone</FormLabel>
+                      <FormLabel>Phone</FormLabel>
                       <FormControl>
                         <Input
                           type="tel"
                           placeholder="(555) 123-4567"
-                          className="lumina-form-input"
                           {...field}
                         />
                       </FormControl>
@@ -280,15 +266,9 @@ export function ClientCreateDialog({
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Street Address
-                    </FormLabel>
+                    <FormLabel>Street Address</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="123 Main Street"
-                        className="lumina-form-input"
-                        {...field}
-                      />
+                      <Input placeholder="123 Main Street" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -301,13 +281,9 @@ export function ClientCreateDialog({
                   name="city"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">City</FormLabel>
+                      <FormLabel>City</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="City"
-                          className="lumina-form-input"
-                          {...field}
-                        />
+                        <Input placeholder="City" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -319,13 +295,9 @@ export function ClientCreateDialog({
                   name="state"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">State</FormLabel>
+                      <FormLabel>State</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="State"
-                          className="lumina-form-input"
-                          {...field}
-                        />
+                        <Input placeholder="State" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -337,15 +309,9 @@ export function ClientCreateDialog({
                   name="zipCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="lumina-form-label">
-                        ZIP Code
-                      </FormLabel>
+                      <FormLabel>ZIP Code</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="12345"
-                          className="lumina-form-input"
-                          {...field}
-                        />
+                        <Input placeholder="12345" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -365,12 +331,10 @@ export function ClientCreateDialog({
                 name="preferredStaff"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">
-                      Preferred Staff Member
-                    </FormLabel>
+                    <FormLabel>Preferred Staff Member</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger className="lumina-form-input">
+                        <SelectTrigger>
                           <SelectValue placeholder="Select preferred staff member" />
                         </SelectTrigger>
                       </FormControl>
@@ -393,11 +357,10 @@ export function ClientCreateDialog({
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="lumina-form-label">Notes</FormLabel>
+                    <FormLabel>Notes</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Add any notes about this client..."
-                        className="lumina-form-input"
                         rows={3}
                         {...field}
                       />
@@ -427,7 +390,7 @@ export function ClientCreateDialog({
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel className="lumina-form-label">
+                        <FormLabel>
                           Send email marketing and appointment reminders
                         </FormLabel>
                       </div>
@@ -447,7 +410,7 @@ export function ClientCreateDialog({
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel className="lumina-form-label">
+                        <FormLabel>
                           Send SMS marketing and appointment reminders
                         </FormLabel>
                       </div>
