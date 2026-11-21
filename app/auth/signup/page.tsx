@@ -18,7 +18,7 @@ export default async function SignUpPage() {
   });
 
   return (
-    <div className="bg-neutral-light-grey flex min-h-screen items-center justify-center px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="bg-surface shadow-lumina rounded-lg p-8">
           {decision.allowed ? (

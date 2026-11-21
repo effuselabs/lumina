@@ -55,9 +55,9 @@ export default async function HomePage() {
   //   }
   // }
   return (
-    <div className="theme-transitioning page-bg-gradient min-h-screen">
+    <div className="page-bg-gradient min-h-screen">
       {/* Enhanced Navigation Header */}
-      <header className="nav-enhanced theme-transitioning relative z-10">
+      <header className="nav-enhanced relative z-10">
         <div className="container mx-auto px-4 lg:px-6">
           <nav
             className="flex items-center justify-between py-4 lg:py-6"
@@ -72,9 +72,7 @@ export default async function HomePage() {
                 <span className="text-ink-brand text-xl font-bold tracking-tight">
                   Lumina
                 </span>
-                <span className="text-foreground-muted text-xs font-medium">
-                  Salon Management
-                </span>
+                <span className="text-xs font-medium">Salon Management</span>
               </div>
             </div>
 
@@ -124,14 +122,14 @@ export default async function HomePage() {
             {/* Enhanced Brand Badge */}
             <Badge
               variant="secondary"
-              className="animate-lumina-fade-in badge-lumina-gold mb-8 px-4 py-2 text-sm font-semibold shadow-xs"
+              className="badge-lumina-gold mb-8 px-4 py-2 text-sm font-semibold shadow-xs"
             >
               <Sparkles className="mr-2 h-4 w-4" />
               AI-Powered Business Management Platform
             </Badge>
 
             {/* Enhanced Hero Title */}
-            <div className="animate-lumina-fade-in animate-delay-100 mb-8">
+            <div className="animate-delay-100 mb-8">
               <h1
                 id="hero-title"
                 className="text-ink-brand mb-4 text-5xl font-bold tracking-tight lg:text-7xl"
@@ -144,14 +142,14 @@ export default async function HomePage() {
             </div>
 
             {/* Enhanced Hero Description */}
-            <p className="text-foreground-muted animate-lumina-fade-in animate-delay-200 mx-auto mb-12 max-w-3xl text-lg leading-relaxed lg:text-xl">
+            <p className="animate-delay-200 mx-auto mb-12 max-w-3xl text-lg leading-relaxed lg:text-xl">
               Transform your salon or barbershop with our AI-powered platform.
               Streamline appointments, delight clients, and boost revenue while
               you focus on what you love most—creating beautiful experiences.
             </p>
 
             {/* Enhanced CTA Section */}
-            <div className="animate-lumina-fade-in animate-delay-300 mb-16">
+            <div className="animate-delay-300 mb-16">
               <div
                 className="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
                 role="group"
@@ -168,7 +166,7 @@ export default async function HomePage() {
               </div>
 
               {/* Enhanced Social Proof */}
-              <div className="text-foreground-muted flex flex-wrap items-center justify-center gap-6 text-sm lg:gap-8">
+              <div className="flex flex-wrap items-center justify-center gap-6 text-sm lg:gap-8">
                 <div className="flex items-center gap-2">
                   <div className="check-success-bg flex h-5 w-5 items-center justify-center rounded-full">
                     <Check className="text-semantic-success h-3 w-3" />
@@ -201,14 +199,14 @@ export default async function HomePage() {
       </section>
 
       {/* Value Proposition Section */}
-      <section className="section-py-md section-bg-soft-peach theme-transitioning">
+      <section className="section-py-md section-bg-soft-peach">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
                 Stop managing your business. Start building your passion.
               </h2>
-              <p className="text-foreground-muted mb-8 text-lg leading-relaxed">
+              <p className="mb-8 text-lg leading-relaxed">
                 Lumina handles the administrative burden so you can focus on
                 what you love most—creating beautiful experiences for your
                 clients.
@@ -245,9 +243,7 @@ export default async function HomePage() {
               <div className="bg-lumina-section border-lumina-gold-subtle flex aspect-video items-center justify-center rounded-2xl border-2">
                 <div className="text-center">
                   <Sparkles className="text-lumina-coral mx-auto mb-4 h-16 w-16" />
-                  <p className="text-foreground-muted font-medium">
-                    Product Preview Coming Soon
-                  </p>
+                  <p className="font-medium">Product Preview Coming Soon</p>
                 </div>
               </div>
             </div>
@@ -256,7 +252,7 @@ export default async function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="section-py-lg section-bg-clarity-blue theme-transitioning">
+      <section className="section-py-lg section-bg-clarity-blue">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="mb-16 text-center">
             <Badge variant="secondary" className="badge-lumina-gold mb-6">
@@ -266,7 +262,7 @@ export default async function HomePage() {
             <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
               Get started in minutes, not months
             </h2>
-            <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
+            <p className="mx-auto max-w-2xl text-lg">
               Our streamlined onboarding gets your salon up and running quickly
             </p>
           </div>
@@ -278,7 +274,7 @@ export default async function HomePage() {
               <h3 className="text-ink-brand mb-4 text-xl font-semibold">
                 Sign Up & Setup
               </h3>
-              <p className="text-foreground-muted">
+              <p>
                 Create your account and customize your salon profile in under 5
                 minutes.
               </p>
@@ -290,7 +286,7 @@ export default async function HomePage() {
               <h3 className="text-ink-brand mb-4 text-xl font-semibold">
                 Import Your Data
               </h3>
-              <p className="text-foreground-muted">
+              <p>
                 Easily migrate your existing client data and service
                 information.
               </p>
@@ -302,7 +298,7 @@ export default async function HomePage() {
               <h3 className="text-ink-brand mb-4 text-xl font-semibold">
                 Start Growing
               </h3>
-              <p className="text-foreground-muted">
+              <p>
                 Begin accepting bookings and watch your business thrive with AI
                 insights.
               </p>
@@ -313,7 +309,7 @@ export default async function HomePage() {
 
       {/* Enhanced Features Section */}
       <section
-        className="section-bg-white section-py-xl theme-transitioning"
+        className="section-bg-white section-py-xl"
         aria-labelledby="features-title"
       >
         <div className="container mx-auto px-4 lg:px-6">
@@ -328,7 +324,7 @@ export default async function HomePage() {
             >
               Everything you need to grow your business
             </h2>
-            <p className="text-foreground-muted mx-auto max-w-3xl text-lg leading-relaxed lg:text-xl">
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed lg:text-xl">
               Comprehensive tools designed specifically for salon and barbershop
               owners who want to focus on their craft, not paperwork.
             </p>
@@ -355,7 +351,7 @@ export default async function HomePage() {
                   >
                     Smart Booking System
                   </CardTitle>
-                  <CardDescription className="text-foreground-muted text-base leading-relaxed">
+                  <CardDescription className="text-base leading-relaxed">
                     Real-time availability, automated confirmations, and
                     seamless client experience with intelligent scheduling that
                     works 24/7.
@@ -367,23 +363,19 @@ export default async function HomePage() {
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
-                        Online booking widget
-                      </span>
+                      <span className="font-medium">Online booking widget</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
-                        Automated reminders
-                      </span>
+                      <span className="font-medium">Automated reminders</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
+                      <span className="font-medium">
                         Calendar synchronization
                       </span>
                     </li>
@@ -411,7 +403,7 @@ export default async function HomePage() {
                   >
                     Client Management
                   </CardTitle>
-                  <CardDescription className="text-foreground-muted text-base leading-relaxed">
+                  <CardDescription className="text-base leading-relaxed">
                     Comprehensive CRM with history, preferences, and automated
                     communications to build lasting relationships with every
                     client.
@@ -423,7 +415,7 @@ export default async function HomePage() {
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
+                      <span className="font-medium">
                         Client profiles & history
                       </span>
                     </li>
@@ -431,17 +423,13 @@ export default async function HomePage() {
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
-                        Preference tracking
-                      </span>
+                      <span className="font-medium">Preference tracking</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
-                        Automated follow-ups
-                      </span>
+                      <span className="font-medium">Automated follow-ups</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -467,7 +455,7 @@ export default async function HomePage() {
                   >
                     AI-Powered Insights
                   </CardTitle>
-                  <CardDescription className="text-foreground-muted text-base leading-relaxed">
+                  <CardDescription className="text-base leading-relaxed">
                     Intelligent analytics that reveal opportunities and optimize
                     your revenue with actionable recommendations powered by AI.
                   </CardDescription>
@@ -478,25 +466,19 @@ export default async function HomePage() {
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
-                        Revenue optimization
-                      </span>
+                      <span className="font-medium">Revenue optimization</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
-                        Performance analytics
-                      </span>
+                      <span className="font-medium">Performance analytics</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <div className="bg-success/20 flex h-5 w-5 items-center justify-center rounded-full">
                         <Check className="text-success h-3 w-3" />
                       </div>
-                      <span className="text-foreground-muted font-medium">
-                        Predictive insights
-                      </span>
+                      <span className="font-medium">Predictive insights</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -507,7 +489,7 @@ export default async function HomePage() {
       </section>
 
       {/* Pricing Preview Section */}
-      <section className="section-py-lg section-bg-lavender-mist theme-transitioning">
+      <section className="section-py-lg section-bg-lavender-mist">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="mb-16 text-center">
             <Badge variant="secondary" className="badge-lumina-coral mb-6">
@@ -517,7 +499,7 @@ export default async function HomePage() {
             <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
               Simple, transparent pricing
             </h2>
-            <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
+            <p className="mx-auto max-w-2xl text-lg">
               Start free during our development phase, scale as you grow
             </p>
           </div>
@@ -531,18 +513,14 @@ export default async function HomePage() {
                 <h3 className="text-ink-brand mb-2 text-2xl font-bold">
                   Early Access
                 </h3>
-                <p className="text-foreground-muted">
-                  Perfect for getting started
-                </p>
+                <p>Perfect for getting started</p>
               </div>
 
               <div className="mb-6">
                 <div className="text-gradient-lumina mb-2 text-5xl font-bold">
                   Free
                 </div>
-                <p className="text-foreground-muted">
-                  During development phase
-                </p>
+                <p>During development phase</p>
               </div>
 
               <ul className="mb-8 space-y-3 text-left">
@@ -572,7 +550,7 @@ export default async function HomePage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
 
-              <p className="text-foreground-muted mt-4 text-xs">
+              <p className="mt-4 text-xs">
                 No credit card required • Cancel anytime
               </p>
             </Card>
@@ -581,7 +559,7 @@ export default async function HomePage() {
       </section>
 
       {/* Enhanced Development Status */}
-      <section className="section-py-lg section-bg-gradient-coral theme-transitioning">
+      <section className="section-py-lg section-bg-gradient-coral">
         <div className="container mx-auto px-4 lg:px-6">
           <Card className="border-lumina-gold-subtle bg-surface-translucent mx-auto max-w-3xl border-2 text-center shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl">
             <CardHeader className="pb-6">
@@ -598,7 +576,7 @@ export default async function HomePage() {
               <CardTitle className="text-ink-brand mb-4 text-2xl font-bold lg:text-3xl">
                 🎯 Be Part of Something Revolutionary
               </CardTitle>
-              <CardDescription className="text-foreground-muted text-lg leading-relaxed lg:text-xl">
+              <CardDescription className="text-lg leading-relaxed lg:text-xl">
                 Join forward-thinking salon owners who are shaping the future of
                 beauty business management. Get exclusive early access, priority
                 support, and help us build the perfect platform for your needs.
@@ -629,7 +607,7 @@ export default async function HomePage() {
                   <span className="text-semantic-success font-medium">
                     Core Platform
                   </span>
-                  <span className="text-foreground-muted text-xs">Ready</span>
+                  <span className="text-xs">Ready</span>
                 </div>
                 <div className="progress-warning flex flex-col items-center gap-2 rounded-lg p-3">
                   <div className="progress-warning-icon flex h-8 w-8 items-center justify-center rounded-full">
@@ -638,9 +616,7 @@ export default async function HomePage() {
                   <span className="text-semantic-warning font-medium">
                     Booking System
                   </span>
-                  <span className="text-foreground-muted text-xs">
-                    In Progress
-                  </span>
+                  <span className="text-xs">In Progress</span>
                 </div>
                 <div className="progress-info flex flex-col items-center gap-2 rounded-lg p-3">
                   <div className="progress-info-icon flex h-8 w-8 items-center justify-center rounded-full">
@@ -649,9 +625,7 @@ export default async function HomePage() {
                   <span className="text-semantic-info font-medium">
                     AI Features
                   </span>
-                  <span className="text-foreground-muted text-xs">
-                    Coming Soon
-                  </span>
+                  <span className="text-xs">Coming Soon</span>
                 </div>
               </div>
             </CardContent>
@@ -660,7 +634,7 @@ export default async function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="section-py-lg section-bg-sage-green theme-transitioning">
+      <section className="section-py-lg section-bg-sage-green">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="mb-16 text-center">
             <Badge variant="secondary" className="badge-lumina-gold mb-6">
@@ -670,7 +644,7 @@ export default async function HomePage() {
             <h2 className="text-ink-brand mb-6 text-3xl font-bold tracking-tight lg:text-4xl">
               Questions & Answers
             </h2>
-            <p className="text-foreground-muted mx-auto max-w-2xl text-lg">
+            <p className="mx-auto max-w-2xl text-lg">
               Everything you need to know about Lumina and our early access
               program
             </p>
@@ -681,7 +655,7 @@ export default async function HomePage() {
               <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 Is Lumina really free during early access?
               </h3>
-              <p className="text-foreground-muted">
+              <p>
                 Yes! Early access is completely free with no hidden costs.
                 You&apos;ll get full platform access and help shape our
                 development roadmap. Early access users will also receive
@@ -693,7 +667,7 @@ export default async function HomePage() {
               <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 How do I migrate my existing client data?
               </h3>
-              <p className="text-foreground-muted">
+              <p>
                 Our onboarding team will help you import your existing client
                 data, appointment history, and service information. We support
                 imports from most major salon management systems and
@@ -705,7 +679,7 @@ export default async function HomePage() {
               <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 What happens when Lumina officially launches?
               </h3>
-              <p className="text-foreground-muted">
+              <p>
                 Early access users will automatically transition to our launch
                 version with special grandfathered pricing. You&apos;ll keep all
                 your data and settings, plus get priority access to new
@@ -717,7 +691,7 @@ export default async function HomePage() {
               <h3 className="text-ink-brand mb-3 text-lg font-semibold">
                 Do you offer training and support?
               </h3>
-              <p className="text-foreground-muted">
+              <p>
                 Absolutely! Early access users get priority support,
                 personalized onboarding, and direct access to our development
                 team. We&apos;re here to ensure your success every step of the
@@ -729,7 +703,7 @@ export default async function HomePage() {
       </section>
 
       {/* Enhanced Footer */}
-      <footer className="theme-transitioning bg-deep-teal py-16 text-white">
+      <footer className="bg-deep-teal py-16 text-white">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-12">
             {/* Enhanced Brand Section */}

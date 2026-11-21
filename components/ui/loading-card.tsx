@@ -31,12 +31,10 @@ export function LoadingCard({
       {title && (
         <CardHeader className="pb-4">
           <div className="flex items-center space-x-3">
-            {avatar && (
-              <div className="bg-color-background-muted h-10 w-10 rounded-full" />
-            )}
+            {avatar && <div className="h-10 w-10 rounded-full" />}
             <div className="flex-1 space-y-2">
-              <div className="bg-color-background-muted h-4 w-1/3 rounded" />
-              <div className="bg-color-background-muted h-3 w-1/2 rounded" />
+              <div className="h-4 w-1/3 rounded" />
+              <div className="h-3 w-1/2 rounded" />
             </div>
           </div>
         </CardHeader>
@@ -46,16 +44,16 @@ export function LoadingCard({
         {/* Content Lines */}
         {Array.from({ length: lines }).map((_, i) => (
           <div key={i} className="space-y-2">
-            <div className="bg-color-background-muted h-4 w-full rounded" />
-            <div className="bg-color-background-muted h-3 w-3/4 rounded" />
+            <div className="h-4 w-full rounded" />
+            <div className="h-3 w-3/4 rounded" />
           </div>
         ))}
 
         {/* Actions */}
         {actions && (
           <div className="flex space-x-2 pt-4">
-            <div className="bg-color-background-muted h-8 w-20 rounded" />
-            <div className="bg-color-background-muted h-8 w-16 rounded" />
+            <div className="h-8 w-20 rounded" />
+            <div className="h-8 w-16 rounded" />
           </div>
         )}
       </CardContent>

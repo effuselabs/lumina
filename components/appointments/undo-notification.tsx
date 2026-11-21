@@ -110,7 +110,7 @@ export function UndoNotification({
         className
       )}
     >
-      <Alert className="bg-color-background border-color-border shadow-lg">
+      <Alert className="shadow-lg">
         <CheckCircle className="h-4 w-4 text-green-600" />
         <AlertDescription className="pr-16">
           <div className="space-y-2">
@@ -145,14 +145,14 @@ export function UndoNotification({
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="hover:bg-color-background-muted absolute top-2 right-2 rounded-full p-1 transition-colors"
+          className="absolute top-2 right-2 rounded-full p-1 transition-colors"
           aria-label="Dismiss notification"
         >
           <X className="h-4 w-4" />
         </button>
 
         {/* Progress bar */}
-        <div className="bg-color-background-muted absolute right-0 bottom-0 left-0 h-1 rounded-b">
+        <div className="absolute right-0 bottom-0 left-0 h-1 rounded-b">
           <div
             className="bg-lumina-coral h-full rounded-b transition-all duration-1000 ease-linear"
             style={{

@@ -129,12 +129,8 @@ export function SignUpForm() {
           <CheckCircle className="h-16 w-16 text-green-500" />
         </div>
         <div>
-          <h1 className="text-neutral-off-black text-2xl font-bold">
-            Account Created!
-          </h1>
-          <p className="text-neutral-medium-grey mt-2">
-            Welcome to Lumina! Signing you in...
-          </p>
+          <h1 className="text-2xl font-bold">Account Created!</h1>
+          <p className="mt-2">Welcome to Lumina! Signing you in...</p>
         </div>
         <div className="flex justify-center">
           <Loader2 className="text-lumina-coral h-6 w-6 animate-spin" />
@@ -146,12 +142,8 @@ export function SignUpForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-neutral-off-black text-2xl font-bold">
-          Create your account
-        </h1>
-        <p className="text-neutral-medium-grey mt-2">
-          Get started with Lumina today
-        </p>
+        <h1 className="text-2xl font-bold">Create your account</h1>
+        <p className="mt-2">Get started with Lumina today</p>
       </div>
 
       {generalError && (
@@ -241,7 +233,7 @@ export function SignUpForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="text-neutral-medium-grey hover:text-neutral-off-black absolute top-1/2 right-3 -translate-y-1/2"
+              className="absolute top-1/2 right-3 -translate-y-1/2"
               disabled={isLoading}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -250,9 +242,7 @@ export function SignUpForm() {
           {errors.password && (
             <p className="text-sm text-red-500">{errors.password}</p>
           )}
-          <p className="text-neutral-medium-grey text-xs">
-            Password must be at least 8 characters long
-          </p>
+          <p className="text-xs">Password must be at least 8 characters long</p>
         </div>
 
         <Button
@@ -272,9 +262,7 @@ export function SignUpForm() {
       </form>
 
       <div className="text-center text-sm">
-        <span className="text-neutral-medium-grey">
-          Already have an account?{' '}
-        </span>
+        <span>Already have an account? </span>
         <a
           href="/auth/signin"
           className="text-lumina-coral hover:text-ink-brand font-medium"

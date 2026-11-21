@@ -213,16 +213,16 @@ export function DayView({
   }
 
   return (
-    <div className="bg-color-background flex h-full flex-col">
+    <div className="flex h-full flex-col">
       {/* Staff Headers */}
-      <div className="border-color-border bg-color-background-muted sticky top-0 z-10 flex border-b-2">
-        <div className="text-color-foreground-muted border-color-border w-16 shrink-0 border-r p-2 text-xs font-semibold sm:w-24 sm:p-4 sm:text-sm">
+      <div className="sticky top-0 z-10 flex border-b-2">
+        <div className="text-color-foreground-muted w-16 shrink-0 border-r p-2 text-xs font-semibold sm:w-24 sm:p-4 sm:text-sm">
           Time
         </div>
         {activeStaff.map(staff => (
           <div
             key={staff.id}
-            className="border-color-border min-w-0 flex-1 border-l p-2 text-center text-xs font-semibold sm:p-4 sm:text-sm"
+            className="min-w-0 flex-1 border-l p-2 text-center text-xs font-semibold sm:p-4 sm:text-sm"
             style={{
               borderLeftColor: staff.color,
               borderLeftWidth: '3px',
@@ -242,7 +242,7 @@ export function DayView({
       </div>
 
       {showsClosedHours && (
-        <p className="border-color-border text-ink-muted border-b px-3 py-2 text-xs">
+        <p className="text-ink-muted border-b px-3 py-2 text-xs">
           Showing time outside business hours: some appointments today fall
           there.
         </p>
@@ -257,7 +257,7 @@ export function DayView({
           return (
             <div
               key={slotIndex}
-              className={cn('border-color-border flex border-b', {
+              className={cn('flex border-b', {
                 'border-b-2': isHourMark,
                 'bg-surface-muted/30': !isBusinessHours,
               })}
@@ -265,7 +265,7 @@ export function DayView({
               {/* Time Label */}
               <div
                 className={cn(
-                  'border-color-border relative w-16 shrink-0 border-r p-1 text-xs sm:w-24 sm:p-3',
+                  'relative w-16 shrink-0 border-r p-1 text-xs sm:w-24 sm:p-3',
                   {
                     'text-color-foreground font-semibold': isHourMark,
                     'text-color-foreground-muted': !isHourMark,
@@ -320,10 +320,9 @@ export function DayView({
                     showFeedback={shouldShowDropFeedback(staffSlot, staff.id)}
                     disabled={!isBusinessHours}
                     className={cn(
-                      'border-color-border relative min-h-10 flex-1 touch-manipulation border-l transition-colors sm:min-h-12',
+                      'relative min-h-10 flex-1 touch-manipulation border-l transition-colors sm:min-h-12',
                       {
-                        'bg-color-background hover:bg-color-background-muted cursor-pointer':
-                          isBusinessHours && !hasAppointments,
+                        'cursor-pointer': isBusinessHours && !hasAppointments,
                         'bg-surface-muted/50': !isBusinessHours,
                         'border-red-200 bg-red-50': hasConflicts,
                       }
@@ -380,7 +379,7 @@ export function DayView({
 
                       {/* Hour Marker */}
                       {isHourMark && (
-                        <div className="bg-color-border absolute top-0 left-0 h-px w-full opacity-50" />
+                        <div className="absolute top-0 left-0 h-px w-full opacity-50" />
                       )}
                     </div>
                   </DropZone>

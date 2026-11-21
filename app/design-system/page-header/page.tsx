@@ -12,7 +12,7 @@ import { Download, Plus, Settings, Upload, Users } from 'lucide-react';
 
 export default function PageHeaderShowcase() {
   return (
-    <div className="bg-color-background min-h-screen p-8">
+    <div className="min-h-screen p-8">
       <div className="mx-auto max-w-6xl space-y-12">
         {/* Default Page Header */}
         <section>
@@ -158,13 +158,13 @@ export default function PageHeaderShowcase() {
               },
             ]}
           >
-            <div className="border-color-border flex gap-4 border-t pt-4">
+            <div className="flex gap-4 border-t pt-4">
               <div className="text-color-foreground-secondary flex items-center gap-2 text-sm">
-                <div className="bg-color-success h-2 w-2 rounded-full"></div>
+                <div className="h-2 w-2 rounded-full"></div>
                 <span>System Status: Operational</span>
               </div>
               <div className="text-color-foreground-secondary flex items-center gap-2 text-sm">
-                <div className="bg-color-warning h-2 w-2 rounded-full"></div>
+                <div className="h-2 w-2 rounded-full"></div>
                 <span>3 Pending Updates</span>
               </div>
             </div>

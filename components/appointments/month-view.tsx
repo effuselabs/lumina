@@ -130,13 +130,13 @@ export function MonthView({
   }
 
   return (
-    <div className="bg-color-background flex h-full flex-col">
+    <div className="flex h-full flex-col">
       {/* Month Header */}
-      <div className="border-color-border bg-color-background-muted sticky top-0 z-10 grid grid-cols-7 border-b-2">
+      <div className="sticky top-0 z-10 grid grid-cols-7 border-b-2">
         {dayNames.map((dayName, index) => (
           <div
             key={dayName}
-            className="text-color-foreground-muted border-color-border border-r p-2 text-center text-xs font-medium last:border-r-0 sm:p-3 sm:text-sm"
+            className="text-color-foreground-muted border-r p-2 text-center text-xs font-medium last:border-r-0 sm:p-3 sm:text-sm"
           >
             <span className="hidden sm:inline">{dayName}</span>
             <span className="sm:hidden">{dayNamesShort[index]}</span>
@@ -149,7 +149,7 @@ export function MonthView({
         {weeks.map((week, weekIndex) => (
           <div
             key={weekIndex}
-            className="border-color-border grid h-1/6 grid-cols-7 border-b last:border-b-0"
+            className="grid h-1/6 grid-cols-7 border-b last:border-b-0"
           >
             {week.map((day, dayIndex) => {
               const density = calculateDensity(day.appointmentCount);
@@ -182,7 +182,7 @@ export function MonthView({
                 <div
                   key={dayIndex}
                   className={cn(
-                    'border-color-border hover:bg-surface-muted/30 relative cursor-pointer border-r transition-colors last:border-r-0',
+                    'hover:bg-surface-muted/30 relative cursor-pointer border-r transition-colors last:border-r-0',
                     getDensityStyle(density),
                     {
                       'bg-surface-muted/50': !day.isCurrentMonth,
@@ -208,8 +208,6 @@ export function MonthView({
                     <div
                       className={cn('text-xs font-medium sm:text-sm', {
                         'text-color-foreground-muted': !day.isCurrentMonth,
-                        'text-color-secondary':
-                          day.isCurrentMonth && !day.isToday,
                         'text-lumina-coral font-semibold': day.isToday,
                       })}
                     >
@@ -258,7 +256,7 @@ export function MonthView({
                       {day.appointments.slice(0, 2).map(appointment => (
                         <div
                           key={appointment.id}
-                          className="hover:bg-opacity-80 truncate rounded p-1 text-xs transition-colors"
+                          className="truncate rounded p-1 text-xs transition-colors"
                           style={{
                             backgroundColor: `${appointment.staff.color}20`,
                             borderLeft: `2px solid ${appointment.staff.color}`,
@@ -315,7 +313,7 @@ export function MonthView({
       </div>
 
       {/* Legend for Density Visualization */}
-      <div className="border-color-border bg-color-background-muted border-t p-2 sm:p-3">
+      <div className="border-t p-2 sm:p-3">
         <div className="text-color-foreground-muted flex items-center justify-center space-x-4 text-xs">
           <div className="flex items-center space-x-1">
             <div className="h-2 w-4 rounded bg-green-400" />

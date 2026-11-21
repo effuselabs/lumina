@@ -233,7 +233,7 @@ const StatCard = memo(
       <article
         ref={combinedRef}
         className={cn(
-          'stat-card hover-lumina-lift-subtle transition-card',
+          'stat-card',
           sizeClasses[size],
           {
             'stat-card-animated': animated,

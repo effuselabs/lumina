@@ -336,34 +336,30 @@ export function ComprehensiveClientManagement({
       {/* Client Metrics */}
       {metrics && (
         <div className="dashboard-stats-grid">
-          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
+          <Card className="border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-color-secondary text-sm font-medium">
+              <CardTitle className="text-sm font-medium">
                 Total Clients
               </CardTitle>
-              <Users className="text-color-primary h-4 w-4" />
+              <Users className="h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-color-secondary text-2xl font-bold">
-                {metrics.totalClients}
-              </div>
+              <div className="text-2xl font-bold">{metrics.totalClients}</div>
               <p className="text-color-foreground-muted text-xs">
                 {metrics.activeClients} active
               </p>
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
+          <Card className="border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-color-secondary text-sm font-medium">
+              <CardTitle className="text-sm font-medium">
                 New This Month
               </CardTitle>
-              <TrendingUp className="text-color-success h-4 w-4" />
+              <TrendingUp className="h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-color-secondary text-2xl font-bold">
-                {metrics.newThisMonth}
-              </div>
+              <div className="text-2xl font-bold">{metrics.newThisMonth}</div>
               <p className="text-color-foreground-muted text-xs">
                 +
                 {Math.round(
@@ -374,32 +370,28 @@ export function ComprehensiveClientManagement({
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
+          <Card className="border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-color-secondary text-sm font-medium">
+              <CardTitle className="text-sm font-medium">
                 Avg Lifetime Value
               </CardTitle>
-              <DollarSign className="text-color-primary h-4 w-4" />
+              <DollarSign className="h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-color-secondary text-2xl font-bold">
+              <div className="text-2xl font-bold">
                 ${metrics.averageLifetimeValue.toLocaleString()}
               </div>
               <p className="text-color-foreground-muted text-xs">Per client</p>
             </CardContent>
           </Card>
 
-          <Card className="client-metrics-card border-line bg-surface border shadow-xs">
+          <Card className="border-line bg-surface border shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-color-secondary text-sm font-medium">
-                VIP Clients
-              </CardTitle>
-              <Heart className="text-color-primary h-4 w-4" />
+              <CardTitle className="text-sm font-medium">VIP Clients</CardTitle>
+              <Heart className="h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-color-secondary text-2xl font-bold">
-                {metrics.vipClients}
-              </div>
+              <div className="text-2xl font-bold">{metrics.vipClients}</div>
               <p className="text-color-foreground-muted text-xs">
                 {metrics.retentionRate}% retention rate
               </p>
@@ -439,13 +431,11 @@ export function ComprehensiveClientManagement({
           <div className="text-color-foreground-muted text-sm">
             Showing {filteredClients.length} of {clients.length} clients
           </div>
-          <div className="bg-color-background-muted flex items-center gap-1 rounded-lg p-1">
+          <div className="flex items-center gap-1 rounded-lg p-1">
             <button
               onClick={() => setViewMode('cards')}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                viewMode === 'cards'
-                  ? 'text-color-secondary bg-surface shadow-xs'
-                  : 'text-ink-soft'
+                viewMode === 'cards' ? 'bg-surface shadow-xs' : 'text-ink-soft'
               }`}
             >
               Cards
@@ -453,9 +443,7 @@ export function ComprehensiveClientManagement({
             <button
               onClick={() => setViewMode('table')}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                viewMode === 'table'
-                  ? 'text-color-secondary bg-surface shadow-xs'
-                  : 'text-ink-soft'
+                viewMode === 'table' ? 'bg-surface shadow-xs' : 'text-ink-soft'
               }`}
             >
               Table
@@ -484,23 +472,23 @@ export function ComprehensiveClientManagement({
           }
         />
       ) : viewMode === 'cards' ? (
-        <div className="client-grid">
+        <div>
           {filteredClients.map(client => (
             <Card
               key={client.id}
-              className="client-card flex h-full cursor-pointer flex-col"
+              className="flex h-full cursor-pointer flex-col"
               onClick={() => onViewClient?.(client)}
             >
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <div className="flex min-w-0 flex-1 items-center space-x-2">
                     <Avatar className="h-9 w-9 shrink-0">
-                      <AvatarFallback className="client-card__avatar text-xs font-medium text-white">
+                      <AvatarFallback className="text-xs font-medium text-white">
                         {getInitials(client.firstName, client.lastName)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-color-secondary truncate text-sm font-semibold">
+                      <h3 className="truncate text-sm font-semibold">
                         {client.firstName} {client.lastName}
                       </h3>
                       <div className="mt-1 flex items-center gap-1">
@@ -578,7 +566,7 @@ export function ComprehensiveClientManagement({
                 {/* Stats - Compact Grid */}
                 <div className="border-line-soft grid grid-cols-2 gap-2 border-t py-2">
                   <div className="text-center">
-                    <div className="text-color-secondary text-sm font-medium">
+                    <div className="text-sm font-medium">
                       {client.appointmentCount}
                     </div>
                     <div className="text-color-foreground-muted text-xs">
@@ -586,7 +574,7 @@ export function ComprehensiveClientManagement({
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-color-secondary text-sm font-medium">
+                    <div className="text-sm font-medium">
                       ${client.totalSpent?.toLocaleString() || '0'}
                     </div>
                     <div className="text-color-foreground-muted text-xs">
@@ -598,7 +586,7 @@ export function ComprehensiveClientManagement({
                 {/* Last Appointment - Compact */}
                 {client.lastAppointment && (
                   <div className="border-line-soft border-t pt-2">
-                    <div className="text-color-secondary text-xs">
+                    <div className="text-xs">
                       {formatDistanceToNow(
                         new Date(client.lastAppointment.startTime),
                         { addSuffix: true }
@@ -619,7 +607,7 @@ export function ComprehensiveClientManagement({
                       e.stopPropagation();
                       onViewClient?.(client);
                     }}
-                    className="client-card__action-secondary flex-1 rounded-md px-2 py-1.5 text-xs"
+                    className="flex-1 rounded-md px-2 py-1.5 text-xs"
                   >
                     <Calendar className="mr-1 inline h-3 w-3" />
                     Details
@@ -629,7 +617,7 @@ export function ComprehensiveClientManagement({
                       e.stopPropagation();
                       onBookAppointment?.(client);
                     }}
-                    className="client-card__action-primary flex-1 rounded-md px-2 py-1.5 text-xs"
+                    className="flex-1 rounded-md px-2 py-1.5 text-xs"
                   >
                     Book Now
                   </button>
@@ -640,24 +628,24 @@ export function ComprehensiveClientManagement({
         </div>
       ) : (
         // Enhanced Table view with perfect alignment
-        <div className="border-color-border bg-color-surface rounded-lg border shadow-xs">
+        <div className="rounded-lg border shadow-xs">
           <div className="p-4">
             <div className="space-y-3">
               {filteredClients.map(client => (
                 <div
                   key={client.id}
-                  className="hover:bg-color-surface-hover flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors"
+                  className="flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors"
                   onClick={() => onViewClient?.(client)}
                 >
                   <div className="flex min-w-0 flex-1 items-center space-x-3">
                     <Avatar className="h-10 w-10 shrink-0">
-                      <AvatarFallback className="client-card__avatar text-sm font-medium text-white">
+                      <AvatarFallback className="text-sm font-medium text-white">
                         {getInitials(client.firstName, client.lastName)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-color-secondary truncate font-medium">
+                        <h3 className="truncate font-medium">
                           {client.firstName} {client.lastName}
                         </h3>
                         <StatusBadge
@@ -679,7 +667,7 @@ export function ComprehensiveClientManagement({
 
                   <div className="flex shrink-0 items-center gap-4">
                     <div className="text-right">
-                      <div className="text-color-secondary text-sm font-medium">
+                      <div className="text-sm font-medium">
                         {client.appointmentCount} visits
                       </div>
                       <div className="text-color-foreground-muted text-xs">
@@ -692,7 +680,7 @@ export function ComprehensiveClientManagement({
                           e.stopPropagation();
                           onViewClient?.(client);
                         }}
-                        className="client-card__action-secondary rounded-md px-3 py-1.5 text-xs"
+                        className="rounded-md px-3 py-1.5 text-xs"
                       >
                         Details
                       </button>
@@ -701,7 +689,7 @@ export function ComprehensiveClientManagement({
                           e.stopPropagation();
                           onBookAppointment?.(client);
                         }}
-                        className="client-card__action-primary rounded-md px-3 py-1.5 text-xs"
+                        className="rounded-md px-3 py-1.5 text-xs"
                       >
                         Book Now
                       </button>
