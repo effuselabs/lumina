@@ -21,7 +21,20 @@
 /* Tailwind 3's space-x and space-y, generated in place of Tailwind 4's (#154). */
 @import './tailwind-3-compat.css' layer(utilities);
 
-@config '../tailwind.config.ts';
+/*
+  Tailwind's theme, generated from lib/design/tailwind-theme.ts (#179), and
+  the enter and exit animations Radix's dialogs and menus use.
+*/
+@import './theme.css';
+@import 'tw-animate-css';
+
+/*
+  `dark:` follows the .dark class ThemeProvider sets on <html>, not the
+  device's setting, which the theme rule (lib/theme/initial-theme.ts) has
+  already weighed. This is Tailwind 3's class strategy, selector for
+  selector, so no `dark:` utility changed when the config went (#179).
+*/
+@custom-variant dark (&:is(.dark *));
 
 /*
   Classes built at runtime, which the scanner cannot see in source. This was
