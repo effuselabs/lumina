@@ -98,5 +98,3 @@ export const authConfig = {
   // Enable debug mode in development
   debug: process.env.NODE_ENV === 'development',
 } satisfies NextAuthConfig;
-
-export default authConfig;

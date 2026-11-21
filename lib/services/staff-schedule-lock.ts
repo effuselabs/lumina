@@ -1,11 +1,7 @@
 import type { Prisma } from '@prisma/client';
 
 /** Statuses that hold a staff member's time. */
-export const BLOCKING_STATUSES = [
-  'SCHEDULED',
-  'CONFIRMED',
-  'IN_PROGRESS',
-] as const;
+const BLOCKING_STATUSES = ['SCHEDULED', 'CONFIRMED', 'IN_PROGRESS'] as const;
 
 /**
  * Serialise appointment writes for one staff member until the transaction
@@ -19,7 +15,7 @@ export const BLOCKING_STATUSES = [
  * different people still run in parallel. It is released at commit or
  * rollback, so it cannot leak.
  */
-export async function lockStaffSchedule(
+async function lockStaffSchedule(
   tx: Prisma.TransactionClient,
   staffId: string
 ): Promise<void> {

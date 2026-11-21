@@ -1,4 +1,4 @@
-import authConfig from '@/auth.config';
+import { authConfig } from '@/auth.config';
 import { isPublicRoute } from '@/lib/auth/public-routes';
 import NextAuth from 'next-auth';
 import { NextResponse } from 'next/server';
