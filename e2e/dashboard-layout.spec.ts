@@ -33,3 +33,41 @@ test('dashboard content starts where the sidebar ends', async ({ page }) => {
   }
   expect(mainBox!.x + mainBox!.width).toBeLessThanOrEqual(viewport!.width + 1);
 });
+
+/**
+ * On a page taller than the window, the sidebar's background stopped one
+ * screen down: at desktop width it is a grid column, but it kept the 100vh
+ * height of the phone drawer (#125). It now runs the full height of the
+ * page, and its navigation stays in view while the content scrolls.
+ */
+test('the sidebar runs the full height of a long page', async ({ page }) => {
+  test.setTimeout(60_000);
+  const viewport = page.viewportSize();
+  test.skip(viewport!.width < 1024, 'the sidebar is a drawer below 1024px');
+
+  await signInAsOwner(page);
+  await expect(page.locator('.dashboard-main')).toBeVisible({
+    timeout: 20_000,
+  });
+  // Staff lists every member, so it is taller than the window.
+  await page.goto(`${new URL(page.url()).pathname.replace(/\/$/, '')}/staff`);
+  const main = page.locator('.dashboard-main');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible({
+    timeout: 20_000,
+  });
+
+  const mainBox = await main.boundingBox();
+  const sidebarBox = await page.locator('.dashboard-sidebar').boundingBox();
+  expect(
+    mainBox!.height,
+    'the page should be taller than the window'
+  ).toBeGreaterThan(viewport!.height);
+  expect(sidebarBox!.height).toBeGreaterThanOrEqual(mainBox!.height - 1);
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const navBox = await page.locator('.sidebar-nav').boundingBox();
+  expect(
+    Math.abs(navBox!.y),
+    'the navigation stays at the top of the window'
+  ).toBeLessThanOrEqual(1);
+});
