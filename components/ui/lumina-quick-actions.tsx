@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { LucideIcon, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { forwardRef } from 'react';
-import { brand } from '@/lib/design/tokens';
 
 interface QuickActionLink {
   title: string;
@@ -40,7 +39,7 @@ const LuminaQuickActions = forwardRef<HTMLDivElement, LuminaQuickActionsProps>(
         {/* Header */}
         <div className="quick-actions-header">
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4" style={{ color: brand.coral }} />
+            <Zap className="text-ink-gold h-4 w-4" />
             <h3 className="stat-card-title">{title}</h3>
           </div>
         </div>

@@ -7,7 +7,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { brand, themeSurface } from '@/lib/design/tokens';
 
 type Theme = 'light' | 'dark' | 'system';
 type ResolvedTheme = 'light' | 'dark';
@@ -84,13 +83,15 @@ export function ThemeProvider({
       // Update color-scheme for better browser integration
       root.style.colorScheme = resolvedTheme;
 
-      // Update meta theme-color for mobile browsers
+      // Mobile browsers tint their chrome with theme-color: the canvas of
+      // the theme just applied, read from the page's own --ui-canvas so this
+      // file needs no copy of the palette (lib/design/tokens.ts).
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-      if (metaThemeColor) {
-        metaThemeColor.setAttribute(
-          'content',
-          resolvedTheme === 'dark' ? themeSurface.darkBackground : brand.cream
-        );
+      const canvas = getComputedStyle(root)
+        .getPropertyValue('--ui-canvas')
+        .trim();
+      if (metaThemeColor && canvas) {
+        metaThemeColor.setAttribute('content', canvas);
       }
 
       // End transition after animation duration

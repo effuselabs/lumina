@@ -52,7 +52,8 @@
   &:hover {
     background: var(--lumina-radiant-gradient-reverse);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 122, 90, 0.4);
+    box-shadow: 0 4px 12px
+      color-mix(in oklab, var(--lumina-coral) 40%, transparent);
   }
   @media (prefers-contrast: more) {
     border: 3px solid var(--color-primary-foreground);
@@ -232,7 +233,7 @@
   }
 
   &.active {
-    background-color: rgba(255, 122, 90, 0.1);
+    background-color: color-mix(in oklab, var(--lumina-coral) 10%, transparent);
     color: var(--lumina-coral);
     border-left-color: var(--lumina-coral);
     font-weight: 600;
@@ -703,7 +704,7 @@
 }
 .active {
   &.sidebar-nav-item {
-    background-color: rgba(255, 122, 90, 0.1);
+    background-color: color-mix(in oklab, var(--lumina-coral) 10%, transparent);
     color: var(--lumina-coral);
     border-left-color: var(--lumina-coral);
     font-weight: 600;

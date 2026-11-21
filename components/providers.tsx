@@ -2,7 +2,8 @@
 
 import { SessionProvider } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, useSyncExternalStore } from 'react';
+import { DEFAULT_THEME, THEME_STORAGE_KEY } from '@/lib/theme/initial-theme';
 import { Toaster } from 'sonner';
 import { ThemeProvider } from './theme-provider';
 
@@ -11,23 +12,43 @@ interface ProvidersProps {
 }
 
 /**
- * The theme follows the OS until someone picks one with the toggle in the
- * dashboard header; the choice is kept in localStorage under `lumina-theme`.
- *
- * This was light-only, deliberately, while components hardcoded light
- * colours: under "system" a dark-OS visitor got dark cards with deep-teal
- * headings on them (about 1.2:1). docs/PLAN.md 3f moved every component onto
- * theme-aware colours first, and `__tests__/design/` holds them there.
+ * The theme a page opens in is lib/theme/initial-theme.ts: dark by default
+ * (P3), the person's own pick remembered per device under `lumina-theme`,
+ * /book following the client's phone, and the home page light. The inline
+ * script in app/layout.tsx applies it before the first paint; this keeps it.
  */
+const DARK_QUERY = '(prefers-color-scheme: dark)';
+
+function subscribeToSystemTheme(onChange: () => void) {
+  const query = window.matchMedia(DARK_QUERY);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
+/** The device's own light or dark setting, live. */
+function useSystemTheme(): 'light' | 'dark' {
+  return useSyncExternalStore(
+    subscribeToSystemTheme,
+    () => (window.matchMedia(DARK_QUERY).matches ? 'dark' : 'light'),
+    () => 'light'
+  );
+}
+
 export function Providers({ children }: ProvidersProps) {
-  // The marketing home page is designed light-only — photographic and
-  // gradient sections that do not change with the theme — so it stays light
-  // until it gets a dark design of its own.
-  const forcedTheme = usePathname() === '/' ? 'light' : undefined;
+  const pathname = usePathname();
+  const systemTheme = useSystemTheme();
+  // The home page has no dark design yet; /book is the salon's page on its
+  // client's phone, so it follows the phone, not this device's pick.
+  const forcedTheme =
+    pathname === '/'
+      ? 'light'
+      : pathname === '/book' || pathname?.startsWith('/book/')
+        ? systemTheme
+        : undefined;
   return (
     <ThemeProvider
-      defaultTheme="system"
-      storageKey="lumina-theme"
+      defaultTheme={DEFAULT_THEME}
+      storageKey={THEME_STORAGE_KEY}
       forcedTheme={forcedTheme}
     >
       <SessionProvider

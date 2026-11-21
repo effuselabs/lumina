@@ -144,40 +144,119 @@ export const themeSurface = {
 } as const;
 
 /**
+ * Gold on ink, the approved direction (P2, P3; docs/visual-language.md). Ink
+ * neutrals at hue 220 with gold the only accent, measured in OKLCH and
+ * written here as the sRGB they convert to, so the contrast checks can read
+ * them. The OKLCH source of each is beside it. Steps the prototype did not
+ * name (sunken, the soft and strong lines, soft and faint ink) sit on the
+ * same ramp between the ones it did.
+ */
+export const palette = {
+  dark: {
+    canvas: '#090D0F', // oklch(0.155 0.008 220)
+    sunken: '#0D1113', // oklch(0.175 0.008 220)
+    surface: '#111618', // oklch(0.195 0.009 220)
+    raised: '#191F21', // oklch(0.235 0.010 220)
+    line: '#2B3234', // oklch(0.31 0.010 220)
+    lineStrong: '#3D4446', // oklch(0.38 0.010 220)
+    inkStrong: '#F0F4F6', // oklch(0.965 0.005 220)
+    ink: '#D2D9DB', // oklch(0.88 0.008 220)
+    inkSoft: '#B8BFC2', // oklch(0.80 0.009 220)
+    inkMuted: '#9EA6A9', // oklch(0.72 0.010 220)
+    inkFaint: '#6E7678', // oklch(0.56 0.010 220)
+    /** Gold as text, and the now-line. */
+    gold: '#F9CB52', // oklch(0.86 0.145 88)
+  },
+  light: {
+    canvas: '#F8FBFB', // oklch(0.985 0.003 220)
+    sunken: '#EDF1F2', // oklch(0.955 0.004 220)
+    surface: '#FFFFFF', // oklch(1 0 0)
+    raised: '#F2F6F7', // oklch(0.97 0.004 220)
+    line: '#DBE1E2', // oklch(0.905 0.006 220)
+    lineStrong: '#CCD2D4', // oklch(0.86 0.007 220)
+    inkStrong: '#111A1D', // oklch(0.21 0.015 220)
+    ink: '#2D373B', // oklch(0.33 0.015 220)
+    inkSoft: '#444F53', // oklch(0.42 0.015 220)
+    inkMuted: '#5B6569', // oklch(0.50 0.014 220)
+    inkFaint: '#929A9D', // oklch(0.68 0.010 220)
+    /** Gold as text: gold itself is 1.5:1 on white, so light takes bronze. */
+    gold: '#8D5E00', // oklch(0.52 0.11 75)
+  },
+  /** The gold fill, the same in both themes: the metallic button. */
+  fill: {
+    top: '#FDDB72', // oklch(0.90 0.13 92)
+    bottom: '#F7C243', // oklch(0.84 0.15 85)
+    hoverTop: '#FFE17C', // oklch(0.92 0.13 92)
+    hoverBottom: '#FDCA4E', // oklch(0.86 0.15 85)
+    pressed: '#ECBD4A', // oklch(0.82 0.14 86)
+    border: '#C5953B', // oklch(0.70 0.12 80)
+    /** Text on gold. */
+    ink: '#111A1D', // oklch(0.21 0.015 220)
+  },
+  /** The focus ring: gold on dark, a deeper gold on light. */
+  focus: { dark: '#F9CB52', light: '#996516' }, // oklch(0.55 0.11 72)
+} as const;
+
+/**
  * Theme-aware surfaces, text and lines: one name, a light and a dark value.
  * Generated into `app/tokens.css` as `--ui-*` under `:root` and `.dark`, and
  * exposed to Tailwind as `bg-surface-*`, `text-ink-*` and `border-line-*`, so
  * a component writes `text-ink-strong` once instead of
  * `text-gray-900 dark:text-…`.
  *
- * Each light value is the Tailwind gray it replaces — `ink-strong` is
- * `gray-900`, `surface-muted` is `gray-50` — so moving a component onto these
- * names changes nothing in light mode. `semantic-colours.test.ts` holds them
- * to Tailwind's palette.
+ * Since stage 2 (#155) every value comes from `palette`, gold on ink;
+ * `semantic-colours.test.ts` holds them to it. Before, each light value was
+ * the Tailwind gray it replaced, so moving components onto these names
+ * changed nothing; this is where the look changes.
  */
 export const themed = {
-  surface: { light: base.white, dark: neutral[900] },
-  'surface-muted': { light: '#F9FAFB', dark: themeSurface.darkBorderMuted },
-  'surface-sunken': { light: '#F3F4F6', dark: themeSurface.darkBorder },
-  'surface-strong': { light: '#E5E7EB', dark: '#323238' },
+  canvas: { light: palette.light.canvas, dark: palette.dark.canvas },
+  surface: { light: palette.light.surface, dark: palette.dark.surface },
+  'surface-muted': { light: palette.light.canvas, dark: palette.dark.canvas },
+  'surface-sunken': { light: palette.light.sunken, dark: palette.dark.sunken },
+  'surface-raised': { light: palette.light.raised, dark: palette.dark.raised },
+  'surface-strong': { light: palette.light.line, dark: palette.dark.line },
   /** Skeleton bars and inactive dots. */
-  'surface-dim': { light: '#D1D5DB', dark: '#3F3F46' },
-  'ink-strong': { light: '#111827', dark: neutral[50] },
-  'ink-deep': { light: '#1F2937', dark: '#F4F4F5' },
+  'surface-dim': {
+    light: palette.light.lineStrong,
+    dark: palette.dark.lineStrong,
+  },
+  'ink-strong': {
+    light: palette.light.inkStrong,
+    dark: palette.dark.inkStrong,
+  },
+  'ink-deep': { light: palette.light.inkStrong, dark: palette.dark.inkStrong },
   /**
-   * Brand text: deep teal in light (3c′). Deep teal is 1.3:1 on the dark
-   * surfaces, so dark mode takes the teal ramp's 300 step
-   * (`scales.deepTeal[300]`), keeping the hue.
+   * The old brand text (deep teal) is ink now: headings read in ink-strong,
+   * and gold text is kept for accents (P2, and no gold at all on /book).
    */
-  'ink-brand': { light: brand.deepTeal, dark: '#8DD2D8' },
-  ink: { light: '#374151', dark: '#E4E4E7' },
-  'ink-soft': { light: '#4B5563', dark: themeSurface.darkForegroundSecondary },
-  'ink-muted': { light: '#6B7280', dark: themeSurface.darkForegroundMuted },
-  /** Placeholders and decoration only: 2.5:1 in light, as gray-400 was. */
-  'ink-faint': { light: '#9CA3AF', dark: '#71717A' },
-  line: { light: '#E5E7EB', dark: themeSurface.darkBorder },
-  'line-strong': { light: '#D1D5DB', dark: '#3F3F46' },
-  'line-soft': { light: '#F3F4F6', dark: themeSurface.darkBorderMuted },
+  'ink-brand': { light: palette.light.inkStrong, dark: palette.dark.inkStrong },
+  'ink-gold': { light: palette.light.gold, dark: palette.dark.gold },
+  ink: { light: palette.light.ink, dark: palette.dark.ink },
+  'ink-soft': { light: palette.light.inkSoft, dark: palette.dark.inkSoft },
+  'ink-muted': { light: palette.light.inkMuted, dark: palette.dark.inkMuted },
+  /** Placeholders and decoration only, as gray-400 was. */
+  'ink-faint': { light: palette.light.inkFaint, dark: palette.dark.inkFaint },
+  line: { light: palette.light.line, dark: palette.dark.line },
+  'line-strong': {
+    light: palette.light.lineStrong,
+    dark: palette.dark.lineStrong,
+  },
+  'line-soft': { light: palette.light.sunken, dark: palette.dark.raised },
+  gold: { light: palette.fill.bottom, dark: palette.fill.bottom },
+  'gold-top': { light: palette.fill.top, dark: palette.fill.top },
+  'gold-hover': {
+    light: palette.fill.hoverBottom,
+    dark: palette.fill.hoverBottom,
+  },
+  'gold-hover-top': {
+    light: palette.fill.hoverTop,
+    dark: palette.fill.hoverTop,
+  },
+  'gold-pressed': { light: palette.fill.pressed, dark: palette.fill.pressed },
+  'gold-border': { light: palette.fill.border, dark: palette.fill.border },
+  'gold-ink': { light: palette.fill.ink, dark: palette.fill.ink },
+  focus: { light: palette.focus.light, dark: palette.focus.dark },
 } as const;
 
 type Themed = keyof typeof themed;
@@ -662,6 +741,44 @@ export const contrastPairs: ReadonlyArray<{
  *   white text. Use deep teal on gradient fills, or place white text only on
  *   deep teal (14.92:1).
  */
+/**
+ * Gold on ink's contrast pairs (#155): every text role on every surface in
+ * both themes, text on the gold button, and the focus ring. A function, not a
+ * constant, so the browser bundles that import tokens.ts can leave it out.
+ */
+export function paletteContrastPairs(): typeof contrastPairs {
+  return [
+    ...(['dark', 'light'] as const).flatMap(theme =>
+      (['canvas', 'sunken', 'surface', 'raised'] as const).flatMap(surface =>
+        (['inkStrong', 'ink', 'inkSoft', 'inkMuted', 'gold'] as const).map(
+          role => ({
+            name: `${theme}: ${role} on ${surface}`,
+            foreground: palette[theme][role],
+            background: palette[theme][surface],
+          })
+        )
+      )
+    ),
+    // Text on the gold button, at each of its stops and pressed.
+    ...(['top', 'bottom', 'hoverTop', 'hoverBottom', 'pressed'] as const).map(
+      stop => ({
+        name: `ink on the gold fill, ${stop}`,
+        foreground: palette.fill.ink,
+        background: palette.fill[stop],
+      })
+    ),
+    // The focus ring is not text: 3:1 against what it sits on.
+    ...(['dark', 'light'] as const).flatMap(theme =>
+      (['canvas', 'surface'] as const).map(surface => ({
+        name: `${theme}: focus ring on ${surface}`,
+        foreground: palette.focus[theme],
+        background: palette[theme][surface],
+        largeText: true,
+      }))
+    ),
+  ];
+}
+
 export const prohibitedPairs = [
   { foreground: '#FFFFFF', background: brand.coral, ratio: 2.57 },
 ] as const;
