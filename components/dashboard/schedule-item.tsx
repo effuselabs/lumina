@@ -53,13 +53,7 @@ export function ScheduleItem({
   };
 
   return (
-    <div
-      className={cn(
-        'schedule-item-professional',
-        variant === 'compact' && 'schedule-item-professional-compact',
-        className
-      )}
-    >
+    <div className={cn('schedule-item-professional', className)}>
       {/* Status indicator bar */}
       <div
         className={cn('schedule-item-status-bar', {

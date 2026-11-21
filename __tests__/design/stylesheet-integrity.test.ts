@@ -1,15 +1,11 @@
 /**
  * @jest-environment node
  */
-import { execSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { compile } from '@tailwindcss/node';
-import postcss from 'postcss';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { PageHeader } from '@/components/ui/page-header';
-import tailwind3Order from '@/lib/design/postcss-tailwind-3-order';
+import postcss from 'postcss';
+import { buildStylesheet, sourceTokens } from './support/stylesheet';
 
 /**
  * Three faults the screen audit found (#153) had one shape: CSS that names
@@ -26,43 +22,20 @@ import tailwind3Order from '@/lib/design/postcss-tailwind-3-order';
  * token in the source, and checks each kind of silence.
  */
 
-const root = process.cwd();
-
-function sourceTokens(): string[] {
-  const files = execSync(
-    "git ls-files 'app/**/*.ts' 'app/**/*.tsx' 'components/**/*.ts' 'components/**/*.tsx' 'lib/**/*.ts' 'lib/**/*.tsx' 'hooks/**/*.ts' 'hooks/**/*.tsx'",
-    { cwd: root, encoding: 'utf8' }
-  )
-    .trim()
-    .split('\n');
-  const tokens = files.flatMap(
-    file =>
-      readFileSync(join(root, file), 'utf8').match(
-        /[A-Za-z0-9_:./[\]()%#,-]+/g
-      ) ?? []
-  );
-  return [...new Set(tokens)];
-}
-
 const tokens = sourceTokens();
 let css = '';
 
 beforeAll(async () => {
-  const path = join(root, 'app/globals.css');
-  const ordered = (
-    await postcss([tailwind3Order()]).process(readFileSync(path, 'utf8'), {
-      from: path,
-    })
-  ).css;
-  const compiler = await compile(ordered, {
-    base: join(root, 'app'),
-    onDependency: () => {},
-  });
-  css = compiler.build(tokens);
+  css = await buildStylesheet(tokens);
 }, 60_000);
 
-/** Set by Radix on the element at runtime, so no stylesheet defines them. */
+/**
+ * Defined outside the stylesheet: Radix sets its two on the element at
+ * runtime, and next/font defines --font-inter in the class it puts on
+ * <html> (app/layout.tsx).
+ */
 const RUNTIME = new Set([
+  '--font-inter',
   '--radix-select-trigger-height',
   '--radix-select-trigger-width',
 ]);

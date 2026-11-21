@@ -59,7 +59,7 @@ const LuminaQuickActions = forwardRef<HTMLDivElement, LuminaQuickActionsProps>(
               >
                 <div className="quick-action-link-content">
                   <action.icon className="quick-action-link-icon" />
-                  <span className="quick-action-link-text">{action.title}</span>
+                  <span>{action.title}</span>
                 </div>
                 <svg
                   className="quick-action-link-arrow"

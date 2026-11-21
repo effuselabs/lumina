@@ -110,10 +110,8 @@ export function AppointmentMoveConfirmation({
 
         <div className="space-y-6">
           {/* Appointment Details */}
-          <div className="bg-color-background-muted rounded-lg p-4">
-            <h3 className="text-color-secondary mb-3 font-medium">
-              Appointment Details
-            </h3>
+          <div className="rounded-lg p-4">
+            <h3 className="mb-3 font-medium">Appointment Details</h3>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <User className="text-color-foreground-muted h-4 w-4" />
@@ -185,7 +183,7 @@ export function AppointmentMoveConfirmation({
           {/* Conflicts */}
           {hasConflicts && validation && (
             <div className="space-y-3">
-              <h3 className="text-color-secondary flex items-center space-x-2 font-medium">
+              <h3 className="flex items-center space-x-2 font-medium">
                 <AlertTriangle className="h-5 w-5 text-red-500" />
                 <span>Conflicts Detected</span>
               </h3>
@@ -209,7 +207,7 @@ export function AppointmentMoveConfirmation({
           {/* Warnings */}
           {hasWarnings && validation && (
             <div className="space-y-3">
-              <h3 className="text-color-secondary flex items-center space-x-2 font-medium">
+              <h3 className="flex items-center space-x-2 font-medium">
                 <Info className="h-5 w-5 text-yellow-500" />
                 <span>Important Notes</span>
               </h3>
@@ -225,15 +223,13 @@ export function AppointmentMoveConfirmation({
           {/* Alternative Suggestions */}
           {suggestedAlternatives.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-color-secondary font-medium">
-                Suggested Alternatives
-              </h3>
+              <h3 className="font-medium">Suggested Alternatives</h3>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {suggestedAlternatives.slice(0, 4).map((slot, index) => (
                   <button
                     key={index}
                     onClick={() => onSelectAlternative?.(slot)}
-                    className="border-color-border hover:bg-color-background-muted rounded-lg border p-3 text-left transition-colors"
+                    className="rounded-lg border p-3 text-left transition-colors"
                   >
                     <div className="text-sm font-medium">
                       {formatDate(slot.startTime)}

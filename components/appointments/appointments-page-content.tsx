@@ -109,7 +109,7 @@ export function AppointmentsPageContent({
           {/* Calendar View Navigation */}
           <div className="grid gap-4 md:grid-cols-3">
             <Link href={`/dashboard/${businessSlug}/appointments`}>
-              <Card className="border-color-border hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
+              <Card className="hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
@@ -127,7 +127,7 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/dashboard/${businessSlug}/appointments/calendar`}>
-              <Card className="border-color-border hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
+              <Card className="hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
@@ -145,7 +145,7 @@ export function AppointmentsPageContent({
             </Link>
 
             <Link href={`/book/${business.id}`}>
-              <Card className="border-color-border hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
+              <Card className="hover:border-lumina-coral cursor-pointer shadow-xs transition-colors">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
                     <div className="bg-lumina-radiant/10 flex h-12 w-12 items-center justify-center rounded-lg">
@@ -164,13 +164,11 @@ export function AppointmentsPageContent({
           </div>
 
           {/* Appointment Management Interface */}
-          <Card className="border-color-border shadow-xs">
+          <Card className="shadow-xs">
             <CardHeader>
               <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div>
-                  <CardTitle className="text-color-secondary">
-                    Your schedule
-                  </CardTitle>
+                  <CardTitle>Your schedule</CardTitle>
                   <p className="text-color-foreground-muted">
                     Every booking, by day, week or month
                   </p>

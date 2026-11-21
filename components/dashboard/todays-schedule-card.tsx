@@ -39,7 +39,7 @@ export function TodaysScheduleCard({
             <h3 className="stat-card-title">Today&apos;s Schedule</h3>
           </div>
         </div>
-        <div className="schedule-card-content">
+        <div>
           <div className="schedule-items">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="schedule-item-skeleton animate-pulse">
@@ -75,7 +75,7 @@ export function TodaysScheduleCard({
               <span className="schedule-card-count-number">
                 {appointments.length}
               </span>
-              <span className="schedule-card-count-label">
+              <span>
                 {appointments.length === 1 ? 'appointment' : 'appointments'}
               </span>
             </div>
@@ -83,7 +83,7 @@ export function TodaysScheduleCard({
         </div>
       </div>
 
-      <div className="schedule-card-content">
+      <div>
         {displayAppointments.length === 0 ? (
           <div className="schedule-empty-state">
             <Calendar className="schedule-empty-icon mx-auto mb-2 h-8 w-8" />

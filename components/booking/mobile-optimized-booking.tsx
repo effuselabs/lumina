@@ -201,7 +201,7 @@ export function MobileOptimizedBooking({
        * Confirm button, so the tap landed on the bar instead.
        */}
       {(onBack || onNext) && (
-        <footer className="safe-area-pb bg-surface sticky bottom-0 border-t p-4">
+        <footer className="bg-surface sticky bottom-0 border-t p-4">
           <div className="flex gap-3">
             {onBack && (
               <Button

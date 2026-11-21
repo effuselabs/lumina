@@ -17,8 +17,7 @@ const spinnerVariants = cva(
       variant: {
         default: '',
         slow: 'animate-lumina-spin-slow motion-reduce:animate-lumina-pulse-subtle',
-        pulse:
-          'animate-lumina-pulse border-transparent bg-current rounded-full',
+        pulse: 'border-transparent bg-current rounded-full',
         dots: 'animate-lumina-typing border-transparent bg-current rounded-full',
       },
     },

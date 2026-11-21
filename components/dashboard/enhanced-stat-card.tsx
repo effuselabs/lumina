@@ -44,8 +44,6 @@ function TrendIcon({ type, className }: TrendIconProps) {
     <Icon
       className={cn(
         'h-4 w-4',
-        type === 'increase' && 'text-status-success',
-        type === 'decrease' && 'text-status-danger',
         type === 'neutral' && 'text-text-secondary',
         className
       )}
@@ -81,7 +79,7 @@ function MiniChart({ data, color, className }: MiniChartProps) {
     .join(' ');
 
   return (
-    <div className={cn('stat-card-trend', className)}>
+    <div className={cn(className)}>
       <svg width="60" height="20" className="overflow-visible">
         <path
           d={pathData}

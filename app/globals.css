@@ -519,7 +519,7 @@
 
 @utility high-contrast {
   --tw-sort: forced-color-adjust;
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     border-width: 2px;
     font-weight: 600;
   }
@@ -2340,7 +2340,7 @@
     outline: 2px solid var(--color-interactive-focus);
     outline-offset: 2px;
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     border-width: 2px;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -2518,7 +2518,7 @@
   .testimonial-card & svg {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     & svg {
       opacity: 1;
     }
@@ -2646,7 +2646,7 @@
   .dark & {
     border-top-color: var(--color-border);
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     border-top-width: 2px;
   }
 
@@ -2900,7 +2900,7 @@
     outline-offset: 2px;
     border-radius: 0.375rem;
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     &.animating .animated-counter-value {
       text-shadow: none;
       font-weight: 800;
@@ -2987,7 +2987,7 @@
   .dark .animated-counter.animating & {
     text-shadow: 0 0 12px currentColor;
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     font-weight: 700;
 
     .animated-counter.animating & {
@@ -3047,7 +3047,7 @@
   .dark &.animated-counter .animated-counter-value {
     text-shadow: 0 0 12px currentColor;
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     &.animated-counter .animated-counter-value {
       text-shadow: none;
       font-weight: 800;
@@ -3141,7 +3141,7 @@
   .dark & {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     border: 1px solid currentColor;
   }
   @media (prefers-reduced-motion: reduce) {

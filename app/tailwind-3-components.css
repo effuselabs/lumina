@@ -54,7 +54,7 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(255, 122, 90, 0.4);
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     border: 3px solid var(--color-primary-foreground);
   }
   @media (prefers-reduced-motion: reduce) {
@@ -424,7 +424,7 @@
     outline: 2px solid var(--color-interactive-focus);
     outline-offset: 2px;
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     border: 2px solid var(--color-border);
     background: var(--color-surface);
     backdrop-filter: none;
@@ -457,7 +457,7 @@
     outline: 2px solid var(--color-interactive-focus);
     outline-offset: 2px;
   }
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     &::before {
       background: var(--color-border);
     }
@@ -563,7 +563,7 @@
   }
 
   /* High contrast mode adjustments */
-  @media (prefers-contrast: high) {
+  @media (prefers-contrast: more) {
     border: 2px solid var(--color-primary);
   }
 }

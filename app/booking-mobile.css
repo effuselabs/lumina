@@ -84,7 +84,7 @@ html {
 }
 
 /* High contrast mode support */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
   .booking-button {
     border: 2px solid currentColor !important;
   }

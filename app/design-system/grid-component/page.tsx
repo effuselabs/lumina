@@ -65,7 +65,7 @@ export default function GridComponentShowcase() {
   ];
 
   return (
-    <div className="bg-color-background min-h-screen p-8">
+    <div className="min-h-screen p-8">
       <div className="mx-auto max-w-7xl space-y-12">
         <PageHeader
           title="Grid Component"
@@ -407,7 +407,7 @@ export default function GridComponentShowcase() {
                 <h4 className="mb-3 font-semibold">Grid Props</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex gap-4">
-                    <code className="bg-color-background-secondary rounded px-2 py-1 font-mono text-xs">
+                    <code className="rounded px-2 py-1 font-mono text-xs">
                       variant
                     </code>
                     <span className="text-color-foreground-secondary">
@@ -418,7 +418,7 @@ export default function GridComponentShowcase() {
                     </span>
                   </div>
                   <div className="flex gap-4">
-                    <code className="bg-color-background-secondary rounded px-2 py-1 font-mono text-xs">
+                    <code className="rounded px-2 py-1 font-mono text-xs">
                       columns
                     </code>
                     <span className="text-color-foreground-secondary">
@@ -426,7 +426,7 @@ export default function GridComponentShowcase() {
                     </span>
                   </div>
                   <div className="flex gap-4">
-                    <code className="bg-color-background-secondary rounded px-2 py-1 font-mono text-xs">
+                    <code className="rounded px-2 py-1 font-mono text-xs">
                       gap
                     </code>
                     <span className="text-color-foreground-secondary">
@@ -435,7 +435,7 @@ export default function GridComponentShowcase() {
                     </span>
                   </div>
                   <div className="flex gap-4">
-                    <code className="bg-color-background-secondary rounded px-2 py-1 font-mono text-xs">
+                    <code className="rounded px-2 py-1 font-mono text-xs">
                       debug
                     </code>
                     <span className="text-color-foreground-secondary">
@@ -449,7 +449,7 @@ export default function GridComponentShowcase() {
                 <h4 className="mb-3 font-semibold">GridItem Props</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex gap-4">
-                    <code className="bg-color-background-secondary rounded px-2 py-1 font-mono text-xs">
+                    <code className="rounded px-2 py-1 font-mono text-xs">
                       colSpan
                     </code>
                     <span className="text-color-foreground-secondary">
@@ -457,7 +457,7 @@ export default function GridComponentShowcase() {
                     </span>
                   </div>
                   <div className="flex gap-4">
-                    <code className="bg-color-background-secondary rounded px-2 py-1 font-mono text-xs">
+                    <code className="rounded px-2 py-1 font-mono text-xs">
                       rowSpan
                     </code>
                     <span className="text-color-foreground-secondary">

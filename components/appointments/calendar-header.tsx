@@ -84,19 +84,19 @@ export function CalendarHeader({
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
-        <div className="text-color-secondary text-lg font-semibold">
+        <div className="text-lg font-semibold">
           {formatDateForView(currentDate, view)}
         </div>
       </div>
 
       {/* View Controls */}
       <div className="flex items-center space-x-2">
-        <div className="border-color-border flex overflow-hidden rounded-lg border">
+        <div className="flex overflow-hidden rounded-lg border">
           <Button
             variant={view === 'day' ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => onViewChange('day')}
-            className="border-color-border rounded-none border-r first:rounded-l-lg last:rounded-r-lg last:border-r-0"
+            className="rounded-none border-r first:rounded-l-lg last:rounded-r-lg last:border-r-0"
           >
             Day
           </Button>
@@ -104,7 +104,7 @@ export function CalendarHeader({
             variant={view === 'week' ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => onViewChange('week')}
-            className="border-color-border rounded-none border-r first:rounded-l-lg last:rounded-r-lg last:border-r-0"
+            className="rounded-none border-r first:rounded-l-lg last:rounded-r-lg last:border-r-0"
           >
             Week
           </Button>
@@ -112,7 +112,7 @@ export function CalendarHeader({
             variant={view === 'month' ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => onViewChange('month')}
-            className="border-color-border rounded-none border-r first:rounded-l-lg last:rounded-r-lg last:border-r-0"
+            className="rounded-none border-r first:rounded-l-lg last:rounded-r-lg last:border-r-0"
           >
             Month
           </Button>

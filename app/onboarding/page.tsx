@@ -137,7 +137,7 @@ export default function OnboardingPage() {
 
         {/* Loading State */}
         {state.isLoading && (
-          <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
             <div className="bg-surface rounded-lg p-6 text-center">
               <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent"></div>
               <p className="text-ink-strong font-medium">

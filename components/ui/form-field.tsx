@@ -67,7 +67,6 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
             className={cn(
               'text-sm leading-none font-medium',
               'text-neutral-900 dark:text-neutral-100',
-              error && 'text-error-accessible',
               'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
               required && 'required'
             )}
@@ -75,7 +74,7 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
             {label}
             {required && (
               <span
-                className="text-error-accessible ml-1"
+                className="ml-1"
                 aria-label="required field"
                 role="img"
                 aria-hidden="false"
@@ -116,10 +115,7 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
         {error && (
           <p
             id={errorId}
-            className={cn(
-              'text-xs leading-relaxed font-medium',
-              'text-error-accessible'
-            )}
+            className={'text-xs leading-relaxed font-medium'}
             role="alert"
             aria-live="assertive"
             aria-atomic="true"

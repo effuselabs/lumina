@@ -183,9 +183,9 @@ export function WeekView({
   }
 
   return (
-    <div className="bg-color-background flex h-full flex-col">
+    <div className="flex h-full flex-col">
       {/* Week Header */}
-      <div className="border-color-border bg-color-background-muted sticky top-0 z-10 flex border-b-2">
+      <div className="sticky top-0 z-10 flex border-b-2">
         <div className="text-color-foreground-muted w-16 shrink-0 p-2 text-xs font-medium sm:w-20 sm:p-3 sm:text-sm">
           Time
         </div>
@@ -200,14 +200,14 @@ export function WeekView({
             <div
               key={index}
               className={cn(
-                'border-color-border min-w-0 flex-1 border-l p-2 text-center sm:p-3',
+                'min-w-0 flex-1 border-l p-2 text-center sm:p-3',
                 getDensityColor(density)
               )}
             >
               <div
                 className={cn(
                   'truncate text-xs font-medium sm:text-sm',
-                  isToday ? 'text-lumina-coral' : 'text-color-secondary'
+                  isToday ? 'text-lumina-coral' : ''
                 )}
               >
                 <span className="hidden sm:inline">{dayNames[index]}</span>
@@ -216,7 +216,7 @@ export function WeekView({
               <div
                 className={cn(
                   'text-sm font-semibold sm:text-lg',
-                  isToday ? 'text-lumina-coral' : 'text-color-secondary'
+                  isToday ? 'text-lumina-coral' : ''
                 )}
               >
                 {date.getDate()}
@@ -235,7 +235,7 @@ export function WeekView({
       </div>
 
       {extended && (
-        <p className="border-color-border text-ink-muted border-b px-3 py-2 text-xs">
+        <p className="text-ink-muted border-b px-3 py-2 text-xs">
           Showing hours outside business hours: some appointments this week fall
           there.
         </p>
@@ -244,12 +244,9 @@ export function WeekView({
       {/* Week Grid */}
       <div className="flex-1 overflow-y-auto">
         {timeSlots.map(hour => (
-          <div
-            key={hour}
-            className="border-color-border flex min-h-10 border-b sm:min-h-12"
-          >
+          <div key={hour} className="flex min-h-10 border-b sm:min-h-12">
             {/* Time Label */}
-            <div className="text-color-foreground-muted border-color-border w-16 shrink-0 border-r p-1 text-xs sm:w-20 sm:p-2">
+            <div className="text-color-foreground-muted w-16 shrink-0 border-r p-1 text-xs sm:w-20 sm:p-2">
               <div className="text-right">
                 {new Date(0, 0, 0, hour).toLocaleTimeString('en-US', {
                   hour: 'numeric',
@@ -273,7 +270,7 @@ export function WeekView({
                 return (
                   <div
                     key={dayIndex}
-                    className="border-color-border bg-surface-muted/50 relative flex-1 border-l"
+                    className="bg-surface-muted/50 relative flex-1 border-l"
                     title="Outside business hours"
                   >
                     <div className="absolute inset-0 p-0.5 sm:p-1">
@@ -288,7 +285,7 @@ export function WeekView({
                           />
                         ))}
                         {hourAppointments.length > 2 && (
-                          <div className="text-color-foreground-muted bg-color-background-muted rounded px-1 text-center text-xs">
+                          <div className="text-color-foreground-muted rounded px-1 text-center text-xs">
                             +{hourAppointments.length - 2}
                           </div>
                         )}
@@ -303,7 +300,7 @@ export function WeekView({
                 return (
                   <div
                     key={dayIndex}
-                    className="border-color-border bg-surface-muted/50 relative flex-1 border-l"
+                    className="bg-surface-muted/50 relative flex-1 border-l"
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-color-foreground-muted text-xs opacity-50">
@@ -323,14 +320,10 @@ export function WeekView({
               return (
                 <div
                   key={dayIndex}
-                  className={cn(
-                    'border-color-border relative flex-1 border-l transition-colors',
-                    {
-                      'hover:bg-color-background-muted cursor-pointer':
-                        !hasAppointments,
-                      'bg-lumina-radiant/5': hasAppointments,
-                    }
-                  )}
+                  className={cn('relative flex-1 border-l transition-colors', {
+                    'cursor-pointer': !hasAppointments,
+                    'bg-lumina-radiant/5': hasAppointments,
+                  })}
                   onClick={() =>
                     onTimeSlotClick?.(
                       enhancedSlot.startTime,
@@ -369,7 +362,7 @@ export function WeekView({
                         ))}
                       {/* Show overflow indicator */}
                       {hourAppointments.length > 2 && (
-                        <div className="text-color-foreground-muted bg-color-background-muted rounded px-1 text-center text-xs">
+                        <div className="text-color-foreground-muted rounded px-1 text-center text-xs">
                           +{hourAppointments.length - 2}
                         </div>
                       )}

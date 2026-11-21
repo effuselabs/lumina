@@ -74,7 +74,7 @@ export default function GridSystemShowcase() {
   }));
 
   return (
-    <div className="bg-color-background min-h-screen p-8">
+    <div className="min-h-screen p-8">
       <div className="mx-auto max-w-7xl space-y-12">
         <PageHeader
           title="Responsive Grid System"
@@ -446,7 +446,7 @@ export default function GridSystemShowcase() {
                 </div>
               </div>
 
-              <div className="border-color-border border-t pt-4">
+              <div className="border-t pt-4">
                 <h4 className="mb-2 font-semibold">Available Grid Classes</h4>
                 <div className="grid grid-cols-2 gap-2 text-sm md:grid-cols-3">
                   <Badge variant="outline">grid-cards</Badge>
