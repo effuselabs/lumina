@@ -1,0 +1,9 @@
+{
+  "$comment": "Size budgets, checked by scripts/check-budgets.ts after next build (#152). They start at what the app shipped when they were set and may only fall. First-load JavaScript counts every layout above the page, which Next's build table leaves out, so it reads about 23 KB above that table. /book's target is 100 KB (docs/visual-language.md); stage 5a's rebuild is where it gets there.",
+  "firstLoadJs": {
+    "/book/[businessId]/page": 152,
+    "/dashboard/[businessSlug]/page": 142
+  },
+  "css": 27,
+  "dataUri": 1024
+}

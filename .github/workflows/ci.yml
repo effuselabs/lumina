@@ -93,6 +93,11 @@ jobs:
           NEXTAUTH_SECRET: build-time-placeholder-not-a-real-secret
           NEXTAUTH_URL: http://localhost:3000
 
+      # What we ship may only shrink: first-load JavaScript per route, CSS,
+      # and inlined data URIs, against budgets.json (#152).
+      - name: Size budgets
+        run: npm run budgets
+
   migrations:
     name: Migrations apply cleanly and match the schema
     runs-on: ubuntu-latest
