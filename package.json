@@ -68,7 +68,8 @@
     "compat:migrate-staff": "tsx scripts/manage-backward-compatibility.ts migrate-staff",
     "compat:migrate-all": "tsx scripts/manage-backward-compatibility.ts migrate-all",
     "compat:test-fallback": "tsx scripts/manage-backward-compatibility.ts test-fallback",
-    "knip": "knip"
+    "knip": "knip",
+    "budgets": "tsx scripts/check-budgets.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
@@ -172,5 +173,13 @@
     "next": {
       "postcss": "$postcss"
     }
-  }
+  },
+  "browserslist": [
+    "safari >= 16.4",
+    "ios_saf >= 16.4",
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 128",
+    "samsung >= 22"
+  ]
 }
