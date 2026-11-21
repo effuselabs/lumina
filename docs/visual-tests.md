@@ -1,7 +1,7 @@
 # Visual tests
 
 `e2e/visual.spec.ts` screenshots the main pages in light and dark, at desktop
-(1280px) and phone (390px) width, and compares them pixel for pixel with the
+(1280px), tablet (820px) and phone (390px) width, and compares them pixel for pixel with the
 baselines in `e2e/__screenshots__/`.
 
 Every colour, radius, shadow and font on those pages comes from

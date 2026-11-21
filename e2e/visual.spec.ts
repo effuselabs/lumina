@@ -3,7 +3,8 @@ import { seededBusiness } from './support/seeded-business';
 import { signInAsOwner } from './support/sign-in';
 
 /*
- * What the main pages look like, in both themes, at desktop and phone width.
+ * What the main pages look like, in both themes, at desktop, tablet and phone
+ * width.
  *
  * A changed screenshot is not a failure of the code — it is a question: did
  * you mean to change this? Every colour, radius and shadow here comes from
@@ -19,6 +20,9 @@ import { signInAsOwner } from './support/sign-in';
 const THEMES = ['light', 'dark'] as const;
 const WIDTHS = [
   { name: 'desktop', width: 1280, height: 800 },
+  // Below the sidebar's 1024px breakpoint and above the phone layout: the
+  // width where the two meet, which nothing else looks at (#152).
+  { name: 'tablet', width: 820, height: 1180 },
   { name: 'phone', width: 390, height: 844 },
 ] as const;
 
