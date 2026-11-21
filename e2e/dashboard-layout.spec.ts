@@ -52,7 +52,9 @@ test('the sidebar runs the full height of a long page', async ({ page }) => {
   // Staff lists every member, so it is taller than the window.
   await page.goto(`${new URL(page.url()).pathname.replace(/\/$/, '')}/staff`);
   const main = page.locator('.dashboard-main');
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible({
+  await expect(
+    page.getByRole('heading', { name: 'Staff Management' })
+  ).toBeVisible({
     timeout: 20_000,
   });
 
