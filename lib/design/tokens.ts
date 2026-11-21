@@ -2,9 +2,10 @@
  * Lumina design tokens — the single source of truth.
  *
  * Every colour, spacing step, radius, shadow and font in the product is
- * declared here and nowhere else. `tailwind.config.ts` imports this file
- * rather than restating values, and the CSS custom properties consumed by the
- * runtime theme switcher are generated from `cssVariables` below.
+ * declared here and nowhere else. Tailwind's theme (`tailwind-theme.ts`, which
+ * generates app/theme.css) imports this file rather than restating values, and
+ * the CSS custom properties consumed by the runtime theme switcher are
+ * generated from `cssVariables` below.
  *
  * WHY THIS FILE EXISTS
  * Values were previously duplicated across four places: app/globals.css
@@ -320,7 +321,7 @@ export const email = {
 
 /**
  * Tint and shade steps behind Tailwind's `deep-teal-50`, `sage-green-700` and
- * the like. Each palette's base step is a CSS variable in tailwind.config.ts;
+ * the like. Each palette's base step is a CSS variable in tailwind-theme.ts;
  * these are the rest, moved here unchanged. The status steps 700 and 800 are
  * shades of the status colours as they were before #29 changed them, so they
  * no longer step from `status` — reconciling that is a visible change.

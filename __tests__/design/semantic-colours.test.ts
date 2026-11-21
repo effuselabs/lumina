@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import postcss, { type Rule } from 'postcss';
-import tailwindConfig from '../../tailwind.config';
+import { theme } from '@/lib/design/tailwind-theme';
 import { palette, themed } from '@/lib/design/tokens';
 
 /**
@@ -45,11 +45,7 @@ describe('themed colours', () => {
   });
 
   it('are Tailwind colours pointing at their --ui-* properties', () => {
-    // Tailwind 4 has no resolveConfig; the themed colours are in extend.
-    const resolved = tailwindConfig.theme?.extend?.colors as unknown as Record<
-      string,
-      Record<string, string>
-    >;
+    const resolved = theme.colors as Record<string, Record<string, string>>;
     expect(resolved.surface.muted).toBe('var(--ui-surface-muted)');
     expect(resolved.ink.DEFAULT).toBe('var(--ui-ink)');
     expect(resolved.ink.strong).toBe('var(--ui-ink-strong)');

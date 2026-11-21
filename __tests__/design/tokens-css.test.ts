@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { themeStylesheet } from '@/lib/design/tailwind-theme';
 import { tokenStylesheet } from '@/lib/design/token-stylesheet';
 
 /**
@@ -20,6 +21,12 @@ const HEX = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
 describe('app/tokens.css', () => {
   it('is what `npm run tokens:css` generates from tokens.ts', () => {
     expect(read('app/tokens.css')).toBe(tokenStylesheet());
+  });
+});
+
+describe('app/theme.css', () => {
+  it('is what `npm run tokens:css` generates from tailwind-theme.ts', () => {
+    expect(read('app/theme.css')).toBe(themeStylesheet());
   });
 });
 
