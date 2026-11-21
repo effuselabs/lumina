@@ -6,9 +6,10 @@
  * build table leaves the layouts out, so these numbers read higher than it.
  *
  * Run after `next build`. Each budget starts at what the app shipped when it
- * was set and may only fall: when a change makes something smaller, lower
- * its number in `budgets.json` in the same pull request, and the room it
- * frees cannot be spent by accident later.
+ * was set. When a change makes something smaller, lower its number in
+ * `budgets.json` in the same pull request, so the room it frees cannot be
+ * spent by accident later; raise one only in a pull request that says what
+ * the bytes buy.
  *
  *   npx tsx scripts/check-budgets.ts
  */
