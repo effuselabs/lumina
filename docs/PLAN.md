@@ -26,18 +26,19 @@ built the same way. An issue without a milestone is parked, and carries the
 
 ---
 
-## Where things stand — 2026-10-27
+## Where things stand — 2026-11-21
 
-| Check                 | Now                                                                                                              |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Build                 | Passes; 62 static pages                                                                                          |
-| Type-check, lint      | 0 errors                                                                                                         |
-| Jest                  | 1,020 tests in 68 suites, green                                                                                  |
-| End to end            | 19 tests, Chromium and Mobile Safari, green in CI                                                                |
-| Screenshots           | Home, sign-in, sign-up, booking, dashboard, design system; both themes                                           |
-| Staging               | `staging.uselumina.app`, auto-deploys on green `main`, healthy                                                   |
-| Production advisories | 0 high or critical (4 moderate, build-time only, [#149](https://github.com/effuselabs/lumina/issues/149))        |
-| Unused code (`knip`)  | 6 small findings: it drifted because CI doesn't run it ([#152](https://github.com/effuselabs/lumina/issues/152)) |
+| Check                 | Now                                                                                                                                                       |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build                 | Passes; 62 static pages                                                                                                                                   |
+| Type-check, lint      | 0 errors                                                                                                                                                  |
+| Jest                  | 1,119 tests in 76 suites, green                                                                                                                           |
+| End to end            | 19 tests, Chromium and Mobile Safari, green in CI                                                                                                         |
+| Screenshots           | Home, sign-in, sign-up, booking, dashboard, design system; both themes; desktop, tablet and phone width                                                   |
+| Staging               | `staging.uselumina.app`, auto-deploys on green `main`, healthy                                                                                            |
+| Production advisories | 0 high or critical; 7 moderate, three of them in Next.js with a patch out ([#189](https://github.com/effuselabs/lumina/issues/189), for Jeremy)           |
+| Unused code (`knip`)  | None; CI fails on any ([#152](https://github.com/effuselabs/lumina/issues/152))                                                                           |
+| Size budgets          | `/book` 152.2 of 153 KB first-load JS, dashboard 141.8 of 142, CSS 27.8 of 28 KB; CI fails over ([#152](https://github.com/effuselabs/lumina/issues/152)) |
 
 **What works for a salon today:** a client can book through the salon's public
 page, in the salon's timezone, without double-booking a chair, and the owner
@@ -45,8 +46,9 @@ sees the booking on the calendar and in real dashboard figures.
 
 **What does not, yet:** no email has ever been delivered
 ([#120](https://github.com/effuselabs/lumina/issues/120)); there is no password
-reset, no staff booking, no check-in, and no Settings page; and the interface
-is the old coral design, which Phase 6 replaces.
+reset, no staff booking, no check-in, and no Settings page. The interface wears
+the new gold-on-ink colours, but its components and screens are still the old
+ones, which the rest of Phase 6 rebuilds.
 
 **One correction to the record.** Phase 4 was marked done when
 `e2e/booking-loop.spec.ts` passed. `CLAUDE.md`'s definition of done is longer:
@@ -66,7 +68,7 @@ a launch gate.
 | 3 — Environments and pipeline            | Done                                       |                                                                  |
 | 4 — Make the booking loop work           | Done, as tested (see the correction above) |                                                                  |
 | 5 — Design system collapse               | Done; milestone closed 2026-10-27          | [1](https://github.com/effuselabs/lumina/milestone/1)            |
-| **6 — UI/UX rebuild**                    | **In progress: stage 0**                   | [4](https://github.com/effuselabs/lumina/milestone/4), epic #126 |
+| **6 — UI/UX rebuild**                    | **In progress: stage 2**                   | [4](https://github.com/effuselabs/lumina/milestone/4), epic #126 |
 | 7 — Brand, releases, production launch   | Not started; checklist proposed            | [2](https://github.com/effuselabs/lumina/milestone/2), #167      |
 | 8 — Ratchet and expand                   | Not started                                | [3](https://github.com/effuselabs/lumina/milestone/3)            |
 
@@ -76,20 +78,24 @@ launch).
 
 ## Now, next, and waiting
 
-**Now — Phase 6, stage 0**, groundwork that changes nothing a salon sees:
-retire the dormant offline mode ([#150](https://github.com/effuselabs/lumina/issues/150)),
-allow-list what public booking responses contain ([#151](https://github.com/effuselabs/lumina/issues/151)),
-the redesign's guardrail checks ([#152](https://github.com/effuselabs/lumina/issues/152)),
-and analytics' made-up figures ([#123](https://github.com/effuselabs/lumina/issues/123):
-computed honestly, or taken out of the navigation until they are). The truth
-pass that removed every dead link and "Coming Soon" page is done
-([#147](https://github.com/effuselabs/lumina/issues/147)).
+**Now — Phase 6, stage 2, the look** ([#155](https://github.com/effuselabs/lumina/issues/155)).
+The gold-on-ink palette is on staging: the dashboard opens dark, gold is the
+only accent, and `/book` follows the client's phone (#185). Tailwind's theme is
+generated from the token layer and its JavaScript config is gone
+([#179](https://github.com/effuselabs/lumina/issues/179)). Still to come in stage 2:
+Inter committed with Fraunces, the material and motion tokens, and keeping gold
+off `/book`.
 
-**Next — stage 1, plumbing:** the Tailwind 4 upgrade
-([#154](https://github.com/effuselabs/lumina/issues/154), approved) and
-[#153](https://github.com/effuselabs/lumina/issues/153), then **stage 2, the
-look** ([#155](https://github.com/effuselabs/lumina/issues/155)) — the first
-pull request that visibly changes staging.
+**Done before it:** stage 0, apart from analytics' made-up figures
+([#123](https://github.com/effuselabs/lumina/issues/123): computed honestly, or taken out of
+the navigation until they are), and stage 1. The guardrails are in CI
+([#152](https://github.com/effuselabs/lumina/issues/152)): the class-hygiene ratchet, size
+budgets, unused code, and screenshots at three widths.
+
+**Next — stage 3, components** ([#156](https://github.com/effuselabs/lumina/issues/156)).
+Stage 2's palette costs `/book` about 0.4 KB of JavaScript, because `tokens.ts`
+reaches the browser whole; [#184](https://github.com/effuselabs/lumina/issues/184) fixes that
+before the budget gets tight.
 
 **Waiting on Jeremy**, each with what it unblocks:
 
@@ -98,6 +104,7 @@ pull request that visibly changes staging.
 | Move DNS to Cloudflare, verify the domain in Resend, set the key on Railway | Every email, password reset, the launch | [#120](https://github.com/effuselabs/lumina/issues/120) |
 | Create the Sentry project, set `SENTRY_DSN` on Railway                      | Error reporting                         | [#100](https://github.com/effuselabs/lumina/issues/100) |
 | Set up CLA Assistant with the approved text                                 | The CLA pull request                    | [#77](https://github.com/effuselabs/lumina/issues/77)   |
+| Take Next.js 15.5.29 now, ahead of Phase 8, for three moderate advisories   | Session cookies on Edge routes covered  | [#189](https://github.com/effuselabs/lumina/issues/189) |
 | Agree the first-release checklist                                           | Phase 7's definition of done            | [#167](https://github.com/effuselabs/lumina/issues/167) |
 
 None of these touches Phase 6. Decided in October 2026: Tailwind 4 moves to
@@ -167,8 +174,8 @@ goes before paint.
 
 | Stage                | Issue                                                                                                            | What changes on staging                                             |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 0 — Groundwork       | #147 ✓, #150, #151, #152, #123                                                                                   | Dead ends gone (done); otherwise nothing visible                    |
-| 1 — Plumbing         | [#153](https://github.com/effuselabs/lumina/issues/153), [#154](https://github.com/effuselabs/lumina/issues/154) | Corners round, hovers and headings work. Tailwind 4 pixel-identical |
+| 0 — Groundwork       | #147 ✓, #150 ✓, #151 ✓, #152 ✓, #123                                                                             | Dead ends gone (done); otherwise nothing visible                    |
+| 1 — Plumbing ✓       | [#153](https://github.com/effuselabs/lumina/issues/153), [#154](https://github.com/effuselabs/lumina/issues/154) | Corners round, hovers and headings work. Tailwind 4 pixel-identical |
 | 2 — The look         | [#155](https://github.com/effuselabs/lumina/issues/155)                                                          | **Everything turns gold on ink, dark by default**                   |
 | 3 — Components       | [#156](https://github.com/effuselabs/lumina/issues/156)                                                          | New buttons, inputs, sheets, menus, toasts, ⌘K                      |
 | 4 — Shell and logo   | [#157](https://github.com/effuselabs/lumina/issues/157)                                                          | Glass header, phone tab bar, First Light, the sign-in sunrise       |
@@ -180,8 +187,10 @@ goes before paint.
 | 5f — Shared devices  | [#163](https://github.com/effuselabs/lumina/issues/163)                                                          | Front-desk privacy                                                  |
 | 5g — Everything else | [#164](https://github.com/effuselabs/lumina/issues/164)                                                          | Clients, staff, services, onboarding, sign-in; the home page last   |
 
-**What Tailwind 4 leaves behind** (#154): the upgrade keeps Tailwind 3's look
-with four compatibility pieces, each deleted once the screens that need it are
+**What Tailwind 4 leaves behind** (#154): the JavaScript config is gone
+(#179; the theme is generated into `app/theme.css` from
+`lib/design/tailwind-theme.ts`), and Tailwind 3's look is kept by four
+compatibility pieces, each deleted once the screens that need it are
 rebuilt on tokens — `app/tailwind-3-components.css` (the old component
 classes), `app/tailwind-3-compat.css` (`space-x`/`space-y`), `tailwind3Palette`
 in `lib/design/tokens.ts` (the default palette's old colours) and
