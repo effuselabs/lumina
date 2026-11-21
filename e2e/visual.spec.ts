@@ -41,6 +41,13 @@ for (const theme of THEMES) {
       test.beforeEach(async ({ page }) => {
         await page.clock.setFixedTime(new Date('2026-06-15T10:00:00-07:00'));
         await page.emulateMedia({ colorScheme: theme });
+        // The dashboard opens dark whatever the device says (P3), so each
+        // theme is also picked the way a person would pick it; /book still
+        // follows the emulated device setting.
+        await page.addInitScript(
+          picked => window.localStorage.setItem('lumina-theme', picked),
+          theme
+        );
         await page.setViewportSize({ width: size.width, height: size.height });
       });
 

@@ -2,7 +2,8 @@ import { Providers } from '@/components/providers';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { brand } from '@/lib/design/tokens';
+import { palette } from '@/lib/design/tokens';
+import { initialThemeScript } from '@/lib/theme/initial-theme-script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -82,7 +83,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
-        <meta name="theme-color" content={brand.cream} />
+        {/* The theme, set before the first paint so dark pages never
+            flash light: lib/theme/initial-theme.ts */}
+        <script dangerouslySetInnerHTML={{ __html: initialThemeScript }} />
+        <meta name="theme-color" content={palette.dark.canvas} />
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className={`${inter.className} font-sans antialiased`}>
