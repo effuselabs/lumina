@@ -182,10 +182,10 @@ export function MonthView({
                 <div
                   key={dayIndex}
                   className={cn(
-                    'border-color-border hover:bg-color-background-muted/30 relative cursor-pointer border-r transition-colors last:border-r-0',
+                    'border-color-border hover:bg-surface-muted/30 relative cursor-pointer border-r transition-colors last:border-r-0',
                     getDensityStyle(density),
                     {
-                      'bg-color-background-muted/50': !day.isCurrentMonth,
+                      'bg-surface-muted/50': !day.isCurrentMonth,
                       'bg-lumina-radiant/10 border-lumina-coral': day.isToday,
                     }
                   )}
@@ -279,7 +279,7 @@ export function MonthView({
                         </div>
                       ))}
                       {day.appointments.length > 2 && (
-                        <div className="text-color-foreground-muted bg-color-background-muted/80 rounded px-1 text-center text-xs">
+                        <div className="text-color-foreground-muted bg-surface-muted/80 rounded px-1 text-center text-xs">
                           +{day.appointments.length - 2} more
                         </div>
                       )}
